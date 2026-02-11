@@ -1,0 +1,615 @@
+AI Picks
+These are player props assessed using GameScript's own algorithm, including alternative lines suitable for building parlays.
+
+NBA
+
+Game
+
+Prop -
+
+The top number above the name is the probability/confidence out of 100 the AI is on todays picks.
+
+Today
+Updated today 4:19 AM
+87
+Derrick Jones Jr.
+6+ Points
+LAC @ SAC • 9:00 PM
+
+87
+Jaylen Brown
+6+ Rebounds
+MIA @ BOS • 6:30 PM
+
+87
+Kris Dunn
+6+ Points
+LAC @ SAC • 9:00 PM
+
+87
+Kevin Porter Jr.
+5+ Assists
+IND @ MIL • 7:00 PM
+
+87
+Bobby Portis
+2+ Assists
+IND @ MIL • 7:00 PM
+
+87
+Ryan Rollins
+4+ Rebounds
+IND @ MIL • 7:00 PM
+
+87
+Kyle Kuzma
+3+ Assists
+IND @ MIL • 7:00 PM
+
+87
+Kawhi Leonard
+4+ Assists
+LAC @ SAC • 9:00 PM
+
+87
+Jarace Walker
+8+ Points
+IND @ MIL • 7:00 PM
+
+87
+Zion Williamson
+5+ Rebounds
+NOP @ MIN • 7:00 PM
+
+87
+John Collins
+12+ Points
+LAC @ SAC • 9:00 PM
+
+87
+DeMar DeRozan
+12+ Points
+LAC @ SAC • 9:00 PM
+
+87
+Jalen Brunson
+3+ Rebounds
+NYK @ DET • 6:30 PM
+
+87
+Neemias Queta
+6+ Points
+MIA @ BOS • 6:30 PM
+
+86
+Duncan Robinson
+8+ Points
+NYK @ DET • 6:30 PM
+
+86
+Jaime Jaquez Jr.
+10+ Points
+MIA @ BOS • 6:30 PM
+
+86
+Ron Holland II
+3+ Rebounds
+NYK @ DET • 6:30 PM
+
+86
+Russell Westbrook
+10+ Points
+LAC @ SAC • 9:00 PM
+
+85
+Pelle Larsson
+3+ Rebounds
+MIA @ BOS • 6:30 PM
+
+85
+Saddiq Bey
+12+ Points
+NOP @ MIN • 7:00 PM
+
+85
+Derrick Jones Jr.
+3+ Rebounds
+LAC @ SAC • 9:00 PM
+
+85
+Domantas Sabonis
+10+ Points
+LAC @ SAC • 9:00 PM
+
+85
+OG Anunoby
+15+ Points
+NYK @ DET • 6:30 PM
+
+85
+Neemias Queta
+6+ Rebounds
+MIA @ BOS • 6:30 PM
+
+84
+Myles Turner
+5+ Rebounds
+IND @ MIL • 7:00 PM
+
+84
+Kevin Porter Jr.
+1+ Steals
+IND @ MIL • 7:00 PM
+
+84
+Karl-Anthony Towns
+10+ Rebounds
+NYK @ DET • 6:30 PM
+
+84
+Bobby Portis
+6+ Rebounds
+IND @ MIL • 7:00 PM
+
+84
+Herbert Jones
+6+ Points
+NOP @ MIN • 7:00 PM
+
+84
+Johnny Furphy
+5+ Points
+IND @ MIL • 7:00 PM
+
+84
+Josh Hart
+10+ Points
+NYK @ DET • 6:30 PM
+
+84
+Cade Cunningham
+20+ Points
+NYK @ DET • 6:30 PM
+
+83
+Pelle Larsson
+8+ Points
+MIA @ BOS • 6:30 PM
+
+83
+Derik Queen
+8+ Points
+NOP @ MIN • 7:00 PM
+
+83
+Jaime Jaquez Jr.
+4+ Rebounds
+MIA @ BOS • 6:30 PM
+
+82
+Malik Monk
+2+ Assists
+LAC @ SAC • 9:00 PM
+
+82
+Trey Murphy III
+4+ Rebounds
+NOP @ MIN • 7:00 PM
+
+82
+Saddiq Bey
+2+ Assists
+NOP @ MIN • 7:00 PM
+
+82
+OG Anunoby
+5+ Rebounds
+NYK @ DET • 6:30 PM
+
+82
+Kawhi Leonard
+5+ Rebounds
+LAC @ SAC • 9:00 PM
+
+82
+Ron Holland II
+6+ Points
+NYK @ DET • 6:30 PM
+
+81
+Domantas Sabonis
+3+ Assists
+LAC @ SAC • 9:00 PM
+
+81
+Kevin Porter Jr.
+4+ Rebounds
+IND @ MIL • 7:00 PM
+
+81
+Aaron Nesmith
+2+ Assists
+IND @ MIL • 7:00 PM
+
+81
+Ausar Thompson
+5+ Rebounds
+NYK @ DET • 6:30 PM
+
+81
+Kris Dunn
+3+ Rebounds
+LAC @ SAC • 9:00 PM
+
+81
+Bobby Portis
+12+ Points
+IND @ MIL • 7:00 PM
+
+81
+Jalen Brunson
+5+ Assists
+NYK @ DET • 6:30 PM
+
+81
+Andrew Nembhard
+3+ Rebounds
+IND @ MIL • 7:00 PM
+
+80
+Yves Missi
+4+ Rebounds
+NOP @ MIN • 7:00 PM
+
+80
+Cade Cunningham
+4+ Rebounds
+NYK @ DET • 6:30 PM
+
+80
+Aaron Nesmith
+12+ Points
+IND @ MIL • 7:00 PM
+
+80
+John Collins
+5+ Rebounds
+LAC @ SAC • 9:00 PM
+
+80
+Jaden McDaniels
+12+ Points
+NOP @ MIN • 7:00 PM
+
+80
+Jarace Walker
+2+ Assists
+IND @ MIL • 7:00 PM
+
+2/7 AI Picks
+
+87
+Draymond Green
+6+ Points
+GSW @ LAL • 7:30 PM
+
+87
+Miles Bridges
+4+ Rebounds
+CHA @ ATL • 6:30 PM
+
+87
+Dillon Brooks
+3+ Rebounds
+PHI @ PHX • 8:00 PM
+
+87
+Will Richard
+5+ Points
+GSW @ LAL • 7:30 PM
+
+87
+Patrick Williams
+6+ Points
+DEN @ CHI • 7:00 PM
+
+87
+Luguentz Dort
+3+ Rebounds
+HOU @ OKC • 2:30 PM
+
+87
+Al Horford
+8+ Points
+GSW @ LAL • 7:30 PM
+
+87
+Jabari Smith Jr.
+10+ Points
+HOU @ OKC • 2:30 PM
+
+87
+Moses Moody
+3+ Rebounds
+GSW @ LAL • 7:30 PM
+
+87
+Devin Booker
+18+ Points
+PHI @ PHX • 8:00 PM
+
+87
+Brandin Podziemski
+3+ Rebounds
+GSW @ LAL • 7:30 PM
+
+87
+Jaylin Williams
+4+ Rebounds
+HOU @ OKC • 2:30 PM
+
+87
+Jaylin Williams
+5+ Points
+HOU @ OKC • 2:30 PM
+
+87
+Jamal Murray
+20+ Points
+DEN @ CHI • 7:00 PM
+
+87
+Stephon Castle
+12+ Points
+DAL @ SAS • 5:00 PM
+
+87
+Al Horford
+2+ Assists
+GSW @ LAL • 7:30 PM
+
+87
+Tim Hardaway Jr.
+8+ Points
+DEN @ CHI • 7:00 PM
+
+87
+Jaren Jackson Jr.
+4+ Rebounds
+UTA @ ORL • 6:00 PM
+
+87
+Luke Kornet
+5+ Rebounds
+DAL @ SAS • 5:00 PM
+
+87
+Jaren Jackson Jr.
+12+ Points
+UTA @ ORL • 6:00 PM
+
+87
+LeBron James
+18+ Points
+GSW @ LAL • 7:30 PM
+
+87
+Draymond Green
+4+ Rebounds
+GSW @ LAL • 7:30 PM
+
+86
+Joel Embiid
+25+ Points
+PHI @ PHX • 8:00 PM
+
+85
+Patrick Williams
+3+ Rebounds
+DEN @ CHI • 7:00 PM
+
+85
+Miles Bridges
+12+ Points
+CHA @ ATL • 6:30 PM
+
+85
+Jaylin Williams
+2+ Assists
+HOU @ OKC • 2:30 PM
+
+85
+Jabari Smith Jr.
+5+ Rebounds
+HOU @ OKC • 2:30 PM
+
+85
+Domantas Sabonis
+10+ Points
+CLE @ SAC • 9:00 PM
+
+85
+Zaccharie Risacher
+3+ Rebounds
+CHA @ ATL • 6:30 PM
+
+84
+Christian Braun
+2+ Assists
+DEN @ CHI • 7:00 PM
+
+84
+Reed Sheppard
+8+ Points
+HOU @ OKC • 2:30 PM
+
+84
+Jalen Smith
+10+ Points
+DEN @ CHI • 7:00 PM
+
+83
+Clint Capela
+4+ Points
+HOU @ OKC • 2:30 PM
+
+83
+Devin Booker
+3+ Rebounds
+PHI @ PHX • 8:00 PM
+
+83
+Ryan Kalkbrenner
+5+ Points
+CHA @ ATL • 6:30 PM
+
+83
+Amen Thompson
+4+ Assists
+HOU @ OKC • 2:30 PM
+
+83
+Cooper Flagg
+20+ Points
+DAL @ SAS • 5:00 PM
+
+83
+LaMelo Ball
+4+ Rebounds
+CHA @ ATL • 6:30 PM
+
+83
+Kon Knueppel
+15+ Points
+CHA @ ATL • 6:30 PM
+
+82
+Al Horford
+13+ PAs
+GSW @ LAL • 7:30 PM
+
+82
+Brandin Podziemski
+3+ Assists
+GSW @ LAL • 7:30 PM
+
+82
+Domantas Sabonis
+3+ Assists
+CLE @ SAC • 9:00 PM
+
+82
+Brandon Miller
+4+ Rebounds
+CHA @ ATL • 6:30 PM
+
+82
+Jalen Johnson
+8+ Rebounds
+CHA @ ATL • 6:30 PM
+
+82
+Jalen Johnson
+18+ Points
+CHA @ ATL • 6:30 PM
+
+82
+Devin Booker
+4+ Assists
+PHI @ PHX • 8:00 PM
+
+81
+Devin Vassell
+10+ Points
+DAL @ SAS • 5:00 PM
+
+81
+Jalen Suggs
+4+ Rebounds
+UTA @ ORL • 6:00 PM
+
+81
+Oso Ighodaro
+4+ Rebounds
+PHI @ PHX • 8:00 PM
+
+81
+Ryan Kalkbrenner
+4+ Rebounds
+CHA @ ATL • 6:30 PM
+
+81
+Clint Capela
+4+ Rebounds
+HOU @ OKC • 2:30 PM
+
+81
+Cooper Flagg
+6+ Rebounds
+DAL @ SAS • 5:00 PM
+
+81
+Kevin Durant
+4+ Rebounds
+HOU @ OKC • 2:30 PM
+
+81
+Will Richard
+2+ Assists
+GSW @ LAL • 7:30 PM
+
+81
+Isaac Okoro
+8+ Points
+DEN @ CHI • 7:00 PM
+
+81
+Jaden Ivey
+3+ Rebounds
+DEN @ CHI • 7:00 PM
+
+81
+Jake LaRavia
+8+ Points
+GSW @ LAL • 7:30 PM
+
+81
+Caleb Martin
+3+ Rebounds
+DAL @ SAS • 5:00 PM
+
+80
+Jamal Murray
+6+ Assists
+DEN @ CHI • 7:00 PM
+
+80
+Jalen Johnson
+7+ Assists
+CHA @ ATL • 6:30 PM
+
+80
+Dillon Brooks
+15+ Points
+PHI @ PHX • 8:00 PM
+
+80
+VJ Edgecombe
+12+ Points
+PHI @ PHX • 8:00 PM
+
+80
+James Harden
+18+ Points
+CLE @ SAC • 9:00 PM
+
+80
+Jalen Suggs
+5+ Assists
+UTA @ ORL • 6:00 PM
+
+80
+Tari Eason
+5+ Rebounds
+HOU @ OKC • 2:30 PM
+

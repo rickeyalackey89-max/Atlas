@@ -1,0 +1,4 @@
+# Atlas runtime manifest (directly invoked by run_today.py)
+tools/fetch_prizepicks_today.py
+tools/filter_recommendations_live.py
+tools/rebuild_today_from_any_raw.py

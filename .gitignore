@@ -1,0 +1,42 @@
+# =========================
+# Python
+# =========================
+__pycache__/
+*.pyc
+*.pyo
+
+# Virtual Envs
+.venv/
+venv/
+env/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# =========================
+# Runtime / Generated Data
+# =========================
+data/output/
+data/raw/
+data/board/snapshots/
+data/output.zip
+
+# Keep canonical board files
+!data/board/today.csv
+!data/board/fetch_board.csv
+!data/board/archive/
+
+# Logs
+*.log
+
+# Audit
+.atlas_audit/
+
+# VSCode
+.vscode/
+
+daily to-dos/
+data/gamelogs/
+data/board/prizepicks_raw.json
+data/board/*.orig_backup
