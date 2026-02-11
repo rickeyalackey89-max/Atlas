@@ -108,29 +108,37 @@ def get_player_window(gamelogs: pd.DataFrame, player: str, lookback: int) -> pd.
     """
     Return the most recent `lookback` rows for a player from gamelogs.
 
-    Expects a 'game_date' column in gamelogs.
-    Applies Strategy B name resolution so board names map to gamelog identities.
-
-    If unresolved/ambiguous, returns empty df.
+    Performance notes:
+    - Do NOT copy the full gamelogs dataframe (too expensive in tight loops).
+    - Cache the gamelog player list on `gamelogs.attrs` so we don't rebuild it per call.
+    - Only copy the final small window we return.
     """
     if gamelogs is None or gamelogs.empty:
         return gamelogs.iloc[0:0].copy()
 
-    g = gamelogs.copy()
+    if "player" not in gamelogs.columns:
+        return gamelogs.iloc[0:0].copy()
 
-    if "game_date" in g.columns:
-        g["game_date"] = pd.to_datetime(g["game_date"], errors="coerce")
+    # Cache the unique player list once per gamelogs instance
+    players = gamelogs.attrs.get("_atlas_players_unique")
+    if players is None:
+        players = gamelogs["player"].astype(str).dropna().unique().tolist()
+        gamelogs.attrs["_atlas_players_unique"] = players
 
-    if "player" not in g.columns:
-        return g.iloc[0:0].copy()
-
-    resolved, _method = resolve_player_name(player, g["player"].astype(str).unique().tolist())
+    resolved, _method = resolve_player_name(player, players)
     if not resolved:
-        return g.iloc[0:0].copy()
+        return gamelogs.iloc[0:0].copy()
 
-    gg = g[g["player"] == resolved].copy()
+    # Filter first (cheap), then copy only the subset
+    gg = gamelogs.loc[gamelogs["player"] == resolved]
+
+    if gg.empty:
+        return gg.copy()
+
+    # Convert/sort on the subset only
     if "game_date" in gg.columns:
-        gg = gg.sort_values("game_date", ascending=False)
+        game_date = pd.to_datetime(gg["game_date"], errors="coerce")
+        gg = gg.assign(game_date=game_date).sort_values("game_date", ascending=False)
 
     return gg.head(int(lookback)).copy()
 
