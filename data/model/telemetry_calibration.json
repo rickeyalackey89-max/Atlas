@@ -1,0 +1,27 @@
+{
+	"version": 1,
+	"generated_at": "2026-03-17T19:57:54Z",
+	"k_shrink": 0.96,
+	"standard_under_penalty": 0.98,
+	"mult": {},
+	"mult_rolectx_on": {},
+	"mult_rolectx_off": {
+		"AST|OVER": 1.024107,
+		"AST|UNDER": 1.018254,
+		"FG3M|OVER": 0.973762,
+		"PA|OVER": 1.043443,
+		"PA|UNDER": 1.030769,
+		"PRA|OVER": 1.045516,
+		"PRA|UNDER": 1.032301,
+		"PR|OVER": 1.045316,
+		"PR|UNDER": 1.031818,
+		"PTS|OVER": 1.024261,
+		"PTS|UNDER": 1.031982,
+		"RA|OVER": 1.045169,
+		"RA|UNDER": 1.025,
+		"REB|OVER": 1.033125,
+		"REB|UNDER": 1.024359
+	},
+	"bucket_rules": [],
+	"cap": {"min": 0.0, "max": 1.0}
+}
