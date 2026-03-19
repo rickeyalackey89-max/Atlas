@@ -22,6 +22,7 @@ import numpy as np
 import pandas as pd
 
 from Atlas.engine.api import Engine, EngineOutputs
+from Atlas.core.share_name_key import share_name_key
 
 __all__ = ["NewEngine", "_run_score_board_new"]
 
@@ -43,7 +44,11 @@ def _normalize_iael_for_kernel(iael_df: pd.DataFrame | None) -> pd.DataFrame:
             out = out.rename(columns={cols["player"]: "out_player"})
         else:
             out = out.rename(columns={cols["team"]: "team", cols["status"]: "status", cols["out_player"]: "out_player"})
-        return out[["team", "out_player", "status"]].copy()
+        if "player_key" in cols:
+            out = out.rename(columns={cols["player_key"]: "player_key"})
+        elif "out_player" in out.columns:
+            out["player_key"] = out["out_player"].astype(str).map(share_name_key)
+        return out[["team", "out_player", "player_key", "status"]].copy()
 
     # Normalize from invalidations schema
     if "team_norm" in cols and "player_norm" in cols and "status" in cols:
@@ -54,10 +59,15 @@ def _normalize_iael_for_kernel(iael_df: pd.DataFrame | None) -> pd.DataFrame:
                 cols["status"]: "status",
             }
         ).copy()
+        if "player_key" in cols:
+            out = out.rename(columns={cols["player_key"]: "player_key"})
+        else:
+            out["player_key"] = out["out_player"].astype(str).map(share_name_key)
         out["team"] = out["team"].astype(str).str.upper().str.strip()
         out["out_player"] = out["out_player"].astype(str).str.strip()
+        out["player_key"] = out["player_key"].astype(str).str.strip()
         out["status"] = out["status"].astype(str).str.upper().str.strip()
-        return out[["team", "out_player", "status"]].copy()
+        return out[["team", "out_player", "player_key", "status"]].copy()
 
     return pd.DataFrame()
 

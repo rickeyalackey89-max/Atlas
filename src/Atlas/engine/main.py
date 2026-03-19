@@ -15,6 +15,7 @@ import yaml
 from zoneinfo import ZoneInfo
 
 from ..core.matchup_enricher import enrich_with_matchups
+from Atlas.core.share_name_key import share_name_key
 from Atlas.core.slip_scoring import _score_slip
 from Atlas.core.payout_tables import FLEX_3, FLEX_4, FLEX_5, POWER_MULT
 
@@ -309,6 +310,7 @@ def load_iael_invalidations(
             df["team"] = ""
 
         df["player_norm"] = df["player"].apply(normalize_person_name)
+        df["player_key"] = df["player"].apply(share_name_key)
         df["team_norm"] = df["team"].apply(normalize_team_token)
 
         if "status" in df.columns:
@@ -318,7 +320,7 @@ def load_iael_invalidations(
 
         df = df.dropna(subset=["player_norm"])
         df = df[df["player_norm"] != ""]
-        df = df.drop_duplicates(subset=["team_norm", "player_norm", "status"])
+        df = df.drop_duplicates(subset=["team_norm", "player_key", "status"])
 
         if status_path.exists():
             try:
@@ -329,7 +331,7 @@ def load_iael_invalidations(
         else:
             print(f"[IAEL] Loaded invalidations={len(df)}.")
 
-        return df[["team_norm", "player_norm", "status"]].reset_index(drop=True)
+        return df[["team_norm", "player_norm", "player_key", "status"]].reset_index(drop=True)
 
     except Exception as e:
         print(f"[IAEL][ERROR] Failed to parse invalidations JSON: {e!r}")
