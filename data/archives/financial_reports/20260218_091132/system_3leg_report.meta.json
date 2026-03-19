@@ -1,0 +1,9 @@
+{
+  "product": "system",
+  "n_legs": 3,
+  "rank_key": "ev_mult",
+  "rows_total": 25,
+  "rows_written": 25,
+  "source": "C:\\Users\\rick\\projects\\Atlas\\data\\output\\runs\\20260218_063241\\System\\recommended_3leg.csv",
+  "output_csv": "C:\\Users\\rick\\projects\\Atlas\\data\\archives\\financial_reports\\20260218_091132\\system_3leg_report.csv"
+}

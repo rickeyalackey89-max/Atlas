@@ -1,0 +1,459 @@
+{
+  "report_date": "2026-03-05",
+  "report_label": "02:45PM",
+  "pulled_at_local": "2026-03-05T14:02:03-06:00",
+  "invalidated_players_count": 75,
+  "invalidated_players": [
+    {
+      "team": "BOS",
+      "player": "Jones,Dillon",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "BOS",
+      "player": "McBride,Miles",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "DAL",
+      "player": "BagleyIII,Marvin",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "DAL",
+      "player": "Cisse,Moussa",
+      "status": "DOUBTFUL",
+      "reason": ""
+    },
+    {
+      "team": "DAL",
+      "player": "Irving,Kyrie",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "DAL",
+      "player": "LivelyII,Dereck",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "DAL",
+      "player": "Poulakidas,John",
+      "status": "DOUBTFUL",
+      "reason": ""
+    },
+    {
+      "team": "DAL",
+      "player": "Smith,Tyler",
+      "status": "DOUBTFUL",
+      "reason": ""
+    },
+    {
+      "team": "DEN",
+      "player": "Dickinson,Hunter",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "DEN",
+      "player": "Gordon,Aaron",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "DEN",
+      "player": "Jones,Curtis",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "DEN",
+      "player": "Jones,Spencer",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "DEN",
+      "player": "Murray,Dejounte",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "DEN",
+      "player": "Oduro,Josh",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "DEN",
+      "player": "Watson,Peyton",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "HOU",
+      "player": "Adams,Steven",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "HOU",
+      "player": "MooreJr.,Wendell",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "HOU",
+      "player": "Newton,Tristen",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "HOU",
+      "player": "Smith,Tolu",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "HOU",
+      "player": "Tate,Jae'Sean",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "HOU",
+      "player": "VanVleet,Fred",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "MIA",
+      "player": "Curry,Seth",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "MIA",
+      "player": "Curry,Stephen",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "MIA",
+      "player": "Fontecchio,Simone",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "MIA",
+      "player": "Goldin,Vladislav",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "MIA",
+      "player": "Johnson,Keshad",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "MIA",
+      "player": "Jovic,Nikola",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "MIA",
+      "player": "Moody,Moses",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "MIA",
+      "player": "Porzingis,Kristaps",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "MIA",
+      "player": "Powell,Norman",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "MIA",
+      "player": "Richard,Will",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "MIA",
+      "player": "Rozier,Terry",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "MIN",
+      "player": "Collins,Zach",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "MIN",
+      "player": "Essengue,Noa",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "MIN",
+      "player": "Freeman,Enrique",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "MIN",
+      "player": "Ingles,Joe",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "MIN",
+      "player": "Ivey,Jaden",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "MIN",
+      "player": "Pullin,Zyon",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "MIN",
+      "player": "Simons,Anfernee",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "MIN",
+      "player": "Smith,Jalen",
+      "status": "DOUBTFUL",
+      "reason": ""
+    },
+    {
+      "team": "MIN",
+      "player": "Williams,Patrick",
+      "status": "DOUBTFUL",
+      "reason": ""
+    },
+    {
+      "team": "MIN",
+      "player": "Zikarsky,Rocco",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "ORL",
+      "player": "JacksonJr.,Jaren",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "ORL",
+      "player": "Kessler,Walker",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "ORL",
+      "player": "Markkanen,Lauri",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "ORL",
+      "player": "Nurkic,Jusuf",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "ORL",
+      "player": "Wagner,Franz",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "ORL",
+      "player": "WilliamsJr.,Vince",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "PHX",
+      "player": "Brooks,Dillon",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "PHX",
+      "player": "Goodwin,Jordan",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "PHX",
+      "player": "Williams,Mark",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "SAC",
+      "player": "Cardwell,Dylan",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "SAC",
+      "player": "Hunter,De'Andre",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "SAC",
+      "player": "LaVine,Zach",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "SAC",
+      "player": "Murray,Keegan",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "SAC",
+      "player": "Sabonis,Domantas",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "SAS",
+      "player": "Barnes,Harrison",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "SAS",
+      "player": "Ingram,Harrison",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "SAS",
+      "player": "JonesGarcia,David",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "SAS",
+      "player": "Lawson,A.J.",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "SAS",
+      "player": "Martin,Alijah",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "SAS",
+      "player": "Miller,Emanuel",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "SAS",
+      "player": "Murray-Boyles,Collin",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "SAS",
+      "player": "Plumlee,Mason",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "WAS",
+      "player": "Davis,Anthony",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "WAS",
+      "player": "Etienne,Tyson",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "WAS",
+      "player": "George,Kyshawn",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "WAS",
+      "player": "Johnson,Chaney",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "WAS",
+      "player": "Liddell,E.J.",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "WAS",
+      "player": "Powell,Drake",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "WAS",
+      "player": "Russell,D'Angelo",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "WAS",
+      "player": "Sarr,Alex",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "WAS",
+      "player": "Vukcevic,Tristan",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "WAS",
+      "player": "Watkins,Jamir",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "WAS",
+      "player": "Whitmore,Cam",
+      "status": "OUT",
+      "reason": ""
+    }
+  ],
+  "policy": "Remove OUT/DOUBTFUL from eligibility. PROBABLE allowed but tagged."
+}

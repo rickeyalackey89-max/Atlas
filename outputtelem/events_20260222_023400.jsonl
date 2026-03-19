@@ -1,0 +1,10 @@
+{"authority":"production","event":"run_start","raw_path":null,"run_id":"20260222_023400","scheduled":false,"ts":"2026-02-22T02:34:00Z"}
+{"authority":"production","event":"stage_start","run_id":"20260222_023400","stage":"fetch_raw_only","ts":"2026-02-22T02:34:00Z"}
+{"authority":"production","duration_ms":1784,"error_message":null,"error_type":null,"event":"stage_end","run_id":"20260222_023400","stage":"fetch_raw_only","status":"ok","ts":"2026-02-22T02:34:02Z"}
+{"authority":"production","csv_rows":4314,"event":"artifact_fingerprint","exists":true,"label":"fetch_board.csv","path":"C:\\Users\\rick\\projects\\Atlas\\data\\board\\fetch_board.csv","run_id":"20260222_023400","sha256":"7de0f06028f9531bc47ef7078d80f64149fe0a6d42966d102f9f200453ee0d09","size_bytes":222221,"ts":"2026-02-22T02:34:02Z"}
+{"authority":"production","event":"stage_start","run_id":"20260222_023400","stage":"rebuild_today","ts":"2026-02-22T02:34:02Z"}
+{"authority":"production","duration_ms":527,"error_message":null,"error_type":null,"event":"stage_end","run_id":"20260222_023400","stage":"rebuild_today","status":"ok","ts":"2026-02-22T02:34:02Z"}
+{"authority":"production","csv_rows":3302,"event":"artifact_fingerprint","exists":true,"label":"today.csv","path":"C:\\Users\\rick\\projects\\Atlas\\data\\board\\today.csv","run_id":"20260222_023400","sha256":"94841651a774e15410e6ab14ce367ed7d8351dfc3e38c5780a8768b4117f3e6d","size_bytes":619226,"ts":"2026-02-22T02:34:02Z"}
+{"authority":"production","event":"game_date_selected","game_date":"2026-02-21","run_id":"20260222_023400","source":"local_now","ts":"2026-02-22T02:34:02Z"}
+{"authority":"production","event":"stage_start","run_id":"20260222_023400","stage":"fetch_rotowire_lines","ts":"2026-02-22T02:34:02Z"}
+{"authority":"production","duration_ms":1178,"error_message":"5","error_type":"SystemExit","event":"stage_end","run_id":"20260222_023400","stage":"fetch_rotowire_lines","status":"fail","ts":"2026-02-22T02:34:03Z"}

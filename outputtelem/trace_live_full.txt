@@ -1,0 +1,26 @@
+[INJURY] target_date=2026-03-06
+OK: pulled https://ak-static.cms.nba.com/referee/injury/Injury-Report_2026-03-06_08_45PM.pdf -> 2026-03-06_08_45PM.json (rows=51) invalid=40
+[IAEL][FAIL] TEAM MISMATCHES found: 4. Audit: C:\Users\rick\projects\Atlas\.atlas_audit\diagnostics\iael_team_mismatches_20260306_195921.csv
+  - Simpson, KJ status=OUT iael=DEN roster=CHA (raw_team=DEN)
+  - Anderson, Kyle status=QUESTIONABLE iael=MIN roster=UTA (raw_team=MIN)
+  - Kuminga, Jonathan status=QUESTIONABLE iael=ATL roster=GSW (raw_team=ATL)
+  - Prince, Taurean status=OUT iael=POR roster=MIL (raw_team=POR)
+[IAEL][FATAL] IAEL TEAM MISMATCHES: 4 (see C:\Users\rick\projects\Atlas\.atlas_audit\diagnostics\iael_team_mismatches_20260306_195921.csv)
+[IAEL] Running injury pipeline: C:\Users\rick\projects\Atlas\scripts\dev\adhoc\injury\injury_pull_and_parse.py
+[IAEL] Published latest.json <- 2026-03-06_08_45PM.json
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\Users\rick\AppData\Local\Programs\Python\Python311\Lib\trace.py", line 740, in <module>
+    main()
+  File "C:\Users\rick\AppData\Local\Programs\Python\Python311\Lib\trace.py", line 728, in main
+    t.runctx(code, globs, globs)
+  File "C:\Users\rick\AppData\Local\Programs\Python\Python311\Lib\trace.py", line 450, in runctx
+    exec(cmd, globals, locals)
+  File "C:\Users\rick\projects\Atlas\src\Atlas\cli.py", line 611, in <module>
+    main()
+  File "C:\Users\rick\projects\Atlas\src\Atlas\cli.py", line 528, in main
+    _hard_live_iael_preflight(repo_root)
+  File "C:\Users\rick\projects\Atlas\src\Atlas\cli.py", line 363, in _hard_live_iael_preflight
+    raise RuntimeError(f"Step failed (IAEL_REFRESH). ExitCode={code}")
+RuntimeError: Step failed (IAEL_REFRESH). ExitCode=1

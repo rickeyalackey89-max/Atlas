@@ -1,0 +1,3 @@
+player,old_team,new_team,source
+Ivica Zubac,LAC,IND,fetch_board
+Cameron Payne,,PHI,fetch_board

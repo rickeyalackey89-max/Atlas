@@ -1,0 +1,3 @@
+[DEBUG] Dropped 409 invalid rows from today.csv (blank/unknown stat/line)
+[IAEL] Loaded invalidations=42. Report: 2026-03-05 09:00PM
+[IAEL] Removed 0 legs out of 1235 (statuses=['DOUBTFUL', 'OUT'])

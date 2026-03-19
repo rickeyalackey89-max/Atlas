@@ -1,0 +1,3 @@
+{"authority":"production","event":"run_start","raw_path":null,"run_id":"20260306_030516","scheduled":false,"ts":"2026-03-06T03:05:16Z"}
+{"authority":"production","event":"stage_start","run_id":"20260306_030516","stage":"fetch_raw_only","ts":"2026-03-06T03:05:16Z"}
+{"authority":"production","duration_ms":6623,"error_message":"1","error_type":"SystemExit","event":"stage_end","run_id":"20260306_030516","stage":"fetch_raw_only","status":"fail","ts":"2026-03-06T03:05:22Z"}

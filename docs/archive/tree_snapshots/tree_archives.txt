@@ -1,0 +1,42 @@
+Folder PATH listing for volume Windows
+Volume serial number is 00D0-671A
+C:\USERS\RICK\PROJECTS\ATLAS\DATA\ARCHIVES
++---iael
+|   \---2026
+|       +---2026-02-16
+|       |   +---20260216_185812Z
+|       |   |       iael_manifest.json
+|       |   |       injury_invalidations.json
+|       |   |       status.json
+|       |   |       
+|       |   +---20260216_193149Z
+|       |   |       iael_manifest.json
+|       |   |       injury_invalidations.json
+|       |   |       status.json
+|       |   |       
+|       |   \---20260216_195008Z
+|       |           iael_manifest.json
+|       |           injury_invalidations.json
+|       |           status.json
+|       |           
+|       +---daily
+|       \---weekly
+|               week2_8-2_15.zip
+|               
+\---iael_seed
+    \---2026
+        +---20260211_063607
+        |       injury_invalidations_latest.json
+        |       seed_meta.json
+        |       status_latest.json
+        |       
+        +---20260216_133149
+        |       injury_invalidations_latest.json
+        |       seed_meta.json
+        |       status_latest.json
+        |       
+        \---20260216_135008
+                injury_invalidations_latest.json
+                seed_meta.json
+                status_latest.json
+                

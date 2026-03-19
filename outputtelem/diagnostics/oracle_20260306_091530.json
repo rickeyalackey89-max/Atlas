@@ -1,0 +1,2753 @@
+{
+  "run_dir": "data\\output\\runs\\20260306_091530",
+  "iael_audit": {
+    "iael_path": "C:\\Users\\rick\\projects\\Atlas\\data\\output\\injury\\normalized\\latest.json",
+    "cutoff_p_adj": 0.7,
+    "player_out_frac_threshold": 0.08,
+    "meta": {
+      "report_label": "10:00AM",
+      "pulled_at_local": "2026-03-06T09:11:27-06:00",
+      "source_url": "https://ak-static.cms.nba.com/referee/injury/Injury-Report_2026-03-06_10_00AM.pdf",
+      "report_date": "2026-03-06"
+    },
+    "n_teams_with_hard_invalids": 1,
+    "n_teams_with_impact_outs": 1,
+    "iael_raw_team_sample": [
+      "BOS",
+      "BOS",
+      "CHA",
+      "CHA",
+      "CHA",
+      "CHA",
+      "CHA"
+    ],
+    "teams_with_hard_invalids_abbrev": [
+      "CHA"
+    ],
+    "teams_with_impact_outs_abbrev": [
+      "CHA"
+    ],
+    "eligible_players_count": 1,
+    "cols": {
+      "team": "team",
+      "outs_used": "role_ctx_outs_used",
+      "p_adj": "p_adj",
+      "p_role": "p_role",
+      "player": "player",
+      "stat": "stat",
+      "tier": "tier",
+      "direction": "direction"
+    },
+    "team_coverage": [
+      {
+        "team": "CHA",
+        "n_legs": 252,
+        "n_outs_used_gt0": 186,
+        "share_outs_used_gt0": 0.7380952380952381,
+        "n_iael_eligible_out_players": 1
+      }
+    ],
+    "possible_misses_count": 0,
+    "possible_misses_top50": []
+  },
+  "legs_rows": 3813,
+  "p_cal": {
+    "min": 0.03,
+    "p01": 0.03,
+    "p05": 0.06226193084332312,
+    "p25": 0.195930406959304,
+    "med": 0.3412927037852744,
+    "p75": 0.4860332419677466,
+    "p95": 0.6667282237745611,
+    "max": 0.8933606639336067
+  },
+  "p_adj": {
+    "min": 0.03,
+    "p01": 0.03,
+    "p05": 0.06226193084332312,
+    "p25": 0.1943013936821928,
+    "med": 0.3386277957066889,
+    "p75": 0.4811874469331729,
+    "p95": 0.6588768268896198,
+    "max": 0.8838405962891367
+  },
+  "p_for_cal": {
+    "min": 0.03,
+    "p01": 0.03,
+    "p05": 0.06226193084332312,
+    "p25": 0.195930406959304,
+    "med": 0.3412927037852744,
+    "p75": 0.4860332419677466,
+    "p95": 0.6667282237745611,
+    "max": 0.8933606639336067
+  },
+  "games_used": {
+    "min": 0,
+    "p10": 50,
+    "med": 50,
+    "p90": 50,
+    "max": 50
+  },
+  "prob_audit": {
+    "overall": {
+      "p_role": {
+        "min": 4.999500049995001e-05,
+        "p01": 4.999500049995001e-05,
+        "p05": 0.078942105789421,
+        "p25": 0.2502249775022497,
+        "med": 0.4336066393360664,
+        "p75": 0.6018898110188982,
+        "p95": 0.7996900309969002,
+        "max": 0.9999500049995,
+        "floor_share": 0.0,
+        "cap_share": 0.0
+      },
+      "p_adj": {
+        "min": 0.03,
+        "p01": 0.03,
+        "p05": 0.06226193084332312,
+        "p25": 0.1943013936821928,
+        "med": 0.3386277957066889,
+        "p75": 0.4811874469331729,
+        "p95": 0.6588768268896198,
+        "max": 0.8838405962891367,
+        "floor_share": 0.0,
+        "cap_share": 0.0
+      },
+      "p_cal": {
+        "min": 0.03,
+        "p01": 0.03,
+        "p05": 0.06226193084332312,
+        "p25": 0.195930406959304,
+        "med": 0.3412927037852744,
+        "p75": 0.4860332419677466,
+        "p95": 0.6667282237745611,
+        "max": 0.8933606639336067,
+        "floor_share": 0.0,
+        "cap_share": 0.0
+      },
+      "games_used_lt5_share": 0.024914765276685024,
+      "over_share": 0.8680828743771308,
+      "under_share": 0.13191712562286914
+    },
+    "by_tier": {
+      "DEMON": {
+        "rows": 1784,
+        "p_role": {
+          "min": 4.999500049995001e-05,
+          "p01": 4.999500049995001e-05,
+          "p05": 0.04972002799720023,
+          "p25": 0.15165983401659827,
+          "med": 0.25297470252974696,
+          "p75": 0.3625637436256375,
+          "p95": 0.513848615138486,
+          "max": 0.8511648835116489,
+          "floor_share": 0.0,
+          "cap_share": 0.0
+        },
+        "p_adj": {
+          "min": 0.03,
+          "p01": 0.03,
+          "p05": 0.039272747685038245,
+          "p25": 0.11992648522117574,
+          "med": 0.2001208157381632,
+          "p75": 0.29429749847721004,
+          "p95": 0.4203227262931007,
+          "max": 0.7119353959431481,
+          "floor_share": 0.0,
+          "cap_share": 0.0
+        },
+        "p_cal": {
+          "min": 0.03,
+          "p01": 0.03,
+          "p05": 0.039272747685038245,
+          "p25": 0.12079290339586332,
+          "med": 0.2028148997587094,
+          "p75": 0.29684118359329387,
+          "p95": 0.43350539105443336,
+          "max": 0.7119353959431481,
+          "floor_share": 0.0,
+          "cap_share": 0.0
+        },
+        "games_used_lt5_share": 0.02522421524663677,
+        "over_share": 1.0,
+        "under_share": 0.0,
+        "delta_p_adj_minus_p_role": {
+          "min": -0.4440099341777341,
+          "p01": -0.24758724166352925,
+          "p05": -0.14425261275594528,
+          "p25": -0.06710437685979505,
+          "med": -0.039668208417792034,
+          "p75": -0.021791968446597365,
+          "p95": -0.007112242007647168,
+          "max": 0.029950004999500048
+        }
+      },
+      "GOBLIN": {
+        "rows": 1023,
+        "p_role": {
+          "min": 4.999500049995001e-05,
+          "p01": 4.999500049995001e-05,
+          "p05": 0.34988501149885004,
+          "p25": 0.5820917908209179,
+          "med": 0.678082191780822,
+          "p75": 0.7574242575742426,
+          "p95": 0.8716128387161284,
+          "max": 0.9869513048695132,
+          "floor_share": 0.0,
+          "cap_share": 0.0
+        },
+        "p_adj": {
+          "min": 0.03,
+          "p01": 0.03,
+          "p05": 0.2764178179674279,
+          "p25": 0.4478238641251069,
+          "med": 0.5495284584728655,
+          "p75": 0.6270213347706219,
+          "p95": 0.7260607203258769,
+          "max": 0.8838405962891367,
+          "floor_share": 0.0,
+          "cap_share": 0.0
+        },
+        "p_cal": {
+          "min": 0.03,
+          "p01": 0.03,
+          "p05": 0.2764178179674279,
+          "p25": 0.44952646562621934,
+          "med": 0.5539439748061822,
+          "p75": 0.6353439589304171,
+          "p95": 0.7455721246315515,
+          "max": 0.8933606639336067,
+          "floor_share": 0.0,
+          "cap_share": 0.0
+        },
+        "games_used_lt5_share": 0.021505376344086023,
+        "over_share": 1.0,
+        "under_share": 0.0,
+        "delta_p_adj_minus_p_role": {
+          "min": -0.505401968542162,
+          "p01": -0.43103467294706715,
+          "p05": -0.3130263515983361,
+          "p25": -0.15998150158653193,
+          "med": -0.10585397573374211,
+          "p75": -0.07765816454391655,
+          "p95": -0.04409390382844131,
+          "max": 0.029950004999500048
+        }
+      },
+      "STANDARD": {
+        "rows": 1006,
+        "p_role": {
+          "min": 4.999500049995001e-05,
+          "p01": 0.10378462153784615,
+          "p05": 0.25469953004699525,
+          "p25": 0.4253074692530746,
+          "med": 0.5,
+          "p75": 0.5746925307469253,
+          "p95": 0.7453004699530047,
+          "max": 0.9999500049995,
+          "floor_share": 0.0,
+          "cap_share": 0.0
+        },
+        "p_adj": {
+          "min": 0.03,
+          "p01": 0.07984047149929432,
+          "p05": 0.18059670785067938,
+          "p25": 0.31511090214045073,
+          "med": 0.40685097815309357,
+          "p75": 0.469781662795409,
+          "p95": 0.5799771786235921,
+          "max": 0.8112206962242474,
+          "floor_share": 0.0,
+          "cap_share": 0.0
+        },
+        "p_cal": {
+          "min": 0.03,
+          "p01": 0.07984047149929432,
+          "p05": 0.18059670785067938,
+          "p25": 0.31683404398571485,
+          "med": 0.4110475905912928,
+          "p75": 0.47662381082747646,
+          "p95": 0.6062527898577028,
+          "max": 0.8112206962242474,
+          "floor_share": 0.0,
+          "cap_share": 0.0
+        },
+        "games_used_lt5_share": 0.027833001988071572,
+        "over_share": 0.5,
+        "under_share": 0.5,
+        "delta_p_adj_minus_p_role": {
+          "min": -0.5216236530683618,
+          "p01": -0.3331574099355926,
+          "p05": -0.25747099407790075,
+          "p25": -0.12770467505009347,
+          "med": -0.08713673339062133,
+          "p75": -0.059145249041435644,
+          "p95": -0.03386982788112883,
+          "max": 0.029950004999500048
+        }
+      }
+    }
+  },
+  "role_ctx_audit": {
+    "role_ctx_mult": {
+      "min": 1.0,
+      "p01": 1.0,
+      "p05": 1.0,
+      "p25": 1.0,
+      "med": 1.0,
+      "p75": 1.0,
+      "p95": 1.0,
+      "max": 1.186150850314832,
+      "std": 0.028203895936642333,
+      "iqr": 0.0
+    },
+    "extremes_top10": [
+      {
+        "prop_key": "Brandon Miller|PR|OVER|39.5|DEMON",
+        "player": "Brandon Miller",
+        "stat": "PR",
+        "tier": "DEMON",
+        "direction": "OVER",
+        "role_ctx_mult": 1.186150850314832,
+        "role_ctx_outs_used": 4,
+        "p_adj": 0.1124917370189615,
+        "p_role": 0.144935506449355,
+        "p_cal": 0.144935506449355
+      },
+      {
+        "prop_key": "Brandon Miller|PR|UNDER|26.5|STANDARD",
+        "player": "Brandon Miller",
+        "stat": "PR",
+        "tier": "STANDARD",
+        "direction": "UNDER",
+        "role_ctx_mult": 1.186150850314832,
+        "role_ctx_outs_used": 4,
+        "p_adj": 0.3323531312754071,
+        "p_role": 0.4282071792820718,
+        "p_cal": 0.4282071792820718
+      },
+      {
+        "prop_key": "Brandon Miller|PRA|OVER|24.5|GOBLIN",
+        "player": "Brandon Miller",
+        "stat": "PRA",
+        "tier": "GOBLIN",
+        "direction": "OVER",
+        "role_ctx_mult": 1.186150850314832,
+        "role_ctx_outs_used": 4,
+        "p_adj": 0.613834697448414,
+        "p_role": 0.7908709129087091,
+        "p_cal": 0.7908709129087091
+      },
+      {
+        "prop_key": "Brandon Miller|PRA|OVER|27.5|GOBLIN",
+        "player": "Brandon Miller",
+        "stat": "PRA",
+        "tier": "GOBLIN",
+        "direction": "OVER",
+        "role_ctx_mult": 1.186150850314832,
+        "role_ctx_outs_used": 4,
+        "p_adj": 0.5312605627894453,
+        "p_role": 0.6844815518448155,
+        "p_cal": 0.6844815518448155
+      },
+      {
+        "prop_key": "Brandon Miller|PRA|OVER|28.5|GOBLIN",
+        "player": "Brandon Miller",
+        "stat": "PRA",
+        "tier": "GOBLIN",
+        "direction": "OVER",
+        "role_ctx_mult": 1.186150850314832,
+        "role_ctx_outs_used": 4,
+        "p_adj": 0.5040204112243156,
+        "p_role": 0.6493850614938507,
+        "p_cal": 0.6493850614938507
+      },
+      {
+        "prop_key": "Brandon Miller|PRA|OVER|30.0|STANDARD",
+        "player": "Brandon Miller",
+        "stat": "PRA",
+        "tier": "STANDARD",
+        "direction": "OVER",
+        "role_ctx_mult": 1.186150850314832,
+        "role_ctx_outs_used": 4,
+        "p_adj": 0.4594738385793456,
+        "p_role": 0.591990800919908,
+        "p_cal": 0.591990800919908
+      },
+      {
+        "prop_key": "Brandon Miller|PRA|OVER|33.5|DEMON",
+        "player": "Brandon Miller",
+        "stat": "PRA",
+        "tier": "DEMON",
+        "direction": "OVER",
+        "role_ctx_mult": 1.186150850314832,
+        "role_ctx_outs_used": 4,
+        "p_adj": 0.355324883022639,
+        "p_role": 0.4578042195780422,
+        "p_cal": 0.4578042195780422
+      },
+      {
+        "prop_key": "Brandon Miller|PRA|OVER|34.5|DEMON",
+        "player": "Brandon Miller",
+        "stat": "PRA",
+        "tier": "DEMON",
+        "direction": "OVER",
+        "role_ctx_mult": 1.186150850314832,
+        "role_ctx_outs_used": 4,
+        "p_adj": 0.3273862660327624,
+        "p_role": 0.4218078192180782,
+        "p_cal": 0.4218078192180782
+      },
+      {
+        "prop_key": "Brandon Miller|PRA|OVER|39.5|DEMON",
+        "player": "Brandon Miller",
+        "stat": "PRA",
+        "tier": "DEMON",
+        "direction": "OVER",
+        "role_ctx_mult": 1.186150850314832,
+        "role_ctx_outs_used": 4,
+        "p_adj": 0.2020505259253993,
+        "p_role": 0.2603239676032396,
+        "p_cal": 0.2603239676032396
+      },
+      {
+        "prop_key": "Brandon Miller|PRA|UNDER|30.0|STANDARD",
+        "player": "Brandon Miller",
+        "stat": "PRA",
+        "tier": "STANDARD",
+        "direction": "UNDER",
+        "role_ctx_mult": 1.186150850314832,
+        "role_ctx_outs_used": 4,
+        "p_adj": 0.3166764628533097,
+        "p_role": 0.408009199080092,
+        "p_cal": 0.408009199080092
+      }
+    ],
+    "group_medians": {
+      "outs_used_gt0": {
+        "n": 186,
+        "role_ctx_mult_median": 1.1228982195466224,
+        "p_role_median": 0.4607039296070393,
+        "p_adj_median": 0.37135078415710987,
+        "delta_p_adj_minus_p_role_median": -0.08478802551174464
+      },
+      "outs_used_eq0": {
+        "n": 3627,
+        "role_ctx_mult_median": 1.0,
+        "p_role_median": 0.4318068193180682,
+        "p_adj_median": 0.3360125462311925,
+        "delta_p_adj_minus_p_role_median": -0.06783086806402741
+      }
+    },
+    "corr_role_mult_vs_delta_p": -0.01833743937490648,
+    "outs_ctx_p_adj_ge_0.85_share": 0.0,
+    "outs_ctx_p_adj_ge_0.90_share": 0.0,
+    "outs_ctx_p_adj_ge_0.95_share": 0.0,
+    "outs_ctx_top10_by_p_adj": [
+      {
+        "prop_key": "Kon Knueppel|PTS|OVER|14.5|GOBLIN",
+        "player": "Kon Knueppel",
+        "stat": "PTS",
+        "tier": "GOBLIN",
+        "direction": "OVER",
+        "role_ctx_outs_used": 2,
+        "role_ctx_mult": 1.1727273345353095,
+        "p_role": 0.8718628137186282,
+        "p_adj": 0.7547630768928331,
+        "p_cal": 0.8718628137186282
+      },
+      {
+        "prop_key": "Brandon Miller|PTS|OVER|14.5|GOBLIN",
+        "player": "Brandon Miller",
+        "stat": "PTS",
+        "tier": "GOBLIN",
+        "direction": "OVER",
+        "role_ctx_outs_used": 2,
+        "role_ctx_mult": 1.124214601284995,
+        "p_role": 0.852964703529647,
+        "p_adj": 0.7384031684654295,
+        "p_cal": 0.852964703529647
+      },
+      {
+        "prop_key": "Miles Bridges|PTS|OVER|11.5|GOBLIN",
+        "player": "Miles Bridges",
+        "stat": "PTS",
+        "tier": "GOBLIN",
+        "direction": "OVER",
+        "role_ctx_outs_used": 1,
+        "role_ctx_mult": 1.0321379620909703,
+        "p_role": 0.8201679832016798,
+        "p_adj": 0.7100113697131101,
+        "p_cal": 0.8201679832016798
+      },
+      {
+        "prop_key": "Miles Bridges|PR|OVER|14.5|GOBLIN",
+        "player": "Miles Bridges",
+        "stat": "PR",
+        "tier": "GOBLIN",
+        "direction": "OVER",
+        "role_ctx_outs_used": 1,
+        "role_ctx_mult": 1.0321379620909703,
+        "p_role": 0.8933606639336067,
+        "p_adj": 0.693382148600146,
+        "p_cal": 0.8933606639336067
+      },
+      {
+        "prop_key": "Kon Knueppel|PR|OVER|19.5|GOBLIN",
+        "player": "Kon Knueppel",
+        "stat": "PR",
+        "tier": "GOBLIN",
+        "direction": "OVER",
+        "role_ctx_outs_used": 4,
+        "role_ctx_mult": 1.1827971455490176,
+        "p_role": 0.8846615338466154,
+        "p_adj": 0.6866303161609258,
+        "p_cal": 0.8846615338466154
+      },
+      {
+        "prop_key": "Kon Knueppel|REB|OVER|3.5|GOBLIN",
+        "player": "Kon Knueppel",
+        "stat": "REB",
+        "tier": "GOBLIN",
+        "direction": "OVER",
+        "role_ctx_outs_used": 2,
+        "role_ctx_mult": 1.1125241038290183,
+        "p_role": 0.7841715828417158,
+        "p_adj": 0.6788496393751985,
+        "p_cal": 0.7841715828417158
+      },
+      {
+        "prop_key": "Miles Bridges|PRA|OVER|19.5|GOBLIN",
+        "player": "Miles Bridges",
+        "stat": "PRA",
+        "tier": "GOBLIN",
+        "direction": "OVER",
+        "role_ctx_outs_used": 2,
+        "role_ctx_mult": 1.1228982195466224,
+        "p_role": 0.8680631936806319,
+        "p_adj": 0.6737475094378159,
+        "p_cal": 0.8680631936806319
+      },
+      {
+        "prop_key": "Kon Knueppel|FG3M|OVER|2.5|GOBLIN",
+        "player": "Kon Knueppel",
+        "stat": "FG3M",
+        "tier": "GOBLIN",
+        "direction": "OVER",
+        "role_ctx_outs_used": 2,
+        "role_ctx_mult": 1.1727273345353095,
+        "p_role": 0.7734726527347265,
+        "p_adj": 0.6695876806358748,
+        "p_cal": 0.7734726527347265
+      },
+      {
+        "prop_key": "Miles Bridges|PTS|OVER|12.5|GOBLIN",
+        "player": "Miles Bridges",
+        "stat": "PTS",
+        "tier": "GOBLIN",
+        "direction": "OVER",
+        "role_ctx_outs_used": 1,
+        "role_ctx_mult": 1.0321379620909703,
+        "p_role": 0.7712728727127287,
+        "p_adj": 0.6676833526707802,
+        "p_cal": 0.7712728727127287
+      },
+      {
+        "prop_key": "Miles Bridges|PA|OVER|14.5|GOBLIN",
+        "player": "Miles Bridges",
+        "stat": "PA",
+        "tier": "GOBLIN",
+        "direction": "OVER",
+        "role_ctx_outs_used": 2,
+        "role_ctx_mult": 1.1228982195466224,
+        "p_role": 0.8552644735526448,
+        "p_adj": 0.6638137789525266,
+        "p_cal": 0.8552644735526448
+      }
+    ],
+    "outs_ctx_top10_by_delta_p_adj_minus_p_role": [
+      {
+        "prop_key": "LaMelo Ball|PTS|OVER|29.5|DEMON",
+        "player": "LaMelo Ball",
+        "stat": "PTS",
+        "tier": "DEMON",
+        "direction": "OVER",
+        "role_ctx_outs_used": 1,
+        "role_ctx_mult": 1.0165373212263995,
+        "p_role": 0.0897410258974102,
+        "p_adj": 0.0776879249396545,
+        "p_cal": 0.0897410258974102
+      },
+      {
+        "prop_key": "Moussa Diabat\u00e9|AST|OVER|3.5|DEMON",
+        "player": "Moussa Diabat\u00e9",
+        "stat": "AST",
+        "tier": "DEMON",
+        "direction": "OVER",
+        "role_ctx_outs_used": 1,
+        "role_ctx_mult": 1.092802727124642,
+        "p_role": 0.101939806019398,
+        "p_adj": 0.0882482891097245,
+        "p_cal": 0.101939806019398
+      },
+      {
+        "prop_key": "Moussa Diabat\u00e9|REB|OVER|15.5|DEMON",
+        "player": "Moussa Diabat\u00e9",
+        "stat": "REB",
+        "tier": "DEMON",
+        "direction": "OVER",
+        "role_ctx_outs_used": 1,
+        "role_ctx_mult": 1.1527636707438105,
+        "p_role": 0.1070392960703929,
+        "p_adj": 0.092662867574262,
+        "p_cal": 0.1070392960703929
+      },
+      {
+        "prop_key": "Brandon Miller|FG3M|OVER|5.5|DEMON",
+        "player": "Brandon Miller",
+        "stat": "FG3M",
+        "tier": "DEMON",
+        "direction": "OVER",
+        "role_ctx_outs_used": 2,
+        "role_ctx_mult": 1.124214601284995,
+        "p_role": 0.1462353764623537,
+        "p_adj": 0.1265945294977657,
+        "p_cal": 0.1462353764623537
+      },
+      {
+        "prop_key": "LaMelo Ball|REB|OVER|7.5|DEMON",
+        "player": "LaMelo Ball",
+        "stat": "REB",
+        "tier": "DEMON",
+        "direction": "OVER",
+        "role_ctx_outs_used": 1,
+        "role_ctx_mult": 1.063931047690088,
+        "p_role": 0.1566343365663433,
+        "p_adj": 0.1355968071509402,
+        "p_cal": 0.1566343365663433
+      },
+      {
+        "prop_key": "Miles Bridges|PTS|OVER|24.5|DEMON",
+        "player": "Miles Bridges",
+        "stat": "PTS",
+        "tier": "DEMON",
+        "direction": "OVER",
+        "role_ctx_outs_used": 1,
+        "role_ctx_mult": 1.0321379620909703,
+        "p_role": 0.1634336566343365,
+        "p_adj": 0.1414829117703235,
+        "p_cal": 0.1634336566343365
+      },
+      {
+        "prop_key": "LaMelo Ball|FG3M|OVER|5.5|DEMON",
+        "player": "LaMelo Ball",
+        "stat": "FG3M",
+        "tier": "DEMON",
+        "direction": "OVER",
+        "role_ctx_outs_used": 1,
+        "role_ctx_mult": 1.0165373212263995,
+        "p_role": 0.1803319668033196,
+        "p_adj": 0.1561116129567319,
+        "p_cal": 0.1803319668033196
+      },
+      {
+        "prop_key": "Brandon Miller|REB|OVER|7.5|DEMON",
+        "player": "Brandon Miller",
+        "stat": "REB",
+        "tier": "DEMON",
+        "direction": "OVER",
+        "role_ctx_outs_used": 2,
+        "role_ctx_mult": 1.1770955449320764,
+        "p_role": 0.1950304969503049,
+        "p_adj": 0.1688359861780458,
+        "p_cal": 0.1950304969503049
+      },
+      {
+        "prop_key": "Moussa Diabat\u00e9|REB|OVER|13.5|DEMON",
+        "player": "Moussa Diabat\u00e9",
+        "stat": "REB",
+        "tier": "DEMON",
+        "direction": "OVER",
+        "role_ctx_outs_used": 1,
+        "role_ctx_mult": 1.1527636707438105,
+        "p_role": 0.1956304369563043,
+        "p_adj": 0.1693553483503443,
+        "p_cal": 0.1956304369563043
+      },
+      {
+        "prop_key": "Miles Bridges|FG3M|OVER|3.5|DEMON",
+        "player": "Miles Bridges",
+        "stat": "FG3M",
+        "tier": "DEMON",
+        "direction": "OVER",
+        "role_ctx_outs_used": 1,
+        "role_ctx_mult": 1.0321379620909703,
+        "p_role": 0.195930406959304,
+        "p_adj": 0.1696150294364936,
+        "p_cal": 0.195930406959304
+      }
+    ]
+  },
+  "slip_files": [
+    "recommended_3leg.csv",
+    "recommended_3leg_winprob.csv",
+    "recommended_4leg.csv",
+    "recommended_4leg_winprob.csv",
+    "recommended_5leg.csv",
+    "recommended_5leg_winprob.csv",
+    "System\\recommended_3leg.csv",
+    "System\\recommended_3leg_winprob.csv",
+    "System\\recommended_4leg.csv",
+    "System\\recommended_4leg_winprob.csv",
+    "System\\recommended_5leg.csv",
+    "System\\recommended_5leg_winprob.csv",
+    "Windfall\\recommended_3leg.csv",
+    "Windfall\\recommended_3leg_winprob.csv",
+    "Windfall\\recommended_4leg.csv",
+    "Windfall\\recommended_4leg_winprob.csv",
+    "Windfall\\recommended_5leg.csv",
+    "Windfall\\recommended_5leg_winprob.csv"
+  ],
+  "slips": [
+    {
+      "file": "recommended_3leg.csv",
+      "rows": 15,
+      "hit_prob": {
+        "min": 0.128377143542157,
+        "p01": 0.13234593199972172,
+        "p05": 0.1482210858299805,
+        "p25": 0.18105285943914318,
+        "med": 0.2372605035194035,
+        "p75": 0.33026234478911265,
+        "p95": 0.3658677207872162,
+        "max": 0.4153003283202037
+      },
+      "ev": {
+        "min": 1.239963889053947,
+        "p01": 1.2603202570245653,
+        "p05": 1.3417457289070385,
+        "p25": 1.5026730211797492,
+        "med": 2.055793659871035,
+        "p75": 2.543799530245788,
+        "p95": 2.6907759240611853,
+        "max": 2.8142299260731005
+      },
+      "payout_mult": {
+        "min": 6.0,
+        "p01": 6.0,
+        "p05": 6.0,
+        "p25": 6.0,
+        "med": 6.0,
+        "p75": 6.0,
+        "p95": 6.0,
+        "max": 6.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "payout_mult_eff": {
+        "min": 6.776372986402459,
+        "p01": 6.868254477060774,
+        "p05": 7.235780439694038,
+        "p25": 7.693480512505035,
+        "med": 8.117905204480646,
+        "p75": 8.510418732628125,
+        "p95": 9.085234321896742,
+        "max": 9.65875898809637,
+        "std": 0.6673769631589969,
+        "iqr": 0.8169382201230899
+      },
+      "kernel_mult": {
+        "min": 1.129395497733743,
+        "p01": 1.1447090795101291,
+        "p05": 1.205963406615673,
+        "p25": 1.2822467520841725,
+        "med": 1.3529842007467745,
+        "p75": 1.4184031221046873,
+        "p95": 1.5142057203161237,
+        "max": 1.6097931646827284,
+        "std": 0.11122949385983281,
+        "iqr": 0.13615637002051484
+      },
+      "tier_mix_legs": {
+        "STANDARD": 30,
+        "GOBLIN": 15,
+        "DEMON": 0,
+        "OTHER": 0
+      },
+      "player_exposure": {
+        "players": 22,
+        "max": 4,
+        "top10": [
+          {
+            "player": "Aaron Gordon",
+            "count": 4
+          },
+          {
+            "player": "Brandon Miller",
+            "count": 4
+          },
+          {
+            "player": "Dejounte Murray",
+            "count": 4
+          },
+          {
+            "player": "Kon Knueppel",
+            "count": 4
+          },
+          {
+            "player": "LaMelo Ball",
+            "count": 4
+          },
+          {
+            "player": "Miles Bridges",
+            "count": 4
+          },
+          {
+            "player": "Moussa Diabat\u00e9",
+            "count": 4
+          },
+          {
+            "player": "Bam Adebayo",
+            "count": 3
+          },
+          {
+            "player": "Clint Capela",
+            "count": 1
+          },
+          {
+            "player": "De'Aaron Fox",
+            "count": 1
+          }
+        ]
+      }
+    },
+    {
+      "file": "recommended_3leg_winprob.csv",
+      "rows": 15,
+      "hit_prob": {
+        "min": 0.337490772479916,
+        "p01": 0.33827311071961463,
+        "p05": 0.3414024636784091,
+        "p25": 0.37260886494273393,
+        "med": 0.4192098674619579,
+        "p75": 0.44631957673091355,
+        "p95": 0.46617789586651215,
+        "max": 0.471870130862911
+      },
+      "ev": {
+        "min": 2.024944634879496,
+        "p01": 2.029638664317688,
+        "p05": 2.0484147820704552,
+        "p25": 2.2356531896564036,
+        "med": 2.5152592047717475,
+        "p75": 2.6779174603854816,
+        "p95": 2.797067375199073,
+        "max": 2.8312207851774662
+      },
+      "payout_mult": {
+        "min": 6.0,
+        "p01": 6.0,
+        "p05": 6.0,
+        "p25": 6.0,
+        "med": 6.0,
+        "p75": 6.0,
+        "p95": 6.0,
+        "max": 6.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "payout_mult_eff": {
+        "min": 6.0,
+        "p01": 6.0,
+        "p05": 6.0,
+        "p25": 6.0,
+        "med": 6.0,
+        "p75": 6.0,
+        "p95": 6.0,
+        "max": 6.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "kernel_mult": {
+        "min": 1.0,
+        "p01": 1.0,
+        "p05": 1.0,
+        "p25": 1.0,
+        "med": 1.0,
+        "p75": 1.0,
+        "p95": 1.0,
+        "max": 1.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "tier_mix_legs": {
+        "STANDARD": 30,
+        "GOBLIN": 15,
+        "DEMON": 0,
+        "OTHER": 0
+      },
+      "player_exposure": {
+        "players": 17,
+        "max": 4,
+        "top10": [
+          {
+            "player": "Aaron Gordon",
+            "count": 4
+          },
+          {
+            "player": "Coby White",
+            "count": 4
+          },
+          {
+            "player": "Dejounte Murray",
+            "count": 4
+          },
+          {
+            "player": "Jalen Green",
+            "count": 4
+          },
+          {
+            "player": "Kon Knueppel",
+            "count": 4
+          },
+          {
+            "player": "Miles Bridges",
+            "count": 4
+          },
+          {
+            "player": "Oso Ighodaro",
+            "count": 4
+          },
+          {
+            "player": "Brandon Miller",
+            "count": 3
+          },
+          {
+            "player": "Jaxson Hayes",
+            "count": 3
+          },
+          {
+            "player": "Reed Sheppard",
+            "count": 3
+          }
+        ]
+      }
+    },
+    {
+      "file": "recommended_4leg.csv",
+      "rows": 15,
+      "hit_prob": {
+        "min": 0.091700724282541,
+        "p01": 0.09413123588487794,
+        "p05": 0.10385328229422572,
+        "p25": 0.1754836336148927,
+        "med": 0.1918952827983288,
+        "p75": 0.2098664865125074,
+        "p95": 0.2817323667282134,
+        "max": 0.3012481276337811
+      },
+      "ev": {
+        "min": 0.990209008913254,
+        "p01": 1.0035028278251208,
+        "p05": 1.0566781034725878,
+        "p25": 1.4132792359660662,
+        "med": 1.6726499263264478,
+        "p75": 2.0049420591275346,
+        "p95": 2.3794093924566515,
+        "max": 2.4597720405209484
+      },
+      "payout_mult": {
+        "min": 10.0,
+        "p01": 10.0,
+        "p05": 10.0,
+        "p25": 10.0,
+        "med": 10.0,
+        "p75": 10.0,
+        "p95": 10.0,
+        "max": 10.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "payout_mult_eff": {
+        "min": 6.626683207196208,
+        "p01": 6.736921240459964,
+        "p05": 7.1778733735149896,
+        "p25": 8.004403880931202,
+        "med": 9.578268428748638,
+        "p75": 9.816850807586672,
+        "p95": 10.462451285486503,
+        "max": 10.79826813430939,
+        "std": 1.1812209282584742,
+        "iqr": 1.8124469266554701
+      },
+      "kernel_mult": {
+        "min": 0.6626683207196208,
+        "p01": 0.6736921240459964,
+        "p05": 0.7177873373514989,
+        "p25": 0.8004403880931201,
+        "med": 0.957826842874864,
+        "p75": 0.9816850807586671,
+        "p95": 1.0462451285486503,
+        "max": 1.079826813430939,
+        "std": 0.11812209282584744,
+        "iqr": 0.181244692665547
+      },
+      "tier_mix_legs": {
+        "STANDARD": 30,
+        "GOBLIN": 30,
+        "DEMON": 0,
+        "OTHER": 0
+      },
+      "player_exposure": {
+        "players": 32,
+        "max": 4,
+        "top10": [
+          {
+            "player": "Aaron Gordon",
+            "count": 4
+          },
+          {
+            "player": "Brandon Miller",
+            "count": 4
+          },
+          {
+            "player": "Dejounte Murray",
+            "count": 4
+          },
+          {
+            "player": "Kon Knueppel",
+            "count": 4
+          },
+          {
+            "player": "LaMelo Ball",
+            "count": 4
+          },
+          {
+            "player": "Miles Bridges",
+            "count": 4
+          },
+          {
+            "player": "Moussa Diabat\u00e9",
+            "count": 4
+          },
+          {
+            "player": "Coby White",
+            "count": 3
+          },
+          {
+            "player": "Derik Queen",
+            "count": 3
+          },
+          {
+            "player": "Andrew Wiggins",
+            "count": 2
+          }
+        ]
+      }
+    },
+    {
+      "file": "recommended_4leg_winprob.csv",
+      "rows": 15,
+      "hit_prob": {
+        "min": 0.2431693954527492,
+        "p01": 0.24338870780071367,
+        "p05": 0.2442659571925715,
+        "p25": 0.27352070245530924,
+        "med": 0.3046659025697841,
+        "p75": 0.32470229665288936,
+        "p95": 0.3805351167435745,
+        "max": 0.3882700806803181
+      },
+      "ev": {
+        "min": 2.4316939545274927,
+        "p01": 2.433887078007137,
+        "p05": 2.442659571925715,
+        "p25": 2.735207024553093,
+        "med": 3.0466590256978416,
+        "p75": 3.2470229665288937,
+        "p95": 3.805351167435745,
+        "max": 3.882700806803181
+      },
+      "payout_mult": {
+        "min": 10.0,
+        "p01": 10.0,
+        "p05": 10.0,
+        "p25": 10.0,
+        "med": 10.0,
+        "p75": 10.0,
+        "p95": 10.0,
+        "max": 10.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "payout_mult_eff": {
+        "min": 10.0,
+        "p01": 10.0,
+        "p05": 10.0,
+        "p25": 10.0,
+        "med": 10.0,
+        "p75": 10.0,
+        "p95": 10.0,
+        "max": 10.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "kernel_mult": {
+        "min": 1.0,
+        "p01": 1.0,
+        "p05": 1.0,
+        "p25": 1.0,
+        "med": 1.0,
+        "p75": 1.0,
+        "p95": 1.0,
+        "max": 1.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "tier_mix_legs": {
+        "STANDARD": 30,
+        "GOBLIN": 30,
+        "DEMON": 0,
+        "OTHER": 0
+      },
+      "player_exposure": {
+        "players": 28,
+        "max": 4,
+        "top10": [
+          {
+            "player": "Aaron Gordon",
+            "count": 4
+          },
+          {
+            "player": "Brandon Miller",
+            "count": 4
+          },
+          {
+            "player": "Coby White",
+            "count": 4
+          },
+          {
+            "player": "Dejounte Murray",
+            "count": 4
+          },
+          {
+            "player": "Kon Knueppel",
+            "count": 4
+          },
+          {
+            "player": "Miles Bridges",
+            "count": 4
+          },
+          {
+            "player": "Oso Ighodaro",
+            "count": 4
+          },
+          {
+            "player": "Reed Sheppard",
+            "count": 4
+          },
+          {
+            "player": "Jalen Green",
+            "count": 3
+          },
+          {
+            "player": "LaMelo Ball",
+            "count": 3
+          }
+        ]
+      }
+    },
+    {
+      "file": "recommended_5leg.csv",
+      "rows": 15,
+      "hit_prob": {
+        "min": 0.1307784059577527,
+        "p01": 0.13110122463613605,
+        "p05": 0.1323924993496695,
+        "p25": 0.14847580560084395,
+        "med": 0.1605784911451369,
+        "p75": 0.17782711944692386,
+        "p95": 0.22394199221223401,
+        "max": 0.2326133852613526
+      },
+      "ev": {
+        "min": 1.3622723541480908,
+        "p01": 1.3636174149691336,
+        "p05": 1.3689976582533048,
+        "p25": 1.5497334040919388,
+        "med": 1.746655288609367,
+        "p75": 2.0761465247884474,
+        "p95": 2.4386972199706354,
+        "max": 2.525177885950492
+      },
+      "payout_mult": {
+        "min": 20.0,
+        "p01": 20.0,
+        "p05": 20.0,
+        "p25": 20.0,
+        "med": 20.0,
+        "p75": 20.0,
+        "p95": 20.0,
+        "max": 20.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "payout_mult_eff": {
+        "min": 9.660221002683356,
+        "p01": 9.669096085467542,
+        "p05": 9.704596416604284,
+        "p25": 10.068949159741521,
+        "med": 10.490110514762144,
+        "p75": 12.01533479482258,
+        "p95": 12.741836094969276,
+        "max": 12.820502086727288,
+        "std": 1.135842476344306,
+        "iqr": 1.946385635081059
+      },
+      "kernel_mult": {
+        "min": 0.4830110501341678,
+        "p01": 0.48345480427337706,
+        "p05": 0.4852298208302141,
+        "p25": 0.503447457987076,
+        "med": 0.5245055257381072,
+        "p75": 0.6007667397411289,
+        "p95": 0.6370918047484637,
+        "max": 0.6410251043363644,
+        "std": 0.056792123817215295,
+        "iqr": 0.09731928175405291
+      },
+      "tier_mix_legs": {
+        "STANDARD": 30,
+        "GOBLIN": 45,
+        "DEMON": 0,
+        "OTHER": 0
+      },
+      "player_exposure": {
+        "players": 37,
+        "max": 4,
+        "top10": [
+          {
+            "player": "Aaron Gordon",
+            "count": 4
+          },
+          {
+            "player": "Brandon Miller",
+            "count": 4
+          },
+          {
+            "player": "Dejounte Murray",
+            "count": 4
+          },
+          {
+            "player": "Karl-Anthony Towns",
+            "count": 4
+          },
+          {
+            "player": "Kon Knueppel",
+            "count": 4
+          },
+          {
+            "player": "LaMelo Ball",
+            "count": 4
+          },
+          {
+            "player": "Miles Bridges",
+            "count": 4
+          },
+          {
+            "player": "Moussa Diabat\u00e9",
+            "count": 4
+          },
+          {
+            "player": "Cameron Johnson",
+            "count": 3
+          },
+          {
+            "player": "Coby White",
+            "count": 3
+          }
+        ]
+      }
+    },
+    {
+      "file": "recommended_5leg_winprob.csv",
+      "rows": 15,
+      "hit_prob": {
+        "min": 0.1553523922882759,
+        "p01": 0.1557650668212194,
+        "p05": 0.15741576495299345,
+        "p25": 0.16706782414344115,
+        "med": 0.2209009312547925,
+        "p75": 0.2610792665565602,
+        "p95": 0.27218830068164235,
+        "max": 0.2731719324477207
+      },
+      "ev": {
+        "min": 3.107047845765518,
+        "p01": 3.115301336424389,
+        "p05": 3.148315299059871,
+        "p25": 3.3413564828688234,
+        "med": 4.418018625095852,
+        "p75": 5.221585331131204,
+        "p95": 5.443766013632847,
+        "max": 5.463438648954414
+      },
+      "payout_mult": {
+        "min": 20.0,
+        "p01": 20.0,
+        "p05": 20.0,
+        "p25": 20.0,
+        "med": 20.0,
+        "p75": 20.0,
+        "p95": 20.0,
+        "max": 20.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "payout_mult_eff": {
+        "min": 20.0,
+        "p01": 20.0,
+        "p05": 20.0,
+        "p25": 20.0,
+        "med": 20.0,
+        "p75": 20.0,
+        "p95": 20.0,
+        "max": 20.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "kernel_mult": {
+        "min": 1.0,
+        "p01": 1.0,
+        "p05": 1.0,
+        "p25": 1.0,
+        "med": 1.0,
+        "p75": 1.0,
+        "p95": 1.0,
+        "max": 1.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "tier_mix_legs": {
+        "STANDARD": 30,
+        "GOBLIN": 45,
+        "DEMON": 0,
+        "OTHER": 0
+      },
+      "player_exposure": {
+        "players": 35,
+        "max": 4,
+        "top10": [
+          {
+            "player": "Aaron Gordon",
+            "count": 4
+          },
+          {
+            "player": "Brandon Miller",
+            "count": 4
+          },
+          {
+            "player": "Coby White",
+            "count": 4
+          },
+          {
+            "player": "Dejounte Murray",
+            "count": 4
+          },
+          {
+            "player": "Jalen Green",
+            "count": 4
+          },
+          {
+            "player": "Jayson Tatum",
+            "count": 4
+          },
+          {
+            "player": "Kon Knueppel",
+            "count": 4
+          },
+          {
+            "player": "LaMelo Ball",
+            "count": 4
+          },
+          {
+            "player": "Miles Bridges",
+            "count": 4
+          },
+          {
+            "player": "Oso Ighodaro",
+            "count": 4
+          }
+        ]
+      }
+    },
+    {
+      "file": "System\\recommended_3leg.csv",
+      "rows": 15,
+      "hit_prob": {
+        "min": 0.128377143542157,
+        "p01": 0.13234593199972172,
+        "p05": 0.1482210858299805,
+        "p25": 0.18105285943914318,
+        "med": 0.2372605035194035,
+        "p75": 0.33026234478911265,
+        "p95": 0.3658677207872162,
+        "max": 0.4153003283202037
+      },
+      "ev": {
+        "min": 1.239963889053947,
+        "p01": 1.2603202570245653,
+        "p05": 1.3417457289070385,
+        "p25": 1.5026730211797492,
+        "med": 2.055793659871035,
+        "p75": 2.543799530245788,
+        "p95": 2.6907759240611853,
+        "max": 2.8142299260731005
+      },
+      "payout_mult": {
+        "min": 6.0,
+        "p01": 6.0,
+        "p05": 6.0,
+        "p25": 6.0,
+        "med": 6.0,
+        "p75": 6.0,
+        "p95": 6.0,
+        "max": 6.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "payout_mult_eff": {
+        "min": 6.776372986402459,
+        "p01": 6.868254477060774,
+        "p05": 7.235780439694038,
+        "p25": 7.693480512505035,
+        "med": 8.117905204480646,
+        "p75": 8.510418732628125,
+        "p95": 9.085234321896742,
+        "max": 9.65875898809637,
+        "std": 0.6673769631589969,
+        "iqr": 0.8169382201230899
+      },
+      "kernel_mult": {
+        "min": 1.129395497733743,
+        "p01": 1.1447090795101291,
+        "p05": 1.205963406615673,
+        "p25": 1.2822467520841725,
+        "med": 1.3529842007467745,
+        "p75": 1.4184031221046873,
+        "p95": 1.5142057203161237,
+        "max": 1.6097931646827284,
+        "std": 0.11122949385983281,
+        "iqr": 0.13615637002051484
+      },
+      "tier_mix_legs": {
+        "STANDARD": 30,
+        "GOBLIN": 15,
+        "DEMON": 0,
+        "OTHER": 0
+      },
+      "player_exposure": {
+        "players": 22,
+        "max": 4,
+        "top10": [
+          {
+            "player": "Aaron Gordon",
+            "count": 4
+          },
+          {
+            "player": "Brandon Miller",
+            "count": 4
+          },
+          {
+            "player": "Dejounte Murray",
+            "count": 4
+          },
+          {
+            "player": "Kon Knueppel",
+            "count": 4
+          },
+          {
+            "player": "LaMelo Ball",
+            "count": 4
+          },
+          {
+            "player": "Miles Bridges",
+            "count": 4
+          },
+          {
+            "player": "Moussa Diabat\u00e9",
+            "count": 4
+          },
+          {
+            "player": "Bam Adebayo",
+            "count": 3
+          },
+          {
+            "player": "Clint Capela",
+            "count": 1
+          },
+          {
+            "player": "De'Aaron Fox",
+            "count": 1
+          }
+        ]
+      }
+    },
+    {
+      "file": "System\\recommended_3leg_winprob.csv",
+      "rows": 15,
+      "hit_prob": {
+        "min": 0.337490772479916,
+        "p01": 0.33827311071961463,
+        "p05": 0.3414024636784091,
+        "p25": 0.37260886494273393,
+        "med": 0.4192098674619579,
+        "p75": 0.44631957673091355,
+        "p95": 0.46617789586651215,
+        "max": 0.471870130862911
+      },
+      "ev": {
+        "min": 2.024944634879496,
+        "p01": 2.029638664317688,
+        "p05": 2.0484147820704552,
+        "p25": 2.2356531896564036,
+        "med": 2.5152592047717475,
+        "p75": 2.6779174603854816,
+        "p95": 2.797067375199073,
+        "max": 2.8312207851774662
+      },
+      "payout_mult": {
+        "min": 6.0,
+        "p01": 6.0,
+        "p05": 6.0,
+        "p25": 6.0,
+        "med": 6.0,
+        "p75": 6.0,
+        "p95": 6.0,
+        "max": 6.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "payout_mult_eff": {
+        "min": 6.0,
+        "p01": 6.0,
+        "p05": 6.0,
+        "p25": 6.0,
+        "med": 6.0,
+        "p75": 6.0,
+        "p95": 6.0,
+        "max": 6.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "kernel_mult": {
+        "min": 1.0,
+        "p01": 1.0,
+        "p05": 1.0,
+        "p25": 1.0,
+        "med": 1.0,
+        "p75": 1.0,
+        "p95": 1.0,
+        "max": 1.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "tier_mix_legs": {
+        "STANDARD": 30,
+        "GOBLIN": 15,
+        "DEMON": 0,
+        "OTHER": 0
+      },
+      "player_exposure": {
+        "players": 17,
+        "max": 4,
+        "top10": [
+          {
+            "player": "Aaron Gordon",
+            "count": 4
+          },
+          {
+            "player": "Coby White",
+            "count": 4
+          },
+          {
+            "player": "Dejounte Murray",
+            "count": 4
+          },
+          {
+            "player": "Jalen Green",
+            "count": 4
+          },
+          {
+            "player": "Kon Knueppel",
+            "count": 4
+          },
+          {
+            "player": "Miles Bridges",
+            "count": 4
+          },
+          {
+            "player": "Oso Ighodaro",
+            "count": 4
+          },
+          {
+            "player": "Brandon Miller",
+            "count": 3
+          },
+          {
+            "player": "Jaxson Hayes",
+            "count": 3
+          },
+          {
+            "player": "Reed Sheppard",
+            "count": 3
+          }
+        ]
+      }
+    },
+    {
+      "file": "System\\recommended_4leg.csv",
+      "rows": 15,
+      "hit_prob": {
+        "min": 0.091700724282541,
+        "p01": 0.09413123588487794,
+        "p05": 0.10385328229422572,
+        "p25": 0.1754836336148927,
+        "med": 0.1918952827983288,
+        "p75": 0.2098664865125074,
+        "p95": 0.2817323667282134,
+        "max": 0.3012481276337811
+      },
+      "ev": {
+        "min": 0.990209008913254,
+        "p01": 1.0035028278251208,
+        "p05": 1.0566781034725878,
+        "p25": 1.4132792359660662,
+        "med": 1.6726499263264478,
+        "p75": 2.0049420591275346,
+        "p95": 2.3794093924566515,
+        "max": 2.4597720405209484
+      },
+      "payout_mult": {
+        "min": 10.0,
+        "p01": 10.0,
+        "p05": 10.0,
+        "p25": 10.0,
+        "med": 10.0,
+        "p75": 10.0,
+        "p95": 10.0,
+        "max": 10.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "payout_mult_eff": {
+        "min": 6.626683207196208,
+        "p01": 6.736921240459964,
+        "p05": 7.1778733735149896,
+        "p25": 8.004403880931202,
+        "med": 9.578268428748638,
+        "p75": 9.816850807586672,
+        "p95": 10.462451285486503,
+        "max": 10.79826813430939,
+        "std": 1.1812209282584742,
+        "iqr": 1.8124469266554701
+      },
+      "kernel_mult": {
+        "min": 0.6626683207196208,
+        "p01": 0.6736921240459964,
+        "p05": 0.7177873373514989,
+        "p25": 0.8004403880931201,
+        "med": 0.957826842874864,
+        "p75": 0.9816850807586671,
+        "p95": 1.0462451285486503,
+        "max": 1.079826813430939,
+        "std": 0.11812209282584744,
+        "iqr": 0.181244692665547
+      },
+      "tier_mix_legs": {
+        "STANDARD": 30,
+        "GOBLIN": 30,
+        "DEMON": 0,
+        "OTHER": 0
+      },
+      "player_exposure": {
+        "players": 32,
+        "max": 4,
+        "top10": [
+          {
+            "player": "Aaron Gordon",
+            "count": 4
+          },
+          {
+            "player": "Brandon Miller",
+            "count": 4
+          },
+          {
+            "player": "Dejounte Murray",
+            "count": 4
+          },
+          {
+            "player": "Kon Knueppel",
+            "count": 4
+          },
+          {
+            "player": "LaMelo Ball",
+            "count": 4
+          },
+          {
+            "player": "Miles Bridges",
+            "count": 4
+          },
+          {
+            "player": "Moussa Diabat\u00e9",
+            "count": 4
+          },
+          {
+            "player": "Coby White",
+            "count": 3
+          },
+          {
+            "player": "Derik Queen",
+            "count": 3
+          },
+          {
+            "player": "Andrew Wiggins",
+            "count": 2
+          }
+        ]
+      }
+    },
+    {
+      "file": "System\\recommended_4leg_winprob.csv",
+      "rows": 15,
+      "hit_prob": {
+        "min": 0.2431693954527492,
+        "p01": 0.24338870780071367,
+        "p05": 0.2442659571925715,
+        "p25": 0.27352070245530924,
+        "med": 0.3046659025697841,
+        "p75": 0.32470229665288936,
+        "p95": 0.3805351167435745,
+        "max": 0.3882700806803181
+      },
+      "ev": {
+        "min": 2.4316939545274927,
+        "p01": 2.433887078007137,
+        "p05": 2.442659571925715,
+        "p25": 2.735207024553093,
+        "med": 3.0466590256978416,
+        "p75": 3.2470229665288937,
+        "p95": 3.805351167435745,
+        "max": 3.882700806803181
+      },
+      "payout_mult": {
+        "min": 10.0,
+        "p01": 10.0,
+        "p05": 10.0,
+        "p25": 10.0,
+        "med": 10.0,
+        "p75": 10.0,
+        "p95": 10.0,
+        "max": 10.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "payout_mult_eff": {
+        "min": 10.0,
+        "p01": 10.0,
+        "p05": 10.0,
+        "p25": 10.0,
+        "med": 10.0,
+        "p75": 10.0,
+        "p95": 10.0,
+        "max": 10.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "kernel_mult": {
+        "min": 1.0,
+        "p01": 1.0,
+        "p05": 1.0,
+        "p25": 1.0,
+        "med": 1.0,
+        "p75": 1.0,
+        "p95": 1.0,
+        "max": 1.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "tier_mix_legs": {
+        "STANDARD": 30,
+        "GOBLIN": 30,
+        "DEMON": 0,
+        "OTHER": 0
+      },
+      "player_exposure": {
+        "players": 28,
+        "max": 4,
+        "top10": [
+          {
+            "player": "Aaron Gordon",
+            "count": 4
+          },
+          {
+            "player": "Brandon Miller",
+            "count": 4
+          },
+          {
+            "player": "Coby White",
+            "count": 4
+          },
+          {
+            "player": "Dejounte Murray",
+            "count": 4
+          },
+          {
+            "player": "Kon Knueppel",
+            "count": 4
+          },
+          {
+            "player": "Miles Bridges",
+            "count": 4
+          },
+          {
+            "player": "Oso Ighodaro",
+            "count": 4
+          },
+          {
+            "player": "Reed Sheppard",
+            "count": 4
+          },
+          {
+            "player": "Jalen Green",
+            "count": 3
+          },
+          {
+            "player": "LaMelo Ball",
+            "count": 3
+          }
+        ]
+      }
+    },
+    {
+      "file": "System\\recommended_5leg.csv",
+      "rows": 15,
+      "hit_prob": {
+        "min": 0.1307784059577527,
+        "p01": 0.13110122463613605,
+        "p05": 0.1323924993496695,
+        "p25": 0.14847580560084395,
+        "med": 0.1605784911451369,
+        "p75": 0.17782711944692386,
+        "p95": 0.22394199221223401,
+        "max": 0.2326133852613526
+      },
+      "ev": {
+        "min": 1.3622723541480908,
+        "p01": 1.3636174149691336,
+        "p05": 1.3689976582533048,
+        "p25": 1.5497334040919388,
+        "med": 1.746655288609367,
+        "p75": 2.0761465247884474,
+        "p95": 2.4386972199706354,
+        "max": 2.525177885950492
+      },
+      "payout_mult": {
+        "min": 20.0,
+        "p01": 20.0,
+        "p05": 20.0,
+        "p25": 20.0,
+        "med": 20.0,
+        "p75": 20.0,
+        "p95": 20.0,
+        "max": 20.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "payout_mult_eff": {
+        "min": 9.660221002683356,
+        "p01": 9.669096085467542,
+        "p05": 9.704596416604284,
+        "p25": 10.068949159741521,
+        "med": 10.490110514762144,
+        "p75": 12.01533479482258,
+        "p95": 12.741836094969276,
+        "max": 12.820502086727288,
+        "std": 1.135842476344306,
+        "iqr": 1.946385635081059
+      },
+      "kernel_mult": {
+        "min": 0.4830110501341678,
+        "p01": 0.48345480427337706,
+        "p05": 0.4852298208302141,
+        "p25": 0.503447457987076,
+        "med": 0.5245055257381072,
+        "p75": 0.6007667397411289,
+        "p95": 0.6370918047484637,
+        "max": 0.6410251043363644,
+        "std": 0.056792123817215295,
+        "iqr": 0.09731928175405291
+      },
+      "tier_mix_legs": {
+        "STANDARD": 30,
+        "GOBLIN": 45,
+        "DEMON": 0,
+        "OTHER": 0
+      },
+      "player_exposure": {
+        "players": 37,
+        "max": 4,
+        "top10": [
+          {
+            "player": "Aaron Gordon",
+            "count": 4
+          },
+          {
+            "player": "Brandon Miller",
+            "count": 4
+          },
+          {
+            "player": "Dejounte Murray",
+            "count": 4
+          },
+          {
+            "player": "Karl-Anthony Towns",
+            "count": 4
+          },
+          {
+            "player": "Kon Knueppel",
+            "count": 4
+          },
+          {
+            "player": "LaMelo Ball",
+            "count": 4
+          },
+          {
+            "player": "Miles Bridges",
+            "count": 4
+          },
+          {
+            "player": "Moussa Diabat\u00e9",
+            "count": 4
+          },
+          {
+            "player": "Cameron Johnson",
+            "count": 3
+          },
+          {
+            "player": "Coby White",
+            "count": 3
+          }
+        ]
+      }
+    },
+    {
+      "file": "System\\recommended_5leg_winprob.csv",
+      "rows": 15,
+      "hit_prob": {
+        "min": 0.1553523922882759,
+        "p01": 0.1557650668212194,
+        "p05": 0.15741576495299345,
+        "p25": 0.16706782414344115,
+        "med": 0.2209009312547925,
+        "p75": 0.2610792665565602,
+        "p95": 0.27218830068164235,
+        "max": 0.2731719324477207
+      },
+      "ev": {
+        "min": 3.107047845765518,
+        "p01": 3.115301336424389,
+        "p05": 3.148315299059871,
+        "p25": 3.3413564828688234,
+        "med": 4.418018625095852,
+        "p75": 5.221585331131204,
+        "p95": 5.443766013632847,
+        "max": 5.463438648954414
+      },
+      "payout_mult": {
+        "min": 20.0,
+        "p01": 20.0,
+        "p05": 20.0,
+        "p25": 20.0,
+        "med": 20.0,
+        "p75": 20.0,
+        "p95": 20.0,
+        "max": 20.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "payout_mult_eff": {
+        "min": 20.0,
+        "p01": 20.0,
+        "p05": 20.0,
+        "p25": 20.0,
+        "med": 20.0,
+        "p75": 20.0,
+        "p95": 20.0,
+        "max": 20.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "kernel_mult": {
+        "min": 1.0,
+        "p01": 1.0,
+        "p05": 1.0,
+        "p25": 1.0,
+        "med": 1.0,
+        "p75": 1.0,
+        "p95": 1.0,
+        "max": 1.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "tier_mix_legs": {
+        "STANDARD": 30,
+        "GOBLIN": 45,
+        "DEMON": 0,
+        "OTHER": 0
+      },
+      "player_exposure": {
+        "players": 35,
+        "max": 4,
+        "top10": [
+          {
+            "player": "Aaron Gordon",
+            "count": 4
+          },
+          {
+            "player": "Brandon Miller",
+            "count": 4
+          },
+          {
+            "player": "Coby White",
+            "count": 4
+          },
+          {
+            "player": "Dejounte Murray",
+            "count": 4
+          },
+          {
+            "player": "Jalen Green",
+            "count": 4
+          },
+          {
+            "player": "Jayson Tatum",
+            "count": 4
+          },
+          {
+            "player": "Kon Knueppel",
+            "count": 4
+          },
+          {
+            "player": "LaMelo Ball",
+            "count": 4
+          },
+          {
+            "player": "Miles Bridges",
+            "count": 4
+          },
+          {
+            "player": "Oso Ighodaro",
+            "count": 4
+          }
+        ]
+      }
+    },
+    {
+      "file": "Windfall\\recommended_3leg.csv",
+      "rows": 15,
+      "hit_prob": {
+        "min": 0.0980406812046597,
+        "p01": 0.09865727233289458,
+        "p05": 0.10112363684583413,
+        "p25": 0.12783308234739235,
+        "med": 0.1408232107675376,
+        "p75": 0.18618981247347635,
+        "p95": 0.26552228550868373,
+        "max": 0.2897843614139889
+      },
+      "ev": {
+        "min": 0.9156847031923584,
+        "p01": 0.9161954801162356,
+        "p05": 0.9182385878117447,
+        "p25": 1.002146405517325,
+        "med": 1.1661761309917251,
+        "p75": 1.3851186605003512,
+        "p95": 1.6196463683247881,
+        "max": 1.774592158830393
+      },
+      "payout_mult": {
+        "min": 6.0,
+        "p01": 6.0,
+        "p05": 6.0,
+        "p25": 6.0,
+        "med": 6.0,
+        "p75": 6.0,
+        "p95": 6.0,
+        "max": 6.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "payout_mult_eff": {
+        "min": 6.088174728223872,
+        "p01": 6.093167429064855,
+        "p05": 6.1131382324287875,
+        "p25": 7.256930185629342,
+        "med": 7.868377235190882,
+        "p75": 8.243876719244046,
+        "p95": 9.083702370118543,
+        "max": 9.339844357883116,
+        "std": 0.8833513058828079,
+        "iqr": 0.9869465336147041
+      },
+      "kernel_mult": {
+        "min": 1.014695788037312,
+        "p01": 1.0155279048441426,
+        "p05": 1.0188563720714645,
+        "p25": 1.209488364271557,
+        "med": 1.3113962058651472,
+        "p75": 1.3739794532073408,
+        "p95": 1.513950395019757,
+        "max": 1.5566407263138526,
+        "std": 0.14722521764713464,
+        "iqr": 0.1644910889357838
+      },
+      "tier_mix_legs": {
+        "STANDARD": 15,
+        "GOBLIN": 15,
+        "DEMON": 15,
+        "OTHER": 0
+      },
+      "player_exposure": {
+        "players": 22,
+        "max": 4,
+        "top10": [
+          {
+            "player": "Brandon Miller",
+            "count": 4
+          },
+          {
+            "player": "Derik Queen",
+            "count": 4
+          },
+          {
+            "player": "Kon Knueppel",
+            "count": 4
+          },
+          {
+            "player": "LaMelo Ball",
+            "count": 4
+          },
+          {
+            "player": "Miles Bridges",
+            "count": 4
+          },
+          {
+            "player": "Moussa Diabat\u00e9",
+            "count": 4
+          },
+          {
+            "player": "Aaron Gordon",
+            "count": 3
+          },
+          {
+            "player": "Davion Mitchell",
+            "count": 2
+          },
+          {
+            "player": "De'Aaron Fox",
+            "count": 2
+          },
+          {
+            "player": "Pascal Siakam",
+            "count": 2
+          }
+        ]
+      }
+    },
+    {
+      "file": "Windfall\\recommended_3leg_winprob.csv",
+      "rows": 15,
+      "hit_prob": {
+        "min": 0.2806372179303194,
+        "p01": 0.28137876383364685,
+        "p05": 0.2843449474469565,
+        "p25": 0.2996620941299847,
+        "med": 0.375997251274739,
+        "p75": 0.41993393082658426,
+        "p95": 0.4292449801264264,
+        "max": 0.4337815457667915
+      },
+      "ev": {
+        "min": 1.683823307581917,
+        "p01": 1.6882725830018814,
+        "p05": 1.7060696846817394,
+        "p25": 1.7979725647799083,
+        "med": 2.255983507648434,
+        "p75": 2.5196035849595058,
+        "p95": 2.5754698807585585,
+        "max": 2.602689274600749
+      },
+      "payout_mult": {
+        "min": 6.0,
+        "p01": 6.0,
+        "p05": 6.0,
+        "p25": 6.0,
+        "med": 6.0,
+        "p75": 6.0,
+        "p95": 6.0,
+        "max": 6.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "payout_mult_eff": {
+        "min": 6.0,
+        "p01": 6.0,
+        "p05": 6.0,
+        "p25": 6.0,
+        "med": 6.0,
+        "p75": 6.0,
+        "p95": 6.0,
+        "max": 6.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "kernel_mult": {
+        "min": 1.0,
+        "p01": 1.0,
+        "p05": 1.0,
+        "p25": 1.0,
+        "med": 1.0,
+        "p75": 1.0,
+        "p95": 1.0,
+        "max": 1.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "tier_mix_legs": {
+        "STANDARD": 15,
+        "GOBLIN": 15,
+        "DEMON": 15,
+        "OTHER": 0
+      },
+      "player_exposure": {
+        "players": 19,
+        "max": 4,
+        "top10": [
+          {
+            "player": "Aaron Gordon",
+            "count": 4
+          },
+          {
+            "player": "Brandon Miller",
+            "count": 4
+          },
+          {
+            "player": "Coby White",
+            "count": 4
+          },
+          {
+            "player": "Dejounte Murray",
+            "count": 4
+          },
+          {
+            "player": "Kon Knueppel",
+            "count": 4
+          },
+          {
+            "player": "Miles Bridges",
+            "count": 4
+          },
+          {
+            "player": "Oso Ighodaro",
+            "count": 4
+          },
+          {
+            "player": "Bruce Brown",
+            "count": 2
+          },
+          {
+            "player": "Jalen Green",
+            "count": 2
+          },
+          {
+            "player": "Jonas Valan\u010di\u016bnas",
+            "count": 2
+          }
+        ]
+      }
+    },
+    {
+      "file": "Windfall\\recommended_4leg.csv",
+      "rows": 15,
+      "hit_prob": {
+        "min": 0.0428860128247142,
+        "p01": 0.043900623778770846,
+        "p05": 0.04795906759499742,
+        "p25": 0.05513773704079925,
+        "med": 0.064409066037875,
+        "p75": 0.10601347672821686,
+        "p95": 0.15800013155717685,
+        "max": 0.1617973297315405
+      },
+      "ev": {
+        "min": 0.9685332849317762,
+        "p01": 0.9769679693938305,
+        "p05": 1.0107067072420477,
+        "p25": 1.0753702962336356,
+        "med": 1.225287155208605,
+        "p75": 1.7048537400972976,
+        "p95": 2.221007911460763,
+        "max": 2.38291037327685
+      },
+      "payout_mult": {
+        "min": 10.0,
+        "p01": 10.0,
+        "p05": 10.0,
+        "p25": 10.0,
+        "med": 10.0,
+        "p75": 10.0,
+        "p95": 10.0,
+        "max": 10.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "payout_mult_eff": {
+        "min": 12.870546834075611,
+        "p01": 12.956641601849148,
+        "p05": 13.301020672943297,
+        "p25": 16.042264870944106,
+        "med": 18.38755860909703,
+        "p75": 20.809123783855064,
+        "p95": 22.490657769393327,
+        "max": 22.583896733193896,
+        "std": 3.0048216687512346,
+        "iqr": 4.766858912910958
+      },
+      "kernel_mult": {
+        "min": 1.2870546834075614,
+        "p01": 1.295664160184915,
+        "p05": 1.3301020672943298,
+        "p25": 1.6042264870944105,
+        "med": 1.838755860909703,
+        "p75": 2.0809123783855066,
+        "p95": 2.2490657769393327,
+        "max": 2.25838967331939,
+        "std": 0.30048216687512347,
+        "iqr": 0.47668589129109606
+      },
+      "tier_mix_legs": {
+        "STANDARD": 30,
+        "GOBLIN": 15,
+        "DEMON": 15,
+        "OTHER": 0
+      },
+      "player_exposure": {
+        "players": 31,
+        "max": 4,
+        "top10": [
+          {
+            "player": "Brandon Miller",
+            "count": 4
+          },
+          {
+            "player": "Kon Knueppel",
+            "count": 4
+          },
+          {
+            "player": "LaMelo Ball",
+            "count": 4
+          },
+          {
+            "player": "Miles Bridges",
+            "count": 4
+          },
+          {
+            "player": "Moussa Diabat\u00e9",
+            "count": 4
+          },
+          {
+            "player": "Pelle Larsson",
+            "count": 4
+          },
+          {
+            "player": "Aaron Gordon",
+            "count": 3
+          },
+          {
+            "player": "Coby White",
+            "count": 2
+          },
+          {
+            "player": "Collin Gillespie",
+            "count": 2
+          },
+          {
+            "player": "Dejounte Murray",
+            "count": 2
+          }
+        ]
+      }
+    },
+    {
+      "file": "Windfall\\recommended_4leg_winprob.csv",
+      "rows": 15,
+      "hit_prob": {
+        "min": 0.1728322620633469,
+        "p01": 0.17412653866662084,
+        "p05": 0.17930364507971658,
+        "p25": 0.18783172973722778,
+        "med": 0.2212850112960595,
+        "p75": 0.2811945438635479,
+        "p95": 0.2901095816229683,
+        "max": 0.2991554468269004
+      },
+      "ev": {
+        "min": 1.7283226206334692,
+        "p01": 1.7412653866662084,
+        "p05": 1.793036450797166,
+        "p25": 1.878317297372278,
+        "med": 2.212850112960595,
+        "p75": 2.811945438635479,
+        "p95": 2.901095816229683,
+        "max": 2.991554468269004
+      },
+      "payout_mult": {
+        "min": 10.0,
+        "p01": 10.0,
+        "p05": 10.0,
+        "p25": 10.0,
+        "med": 10.0,
+        "p75": 10.0,
+        "p95": 10.0,
+        "max": 10.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "payout_mult_eff": {
+        "min": 10.0,
+        "p01": 10.0,
+        "p05": 10.0,
+        "p25": 10.0,
+        "med": 10.0,
+        "p75": 10.0,
+        "p95": 10.0,
+        "max": 10.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "kernel_mult": {
+        "min": 1.0,
+        "p01": 1.0,
+        "p05": 1.0,
+        "p25": 1.0,
+        "med": 1.0,
+        "p75": 1.0,
+        "p95": 1.0,
+        "max": 1.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "tier_mix_legs": {
+        "STANDARD": 30,
+        "GOBLIN": 15,
+        "DEMON": 15,
+        "OTHER": 0
+      },
+      "player_exposure": {
+        "players": 23,
+        "max": 4,
+        "top10": [
+          {
+            "player": "Aaron Gordon",
+            "count": 4
+          },
+          {
+            "player": "Brandon Miller",
+            "count": 4
+          },
+          {
+            "player": "Cameron Johnson",
+            "count": 4
+          },
+          {
+            "player": "Coby White",
+            "count": 4
+          },
+          {
+            "player": "Jayson Tatum",
+            "count": 4
+          },
+          {
+            "player": "Kon Knueppel",
+            "count": 4
+          },
+          {
+            "player": "Miles Bridges",
+            "count": 4
+          },
+          {
+            "player": "Oso Ighodaro",
+            "count": 4
+          },
+          {
+            "player": "Reed Sheppard",
+            "count": 4
+          },
+          {
+            "player": "Dejounte Murray",
+            "count": 3
+          }
+        ]
+      }
+    },
+    {
+      "file": "Windfall\\recommended_5leg.csv",
+      "rows": 15,
+      "hit_prob": {
+        "min": 0.0371031170423853,
+        "p01": 0.037724986010046854,
+        "p05": 0.04021246188069305,
+        "p25": 0.043530060499043594,
+        "med": 0.0490734891515255,
+        "p75": 0.09001757740166244,
+        "p95": 0.11669438502413011,
+        "max": 0.1187991214818725
+      },
+      "ev": {
+        "min": 0.9432591215899232,
+        "p01": 0.9545255759553924,
+        "p05": 0.9995913934172692,
+        "p25": 1.0488513832701574,
+        "med": 1.2628755602279371,
+        "p75": 1.7801017078038082,
+        "p95": 2.1065608512178016,
+        "max": 2.297988957503488
+      },
+      "payout_mult": {
+        "min": 20.0,
+        "p01": 20.0,
+        "p05": 20.0,
+        "p25": 20.0,
+        "med": 20.0,
+        "p75": 20.0,
+        "p95": 20.0,
+        "max": 20.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "payout_mult_eff": {
+        "min": 17.041542134191133,
+        "p01": 17.341856367614565,
+        "p05": 18.543113301308296,
+        "p25": 19.828117602627763,
+        "med": 22.83032430670117,
+        "p75": 24.828898577510063,
+        "p95": 26.880247368222445,
+        "max": 29.215967368791024,
+        "std": 3.1841330790582707,
+        "iqr": 5.0007809748823
+      },
+      "kernel_mult": {
+        "min": 0.8520771067095567,
+        "p01": 0.8670928183807284,
+        "p05": 0.9271556650654149,
+        "p25": 0.9914058801313881,
+        "med": 1.1415162153350584,
+        "p75": 1.2414449288755032,
+        "p95": 1.3440123684111223,
+        "max": 1.4607983684395511,
+        "std": 0.1592066539529135,
+        "iqr": 0.2500390487441151
+      },
+      "tier_mix_legs": {
+        "STANDARD": 30,
+        "GOBLIN": 30,
+        "DEMON": 15,
+        "OTHER": 0
+      },
+      "player_exposure": {
+        "players": 40,
+        "max": 4,
+        "top10": [
+          {
+            "player": "Aaron Gordon",
+            "count": 4
+          },
+          {
+            "player": "Brandon Miller",
+            "count": 4
+          },
+          {
+            "player": "Dejounte Murray",
+            "count": 4
+          },
+          {
+            "player": "Kon Knueppel",
+            "count": 4
+          },
+          {
+            "player": "LaMelo Ball",
+            "count": 4
+          },
+          {
+            "player": "Miles Bridges",
+            "count": 4
+          },
+          {
+            "player": "Moussa Diabat\u00e9",
+            "count": 4
+          },
+          {
+            "player": "Andrew Wiggins",
+            "count": 3
+          },
+          {
+            "player": "Karl-Anthony Towns",
+            "count": 3
+          },
+          {
+            "player": "Scoot Henderson",
+            "count": 3
+          }
+        ]
+      }
+    },
+    {
+      "file": "Windfall\\recommended_5leg_winprob.csv",
+      "rows": 15,
+      "hit_prob": {
+        "min": 0.120156767238573,
+        "p01": 0.1202654177250565,
+        "p05": 0.12070001967099045,
+        "p25": 0.1291143579827821,
+        "med": 0.1724173323296605,
+        "p75": 0.20695931186748664,
+        "p95": 0.24293720837894742,
+        "max": 0.2498988240841576
+      },
+      "ev": {
+        "min": 2.4031353447714605,
+        "p01": 2.4053083545011305,
+        "p05": 2.41400039341981,
+        "p25": 2.5822871596556425,
+        "med": 3.448346646593212,
+        "p75": 4.139186237349734,
+        "p95": 4.858744167578949,
+        "max": 4.997976481683152
+      },
+      "payout_mult": {
+        "min": 20.0,
+        "p01": 20.0,
+        "p05": 20.0,
+        "p25": 20.0,
+        "med": 20.0,
+        "p75": 20.0,
+        "p95": 20.0,
+        "max": 20.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "payout_mult_eff": {
+        "min": 20.0,
+        "p01": 20.0,
+        "p05": 20.0,
+        "p25": 20.0,
+        "med": 20.0,
+        "p75": 20.0,
+        "p95": 20.0,
+        "max": 20.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "kernel_mult": {
+        "min": 1.0,
+        "p01": 1.0,
+        "p05": 1.0,
+        "p25": 1.0,
+        "med": 1.0,
+        "p75": 1.0,
+        "p95": 1.0,
+        "max": 1.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "tier_mix_legs": {
+        "STANDARD": 30,
+        "GOBLIN": 30,
+        "DEMON": 15,
+        "OTHER": 0
+      },
+      "player_exposure": {
+        "players": 32,
+        "max": 4,
+        "top10": [
+          {
+            "player": "Aaron Gordon",
+            "count": 4
+          },
+          {
+            "player": "Brandon Miller",
+            "count": 4
+          },
+          {
+            "player": "Coby White",
+            "count": 4
+          },
+          {
+            "player": "Derik Queen",
+            "count": 4
+          },
+          {
+            "player": "Jalen Green",
+            "count": 4
+          },
+          {
+            "player": "Jonas Valan\u010di\u016bnas",
+            "count": 4
+          },
+          {
+            "player": "Kon Knueppel",
+            "count": 4
+          },
+          {
+            "player": "Miles Bridges",
+            "count": 4
+          },
+          {
+            "player": "Oso Ighodaro",
+            "count": 4
+          },
+          {
+            "player": "Cameron Johnson",
+            "count": 3
+          }
+        ]
+      }
+    }
+  ],
+  "kernel_suggestions": {
+    "std_logit_p_adj_STANDARD": 0.607139154330998,
+    "sigma_leg_system_4": 0.06857850531775847,
+    "sigma_leg_system_5": 0.04538809030592293,
+    "sigma_leg_windfall_4": 0.08587298453749036,
+    "sigma_leg_windfall_5": 0.06340666474498874,
+    "target_sigma_leg_reason": "match_windfall_avg",
+    "target_sigma_leg": 0.07463982464123955,
+    "p0": 0.75,
+    "suggest_STANDARD_b_from_logit": -0.12293693152352299,
+    "suggest_STANDARD_a_from_logit": 0.13506002370289227,
+    "cur_sigma_leg_system_avg": 0.0569832978118407,
+    "b_current_source": "PTS",
+    "b_current": -0.288,
+    "sigma_ratio_target_over_current": 1.3098544223905897,
+    "suggest_STANDARD_b_from_sigma_ratio_raw": null,
+    "suggest_STANDARD_a_from_sigma_ratio_raw": null,
+    "suggest_STANDARD_b_from_sigma_ratio_step": -0.3772380736484898,
+    "suggest_STANDARD_a_from_sigma_ratio_step": 0.41443838346371636
+  },
+  "p_cal_floor_share": 0.0,
+  "p_cal_cap_share": 0.0,
+  "recommendations": []
+}

@@ -1,0 +1,141 @@
+{
+  "report_date": "2026-03-14",
+  "report_label": "04:30PM",
+  "pulled_at_local": "2026-03-14T15:42:59-05:00",
+  "invalidated_players_count": 22,
+  "invalidated_players": [
+    {
+      "team": "ATL",
+      "player": "Gilbert, Keshon",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "ATL",
+      "player": "Kuminga, Jonathan",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "ATL",
+      "player": "Newell, Asa",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "BOS",
+      "player": "Vucevic, Nikola",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "LAC",
+      "player": "Batum, Nicolas",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "LAC",
+      "player": "Beal, Bradley",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "LAC",
+      "player": "Niederhauser, Yanic Konan",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "MIA",
+      "player": "Jovic, Nikola",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "MIA",
+      "player": "Rozier, Terry",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "MIA",
+      "player": "Wiggins, Andrew",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "PHI",
+      "player": "Broome, Johni",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "PHI",
+      "player": "Drummond, Andre",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "PHI",
+      "player": "Embiid, Joel",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "PHI",
+      "player": "George, Paul",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "PHI",
+      "player": "Maxey, Tyrese",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "PHI",
+      "player": "Walker, Jabari",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "POR",
+      "player": "Jr., Michael",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "POR",
+      "player": "Powell, Drake",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "POR",
+      "player": "Ryan, Cormac",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "POR",
+      "player": "Sharpe, Day'Ron",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "TOR",
+      "player": "Hepburn, Chucky",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "TOR",
+      "player": "Murray-Boyles, Collin",
+      "status": "OUT",
+      "reason": ""
+    }
+  ],
+  "policy": "Remove OUT/DOUBTFUL from eligibility. PROBABLE allowed but tagged."
+}

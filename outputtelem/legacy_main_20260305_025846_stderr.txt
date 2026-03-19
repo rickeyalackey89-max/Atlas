@@ -1,0 +1,13 @@
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\Users\rick\projects\Atlas\src\Atlas\engine\main.py", line 819, in <module>
+    main()
+  File "C:\Users\rick\projects\Atlas\src\Atlas\engine\main.py", line 737, in main
+    scored = _run_score_board_new(board=board, logs=logs, cfg=cfg, iael_df=iael_df)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rick\projects\Atlas\src\Atlas\engine\new_engine.py", line 79, in _run_score_board_new
+    from Atlas.engine.new_probability import simulate_leg_probability_new
+  File "C:\Users\rick\projects\Atlas\src\Atlas\engine\new_probability.py", line 650
+    role_mult_raw = role_mult_raw if np.isfinite(role_mult_raw) and role_mult_raw > 0 else 1.0
+IndentationError: unexpected indent

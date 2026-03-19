@@ -1,0 +1,73 @@
+[DEBUG] Dropped 929 invalid rows from today.csv (blank/unknown stat/line)
+[IAEL] Loaded invalidations=27. Report: 2026-03-02 06:45AM
+[IAEL] Removed 84 legs out of 2982 (statuses=['DOUBTFUL', 'OUT', 'QUESTIONABLE'])
+[IAEL] Sample removed:
+          player
+  Kyshawn George
+Tristan Vukcevic
+[BUILDER][DEBUG] ENTER build_slips_by_tier_buckets top_n=25 per_tier=650 max_attempts=500000 target_pool_mult=100 phase1_frac=0.2 phase1_pool_frac=0.5
+[BUILDER][DEBUG] leg_df tier counts: {'GOBLIN': 849, 'STANDARD': 746}
+[BUILDER][DEBUG] p_eff source: p_cal
+[BUILDER][DEBUG] beam summary | selected_vs_requested=25/25 | beam_window_size=2500 | max_exposure=5 | top5_exposure=amen thompson:5, baylor scheierman:5, brandin podziemski:5, brook lopez:5, bub carrington:5 | rej_exposure_cap=2491888 | rej_missing_players=0
+[BUILDER][DEBUG] ENTER build_slips_by_tier_buckets top_n=25 per_tier=650 max_attempts=500000 target_pool_mult=100 phase1_frac=0.2 phase1_pool_frac=0.5
+[BUILDER][DEBUG] leg_df tier counts: {'GOBLIN': 849, 'STANDARD': 746}
+[BUILDER][DEBUG] p_eff source: p_cal
+[BUILDER][DEBUG] beam summary | selected_vs_requested=25/25 | beam_window_size=2500 | max_exposure=5 | top5_exposure=amen thompson:5, baylor scheierman:5, brandin podziemski:5, brook lopez:5, bub carrington:5 | rej_exposure_cap=3296600 | rej_missing_players=0
+[BUILDER][DEBUG] ENTER build_slips_by_tier_buckets top_n=25 per_tier=650 max_attempts=500000 target_pool_mult=100 phase1_frac=0.2 phase1_pool_frac=0.5
+[BUILDER][DEBUG] leg_df tier counts: {'GOBLIN': 849, 'STANDARD': 746}
+[BUILDER][DEBUG] p_eff source: p_cal
+[BUILDER][DEBUG] beam summary | selected_vs_requested=25/25 | beam_window_size=2500 | max_exposure=5 | top5_exposure=amen thompson:5, baylor scheierman:5, bobby portis:5, brandin podziemski:5, brook lopez:5 | rej_exposure_cap=4611028 | rej_missing_players=0
+[BUILDER][DEBUG] ENTER build_slips_by_tier_buckets top_n=25 per_tier=400 max_attempts=400000 target_pool_mult=100 phase1_frac=0.2 phase1_pool_frac=0.5
+[BUILDER][DEBUG] leg_df tier counts: {'DEMON': 1303, 'GOBLIN': 849, 'STANDARD': 746}
+[BUILDER][DEBUG] p_eff source: p_cal
+[BUILDER][DEBUG] beam summary | selected_vs_requested=25/25 | beam_window_size=2500 | max_exposure=5 | top5_exposure=alperen sengun:5, amen thompson:5, brice sensabaugh:5, brook lopez:5, bub carrington:5 | rej_exposure_cap=2880544 | rej_missing_players=0
+[BUILDER][DEBUG] ENTER build_slips_by_tier_buckets top_n=25 per_tier=400 max_attempts=400000 target_pool_mult=100 phase1_frac=0.2 phase1_pool_frac=0.5
+[BUILDER][DEBUG] leg_df tier counts: {'DEMON': 1303, 'GOBLIN': 849, 'STANDARD': 746}
+[BUILDER][DEBUG] p_eff source: p_cal
+[BUILDER][DEBUG] beam summary | selected_vs_requested=25/25 | beam_window_size=2500 | max_exposure=5 | top5_exposure=alperen sengun:5, amen thompson:5, baylor scheierman:5, brice sensabaugh:5, brook lopez:5 | rej_exposure_cap=3351600 | rej_missing_players=0
+[BUILDER][DEBUG] ENTER build_slips_by_tier_buckets top_n=25 per_tier=400 max_attempts=400000 target_pool_mult=100 phase1_frac=0.2 phase1_pool_frac=0.5
+[BUILDER][DEBUG] leg_df tier counts: {'DEMON': 1303, 'GOBLIN': 849, 'STANDARD': 746}
+[BUILDER][DEBUG] p_eff source: p_cal
+[BUILDER][DEBUG] beam summary | selected_vs_requested=25/25 | beam_window_size=2500 | max_exposure=5 | top5_exposure=alperen sengun:5, amen thompson:5, brandin podziemski:5, brice sensabaugh:5, brook lopez:5 | rej_exposure_cap=4852200 | rej_missing_players=0
+[BUILDER][DEBUG] ENTER build_slips_by_tier_buckets top_n=25 per_tier=650 max_attempts=500000 target_pool_mult=100 phase1_frac=0.2 phase1_pool_frac=0.5
+[BUILDER][DEBUG] leg_df tier counts: {'GOBLIN': 849, 'STANDARD': 746}
+[BUILDER][DEBUG] p_eff source: p_cal
+[BUILDER][DEBUG] beam summary | selected_vs_requested=25/25 | beam_window_size=2500 | max_exposure=5 | top5_exposure=amen thompson:5, baylor scheierman:5, brandin podziemski:5, brook lopez:5, bub carrington:5 | rej_exposure_cap=2494016 | rej_missing_players=0
+[BUILDER][DEBUG] ENTER build_slips_by_tier_buckets top_n=25 per_tier=650 max_attempts=500000 target_pool_mult=100 phase1_frac=0.2 phase1_pool_frac=0.5
+[BUILDER][DEBUG] leg_df tier counts: {'GOBLIN': 849, 'STANDARD': 746}
+[BUILDER][DEBUG] p_eff source: p_cal
+[BUILDER][DEBUG] beam summary | selected_vs_requested=25/25 | beam_window_size=2500 | max_exposure=5 | top5_exposure=amen thompson:5, baylor scheierman:5, brandin podziemski:5, brook lopez:5, bub carrington:5 | rej_exposure_cap=3660600 | rej_missing_players=0
+[BUILDER][DEBUG] ENTER build_slips_by_tier_buckets top_n=25 per_tier=650 max_attempts=500000 target_pool_mult=100 phase1_frac=0.2 phase1_pool_frac=0.5
+[BUILDER][DEBUG] leg_df tier counts: {'GOBLIN': 849, 'STANDARD': 746}
+[BUILDER][DEBUG] p_eff source: p_cal
+[BUILDER][DEBUG] beam summary | selected_vs_requested=25/25 | beam_window_size=2500 | max_exposure=5 | top5_exposure=amen thompson:5, baylor scheierman:5, bobby portis:5, brandin podziemski:5, brook lopez:5 | rej_exposure_cap=4759688 | rej_missing_players=0
+[BUILDER][DEBUG] ENTER build_slips_by_tier_buckets top_n=25 per_tier=400 max_attempts=400000 target_pool_mult=100 phase1_frac=0.2 phase1_pool_frac=0.5
+[BUILDER][DEBUG] leg_df tier counts: {'DEMON': 1303, 'GOBLIN': 849, 'STANDARD': 746}
+[BUILDER][DEBUG] p_eff source: p_cal
+[BUILDER][DEBUG] beam summary | selected_vs_requested=25/25 | beam_window_size=2500 | max_exposure=5 | top5_exposure=amen thompson:5, bobby portis:5, brandin podziemski:5, brook lopez:5, bub carrington:5 | rej_exposure_cap=4283240 | rej_missing_players=0
+[BUILDER][DEBUG] ENTER build_slips_by_tier_buckets top_n=25 per_tier=400 max_attempts=400000 target_pool_mult=100 phase1_frac=0.2 phase1_pool_frac=0.5
+[BUILDER][DEBUG] leg_df tier counts: {'DEMON': 1303, 'GOBLIN': 849, 'STANDARD': 746}
+[BUILDER][DEBUG] p_eff source: p_cal
+[BUILDER][DEBUG] beam summary | selected_vs_requested=25/25 | beam_window_size=2500 | max_exposure=5 | top5_exposure=amen thompson:5, baylor scheierman:5, brandin podziemski:5, brook lopez:5, bub carrington:5 | rej_exposure_cap=5172508 | rej_missing_players=0
+[BUILDER][DEBUG] ENTER build_slips_by_tier_buckets top_n=25 per_tier=400 max_attempts=400000 target_pool_mult=100 phase1_frac=0.2 phase1_pool_frac=0.5
+[BUILDER][DEBUG] leg_df tier counts: {'DEMON': 1303, 'GOBLIN': 849, 'STANDARD': 746}
+[BUILDER][DEBUG] p_eff source: p_cal
+[BUILDER][DEBUG] beam summary | selected_vs_requested=25/25 | beam_window_size=2500 | max_exposure=5 | top5_exposure=amen thompson:5, baylor scheierman:5, bennedict mathurin:5, bobby portis:5, brandin podziemski:5 | rej_exposure_cap=6016632 | rej_missing_players=0
+Model run complete.
+Outputs folder: C:\Users\rick\projects\Atlas\data\output
+Run folder: C:\Users\rick\projects\Atlas\data\output\runs\20260302_100112
+Wrote:
+ - C:\Users\rick\projects\Atlas\data\output\runs\20260302_100112\scored_legs.csv
+ - C:\Users\rick\projects\Atlas\data\output\runs\20260302_100112\scored_legs_deduped.csv
+ - C:\Users\rick\projects\Atlas\data\output\runs\20260302_100112\System\recommended_3leg.csv (SYSTEM)
+ - C:\Users\rick\projects\Atlas\data\output\runs\20260302_100112\System\recommended_4leg.csv (SYSTEM)
+ - C:\Users\rick\projects\Atlas\data\output\runs\20260302_100112\System\recommended_5leg.csv (SYSTEM)
+ - C:\Users\rick\projects\Atlas\data\output\runs\20260302_100112\Windfall\recommended_3leg.csv (WINDFALL)
+ - C:\Users\rick\projects\Atlas\data\output\runs\20260302_100112\Windfall\recommended_4leg.csv (WINDFALL)
+ - C:\Users\rick\projects\Atlas\data\output\runs\20260302_100112\Windfall\recommended_5leg.csv (WINDFALL)
+ - C:\Users\rick\projects\Atlas\data\output\runs\20260302_100112\System\recommended_3leg_winprob.csv (SYSTEM winprob)
+ - C:\Users\rick\projects\Atlas\data\output\runs\20260302_100112\System\recommended_4leg_winprob.csv (SYSTEM winprob)
+ - C:\Users\rick\projects\Atlas\data\output\runs\20260302_100112\System\recommended_5leg_winprob.csv (SYSTEM winprob)
+ - C:\Users\rick\projects\Atlas\data\output\runs\20260302_100112\Windfall\recommended_3leg_winprob.csv (WINDFALL winprob)
+ - C:\Users\rick\projects\Atlas\data\output\runs\20260302_100112\Windfall\recommended_4leg_winprob.csv (WINDFALL winprob)
+ - C:\Users\rick\projects\Atlas\data\output\runs\20260302_100112\Windfall\recommended_5leg_winprob.csv (WINDFALL winprob)

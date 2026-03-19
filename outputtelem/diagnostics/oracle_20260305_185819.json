@@ -1,0 +1,3134 @@
+{
+  "run_dir": "data\\output\\runs\\20260305_185819",
+  "iael_audit": {
+    "iael_path": "C:\\Users\\rick\\projects\\Atlas\\data\\output\\injury\\normalized\\latest.json",
+    "cutoff_p_adj": 0.7,
+    "player_out_frac_threshold": 0.08,
+    "meta": {
+      "report_label": "07:45PM",
+      "pulled_at_local": "2026-03-05T18:49:15-06:00",
+      "source_url": "https://ak-static.cms.nba.com/referee/injury/Injury-Report_2026-03-05_07_45PM.pdf",
+      "report_date": "2026-03-05"
+    },
+    "n_teams_with_hard_invalids": 9,
+    "n_teams_with_impact_outs": 9,
+    "iael_raw_team_sample": [
+      "ORL",
+      "ORL",
+      "ORL",
+      "WAS",
+      "WAS",
+      "WAS",
+      "WAS",
+      "WAS",
+      "WAS",
+      "WAS",
+      "WAS",
+      "MIA",
+      "MIA",
+      "MIA",
+      "MIA",
+      "MIA",
+      "MIA",
+      "MIA",
+      "MIA",
+      "MIA",
+      "MIA",
+      "MIA",
+      "HOU",
+      "HOU",
+      "HOU"
+    ],
+    "teams_with_hard_invalids_abbrev": [
+      "CHA",
+      "DEN",
+      "HOU",
+      "MIA",
+      "MIN",
+      "ORL",
+      "PHX",
+      "SAC",
+      "WAS"
+    ],
+    "teams_with_impact_outs_abbrev": [
+      "CHA",
+      "DEN",
+      "HOU",
+      "MIA",
+      "MIN",
+      "ORL",
+      "PHX",
+      "SAC",
+      "WAS"
+    ],
+    "eligible_players_count": 26,
+    "cols": {
+      "team": "team",
+      "outs_used": "role_ctx_outs_used",
+      "p_adj": "p_adj",
+      "p_role": "p_role",
+      "player": "player",
+      "stat": "stat",
+      "tier": "tier",
+      "direction": "direction"
+    },
+    "team_coverage": [
+      {
+        "team": "MIN",
+        "n_legs": 328,
+        "n_outs_used_gt0": 0,
+        "share_outs_used_gt0": 0.0,
+        "n_iael_eligible_out_players": 1
+      },
+      {
+        "team": "PHX",
+        "n_legs": 333,
+        "n_outs_used_gt0": 173,
+        "share_outs_used_gt0": 0.5195195195195195,
+        "n_iael_eligible_out_players": 3
+      },
+      {
+        "team": "DEN",
+        "n_legs": 344,
+        "n_outs_used_gt0": 285,
+        "share_outs_used_gt0": 0.8284883720930233,
+        "n_iael_eligible_out_players": 3
+      },
+      {
+        "team": "SAC",
+        "n_legs": 320,
+        "n_outs_used_gt0": 316,
+        "share_outs_used_gt0": 0.9875,
+        "n_iael_eligible_out_players": 3
+      },
+      {
+        "team": "CHA",
+        "n_legs": 0,
+        "n_outs_used_gt0": 0,
+        "share_outs_used_gt0": null,
+        "n_iael_eligible_out_players": 1
+      },
+      {
+        "team": "HOU",
+        "n_legs": 0,
+        "n_outs_used_gt0": 0,
+        "share_outs_used_gt0": null,
+        "n_iael_eligible_out_players": 3
+      },
+      {
+        "team": "MIA",
+        "n_legs": 0,
+        "n_outs_used_gt0": 0,
+        "share_outs_used_gt0": null,
+        "n_iael_eligible_out_players": 3
+      },
+      {
+        "team": "ORL",
+        "n_legs": 0,
+        "n_outs_used_gt0": 0,
+        "share_outs_used_gt0": null,
+        "n_iael_eligible_out_players": 2
+      },
+      {
+        "team": "WAS",
+        "n_legs": 0,
+        "n_outs_used_gt0": 0,
+        "share_outs_used_gt0": null,
+        "n_iael_eligible_out_players": 7
+      }
+    ],
+    "possible_misses_count": 29,
+    "possible_misses_top50": [
+      {
+        "team": "MIN",
+        "player": "Ayo Dosunmu",
+        "stat": "PTS",
+        "tier": "GOBLIN",
+        "direction": "OVER",
+        "role_ctx_outs_used": 0,
+        "p_role": 0.8945605439456055,
+        "p_adj": 0.8115934798130161
+      },
+      {
+        "team": "MIN",
+        "player": "Ayo Dosunmu",
+        "stat": "FG3M",
+        "tier": "GOBLIN",
+        "direction": "OVER",
+        "role_ctx_outs_used": 0,
+        "p_role": 0.8644635536446356,
+        "p_adj": 0.7842878700858917
+      },
+      {
+        "team": "MIN",
+        "player": "Ayo Dosunmu",
+        "stat": "PTS",
+        "tier": "GOBLIN",
+        "direction": "OVER",
+        "role_ctx_outs_used": 0,
+        "p_role": 0.8554644535546445,
+        "p_adj": 0.7761234020611701
+      },
+      {
+        "team": "MIN",
+        "player": "Donte DiVincenzo",
+        "stat": "REB",
+        "tier": "GOBLIN",
+        "direction": "OVER",
+        "role_ctx_outs_used": 0,
+        "p_role": 0.8544645535446456,
+        "p_adj": 0.7752162389473123
+      },
+      {
+        "team": "MIN",
+        "player": "Donte DiVincenzo",
+        "stat": "PTS",
+        "tier": "GOBLIN",
+        "direction": "OVER",
+        "role_ctx_outs_used": 0,
+        "p_role": 0.8500649935006499,
+        "p_adj": 0.7712247212463372
+      },
+      {
+        "team": "MIN",
+        "player": "Ayo Dosunmu",
+        "stat": "PR",
+        "tier": "GOBLIN",
+        "direction": "OVER",
+        "role_ctx_outs_used": 0,
+        "p_role": 0.9114588541145884,
+        "p_adj": 0.7705683246523001
+      },
+      {
+        "team": "MIN",
+        "player": "Donte DiVincenzo",
+        "stat": "FG3M",
+        "tier": "GOBLIN",
+        "direction": "OVER",
+        "role_ctx_outs_used": 0,
+        "p_role": 0.8465653434656535,
+        "p_adj": 0.7680496503478345
+      },
+      {
+        "team": "MIN",
+        "player": "Ayo Dosunmu",
+        "stat": "PA",
+        "tier": "GOBLIN",
+        "direction": "OVER",
+        "role_ctx_outs_used": 0,
+        "p_role": 0.9017598240175982,
+        "p_adj": 0.7623685410429234
+      },
+      {
+        "team": "MIN",
+        "player": "Jaden McDaniels",
+        "stat": "AST",
+        "tier": "GOBLIN",
+        "direction": "OVER",
+        "role_ctx_outs_used": 0,
+        "p_role": 0.8327667233276672,
+        "p_adj": 0.7555307993765946
+      },
+      {
+        "team": "MIN",
+        "player": "Rudy Gobert",
+        "stat": "REB",
+        "tier": "GOBLIN",
+        "direction": "OVER",
+        "role_ctx_outs_used": 0,
+        "p_role": 0.8257674232576743,
+        "p_adj": 0.7491806575795891
+      },
+      {
+        "team": "MIN",
+        "player": "Donte DiVincenzo",
+        "stat": "PRA",
+        "tier": "GOBLIN",
+        "direction": "OVER",
+        "role_ctx_outs_used": 0,
+        "p_role": 0.8844615538446156,
+        "p_adj": 0.7477441847086743
+      },
+      {
+        "team": "MIN",
+        "player": "Naz Reid",
+        "stat": "PTS",
+        "tier": "GOBLIN",
+        "direction": "OVER",
+        "role_ctx_outs_used": 0,
+        "p_role": 0.8238676132386761,
+        "p_adj": 0.7474570476632588
+      },
+      {
+        "team": "MIN",
+        "player": "Rudy Gobert",
+        "stat": "AST",
+        "tier": "GOBLIN",
+        "direction": "OVER",
+        "role_ctx_outs_used": 0,
+        "p_role": 0.8201679832016798,
+        "p_adj": 0.7441005441419845
+      },
+      {
+        "team": "MIN",
+        "player": "Julius Randle",
+        "stat": "PTS",
+        "tier": "GOBLIN",
+        "direction": "OVER",
+        "role_ctx_outs_used": 0,
+        "p_role": 0.805069493050695,
+        "p_adj": 0.7304023811227295
+      },
+      {
+        "team": "MIN",
+        "player": "Ayo Dosunmu",
+        "stat": "AST",
+        "tier": "GOBLIN",
+        "direction": "OVER",
+        "role_ctx_outs_used": 0,
+        "p_role": 0.8036696330366964,
+        "p_adj": 0.7291323527633283
+      },
+      {
+        "team": "MIN",
+        "player": "Ayo Dosunmu",
+        "stat": "PTS",
+        "tier": "GOBLIN",
+        "direction": "OVER",
+        "role_ctx_outs_used": 0,
+        "p_role": 0.8031696830316968,
+        "p_adj": 0.7286787712063992
+      },
+      {
+        "team": "MIN",
+        "player": "Julius Randle",
+        "stat": "REB",
+        "tier": "GOBLIN",
+        "direction": "OVER",
+        "role_ctx_outs_used": 0,
+        "p_role": 0.8016698330166984,
+        "p_adj": 0.7273180265356124
+      },
+      {
+        "team": "MIN",
+        "player": "Donte DiVincenzo",
+        "stat": "PR",
+        "tier": "GOBLIN",
+        "direction": "OVER",
+        "role_ctx_outs_used": 0,
+        "p_role": 0.8531646835316469,
+        "p_adj": 0.721285089144397
+      },
+      {
+        "team": "MIN",
+        "player": "Ayo Dosunmu",
+        "stat": "REB",
+        "tier": "GOBLIN",
+        "direction": "OVER",
+        "role_ctx_outs_used": 0,
+        "p_role": 0.7884711528847115,
+        "p_adj": 0.7153434734326874
+      },
+      {
+        "team": "MIN",
+        "player": "Ayo Dosunmu",
+        "stat": "PRA",
+        "tier": "GOBLIN",
+        "direction": "OVER",
+        "role_ctx_outs_used": 0,
+        "p_role": 0.8440655934406559,
+        "p_adj": 0.7135925086448786
+      },
+      {
+        "team": "MIN",
+        "player": "Donte DiVincenzo",
+        "stat": "AST",
+        "tier": "GOBLIN",
+        "direction": "OVER",
+        "role_ctx_outs_used": 0,
+        "p_role": 0.7854714528547145,
+        "p_adj": 0.7126219840911135
+      },
+      {
+        "team": "MIN",
+        "player": "Julius Randle",
+        "stat": "FG3M",
+        "tier": "GOBLIN",
+        "direction": "OVER",
+        "role_ctx_outs_used": 0,
+        "p_role": 0.7826717328267173,
+        "p_adj": 0.7100819273723114
+      },
+      {
+        "team": "MIN",
+        "player": "Naz Reid",
+        "stat": "PTS",
+        "tier": "GOBLIN",
+        "direction": "OVER",
+        "role_ctx_outs_used": 0,
+        "p_role": 0.7818718128187181,
+        "p_adj": 0.709356196881225
+      },
+      {
+        "team": "MIN",
+        "player": "Donte DiVincenzo",
+        "stat": "PA",
+        "tier": "GOBLIN",
+        "direction": "OVER",
+        "role_ctx_outs_used": 0,
+        "p_role": 0.8367663233676632,
+        "p_adj": 0.7074215374749353
+      },
+      {
+        "team": "MIN",
+        "player": "Julius Randle",
+        "stat": "PR",
+        "tier": "GOBLIN",
+        "direction": "OVER",
+        "role_ctx_outs_used": 0,
+        "p_role": 0.8366663333666633,
+        "p_adj": 0.7073370036232922
+      },
+      {
+        "team": "MIN",
+        "player": "Rudy Gobert",
+        "stat": "RA",
+        "tier": "GOBLIN",
+        "direction": "OVER",
+        "role_ctx_outs_used": 0,
+        "p_role": 0.8331666833316669,
+        "p_adj": 0.7043783188157853
+      },
+      {
+        "team": "MIN",
+        "player": "Rudy Gobert",
+        "stat": "PA",
+        "tier": "GOBLIN",
+        "direction": "OVER",
+        "role_ctx_outs_used": 0,
+        "p_role": 0.8315668433156684,
+        "p_adj": 0.7030257771894963
+      },
+      {
+        "team": "MIN",
+        "player": "Ayo Dosunmu",
+        "stat": "PR",
+        "tier": "GOBLIN",
+        "direction": "OVER",
+        "role_ctx_outs_used": 0,
+        "p_role": 0.8308669133086691,
+        "p_adj": 0.7024340402279949
+      },
+      {
+        "team": "MIN",
+        "player": "Ayo Dosunmu",
+        "stat": "PA",
+        "tier": "GOBLIN",
+        "direction": "OVER",
+        "role_ctx_outs_used": 0,
+        "p_role": 0.8287671232876712,
+        "p_adj": 0.7006588293434907
+      }
+    ]
+  },
+  "legs_rows": 3092,
+  "p_cal": {
+    "min": 0.0098490150984901,
+    "p01": 0.04218573502638712,
+    "p05": 0.09402611758101777,
+    "p25": 0.24512548745125487,
+    "med": 0.398661644348664,
+    "p75": 0.5592445144211786,
+    "p95": 0.7392658045396024,
+    "max": 0.916958304169583
+  },
+  "p_adj": {
+    "min": 0.03,
+    "p01": 0.038509188821232804,
+    "p05": 0.0874524612137916,
+    "p25": 0.23216322166546124,
+    "med": 0.3823441495601122,
+    "p75": 0.5339108506610972,
+    "p95": 0.7068578739388462,
+    "max": 0.8290398825533632
+  },
+  "p_for_cal": {
+    "min": 0.0098490150984901,
+    "p01": 0.04218573502638712,
+    "p05": 0.09402611758101777,
+    "p25": 0.24512548745125487,
+    "med": 0.398661644348664,
+    "p75": 0.5592445144211786,
+    "p95": 0.7392658045396024,
+    "max": 0.916958304169583
+  },
+  "games_used": {
+    "min": 18,
+    "p10": 50,
+    "med": 50,
+    "p90": 50,
+    "max": 50
+  },
+  "prob_audit": {
+    "overall": {
+      "p_role": {
+        "min": 0.0098490150984901,
+        "p01": 0.04850014998500144,
+        "p05": 0.1066493350664933,
+        "p25": 0.2755224477552245,
+        "med": 0.4521047895210479,
+        "p75": 0.6256374362563744,
+        "p95": 0.8040045995400459,
+        "max": 0.940955904409559,
+        "floor_share": 0.0,
+        "cap_share": 0.0
+      },
+      "p_adj": {
+        "min": 0.03,
+        "p01": 0.038509188821232804,
+        "p05": 0.0874524612137916,
+        "p25": 0.23216322166546124,
+        "med": 0.3823441495601122,
+        "p75": 0.5339108506610972,
+        "p95": 0.7068578739388462,
+        "max": 0.8290398825533632,
+        "floor_share": 0.0,
+        "cap_share": 0.0
+      },
+      "p_cal": {
+        "min": 0.0098490150984901,
+        "p01": 0.04218573502638712,
+        "p05": 0.09402611758101777,
+        "p25": 0.24512548745125487,
+        "med": 0.398661644348664,
+        "p75": 0.5592445144211786,
+        "p95": 0.7392658045396024,
+        "max": 0.916958304169583,
+        "floor_share": 0.0,
+        "cap_share": 0.0
+      },
+      "games_used_lt5_share": 0.0,
+      "over_share": 0.8706338939197931,
+      "under_share": 0.129366106080207
+    },
+    "by_tier": {
+      "DEMON": {
+        "rows": 1351,
+        "p_role": {
+          "min": 0.0098490150984901,
+          "p01": 0.037746225377462195,
+          "p05": 0.0695430456954304,
+          "p25": 0.17028297170282966,
+          "med": 0.2693230676932306,
+          "p75": 0.37146285371462856,
+          "p95": 0.5247475252474753,
+          "max": 0.7307769223077692,
+          "floor_share": 0.0,
+          "cap_share": 0.0
+        },
+        "p_adj": {
+          "min": 0.03,
+          "p01": 0.03,
+          "p05": 0.0563556539936443,
+          "p25": 0.14045303244892066,
+          "med": 0.2304647890756125,
+          "p75": 0.3226325614435804,
+          "p95": 0.45709029667121875,
+          "max": 0.6178156547332934,
+          "floor_share": 0.0,
+          "cap_share": 0.0
+        },
+        "p_cal": {
+          "min": 0.0098490150984901,
+          "p01": 0.03235024627903275,
+          "p05": 0.0615974219922103,
+          "p25": 0.14777572259839278,
+          "med": 0.2420764769329943,
+          "p75": 0.3382161783821618,
+          "p95": 0.4748497380426492,
+          "max": 0.6428857114288571,
+          "floor_share": 0.0,
+          "cap_share": 0.0
+        },
+        "games_used_lt5_share": 0.0,
+        "over_share": 1.0,
+        "under_share": 0.0,
+        "delta_p_adj_minus_p_role": {
+          "min": -0.24789934832795868,
+          "p01": -0.13024916382642815,
+          "p05": -0.08461096590649576,
+          "p25": -0.0502077732968762,
+          "med": -0.03303751925024867,
+          "p75": -0.021025686399242044,
+          "p95": -0.008701193111878898,
+          "max": 0.020150984901509898
+        }
+      },
+      "GOBLIN": {
+        "rows": 941,
+        "p_role": {
+          "min": 0.0997400259974002,
+          "p01": 0.16981301869813012,
+          "p05": 0.3402159784021598,
+          "p25": 0.5904909509049096,
+          "med": 0.6861813818618138,
+          "p75": 0.7654734526547345,
+          "p95": 0.8596640335966403,
+          "max": 0.940955904409559,
+          "floor_share": 0.0,
+          "cap_share": 0.0
+        },
+        "p_adj": {
+          "min": 0.0600323423431025,
+          "p01": 0.12667574932402287,
+          "p05": 0.264292763308005,
+          "p25": 0.4852665753569775,
+          "med": 0.5904443924626621,
+          "p75": 0.671255346099191,
+          "p95": 0.7564511714279093,
+          "max": 0.8290398825533632,
+          "floor_share": 0.0,
+          "cap_share": 0.0
+        },
+        "p_cal": {
+          "min": 0.0600323423431025,
+          "p01": 0.13859614038596135,
+          "p05": 0.3021197880211979,
+          "p25": 0.5154112427163541,
+          "med": 0.6157369635310845,
+          "p75": 0.7003656576541698,
+          "p95": 0.7825717428257174,
+          "max": 0.8977602239776022,
+          "floor_share": 0.0,
+          "cap_share": 0.0
+        },
+        "games_used_lt5_share": 0.0,
+        "over_share": 1.0,
+        "under_share": 0.0,
+        "delta_p_adj_minus_p_role": {
+          "min": -0.3490892549437228,
+          "p01": -0.29275410315669315,
+          "p05": -0.19212945880447901,
+          "p25": -0.11439868946466214,
+          "med": -0.08545637521318772,
+          "p75": -0.0647066062958004,
+          "p95": -0.04560711094007899,
+          "max": -0.012060312350544
+        }
+      },
+      "STANDARD": {
+        "rows": 800,
+        "p_role": {
+          "min": 0.0830416958304169,
+          "p01": 0.17611738826117382,
+          "p05": 0.2554994500549944,
+          "p25": 0.4168333166683331,
+          "med": 0.5,
+          "p75": 0.5831666833316669,
+          "p95": 0.7445005499450055,
+          "max": 0.916958304169583,
+          "floor_share": 0.0,
+          "cap_share": 0.0
+        },
+        "p_adj": {
+          "min": 0.0552779011951275,
+          "p01": 0.11363896720051786,
+          "p05": 0.207502204654429,
+          "p25": 0.35333666988705176,
+          "med": 0.4274570931290532,
+          "p75": 0.49787188057293497,
+          "p95": 0.6192630166097824,
+          "max": 0.8122056763730929,
+          "floor_share": 0.0,
+          "cap_share": 0.0
+        },
+        "p_cal": {
+          "min": 0.0552779011951275,
+          "p01": 0.11872002018748218,
+          "p05": 0.2278204528843874,
+          "p25": 0.36472002010607407,
+          "med": 0.44307818358355155,
+          "p75": 0.5222477752224778,
+          "p95": 0.6787421257874209,
+          "max": 0.916958304169583,
+          "floor_share": 0.0,
+          "cap_share": 0.0
+        },
+        "games_used_lt5_share": 0.0,
+        "over_share": 0.5,
+        "under_share": 0.5,
+        "delta_p_adj_minus_p_role": {
+          "min": -0.3615489090628158,
+          "p01": -0.3005559166097315,
+          "p05": -0.18668662012172002,
+          "p25": -0.0882275645661904,
+          "med": -0.06435843508985711,
+          "p75": -0.046543071690388405,
+          "p95": -0.03275504532378442,
+          "max": -0.009720329703058597
+        }
+      }
+    }
+  },
+  "role_ctx_audit": {
+    "role_ctx_mult": {
+      "min": 1.0,
+      "p01": 1.0,
+      "p05": 1.0,
+      "p25": 1.0,
+      "med": 1.0,
+      "p75": 1.001628649332016,
+      "p95": 1.1455280535318608,
+      "max": 1.1902629390756387,
+      "std": 0.04857777442135135,
+      "iqr": 0.0016286493320158968
+    },
+    "extremes_top10": [
+      {
+        "prop_key": "Cameron Johnson|PRA|OVER|15.5|GOBLIN",
+        "player": "Cameron Johnson",
+        "stat": "PRA",
+        "tier": "GOBLIN",
+        "direction": "OVER",
+        "role_ctx_mult": 1.1902629390756387,
+        "role_ctx_outs_used": 6,
+        "p_adj": 0.5699694947033221,
+        "p_role": 0.6741825817418258,
+        "p_cal": 0.6741825817418258
+      },
+      {
+        "prop_key": "Cameron Johnson|PRA|OVER|16.5|GOBLIN",
+        "player": "Cameron Johnson",
+        "stat": "PRA",
+        "tier": "GOBLIN",
+        "direction": "OVER",
+        "role_ctx_mult": 1.1902629390756387,
+        "role_ctx_outs_used": 6,
+        "p_adj": 0.5286324412498666,
+        "p_role": 0.6252874712528748,
+        "p_cal": 0.6252874712528748
+      },
+      {
+        "prop_key": "Cameron Johnson|PRA|OVER|21.5|DEMON",
+        "player": "Cameron Johnson",
+        "stat": "PRA",
+        "tier": "DEMON",
+        "direction": "OVER",
+        "role_ctx_mult": 1.1902629390756387,
+        "role_ctx_outs_used": 6,
+        "p_adj": 0.322877046350662,
+        "p_role": 0.381911808819118,
+        "p_cal": 0.381911808819118
+      },
+      {
+        "prop_key": "Cameron Johnson|PRA|OVER|19.5|DEMON",
+        "player": "Cameron Johnson",
+        "stat": "PRA",
+        "tier": "DEMON",
+        "direction": "OVER",
+        "role_ctx_mult": 1.1902629390756387,
+        "role_ctx_outs_used": 6,
+        "p_adj": 0.4000564529007745,
+        "p_role": 0.4732026797320268,
+        "p_cal": 0.4732026797320268
+      },
+      {
+        "prop_key": "Cameron Johnson|PRA|OVER|14.5|GOBLIN",
+        "player": "Cameron Johnson",
+        "stat": "PRA",
+        "tier": "GOBLIN",
+        "direction": "OVER",
+        "role_ctx_mult": 1.1902629390756387,
+        "role_ctx_outs_used": 6,
+        "p_adj": 0.6123209543764945,
+        "p_role": 0.7242775722427757,
+        "p_cal": 0.7242775722427757
+      },
+      {
+        "prop_key": "Cameron Johnson|PRA|OVER|23.5|DEMON",
+        "player": "Cameron Johnson",
+        "stat": "PRA",
+        "tier": "DEMON",
+        "direction": "OVER",
+        "role_ctx_mult": 1.1902629390756387,
+        "role_ctx_outs_used": 6,
+        "p_adj": 0.2527984833385665,
+        "p_role": 0.2990200979902009,
+        "p_cal": 0.2990200979902009
+      },
+      {
+        "prop_key": "Cameron Johnson|PRA|UNDER|17.5|STANDARD",
+        "player": "Cameron Johnson",
+        "stat": "PRA",
+        "tier": "STANDARD",
+        "direction": "UNDER",
+        "role_ctx_mult": 1.1902629390756387,
+        "role_ctx_outs_used": 6,
+        "p_adj": 0.3594802041121064,
+        "p_role": 0.4252074792520748,
+        "p_cal": 0.4252074792520748
+      },
+      {
+        "prop_key": "Cameron Johnson|PRA|OVER|17.5|STANDARD",
+        "player": "Cameron Johnson",
+        "stat": "PRA",
+        "tier": "STANDARD",
+        "direction": "OVER",
+        "role_ctx_mult": 1.1902629390756387,
+        "role_ctx_outs_used": 6,
+        "p_adj": 0.4859428461701219,
+        "p_role": 0.5747925207479252,
+        "p_cal": 0.5747925207479252
+      },
+      {
+        "prop_key": "Cameron Johnson|PR|OVER|15.5|STANDARD",
+        "player": "Cameron Johnson",
+        "stat": "PR",
+        "tier": "STANDARD",
+        "direction": "OVER",
+        "role_ctx_mult": 1.1858124918034578,
+        "role_ctx_outs_used": 4,
+        "p_adj": 0.4605826906772044,
+        "p_role": 0.5447955204479552,
+        "p_cal": 0.5447955204479552
+      },
+      {
+        "prop_key": "Cameron Johnson|PR|OVER|19.5|DEMON",
+        "player": "Cameron Johnson",
+        "stat": "PR",
+        "tier": "DEMON",
+        "direction": "OVER",
+        "role_ctx_mult": 1.1858124918034578,
+        "role_ctx_outs_used": 4,
+        "p_adj": 0.293881935237093,
+        "p_role": 0.3476152384761524,
+        "p_cal": 0.3476152384761524
+      }
+    ],
+    "group_medians": {
+      "outs_used_gt0": {
+        "n": 774,
+        "role_ctx_mult_median": 1.097015882769807,
+        "p_role_median": 0.4138586141385861,
+        "p_adj_median": 0.32808634613062115,
+        "delta_p_adj_minus_p_role_median": -0.05920646066116869
+      },
+      "outs_used_eq0": {
+        "n": 2318,
+        "role_ctx_mult_median": 1.0,
+        "p_role_median": 0.46195380461953806,
+        "p_adj_median": 0.39585812468840365,
+        "delta_p_adj_minus_p_role_median": -0.055657593833986135
+      }
+    },
+    "corr_role_mult_vs_delta_p": -0.12574153666380025,
+    "outs_ctx_p_adj_ge_0.85_share": 0.0,
+    "outs_ctx_p_adj_ge_0.90_share": 0.0,
+    "outs_ctx_p_adj_ge_0.95_share": 0.0,
+    "outs_ctx_top10_by_p_adj": [
+      {
+        "prop_key": "Jonas Valan\u010di\u016bnas|PTS|OVER|4.5|GOBLIN",
+        "player": "Jonas Valan\u010di\u016bnas",
+        "stat": "PTS",
+        "tier": "GOBLIN",
+        "direction": "OVER",
+        "role_ctx_outs_used": 2,
+        "role_ctx_mult": 1.0743446535136985,
+        "p_role": 0.8952604739526048,
+        "p_adj": 0.8122284939927167,
+        "p_cal": 0.8952604739526048
+      },
+      {
+        "prop_key": "Nique Clifford|PTS|UNDER|14.5|STANDARD",
+        "player": "Nique Clifford",
+        "stat": "PTS",
+        "tier": "STANDARD",
+        "direction": "UNDER",
+        "role_ctx_outs_used": 2,
+        "role_ctx_mult": 1.0490701118865071,
+        "p_role": 0.906959304069593,
+        "p_adj": 0.8122056763730929,
+        "p_cal": 0.906959304069593
+      },
+      {
+        "prop_key": "Nique Clifford|AST|UNDER|4.0|STANDARD",
+        "player": "Nique Clifford",
+        "stat": "AST",
+        "tier": "STANDARD",
+        "direction": "UNDER",
+        "role_ctx_outs_used": 2,
+        "role_ctx_mult": 1.111558119463106,
+        "p_role": 0.9028597140285972,
+        "p_adj": 0.8085343867273956,
+        "p_cal": 0.9028597140285972
+      },
+      {
+        "prop_key": "Jonas Valan\u010di\u016bnas|REB|OVER|2.5|GOBLIN",
+        "player": "Jonas Valan\u010di\u016bnas",
+        "stat": "REB",
+        "tier": "GOBLIN",
+        "direction": "OVER",
+        "role_ctx_outs_used": 1,
+        "role_ctx_mult": 1.0611876077857232,
+        "p_role": 0.8563643635636436,
+        "p_adj": 0.7769398488636423,
+        "p_cal": 0.8563643635636436
+      },
+      {
+        "prop_key": "Malik Monk|PTS|OVER|5.5|GOBLIN",
+        "player": "Malik Monk",
+        "stat": "PTS",
+        "tier": "GOBLIN",
+        "direction": "OVER",
+        "role_ctx_outs_used": 1,
+        "role_ctx_mult": 1.0946111173703643,
+        "p_role": 0.8512648735126488,
+        "p_adj": 0.7623298633815475,
+        "p_cal": 0.8512648735126488
+      },
+      {
+        "prop_key": "Russell Westbrook|AST|OVER|3.5|GOBLIN",
+        "player": "Russell Westbrook",
+        "stat": "AST",
+        "tier": "GOBLIN",
+        "direction": "OVER",
+        "role_ctx_outs_used": 1,
+        "role_ctx_mult": 1.0637133897843802,
+        "p_role": 0.84996500349965,
+        "p_adj": 0.7611657959329117,
+        "p_cal": 0.84996500349965
+      },
+      {
+        "prop_key": "Nique Clifford|PA|UNDER|18.5|STANDARD",
+        "player": "Nique Clifford",
+        "stat": "PA",
+        "tier": "STANDARD",
+        "direction": "UNDER",
+        "role_ctx_outs_used": 4,
+        "role_ctx_mult": 1.1297621327646112,
+        "p_role": 0.916958304169583,
+        "p_adj": 0.7572945328246086,
+        "p_cal": 0.916958304169583
+      },
+      {
+        "prop_key": "Jonas Valan\u010di\u016bnas|PRA|OVER|9.5|GOBLIN",
+        "player": "Jonas Valan\u010di\u016bnas",
+        "stat": "PRA",
+        "tier": "GOBLIN",
+        "direction": "OVER",
+        "role_ctx_outs_used": 4,
+        "role_ctx_mult": 1.132273153868407,
+        "p_role": 0.8906609339066094,
+        "p_adj": 0.752985283510544,
+        "p_cal": 0.8906609339066094
+      },
+      {
+        "prop_key": "Jonas Valan\u010di\u016bnas|PTS|OVER|5.5|GOBLIN",
+        "player": "Jonas Valan\u010di\u016bnas",
+        "stat": "PTS",
+        "tier": "GOBLIN",
+        "direction": "OVER",
+        "role_ctx_outs_used": 2,
+        "role_ctx_mult": 1.0743446535136985,
+        "p_role": 0.8274672532746725,
+        "p_adj": 0.7507228348731475,
+        "p_cal": 0.8274672532746725
+      },
+      {
+        "prop_key": "Nikola Joki\u0107|AST|OVER|7.5|GOBLIN",
+        "player": "Nikola Joki\u0107",
+        "stat": "AST",
+        "tier": "GOBLIN",
+        "direction": "OVER",
+        "role_ctx_outs_used": 1,
+        "role_ctx_mult": 1.1058083107365262,
+        "p_role": 0.8172682731726827,
+        "p_adj": 0.7414697711117963,
+        "p_cal": 0.8172682731726827
+      }
+    ],
+    "outs_ctx_top10_by_delta_p_adj_minus_p_role": [
+      {
+        "prop_key": "Nique Clifford|AST|OVER|6.5|DEMON",
+        "player": "Nique Clifford",
+        "stat": "AST",
+        "tier": "DEMON",
+        "direction": "OVER",
+        "role_ctx_outs_used": 2,
+        "role_ctx_mult": 1.111558119463106,
+        "p_role": 0.0098490150984901,
+        "p_adj": 0.03,
+        "p_cal": 0.0098490150984901
+      },
+      {
+        "prop_key": "Nique Clifford|FG3M|OVER|3.5|DEMON",
+        "player": "Nique Clifford",
+        "stat": "FG3M",
+        "tier": "DEMON",
+        "direction": "OVER",
+        "role_ctx_outs_used": 2,
+        "role_ctx_mult": 1.0490701118865071,
+        "p_role": 0.0125487451254874,
+        "p_adj": 0.03,
+        "p_cal": 0.0125487451254874
+      },
+      {
+        "prop_key": "Nique Clifford|PR|OVER|29.5|DEMON",
+        "player": "Nique Clifford",
+        "stat": "PR",
+        "tier": "DEMON",
+        "direction": "OVER",
+        "role_ctx_outs_used": 4,
+        "role_ctx_mult": 1.098740144633303,
+        "p_role": 0.0145485451454854,
+        "p_adj": 0.03,
+        "p_cal": 0.0145485451454854
+      },
+      {
+        "prop_key": "Nique Clifford|PA|OVER|24.5|DEMON",
+        "player": "Nique Clifford",
+        "stat": "PA",
+        "tier": "DEMON",
+        "direction": "OVER",
+        "role_ctx_outs_used": 4,
+        "role_ctx_mult": 1.1297621327646112,
+        "p_role": 0.0200479952004799,
+        "p_adj": 0.03,
+        "p_cal": 0.0200479952004799
+      },
+      {
+        "prop_key": "Nique Clifford|PTS|OVER|19.5|DEMON",
+        "player": "Nique Clifford",
+        "stat": "PTS",
+        "tier": "DEMON",
+        "direction": "OVER",
+        "role_ctx_outs_used": 2,
+        "role_ctx_mult": 1.0490701118865071,
+        "p_role": 0.0235476452354764,
+        "p_adj": 0.03,
+        "p_cal": 0.0235476452354764
+      },
+      {
+        "prop_key": "Nique Clifford|AST|OVER|5.5|DEMON",
+        "player": "Nique Clifford",
+        "stat": "AST",
+        "tier": "DEMON",
+        "direction": "OVER",
+        "role_ctx_outs_used": 2,
+        "role_ctx_mult": 1.111558119463106,
+        "p_role": 0.0250474952504749,
+        "p_adj": 0.03,
+        "p_cal": 0.0250474952504749
+      },
+      {
+        "prop_key": "Nique Clifford|PRA|OVER|30.5|DEMON",
+        "player": "Nique Clifford",
+        "stat": "PRA",
+        "tier": "DEMON",
+        "direction": "OVER",
+        "role_ctx_outs_used": 6,
+        "role_ctx_mult": 1.1493401116926532,
+        "p_role": 0.0311468853114688,
+        "p_adj": 0.03,
+        "p_cal": 0.0311468853114688
+      },
+      {
+        "prop_key": "Nique Clifford|PA|OVER|22.5|DEMON",
+        "player": "Nique Clifford",
+        "stat": "PA",
+        "tier": "DEMON",
+        "direction": "OVER",
+        "role_ctx_outs_used": 4,
+        "role_ctx_mult": 1.1297621327646112,
+        "p_role": 0.0334466553344665,
+        "p_adj": 0.03,
+        "p_cal": 0.0334466553344665
+      },
+      {
+        "prop_key": "Precious Achiuwa|PTS|OVER|19.5|DEMON",
+        "player": "Precious Achiuwa",
+        "stat": "PTS",
+        "tier": "DEMON",
+        "direction": "OVER",
+        "role_ctx_outs_used": 1,
+        "role_ctx_mult": 1.0296903152098926,
+        "p_role": 0.0334466553344665,
+        "p_adj": 0.03,
+        "p_cal": 0.0334466553344665
+      },
+      {
+        "prop_key": "Nique Clifford|PTS|OVER|17.5|DEMON",
+        "player": "Nique Clifford",
+        "stat": "PTS",
+        "tier": "DEMON",
+        "direction": "OVER",
+        "role_ctx_outs_used": 2,
+        "role_ctx_mult": 1.0490701118865071,
+        "p_role": 0.0433456654334566,
+        "p_adj": 0.0388171722295061,
+        "p_cal": 0.0433456654334566
+      }
+    ]
+  },
+  "slip_files": [
+    "recommended_3leg.csv",
+    "recommended_3leg_winprob.csv",
+    "recommended_4leg.csv",
+    "recommended_4leg_winprob.csv",
+    "recommended_5leg.csv",
+    "recommended_5leg_winprob.csv",
+    "System\\recommended_3leg.csv",
+    "System\\recommended_3leg_winprob.csv",
+    "System\\recommended_4leg.csv",
+    "System\\recommended_4leg_winprob.csv",
+    "System\\recommended_5leg.csv",
+    "System\\recommended_5leg_winprob.csv",
+    "Windfall\\recommended_3leg.csv",
+    "Windfall\\recommended_3leg_winprob.csv",
+    "Windfall\\recommended_4leg.csv",
+    "Windfall\\recommended_4leg_winprob.csv",
+    "Windfall\\recommended_5leg.csv",
+    "Windfall\\recommended_5leg_winprob.csv"
+  ],
+  "slips": [
+    {
+      "file": "recommended_3leg.csv",
+      "rows": 25,
+      "hit_prob": {
+        "min": 0.1700010767558715,
+        "p01": 0.17465897529705576,
+        "p05": 0.19645624247895713,
+        "p25": 0.2668512887918686,
+        "med": 0.3050439650951284,
+        "p75": 0.3685715205071333,
+        "p95": 0.4367883700208669,
+        "max": 0.4848931420319862
+      },
+      "ev": {
+        "min": 1.690073301704767,
+        "p01": 1.7175996236162052,
+        "p05": 1.8279705962240431,
+        "p25": 2.155302951087399,
+        "med": 2.340886656782563,
+        "p75": 2.7410647842858324,
+        "p95": 3.450181034295327,
+        "max": 3.6903219385057526
+      },
+      "payout_mult": {
+        "min": 6.0,
+        "p01": 6.0,
+        "p05": 6.0,
+        "p25": 6.0,
+        "med": 6.0,
+        "p75": 6.0,
+        "p95": 6.0,
+        "max": 6.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "payout_mult_eff": {
+        "min": 5.634999882528961,
+        "p01": 5.63930201929752,
+        "p05": 5.7333010377173705,
+        "p25": 7.449968942561414,
+        "med": 7.997753060362791,
+        "p75": 9.375642655279876,
+        "p95": 10.226189860789388,
+        "max": 10.616205168281438,
+        "std": 1.4449938048905926,
+        "iqr": 1.9256737127184618
+      },
+      "kernel_mult": {
+        "min": 0.93916664708816,
+        "p01": 0.9398836698829198,
+        "p05": 0.9555501729528949,
+        "p25": 1.2416614904269023,
+        "med": 1.3329588433937984,
+        "p75": 1.5626071092133125,
+        "p95": 1.704364976798231,
+        "max": 1.7693675280469063,
+        "std": 0.2408323008150988,
+        "iqr": 0.32094561878641015
+      },
+      "tier_mix_legs": {
+        "STANDARD": 50,
+        "GOBLIN": 25,
+        "DEMON": 0,
+        "OTHER": 0
+      },
+      "player_exposure": {
+        "players": 27,
+        "max": 4,
+        "top10": [
+          {
+            "player": "Bruce Brown",
+            "count": 4
+          },
+          {
+            "player": "Cameron Johnson",
+            "count": 4
+          },
+          {
+            "player": "DeMar DeRozan",
+            "count": 4
+          },
+          {
+            "player": "Devin Booker",
+            "count": 4
+          },
+          {
+            "player": "Jonas Valan\u010di\u016bnas",
+            "count": 4
+          },
+          {
+            "player": "Julian Strawther",
+            "count": 4
+          },
+          {
+            "player": "Malik Monk",
+            "count": 4
+          },
+          {
+            "player": "Maxime Raynaud",
+            "count": 4
+          },
+          {
+            "player": "Nikola Joki\u0107",
+            "count": 4
+          },
+          {
+            "player": "Oso Ighodaro",
+            "count": 4
+          }
+        ]
+      }
+    },
+    {
+      "file": "recommended_3leg_winprob.csv",
+      "rows": 25,
+      "hit_prob": {
+        "min": 0.3228991209490923,
+        "p01": 0.32406890694672436,
+        "p05": 0.32831042391511606,
+        "p25": 0.3407873814743671,
+        "med": 0.3773787260961764,
+        "p75": 0.5352928820431903,
+        "p95": 0.6045535610373138,
+        "max": 0.6182355288817764
+      },
+      "ev": {
+        "min": 1.937394725694554,
+        "p01": 1.9444134416803465,
+        "p05": 1.9698625434906964,
+        "p25": 2.0447242888462025,
+        "med": 2.2642723565770586,
+        "p75": 3.2117572922591417,
+        "p95": 3.627321366223883,
+        "max": 3.709413173290658
+      },
+      "payout_mult": {
+        "min": 6.0,
+        "p01": 6.0,
+        "p05": 6.0,
+        "p25": 6.0,
+        "med": 6.0,
+        "p75": 6.0,
+        "p95": 6.0,
+        "max": 6.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "payout_mult_eff": {
+        "min": 6.0,
+        "p01": 6.0,
+        "p05": 6.0,
+        "p25": 6.0,
+        "med": 6.0,
+        "p75": 6.0,
+        "p95": 6.0,
+        "max": 6.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "kernel_mult": {
+        "min": 1.0,
+        "p01": 1.0,
+        "p05": 1.0,
+        "p25": 1.0,
+        "med": 1.0,
+        "p75": 1.0,
+        "p95": 1.0,
+        "max": 1.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "tier_mix_legs": {
+        "STANDARD": 50,
+        "GOBLIN": 25,
+        "DEMON": 0,
+        "OTHER": 0
+      },
+      "player_exposure": {
+        "players": 29,
+        "max": 4,
+        "top10": [
+          {
+            "player": "Derik Queen",
+            "count": 4
+          },
+          {
+            "player": "Devin Booker",
+            "count": 4
+          },
+          {
+            "player": "Devin Carter",
+            "count": 4
+          },
+          {
+            "player": "Jonas Valan\u010di\u016bnas",
+            "count": 4
+          },
+          {
+            "player": "Julian Strawther",
+            "count": 4
+          },
+          {
+            "player": "Luke Kornet",
+            "count": 4
+          },
+          {
+            "player": "Malik Monk",
+            "count": 4
+          },
+          {
+            "player": "Maxime Raynaud",
+            "count": 4
+          },
+          {
+            "player": "Nique Clifford",
+            "count": 4
+          },
+          {
+            "player": "Oso Ighodaro",
+            "count": 4
+          }
+        ]
+      }
+    },
+    {
+      "file": "recommended_4leg.csv",
+      "rows": 25,
+      "hit_prob": {
+        "min": 0.0966823054485669,
+        "p01": 0.09706566819889,
+        "p05": 0.10046316589823943,
+        "p25": 0.13567563616743,
+        "med": 0.2538212140598316,
+        "p75": 0.2762218869687333,
+        "p95": 0.3371977614613361,
+        "max": 0.3951062314788379
+      },
+      "ev": {
+        "min": 1.113531319944134,
+        "p01": 1.1399032133800946,
+        "p05": 1.232106670025762,
+        "p25": 1.543605432982597,
+        "med": 1.9588347972539577,
+        "p75": 2.6783175877158025,
+        "p95": 3.0462380978456927,
+        "max": 3.1904141028906525
+      },
+      "payout_mult": {
+        "min": 10.0,
+        "p01": 10.0,
+        "p05": 10.0,
+        "p25": 10.0,
+        "med": 10.0,
+        "p75": 10.0,
+        "p95": 10.0,
+        "max": 10.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "payout_mult_eff": {
+        "min": 6.694737981181462,
+        "p01": 6.775910169910952,
+        "p05": 7.065560446712784,
+        "p25": 7.535259049762145,
+        "med": 9.525159368046822,
+        "p75": 10.814935733880676,
+        "p95": 12.475059020269253,
+        "max": 13.863769498741563,
+        "std": 1.9644808889604946,
+        "iqr": 3.279676684118531
+      },
+      "kernel_mult": {
+        "min": 0.6694737981181462,
+        "p01": 0.6775910169910951,
+        "p05": 0.7065560446712783,
+        "p25": 0.7535259049762144,
+        "med": 0.9525159368046822,
+        "p75": 1.0814935733880675,
+        "p95": 1.2475059020269252,
+        "max": 1.3863769498741565,
+        "std": 0.19644808889604948,
+        "iqr": 0.3279676684118531
+      },
+      "tier_mix_legs": {
+        "STANDARD": 50,
+        "GOBLIN": 50,
+        "DEMON": 0,
+        "OTHER": 0
+      },
+      "player_exposure": {
+        "players": 35,
+        "max": 4,
+        "top10": [
+          {
+            "player": "Bruce Brown",
+            "count": 4
+          },
+          {
+            "player": "Cameron Johnson",
+            "count": 4
+          },
+          {
+            "player": "Christian Braun",
+            "count": 4
+          },
+          {
+            "player": "De'Aaron Fox",
+            "count": 4
+          },
+          {
+            "player": "DeMar DeRozan",
+            "count": 4
+          },
+          {
+            "player": "Derik Queen",
+            "count": 4
+          },
+          {
+            "player": "Devin Booker",
+            "count": 4
+          },
+          {
+            "player": "Devin Carter",
+            "count": 4
+          },
+          {
+            "player": "Donte DiVincenzo",
+            "count": 4
+          },
+          {
+            "player": "Jonas Valan\u010di\u016bnas",
+            "count": 4
+          }
+        ]
+      }
+    },
+    {
+      "file": "recommended_4leg_winprob.csv",
+      "rows": 25,
+      "hit_prob": {
+        "min": 0.234160488024286,
+        "p01": 0.2344665324172954,
+        "p05": 0.23643674905865494,
+        "p25": 0.2712067242403347,
+        "med": 0.3256507036013832,
+        "p75": 0.3977685774888811,
+        "p95": 0.48202506516054894,
+        "max": 0.497057260397834
+      },
+      "ev": {
+        "min": 2.34160488024286,
+        "p01": 2.3446653241729543,
+        "p05": 2.3643674905865497,
+        "p25": 2.712067242403347,
+        "med": 3.256507036013832,
+        "p75": 3.977685774888812,
+        "p95": 4.82025065160549,
+        "max": 4.97057260397834
+      },
+      "payout_mult": {
+        "min": 10.0,
+        "p01": 10.0,
+        "p05": 10.0,
+        "p25": 10.0,
+        "med": 10.0,
+        "p75": 10.0,
+        "p95": 10.0,
+        "max": 10.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "payout_mult_eff": {
+        "min": 10.0,
+        "p01": 10.0,
+        "p05": 10.0,
+        "p25": 10.0,
+        "med": 10.0,
+        "p75": 10.0,
+        "p95": 10.0,
+        "max": 10.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "kernel_mult": {
+        "min": 1.0,
+        "p01": 1.0,
+        "p05": 1.0,
+        "p25": 1.0,
+        "med": 1.0,
+        "p75": 1.0,
+        "p95": 1.0,
+        "max": 1.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "tier_mix_legs": {
+        "STANDARD": 50,
+        "GOBLIN": 50,
+        "DEMON": 0,
+        "OTHER": 0
+      },
+      "player_exposure": {
+        "players": 35,
+        "max": 4,
+        "top10": [
+          {
+            "player": "Ayo Dosunmu",
+            "count": 4
+          },
+          {
+            "player": "De'Aaron Fox",
+            "count": 4
+          },
+          {
+            "player": "DeMar DeRozan",
+            "count": 4
+          },
+          {
+            "player": "Derik Queen",
+            "count": 4
+          },
+          {
+            "player": "Devin Booker",
+            "count": 4
+          },
+          {
+            "player": "Devin Carter",
+            "count": 4
+          },
+          {
+            "player": "Jake LaRavia",
+            "count": 4
+          },
+          {
+            "player": "Jonas Valan\u010di\u016bnas",
+            "count": 4
+          },
+          {
+            "player": "Julian Strawther",
+            "count": 4
+          },
+          {
+            "player": "Luke Kornet",
+            "count": 4
+          }
+        ]
+      }
+    },
+    {
+      "file": "recommended_5leg.csv",
+      "rows": 25,
+      "hit_prob": {
+        "min": 0.0849145869199212,
+        "p01": 0.08706317991328269,
+        "p05": 0.10790590745356991,
+        "p25": 0.17980437613158,
+        "med": 0.2102378046364491,
+        "p75": 0.2534458054086773,
+        "p95": 0.28162358677334753,
+        "max": 0.353722992055372
+      },
+      "ev": {
+        "min": 1.3282801702539098,
+        "p01": 1.4136894804816729,
+        "p05": 1.6868757930218161,
+        "p25": 1.8264061050214804,
+        "med": 2.1895847822122487,
+        "p75": 2.487900527574985,
+        "p95": 3.4379665860074575,
+        "max": 3.648044607573839
+      },
+      "payout_mult": {
+        "min": 20.0,
+        "p01": 20.0,
+        "p05": 20.0,
+        "p25": 20.0,
+        "med": 20.0,
+        "p75": 20.0,
+        "p95": 20.0,
+        "max": 20.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "payout_mult_eff": {
+        "min": 7.559581047470933,
+        "p01": 7.606927895599003,
+        "p05": 7.809238522171567,
+        "p25": 8.725338476205144,
+        "med": 10.705851358527598,
+        "p75": 13.338449329728288,
+        "p95": 15.61411595211649,
+        "max": 18.802362260893418,
+        "std": 2.929773463049805,
+        "iqr": 4.613110853523144
+      },
+      "kernel_mult": {
+        "min": 0.3779790523735466,
+        "p01": 0.38034639477995014,
+        "p05": 0.39046192610857827,
+        "p25": 0.4362669238102571,
+        "med": 0.5352925679263799,
+        "p75": 0.6669224664864144,
+        "p95": 0.7807057976058245,
+        "max": 0.9401181130446707,
+        "std": 0.14648867315249023,
+        "iqr": 0.2306555426761573
+      },
+      "tier_mix_legs": {
+        "STANDARD": 50,
+        "GOBLIN": 75,
+        "DEMON": 0,
+        "OTHER": 0
+      },
+      "player_exposure": {
+        "players": 44,
+        "max": 4,
+        "top10": [
+          {
+            "player": "Ayo Dosunmu",
+            "count": 4
+          },
+          {
+            "player": "Bruce Brown",
+            "count": 4
+          },
+          {
+            "player": "Cameron Johnson",
+            "count": 4
+          },
+          {
+            "player": "De'Aaron Fox",
+            "count": 4
+          },
+          {
+            "player": "DeMar DeRozan",
+            "count": 4
+          },
+          {
+            "player": "Derik Queen",
+            "count": 4
+          },
+          {
+            "player": "Devin Booker",
+            "count": 4
+          },
+          {
+            "player": "Devin Carter",
+            "count": 4
+          },
+          {
+            "player": "Duncan Robinson",
+            "count": 4
+          },
+          {
+            "player": "Jonas Valan\u010di\u016bnas",
+            "count": 4
+          }
+        ]
+      }
+    },
+    {
+      "file": "recommended_5leg_winprob.csv",
+      "rows": 25,
+      "hit_prob": {
+        "min": 0.1517329570839986,
+        "p01": 0.15225167071244342,
+        "p05": 0.1544348897095345,
+        "p25": 0.1942136379592814,
+        "med": 0.2320036550598593,
+        "p75": 0.346815186913852,
+        "p95": 0.3758755123984097,
+        "max": 0.3999160290956624
+      },
+      "ev": {
+        "min": 3.034659141679972,
+        "p01": 3.0450334142488686,
+        "p05": 3.088697794190691,
+        "p25": 3.884272759185628,
+        "med": 4.640073101197186,
+        "p75": 6.93630373827704,
+        "p95": 7.517510247968195,
+        "max": 7.998320581913249
+      },
+      "payout_mult": {
+        "min": 20.0,
+        "p01": 20.0,
+        "p05": 20.0,
+        "p25": 20.0,
+        "med": 20.0,
+        "p75": 20.0,
+        "p95": 20.0,
+        "max": 20.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "payout_mult_eff": {
+        "min": 20.0,
+        "p01": 20.0,
+        "p05": 20.0,
+        "p25": 20.0,
+        "med": 20.0,
+        "p75": 20.0,
+        "p95": 20.0,
+        "max": 20.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "kernel_mult": {
+        "min": 1.0,
+        "p01": 1.0,
+        "p05": 1.0,
+        "p25": 1.0,
+        "med": 1.0,
+        "p75": 1.0,
+        "p95": 1.0,
+        "max": 1.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "tier_mix_legs": {
+        "STANDARD": 50,
+        "GOBLIN": 75,
+        "DEMON": 0,
+        "OTHER": 0
+      },
+      "player_exposure": {
+        "players": 37,
+        "max": 4,
+        "top10": [
+          {
+            "player": "Austin Reaves",
+            "count": 4
+          },
+          {
+            "player": "Ayo Dosunmu",
+            "count": 4
+          },
+          {
+            "player": "Cameron Johnson",
+            "count": 4
+          },
+          {
+            "player": "De'Aaron Fox",
+            "count": 4
+          },
+          {
+            "player": "DeMar DeRozan",
+            "count": 4
+          },
+          {
+            "player": "Deandre Ayton",
+            "count": 4
+          },
+          {
+            "player": "Derik Queen",
+            "count": 4
+          },
+          {
+            "player": "Devin Booker",
+            "count": 4
+          },
+          {
+            "player": "Devin Carter",
+            "count": 4
+          },
+          {
+            "player": "Jake LaRavia",
+            "count": 4
+          }
+        ]
+      }
+    },
+    {
+      "file": "System\\recommended_3leg.csv",
+      "rows": 25,
+      "hit_prob": {
+        "min": 0.1700010767558715,
+        "p01": 0.17465897529705576,
+        "p05": 0.19645624247895713,
+        "p25": 0.2668512887918686,
+        "med": 0.3050439650951284,
+        "p75": 0.3685715205071333,
+        "p95": 0.4367883700208669,
+        "max": 0.4848931420319862
+      },
+      "ev": {
+        "min": 1.690073301704767,
+        "p01": 1.7175996236162052,
+        "p05": 1.8279705962240431,
+        "p25": 2.155302951087399,
+        "med": 2.340886656782563,
+        "p75": 2.7410647842858324,
+        "p95": 3.450181034295327,
+        "max": 3.6903219385057526
+      },
+      "payout_mult": {
+        "min": 6.0,
+        "p01": 6.0,
+        "p05": 6.0,
+        "p25": 6.0,
+        "med": 6.0,
+        "p75": 6.0,
+        "p95": 6.0,
+        "max": 6.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "payout_mult_eff": {
+        "min": 5.634999882528961,
+        "p01": 5.63930201929752,
+        "p05": 5.7333010377173705,
+        "p25": 7.449968942561414,
+        "med": 7.997753060362791,
+        "p75": 9.375642655279876,
+        "p95": 10.226189860789388,
+        "max": 10.616205168281438,
+        "std": 1.4449938048905926,
+        "iqr": 1.9256737127184618
+      },
+      "kernel_mult": {
+        "min": 0.93916664708816,
+        "p01": 0.9398836698829198,
+        "p05": 0.9555501729528949,
+        "p25": 1.2416614904269023,
+        "med": 1.3329588433937984,
+        "p75": 1.5626071092133125,
+        "p95": 1.704364976798231,
+        "max": 1.7693675280469063,
+        "std": 0.2408323008150988,
+        "iqr": 0.32094561878641015
+      },
+      "tier_mix_legs": {
+        "STANDARD": 50,
+        "GOBLIN": 25,
+        "DEMON": 0,
+        "OTHER": 0
+      },
+      "player_exposure": {
+        "players": 27,
+        "max": 4,
+        "top10": [
+          {
+            "player": "Bruce Brown",
+            "count": 4
+          },
+          {
+            "player": "Cameron Johnson",
+            "count": 4
+          },
+          {
+            "player": "DeMar DeRozan",
+            "count": 4
+          },
+          {
+            "player": "Devin Booker",
+            "count": 4
+          },
+          {
+            "player": "Jonas Valan\u010di\u016bnas",
+            "count": 4
+          },
+          {
+            "player": "Julian Strawther",
+            "count": 4
+          },
+          {
+            "player": "Malik Monk",
+            "count": 4
+          },
+          {
+            "player": "Maxime Raynaud",
+            "count": 4
+          },
+          {
+            "player": "Nikola Joki\u0107",
+            "count": 4
+          },
+          {
+            "player": "Oso Ighodaro",
+            "count": 4
+          }
+        ]
+      }
+    },
+    {
+      "file": "System\\recommended_3leg_winprob.csv",
+      "rows": 25,
+      "hit_prob": {
+        "min": 0.3228991209490923,
+        "p01": 0.32406890694672436,
+        "p05": 0.32831042391511606,
+        "p25": 0.3407873814743671,
+        "med": 0.3773787260961764,
+        "p75": 0.5352928820431903,
+        "p95": 0.6045535610373138,
+        "max": 0.6182355288817764
+      },
+      "ev": {
+        "min": 1.937394725694554,
+        "p01": 1.9444134416803465,
+        "p05": 1.9698625434906964,
+        "p25": 2.0447242888462025,
+        "med": 2.2642723565770586,
+        "p75": 3.2117572922591417,
+        "p95": 3.627321366223883,
+        "max": 3.709413173290658
+      },
+      "payout_mult": {
+        "min": 6.0,
+        "p01": 6.0,
+        "p05": 6.0,
+        "p25": 6.0,
+        "med": 6.0,
+        "p75": 6.0,
+        "p95": 6.0,
+        "max": 6.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "payout_mult_eff": {
+        "min": 6.0,
+        "p01": 6.0,
+        "p05": 6.0,
+        "p25": 6.0,
+        "med": 6.0,
+        "p75": 6.0,
+        "p95": 6.0,
+        "max": 6.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "kernel_mult": {
+        "min": 1.0,
+        "p01": 1.0,
+        "p05": 1.0,
+        "p25": 1.0,
+        "med": 1.0,
+        "p75": 1.0,
+        "p95": 1.0,
+        "max": 1.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "tier_mix_legs": {
+        "STANDARD": 50,
+        "GOBLIN": 25,
+        "DEMON": 0,
+        "OTHER": 0
+      },
+      "player_exposure": {
+        "players": 29,
+        "max": 4,
+        "top10": [
+          {
+            "player": "Derik Queen",
+            "count": 4
+          },
+          {
+            "player": "Devin Booker",
+            "count": 4
+          },
+          {
+            "player": "Devin Carter",
+            "count": 4
+          },
+          {
+            "player": "Jonas Valan\u010di\u016bnas",
+            "count": 4
+          },
+          {
+            "player": "Julian Strawther",
+            "count": 4
+          },
+          {
+            "player": "Luke Kornet",
+            "count": 4
+          },
+          {
+            "player": "Malik Monk",
+            "count": 4
+          },
+          {
+            "player": "Maxime Raynaud",
+            "count": 4
+          },
+          {
+            "player": "Nique Clifford",
+            "count": 4
+          },
+          {
+            "player": "Oso Ighodaro",
+            "count": 4
+          }
+        ]
+      }
+    },
+    {
+      "file": "System\\recommended_4leg.csv",
+      "rows": 25,
+      "hit_prob": {
+        "min": 0.0966823054485669,
+        "p01": 0.09706566819889,
+        "p05": 0.10046316589823943,
+        "p25": 0.13567563616743,
+        "med": 0.2538212140598316,
+        "p75": 0.2762218869687333,
+        "p95": 0.3371977614613361,
+        "max": 0.3951062314788379
+      },
+      "ev": {
+        "min": 1.113531319944134,
+        "p01": 1.1399032133800946,
+        "p05": 1.232106670025762,
+        "p25": 1.543605432982597,
+        "med": 1.9588347972539577,
+        "p75": 2.6783175877158025,
+        "p95": 3.0462380978456927,
+        "max": 3.1904141028906525
+      },
+      "payout_mult": {
+        "min": 10.0,
+        "p01": 10.0,
+        "p05": 10.0,
+        "p25": 10.0,
+        "med": 10.0,
+        "p75": 10.0,
+        "p95": 10.0,
+        "max": 10.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "payout_mult_eff": {
+        "min": 6.694737981181462,
+        "p01": 6.775910169910952,
+        "p05": 7.065560446712784,
+        "p25": 7.535259049762145,
+        "med": 9.525159368046822,
+        "p75": 10.814935733880676,
+        "p95": 12.475059020269253,
+        "max": 13.863769498741563,
+        "std": 1.9644808889604946,
+        "iqr": 3.279676684118531
+      },
+      "kernel_mult": {
+        "min": 0.6694737981181462,
+        "p01": 0.6775910169910951,
+        "p05": 0.7065560446712783,
+        "p25": 0.7535259049762144,
+        "med": 0.9525159368046822,
+        "p75": 1.0814935733880675,
+        "p95": 1.2475059020269252,
+        "max": 1.3863769498741565,
+        "std": 0.19644808889604948,
+        "iqr": 0.3279676684118531
+      },
+      "tier_mix_legs": {
+        "STANDARD": 50,
+        "GOBLIN": 50,
+        "DEMON": 0,
+        "OTHER": 0
+      },
+      "player_exposure": {
+        "players": 35,
+        "max": 4,
+        "top10": [
+          {
+            "player": "Bruce Brown",
+            "count": 4
+          },
+          {
+            "player": "Cameron Johnson",
+            "count": 4
+          },
+          {
+            "player": "Christian Braun",
+            "count": 4
+          },
+          {
+            "player": "De'Aaron Fox",
+            "count": 4
+          },
+          {
+            "player": "DeMar DeRozan",
+            "count": 4
+          },
+          {
+            "player": "Derik Queen",
+            "count": 4
+          },
+          {
+            "player": "Devin Booker",
+            "count": 4
+          },
+          {
+            "player": "Devin Carter",
+            "count": 4
+          },
+          {
+            "player": "Donte DiVincenzo",
+            "count": 4
+          },
+          {
+            "player": "Jonas Valan\u010di\u016bnas",
+            "count": 4
+          }
+        ]
+      }
+    },
+    {
+      "file": "System\\recommended_4leg_winprob.csv",
+      "rows": 25,
+      "hit_prob": {
+        "min": 0.234160488024286,
+        "p01": 0.2344665324172954,
+        "p05": 0.23643674905865494,
+        "p25": 0.2712067242403347,
+        "med": 0.3256507036013832,
+        "p75": 0.3977685774888811,
+        "p95": 0.48202506516054894,
+        "max": 0.497057260397834
+      },
+      "ev": {
+        "min": 2.34160488024286,
+        "p01": 2.3446653241729543,
+        "p05": 2.3643674905865497,
+        "p25": 2.712067242403347,
+        "med": 3.256507036013832,
+        "p75": 3.977685774888812,
+        "p95": 4.82025065160549,
+        "max": 4.97057260397834
+      },
+      "payout_mult": {
+        "min": 10.0,
+        "p01": 10.0,
+        "p05": 10.0,
+        "p25": 10.0,
+        "med": 10.0,
+        "p75": 10.0,
+        "p95": 10.0,
+        "max": 10.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "payout_mult_eff": {
+        "min": 10.0,
+        "p01": 10.0,
+        "p05": 10.0,
+        "p25": 10.0,
+        "med": 10.0,
+        "p75": 10.0,
+        "p95": 10.0,
+        "max": 10.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "kernel_mult": {
+        "min": 1.0,
+        "p01": 1.0,
+        "p05": 1.0,
+        "p25": 1.0,
+        "med": 1.0,
+        "p75": 1.0,
+        "p95": 1.0,
+        "max": 1.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "tier_mix_legs": {
+        "STANDARD": 50,
+        "GOBLIN": 50,
+        "DEMON": 0,
+        "OTHER": 0
+      },
+      "player_exposure": {
+        "players": 35,
+        "max": 4,
+        "top10": [
+          {
+            "player": "Ayo Dosunmu",
+            "count": 4
+          },
+          {
+            "player": "De'Aaron Fox",
+            "count": 4
+          },
+          {
+            "player": "DeMar DeRozan",
+            "count": 4
+          },
+          {
+            "player": "Derik Queen",
+            "count": 4
+          },
+          {
+            "player": "Devin Booker",
+            "count": 4
+          },
+          {
+            "player": "Devin Carter",
+            "count": 4
+          },
+          {
+            "player": "Jake LaRavia",
+            "count": 4
+          },
+          {
+            "player": "Jonas Valan\u010di\u016bnas",
+            "count": 4
+          },
+          {
+            "player": "Julian Strawther",
+            "count": 4
+          },
+          {
+            "player": "Luke Kornet",
+            "count": 4
+          }
+        ]
+      }
+    },
+    {
+      "file": "System\\recommended_5leg.csv",
+      "rows": 25,
+      "hit_prob": {
+        "min": 0.0849145869199212,
+        "p01": 0.08706317991328269,
+        "p05": 0.10790590745356991,
+        "p25": 0.17980437613158,
+        "med": 0.2102378046364491,
+        "p75": 0.2534458054086773,
+        "p95": 0.28162358677334753,
+        "max": 0.353722992055372
+      },
+      "ev": {
+        "min": 1.3282801702539098,
+        "p01": 1.4136894804816729,
+        "p05": 1.6868757930218161,
+        "p25": 1.8264061050214804,
+        "med": 2.1895847822122487,
+        "p75": 2.487900527574985,
+        "p95": 3.4379665860074575,
+        "max": 3.648044607573839
+      },
+      "payout_mult": {
+        "min": 20.0,
+        "p01": 20.0,
+        "p05": 20.0,
+        "p25": 20.0,
+        "med": 20.0,
+        "p75": 20.0,
+        "p95": 20.0,
+        "max": 20.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "payout_mult_eff": {
+        "min": 7.559581047470933,
+        "p01": 7.606927895599003,
+        "p05": 7.809238522171567,
+        "p25": 8.725338476205144,
+        "med": 10.705851358527598,
+        "p75": 13.338449329728288,
+        "p95": 15.61411595211649,
+        "max": 18.802362260893418,
+        "std": 2.929773463049805,
+        "iqr": 4.613110853523144
+      },
+      "kernel_mult": {
+        "min": 0.3779790523735466,
+        "p01": 0.38034639477995014,
+        "p05": 0.39046192610857827,
+        "p25": 0.4362669238102571,
+        "med": 0.5352925679263799,
+        "p75": 0.6669224664864144,
+        "p95": 0.7807057976058245,
+        "max": 0.9401181130446707,
+        "std": 0.14648867315249023,
+        "iqr": 0.2306555426761573
+      },
+      "tier_mix_legs": {
+        "STANDARD": 50,
+        "GOBLIN": 75,
+        "DEMON": 0,
+        "OTHER": 0
+      },
+      "player_exposure": {
+        "players": 44,
+        "max": 4,
+        "top10": [
+          {
+            "player": "Ayo Dosunmu",
+            "count": 4
+          },
+          {
+            "player": "Bruce Brown",
+            "count": 4
+          },
+          {
+            "player": "Cameron Johnson",
+            "count": 4
+          },
+          {
+            "player": "De'Aaron Fox",
+            "count": 4
+          },
+          {
+            "player": "DeMar DeRozan",
+            "count": 4
+          },
+          {
+            "player": "Derik Queen",
+            "count": 4
+          },
+          {
+            "player": "Devin Booker",
+            "count": 4
+          },
+          {
+            "player": "Devin Carter",
+            "count": 4
+          },
+          {
+            "player": "Duncan Robinson",
+            "count": 4
+          },
+          {
+            "player": "Jonas Valan\u010di\u016bnas",
+            "count": 4
+          }
+        ]
+      }
+    },
+    {
+      "file": "System\\recommended_5leg_winprob.csv",
+      "rows": 25,
+      "hit_prob": {
+        "min": 0.1517329570839986,
+        "p01": 0.15225167071244342,
+        "p05": 0.1544348897095345,
+        "p25": 0.1942136379592814,
+        "med": 0.2320036550598593,
+        "p75": 0.346815186913852,
+        "p95": 0.3758755123984097,
+        "max": 0.3999160290956624
+      },
+      "ev": {
+        "min": 3.034659141679972,
+        "p01": 3.0450334142488686,
+        "p05": 3.088697794190691,
+        "p25": 3.884272759185628,
+        "med": 4.640073101197186,
+        "p75": 6.93630373827704,
+        "p95": 7.517510247968195,
+        "max": 7.998320581913249
+      },
+      "payout_mult": {
+        "min": 20.0,
+        "p01": 20.0,
+        "p05": 20.0,
+        "p25": 20.0,
+        "med": 20.0,
+        "p75": 20.0,
+        "p95": 20.0,
+        "max": 20.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "payout_mult_eff": {
+        "min": 20.0,
+        "p01": 20.0,
+        "p05": 20.0,
+        "p25": 20.0,
+        "med": 20.0,
+        "p75": 20.0,
+        "p95": 20.0,
+        "max": 20.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "kernel_mult": {
+        "min": 1.0,
+        "p01": 1.0,
+        "p05": 1.0,
+        "p25": 1.0,
+        "med": 1.0,
+        "p75": 1.0,
+        "p95": 1.0,
+        "max": 1.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "tier_mix_legs": {
+        "STANDARD": 50,
+        "GOBLIN": 75,
+        "DEMON": 0,
+        "OTHER": 0
+      },
+      "player_exposure": {
+        "players": 37,
+        "max": 4,
+        "top10": [
+          {
+            "player": "Austin Reaves",
+            "count": 4
+          },
+          {
+            "player": "Ayo Dosunmu",
+            "count": 4
+          },
+          {
+            "player": "Cameron Johnson",
+            "count": 4
+          },
+          {
+            "player": "De'Aaron Fox",
+            "count": 4
+          },
+          {
+            "player": "DeMar DeRozan",
+            "count": 4
+          },
+          {
+            "player": "Deandre Ayton",
+            "count": 4
+          },
+          {
+            "player": "Derik Queen",
+            "count": 4
+          },
+          {
+            "player": "Devin Booker",
+            "count": 4
+          },
+          {
+            "player": "Devin Carter",
+            "count": 4
+          },
+          {
+            "player": "Jake LaRavia",
+            "count": 4
+          }
+        ]
+      }
+    },
+    {
+      "file": "Windfall\\recommended_3leg.csv",
+      "rows": 25,
+      "hit_prob": {
+        "min": 0.1079206758181513,
+        "p01": 0.10921889499352495,
+        "p05": 0.11342177102445918,
+        "p25": 0.1304252814254988,
+        "med": 0.1652414123026467,
+        "p75": 0.1909780029239667,
+        "p95": 0.32924674692981437,
+        "max": 0.3710799147414341
+      },
+      "ev": {
+        "min": 1.024851258586029,
+        "p01": 1.027305321507429,
+        "p05": 1.0414473875186452,
+        "p25": 1.2308367981790225,
+        "med": 1.313942607115521,
+        "p75": 1.4362646608363576,
+        "p95": 2.5504114747804096,
+        "max": 2.740212124931185
+      },
+      "payout_mult": {
+        "min": 6.0,
+        "p01": 6.0,
+        "p05": 6.0,
+        "p25": 6.0,
+        "med": 6.0,
+        "p75": 6.0,
+        "p95": 6.0,
+        "max": 6.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "payout_mult_eff": {
+        "min": 6.382435188021036,
+        "p01": 6.3883112362772225,
+        "p05": 6.5293058646866395,
+        "p25": 7.384425877214469,
+        "med": 8.385884151794993,
+        "p75": 9.006580312290328,
+        "p95": 10.203888491499113,
+        "max": 10.86065155880008,
+        "std": 1.1706854553466404,
+        "iqr": 1.622154435075859
+      },
+      "kernel_mult": {
+        "min": 1.063739198003506,
+        "p01": 1.064718539379537,
+        "p05": 1.08821764411444,
+        "p25": 1.2307376462024116,
+        "med": 1.397647358632499,
+        "p75": 1.5010967187150546,
+        "p95": 1.7006480819165186,
+        "max": 1.8101085931333467,
+        "std": 0.1951142425577734,
+        "iqr": 0.270359072512643
+      },
+      "tier_mix_legs": {
+        "STANDARD": 25,
+        "GOBLIN": 25,
+        "DEMON": 25,
+        "OTHER": 0
+      },
+      "player_exposure": {
+        "players": 31,
+        "max": 4,
+        "top10": [
+          {
+            "player": "Bruce Brown",
+            "count": 4
+          },
+          {
+            "player": "Cameron Johnson",
+            "count": 4
+          },
+          {
+            "player": "DeMar DeRozan",
+            "count": 4
+          },
+          {
+            "player": "Devin Booker",
+            "count": 4
+          },
+          {
+            "player": "Jonas Valan\u010di\u016bnas",
+            "count": 4
+          },
+          {
+            "player": "Malik Monk",
+            "count": 4
+          },
+          {
+            "player": "Oso Ighodaro",
+            "count": 4
+          },
+          {
+            "player": "Royce O'Neale",
+            "count": 4
+          },
+          {
+            "player": "Russell Westbrook",
+            "count": 4
+          },
+          {
+            "player": "Ryan Dunn",
+            "count": 4
+          }
+        ]
+      }
+    },
+    {
+      "file": "Windfall\\recommended_3leg_winprob.csv",
+      "rows": 25,
+      "hit_prob": {
+        "min": 0.2872789145103316,
+        "p01": 0.2881639938854066,
+        "p05": 0.2910209196638288,
+        "p25": 0.3411848351292,
+        "med": 0.3769480014190725,
+        "p75": 0.4475863558350862,
+        "p95": 0.4826199961586735,
+        "max": 0.4891045075665987
+      },
+      "ev": {
+        "min": 1.7236734870619896,
+        "p01": 1.7289839633124393,
+        "p05": 1.746125517982973,
+        "p25": 2.0471090107752,
+        "med": 2.261688008514435,
+        "p75": 2.685518135010517,
+        "p95": 2.895719976952041,
+        "max": 2.9346270453995924
+      },
+      "payout_mult": {
+        "min": 6.0,
+        "p01": 6.0,
+        "p05": 6.0,
+        "p25": 6.0,
+        "med": 6.0,
+        "p75": 6.0,
+        "p95": 6.0,
+        "max": 6.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "payout_mult_eff": {
+        "min": 6.0,
+        "p01": 6.0,
+        "p05": 6.0,
+        "p25": 6.0,
+        "med": 6.0,
+        "p75": 6.0,
+        "p95": 6.0,
+        "max": 6.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "kernel_mult": {
+        "min": 1.0,
+        "p01": 1.0,
+        "p05": 1.0,
+        "p25": 1.0,
+        "med": 1.0,
+        "p75": 1.0,
+        "p95": 1.0,
+        "max": 1.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "tier_mix_legs": {
+        "STANDARD": 25,
+        "GOBLIN": 25,
+        "DEMON": 25,
+        "OTHER": 0
+      },
+      "player_exposure": {
+        "players": 24,
+        "max": 4,
+        "top10": [
+          {
+            "player": "Ayo Dosunmu",
+            "count": 4
+          },
+          {
+            "player": "DeMar DeRozan",
+            "count": 4
+          },
+          {
+            "player": "Derik Queen",
+            "count": 4
+          },
+          {
+            "player": "Devin Booker",
+            "count": 4
+          },
+          {
+            "player": "Devin Carter",
+            "count": 4
+          },
+          {
+            "player": "Jake LaRavia",
+            "count": 4
+          },
+          {
+            "player": "Jonas Valan\u010di\u016bnas",
+            "count": 4
+          },
+          {
+            "player": "Julian Strawther",
+            "count": 4
+          },
+          {
+            "player": "Luke Kornet",
+            "count": 4
+          },
+          {
+            "player": "Malik Monk",
+            "count": 4
+          }
+        ]
+      }
+    },
+    {
+      "file": "Windfall\\recommended_4leg.csv",
+      "rows": 25,
+      "hit_prob": {
+        "min": 0.0534452419847425,
+        "p01": 0.054766001739520134,
+        "p05": 0.05905925476689704,
+        "p25": 0.0763920900681576,
+        "med": 0.0939871880947263,
+        "p75": 0.1214805520035467,
+        "p95": 0.2105531658116029,
+        "max": 0.221080849585452
+      },
+      "ev": {
+        "min": 1.1215271364272617,
+        "p01": 1.149123438371413,
+        "p05": 1.2646367416014896,
+        "p25": 1.4682095843498195,
+        "med": 1.732975665222077,
+        "p75": 1.99907955149208,
+        "p95": 3.4440964196476878,
+        "max": 3.627815037343604
+      },
+      "payout_mult": {
+        "min": 10.0,
+        "p01": 10.0,
+        "p05": 10.0,
+        "p25": 10.0,
+        "med": 10.0,
+        "p75": 10.0,
+        "p95": 10.0,
+        "max": 10.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "payout_mult_eff": {
+        "min": 12.441340972042733,
+        "p01": 12.5712535598408,
+        "p05": 13.2466033722181,
+        "p25": 15.736795104533805,
+        "med": 17.848689111247403,
+        "p75": 20.984602085765328,
+        "p95": 25.16333603315946,
+        "max": 28.78031628860233,
+        "std": 3.8705414547991372,
+        "iqr": 5.247806981231523
+      },
+      "kernel_mult": {
+        "min": 1.2441340972042731,
+        "p01": 1.25712535598408,
+        "p05": 1.3246603372218102,
+        "p25": 1.5736795104533805,
+        "med": 1.7848689111247402,
+        "p75": 2.0984602085765327,
+        "p95": 2.516333603315946,
+        "max": 2.878031628860233,
+        "std": 0.3870541454799137,
+        "iqr": 0.5247806981231522
+      },
+      "tier_mix_legs": {
+        "STANDARD": 50,
+        "GOBLIN": 25,
+        "DEMON": 25,
+        "OTHER": 0
+      },
+      "player_exposure": {
+        "players": 45,
+        "max": 4,
+        "top10": [
+          {
+            "player": "Bruce Brown",
+            "count": 4
+          },
+          {
+            "player": "Cameron Johnson",
+            "count": 4
+          },
+          {
+            "player": "Christian Braun",
+            "count": 4
+          },
+          {
+            "player": "De'Aaron Fox",
+            "count": 4
+          },
+          {
+            "player": "DeMar DeRozan",
+            "count": 4
+          },
+          {
+            "player": "Devin Booker",
+            "count": 4
+          },
+          {
+            "player": "Devin Carter",
+            "count": 4
+          },
+          {
+            "player": "Jonas Valan\u010di\u016bnas",
+            "count": 4
+          },
+          {
+            "player": "Malik Monk",
+            "count": 4
+          },
+          {
+            "player": "Maxime Raynaud",
+            "count": 4
+          }
+        ]
+      }
+    },
+    {
+      "file": "Windfall\\recommended_4leg_winprob.csv",
+      "rows": 25,
+      "hit_prob": {
+        "min": 0.1168931956684641,
+        "p01": 0.1248780540909166,
+        "p05": 0.15188328416882604,
+        "p25": 0.1694229808862259,
+        "med": 0.2477206109852042,
+        "p75": 0.3107368052382053,
+        "p95": 0.3827838062046458,
+        "max": 0.3865490118316836
+      },
+      "ev": {
+        "min": 1.168931956684641,
+        "p01": 1.2487805409091661,
+        "p05": 1.518832841688261,
+        "p25": 1.6942298088622596,
+        "med": 2.477206109852043,
+        "p75": 3.107368052382053,
+        "p95": 3.8278380620464585,
+        "max": 3.8654901183168366
+      },
+      "payout_mult": {
+        "min": 10.0,
+        "p01": 10.0,
+        "p05": 10.0,
+        "p25": 10.0,
+        "med": 10.0,
+        "p75": 10.0,
+        "p95": 10.0,
+        "max": 10.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "payout_mult_eff": {
+        "min": 10.0,
+        "p01": 10.0,
+        "p05": 10.0,
+        "p25": 10.0,
+        "med": 10.0,
+        "p75": 10.0,
+        "p95": 10.0,
+        "max": 10.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "kernel_mult": {
+        "min": 1.0,
+        "p01": 1.0,
+        "p05": 1.0,
+        "p25": 1.0,
+        "med": 1.0,
+        "p75": 1.0,
+        "p95": 1.0,
+        "max": 1.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "tier_mix_legs": {
+        "STANDARD": 50,
+        "GOBLIN": 25,
+        "DEMON": 25,
+        "OTHER": 0
+      },
+      "player_exposure": {
+        "players": 32,
+        "max": 4,
+        "top10": [
+          {
+            "player": "Austin Reaves",
+            "count": 4
+          },
+          {
+            "player": "Ayo Dosunmu",
+            "count": 4
+          },
+          {
+            "player": "De'Aaron Fox",
+            "count": 4
+          },
+          {
+            "player": "DeMar DeRozan",
+            "count": 4
+          },
+          {
+            "player": "Derik Queen",
+            "count": 4
+          },
+          {
+            "player": "Devin Booker",
+            "count": 4
+          },
+          {
+            "player": "Devin Carter",
+            "count": 4
+          },
+          {
+            "player": "Jake LaRavia",
+            "count": 4
+          },
+          {
+            "player": "Jonas Valan\u010di\u016bnas",
+            "count": 4
+          },
+          {
+            "player": "Julian Strawther",
+            "count": 4
+          }
+        ]
+      }
+    },
+    {
+      "file": "Windfall\\recommended_5leg.csv",
+      "rows": 25,
+      "hit_prob": {
+        "min": 0.0386872108695174,
+        "p01": 0.03941133873876135,
+        "p05": 0.04184296841616752,
+        "p25": 0.0511515490129364,
+        "med": 0.060259951097192,
+        "p75": 0.0753897751297172,
+        "p95": 0.16973893089967368,
+        "max": 0.1865155647583571
+      },
+      "ev": {
+        "min": 0.9449203629896354,
+        "p01": 0.9638824550934909,
+        "p05": 1.026725590718229,
+        "p25": 1.2247327572118871,
+        "med": 1.5714250292399816,
+        "p75": 1.9074240487317868,
+        "p95": 3.839885651474441,
+        "max": 4.151226363927991
+      },
+      "payout_mult": {
+        "min": 20.0,
+        "p01": 20.0,
+        "p05": 20.0,
+        "p25": 20.0,
+        "med": 20.0,
+        "p75": 20.0,
+        "p95": 20.0,
+        "max": 20.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "payout_mult_eff": {
+        "min": 16.48262138034317,
+        "p01": 17.149757754594283,
+        "p05": 19.42060254068848,
+        "p25": 21.724486141400373,
+        "med": 23.186612966354215,
+        "p75": 28.35239987768725,
+        "p95": 35.396464085818764,
+        "max": 37.90758442151868,
+        "std": 5.371262172466977,
+        "iqr": 6.627913736286878
+      },
+      "kernel_mult": {
+        "min": 0.8241310690171584,
+        "p01": 0.8574878877297141,
+        "p05": 0.9710301270344242,
+        "p25": 1.0862243070700186,
+        "med": 1.1593306483177108,
+        "p75": 1.4176199938843628,
+        "p95": 1.7698232042909379,
+        "max": 1.8953792210759337,
+        "std": 0.26856310862334887,
+        "iqr": 0.33139568681434417
+      },
+      "tier_mix_legs": {
+        "STANDARD": 50,
+        "GOBLIN": 50,
+        "DEMON": 25,
+        "OTHER": 0
+      },
+      "player_exposure": {
+        "players": 50,
+        "max": 4,
+        "top10": [
+          {
+            "player": "Austin Reaves",
+            "count": 4
+          },
+          {
+            "player": "Bruce Brown",
+            "count": 4
+          },
+          {
+            "player": "Cameron Johnson",
+            "count": 4
+          },
+          {
+            "player": "Christian Braun",
+            "count": 4
+          },
+          {
+            "player": "DeMar DeRozan",
+            "count": 4
+          },
+          {
+            "player": "Derik Queen",
+            "count": 4
+          },
+          {
+            "player": "Devin Booker",
+            "count": 4
+          },
+          {
+            "player": "Jonas Valan\u010di\u016bnas",
+            "count": 4
+          },
+          {
+            "player": "Malik Monk",
+            "count": 4
+          },
+          {
+            "player": "Maxime Raynaud",
+            "count": 4
+          }
+        ]
+      }
+    },
+    {
+      "file": "Windfall\\recommended_5leg_winprob.csv",
+      "rows": 25,
+      "hit_prob": {
+        "min": 0.0659872913188271,
+        "p01": 0.0660646799638036,
+        "p05": 0.06703307757401503,
+        "p25": 0.1258177681764841,
+        "med": 0.1915253484295839,
+        "p75": 0.2553042404372116,
+        "p95": 0.3069663378419061,
+        "max": 0.3101861602656913
+      },
+      "ev": {
+        "min": 1.3197458263765436,
+        "p01": 1.3212935992760735,
+        "p05": 1.3406615514803015,
+        "p25": 2.516355363529682,
+        "med": 3.83050696859168,
+        "p75": 5.106084808744233,
+        "p95": 6.1393267568381225,
+        "max": 6.203723205313826
+      },
+      "payout_mult": {
+        "min": 20.0,
+        "p01": 20.0,
+        "p05": 20.0,
+        "p25": 20.0,
+        "med": 20.0,
+        "p75": 20.0,
+        "p95": 20.0,
+        "max": 20.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "payout_mult_eff": {
+        "min": 20.0,
+        "p01": 20.0,
+        "p05": 20.0,
+        "p25": 20.0,
+        "med": 20.0,
+        "p75": 20.0,
+        "p95": 20.0,
+        "max": 20.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "kernel_mult": {
+        "min": 1.0,
+        "p01": 1.0,
+        "p05": 1.0,
+        "p25": 1.0,
+        "med": 1.0,
+        "p75": 1.0,
+        "p95": 1.0,
+        "max": 1.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "tier_mix_legs": {
+        "STANDARD": 50,
+        "GOBLIN": 50,
+        "DEMON": 25,
+        "OTHER": 0
+      },
+      "player_exposure": {
+        "players": 44,
+        "max": 4,
+        "top10": [
+          {
+            "player": "Austin Reaves",
+            "count": 4
+          },
+          {
+            "player": "Ayo Dosunmu",
+            "count": 4
+          },
+          {
+            "player": "Bruce Brown",
+            "count": 4
+          },
+          {
+            "player": "Cameron Johnson",
+            "count": 4
+          },
+          {
+            "player": "De'Aaron Fox",
+            "count": 4
+          },
+          {
+            "player": "DeMar DeRozan",
+            "count": 4
+          },
+          {
+            "player": "Derik Queen",
+            "count": 4
+          },
+          {
+            "player": "Devin Booker",
+            "count": 4
+          },
+          {
+            "player": "Devin Carter",
+            "count": 4
+          },
+          {
+            "player": "Jake LaRavia",
+            "count": 4
+          }
+        ]
+      }
+    }
+  ],
+  "kernel_suggestions": {
+    "std_logit_p_adj_STANDARD": 0.5574623854574554,
+    "sigma_leg_system_4": 0.10340198710792617,
+    "sigma_leg_system_5": 0.11087795657183469,
+    "sigma_leg_windfall_4": 0.1019573633750568,
+    "sigma_leg_windfall_5": 0.0908036414227111,
+    "target_sigma_leg_reason": "match_windfall_avg",
+    "target_sigma_leg": 0.09638050239888396,
+    "p0": 0.75,
+    "suggest_STANDARD_b_from_logit": -0.17289148992499973,
+    "suggest_STANDARD_a_from_logit": 0.18994071543774338,
+    "cur_sigma_leg_system_avg": 0.10713997183988043,
+    "b_current_source": "PTS",
+    "b_current": -0.288,
+    "sigma_ratio_target_over_current": 0.899575580838528,
+    "suggest_STANDARD_b_from_sigma_ratio_raw": null,
+    "suggest_STANDARD_a_from_sigma_ratio_raw": null,
+    "suggest_STANDARD_b_from_sigma_ratio_step": -0.259077767281496,
+    "suggest_STANDARD_a_from_sigma_ratio_step": 0.28462601885614824
+  },
+  "p_cal_floor_share": 0.0,
+  "p_cal_cap_share": 0.0,
+  "recommendations": []
+}

@@ -1,0 +1,9 @@
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\Users\rick\projects\Atlas\src\Atlas\engine\main.py", line 784, in <module>
+    main()
+  File "C:\Users\rick\projects\Atlas\src\Atlas\engine\main.py", line 726, in main
+    board = enrich_with_matchups(
+            ^^^^^^^^^^^^^^^^^^^^^
+TypeError: enrich_with_matchups() got an unexpected keyword argument 'slate_path'

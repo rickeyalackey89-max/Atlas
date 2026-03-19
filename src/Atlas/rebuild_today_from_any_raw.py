@@ -1,60 +1,116 @@
 from __future__ import annotations
+from Atlas.stages.rebuild.rebuild_today import run_rebuild
 
 import json
 import re
+import os
 from datetime import datetime, timezone
 from pathlib import Path
-
-def find_repo_root(start: Path) -> Path:
-    p = start.resolve()
-    for parent in [p] + list(p.parents):
-        if (parent / "tools").is_dir() and (parent / "data").is_dir():
-            return parent
-    return start.resolve()
 from typing import Any
 
 import pandas as pd
 
 
+# =========================
+# Paths / Repo discovery
+# =========================
+
+def find_repo_root(start: Path) -> Path:
+    """
+    Walk upward until we find a repo layout with both /tools and /data folders.
+    Falls back to the provided start path.
+    """
+    p = start.resolve()
+    for parent in [p] + list(p.parents):
+        if (parent / "tools").is_dir() and (parent / "data").is_dir():
+            return parent
+    return start.resolve()
+
+
 # File path: <repo>/src/Atlas/rebuild_today_from_any_raw.py
 # parents[0] -> <repo>/src/Atlas
 # parents[1] -> <repo>/src
-# parents[2] -> <repo>   ✅
-PROJECT_ROOT = find_repo_root(Path(__file__))
+# parents[2] -> <repo>
+PROJECT_ROOT = find_repo_root(Path(__file__).parent)
 RAW_DIR = PROJECT_ROOT / "data" / "raw"
 OUT_PATH = PROJECT_ROOT / "data" / "board" / "today.csv"
 
-# Canonical stats used by the model
-SUPPORTED_STATS = {
+
+# =========================
+# Stat normalization
+# =========================
+# Canonical stats used across Atlas.
+# NOTE: We do NOT drop unknown stats anymore (to satisfy: ALL stats, no silent fall-through).
+CANONICAL_STATS = {
+    # Singles
     "PTS",
     "REB",
     "AST",
-    "FG3M",
-    "PR",   # Pts+Rebs
-    "PA",   # Pts+Asts
-    "RA",   # Rebs+Asts
-    "PRA",  # Pts+Rebs+Asts
+    "BLK",
+    "STL",
+    "TOV",
+    "FG3M",   # 3PT made
+    "FGM",
+    "FGA",
+    "FTM",
+    "FTA",
+    # Combos
+    "PR",     # Pts+Rebs
+    "PA",     # Pts+Asts
+    "RA",     # Rebs+Asts
+    "PRA",    # Pts+Rebs+Asts
+    "BS",     # Blks+Stls
 }
 
 # Map PrizePicks stat labels -> canonical codes
-STAT_MAP = {
+STAT_MAP: dict[str, str] = {
+    # Points
     "POINTS": "PTS",
     "PTS": "PTS",
+
+    # Rebounds
     "REBOUNDS": "REB",
     "REBS": "REB",
     "REB": "REB",
+
+    # Assists
     "ASSISTS": "AST",
     "ASTS": "AST",
     "AST": "AST",
+
+    # 3PT Made
     "3-PT MADE": "FG3M",
     "3-POINTERS MADE": "FG3M",
     "3PM": "FG3M",
+    "3PTM": "FG3M",
     "FG3M": "FG3M",
+
+    # Steals / Blocks / Turnovers (common variants)
+    "STEALS": "STL",
+    "STLS": "STL",
+    "STL": "STL",
+    "BLOCKS": "BLK",
+    "BLKS": "BLK",
+    "BLK": "BLK",
+    "TURNOVERS": "TOV",
+    "TOS": "TOV",
+    "TOV": "TOV",
+
+    # Combos
     "PTS+REBS": "PR",
+    "POINTS+REBOUNDS": "PR",
+
     "PTS+ASTS": "PA",
+    "POINTS+ASSISTS": "PA",
+
     "REBS+ASTS": "RA",
+    "REBOUNDS+ASSISTS": "RA",
+
     "PTS+REBS+ASTS": "PRA",
+    "POINTS+REBOUNDS+ASSISTS": "PRA",
+
     "BLKS+STLS": "BS",
+    "BLOCKS+STEALS": "BS",
 }
 
 # Map odds_type -> tier used elsewhere in the project
@@ -64,6 +120,10 @@ ODDS_TYPE_TO_TIER = {
     "demon": "DEMON",
 }
 
+
+# =========================
+# Helpers
+# =========================
 
 def _clean_str(x: Any) -> str:
     return "" if x is None else str(x).strip()
@@ -104,12 +164,22 @@ def _is_combo_player_name(name: str) -> bool:
     return False
 
 
-def _norm_stat(raw: Any) -> str:
+def _norm_stat(raw: Any) -> tuple[str, str, int]:
+    """
+    Returns (stat_canon, stat_raw_clean, is_canonical)
+    - stat_canon: mapped canonical if known, else the cleaned raw (upper, normalized spaces)
+    - stat_raw_clean: cleaned uppercase label
+    - is_canonical: 1 if in known canonical set (either via map or already canonical), else 0
+    """
     s = _clean_str(raw).upper()
     if not s:
-        return ""
+        return "", "", 0
+
     s = re.sub(r"\s+", " ", s).strip()
-    return STAT_MAP.get(s, "")
+    canon = STAT_MAP.get(s, s)
+
+    is_canon = 1 if canon in CANONICAL_STATS else 0
+    return canon, s, is_canon
 
 
 def _load_latest_raw() -> Path:
@@ -155,191 +225,148 @@ def _get_player_id(item: dict) -> str:
     )
 
 
-def _pick_main_line(df: pd.DataFrame) -> pd.DataFrame:
+def _dedupe_exact_props(base: pd.DataFrame) -> pd.DataFrame:
     """
-    Keep one line per (player, stat, tier). Prefer:
-    - non-alternate (alt_line False)
-    - is_main True
-    - most recently updated
-    - stable tiebreaker by projection_id
-    Never return empty.
-    """
-    if df.empty:
-        return df
+    Keep ALL tiers and ALL alternate lines.
 
+    Only remove true duplicates where the identity is the same:
+      player + stat + tier + line + odds_type + start_time
+
+    Prefer newest updated_at, then stable by source_projection_id.
+    """
+    if base.empty:
+        return base
+
+    df = base.copy()
+
+    # Sort: newest first
     sort_cols: list[str] = []
     ascending: list[bool] = []
-
     for col, asc in [
-        ("alt_line", True),      # False first
-        ("is_main", False),      # True first
-        ("updated_at", False),   # newest first
-        ("projection_id", True),
+        ("updated_at", False),
+        ("source_projection_id", True),
     ]:
         if col in df.columns:
             sort_cols.append(col)
             ascending.append(asc)
 
-    df2 = df.sort_values(sort_cols, ascending=ascending, kind="mergesort")
-    out = df2.drop_duplicates(subset=["player", "stat", "tier"], keep="first").copy()
-    if out.empty:
-        return df2.head(1).copy()
-    return out
+    if sort_cols:
+        df = df.sort_values(sort_cols, ascending=ascending, kind="mergesort")
 
+    subset = [c for c in ["player", "stat", "tier", "line", "odds_type", "start_time"] if c in df.columns]
+    if not subset:
+        return df
+
+    return df.drop_duplicates(subset=subset, keep="first").copy()
+
+
+def _make_projection_id(source_projection_id: str, player: str, stat: str, tier: str, line: float, direction: str) -> str:
+    """
+    Enforce uniqueness per:
+      player + stat + direction + line + tier
+
+    We keep the provider id as part of the string when present, but do not rely on it.
+    """
+    # Use a stable, human-inspectable id
+    src = _clean_str(source_projection_id) or "no_src"
+    ply = _clean_str(player).replace("|", " ")
+    st = _clean_str(stat)
+    tr = _clean_str(tier)
+    dr = _clean_str(direction)
+    ln = f"{float(line):g}"
+    return f"{src}|{ply}|{st}|{tr}|{ln}|{dr}"
+
+def _build_replay_snapshot_name(raw_path: str, board_df: pd.DataFrame) -> str:
+    raw_stem = Path(raw_path).stem  # prizepicks_20260227_105718
+
+    slate_date = "unknown_date"
+    if "game_date" in board_df.columns:
+        s = (
+            board_df["game_date"]
+            .dropna()
+            .astype(str)
+            .str.strip()
+        )
+        s = s[s.ne("")]
+        if not s.empty:
+            dt = pd.to_datetime(s, errors="coerce")
+            dt = dt.dropna()
+            if not dt.empty:
+                slate_date = dt.min().strftime("%Y%m%d")
+
+    return f"replay_{slate_date}_{raw_stem}.csv"
+
+# =========================
+# Main
+# =========================
 
 def main() -> None:
-    raw_path = _load_latest_raw()
+    replay_raw = os.environ.get("ATLAS_REPLAY_RAW")
+    is_replay = bool(replay_raw)
+    # Resolve raw path (wrapper responsibility)
+    if replay_raw:
+        raw_path = Path(replay_raw).expanduser().resolve()
+        if not raw_path.exists():
+            raise FileNotFoundError(f"[REPLAY] ATLAS_REPLAY_RAW not found: {raw_path}")
+        print(f"[REPLAY] Rebuild using raw: {raw_path}")
+
+    else:
+        raw_path = _load_latest_raw()
+
+    # Load payload (wrapper responsibility)
     payload = json.loads(raw_path.read_text(encoding="utf-8"))
 
-    players = _build_player_map(payload)
-    now_utc = datetime.now(timezone.utc)
+    # Stage transform (pure deterministic logic)
+    out = run_rebuild(payload=payload, is_replay=is_replay)
 
-    dropped_unknown_stat = 0
-    dropped_combo_players = 0
-    dropped_started_games = 0
-    dropped_missing_player = 0
-    dropped_bad_rows = 0
+    # Preserve replay messaging (wrapper responsibility)
+    if is_replay:
+        print("[REPLAY] Rebuild bypassing started-game filtering (frozen now_utc).")
 
-    base_rows: list[dict[str, Any]] = []
+    # Write outputs (wrapper responsibility) — keep legacy path behavior
+    out_path = Path("data") / "board" / "today.csv"
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    out.to_csv(out_path, index=False)
+    print(f"Wrote: {out_path}")
 
-    for item in payload.get("data", []) or []:
-        if item.get("type") != "projection":
-            continue
+    # Snapshot (kept similar to fetch pattern)
+    snap_dir = out_path.parent / "snapshots"
+    snap_dir.mkdir(parents=True, exist_ok=True)
+    if is_replay:
+        snap_name = _build_replay_snapshot_name(str(raw_path), out)
+        snap_path = snap_dir / snap_name
+    else:
+        ts = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
+        snap_path = snap_dir / f"today_{ts}.csv"
+    out.to_csv(snap_path, index=False)
+    print(f"Snapshot: {snap_path}")
+    
+    if is_replay:
+        print(f"[REPLAY] snapshot_written={snap_path}")
 
-        attr = item.get("attributes", {}) or {}
-
-        proj_id = _clean_str(item.get("id"))
-        player_id = _get_player_id(item)
-
-        p = players.get(player_id, {}) if player_id else {}
-        player_name = _clean_str(p.get("name"))
-        team = _clean_str(p.get("team"))
-
-        if not player_name:
-            player_name = _clean_str(attr.get("description") or attr.get("player_name") or attr.get("name"))
-
-        if not player_name:
-            dropped_missing_player += 1
-            continue
-
-        if _is_combo_player_name(player_name):
-            dropped_combo_players += 1
-            continue
-
-        stat = _norm_stat(attr.get("stat_type") or attr.get("stat_type_display") or attr.get("stat_display_name"))
-        if not stat or stat not in SUPPORTED_STATS:
-            dropped_unknown_stat += 1
-            continue
-
-        start_dt = _parse_iso_datetime(_clean_str(attr.get("start_time")))
-        if start_dt is not None and start_dt < now_utc:
-            dropped_started_games += 1
-            continue
-
-        line = attr.get("line_score")
-        if line is None:
-            line = attr.get("flash_sale_line_score")
-
-        if line is None:
-            dropped_bad_rows += 1
-            continue
-
-        odds_type = _clean_str(attr.get("odds_type")).lower()
-        tier = ODDS_TYPE_TO_TIER.get(odds_type, "STANDARD")
-
-        updated_dt = _parse_iso_datetime(_clean_str(attr.get("updated_at")))
-        updated_at = updated_dt.isoformat() if updated_dt else _clean_str(attr.get("updated_at"))
-
-        alt_line = bool(attr.get("is_alternate") or attr.get("alt_line") or attr.get("is_alternate_line") or False)
-        is_main = bool(attr.get("is_main") or attr.get("isMain") or False)
-
-        base_rows.append(
-            {
-                "projection_id": proj_id,
-                "player": player_name,
-                "stat": stat,
-                "line": line,
-                "tier": tier,
-                "team": team,
-                "start_time": _clean_str(attr.get("start_time")),
-                "updated_at": updated_at,
-                "alt_line": int(alt_line),
-                "is_main": int(is_main),
-                "odds_type": odds_type,
-            }
-        )
-
-    base = pd.DataFrame(base_rows)
-    if base.empty:
-        raise RuntimeError(f"Rebuild parsed zero usable rows from {raw_path.name}")
-
-    base["line"] = pd.to_numeric(base["line"], errors="coerce")
-    base = base.dropna(subset=["line"]).copy()
-
-    before = len(base)
-    base = _pick_main_line(base)
-    dropped_alt_lines = before - len(base)
-
-    base["main_line"] = base["line"]
-
-    # Atlas 2.0 baseline playability (per-row intent):
-    # - STANDARD: OVER + UNDER allowed
-    # - GOBLIN/DEMON: OVER only
-    expanded_rows: list[dict[str, Any]] = []
-    for d in base.to_dict("records"):
-        tier = _clean_str(d.get("tier"))
-
-        # OVER row always present
-        r = dict(d)
-        r["direction"] = "OVER"
-        r["more_allowed"] = 1
-        r["less_allowed"] = 0
-        expanded_rows.append(r)
-
-        # UNDER row only for STANDARD
-        if tier == "STANDARD":
-            r = dict(d)
-            r["direction"] = "UNDER"
-            r["more_allowed"] = 0
-            r["less_allowed"] = 1
-            expanded_rows.append(r)
-
-    out = pd.DataFrame(expanded_rows)
-    if out.empty:
-        raise RuntimeError("Rebuild produced zero rows after expanding directions")
-
-    cols = [
-        "projection_id",
-        "player",
-        "stat",
-        "line",
-        "direction",
-        "tier",
-        "more_allowed",
-        "less_allowed",
-        "main_line",
-        "start_time",
-        "updated_at",
-        "alt_line",
-        "is_main",
-        "odds_type",
-        "team",
-    ]
-    out = out[[c for c in cols if c in out.columns]].copy()
-
-    OUT_PATH.parent.mkdir(parents=True, exist_ok=True)
-    out.to_csv(OUT_PATH, index=False)
-
+    # ---- Debug summary (safe; does not rely on legacy locals/counters)
     print(f"Rebuilt today.csv from: {raw_path}")
     print(f"Rows: {len(out)}")
-    print("Stat counts:")
-    print(out["stat"].value_counts())
-    print(f"Dropped unsupported/unknown stat: {dropped_unknown_stat}")
-    print(f"Dropped combo players (multi-player props): {dropped_combo_players}")
-    print(f"Dropped missing player: {dropped_missing_player}")
-    print(f"Dropped games already started: {dropped_started_games}")
-    print(f"Dropped blank player/stat/line rows (guard): {dropped_bad_rows}")
-    print(f"Dropped alt lines (kept 1 main line per player+stat+tier): {dropped_alt_lines}")
+
+    if "tier" in out.columns:
+        print("\nTier counts:")
+        print(out["tier"].value_counts(dropna=False))
+
+    if "stat" in out.columns:
+        print("\nStat counts (canonical):")
+        print(out["stat"].value_counts(dropna=False).head(30))
+
+    if "stat_is_canonical" in out.columns:
+        noncanon = int((out["stat_is_canonical"] == 0).sum())
+        if noncanon:
+            print(f"\nWARNING: Non-canonical stat rows retained: {noncanon}")
+            sample = (
+                out.loc[out["stat_is_canonical"] == 0, ["stat_raw", "stat"]]
+                .drop_duplicates()
+                .head(15)
+            )
+            print("Sample unknown/mapped-through stats:")
+            print(sample.to_string(index=False))
 
 
 if __name__ == "__main__":

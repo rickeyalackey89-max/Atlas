@@ -1,0 +1,233 @@
+{
+  "schema": "atlas.iael_invalidations.v1",
+  "report_date": "2026-02-12",
+  "report_label": "08:30PM",
+  "source_norm": "C:\\Users\\rick\\projects\\Atlas\\data\\output\\injury\\normalized\\2026-02-12_08_30PM.json",
+  "count": 28,
+  "invalidations": [
+    {
+      "player": "Antetokounmpo,Alex",
+      "status": "OUT",
+      "team": "MilwaukeeBucks",
+      "reason": "GLeague-Two-Way",
+      "game_date": "02/12/2026",
+      "hard_invalid": true
+    },
+    {
+      "player": "Antetokounmpo,Giannis",
+      "status": "OUT",
+      "team": "MilwaukeeBucks",
+      "reason": "Injury/Illness-RightCalf;Strain",
+      "game_date": "02/12/2026",
+      "hard_invalid": true
+    },
+    {
+      "player": "Prince,Taurean",
+      "status": "OUT",
+      "team": "MilwaukeeBucks",
+      "reason": "Injury/Illness-Neck;Surgery Injury/Illness-RightFoot;Plantar",
+      "game_date": "02/12/2026",
+      "hard_invalid": true
+    },
+    {
+      "player": "Rollins,Ryan",
+      "status": "OUT",
+      "team": "MilwaukeeBucks",
+      "reason": "Fasciitis",
+      "game_date": "02/12/2026",
+      "hard_invalid": true
+    },
+    {
+      "player": "Turner,Myles",
+      "status": "OUT",
+      "team": "MilwaukeeBucks",
+      "reason": "Injury/Illness-RightCalf;Soreness",
+      "game_date": "02/12/2026",
+      "hard_invalid": true
+    },
+    {
+      "player": "Carlson,Branden",
+      "status": "OUT",
+      "team": "OklahomaCityThunder",
+      "reason": "Injury/Illness-LowBack;Spasms",
+      "game_date": "02/12/2026",
+      "hard_invalid": true
+    },
+    {
+      "player": "Gilgeous-Alexander,Shai",
+      "status": "OUT",
+      "team": "OklahomaCityThunder",
+      "reason": "Injury/Illness-Abdominal;Strain Injury/Illness-RightSoleus;Injury",
+      "game_date": "02/12/2026",
+      "hard_invalid": true
+    },
+    {
+      "player": "Hartenstein,Isaiah",
+      "status": "OUT",
+      "team": "OklahomaCityThunder",
+      "reason": "Management Injury/Illness-Abdominal;Strain/",
+      "game_date": "02/12/2026",
+      "hard_invalid": true
+    },
+    {
+      "player": "Mitchell,Ajay",
+      "status": "OUT",
+      "team": "OklahomaCityThunder",
+      "reason": "LeftAnkleSprain Injury/Illness-RightACL;Surgical",
+      "game_date": "02/12/2026",
+      "hard_invalid": true
+    },
+    {
+      "player": "Sorber,Thomas",
+      "status": "OUT",
+      "team": "OklahomaCityThunder",
+      "reason": "Recovery Injury/Illness-RightHamstring;",
+      "game_date": "02/12/2026",
+      "hard_invalid": true
+    },
+    {
+      "player": "Williams,Jalen",
+      "status": "OUT",
+      "team": "OklahomaCityThunder",
+      "reason": "Strain Injury/Illness-LowBack;Injury 09:00(ET) POR@UTA PortlandTrailBlazers Avdija,Deni Out Management",
+      "game_date": "02/12/2026",
+      "hard_invalid": true
+    },
+    {
+      "player": "Lillard,Damian",
+      "status": "OUT",
+      "team": "OklahomaCityThunder",
+      "reason": "Injury/Illness-LeftAchillesTendon; InjuryManagement",
+      "game_date": "02/12/2026",
+      "hard_invalid": true
+    },
+    {
+      "player": "Murray,Kris",
+      "status": "OUT",
+      "team": "OklahomaCityThunder",
+      "reason": "Injury/Illness-Lumbar;Strain",
+      "game_date": "02/12/2026",
+      "hard_invalid": true
+    },
+    {
+      "player": "Sharpe,Shaedon",
+      "status": "OUT",
+      "team": "OklahomaCityThunder",
+      "reason": "Injury/Illness-LeftCalf;Strain Injury/Illness-RightKnee;",
+      "game_date": "02/12/2026",
+      "hard_invalid": true
+    },
+    {
+      "player": "Thybulle,Matisse",
+      "status": "OUT",
+      "team": "OklahomaCityThunder",
+      "reason": "Tendinopathy Injury/Illness-LeftKnee;Injury",
+      "game_date": "02/12/2026",
+      "hard_invalid": true
+    },
+    {
+      "player": "WilliamsIII,Robert",
+      "status": "OUT",
+      "team": "OklahomaCityThunder",
+      "reason": "Management",
+      "game_date": "02/12/2026",
+      "hard_invalid": true
+    },
+    {
+      "player": "George,Keyonte",
+      "status": "OUT",
+      "team": "UtahJazz",
+      "reason": "Injury/Illness-RightAnkle;Sprain Injury/Illness-LeftKnee;Injury",
+      "game_date": "02/12/2026",
+      "hard_invalid": true
+    },
+    {
+      "player": "JacksonJr.,Jaren",
+      "status": "OUT",
+      "team": "UtahJazz",
+      "reason": "management Injury/Illness-LeftShoulder;Injury",
+      "game_date": "02/12/2026",
+      "hard_invalid": true
+    },
+    {
+      "player": "Kessler,Walker",
+      "status": "OUT",
+      "team": "UtahJazz",
+      "reason": "recovery",
+      "game_date": "02/12/2026",
+      "hard_invalid": true
+    },
+    {
+      "player": "Markkanen,Lauri",
+      "status": "OUT",
+      "team": "UtahJazz",
+      "reason": "Rest 10:00(ET) DAL@LAL DallasMavericks Cisse,Moussa Doubtful GLeague-Two-Way",
+      "game_date": "02/12/2026",
+      "hard_invalid": true
+    },
+    {
+      "player": "Flagg,Cooper",
+      "status": "OUT",
+      "team": "UtahJazz",
+      "reason": "Injury/Illness-LeftMidfoot;Sprain",
+      "game_date": "02/12/2026",
+      "hard_invalid": true
+    },
+    {
+      "player": "Irving,Kyrie",
+      "status": "OUT",
+      "team": "UtahJazz",
+      "reason": "Injury/Illness-LeftKnee;Surgery",
+      "game_date": "02/12/2026",
+      "hard_invalid": true
+    },
+    {
+      "player": "Kelly,Miles",
+      "status": "DOUBTFUL",
+      "team": "UtahJazz",
+      "reason": "GLeague-Two-Way",
+      "game_date": "02/12/2026",
+      "hard_invalid": true
+    },
+    {
+      "player": "LivelyII,Dereck",
+      "status": "OUT",
+      "team": "UtahJazz",
+      "reason": "Injury/Illness-RightFoot;Surgery",
+      "game_date": "02/12/2026",
+      "hard_invalid": true
+    },
+    {
+      "player": "Martin,Caleb",
+      "status": "DOUBTFUL",
+      "team": "UtahJazz",
+      "reason": "Injury/Illness-LeftAnkle;Sprain",
+      "game_date": "02/12/2026",
+      "hard_invalid": true
+    },
+    {
+      "player": "Nembhard,Ryan",
+      "status": "DOUBTFUL",
+      "team": "UtahJazz",
+      "reason": "GLeague-Two-Way",
+      "game_date": "02/12/2026",
+      "hard_invalid": true
+    },
+    {
+      "player": "Ayton,Deandre",
+      "status": "OUT",
+      "team": "LosAngelesLakers",
+      "reason": "Injury/Illness-Rightknee;Soreness",
+      "game_date": "02/12/2026",
+      "hard_invalid": true
+    },
+    {
+      "player": "Doncic,Luka",
+      "status": "OUT",
+      "team": "LosAngelesLakers",
+      "reason": "Injury/Illness-LeftHamstring;Strain",
+      "game_date": "02/12/2026",
+      "hard_invalid": true
+    }
+  ]
+}

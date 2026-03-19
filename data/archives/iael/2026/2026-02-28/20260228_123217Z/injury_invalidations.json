@@ -1,0 +1,291 @@
+{
+  "report_date": "2026-02-28",
+  "report_label": "07:30AM",
+  "pulled_at_local": "2026-02-28T06:32:10-06:00",
+  "invalidated_players_count": 47,
+  "invalidated_players": [
+    {
+      "team": "CharlotteHornets",
+      "player": "Evbuomwan,Tosan",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "CharlotteHornets",
+      "player": "Hall,PJ",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "CharlotteHornets",
+      "player": "McNeeley,Liam",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "CharlotteHornets",
+      "player": "Newton,Tristen",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "CharlotteHornets",
+      "player": "Reeves,Antonio",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "CharlotteHornets",
+      "player": "Salaun,Tidjane",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "CharlotteHornets",
+      "player": "SmithJr.,Jabari",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "CharlotteHornets",
+      "player": "Tate,Jae'Sean",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "CharlotteHornets",
+      "player": "VanVleet,Fred",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "GoldenStateWarriors",
+      "player": "ButlerIII,Jimmy",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "GoldenStateWarriors",
+      "player": "Cryer,LJ",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "GoldenStateWarriors",
+      "player": "Curry,Seth",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "GoldenStateWarriors",
+      "player": "Curry,Stephen",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "GoldenStateWarriors",
+      "player": "Dickinson,Hunter",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "GoldenStateWarriors",
+      "player": "Missi,Yves",
+      "status": "QUESTIONABLE",
+      "reason": ""
+    },
+    {
+      "team": "GoldenStateWarriors",
+      "player": "MurphyIII,Trey",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "GoldenStateWarriors",
+      "player": "Murray,Dejounte",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "GoldenStateWarriors",
+      "player": "Porzingis,Kristaps",
+      "status": "QUESTIONABLE",
+      "reason": ""
+    },
+    {
+      "team": "MiamiHeat",
+      "player": "Jovic,Nikola",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "MiamiHeat",
+      "player": "Lawson,A.J.",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "MiamiHeat",
+      "player": "Martin,Alijah",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "MiamiHeat",
+      "player": "Mogbo,Jonathan",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "MiamiHeat",
+      "player": "Murray-Boyles,Collin",
+      "status": "DOUBTFUL",
+      "reason": ""
+    },
+    {
+      "team": "MiamiHeat",
+      "player": "Powell,Norman",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "MiamiHeat",
+      "player": "Rozier,Terry",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "PortlandTrailBlazers",
+      "player": "Avdija,Deni",
+      "status": "DOUBTFUL",
+      "reason": ""
+    },
+    {
+      "team": "PortlandTrailBlazers",
+      "player": "Clingan,Donovan",
+      "status": "QUESTIONABLE",
+      "reason": ""
+    },
+    {
+      "team": "PortlandTrailBlazers",
+      "player": "Lillard,Damian",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "PortlandTrailBlazers",
+      "player": "Love,Caleb",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "PortlandTrailBlazers",
+      "player": "Sharpe,Shaedon",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "UtahJazz",
+      "player": "George,Keyonte",
+      "status": "QUESTIONABLE",
+      "reason": ""
+    },
+    {
+      "team": "UtahJazz",
+      "player": "JacksonJr.,Jaren",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "UtahJazz",
+      "player": "Kessler,Walker",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "UtahJazz",
+      "player": "Markkanen,Lauri",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "UtahJazz",
+      "player": "Nurkic,Jusuf",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "UtahJazz",
+      "player": "WilliamsJr.,Vince",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "WashingtonWizards",
+      "player": "Black,Leaky",
+      "status": "QUESTIONABLE",
+      "reason": ""
+    },
+    {
+      "team": "WashingtonWizards",
+      "player": "Davis,Anthony",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "WashingtonWizards",
+      "player": "George,Kyshawn",
+      "status": "QUESTIONABLE",
+      "reason": ""
+    },
+    {
+      "team": "WashingtonWizards",
+      "player": "James,Bronny",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "WashingtonWizards",
+      "player": "Riley,Will",
+      "status": "QUESTIONABLE",
+      "reason": ""
+    },
+    {
+      "team": "WashingtonWizards",
+      "player": "Russell,D'Angelo",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "WashingtonWizards",
+      "player": "Sarr,Alex",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "WashingtonWizards",
+      "player": "Thiero,Adou",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "WashingtonWizards",
+      "player": "Vukcevic,Tristan",
+      "status": "QUESTIONABLE",
+      "reason": ""
+    },
+    {
+      "team": "WashingtonWizards",
+      "player": "Whitmore,Cam",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "WashingtonWizards",
+      "player": "Young,Trae",
+      "status": "OUT",
+      "reason": ""
+    }
+  ],
+  "policy": "Remove OUT/DOUBTFUL/QUESTIONABLE from eligibility. PROBABLE allowed but tagged."
+}

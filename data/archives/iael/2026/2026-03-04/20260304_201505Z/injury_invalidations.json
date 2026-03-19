@@ -1,0 +1,375 @@
+{
+  "report_date": "2026-03-04",
+  "report_label": "03:00PM",
+  "pulled_at_local": "2026-03-04T14:15:03-06:00",
+  "invalidated_players_count": 61,
+  "invalidated_players": [
+    {
+      "team": "BostonCeltics",
+      "player": "Kessler,Walker",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "BostonCeltics",
+      "player": "Markkanen,Lauri",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "BostonCeltics",
+      "player": "Nurkic,Jusuf",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "BostonCeltics",
+      "player": "Tatum,Jayson",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "BostonCeltics",
+      "player": "WilliamsJr.,Vince",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "DallasMavericks",
+      "player": "Curry,Seth",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "DallasMavericks",
+      "player": "Curry,Stephen",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "DallasMavericks",
+      "player": "Moody,Moses",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "DallasMavericks",
+      "player": "PaytonII,Gary",
+      "status": "QUESTIONABLE",
+      "reason": ""
+    },
+    {
+      "team": "DallasMavericks",
+      "player": "Porzingis,Kristaps",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "DallasMavericks",
+      "player": "Richard,Will",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "LAClippers",
+      "player": "Beal,Bradley",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "LAClippers",
+      "player": "Collins,John",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "MemphisGrizzlies",
+      "player": "Aldama,Santi",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "MemphisGrizzlies",
+      "player": "Caldwell-Pope,Kentavious",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "MemphisGrizzlies",
+      "player": "Clarke,Brandon",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "MemphisGrizzlies",
+      "player": "Coward,Cedric",
+      "status": "DOUBTFUL",
+      "reason": ""
+    },
+    {
+      "team": "MemphisGrizzlies",
+      "player": "Edey,Zach",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "MemphisGrizzlies",
+      "player": "Gibson,Taj",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "MemphisGrizzlies",
+      "player": "Jerome,Ty",
+      "status": "DOUBTFUL",
+      "reason": ""
+    },
+    {
+      "team": "MemphisGrizzlies",
+      "player": "Kuminga,Jonathan",
+      "status": "QUESTIONABLE",
+      "reason": ""
+    },
+    {
+      "team": "MemphisGrizzlies",
+      "player": "Morant,Ja",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "MemphisGrizzlies",
+      "player": "Newell,Asa",
+      "status": "DOUBTFUL",
+      "reason": ""
+    },
+    {
+      "team": "MemphisGrizzlies",
+      "player": "PippenJr.,Scotty",
+      "status": "DOUBTFUL",
+      "reason": ""
+    },
+    {
+      "team": "MilwaukeeBucks",
+      "player": "Antetokounmpo,Alex",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "MilwaukeeBucks",
+      "player": "Haliburton,Tyrese",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "MilwaukeeBucks",
+      "player": "Nembhard,Andrew",
+      "status": "QUESTIONABLE",
+      "reason": ""
+    },
+    {
+      "team": "MilwaukeeBucks",
+      "player": "Nesmith,Aaron",
+      "status": "QUESTIONABLE",
+      "reason": ""
+    },
+    {
+      "team": "MilwaukeeBucks",
+      "player": "Peter,Taelon",
+      "status": "QUESTIONABLE",
+      "reason": ""
+    },
+    {
+      "team": "MilwaukeeBucks",
+      "player": "PorterJr.,Kevin",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "MilwaukeeBucks",
+      "player": "Prince,Taurean",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "MilwaukeeBucks",
+      "player": "Ryan,Cormac",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "MilwaukeeBucks",
+      "player": "Siakam,Pascal",
+      "status": "QUESTIONABLE",
+      "reason": ""
+    },
+    {
+      "team": "MilwaukeeBucks",
+      "player": "Slawson,Jalen",
+      "status": "QUESTIONABLE",
+      "reason": ""
+    },
+    {
+      "team": "MilwaukeeBucks",
+      "player": "Thompson,Ethan",
+      "status": "QUESTIONABLE",
+      "reason": ""
+    },
+    {
+      "team": "MilwaukeeBucks",
+      "player": "Zubac,Ivica",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "NewYorkKnicks",
+      "player": "Dadiet,Pacome",
+      "status": "QUESTIONABLE",
+      "reason": ""
+    },
+    {
+      "team": "NewYorkKnicks",
+      "player": "JemisonIII,Trey",
+      "status": "QUESTIONABLE",
+      "reason": ""
+    },
+    {
+      "team": "NewYorkKnicks",
+      "player": "Jones,Dillon",
+      "status": "QUESTIONABLE",
+      "reason": ""
+    },
+    {
+      "team": "NewYorkKnicks",
+      "player": "McBride,Miles",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "NewYorkKnicks",
+      "player": "McCullarJr.,Kevin",
+      "status": "QUESTIONABLE",
+      "reason": ""
+    },
+    {
+      "team": "NewYorkKnicks",
+      "player": "McNeeley,Liam",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "NewYorkKnicks",
+      "player": "Robinson,Mitchell",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "NewYorkKnicks",
+      "player": "Salaun,Tidjane",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "NewYorkKnicks",
+      "player": "Williams,Grant",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "OklahomaCityThunder",
+      "player": "Carlson,Branden",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "OklahomaCityThunder",
+      "player": "Mitchell,Ajay",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "OklahomaCityThunder",
+      "player": "Sorber,Thomas",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "OklahomaCityThunder",
+      "player": "Topic,Nikola",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "OklahomaCityThunder",
+      "player": "Williams,Jalen",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "Philadelphia76ers",
+      "player": "Broome,Johni",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "Philadelphia76ers",
+      "player": "Edgecombe,VJ",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "Philadelphia76ers",
+      "player": "Embiid,Joel",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "Philadelphia76ers",
+      "player": "George,Paul",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "Philadelphia76ers",
+      "player": "Kent,Jayson",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "Philadelphia76ers",
+      "player": "Lillard,Damian",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "Philadelphia76ers",
+      "player": "Love,Caleb",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "Philadelphia76ers",
+      "player": "Murray,Kris",
+      "status": "QUESTIONABLE",
+      "reason": ""
+    },
+    {
+      "team": "Philadelphia76ers",
+      "player": "OubreJr.,Kelly",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "Philadelphia76ers",
+      "player": "Sharpe,Shaedon",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "Philadelphia76ers",
+      "player": "Yang,Hansen",
+      "status": "OUT",
+      "reason": ""
+    }
+  ],
+  "policy": "Remove OUT/DOUBTFUL/QUESTIONABLE from eligibility. PROBABLE allowed but tagged."
+}

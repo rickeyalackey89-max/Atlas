@@ -1,0 +1,225 @@
+{
+  "report_date": "2026-03-12",
+  "report_label": "05:15PM",
+  "pulled_at_local": "2026-03-12T16:32:24-05:00",
+  "invalidated_players_count": 36,
+  "invalidated_players": [
+    {
+      "team": "ATL",
+      "player": "Gilbert, Keshon",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "DET",
+      "player": "Jones, Isaac",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "DET",
+      "player": "Klintman, Bobi",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "DET",
+      "player": "LeVert, Caris",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "DET",
+      "player": "Smith, Tolu",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "DET",
+      "player": "Thompson, Ausar",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "IND",
+      "player": "Furphy, Johnny",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "IND",
+      "player": "Haliburton, Tyrese",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "IND",
+      "player": "Jackson, Quenton",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "IND",
+      "player": "Siakam, Pascal",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "MEM",
+      "player": "Aldama, Santi",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "MEM",
+      "player": "Caldwell-Pope, Kentavious",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "MEM",
+      "player": "Clarke, Brandon",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "MEM",
+      "player": "Coward, Cedric",
+      "status": "DOUBTFUL",
+      "reason": ""
+    },
+    {
+      "team": "MEM",
+      "player": "Edey, Zach",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "MEM",
+      "player": "Gibson, Taj",
+      "status": "DOUBTFUL",
+      "reason": ""
+    },
+    {
+      "team": "MEM",
+      "player": "Jerome, Ty",
+      "status": "DOUBTFUL",
+      "reason": ""
+    },
+    {
+      "team": "MEM",
+      "player": "Morant, Ja",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "MIA",
+      "player": "Jovic, Nikola",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "MIA",
+      "player": "Powell, Norman",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "MIA",
+      "player": "Rozier, Terry",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "MIA",
+      "player": "Wiggins, Andrew",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "MIA",
+      "player": "Young, Jahmir",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "OKC",
+      "player": "Carlson, Branden",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "OKC",
+      "player": "Hartenstein, Isaiah",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "OKC",
+      "player": "Sorber, Thomas",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "OKC",
+      "player": "Topic, Nikola",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "OKC",
+      "player": "Williams, Jalen",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "ORL",
+      "player": "Black, Anthony",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "ORL",
+      "player": "Wagner, Franz",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "POR",
+      "player": "Jr., Michael",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "POR",
+      "player": "Ryan, Cormac",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "POR",
+      "player": "Sharpe, Day'Ron",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "POR",
+      "player": "Traore, Nolan",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "POR",
+      "player": "Williams, Ziaire",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "TOR",
+      "player": "Hepburn, Chucky",
+      "status": "OUT",
+      "reason": ""
+    }
+  ],
+  "policy": "Remove OUT/DOUBTFUL from eligibility. PROBABLE allowed but tagged."
+}

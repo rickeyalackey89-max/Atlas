@@ -1,0 +1,1 @@
+[DEBUG] Dropped 1444 invalid rows from today.csv (blank/unknown stat/line)

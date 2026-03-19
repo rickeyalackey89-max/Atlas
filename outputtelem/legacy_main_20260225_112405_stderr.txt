@@ -1,0 +1,18 @@
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\Users\rick\projects\Atlas\src\Atlas\engine\main.py", line 784, in <module>
+    main()
+  File "C:\Users\rick\projects\Atlas\src\Atlas\engine\main.py", line 755, in main
+    slips = run_build_slips(
+            ^^^^^^^^^^^^^^^^
+  File "C:\Users\rick\projects\Atlas\src\Atlas\stages\optimize\build_slips_today.py", line 41, in run_build_slips
+    build_system_slips(scored_for_optimizer, 3, top_n, seed, pricing_engine=pricing_engine, cfg=cfg), 3
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rick\projects\Atlas\src\Atlas\core\slip_builders.py", line 450, in build_system_slips
+    return build_slips_by_tier_buckets(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rick\projects\Atlas\src\Atlas\core\slip_builders.py", line 378, in build_slips_by_tier_buckets
+    hp_arr[np.isnan(hp_arr)] = 0.0
+    ~~~~~~^^^^^^^^^^^^^^^^^^
+ValueError: assignment destination is read-only

@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "generated_at": "2026-03-12T00:00:00Z",
+  "k_shrink": 1.0,
+  "standard_under_penalty": 0.998,
+  "mult": {},
+  "cap": {
+    "min": 0.01,
+    "max": 0.99
+  }
+}

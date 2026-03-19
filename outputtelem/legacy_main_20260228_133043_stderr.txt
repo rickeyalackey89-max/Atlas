@@ -1,0 +1,17 @@
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\Users\rick\projects\Atlas\src\Atlas\engine\main.py", line 821, in <module>
+    main()
+  File "C:\Users\rick\projects\Atlas\src\Atlas\engine\main.py", line 771, in main
+    slips = run_build_slips(
+            ^^^^^^^^^^^^^^^^
+  File "C:\Users\rick\projects\Atlas\src\Atlas\stages\optimize\build_slips_today.py", line 42, in run_build_slips
+    build_system_slips(scored_for_optimizer, 3, top_n, seed, pricing_engine=pricing_engine, cfg=cfg, sort_mode=sort_mode), 3
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rick\projects\Atlas\src\Atlas\core\slip_builders.py", line 515, in build_system_slips
+    return build_slips_by_tier_buckets(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rick\projects\Atlas\src\Atlas\core\slip_builders.py", line 209, in build_slips_by_tier_buckets
+    raise RuntimeError("DEBUG_TRIP: build_slips_by_tier_buckets reached")
+RuntimeError: DEBUG_TRIP: build_slips_by_tier_buckets reached

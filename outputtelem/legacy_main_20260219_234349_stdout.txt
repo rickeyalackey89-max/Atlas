@@ -1,0 +1,2 @@
+[DEBUG] Dropped 2326 invalid rows from today.csv (blank/unknown stat/line)
+[IAEL] Loaded invalidations=74. Report: 

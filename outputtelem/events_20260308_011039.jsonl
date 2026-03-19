@@ -1,0 +1,3 @@
+{"authority":"sandbox","event":"run_start","raw_path":"C:\\Users\\rick\\projects\\Atlas\\data\\raw\\prizepicks_20260307_185755.json","run_id":"20260308_011039","scheduled":false,"ts":"2026-03-08T01:10:39Z"}
+{"authority":"sandbox","event":"stage_start","run_id":"20260308_011039","stage":"fetch_raw_only","ts":"2026-03-08T01:10:39Z"}
+{"authority":"sandbox","duration_ms":3502,"error_message":"1","error_type":"SystemExit","event":"stage_end","run_id":"20260308_011039","stage":"fetch_raw_only","status":"fail","ts":"2026-03-08T01:10:43Z"}

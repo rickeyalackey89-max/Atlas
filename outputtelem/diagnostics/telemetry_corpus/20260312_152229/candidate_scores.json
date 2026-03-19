@@ -1,0 +1,872 @@
+{
+  "variant_rankings": [
+    {
+      "score": -0.011302,
+      "config_values": {
+        "pp_kernel.coeffs.DEFAULT.STANDARD.a": 0.3164,
+        "pp_kernel.coeffs.DEFAULT.STANDARD.b": -0.288,
+        "slip_rank.ev_payout_power": 2,
+        "slip_build.target_pool_mult": 200,
+        "slip_build.phase1_frac": 0.2,
+        "slip_build.phase1_pool_frac": 0.5,
+        "slip_build.beam_width": 200,
+        "slip_build.max_slips_per_player": 4
+      },
+      "strict3": 0.20131,
+      "strict4": 0.159167,
+      "strict5": 0.081085,
+      "ev3": 2.010921,
+      "ev4": 1.984268,
+      "ev5": 2.213573,
+      "hit3": 0.288903,
+      "hit4": 0.279685,
+      "hit5": 0.240458,
+      "strict3_std": 0.184831,
+      "strict4_std": 0.157373,
+      "strict5_std": 0.115507,
+      "corpus_metrics": {
+        "eval_rows": 78866,
+        "settled_eval_rows": 78866,
+        "mean_hit": 0.421855,
+        "mean_p_adj": 0.392313,
+        "mean_p_cal": 0.399152,
+        "brier_p_adj": 0.210604,
+        "brier_p_cal": 0.210468,
+        "logloss_p_adj": 0.608608,
+        "logloss_p_cal": 0.608195,
+        "games_used_lt5_share": 0.006674,
+        "role_ctx_outs_used_share": 0.201234,
+        "questionable_share": 0.0,
+        "q_out_frac_mean": 0.0,
+        "p_cal_equal_p_adj_share": 0.389051,
+        "run_count": 23
+      },
+      "score_components": {
+        "realized_core": 0.373239,
+        "pricing_secondary": 0.074505,
+        "stability_penalty": -0.457712,
+        "sample_penalty": -0.001335,
+        "short_slip_protection_penalty": -0.0,
+        "relative_consistency_bonus": 0.0
+      },
+      "relative_metrics": {
+        "delta_strict3": 0.0,
+        "delta_strict4": 0.0,
+        "delta_strict5": 0.0,
+        "delta_hit3": 0.0,
+        "delta_hit4": 0.0,
+        "delta_hit5": 0.0,
+        "delta_ev3": 0.0,
+        "delta_ev4": 0.0,
+        "delta_ev5": 0.0,
+        "delta_games_used_lt5_share": 0.0
+      },
+      "dominant_positive": "realized_core",
+      "dominant_negative": "stability_penalty",
+      "label": "Telemetryruns_cal_challenger",
+      "rank": 1
+    }
+  ],
+  "calibration_candidates": [
+    {
+      "candidate": "stat_direction_light",
+      "brier": 0.209834,
+      "logloss": 0.606294,
+      "ece": 0.017547,
+      "meta": {
+        "family": "stat_direction",
+        "mult_map": {
+          "AST|OVER": 1.004027,
+          "AST|UNDER": 1.04,
+          "FG3M|OVER": 1.001374,
+          "FG3M|UNDER": 1.04,
+          "PA|OVER": 1.033444,
+          "PA|UNDER": 1.04,
+          "PR|OVER": 1.04,
+          "PR|UNDER": 1.04,
+          "PRA|OVER": 1.04,
+          "PRA|UNDER": 1.04,
+          "PTS|OVER": 1.032915,
+          "PTS|UNDER": 1.024389,
+          "RA|OVER": 1.026281,
+          "RA|UNDER": 1.04,
+          "REB|OVER": 1.012398,
+          "REB|UNDER": 1.04
+        }
+      },
+      "gate_summary": {
+        "eligible_slices": 11,
+        "pass_count": 9,
+        "pass_share": 0.818182,
+        "severe_regressions": 0,
+        "overall_clear": true,
+        "slice_rows": [
+          {
+            "slice": "all_runs",
+            "rows": 98863,
+            "delta_brier": 0.000634,
+            "pass": true,
+            "severe_regression": false
+          },
+          {
+            "slice": "older_half",
+            "rows": 46550,
+            "delta_brier": 0.000571,
+            "pass": true,
+            "severe_regression": false
+          },
+          {
+            "slice": "recent_half",
+            "rows": 52313,
+            "delta_brier": 0.000692,
+            "pass": true,
+            "severe_regression": false
+          },
+          {
+            "slice": "recent_third",
+            "rows": 30101,
+            "delta_brier": 0.000714,
+            "pass": true,
+            "severe_regression": false
+          },
+          {
+            "slice": "direction_over",
+            "rows": 86024,
+            "delta_brier": 0.000459,
+            "pass": false,
+            "severe_regression": false
+          },
+          {
+            "slice": "direction_under",
+            "rows": 12839,
+            "delta_brier": 0.001828,
+            "pass": true,
+            "severe_regression": false
+          },
+          {
+            "slice": "games_lt5",
+            "rows": 613,
+            "delta_brier": 0.000993,
+            "pass": true,
+            "severe_regression": false
+          },
+          {
+            "slice": "games_5to9",
+            "rows": 617,
+            "delta_brier": 0.001276,
+            "pass": true,
+            "severe_regression": false
+          },
+          {
+            "slice": "games_10plus",
+            "rows": 97633,
+            "delta_brier": 0.000628,
+            "pass": true,
+            "severe_regression": false
+          },
+          {
+            "slice": "role_ctx_off",
+            "rows": 78495,
+            "delta_brier": 0.000861,
+            "pass": true,
+            "severe_regression": false
+          },
+          {
+            "slice": "role_ctx_on",
+            "rows": 20368,
+            "delta_brier": -0.000289,
+            "pass": false,
+            "severe_regression": false
+          }
+        ]
+      },
+      "improvement_vs_current": 0.000634,
+      "gated_score": 0.005134
+    },
+    {
+      "candidate": "identity",
+      "brier": 0.210604,
+      "logloss": 0.608608,
+      "ece": 0.030114,
+      "meta": {
+        "family": "identity"
+      },
+      "gate_summary": {
+        "eligible_slices": 11,
+        "pass_count": 1,
+        "pass_share": 0.090909,
+        "severe_regressions": 1,
+        "overall_clear": false,
+        "slice_rows": [
+          {
+            "slice": "all_runs",
+            "rows": 98863,
+            "delta_brier": -0.000135,
+            "pass": false,
+            "severe_regression": false
+          },
+          {
+            "slice": "older_half",
+            "rows": 46550,
+            "delta_brier": -0.00017,
+            "pass": false,
+            "severe_regression": false
+          },
+          {
+            "slice": "recent_half",
+            "rows": 52313,
+            "delta_brier": -0.000103,
+            "pass": false,
+            "severe_regression": false
+          },
+          {
+            "slice": "recent_third",
+            "rows": 30101,
+            "delta_brier": -7.9e-05,
+            "pass": false,
+            "severe_regression": false
+          },
+          {
+            "slice": "direction_over",
+            "rows": 86024,
+            "delta_brier": -0.000215,
+            "pass": false,
+            "severe_regression": false
+          },
+          {
+            "slice": "direction_under",
+            "rows": 12839,
+            "delta_brier": 0.000406,
+            "pass": false,
+            "severe_regression": false
+          },
+          {
+            "slice": "games_lt5",
+            "rows": 613,
+            "delta_brier": 0.000222,
+            "pass": false,
+            "severe_regression": false
+          },
+          {
+            "slice": "games_5to9",
+            "rows": 617,
+            "delta_brier": 0.000626,
+            "pass": true,
+            "severe_regression": false
+          },
+          {
+            "slice": "games_10plus",
+            "rows": 97633,
+            "delta_brier": -0.000142,
+            "pass": false,
+            "severe_regression": false
+          },
+          {
+            "slice": "role_ctx_off",
+            "rows": 78495,
+            "delta_brier": 0.000119,
+            "pass": false,
+            "severe_regression": false
+          },
+          {
+            "slice": "role_ctx_on",
+            "rows": 20368,
+            "delta_brier": -0.001171,
+            "pass": false,
+            "severe_regression": true
+          }
+        ]
+      },
+      "improvement_vs_current": -0.000135,
+      "gated_score": -0.004635
+    },
+    {
+      "candidate": "under_penalty_0.98",
+      "brier": 0.210702,
+      "logloss": 0.608806,
+      "ece": 0.031315,
+      "meta": {
+        "family": "under_penalty",
+        "penalty": 0.98
+      },
+      "gate_summary": {
+        "eligible_slices": 11,
+        "pass_count": 0,
+        "pass_share": 0.0,
+        "severe_regressions": 1,
+        "overall_clear": false,
+        "slice_rows": [
+          {
+            "slice": "all_runs",
+            "rows": 98863,
+            "delta_brier": -0.000234,
+            "pass": false,
+            "severe_regression": false
+          },
+          {
+            "slice": "older_half",
+            "rows": 46550,
+            "delta_brier": -0.000267,
+            "pass": false,
+            "severe_regression": false
+          },
+          {
+            "slice": "recent_half",
+            "rows": 52313,
+            "delta_brier": -0.000204,
+            "pass": false,
+            "severe_regression": false
+          },
+          {
+            "slice": "recent_third",
+            "rows": 30101,
+            "delta_brier": -0.000172,
+            "pass": false,
+            "severe_regression": false
+          },
+          {
+            "slice": "direction_over",
+            "rows": 86024,
+            "delta_brier": -0.000215,
+            "pass": false,
+            "severe_regression": false
+          },
+          {
+            "slice": "direction_under",
+            "rows": 12839,
+            "delta_brier": -0.000368,
+            "pass": false,
+            "severe_regression": false
+          },
+          {
+            "slice": "games_lt5",
+            "rows": 613,
+            "delta_brier": -0.000176,
+            "pass": false,
+            "severe_regression": false
+          },
+          {
+            "slice": "games_5to9",
+            "rows": 617,
+            "delta_brier": 0.000497,
+            "pass": false,
+            "severe_regression": false
+          },
+          {
+            "slice": "games_10plus",
+            "rows": 97633,
+            "delta_brier": -0.000239,
+            "pass": false,
+            "severe_regression": false
+          },
+          {
+            "slice": "role_ctx_off",
+            "rows": 78495,
+            "delta_brier": 8e-06,
+            "pass": false,
+            "severe_regression": false
+          },
+          {
+            "slice": "role_ctx_on",
+            "rows": 20368,
+            "delta_brier": -0.001218,
+            "pass": false,
+            "severe_regression": true
+          }
+        ]
+      },
+      "improvement_vs_current": -0.000234,
+      "gated_score": -0.005234
+    },
+    {
+      "candidate": "under_penalty_0.96",
+      "brier": 0.210825,
+      "logloss": 0.60906,
+      "ece": 0.032515,
+      "meta": {
+        "family": "under_penalty",
+        "penalty": 0.96
+      },
+      "gate_summary": {
+        "eligible_slices": 11,
+        "pass_count": 0,
+        "pass_share": 0.0,
+        "severe_regressions": 2,
+        "overall_clear": false,
+        "slice_rows": [
+          {
+            "slice": "all_runs",
+            "rows": 98863,
+            "delta_brier": -0.000357,
+            "pass": false,
+            "severe_regression": false
+          },
+          {
+            "slice": "older_half",
+            "rows": 46550,
+            "delta_brier": -0.000387,
+            "pass": false,
+            "severe_regression": false
+          },
+          {
+            "slice": "recent_half",
+            "rows": 52313,
+            "delta_brier": -0.000329,
+            "pass": false,
+            "severe_regression": false
+          },
+          {
+            "slice": "recent_third",
+            "rows": 30101,
+            "delta_brier": -0.000287,
+            "pass": false,
+            "severe_regression": false
+          },
+          {
+            "slice": "direction_over",
+            "rows": 86024,
+            "delta_brier": -0.000215,
+            "pass": false,
+            "severe_regression": false
+          },
+          {
+            "slice": "direction_under",
+            "rows": 12839,
+            "delta_brier": -0.001332,
+            "pass": false,
+            "severe_regression": true
+          },
+          {
+            "slice": "games_lt5",
+            "rows": 613,
+            "delta_brier": -0.000585,
+            "pass": false,
+            "severe_regression": false
+          },
+          {
+            "slice": "games_5to9",
+            "rows": 617,
+            "delta_brier": 0.000346,
+            "pass": false,
+            "severe_regression": false
+          },
+          {
+            "slice": "games_10plus",
+            "rows": 97633,
+            "delta_brier": -0.000361,
+            "pass": false,
+            "severe_regression": false
+          },
+          {
+            "slice": "role_ctx_off",
+            "rows": 78495,
+            "delta_brier": -0.000128,
+            "pass": false,
+            "severe_regression": false
+          },
+          {
+            "slice": "role_ctx_on",
+            "rows": 20368,
+            "delta_brier": -0.001287,
+            "pass": false,
+            "severe_regression": true
+          }
+        ]
+      },
+      "improvement_vs_current": -0.000357,
+      "gated_score": -0.010357
+    },
+    {
+      "candidate": "shrink_0.92",
+      "brier": 0.210133,
+      "logloss": 0.606926,
+      "ece": 0.021853,
+      "meta": {
+        "family": "shrink",
+        "k": 0.92
+      },
+      "gate_summary": {
+        "eligible_slices": 11,
+        "pass_count": 3,
+        "pass_share": 0.272727,
+        "severe_regressions": 3,
+        "overall_clear": false,
+        "slice_rows": [
+          {
+            "slice": "all_runs",
+            "rows": 98863,
+            "delta_brier": 0.000335,
+            "pass": false,
+            "severe_regression": false
+          },
+          {
+            "slice": "older_half",
+            "rows": 46550,
+            "delta_brier": 0.000326,
+            "pass": false,
+            "severe_regression": false
+          },
+          {
+            "slice": "recent_half",
+            "rows": 52313,
+            "delta_brier": 0.000344,
+            "pass": false,
+            "severe_regression": false
+          },
+          {
+            "slice": "recent_third",
+            "rows": 30101,
+            "delta_brier": 0.000572,
+            "pass": true,
+            "severe_regression": false
+          },
+          {
+            "slice": "direction_over",
+            "rows": 86024,
+            "delta_brier": 8.7e-05,
+            "pass": false,
+            "severe_regression": false
+          },
+          {
+            "slice": "direction_under",
+            "rows": 12839,
+            "delta_brier": 0.002031,
+            "pass": true,
+            "severe_regression": false
+          },
+          {
+            "slice": "games_lt5",
+            "rows": 613,
+            "delta_brier": -0.003405,
+            "pass": false,
+            "severe_regression": true
+          },
+          {
+            "slice": "games_5to9",
+            "rows": 617,
+            "delta_brier": -0.003218,
+            "pass": false,
+            "severe_regression": true
+          },
+          {
+            "slice": "games_10plus",
+            "rows": 97633,
+            "delta_brier": 0.000372,
+            "pass": false,
+            "severe_regression": false
+          },
+          {
+            "slice": "role_ctx_off",
+            "rows": 78495,
+            "delta_brier": 0.000689,
+            "pass": true,
+            "severe_regression": false
+          },
+          {
+            "slice": "role_ctx_on",
+            "rows": 20368,
+            "delta_brier": -0.001103,
+            "pass": false,
+            "severe_regression": true
+          }
+        ]
+      },
+      "improvement_vs_current": 0.000335,
+      "gated_score": -0.013165
+    },
+    {
+      "candidate": "shrink_0.88",
+      "brier": 0.210134,
+      "logloss": 0.607018,
+      "ece": 0.020244,
+      "meta": {
+        "family": "shrink",
+        "k": 0.88
+      },
+      "gate_summary": {
+        "eligible_slices": 11,
+        "pass_count": 3,
+        "pass_share": 0.272727,
+        "severe_regressions": 3,
+        "overall_clear": false,
+        "slice_rows": [
+          {
+            "slice": "all_runs",
+            "rows": 98863,
+            "delta_brier": 0.000334,
+            "pass": false,
+            "severe_regression": false
+          },
+          {
+            "slice": "older_half",
+            "rows": 46550,
+            "delta_brier": 0.000337,
+            "pass": false,
+            "severe_regression": false
+          },
+          {
+            "slice": "recent_half",
+            "rows": 52313,
+            "delta_brier": 0.000332,
+            "pass": false,
+            "severe_regression": false
+          },
+          {
+            "slice": "recent_third",
+            "rows": 30101,
+            "delta_brier": 0.000666,
+            "pass": true,
+            "severe_regression": false
+          },
+          {
+            "slice": "direction_over",
+            "rows": 86024,
+            "delta_brier": -2.1e-05,
+            "pass": false,
+            "severe_regression": false
+          },
+          {
+            "slice": "direction_under",
+            "rows": 12839,
+            "delta_brier": 0.002765,
+            "pass": true,
+            "severe_regression": false
+          },
+          {
+            "slice": "games_lt5",
+            "rows": 613,
+            "delta_brier": -0.005683,
+            "pass": false,
+            "severe_regression": true
+          },
+          {
+            "slice": "games_5to9",
+            "rows": 617,
+            "delta_brier": -0.005447,
+            "pass": false,
+            "severe_regression": true
+          },
+          {
+            "slice": "games_10plus",
+            "rows": 97633,
+            "delta_brier": 0.000395,
+            "pass": false,
+            "severe_regression": false
+          },
+          {
+            "slice": "role_ctx_off",
+            "rows": 78495,
+            "delta_brier": 0.000733,
+            "pass": true,
+            "severe_regression": false
+          },
+          {
+            "slice": "role_ctx_on",
+            "rows": 20368,
+            "delta_brier": -0.001288,
+            "pass": false,
+            "severe_regression": true
+          }
+        ]
+      },
+      "improvement_vs_current": 0.000334,
+      "gated_score": -0.013166
+    },
+    {
+      "candidate": "shrink_0.96",
+      "brier": 0.210289,
+      "logloss": 0.607407,
+      "ece": 0.025784,
+      "meta": {
+        "family": "shrink",
+        "k": 0.96
+      },
+      "gate_summary": {
+        "eligible_slices": 11,
+        "pass_count": 1,
+        "pass_share": 0.090909,
+        "severe_regressions": 3,
+        "overall_clear": false,
+        "slice_rows": [
+          {
+            "slice": "all_runs",
+            "rows": 98863,
+            "delta_brier": 0.000179,
+            "pass": false,
+            "severe_regression": false
+          },
+          {
+            "slice": "older_half",
+            "rows": 46550,
+            "delta_brier": 0.000157,
+            "pass": false,
+            "severe_regression": false
+          },
+          {
+            "slice": "recent_half",
+            "rows": 52313,
+            "delta_brier": 0.000199,
+            "pass": false,
+            "severe_regression": false
+          },
+          {
+            "slice": "recent_third",
+            "rows": 30101,
+            "delta_brier": 0.000324,
+            "pass": false,
+            "severe_regression": false
+          },
+          {
+            "slice": "direction_over",
+            "rows": 86024,
+            "delta_brier": 2.3e-05,
+            "pass": false,
+            "severe_regression": false
+          },
+          {
+            "slice": "direction_under",
+            "rows": 12839,
+            "delta_brier": 0.001245,
+            "pass": true,
+            "severe_regression": false
+          },
+          {
+            "slice": "games_lt5",
+            "rows": 613,
+            "delta_brier": -0.001437,
+            "pass": false,
+            "severe_regression": true
+          },
+          {
+            "slice": "games_5to9",
+            "rows": 617,
+            "delta_brier": -0.001193,
+            "pass": false,
+            "severe_regression": true
+          },
+          {
+            "slice": "games_10plus",
+            "rows": 97633,
+            "delta_brier": 0.000194,
+            "pass": false,
+            "severe_regression": false
+          },
+          {
+            "slice": "role_ctx_off",
+            "rows": 78495,
+            "delta_brier": 0.000484,
+            "pass": false,
+            "severe_regression": false
+          },
+          {
+            "slice": "role_ctx_on",
+            "rows": 20368,
+            "delta_brier": -0.001064,
+            "pass": false,
+            "severe_regression": true
+          }
+        ]
+      },
+      "improvement_vs_current": 0.000179,
+      "gated_score": -0.014321
+    },
+    {
+      "candidate": "under_penalty_0.94",
+      "brier": 0.210972,
+      "logloss": 0.609371,
+      "ece": 0.033716,
+      "meta": {
+        "family": "under_penalty",
+        "penalty": 0.94
+      },
+      "gate_summary": {
+        "eligible_slices": 11,
+        "pass_count": 0,
+        "pass_share": 0.0,
+        "severe_regressions": 3,
+        "overall_clear": false,
+        "slice_rows": [
+          {
+            "slice": "all_runs",
+            "rows": 98863,
+            "delta_brier": -0.000504,
+            "pass": false,
+            "severe_regression": false
+          },
+          {
+            "slice": "older_half",
+            "rows": 46550,
+            "delta_brier": -0.000532,
+            "pass": false,
+            "severe_regression": false
+          },
+          {
+            "slice": "recent_half",
+            "rows": 52313,
+            "delta_brier": -0.000478,
+            "pass": false,
+            "severe_regression": false
+          },
+          {
+            "slice": "recent_third",
+            "rows": 30101,
+            "delta_brier": -0.000427,
+            "pass": false,
+            "severe_regression": false
+          },
+          {
+            "slice": "direction_over",
+            "rows": 86024,
+            "delta_brier": -0.000215,
+            "pass": false,
+            "severe_regression": false
+          },
+          {
+            "slice": "direction_under",
+            "rows": 12839,
+            "delta_brier": -0.002486,
+            "pass": false,
+            "severe_regression": true
+          },
+          {
+            "slice": "games_lt5",
+            "rows": 613,
+            "delta_brier": -0.001006,
+            "pass": false,
+            "severe_regression": true
+          },
+          {
+            "slice": "games_5to9",
+            "rows": 617,
+            "delta_brier": 0.000173,
+            "pass": false,
+            "severe_regression": false
+          },
+          {
+            "slice": "games_10plus",
+            "rows": 97633,
+            "delta_brier": -0.000507,
+            "pass": false,
+            "severe_regression": false
+          },
+          {
+            "slice": "role_ctx_off",
+            "rows": 78495,
+            "delta_brier": -0.000289,
+            "pass": false,
+            "severe_regression": false
+          },
+          {
+            "slice": "role_ctx_on",
+            "rows": 20368,
+            "delta_brier": -0.001378,
+            "pass": false,
+            "severe_regression": true
+          }
+        ]
+      },
+      "improvement_vs_current": -0.000504,
+      "gated_score": -0.015504
+    }
+  ]
+}

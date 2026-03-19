@@ -1,0 +1,506 @@
+{
+  "generated_at": "2026-03-12T21:41:36+00:00",
+  "primary_label": "telemetry_ab_control",
+  "corpus_input": "C:\\Users\\rick\\projects\\Atlas\\outputtelem\\telemetry_ab_control",
+  "primary_runs_read": 1,
+  "primary_corpus_metrics": {
+    "eval_rows": 2181,
+    "settled_eval_rows": 2181,
+    "mean_hit": 0.435122,
+    "mean_p_adj": 0.347518,
+    "mean_p_cal": 0.350915,
+    "brier_p_adj": 0.230924,
+    "brier_p_cal": 0.23096,
+    "logloss_p_adj": 0.659427,
+    "logloss_p_cal": 0.659108,
+    "games_used_lt5_share": 0.0,
+    "role_ctx_outs_used_share": 0.080932,
+    "questionable_share": 0.0,
+    "q_out_frac_mean": 0.0,
+    "p_cal_equal_p_adj_share": 0.919068,
+    "run_count": 1
+  },
+  "primary_bucket_tables": {
+    "p_adj": [
+      [
+        {
+          "bucket": "(0.0, 0.1]",
+          "count": 284,
+          "mean_pred": 0.06082821494867694,
+          "mean_hit": 0.14788732394366197,
+          "gap": -0.08705910899498503,
+          "abs_gap": 0.08705910899498503
+        },
+        {
+          "bucket": "(0.1, 0.2]",
+          "count": 363,
+          "mean_pred": 0.15022042994321186,
+          "mean_hit": 0.30303030303030304,
+          "gap": -0.15280987308709118,
+          "abs_gap": 0.15280987308709118
+        },
+        {
+          "bucket": "(0.2, 0.30000000000000004]",
+          "count": 343,
+          "mean_pred": 0.24454465664937317,
+          "mean_hit": 0.40816326530612246,
+          "gap": -0.1636186086567493,
+          "abs_gap": 0.1636186086567493
+        },
+        {
+          "bucket": "(0.30000000000000004, 0.4]",
+          "count": 323,
+          "mean_pred": 0.346186780490944,
+          "mean_hit": 0.4241486068111455,
+          "gap": -0.07796182632020154,
+          "abs_gap": 0.07796182632020154
+        },
+        {
+          "bucket": "(0.4, 0.5]",
+          "count": 319,
+          "mean_pred": 0.4486545697286392,
+          "mean_hit": 0.5705329153605015,
+          "gap": -0.12187834563186234,
+          "abs_gap": 0.12187834563186234
+        },
+        {
+          "bucket": "(0.5, 0.6000000000000001]",
+          "count": 230,
+          "mean_pred": 0.5465906877779629,
+          "mean_hit": 0.5652173913043478,
+          "gap": -0.018626703526384847,
+          "abs_gap": 0.018626703526384847
+        },
+        {
+          "bucket": "(0.6000000000000001, 0.7000000000000001]",
+          "count": 201,
+          "mean_pred": 0.6440208236185155,
+          "mean_hit": 0.5771144278606966,
+          "gap": 0.06690639575781898,
+          "abs_gap": 0.06690639575781898
+        },
+        {
+          "bucket": "(0.7000000000000001, 0.8]",
+          "count": 105,
+          "mean_pred": 0.7409795559237973,
+          "mean_hit": 0.7714285714285715,
+          "gap": -0.03044901550477419,
+          "abs_gap": 0.03044901550477419
+        },
+        {
+          "bucket": "(0.8, 0.9]",
+          "count": 13,
+          "mean_pred": 0.824544804712326,
+          "mean_hit": 0.8461538461538461,
+          "gap": -0.021609041441520094,
+          "abs_gap": 0.021609041441520094
+        }
+      ]
+    ],
+    "p_cal": [
+      [
+        {
+          "bucket": "(0.0, 0.1]",
+          "count": 282,
+          "mean_pred": 0.06070168946047797,
+          "mean_hit": 0.14184397163120568,
+          "gap": -0.08114228217072772,
+          "abs_gap": 0.08114228217072772
+        },
+        {
+          "bucket": "(0.1, 0.2]",
+          "count": 361,
+          "mean_pred": 0.1502675750171831,
+          "mean_hit": 0.3074792243767313,
+          "gap": -0.1572116493595482,
+          "abs_gap": 0.1572116493595482
+        },
+        {
+          "bucket": "(0.2, 0.30000000000000004]",
+          "count": 344,
+          "mean_pred": 0.24534557932849232,
+          "mean_hit": 0.4011627906976744,
+          "gap": -0.15581721136918208,
+          "abs_gap": 0.15581721136918208
+        },
+        {
+          "bucket": "(0.30000000000000004, 0.4]",
+          "count": 317,
+          "mean_pred": 0.3463130846688045,
+          "mean_hit": 0.42586750788643535,
+          "gap": -0.07955442321763084,
+          "abs_gap": 0.07955442321763084
+        },
+        {
+          "bucket": "(0.4, 0.5]",
+          "count": 316,
+          "mean_pred": 0.4497778636723594,
+          "mean_hit": 0.5759493670886076,
+          "gap": -0.12617150341624817,
+          "abs_gap": 0.12617150341624817
+        },
+        {
+          "bucket": "(0.5, 0.6000000000000001]",
+          "count": 233,
+          "mean_pred": 0.5454904996451352,
+          "mean_hit": 0.5665236051502146,
+          "gap": -0.02103310550507942,
+          "abs_gap": 0.02103310550507942
+        },
+        {
+          "bucket": "(0.6000000000000001, 0.7000000000000001]",
+          "count": 200,
+          "mean_pred": 0.6453351920803384,
+          "mean_hit": 0.575,
+          "gap": 0.07033519208033845,
+          "abs_gap": 0.07033519208033845
+        },
+        {
+          "bucket": "(0.7000000000000001, 0.8]",
+          "count": 106,
+          "mean_pred": 0.7422688079725026,
+          "mean_hit": 0.7169811320754716,
+          "gap": 0.02528767589703096,
+          "abs_gap": 0.02528767589703096
+        },
+        {
+          "bucket": "(0.8, 0.9]",
+          "count": 19,
+          "mean_pred": 0.8341979503556427,
+          "mean_hit": 0.8947368421052632,
+          "gap": -0.06053889174962046,
+          "abs_gap": 0.06053889174962046
+        },
+        {
+          "bucket": "(0.9, 1.0]",
+          "count": 3,
+          "mean_pred": 0.9277905542779056,
+          "mean_hit": 1.0,
+          "gap": -0.07220944572209442,
+          "abs_gap": 0.07220944572209442
+        }
+      ]
+    ]
+  },
+  "regime_tables": {
+    "direction_split": [
+      {
+        "direction": "OVER",
+        "count": 2206,
+        "mean_p_adj": 0.324108,
+        "mean_p_cal": 0.327352,
+        "hit_rate": 0.423016,
+        "brier_p_adj": 0.226619
+      },
+      {
+        "direction": "UNDER",
+        "count": 327,
+        "mean_p_adj": 0.505445,
+        "mean_p_cal": 0.509876,
+        "hit_rate": 0.517986,
+        "brier_p_adj": 0.260399
+      }
+    ],
+    "stat_split": [
+      {
+        "stat": "PTS",
+        "count": 414,
+        "mean_p_adj": 0.383346,
+        "hit_rate": 0.446629,
+        "brier_p_adj": 0.228482
+      },
+      {
+        "stat": "PRA",
+        "count": 377,
+        "mean_p_adj": 0.351174,
+        "hit_rate": 0.454545,
+        "brier_p_adj": 0.253237
+      },
+      {
+        "stat": "PR",
+        "count": 355,
+        "mean_p_adj": 0.344823,
+        "hit_rate": 0.436066,
+        "brier_p_adj": 0.23407
+      },
+      {
+        "stat": "RA",
+        "count": 342,
+        "mean_p_adj": 0.337122,
+        "hit_rate": 0.4811,
+        "brier_p_adj": 0.24794
+      },
+      {
+        "stat": "REB",
+        "count": 339,
+        "mean_p_adj": 0.339034,
+        "hit_rate": 0.423611,
+        "brier_p_adj": 0.206105
+      },
+      {
+        "stat": "PA",
+        "count": 280,
+        "mean_p_adj": 0.345565,
+        "hit_rate": 0.433884,
+        "brier_p_adj": 0.24704
+      },
+      {
+        "stat": "AST",
+        "count": 248,
+        "mean_p_adj": 0.333313,
+        "hit_rate": 0.378505,
+        "brier_p_adj": 0.210237
+      },
+      {
+        "stat": "FG3M",
+        "count": 178,
+        "mean_p_adj": 0.320812,
+        "hit_rate": 0.380645,
+        "brier_p_adj": 0.200409
+      }
+    ],
+    "role_ctx_split": [
+      {
+        "bucket": "outs_used_off",
+        "count": 2328,
+        "mean_p_adj": 0.342735,
+        "hit_rate": 0.431683,
+        "brier_p_adj": 0.229265
+      },
+      {
+        "bucket": "outs_used_on",
+        "count": 205,
+        "mean_p_adj": 0.401833,
+        "hit_rate": 0.478261,
+        "brier_p_adj": 0.251739
+      }
+    ],
+    "games_used_split": [
+      {
+        "bucket": "lt5",
+        "count": 0,
+        "mean_p_adj": null,
+        "hit_rate": null,
+        "brier_p_adj": null
+      },
+      {
+        "bucket": "5to9",
+        "count": 0,
+        "mean_p_adj": null,
+        "hit_rate": null,
+        "brier_p_adj": null
+      },
+      {
+        "bucket": "10to19",
+        "count": 0,
+        "mean_p_adj": null,
+        "hit_rate": null,
+        "brier_p_adj": null
+      },
+      {
+        "bucket": "20plus",
+        "count": 2533,
+        "mean_p_adj": 0.347518,
+        "hit_rate": 0.435122,
+        "brier_p_adj": 0.230924
+      }
+    ],
+    "slip_split": [
+      {
+        "category": "system",
+        "mode": "ev",
+        "n_legs": 3,
+        "slip_count": 10,
+        "mean_hit_prob": 0.208637,
+        "mean_ev_mult": 1.593655,
+        "strict_win_rate": 0.4,
+        "mean_q_leg_count": 0.0
+      },
+      {
+        "category": "system",
+        "mode": "ev",
+        "n_legs": 4,
+        "slip_count": 10,
+        "mean_hit_prob": 0.195547,
+        "mean_ev_mult": 1.454335,
+        "strict_win_rate": 0.0,
+        "mean_q_leg_count": 0.0
+      },
+      {
+        "category": "system",
+        "mode": "ev",
+        "n_legs": 5,
+        "slip_count": 10,
+        "mean_hit_prob": 0.196339,
+        "mean_ev_mult": 1.713239,
+        "strict_win_rate": 0.25,
+        "mean_q_leg_count": 0.0
+      },
+      {
+        "category": "system",
+        "mode": "winprob",
+        "n_legs": 3,
+        "slip_count": 10,
+        "mean_hit_prob": 0.503139,
+        "mean_ev_mult": 3.018832,
+        "strict_win_rate": 0.375,
+        "mean_q_leg_count": 0.0
+      },
+      {
+        "category": "system",
+        "mode": "winprob",
+        "n_legs": 4,
+        "slip_count": 10,
+        "mean_hit_prob": 0.377327,
+        "mean_ev_mult": 3.773272,
+        "strict_win_rate": 0.2,
+        "mean_q_leg_count": 0.0
+      },
+      {
+        "category": "system",
+        "mode": "winprob",
+        "n_legs": 5,
+        "slip_count": 10,
+        "mean_hit_prob": 0.281507,
+        "mean_ev_mult": 5.630138,
+        "strict_win_rate": 0.4,
+        "mean_q_leg_count": 0.0
+      },
+      {
+        "category": "top",
+        "mode": "ev",
+        "n_legs": 3,
+        "slip_count": 10,
+        "mean_hit_prob": 0.208637,
+        "mean_ev_mult": 1.593655,
+        "strict_win_rate": 0.4,
+        "mean_q_leg_count": 0.0
+      },
+      {
+        "category": "top",
+        "mode": "ev",
+        "n_legs": 4,
+        "slip_count": 10,
+        "mean_hit_prob": 0.195547,
+        "mean_ev_mult": 1.454335,
+        "strict_win_rate": 0.0,
+        "mean_q_leg_count": 0.0
+      },
+      {
+        "category": "top",
+        "mode": "ev",
+        "n_legs": 5,
+        "slip_count": 10,
+        "mean_hit_prob": 0.196339,
+        "mean_ev_mult": 1.713239,
+        "strict_win_rate": 0.25,
+        "mean_q_leg_count": 0.0
+      },
+      {
+        "category": "top",
+        "mode": "winprob",
+        "n_legs": 3,
+        "slip_count": 10,
+        "mean_hit_prob": 0.503139,
+        "mean_ev_mult": 3.018832,
+        "strict_win_rate": 0.375,
+        "mean_q_leg_count": 0.0
+      },
+      {
+        "category": "top",
+        "mode": "winprob",
+        "n_legs": 4,
+        "slip_count": 10,
+        "mean_hit_prob": 0.377327,
+        "mean_ev_mult": 3.773272,
+        "strict_win_rate": 0.2,
+        "mean_q_leg_count": 0.0
+      },
+      {
+        "category": "top",
+        "mode": "winprob",
+        "n_legs": 5,
+        "slip_count": 10,
+        "mean_hit_prob": 0.281507,
+        "mean_ev_mult": 5.630138,
+        "strict_win_rate": 0.4,
+        "mean_q_leg_count": 0.0
+      },
+      {
+        "category": "windfall",
+        "mode": "ev",
+        "n_legs": 3,
+        "slip_count": 10,
+        "mean_hit_prob": 0.106025,
+        "mean_ev_mult": 0.985998,
+        "strict_win_rate": 0.333333,
+        "mean_q_leg_count": 0.0
+      },
+      {
+        "category": "windfall",
+        "mode": "ev",
+        "n_legs": 4,
+        "slip_count": 10,
+        "mean_hit_prob": 0.054007,
+        "mean_ev_mult": 1.118268,
+        "strict_win_rate": 0.5,
+        "mean_q_leg_count": 0.0
+      },
+      {
+        "category": "windfall",
+        "mode": "ev",
+        "n_legs": 5,
+        "slip_count": 10,
+        "mean_hit_prob": 0.039085,
+        "mean_ev_mult": 1.080809,
+        "strict_win_rate": 0.5,
+        "mean_q_leg_count": 0.0
+      },
+      {
+        "category": "windfall",
+        "mode": "winprob",
+        "n_legs": 3,
+        "slip_count": 10,
+        "mean_hit_prob": 0.363814,
+        "mean_ev_mult": 2.182887,
+        "strict_win_rate": 0.428571,
+        "mean_q_leg_count": 0.0
+      },
+      {
+        "category": "windfall",
+        "mode": "winprob",
+        "n_legs": 4,
+        "slip_count": 10,
+        "mean_hit_prob": 0.267383,
+        "mean_ev_mult": 2.673835,
+        "strict_win_rate": 0.333333,
+        "mean_q_leg_count": 0.0
+      },
+      {
+        "category": "windfall",
+        "mode": "winprob",
+        "n_legs": 5,
+        "slip_count": 10,
+        "mean_hit_prob": 0.206535,
+        "mean_ev_mult": 4.130693,
+        "strict_win_rate": 0.428571,
+        "mean_q_leg_count": 0.0
+      }
+    ]
+  },
+  "drift_rows": [
+    {
+      "run_id": "20260312_070945",
+      "mean_hit": 0.435122,
+      "mean_p_adj": 0.347518,
+      "mean_p_cal": 0.350915,
+      "brier_p_adj": 0.230924,
+      "brier_p_cal": 0.23096,
+      "games_used_lt5_share": 0.0,
+      "role_ctx_outs_used_share": 0.080932
+    }
+  ],
+  "variant_labels": [
+    "telemetry_ab_control"
+  ]
+}

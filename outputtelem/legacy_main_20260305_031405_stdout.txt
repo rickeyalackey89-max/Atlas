@@ -1,0 +1,11 @@
+[DEBUG] Dropped 204 invalid rows from today.csv (blank/unknown stat/line)
+[IAEL] Loaded invalidations=134. Report: 2026-03-04 10:00PM
+[IAEL] Removed 0 legs out of 625 (statuses=['DOUBTFUL', 'OUT', 'QUESTIONABLE'])
+[BUILDER][DEBUG] ENTER build_slips_by_tier_buckets top_n=15 per_tier=650 max_attempts=500000 target_pool_mult=200 phase1_frac=0.2 phase1_pool_frac=0.5
+[BUILDER][DEBUG] leg_df tier counts: {'GOBLIN': 175, 'STANDARD': 162}
+[BUILDER][DEBUG] p_eff source: p_cal
+[BUILDER][DEBUG] beam summary | selected_vs_requested=15/15 | beam_window_size=3000 | max_exposure=4 | top5_exposure=bennedict mathurin:4, darius garland:4, derrick jones:4, jarace walker:4, kris dunn:4 | rej_exposure_cap=3589000 | rej_missing_players=0
+[BUILDER][DEBUG] ENTER build_slips_by_tier_buckets top_n=15 per_tier=650 max_attempts=500000 target_pool_mult=200 phase1_frac=0.2 phase1_pool_frac=0.5
+[BUILDER][DEBUG] leg_df tier counts: {'GOBLIN': 175, 'STANDARD': 162}
+[BUILDER][DEBUG] p_eff source: p_cal
+[BUILDER][DEBUG] beam stalled -> widen window | window_mult=400 cap=6000 window_size=3000

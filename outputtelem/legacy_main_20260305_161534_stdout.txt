@@ -1,0 +1,69 @@
+[DEBUG] Dropped 1755 invalid rows from today.csv (blank/unknown stat/line)
+[IAEL] Loaded invalidations=83. Report: 2026-03-05 11:00AM
+[IAEL] Removed 0 legs out of 4891 (statuses=['DOUBTFUL', 'OUT'])
+[BUILDER][DEBUG] ENTER build_slips_by_tier_buckets top_n=25 per_tier=650 max_attempts=500000 target_pool_mult=200 phase1_frac=0.2 phase1_pool_frac=0.5
+[BUILDER][DEBUG] leg_df tier counts: {'GOBLIN': 1449, 'STANDARD': 1364}
+[BUILDER][DEBUG] p_eff source: p_cal
+[BUILDER][DEBUG] beam summary | selected_vs_requested=25/25 | beam_window_size=5000 | max_exposure=4 | top5_exposure=amen thompson:4, anthony black:4, brandon williams:4, desmond bane:4, dorian finney-smith:4 | rej_exposure_cap=6890740 | rej_missing_players=0
+[BUILDER][DEBUG] ENTER build_slips_by_tier_buckets top_n=25 per_tier=650 max_attempts=500000 target_pool_mult=200 phase1_frac=0.2 phase1_pool_frac=0.5
+[BUILDER][DEBUG] leg_df tier counts: {'GOBLIN': 1449, 'STANDARD': 1364}
+[BUILDER][DEBUG] p_eff source: p_cal
+[BUILDER][DEBUG] beam summary | selected_vs_requested=25/25 | beam_window_size=5000 | max_exposure=4 | top5_exposure=amen thompson:4, anthony black:4, brandon williams:4, daniel gafford:4, desmond bane:4 | rej_exposure_cap=11381994 | rej_missing_players=0
+[BUILDER][DEBUG] ENTER build_slips_by_tier_buckets top_n=25 per_tier=650 max_attempts=500000 target_pool_mult=200 phase1_frac=0.2 phase1_pool_frac=0.5
+[BUILDER][DEBUG] leg_df tier counts: {'GOBLIN': 1449, 'STANDARD': 1364}
+[BUILDER][DEBUG] p_eff source: p_cal
+[BUILDER][DEBUG] beam summary | selected_vs_requested=25/25 | beam_window_size=5000 | max_exposure=4 | top5_exposure=amen thompson:4, anthony black:4, brandon williams:4, bruce brown:4, cameron johnson:4 | rej_exposure_cap=13849528 | rej_missing_players=0
+[BUILDER][DEBUG] ENTER build_slips_by_tier_buckets top_n=25 per_tier=400 max_attempts=400000 target_pool_mult=200 phase1_frac=0.2 phase1_pool_frac=0.5
+[BUILDER][DEBUG] leg_df tier counts: {'DEMON': 2078, 'GOBLIN': 1449, 'STANDARD': 1364}
+[BUILDER][DEBUG] p_eff source: p_cal
+[BUILDER][DEBUG] beam summary | selected_vs_requested=25/25 | beam_window_size=5000 | max_exposure=4 | top5_exposure=anthony black:4, brandon williams:4, desmond bane:4, jabari smith:4, jalen suggs:4 | rej_exposure_cap=6459400 | rej_missing_players=0
+[BUILDER][DEBUG] ENTER build_slips_by_tier_buckets top_n=25 per_tier=400 max_attempts=400000 target_pool_mult=200 phase1_frac=0.2 phase1_pool_frac=0.5
+[BUILDER][DEBUG] leg_df tier counts: {'DEMON': 2078, 'GOBLIN': 1449, 'STANDARD': 1364}
+[BUILDER][DEBUG] p_eff source: p_cal
+[BUILDER][DEBUG] beam summary | selected_vs_requested=25/25 | beam_window_size=5000 | max_exposure=4 | top5_exposure=amen thompson:4, anthony black:4, brandon williams:4, cameron johnson:4, demar derozan:4 | rej_exposure_cap=10043160 | rej_missing_players=0
+[BUILDER][DEBUG] ENTER build_slips_by_tier_buckets top_n=25 per_tier=400 max_attempts=400000 target_pool_mult=200 phase1_frac=0.2 phase1_pool_frac=0.5
+[BUILDER][DEBUG] leg_df tier counts: {'DEMON': 2078, 'GOBLIN': 1449, 'STANDARD': 1364}
+[BUILDER][DEBUG] p_eff source: p_cal
+[BUILDER][DEBUG] beam summary | selected_vs_requested=25/25 | beam_window_size=5000 | max_exposure=4 | top5_exposure=amen thompson:4, anthony black:4, brandon williams:4, bruce brown:4, cameron johnson:4 | rej_exposure_cap=11592200 | rej_missing_players=0
+[BUILDER][DEBUG] ENTER build_slips_by_tier_buckets top_n=25 per_tier=650 max_attempts=500000 target_pool_mult=200 phase1_frac=0.2 phase1_pool_frac=0.5
+[BUILDER][DEBUG] leg_df tier counts: {'GOBLIN': 1449, 'STANDARD': 1364}
+[BUILDER][DEBUG] p_eff source: p_cal
+[BUILDER][DEBUG] beam summary | selected_vs_requested=25/25 | beam_window_size=5000 | max_exposure=4 | top5_exposure=ace bailey:4, amen thompson:4, anthony black:4, demar derozan:4, guerschon yabusele:4 | rej_exposure_cap=7916200 | rej_missing_players=0
+[BUILDER][DEBUG] ENTER build_slips_by_tier_buckets top_n=25 per_tier=650 max_attempts=500000 target_pool_mult=200 phase1_frac=0.2 phase1_pool_frac=0.5
+[BUILDER][DEBUG] leg_df tier counts: {'GOBLIN': 1449, 'STANDARD': 1364}
+[BUILDER][DEBUG] p_eff source: p_cal
+[BUILDER][DEBUG] beam summary | selected_vs_requested=25/25 | beam_window_size=5000 | max_exposure=4 | top5_exposure=ace bailey:4, amen thompson:4, anthony black:4, demar derozan:4, desmond bane:4 | rej_exposure_cap=9874296 | rej_missing_players=0
+[BUILDER][DEBUG] ENTER build_slips_by_tier_buckets top_n=25 per_tier=650 max_attempts=500000 target_pool_mult=200 phase1_frac=0.2 phase1_pool_frac=0.5
+[BUILDER][DEBUG] leg_df tier counts: {'GOBLIN': 1449, 'STANDARD': 1364}
+[BUILDER][DEBUG] p_eff source: p_cal
+[BUILDER][DEBUG] beam summary | selected_vs_requested=25/25 | beam_window_size=5000 | max_exposure=4 | top5_exposure=ace bailey:4, amen thompson:4, anthony black:4, ayo dosunmu:4, demar derozan:4 | rej_exposure_cap=12318400 | rej_missing_players=0
+[BUILDER][DEBUG] ENTER build_slips_by_tier_buckets top_n=25 per_tier=400 max_attempts=400000 target_pool_mult=200 phase1_frac=0.2 phase1_pool_frac=0.5
+[BUILDER][DEBUG] leg_df tier counts: {'DEMON': 2078, 'GOBLIN': 1449, 'STANDARD': 1364}
+[BUILDER][DEBUG] p_eff source: p_cal
+[BUILDER][DEBUG] beam summary | selected_vs_requested=25/25 | beam_window_size=5000 | max_exposure=4 | top5_exposure=amen thompson:4, anthony black:4, jabari smith:4, jake laravia:4, luke kornet:4 | rej_exposure_cap=9398988 | rej_missing_players=0
+[BUILDER][DEBUG] ENTER build_slips_by_tier_buckets top_n=25 per_tier=400 max_attempts=400000 target_pool_mult=200 phase1_frac=0.2 phase1_pool_frac=0.5
+[BUILDER][DEBUG] leg_df tier counts: {'DEMON': 2078, 'GOBLIN': 1449, 'STANDARD': 1364}
+[BUILDER][DEBUG] p_eff source: p_cal
+[BUILDER][DEBUG] beam summary | selected_vs_requested=25/25 | beam_window_size=5000 | max_exposure=4 | top5_exposure=ace bailey:4, amen thompson:4, anthony black:4, demar derozan:4, desmond bane:4 | rej_exposure_cap=11959788 | rej_missing_players=0
+[BUILDER][DEBUG] ENTER build_slips_by_tier_buckets top_n=25 per_tier=400 max_attempts=400000 target_pool_mult=200 phase1_frac=0.2 phase1_pool_frac=0.5
+[BUILDER][DEBUG] leg_df tier counts: {'DEMON': 2078, 'GOBLIN': 1449, 'STANDARD': 1364}
+[BUILDER][DEBUG] p_eff source: p_cal
+[BUILDER][DEBUG] beam summary | selected_vs_requested=25/25 | beam_window_size=5000 | max_exposure=4 | top5_exposure=ace bailey:4, amen thompson:4, anthony black:4, cameron johnson:4, demar derozan:4 | rej_exposure_cap=14589648 | rej_missing_players=0
+Model run complete.
+Outputs folder: C:\Users\rick\projects\Atlas\data\output
+Run folder: C:\Users\rick\projects\Atlas\data\output\runs\20260305_102502
+Wrote:
+ - C:\Users\rick\projects\Atlas\data\output\runs\20260305_102502\scored_legs.csv
+ - C:\Users\rick\projects\Atlas\data\output\runs\20260305_102502\scored_legs_deduped.csv
+ - C:\Users\rick\projects\Atlas\data\output\runs\20260305_102502\System\recommended_3leg.csv (SYSTEM)
+ - C:\Users\rick\projects\Atlas\data\output\runs\20260305_102502\System\recommended_4leg.csv (SYSTEM)
+ - C:\Users\rick\projects\Atlas\data\output\runs\20260305_102502\System\recommended_5leg.csv (SYSTEM)
+ - C:\Users\rick\projects\Atlas\data\output\runs\20260305_102502\Windfall\recommended_3leg.csv (WINDFALL)
+ - C:\Users\rick\projects\Atlas\data\output\runs\20260305_102502\Windfall\recommended_4leg.csv (WINDFALL)
+ - C:\Users\rick\projects\Atlas\data\output\runs\20260305_102502\Windfall\recommended_5leg.csv (WINDFALL)
+ - C:\Users\rick\projects\Atlas\data\output\runs\20260305_102502\System\recommended_3leg_winprob.csv (SYSTEM winprob)
+ - C:\Users\rick\projects\Atlas\data\output\runs\20260305_102502\System\recommended_4leg_winprob.csv (SYSTEM winprob)
+ - C:\Users\rick\projects\Atlas\data\output\runs\20260305_102502\System\recommended_5leg_winprob.csv (SYSTEM winprob)
+ - C:\Users\rick\projects\Atlas\data\output\runs\20260305_102502\Windfall\recommended_3leg_winprob.csv (WINDFALL winprob)
+ - C:\Users\rick\projects\Atlas\data\output\runs\20260305_102502\Windfall\recommended_4leg_winprob.csv (WINDFALL winprob)
+ - C:\Users\rick\projects\Atlas\data\output\runs\20260305_102502\Windfall\recommended_5leg_winprob.csv (WINDFALL winprob)

@@ -1,0 +1,237 @@
+{
+  "report_date": "2026-02-27",
+  "report_label": "08:00AM",
+  "pulled_at_local": "2026-02-27T07:09:57-06:00",
+  "invalidated_players_count": 38,
+  "invalidated_players": [
+    {
+      "team": "BostonCeltics",
+      "player": "Jones,Dillon",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "BostonCeltics",
+      "player": "McBride,Miles",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "BostonCeltics",
+      "player": "McCullarJr.,Kevin",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "BostonCeltics",
+      "player": "Shulga,Max",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "BostonCeltics",
+      "player": "Tatum,Jayson",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "BostonCeltics",
+      "player": "Williams,Amari",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "ClevelandCavaliers",
+      "player": "Ellis,Keon",
+      "status": "QUESTIONABLE",
+      "reason": ""
+    },
+    {
+      "team": "ClevelandCavaliers",
+      "player": "Harden,James",
+      "status": "QUESTIONABLE",
+      "reason": ""
+    },
+    {
+      "team": "ClevelandCavaliers",
+      "player": "Minix,Riley",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "ClevelandCavaliers",
+      "player": "Mitchell,Donovan",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "ClevelandCavaliers",
+      "player": "Schroder,Dennis",
+      "status": "QUESTIONABLE",
+      "reason": ""
+    },
+    {
+      "team": "ClevelandCavaliers",
+      "player": "Strus,Max",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "ClevelandCavaliers",
+      "player": "Wade,Dean",
+      "status": "QUESTIONABLE",
+      "reason": ""
+    },
+    {
+      "team": "DetroitPistons",
+      "player": "Klintman,Bobi",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "DetroitPistons",
+      "player": "Lanier,Chaz",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "DetroitPistons",
+      "player": "MooreJr.,Wendell",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "DetroitPistons",
+      "player": "Stewart,Isaiah",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "MilwaukeeBucks",
+      "player": "Anderson,Kyle",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "MilwaukeeBucks",
+      "player": "Antetokounmpo,Alex",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "MilwaukeeBucks",
+      "player": "Antetokounmpo,Giannis",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "MilwaukeeBucks",
+      "player": "Caldwell-Pope,Kentavious",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "MilwaukeeBucks",
+      "player": "Clarke,Brandon",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "MilwaukeeBucks",
+      "player": "Coward,Cedric",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "MilwaukeeBucks",
+      "player": "Edey,Zach",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "MilwaukeeBucks",
+      "player": "Gordon,Aaron",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "MilwaukeeBucks",
+      "player": "Jerome,Ty",
+      "status": "DOUBTFUL",
+      "reason": ""
+    },
+    {
+      "team": "MilwaukeeBucks",
+      "player": "Jones,Curtis",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "MilwaukeeBucks",
+      "player": "Jones,Spencer",
+      "status": "QUESTIONABLE",
+      "reason": ""
+    },
+    {
+      "team": "MilwaukeeBucks",
+      "player": "Morant,Ja",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "MilwaukeeBucks",
+      "player": "Murray,Jamal",
+      "status": "QUESTIONABLE",
+      "reason": ""
+    },
+    {
+      "team": "MilwaukeeBucks",
+      "player": "Pickett,Jalen",
+      "status": "QUESTIONABLE",
+      "reason": ""
+    },
+    {
+      "team": "MilwaukeeBucks",
+      "player": "Prince,Taurean",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "MilwaukeeBucks",
+      "player": "Ryan,Cormac",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "MilwaukeeBucks",
+      "player": "Watson,Peyton",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "OklahomaCityThunder",
+      "player": "Carlson,Branden",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "OklahomaCityThunder",
+      "player": "Mitchell,Ajay",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "OklahomaCityThunder",
+      "player": "Sorber,Thomas",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "OklahomaCityThunder",
+      "player": "Williams,Jalen",
+      "status": "OUT",
+      "reason": ""
+    }
+  ],
+  "policy": "Remove OUT/DOUBTFUL/QUESTIONABLE from eligibility. PROBABLE allowed but tagged."
+}

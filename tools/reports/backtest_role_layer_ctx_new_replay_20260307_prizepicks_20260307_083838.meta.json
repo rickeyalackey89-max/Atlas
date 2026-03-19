@@ -1,0 +1,24 @@
+{
+  "start": null,
+  "end": null,
+  "range_label": "replay_20260307_prizepicks_20260307_083838",
+  "snapshots": [
+    "replay_20260307_prizepicks_20260307_083838.csv"
+  ],
+  "nsims": 20000,
+  "seed": 1337,
+  "lookback": 20,
+  "spread_sd": 12.0,
+  "blowout_threshold": 12.0,
+  "star_minute_drop": 6.0,
+  "role_minute_drop": 4.0,
+  "synthetic_spread": false,
+  "synthetic_spread_sd": 8.0,
+  "synthetic_spread_max": 20.0,
+  "synthetic_spread_seed": 1337,
+  "simulator": "Atlas.engine.new_probability.simulate_leg_probability_new",
+  "rows_total": 2941,
+  "rows_eval_no_push": 2935,
+  "report_root": "C:\\Users\\rick\\projects\\Atlas\\tools\\reports",
+  "logs_path": "C:\\Users\\rick\\projects\\Atlas\\data\\telemetry\\Last 10\\Last10.csv"
+}

@@ -1,0 +1,93 @@
+{
+  "report_date": "2026-03-15",
+  "report_label": "11:15AM",
+  "pulled_at_local": "2026-03-15T10:22:18-05:00",
+  "invalidated_players_count": 14,
+  "invalidated_players": [
+    {
+      "team": "CLE",
+      "player": "Allen, Jarrett",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "CLE",
+      "player": "Merrill, Sam",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "MIL",
+      "player": "Antetokounmpo, Alex",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "OKC",
+      "player": "Barnhizer, Brooks",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "OKC",
+      "player": "Carlson, Branden",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "OKC",
+      "player": "Sorber, Thomas",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "OKC",
+      "player": "Topic, Nikola",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "OKC",
+      "player": "Williams, Jalen",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "POR",
+      "player": "Jr., Craig",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "POR",
+      "player": "Jr., Kevin",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "POR",
+      "player": "Proctor, Tyrese",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "POR",
+      "player": "Ryan, Cormac",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "TOR",
+      "player": "Hepburn, Chucky",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "TOR",
+      "player": "Murray-Boyles, Collin",
+      "status": "OUT",
+      "reason": ""
+    }
+  ],
+  "policy": "Remove OUT/DOUBTFUL from eligibility. PROBABLE allowed but tagged."
+}

@@ -1,0 +1,17 @@
+flowchart TD
+  A[run.ps1 / Atlas.cli live]
+  B[tools/refresh_iael_today.py]
+  C[src/Atlas/runtime/orchestrator.py]
+  D[tools/fetch_prizepicks_today.py]
+  E[tools/refresh_nba_gamelogs.py]
+  F[tools/rebuild_today_from_any_raw.py]
+  G[tools/fetch_rotowire_lines.py]
+  H[tools/build_share_matrix.py]
+  I[python -m Atlas.engine.main]
+  J[tools/filter_recommendations_live.py]
+  K[data/output/latest/<tag>/...]
+  L[data/bundles/atlas_bundle_<run_id>.zip]
+
+  A --> B --> C
+  C --> D --> E --> F --> G --> H --> I --> J --> K
+  C --> L

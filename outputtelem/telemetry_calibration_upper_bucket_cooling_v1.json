@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "generated_at": "2026-03-12T00:00:00Z",
+  "k_shrink": 1.0,
+  "standard_under_penalty": 1.0,
+  "mult": {},
+  "bucket_rules": [
+    {
+      "min": 0.7,
+      "max": 0.8,
+      "mult": 0.995
+    },
+    {
+      "min": 0.8,
+      "max": 0.9,
+      "mult": 0.99
+    },
+    {
+      "min": 0.9,
+      "max": 1.0,
+      "mult": 0.98
+    }
+  ],
+  "cap": {
+    "min": 0.01,
+    "max": 0.99
+  }
+}

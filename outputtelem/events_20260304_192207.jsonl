@@ -1,0 +1,14 @@
+{"authority":"production","event":"run_start","raw_path":null,"run_id":"20260304_192207","scheduled":false,"ts":"2026-03-04T19:22:07Z"}
+{"authority":"production","event":"stage_start","run_id":"20260304_192207","stage":"fetch_raw_only","ts":"2026-03-04T19:22:07Z"}
+{"authority":"production","duration_ms":1808,"error_message":null,"error_type":null,"event":"stage_end","run_id":"20260304_192207","stage":"fetch_raw_only","status":"ok","ts":"2026-03-04T19:22:09Z"}
+{"authority":"production","csv_rows":5142,"event":"artifact_fingerprint","exists":true,"label":"fetch_board.csv","path":"C:\\Users\\rick\\projects\\Atlas\\data\\board\\fetch_board.csv","run_id":"20260304_192207","sha256":"f88d4eae59a578a6a247c40cfd51bbe7e397f1eb4e7cf498467425bd5d6e828d","size_bytes":332423,"ts":"2026-03-04T19:22:09Z"}
+{"authority":"production","event":"stage_start","run_id":"20260304_192207","stage":"rebuild_today","ts":"2026-03-04T19:22:14Z"}
+{"authority":"production","duration_ms":591,"error_message":null,"error_type":null,"event":"stage_end","run_id":"20260304_192207","stage":"rebuild_today","status":"ok","ts":"2026-03-04T19:22:14Z"}
+{"authority":"production","csv_rows":4344,"event":"artifact_fingerprint","exists":true,"label":"today.csv","path":"C:\\Users\\rick\\projects\\Atlas\\data\\board\\today.csv","run_id":"20260304_192207","sha256":"03bd119768ffb350dd9f952d1f89519b98583f6944d5dcfa7ce08a4a27f7e78b","size_bytes":984108,"ts":"2026-03-04T19:22:14Z"}
+{"authority":"production","event":"game_date_selected","game_date":"2026-03-04","run_id":"20260304_192207","source":"today_csv","ts":"2026-03-04T19:22:14Z"}
+{"authority":"production","event":"stage_start","run_id":"20260304_192207","stage":"fetch_rotowire_lines","ts":"2026-03-04T19:22:14Z"}
+{"authority":"production","duration_ms":1145,"error_message":null,"error_type":null,"event":"stage_end","run_id":"20260304_192207","stage":"fetch_rotowire_lines","status":"ok","ts":"2026-03-04T19:22:15Z"}
+{"authority":"production","csv_rows":null,"event":"artifact_fingerprint","exists":true,"label":"rotowire_lines.json","path":"C:\\Users\\rick\\projects\\Atlas\\data\\input\\rotowire_lines.json","run_id":"20260304_192207","sha256":"a576fed008f10af3e5e2aa5bfe805692d268772315a6c9c500226bca3436d111","size_bytes":1464,"ts":"2026-03-04T19:22:15Z"}
+{"authority":"production","event":"stage_start","run_id":"20260304_192207","stage":"model_all","ts":"2026-03-04T19:22:15Z"}
+{"authority":"production","duration_ms":745,"error_message":null,"error_type":null,"event":"stage_end","run_id":"20260304_192207","stage":"model_all","status":"ok","ts":"2026-03-04T19:22:16Z"}
+{"authority":"production","cmd":"C:\\Users\\rick\\AppData\\Local\\Programs\\Python\\Python311\\python.exe -m Atlas.engine.main","cwd":"C:\\Users\\rick\\projects\\Atlas","engine_entry":"python -m Atlas.engine.main","event":"engine_invoke","run_id":"20260304_192207","ts":"2026-03-04T19:22:16Z"}

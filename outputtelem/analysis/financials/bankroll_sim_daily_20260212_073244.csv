@@ -1,0 +1,3 @@
+day_key,bankroll_start_expected,n_slips_total,n_slips_bet,total_stake,stake_scale,exp_profit,exp_roi_on_stake,payout_b_3,payout_b_4,payout_b_5,kelly_fraction,max_f_per_slip,max_daily_f,min_edge
+20260212_055749,1000.0,159,0,0.0,1.0,0.0,0.0,1.0,2.0,5.0,0.125,0.02,0.2,0.0
+20260212_063859,1000.0,159,0,0.0,1.0,0.0,0.0,1.0,2.0,5.0,0.125,0.02,0.2,0.0

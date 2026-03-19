@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\Users\rick\projects\Atlas\src\Atlas\engine\main.py", line 884, in <module>
+    main()
+  File "C:\Users\rick\projects\Atlas\src\Atlas\engine\main.py", line 861, in main
+    run_publish_stage(
+  File "C:\Users\rick\projects\Atlas\src\Atlas\stages\publish\publish_run_outputs.py", line 37, in run_publish_stage
+    raise ValueError("write_csv_clean must be provided")
+ValueError: write_csv_clean must be provided

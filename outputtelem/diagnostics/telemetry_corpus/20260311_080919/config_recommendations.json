@@ -1,0 +1,192 @@
+{
+  "recommendations": [
+    {
+      "path": "pp_kernel.coeffs.DEFAULT.STANDARD.a",
+      "current_value": 0.3164,
+      "suggested_value": 0.3164,
+      "confidence": "high",
+      "reason": "Current value remains the leading or statistically tied corpus choice after regime/time-window gates.",
+      "apply_now": false,
+      "winner_label": "Telemetryruns_wrapper",
+      "winner_score": 0.086982,
+      "gate_summary": {
+        "overall_clear": false,
+        "pass_share": 0.0,
+        "window_rows": []
+      }
+    },
+    {
+      "path": "pp_kernel.coeffs.DEFAULT.STANDARD.b",
+      "current_value": -0.288,
+      "suggested_value": -0.288,
+      "confidence": "high",
+      "reason": "Current value remains the leading or statistically tied corpus choice after regime/time-window gates.",
+      "apply_now": false,
+      "winner_label": "Telemetryruns_wrapper",
+      "winner_score": 0.086982,
+      "gate_summary": {
+        "overall_clear": false,
+        "pass_share": 0.0,
+        "window_rows": []
+      }
+    },
+    {
+      "path": "slip_rank.ev_payout_power",
+      "current_value": 2,
+      "suggested_value": 2,
+      "confidence": "high",
+      "reason": "Current value remains the leading or statistically tied corpus choice after regime/time-window gates.",
+      "apply_now": false,
+      "winner_label": "Telemetryruns_wrapper",
+      "winner_score": 0.086982,
+      "gate_summary": {
+        "overall_clear": false,
+        "pass_share": 0.0,
+        "window_rows": []
+      }
+    },
+    {
+      "path": "slip_build.target_pool_mult",
+      "current_value": 200,
+      "suggested_value": 200,
+      "confidence": "high",
+      "reason": "Current value remains the leading or statistically tied corpus choice after regime/time-window gates.",
+      "apply_now": false,
+      "winner_label": "Telemetryruns_wrapper",
+      "winner_score": 0.086982,
+      "gate_summary": {
+        "overall_clear": false,
+        "pass_share": 0.0,
+        "window_rows": []
+      }
+    },
+    {
+      "path": "slip_build.phase1_frac",
+      "current_value": 0.2,
+      "suggested_value": 0.2,
+      "confidence": "high",
+      "reason": "Current value remains the leading or statistically tied corpus choice after regime/time-window gates.",
+      "apply_now": false,
+      "winner_label": "Telemetryruns_wrapper",
+      "winner_score": 0.086982,
+      "gate_summary": {
+        "overall_clear": false,
+        "pass_share": 0.0,
+        "window_rows": []
+      }
+    },
+    {
+      "path": "slip_build.phase1_pool_frac",
+      "current_value": 0.5,
+      "suggested_value": 0.5,
+      "confidence": "high",
+      "reason": "Current value remains the leading or statistically tied corpus choice after regime/time-window gates.",
+      "apply_now": false,
+      "winner_label": "Telemetryruns_wrapper",
+      "winner_score": 0.086982,
+      "gate_summary": {
+        "overall_clear": false,
+        "pass_share": 0.0,
+        "window_rows": []
+      }
+    },
+    {
+      "path": "slip_build.beam_width",
+      "current_value": 200,
+      "suggested_value": 200,
+      "confidence": "high",
+      "reason": "Current value remains the leading or statistically tied corpus choice after regime/time-window gates.",
+      "apply_now": false,
+      "winner_label": "Telemetryruns_wrapper",
+      "winner_score": 0.086982,
+      "gate_summary": {
+        "overall_clear": false,
+        "pass_share": 0.0,
+        "window_rows": []
+      }
+    },
+    {
+      "path": "slip_build.max_slips_per_player",
+      "current_value": 4,
+      "suggested_value": 4,
+      "confidence": "high",
+      "reason": "Current value remains the leading or statistically tied corpus choice after regime/time-window gates.",
+      "apply_now": false,
+      "winner_label": "Telemetryruns_wrapper",
+      "winner_score": 0.086982,
+      "gate_summary": {
+        "overall_clear": false,
+        "pass_share": 0.0,
+        "window_rows": []
+      }
+    }
+  ],
+  "leaderboard": [
+    {
+      "score": 0.086982,
+      "config_values": {
+        "pp_kernel.coeffs.DEFAULT.STANDARD.a": 0.3164,
+        "pp_kernel.coeffs.DEFAULT.STANDARD.b": -0.288,
+        "slip_rank.ev_payout_power": 2,
+        "slip_build.target_pool_mult": 200,
+        "slip_build.phase1_frac": 0.2,
+        "slip_build.phase1_pool_frac": 0.5,
+        "slip_build.beam_width": 200,
+        "slip_build.max_slips_per_player": 4
+      },
+      "strict3": 0.1,
+      "strict4": 0.075,
+      "strict5": 0.035,
+      "ev3": 2.109382,
+      "ev4": 2.270899,
+      "ev5": 3.062651,
+      "hit3": 0.414397,
+      "hit4": 0.304044,
+      "hit5": 0.228227,
+      "strict3_std": 0.082462,
+      "strict4_std": 0.054544,
+      "strict5_std": 0.042131,
+      "corpus_metrics": {
+        "eval_rows": 28647,
+        "settled_eval_rows": 23885,
+        "mean_hit": 0.426837,
+        "mean_p_adj": 0.442816,
+        "mean_p_cal": null,
+        "brier_p_adj": 0.222284,
+        "brier_p_cal": null,
+        "logloss_p_adj": 0.639886,
+        "logloss_p_cal": null,
+        "games_used_lt5_share": 0.012232,
+        "role_ctx_outs_used_share": null,
+        "questionable_share": null,
+        "q_out_frac_mean": null,
+        "p_cal_equal_p_adj_share": null,
+        "run_count": 9
+      },
+      "score_components": {
+        "realized_core": 0.17925,
+        "pricing_secondary": 0.089315,
+        "stability_penalty": -0.179136,
+        "sample_penalty": -0.002446,
+        "short_slip_protection_penalty": -0.0,
+        "relative_consistency_bonus": 0.0
+      },
+      "relative_metrics": {
+        "delta_strict3": 0.0,
+        "delta_strict4": 0.0,
+        "delta_strict5": 0.0,
+        "delta_hit3": 0.0,
+        "delta_hit4": 0.0,
+        "delta_hit5": 0.0,
+        "delta_ev3": 0.0,
+        "delta_ev4": 0.0,
+        "delta_ev5": 0.0,
+        "delta_games_used_lt5_share": 0.0
+      },
+      "dominant_positive": "realized_core",
+      "dominant_negative": "stability_penalty",
+      "label": "Telemetryruns_wrapper",
+      "rank": 1
+    }
+  ]
+}

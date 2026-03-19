@@ -1,0 +1,14 @@
+{
+  "report_datetime_local": "2026-02-16 (NO REPORT FOUND)",
+  "pulled_at_local": "2026-02-16T20:19:54-06:00",
+  "source": "official.nba.com season page (dead period)",
+  "source_url": "https://official.nba.com/nba-injury-report-2025-26-season/",
+  "pdf_sha1": null,
+  "post_iael": true,
+  "post_line_recon": false,
+  "dead_period": true,
+  "notes": "No injury PDF found for 2026-02-16. Proceeding with last known IAEL: 2026-02-12_08_30PM.json",
+  "last_known_norm": "C:\\Users\\rick\\projects\\Atlas\\data\\output\\injury\\normalized\\2026-02-12_08_30PM.json",
+  "last_known_report_date": "2026-02-12",
+  "last_known_report_label": "08:30PM"
+}

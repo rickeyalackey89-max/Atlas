@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "generated_at": "2026-03-13T00:00:00Z",
+  "k_shrink": 1.0,
+  "standard_under_penalty": 1.0,
+  "apply_only_p_cal_src_prefixes": [
+    "p_adj"
+  ],
+  "exclude_p_cal_src_prefixes": [
+    "p_role"
+  ],
+  "mult": {
+    "FG3M|UNDER": 1.024,
+    "RA|UNDER": 1.01,
+    "PRA|UNDER": 1.01,
+    "REB|UNDER": 1.01,
+    "PA|UNDER": 1.006,
+    "PR|UNDER": 1.006
+  }
+}

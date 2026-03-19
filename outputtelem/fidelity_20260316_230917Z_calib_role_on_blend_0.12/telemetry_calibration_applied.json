@@ -1,0 +1,50 @@
+{
+  "version": 1,
+  "generated_at": "2026-03-18T10:48:55.078504Z",
+  "k_shrink": 0.96,
+  "standard_under_penalty": 0.98,
+  "mult": {},
+  "mult_rolectx_on": {
+    "AST|OVER": 1.00331488,
+    "AST|UNDER": 1.012,
+    "FG3M|OVER": 0.99637696,
+    "PA|OVER": 1.00820896,
+    "PA|UNDER": 1.012,
+    "PRA|OVER": 1.00872904,
+    "PRA|UNDER": 1.012,
+    "PR|OVER": 1.00727968,
+    "PR|UNDER": 1.012,
+    "PTS|OVER": 1.00316404,
+    "PTS|UNDER": 1.012,
+    "RA|OVER": 1.012,
+    "RA|UNDER": 1.0062352,
+    "REB|OVER": 1.00439332,
+    "REB|UNDER": 1.0058308
+  },
+  "mult_rolectx_off": {
+    "AST|OVER": 1.027624,
+    "AST|UNDER": 1.1,
+    "FG3M|OVER": 0.969808,
+    "PA|OVER": 1.068408,
+    "PA|UNDER": 1.1,
+    "PRA|OVER": 1.072742,
+    "PRA|UNDER": 1.1,
+    "PR|OVER": 1.060664,
+    "PR|UNDER": 1.1,
+    "PTS|OVER": 1.026367,
+    "PTS|UNDER": 1.1,
+    "RA|OVER": 1.1,
+    "RA|UNDER": 1.05196,
+    "REB|OVER": 1.036611,
+    "REB|UNDER": 1.04859
+  },
+  "bucket_rules": [],
+  "apply_only_p_cal_src_prefixes": [
+    "p_adj"
+  ],
+  "exclude_p_cal_src_prefixes": [],
+  "cap": {
+    "min": 0.01,
+    "max": 0.99
+  }
+}

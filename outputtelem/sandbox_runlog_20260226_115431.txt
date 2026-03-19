@@ -1,0 +1,8 @@
+[REPLAY] scenario_id=pcal_smoketest
+[REPLAY] analysis_root=C:\Users\rick\projects\Atlas\archives\bundles\pcal_smoketest\analysis\20260226_175431
+[REPLAY] running: C:\Users\rick\AppData\Local\Programs\Python\Python311\python.exe -m Atlas.engine.main
+[REPLAY] exit_code=0
+[REPLAY] OK
+[REPLAY] engine_run_id=20260226_115441
+[REPLAY] sandbox events: C:\Users\rick\projects\Atlas\.atlas_audit\sandbox\20260226_115441\events_20260226_115441.jsonl
+[REPLAY] root events:    C:\Users\rick\projects\Atlas\.atlas_audit\events_20260226_115441.jsonl

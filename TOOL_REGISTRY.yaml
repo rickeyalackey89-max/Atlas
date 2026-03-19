@@ -1,0 +1,71 @@
+# TOOL_REGISTRY.yaml
+# Atlas execution authority surface for tools.
+# NOTE: This file is replaced by patch to add refresh_iael_today (LIVE IAEL gate).
+tools:
+  - name: fetch_prizepicks_raw_only
+    kind: python_script
+    path: tools/fetch_prizepicks_raw_only.py
+    modes: [both]
+    network: conditional
+
+  - name: rebuild_today_from_any_raw
+    kind: python_script
+    path: tools/rebuild_today_from_any_raw.py
+    modes: [both]
+    network: false
+
+  - name: publish_latest_placeable
+    kind: python_script
+    path: tools/publish_latest_placeable.py
+    modes: [live]
+    network: false
+
+  - name: refresh_nba_gamelogs
+    kind: python_script
+    path: tools/refresh_nba_gamelogs.py
+    modes: [live]
+    network: conditional
+
+  - name: validate_artifacts
+    kind: python_script
+    path: tools/validate_artifacts.py
+    modes: [both]
+    network: false
+
+  - name: pricing_kernel
+    kind: module
+    path: Atlas.tools.pricing_kernel
+    modes: [both]
+    network: false
+
+  - name: financial_multiplier_tool
+    kind: python_script
+    path: tools/financial_multiplier_tool.py
+    modes: [both]
+    network: false
+
+  - name: telemetry_reader_tool
+    kind: python_script
+    path: tools/telemetry_reader_tool.py
+    modes: [both]
+    network: false
+
+  - name: compare_engines_replay
+    kind: python_script
+    path: tools/compare_engines_replay.py
+    modes: [replay]
+    network: false
+    writes_surfaces: [analysis]
+
+  - name: run_sandbox_wrapper
+    kind: powershell
+    path: tools/run_sandbox_wrapper.ps1
+    modes: [replay]
+    network: false
+
+  - name: refresh_iael_today
+    kind: python_script
+    path: tools/refresh_iael_today.py
+    modes: [live]
+    network: conditional
+    writes_surfaces: [output]

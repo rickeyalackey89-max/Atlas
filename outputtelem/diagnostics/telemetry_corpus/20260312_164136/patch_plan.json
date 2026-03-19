@@ -1,0 +1,18 @@
+{
+  "config_apply_now": [],
+  "calibration_apply_now": false,
+  "logic_recommendations": [
+    {
+      "target_file": "C:\\Users\\rick\\projects\\Atlas\\src\\Atlas\\engine\\calibration.py",
+      "recommendation_type": "inspect",
+      "reason": "Artifact-level candidate improved, but logic changes should be reviewed manually after artifact validation.",
+      "risk": "medium"
+    },
+    {
+      "target_file": "C:\\Users\\rick\\projects\\Atlas\\src\\Atlas\\engine\\calibration_map.py",
+      "recommendation_type": "inspect",
+      "reason": "Artifact-level candidate improved, but logic changes should be reviewed manually after artifact validation.",
+      "risk": "medium"
+    }
+  ]
+}

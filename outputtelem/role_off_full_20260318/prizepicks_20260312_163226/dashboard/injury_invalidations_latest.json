@@ -1,0 +1,225 @@
+{
+  "report_date": "2026-03-12",
+  "report_label": "05:15PM",
+  "pulled_at_local": "2026-03-12T16:32:32-05:00",
+  "invalidated_players_count": 36,
+  "invalidated_players": [
+    {
+      "team": "DET",
+      "player": "Jones, Isaac",
+      "status": "OUT",
+      "reason": "G League - Two-Way"
+    },
+    {
+      "team": "DET",
+      "player": "Klintman, Bobi",
+      "status": "OUT",
+      "reason": "Coach's Decision"
+    },
+    {
+      "team": "DET",
+      "player": "LeVert, Caris",
+      "status": "OUT",
+      "reason": "Injury/Illness - Left Wrist; Sprain"
+    },
+    {
+      "team": "DET",
+      "player": "Smith, Tolu",
+      "status": "OUT",
+      "reason": "G League - Two-Way"
+    },
+    {
+      "team": "DET",
+      "player": "Thompson, Ausar",
+      "status": "OUT",
+      "reason": "Injury/Illness - Right Ankle; Sprain Injury/Illness - Right Knee; Injury"
+    },
+    {
+      "team": "IND",
+      "player": "Furphy, Johnny",
+      "status": "OUT",
+      "reason": "Injury/Illness - Right ACL; Tear Injury/Illness - Right Achilles Tendon;"
+    },
+    {
+      "team": "IND",
+      "player": "Haliburton, Tyrese",
+      "status": "OUT",
+      "reason": "Tear"
+    },
+    {
+      "team": "IND",
+      "player": "Jackson, Quenton",
+      "status": "OUT",
+      "reason": "Injury/Illness - Right Calf; Soreness Injury/Illness - Right Hamstring;"
+    },
+    {
+      "team": "IND",
+      "player": "Siakam, Pascal",
+      "status": "OUT",
+      "reason": "Injury/Illness - Right Knee; Sprain"
+    },
+    {
+      "team": "ORL",
+      "player": "Black, Anthony",
+      "status": "OUT",
+      "reason": "Abdominal; Strain Injury/Illness - Left High Ankle; Sprain"
+    },
+    {
+      "team": "ORL",
+      "player": "Wagner, Franz",
+      "status": "OUT",
+      "reason": "injury management Injury/Illness - Left Plantar Fascia;"
+    },
+    {
+      "team": "POR",
+      "player": "Jr., Michael",
+      "status": "OUT",
+      "reason": "Injury/Illness - Right Ankle; Sprain"
+    },
+    {
+      "team": "POR",
+      "player": "Sharpe, Day'Ron",
+      "status": "OUT",
+      "reason": "Injury/Illness - Left Thumb; Sprain"
+    },
+    {
+      "team": "POR",
+      "player": "Traore, Nolan",
+      "status": "OUT",
+      "reason": "Rest"
+    },
+    {
+      "team": "POR",
+      "player": "Williams, Ziaire",
+      "status": "OUT",
+      "reason": "Injury/Illness - N/a; Illness"
+    },
+    {
+      "team": "ATL",
+      "player": "Gilbert, Keshon",
+      "status": "OUT",
+      "reason": "G League - Two-Way"
+    },
+    {
+      "team": "POR",
+      "player": "Ryan, Cormac",
+      "status": "OUT",
+      "reason": "G League - Two-Way Injury/Illness - Right Patella;"
+    },
+    {
+      "team": "MIA",
+      "player": "Jovic, Nikola",
+      "status": "OUT",
+      "reason": "Management"
+    },
+    {
+      "team": "MIA",
+      "player": "Powell, Norman",
+      "status": "OUT",
+      "reason": "Injury/Illness - Right Groin; Strain"
+    },
+    {
+      "team": "MIA",
+      "player": "Rozier, Terry",
+      "status": "OUT",
+      "reason": "Not With Team"
+    },
+    {
+      "team": "MIA",
+      "player": "Wiggins, Andrew",
+      "status": "OUT",
+      "reason": "Sesamoiditis"
+    },
+    {
+      "team": "MIA",
+      "player": "Young, Jahmir",
+      "status": "OUT",
+      "reason": "G League - Two-Way"
+    },
+    {
+      "team": "MEM",
+      "player": "Aldama, Santi",
+      "status": "OUT",
+      "reason": "Management Injury/Illness - Right 5th Finger;"
+    },
+    {
+      "team": "MEM",
+      "player": "Caldwell-Pope, Kentavious",
+      "status": "OUT",
+      "reason": "Surgery Recovery"
+    },
+    {
+      "team": "MEM",
+      "player": "Clarke, Brandon",
+      "status": "OUT",
+      "reason": "Injury/Illness - Right Calf; Strain Injury/Illness - Right Knee; Injury"
+    },
+    {
+      "team": "MEM",
+      "player": "Coward, Cedric",
+      "status": "DOUBTFUL",
+      "reason": "Management Injury/Illness - Left Ankle; Surgery"
+    },
+    {
+      "team": "MEM",
+      "player": "Edey, Zach",
+      "status": "OUT",
+      "reason": "Recovery Return to Competition"
+    },
+    {
+      "team": "MEM",
+      "player": "Gibson, Taj",
+      "status": "DOUBTFUL",
+      "reason": "Reconditioning Injury/Illness - Right Calf; Injury"
+    },
+    {
+      "team": "MEM",
+      "player": "Jerome, Ty",
+      "status": "DOUBTFUL",
+      "reason": "Management"
+    },
+    {
+      "team": "MEM",
+      "player": "Morant, Ja",
+      "status": "OUT",
+      "reason": "Injury/Illness - Left Elbow; UCL Sprain Injury/Illness - Right Great Toe; Sesamoiditis"
+    },
+    {
+      "team": "OKC",
+      "player": "Carlson, Branden",
+      "status": "OUT",
+      "reason": "Injury/Illness - Low Back; Strain"
+    },
+    {
+      "team": "OKC",
+      "player": "Hartenstein, Isaiah",
+      "status": "OUT",
+      "reason": "Injury/Illness - Left Calf; Contusion Injury/Illness - Right ACL; Surgical"
+    },
+    {
+      "team": "OKC",
+      "player": "Sorber, Thomas",
+      "status": "OUT",
+      "reason": "Recovery"
+    },
+    {
+      "team": "OKC",
+      "player": "Topic, Nikola",
+      "status": "OUT",
+      "reason": "G League - On Assignment Injury/Illness - Right Hamstring;"
+    },
+    {
+      "team": "OKC",
+      "player": "Williams, Jalen",
+      "status": "OUT",
+      "reason": "Strain"
+    },
+    {
+      "team": "TOR",
+      "player": "Hepburn, Chucky",
+      "status": "OUT",
+      "reason": "G League - Two-Way"
+    }
+  ],
+  "policy": "backtest_v2_from_normalized"
+}

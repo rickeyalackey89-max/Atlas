@@ -1,0 +1,309 @@
+{
+  "report_date": "2026-03-07",
+  "report_label": "07:45PM",
+  "pulled_at_local": "2026-03-07T18:58:02-06:00",
+  "invalidated_players_count": 50,
+  "invalidated_players": [
+    {
+      "team": "MIN",
+      "player": "Anderson, Kyle",
+      "status": "OUT",
+      "reason": "Injury/Illness - Right Knee; Soreness"
+    },
+    {
+      "team": "MIN",
+      "player": "Beringer, Joan",
+      "status": "OUT",
+      "reason": "G League - On Assignment"
+    },
+    {
+      "team": "MIN",
+      "player": "Freeman, Enrique",
+      "status": "OUT",
+      "reason": "G League - Two-Way"
+    },
+    {
+      "team": "MIN",
+      "player": "Pullin, Zyon",
+      "status": "OUT",
+      "reason": "G League - Two-Way"
+    },
+    {
+      "team": "DET",
+      "player": "Cunningham, Cade",
+      "status": "OUT",
+      "reason": "Contusion"
+    },
+    {
+      "team": "DET",
+      "player": "Jones, Isaac",
+      "status": "OUT",
+      "reason": "G League - Two-Way"
+    },
+    {
+      "team": "DET",
+      "player": "Thompson, Ausar",
+      "status": "OUT",
+      "reason": "Injury/Illness - Right Ankle; Sprain Injury/Illness - Right Knee; Surgery"
+    },
+    {
+      "team": "ATL",
+      "player": "Dennis, RayJ",
+      "status": "OUT",
+      "reason": "G League - Two-Way"
+    },
+    {
+      "team": "ATL",
+      "player": "Gilbert, Keshon",
+      "status": "OUT",
+      "reason": "G League - Two-Way Injury/Illness - Left Knee;"
+    },
+    {
+      "team": "ATL",
+      "player": "Kuminga, Jonathan",
+      "status": "OUT",
+      "reason": "Inflammation"
+    },
+    {
+      "team": "ATL",
+      "player": "Newell, Asa",
+      "status": "OUT",
+      "reason": "G League - On Assignment"
+    },
+    {
+      "team": "MEM",
+      "player": "Aldama, Santi",
+      "status": "OUT",
+      "reason": "Injury/Illness - Right Knee; Injury Management Injury/Illness - Right 5th Finger;"
+    },
+    {
+      "team": "MEM",
+      "player": "Caldwell-Pope, Kentavious",
+      "status": "OUT",
+      "reason": "Surgery Recovery"
+    },
+    {
+      "team": "MEM",
+      "player": "Clarke, Brandon",
+      "status": "OUT",
+      "reason": "Injury/Illness - Right Calf; Strain Injury/Illness - Left Ankle; Surgery"
+    },
+    {
+      "team": "MEM",
+      "player": "Edey, Zach",
+      "status": "OUT",
+      "reason": "Recovery Return to Competition"
+    },
+    {
+      "team": "MEM",
+      "player": "Gibson, Taj",
+      "status": "OUT",
+      "reason": "Reconditioning"
+    },
+    {
+      "team": "MEM",
+      "player": "Morant, Ja",
+      "status": "OUT",
+      "reason": "Injury/Illness - Left Elbow; UCL Sprain"
+    },
+    {
+      "team": "MEM",
+      "player": "Rupert, Rayan",
+      "status": "OUT",
+      "reason": "G League - Two-Way"
+    },
+    {
+      "team": "MIL",
+      "player": "Antetokounmpo, Alex",
+      "status": "OUT",
+      "reason": "G League - Two-Way"
+    },
+    {
+      "team": "POR",
+      "player": "Jr., Kevin",
+      "status": "OUT",
+      "reason": "Injury/Illness - Right Knee; Swelling"
+    },
+    {
+      "team": "POR",
+      "player": "Prince, Taurean",
+      "status": "OUT",
+      "reason": "Injury/Illness - Neck; Surgery"
+    },
+    {
+      "team": "POR",
+      "player": "Ryan, Cormac",
+      "status": "OUT",
+      "reason": "G League - Two-Way"
+    },
+    {
+      "team": "OKC",
+      "player": "Carlson, Branden",
+      "status": "OUT",
+      "reason": "Injury/Illness - Low Back; Strain"
+    },
+    {
+      "team": "OKC",
+      "player": "Caruso, Alex",
+      "status": "OUT",
+      "reason": "Injury/Illness - Left Hip; Contusion"
+    },
+    {
+      "team": "OKC",
+      "player": "Hartenstein, Isaiah",
+      "status": "OUT",
+      "reason": "Injury/Illness - Left Calf; Contusion"
+    },
+    {
+      "team": "OKC",
+      "player": "Holmgren, Chet",
+      "status": "OUT",
+      "reason": "Injury/Illness - N/a; Flu Injury/Illness - Abdominal; Strain/"
+    },
+    {
+      "team": "OKC",
+      "player": "Mitchell, Ajay",
+      "status": "OUT",
+      "reason": "Left Ankle Sprain Injury/Illness - Right ACL; Surgical"
+    },
+    {
+      "team": "OKC",
+      "player": "Sorber, Thomas",
+      "status": "OUT",
+      "reason": "Recovery Injury/Illness - Right Hamstring;"
+    },
+    {
+      "team": "OKC",
+      "player": "Williams, Jalen",
+      "status": "OUT",
+      "reason": "Strain"
+    },
+    {
+      "team": "CLE",
+      "player": "Allen, Jarrett",
+      "status": "OUT",
+      "reason": "Injury/Illness - Right Knee; Tendonitis Injury/Illness - Left Index Finger;"
+    },
+    {
+      "team": "CLE",
+      "player": "Minix, Riley",
+      "status": "OUT",
+      "reason": "G League - Two-Way"
+    },
+    {
+      "team": "CLE",
+      "player": "Proctor, Tyrese",
+      "status": "OUT",
+      "reason": "Strain"
+    },
+    {
+      "team": "CLE",
+      "player": "Sarr, Olivier",
+      "status": "OUT",
+      "reason": "G League - Two-Way Injury/Illness - Left Foot; Surgery -"
+    },
+    {
+      "team": "CLE",
+      "player": "Strus, Max",
+      "status": "OUT",
+      "reason": "Jones Fracture"
+    },
+    {
+      "team": "TOR",
+      "player": "Hepburn, Chucky",
+      "status": "OUT",
+      "reason": "G League - Two-Way"
+    },
+    {
+      "team": "TOR",
+      "player": "Lawson, A.J.",
+      "status": "OUT",
+      "reason": "G League - Two-Way"
+    },
+    {
+      "team": "TOR",
+      "player": "Martin, Alijah",
+      "status": "OUT",
+      "reason": "G League - Two-Way"
+    },
+    {
+      "team": "TOR",
+      "player": "Mogbo, Jonathan",
+      "status": "OUT",
+      "reason": "G League - On Assignment"
+    },
+    {
+      "team": "TOR",
+      "player": "Murray-Boyles, Collin",
+      "status": "OUT",
+      "reason": "Injury/Illness - Left Thumb; Sprain"
+    },
+    {
+      "team": "MIA",
+      "player": "Fontecchio, Simone",
+      "status": "OUT",
+      "reason": "Injury/Illness - Left Groin; Strain"
+    },
+    {
+      "team": "MIA",
+      "player": "Johnson, Keshad",
+      "status": "OUT",
+      "reason": "G League - On Assignment Injury/Illness - Low Back; Injury"
+    },
+    {
+      "team": "MIA",
+      "player": "Jovic, Nikola",
+      "status": "OUT",
+      "reason": "management Injury/Illness - Left Shoulder;"
+    },
+    {
+      "team": "MIA",
+      "player": "Powell, Norman",
+      "status": "OUT",
+      "reason": "Injury/Illness - Right Groin; Strain"
+    },
+    {
+      "team": "MIA",
+      "player": "Rozier, Terry",
+      "status": "OUT",
+      "reason": "Not With Team Injury/Illness - Left Big Toe;"
+    },
+    {
+      "team": "MIA",
+      "player": "Young, Jahmir",
+      "status": "OUT",
+      "reason": "G League - Two-Way"
+    },
+    {
+      "team": "POR",
+      "player": "Lillard, Damian",
+      "status": "OUT",
+      "reason": "Injury Management"
+    },
+    {
+      "team": "POR",
+      "player": "Sharpe, Shaedon",
+      "status": "OUT",
+      "reason": "Reaction"
+    },
+    {
+      "team": "PHX",
+      "player": "Brooks, Dillon",
+      "status": "OUT",
+      "reason": "Injury/Illness - Left Hand; Fracture"
+    },
+    {
+      "team": "PHX",
+      "player": "Goodwin, Jordan",
+      "status": "OUT",
+      "reason": "Injury/Illness - Left Calf; Strain Injury/Illness - Left Foot Third"
+    },
+    {
+      "team": "PHX",
+      "player": "Williams, Mark",
+      "status": "OUT",
+      "reason": "Metatarsal; Stress Reaction"
+    }
+  ],
+  "policy": "backtest_v2_from_normalized"
+}

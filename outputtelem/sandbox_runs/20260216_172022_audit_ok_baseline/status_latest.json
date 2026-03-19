@@ -1,0 +1,14 @@
+{
+  "report_datetime_local": "2026-02-12 08:30PM",
+  "pulled_at_utc": "2026-02-16T22:35:42Z",
+  "source": "seeded_from_normalized",
+  "source_norm": "C:\\Users\\rick\\projects\\Atlas\\data\\output\\injury\\normalized\\2026-02-12_08_30PM.json",
+  "source_url": "https://ak-static.cms.nba.com/referee/injury/Injury-Report_2026-02-12_08_30PM.pdf",
+  "pdf_sha1": "c98a6911101d50ba4e18f7b33328dcdd15fc10c3",
+  "post_iael": true,
+  "post_line_recon": false,
+  "dead_period": false,
+  "notes": "Seed built from normalized IAEL (historical) for deterministic sandbox replay.",
+  "report_date": "2026-02-12",
+  "report_label": "08:30PM"
+}

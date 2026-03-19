@@ -1,0 +1,67 @@
+{
+  "generated_at": "2026-02-18T09:11:32",
+  "mode": "engine_csv_reports",
+  "run_dir": "C:\\Users\\rick\\projects\\Atlas\\data\\output\\runs\\20260218_063241",
+  "reports": [
+    {
+      "product": "system",
+      "n_legs": 3,
+      "rank_key": "ev_mult",
+      "rows_total": 25,
+      "rows_written": 25,
+      "source": "C:\\Users\\rick\\projects\\Atlas\\data\\output\\runs\\20260218_063241\\System\\recommended_3leg.csv",
+      "output_csv": "C:\\Users\\rick\\projects\\Atlas\\data\\archives\\financial_reports\\20260218_091132\\system_3leg_report.csv",
+      "status": "ok"
+    },
+    {
+      "product": "system",
+      "n_legs": 4,
+      "rank_key": "ev_mult",
+      "rows_total": 25,
+      "rows_written": 25,
+      "source": "C:\\Users\\rick\\projects\\Atlas\\data\\output\\runs\\20260218_063241\\System\\recommended_4leg.csv",
+      "output_csv": "C:\\Users\\rick\\projects\\Atlas\\data\\archives\\financial_reports\\20260218_091132\\system_4leg_report.csv",
+      "status": "ok"
+    },
+    {
+      "product": "system",
+      "n_legs": 5,
+      "rank_key": "ev_mult",
+      "rows_total": 25,
+      "rows_written": 25,
+      "source": "C:\\Users\\rick\\projects\\Atlas\\data\\output\\runs\\20260218_063241\\System\\recommended_5leg.csv",
+      "output_csv": "C:\\Users\\rick\\projects\\Atlas\\data\\archives\\financial_reports\\20260218_091132\\system_5leg_report.csv",
+      "status": "ok"
+    },
+    {
+      "product": "windfall",
+      "n_legs": 3,
+      "rank_key": "ev_mult",
+      "rows_total": 25,
+      "rows_written": 25,
+      "source": "C:\\Users\\rick\\projects\\Atlas\\data\\output\\runs\\20260218_063241\\Windfall\\recommended_3leg.csv",
+      "output_csv": "C:\\Users\\rick\\projects\\Atlas\\data\\archives\\financial_reports\\20260218_091132\\windfall_3leg_report.csv",
+      "status": "ok"
+    },
+    {
+      "product": "windfall",
+      "n_legs": 4,
+      "rank_key": "ev_mult",
+      "rows_total": 25,
+      "rows_written": 25,
+      "source": "C:\\Users\\rick\\projects\\Atlas\\data\\output\\runs\\20260218_063241\\Windfall\\recommended_4leg.csv",
+      "output_csv": "C:\\Users\\rick\\projects\\Atlas\\data\\archives\\financial_reports\\20260218_091132\\windfall_4leg_report.csv",
+      "status": "ok"
+    },
+    {
+      "product": "windfall",
+      "n_legs": 5,
+      "rank_key": "ev_mult",
+      "rows_total": 25,
+      "rows_written": 25,
+      "source": "C:\\Users\\rick\\projects\\Atlas\\data\\output\\runs\\20260218_063241\\Windfall\\recommended_5leg.csv",
+      "output_csv": "C:\\Users\\rick\\projects\\Atlas\\data\\archives\\financial_reports\\20260218_091132\\windfall_5leg_report.csv",
+      "status": "ok"
+    }
+  ]
+}

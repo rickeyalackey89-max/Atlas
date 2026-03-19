@@ -1,0 +1,84 @@
+{
+  "schema": "atlas.bundle.v1",
+  "created_utc": "2026-02-16T23:45:12.9755100Z",
+  "mode": "sandbox",
+  "run_id": "20260216_174432_audit_ok_baseline",
+  "engine_run_id": "20260216_174512",
+  "scenario": "audit_ok_baseline",
+  "raw_path": "C:\\Users\\rick\\projects\\Atlas\\data\\raw\\prizepicks_20260211_063607.json",
+  "dest_dir": "C:\\Users\\rick\\projects\\Atlas\\data\\output\\sandbox_runs\\20260216_174432_audit_ok_baseline",
+  "files": [
+    {
+      "name": "fetch_board.csv",
+      "bytes": 619879,
+      "sha256": "8EA7496D7E8FCBE24E340D6C459066A75F6570C074EE3947178E71789C04D2EF",
+      "mtime_utc": "2026-02-16T23:44:33.6666919Z"
+    },
+    {
+      "name": "injury_invalidations_latest.json",
+      "bytes": 6690,
+      "sha256": "6CCECEBFC6796650A249AD099CB21E90F3B3FB3505A674C344C4034E75ADA034",
+      "mtime_utc": "2026-02-16T22:35:42.6913709Z"
+    },
+    {
+      "name": "recommended_3leg.csv",
+      "bytes": 14683,
+      "sha256": "D93492B76F0360FBFCEA247A0EA68F0F23FFBD943991B25F26F883F1650D3B78",
+      "mtime_utc": "2026-02-16T23:45:12.6742499Z"
+    },
+    {
+      "name": "recommended_4leg.csv",
+      "bytes": 18578,
+      "sha256": "AFF04ED30C34E63A017480C7EE674ABA453C3EE0EEFA9CD892DD47E47D064D15",
+      "mtime_utc": "2026-02-16T23:45:12.6762269Z"
+    },
+    {
+      "name": "recommended_5leg.csv",
+      "bytes": 22379,
+      "sha256": "6A999BA56E922D794CF8634874999D465125B7105C96338785F848F60E9A02B4",
+      "mtime_utc": "2026-02-16T23:45:12.6772251Z"
+    },
+    {
+      "name": "scored_legs_deduped.csv",
+      "bytes": 3318146,
+      "sha256": "9490F31D7B119A901D3E7310A2146A8F2D9073D69FAF18313D2DC960D7C36659",
+      "mtime_utc": "2026-02-16T23:45:12.6732257Z"
+    },
+    {
+      "name": "scored_legs.csv",
+      "bytes": 2909841,
+      "sha256": "C5044E74EBFEBFFC81576B655E51F60DC3E0CCDB65E7F70CF8048C6D4C4CC6FD",
+      "mtime_utc": "2026-02-16T23:45:12.5522409Z"
+    },
+    {
+      "name": "status_latest.json",
+      "bytes": 642,
+      "sha256": "FB4EDF29D2F37C71D721DFC0D2D8EAE14202F4F82270927C6F3E1A8F82EF4199",
+      "mtime_utc": "2026-02-16T22:35:42.6913709Z"
+    },
+    {
+      "name": "today.csv",
+      "bytes": 1604854,
+      "sha256": "C8D046A41623DC39900F7D2EF867BFFF89A4191F2601D09C7E77B9BF81082D15",
+      "mtime_utc": "2026-02-16T23:44:34.4346917Z"
+    },
+    {
+      "name": "Windfall_recommended_3leg.csv",
+      "bytes": 14291,
+      "sha256": "F69603B4A2059688EDBDD25E7076539CFF87E8C56773C0EB0AEBE44E07446523",
+      "mtime_utc": "2026-02-16T23:45:12.6789908Z"
+    },
+    {
+      "name": "Windfall_recommended_4leg.csv",
+      "bytes": 18699,
+      "sha256": "3996D48C52E0D6D11390692E1F0645282C4C1AB40B712C2AEC33E4CC9F732801",
+      "mtime_utc": "2026-02-16T23:45:12.6800239Z"
+    },
+    {
+      "name": "Windfall_recommended_5leg.csv",
+      "bytes": 22448,
+      "sha256": "145AB3C0600266B59A83BB88A0121D1767FC758E23C6E186B11FBC78BEF029D2",
+      "mtime_utc": "2026-02-16T23:45:12.6809966Z"
+    }
+  ]
+}

@@ -1,0 +1,125 @@
+{
+  "recommendations": [
+    {
+      "path": "pp_kernel.coeffs.DEFAULT.STANDARD.a",
+      "current_value": 0.3164,
+      "suggested_value": 0.3164,
+      "confidence": "medium",
+      "reason": "Variant 01 is the locked Standard baseline and corpus telemetry does not show enough drift to justify another Standard coeff move.",
+      "evidence": {
+        "runs": 10,
+        "mean_p_adj": 0.389389,
+        "mean_hit": 0.421291,
+        "gap_abs": 0.031902
+      },
+      "risk": "low",
+      "apply_now": false
+    },
+    {
+      "path": "pp_kernel.coeffs.DEFAULT.STANDARD.b",
+      "current_value": -0.288,
+      "suggested_value": -0.288,
+      "confidence": "medium",
+      "reason": "Variant 01 is the locked Standard baseline and corpus telemetry does not show enough drift to justify another Standard coeff move.",
+      "evidence": {
+        "runs": 10,
+        "mean_p_adj": 0.389389,
+        "mean_hit": 0.421291,
+        "gap_abs": 0.031902
+      },
+      "risk": "low",
+      "apply_now": false
+    },
+    {
+      "path": "slip_rank.ev_payout_power",
+      "current_value": 2,
+      "suggested_value": 2,
+      "confidence": "medium",
+      "reason": "Keep current EV ranking power until a corpus-level comparison shows a cleaner improvement without shorter-slip degradation.",
+      "evidence": {
+        "runs": 10,
+        "mean_p_adj": 0.389389,
+        "mean_hit": 0.421291,
+        "gap_abs": 0.031902,
+        "system_ev_mean_strict_win_rate": 0.135119
+      },
+      "risk": "low",
+      "apply_now": false
+    },
+    {
+      "path": "slip_build.target_pool_mult",
+      "current_value": 200,
+      "suggested_value": 200,
+      "confidence": "medium",
+      "reason": "Hold slip-build knobs steady in v1; current corpus reader is recommendation-only and has not run a controlled ablation on build-space knobs.",
+      "evidence": {
+        "runs": 10,
+        "mean_p_adj": 0.389389,
+        "mean_hit": 0.421291,
+        "gap_abs": 0.031902
+      },
+      "risk": "medium",
+      "apply_now": false
+    },
+    {
+      "path": "slip_build.phase1_frac",
+      "current_value": 0.2,
+      "suggested_value": 0.2,
+      "confidence": "medium",
+      "reason": "Hold slip-build knobs steady in v1; current corpus reader is recommendation-only and has not run a controlled ablation on build-space knobs.",
+      "evidence": {
+        "runs": 10,
+        "mean_p_adj": 0.389389,
+        "mean_hit": 0.421291,
+        "gap_abs": 0.031902
+      },
+      "risk": "medium",
+      "apply_now": false
+    },
+    {
+      "path": "slip_build.phase1_pool_frac",
+      "current_value": 0.5,
+      "suggested_value": 0.5,
+      "confidence": "medium",
+      "reason": "Hold slip-build knobs steady in v1; current corpus reader is recommendation-only and has not run a controlled ablation on build-space knobs.",
+      "evidence": {
+        "runs": 10,
+        "mean_p_adj": 0.389389,
+        "mean_hit": 0.421291,
+        "gap_abs": 0.031902
+      },
+      "risk": "medium",
+      "apply_now": false
+    },
+    {
+      "path": "slip_build.beam_width",
+      "current_value": 200,
+      "suggested_value": 200,
+      "confidence": "medium",
+      "reason": "Hold slip-build knobs steady in v1; current corpus reader is recommendation-only and has not run a controlled ablation on build-space knobs.",
+      "evidence": {
+        "runs": 10,
+        "mean_p_adj": 0.389389,
+        "mean_hit": 0.421291,
+        "gap_abs": 0.031902
+      },
+      "risk": "medium",
+      "apply_now": false
+    },
+    {
+      "path": "slip_build.max_slips_per_player",
+      "current_value": 4,
+      "suggested_value": 4,
+      "confidence": "medium",
+      "reason": "Hold slip-build knobs steady in v1; current corpus reader is recommendation-only and has not run a controlled ablation on build-space knobs.",
+      "evidence": {
+        "runs": 10,
+        "mean_p_adj": 0.389389,
+        "mean_hit": 0.421291,
+        "gap_abs": 0.031902
+      },
+      "risk": "medium",
+      "apply_now": false
+    }
+  ]
+}

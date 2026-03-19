@@ -1,0 +1,5 @@
+player,old_team,new_team,source
+Dennis Schröder,SAC,CLE,fetch_board
+James Harden,LAC,CLE,fetch_board
+Marvin Bagley,,DAL,fetch_board
+Kevin Porter,,MIL,fetch_board

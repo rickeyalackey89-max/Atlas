@@ -1,0 +1,20 @@
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\Users\rick\projects\Atlas\src\Atlas\engine\main.py", line 821, in <module>
+    main()
+  File "C:\Users\rick\projects\Atlas\src\Atlas\engine\main.py", line 784, in main
+    slips_winprob = run_build_slips(
+                    ^^^^^^^^^^^^^^^^
+  File "C:\Users\rick\projects\Atlas\src\Atlas\stages\optimize\build_slips_today.py", line 45, in run_build_slips
+    build_system_slips(scored_for_optimizer, 4, top_n, seed, pricing_engine=pricing_engine, cfg=cfg, sort_mode=sort_mode), 4
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rick\projects\Atlas\src\Atlas\core\slip_builders.py", line 853, in build_system_slips
+    out = build_slips_by_tier_buckets(
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rick\projects\Atlas\src\Atlas\core\slip_builders.py", line 782, in build_slips_by_tier_buckets
+    print(
+  File "C:\Users\rick\AppData\Local\Programs\Python\Python311\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode characters in position 202-203: character maps to <undefined>

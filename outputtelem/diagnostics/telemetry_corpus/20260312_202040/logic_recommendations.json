@@ -1,0 +1,16 @@
+{
+  "recommendations": [
+    {
+      "target_file": "C:\\Users\\rick\\projects\\Atlas\\src\\Atlas\\engine\\calibration.py",
+      "recommendation_type": "keep",
+      "reason": "No structural calibration logic change is supported by the corpus yet.",
+      "risk": "low"
+    },
+    {
+      "target_file": "C:\\Users\\rick\\projects\\Atlas\\src\\Atlas\\engine\\calibration_map.py",
+      "recommendation_type": "keep",
+      "reason": "No structural calibration logic change is supported by the corpus yet.",
+      "risk": "low"
+    }
+  ]
+}

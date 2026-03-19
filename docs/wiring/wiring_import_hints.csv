@@ -1,8 +1,0 @@
-"RelPath","Hints"
-"run_today.py","imports atlas"
-"scripts\dev\diagnostics\diag_fetch_only.py","imports tools"
-"src\Atlas\build_cheatsheet_html.py","imports atlas"
-"src\Atlas\legacy\external_priors.py","imports atlas"
-"src\Atlas\runtime\orchestrator.py","imports atlas"
-"tools\fetch_prizepicks_today.py","imports atlas"
-"tools\rebuild_today_from_any_raw.py","imports atlas"

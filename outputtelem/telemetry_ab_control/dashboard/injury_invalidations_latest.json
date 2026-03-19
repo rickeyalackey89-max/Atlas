@@ -1,0 +1,117 @@
+{
+  "report_date": "2026-03-09",
+  "report_label": "03:30PM",
+  "pulled_at_local": "2026-03-09T14:36:50-05:00",
+  "invalidated_players_count": 18,
+  "invalidated_players": [
+    {
+      "team": "CLE",
+      "player": "Allen, Jarrett",
+      "status": "OUT",
+      "reason": "Injury/Illness - Right Knee; Tendonitis Injury/Illness - Left Index Finger;"
+    },
+    {
+      "team": "CLE",
+      "player": "Proctor, Tyrese",
+      "status": "OUT",
+      "reason": "Strain"
+    },
+    {
+      "team": "CLE",
+      "player": "Sarr, Olivier",
+      "status": "OUT",
+      "reason": "G League - Two-Way Injury/Illness - Left Foot; Surgery -"
+    },
+    {
+      "team": "CLE",
+      "player": "Strus, Max",
+      "status": "OUT",
+      "reason": "Jones Fracture"
+    },
+    {
+      "team": "OKC",
+      "player": "Carlson, Branden",
+      "status": "OUT",
+      "reason": "Injury/Illness - Low Back; Strain"
+    },
+    {
+      "team": "OKC",
+      "player": "Caruso, Alex",
+      "status": "OUT",
+      "reason": "Injury/Illness - Left Hip; Contusion"
+    },
+    {
+      "team": "OKC",
+      "player": "Hartenstein, Isaiah",
+      "status": "OUT",
+      "reason": "Injury/Illness - Left Calf; Contusion"
+    },
+    {
+      "team": "OKC",
+      "player": "Sorber, Thomas",
+      "status": "OUT",
+      "reason": "Recovery Injury/Illness - Right Hamstring;"
+    },
+    {
+      "team": "OKC",
+      "player": "Williams, Jalen",
+      "status": "OUT",
+      "reason": "Strain Injury/Illness - Right Knee; Injury"
+    },
+    {
+      "team": "BKN",
+      "player": "Demin, Egor",
+      "status": "OUT",
+      "reason": "Injury Management"
+    },
+    {
+      "team": "POR",
+      "player": "Jr., Michael",
+      "status": "OUT",
+      "reason": "Rest"
+    },
+    {
+      "team": "UTA",
+      "player": "Collier, Isaiah",
+      "status": "OUT",
+      "reason": "Injury/Illness - N/A; Illness"
+    },
+    {
+      "team": "UTA",
+      "player": "Kessler, Walker",
+      "status": "OUT",
+      "reason": "recovery Injury/Illness - Right Hip;"
+    },
+    {
+      "team": "UTA",
+      "player": "Markkanen, Lauri",
+      "status": "OUT",
+      "reason": "Impingement"
+    },
+    {
+      "team": "UTA",
+      "player": "Nurkic, Jusuf",
+      "status": "OUT",
+      "reason": "Injury/Illness - Nose; Injury recovery Injury/Illness - Left Knee; Injury management"
+    },
+    {
+      "team": "LAC",
+      "player": "Beal, Bradley",
+      "status": "OUT",
+      "reason": "Injury/Illness - Left Hip; Fracture"
+    },
+    {
+      "team": "LAC",
+      "player": "Collins, John",
+      "status": "OUT",
+      "reason": "Injury/Illness - Neck; Strain Injury/Illness - Right Lisfranc"
+    },
+    {
+      "team": "LAC",
+      "player": "Niederhauser, Yanic Konan",
+      "status": "OUT",
+      "reason": "Ligament; Tear"
+    }
+  ],
+  "policy": "backtest_v2_from_normalized"
+}

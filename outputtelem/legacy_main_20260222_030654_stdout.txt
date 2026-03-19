@@ -1,0 +1,15 @@
+[DEBUG] Dropped 509 invalid rows from today.csv (blank/unknown stat/line)
+[IAEL] Loaded invalidations=37. Report: 2026-02-21 12:00PM
+[IAEL] Removed 0 legs out of 2827 (statuses=['DOUBTFUL', 'OUT', 'QUESTIONABLE'])
+Model run complete.
+Outputs folder: C:\Users\rick\projects\Atlas\data\output
+Run folder: C:\Users\rick\projects\Atlas\data\output\runs\20260221_210714
+Wrote:
+ - C:\Users\rick\projects\Atlas\data\output\runs\20260221_210714\scored_legs.csv
+ - C:\Users\rick\projects\Atlas\data\output\runs\20260221_210714\scored_legs_deduped.csv
+ - C:\Users\rick\projects\Atlas\data\output\runs\20260221_210714\System\recommended_3leg.csv (SYSTEM)
+ - C:\Users\rick\projects\Atlas\data\output\runs\20260221_210714\System\recommended_4leg.csv (SYSTEM)
+ - C:\Users\rick\projects\Atlas\data\output\runs\20260221_210714\System\recommended_5leg.csv (SYSTEM)
+ - C:\Users\rick\projects\Atlas\data\output\runs\20260221_210714\Windfall\recommended_3leg.csv (WINDFALL)
+ - C:\Users\rick\projects\Atlas\data\output\runs\20260221_210714\Windfall\recommended_4leg.csv (WINDFALL)
+ - C:\Users\rick\projects\Atlas\data\output\runs\20260221_210714\Windfall\recommended_5leg.csv (WINDFALL)

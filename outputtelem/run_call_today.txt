@@ -1,0 +1,11 @@
+62:[IAEL] Preflight refresh via C:\Users\rick\projects\Atlas\tools\refresh_iael_today.py
+75:CMD: C:\Users\rick\AppData\Local\Programs\Python\Python311\python.exe C:\Users\rick\projects\Atlas\tools\rebuild_today_from_any_raw.py
+80:CMD: C:\Users\rick\AppData\Local\Programs\Python\Python311\python.exe C:\Users\rick\projects\Atlas\tools\fetch_rotowire_lines.py
+85:CMD: C:\Users\rick\AppData\Local\Programs\Python\Python311\python.exe C:\Users\rick\projects\Atlas\tools\build_share_matrix.py
+119:[LIVE] entered src/Atlas/cli.py live branch
+1040:  --> C:\Users\rick\projects\Atlas\src\Atlas\runtime\orchestrator.py
+6628:  --> C:\Users\rick\projects\Atlas\src\Atlas\runtime\orchestrator.py
+6645:  --> C:\Users\rick\projects\Atlas\src\Atlas\cli.py
+7010:*** C:\Users\rick\projects\Atlas\src\Atlas\cli.py ***
+7080:  --> C:\Users\rick\projects\Atlas\src\Atlas\runtime\orchestrator.py
+7154:*** C:\Users\rick\projects\Atlas\src\Atlas\runtime\orchestrator.py ***

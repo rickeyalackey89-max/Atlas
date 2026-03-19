@@ -1,0 +1,6 @@
+[REPLAY] scenario_id=pcal_smoketest
+[REPLAY] analysis_root=C:\Users\rick\projects\Atlas\archives\bundles\pcal_smoketest\analysis\20260226_154550
+[REPLAY] run_id=20260226_154550
+[REPLAY] running: C:\Users\rick\AppData\Local\Programs\Python\Python311\python.exe -m Atlas.engine.main
+[REPLAY] exit_code=0
+[REPLAY] OK

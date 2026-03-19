@@ -1,0 +1,4 @@
+{"authority":"production","event":"run_start","raw_path":null,"run_id":"20260301_150301","scheduled":false,"ts":"2026-03-01T15:03:01Z"}
+{"authority":"production","event":"stage_start","run_id":"20260301_150301","stage":"fetch_raw_only","ts":"2026-03-01T15:03:01Z"}
+{"authority":"production","duration_ms":3151,"error_message":null,"error_type":null,"event":"stage_end","run_id":"20260301_150301","stage":"fetch_raw_only","status":"ok","ts":"2026-03-01T15:03:05Z"}
+{"authority":"production","csv_rows":10594,"event":"artifact_fingerprint","exists":true,"label":"fetch_board.csv","path":"C:\\Users\\rick\\projects\\Atlas\\data\\board\\fetch_board.csv","run_id":"20260301_150301","sha256":"b005d48ac0a178d5cb7ae4f85025e62c432808c6294376cdfbead7a6ecd1f9c8","size_bytes":544027,"ts":"2026-03-01T15:03:05Z"}

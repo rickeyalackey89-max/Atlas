@@ -1,0 +1,58 @@
+version: 1
+
+global:
+  hash_algorithm: sha256
+  enforce_hash: false
+  allow_extra_columns: true
+  require_schema_match: true
+
+artifacts:
+
+  fetch_board.csv:
+    description: Raw PrizePicks board snapshot used to build today.csv
+    required: true
+    min_rows: 1
+    max_rows: null
+    hash_enforced: false
+    schema: {}
+
+  today.csv:
+    description: Canonical today.csv rebuilt from raw board data
+    required: true
+    min_rows: 1
+    max_rows: null
+    hash_enforced: false
+    schema: {}
+
+  scored_legs.csv:
+    description: Model output legs with scores (pre-dedupe)
+    required: true
+    min_rows: 1
+    max_rows: null
+    hash_enforced: false
+    schema: 
+      p: {}
+      p_role: {}
+      p_adj: {}
+      p_for_cal: {}
+      p_cal_src: {}
+      p_cal: {}
+      role_ctx_mult: {}
+      role_ctx_outs_used: {}
+
+  scored_legs_deduped.csv:
+    description: Model output legs with scores (deduped)
+    required: true
+    min_rows: 1
+    max_rows: null
+    hash_enforced: false
+    schema: 
+      p: {}
+      p_role: {}
+      p_adj: {}
+      p_for_cal: {}
+      p_cal_src: {}
+      p_cal: {}
+      role_ctx_mult: {}
+      role_ctx_outs_used: {}
+      prop_key: {}

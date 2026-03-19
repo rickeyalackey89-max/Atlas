@@ -1,0 +1,11 @@
+{
+  "report_datetime_local": "2026-03-05 02:15PM",
+  "pulled_at_local": "2026-03-05T13:28:25-06:00",
+  "source": "NBA injury report PDF (latest-of-day via season page scrape)",
+  "source_url": "https://ak-static.cms.nba.com/referee/injury/Injury-Report_2026-03-05_02_15PM.pdf",
+  "pdf_sha1": "97287904a87b5c71545dced840570b9f546c3b4c",
+  "post_iael": true,
+  "post_line_recon": false,
+  "dead_period": false,
+  "notes": "IAEL completed. Injury rows parsed via text (table extraction unreliable)."
+}

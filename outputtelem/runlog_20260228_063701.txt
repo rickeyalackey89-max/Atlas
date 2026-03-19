@@ -1,0 +1,102 @@
+﻿Wrote: C:\Users\rick\projects\Atlas\data\board\fetch_board.csv (rows=4908)
+Wrote: data\board\today.csv
+Snapshot: data\board\snapshots\today_20260228_123705.csv
+Rebuilt today.csv from: C:\Users\rick\projects\Atlas\data\raw\prizepicks_20260228_063702.json
+Rows: 3555
+
+Tier counts:
+tier
+DEMON       1673
+GOBLIN      1036
+STANDARD     846
+Name: count, dtype: int64
+
+Stat counts (canonical):
+stat
+PTS              523
+PRA              443
+RA               410
+REB              395
+PR               389
+PA               335
+AST              328
+FG3M             220
+STL              205
+BLOCKED SHOTS    125
+BS                83
+TOV               77
+DUNKS             22
+Name: count, dtype: int64
+
+WARNING: Non-canonical stat rows retained: 147
+Sample unknown/mapped-through stats:
+     stat_raw          stat
+BLOCKED SHOTS BLOCKED SHOTS
+        DUNKS         DUNKS
+[rotowire] GET https://www.rotowire.com/betting/nba/tables/nba-games-by-market.php?date=2026-02-28
+[rotowire] status=200 bytes=102978
+[rotowire] wrote C:\Users\rick\projects\Atlas\data\input\rotowire_lines.json (events=5) at 2026-02-28T12:37:06Z
+[rotowire] updated last-good: C:\Users\rick\projects\Atlas\data\input\rotowire_lines_last_good.json
+OK wrote C:\Users\rick\projects\Atlas\data\model\share_matrix.csv rows=0 (after cleanup)
+[PUBLISH] wrote C:\Users\rick\projects\Atlas\data\output\injury\normalized\2026-02-28_06_37AM.json
+[PUBLISH] updated C:\Users\rick\projects\Atlas\data\output\injury\normalized\latest.json
+OK: Live IAEL verified for today (2026-02-28). (cached)
+[OBS] audit log: C:\Users\rick\projects\Atlas\.atlas_audit\events_20260228_123701.jsonl
+
+========================================================================
+[FETCH (fresh PrizePicks data) attempt 1/3] 2026-02-28 06:37:01
+========================================================================
+
+========================================================================
+[REBUILD (canonical today.csv)] 2026-02-28 06:37:05
+CMD: C:\Users\rick\AppData\Local\Programs\Python\Python311\python.exe C:\Users\rick\projects\Atlas\tools\rebuild_today_from_any_raw.py
+========================================================================
+
+========================================================================
+[FETCH ROTOWIRE (lines/spreads)] 2026-02-28 06:37:05
+CMD: C:\Users\rick\AppData\Local\Programs\Python\Python311\python.exe C:\Users\rick\projects\Atlas\tools\fetch_rotowire_lines.py
+========================================================================
+
+========================================================================
+[BUILD SHARE MATRIX (role context)] 2026-02-28 06:37:06
+CMD: C:\Users\rick\AppData\Local\Programs\Python\Python311\python.exe C:\Users\rick\projects\Atlas\tools\build_share_matrix.py
+========================================================================
+[DEBUG] Dropped 512 invalid rows from today.csv (blank/unknown stat/line)
+[IAEL] Loaded invalidations=47. Report: 2026-02-28 07:30AM
+[IAEL] Removed 186 legs out of 3043 (statuses=['DOUBTFUL', 'OUT', 'QUESTIONABLE'])
+[IAEL] Sample removed:
+          player
+ Donovan Clingan
+  Keyonte George
+  Kyshawn George
+Tristan Vukcevic
+Model run complete.
+Outputs folder: C:\Users\rick\projects\Atlas\data\output
+Run folder: C:\Users\rick\projects\Atlas\data\output\runs\20260228_063723
+Wrote:
+ - C:\Users\rick\projects\Atlas\data\output\runs\20260228_063723\scored_legs.csv
+ - C:\Users\rick\projects\Atlas\data\output\runs\20260228_063723\scored_legs_deduped.csv
+ - C:\Users\rick\projects\Atlas\data\output\runs\20260228_063723\System\recommended_3leg.csv (SYSTEM)
+ - C:\Users\rick\projects\Atlas\data\output\runs\20260228_063723\System\recommended_4leg.csv (SYSTEM)
+ - C:\Users\rick\projects\Atlas\data\output\runs\20260228_063723\System\recommended_5leg.csv (SYSTEM)
+ - C:\Users\rick\projects\Atlas\data\output\runs\20260228_063723\Windfall\recommended_3leg.csv (WINDFALL)
+ - C:\Users\rick\projects\Atlas\data\output\runs\20260228_063723\Windfall\recommended_4leg.csv (WINDFALL)
+ - C:\Users\rick\projects\Atlas\data\output\runs\20260228_063723\Windfall\recommended_5leg.csv (WINDFALL)
+ - C:\Users\rick\projects\Atlas\data\output\runs\20260228_063723\System\recommended_3leg_winprob.csv (SYSTEM winprob)
+ - C:\Users\rick\projects\Atlas\data\output\runs\20260228_063723\System\recommended_4leg_winprob.csv (SYSTEM winprob)
+ - C:\Users\rick\projects\Atlas\data\output\runs\20260228_063723\System\recommended_5leg_winprob.csv (SYSTEM winprob)
+ - C:\Users\rick\projects\Atlas\data\output\runs\20260228_063723\Windfall\recommended_3leg_winprob.csv (WINDFALL winprob)
+ - C:\Users\rick\projects\Atlas\data\output\runs\20260228_063723\Windfall\recommended_4leg_winprob.csv (WINDFALL winprob)
+ - C:\Users\rick\projects\Atlas\data\output\runs\20260228_063723\Windfall\recommended_5leg_winprob.csv (WINDFALL winprob)
+[CAL] ATLAS_CAL_MAP='C:\\Users\\rick\\projects\\Atlas\\tools\\calibration\\calibration_map.json'
+[CAL] wrote p_cal into C:\Users\rick\projects\Atlas\data\output\runs\20260228_063723\scored_legs.csv (sep=',')
+[CAL] wrote p_cal into C:\Users\rick\projects\Atlas\data\output\runs\20260228_063723\scored_legs_deduped.csv (sep=',')
+
+========================================================================
+[DONE] 2026-02-28 06:37:24
+========================================================================
+Atlas run complete. latest/{all,early,main,late} updated.
+[BUNDLE] attempting post-run bundle
+[BUNDLE] inferred run_id=20260228_063723
+[BUNDLE] FULL_RUN zip written: C:\Users\rick\projects\Atlas\data\bundles\atlas_bundle_20260228_063723.zip
+[LIVE] entered src/Atlas/cli.py live branch

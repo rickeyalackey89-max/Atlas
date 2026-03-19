@@ -1,0 +1,192 @@
+{
+  "recommendations": [
+    {
+      "path": "pp_kernel.coeffs.DEFAULT.STANDARD.a",
+      "current_value": 0.3164,
+      "suggested_value": 0.3164,
+      "confidence": "high",
+      "reason": "Current value remains the leading or statistically tied corpus choice after regime/time-window gates.",
+      "apply_now": false,
+      "winner_label": "Telemetryruns_cal_targeted_lift_v4_padj_only",
+      "winner_score": -0.071835,
+      "gate_summary": {
+        "overall_clear": false,
+        "pass_share": 0.0,
+        "window_rows": []
+      }
+    },
+    {
+      "path": "pp_kernel.coeffs.DEFAULT.STANDARD.b",
+      "current_value": -0.288,
+      "suggested_value": -0.288,
+      "confidence": "high",
+      "reason": "Current value remains the leading or statistically tied corpus choice after regime/time-window gates.",
+      "apply_now": false,
+      "winner_label": "Telemetryruns_cal_targeted_lift_v4_padj_only",
+      "winner_score": -0.071835,
+      "gate_summary": {
+        "overall_clear": false,
+        "pass_share": 0.0,
+        "window_rows": []
+      }
+    },
+    {
+      "path": "slip_rank.ev_payout_power",
+      "current_value": 2,
+      "suggested_value": 2,
+      "confidence": "high",
+      "reason": "Current value remains the leading or statistically tied corpus choice after regime/time-window gates.",
+      "apply_now": false,
+      "winner_label": "Telemetryruns_cal_targeted_lift_v4_padj_only",
+      "winner_score": -0.071835,
+      "gate_summary": {
+        "overall_clear": false,
+        "pass_share": 0.0,
+        "window_rows": []
+      }
+    },
+    {
+      "path": "slip_build.target_pool_mult",
+      "current_value": 200,
+      "suggested_value": 200,
+      "confidence": "high",
+      "reason": "Current value remains the leading or statistically tied corpus choice after regime/time-window gates.",
+      "apply_now": false,
+      "winner_label": "Telemetryruns_cal_targeted_lift_v4_padj_only",
+      "winner_score": -0.071835,
+      "gate_summary": {
+        "overall_clear": false,
+        "pass_share": 0.0,
+        "window_rows": []
+      }
+    },
+    {
+      "path": "slip_build.phase1_frac",
+      "current_value": 0.2,
+      "suggested_value": 0.2,
+      "confidence": "high",
+      "reason": "Current value remains the leading or statistically tied corpus choice after regime/time-window gates.",
+      "apply_now": false,
+      "winner_label": "Telemetryruns_cal_targeted_lift_v4_padj_only",
+      "winner_score": -0.071835,
+      "gate_summary": {
+        "overall_clear": false,
+        "pass_share": 0.0,
+        "window_rows": []
+      }
+    },
+    {
+      "path": "slip_build.phase1_pool_frac",
+      "current_value": 0.5,
+      "suggested_value": 0.5,
+      "confidence": "high",
+      "reason": "Current value remains the leading or statistically tied corpus choice after regime/time-window gates.",
+      "apply_now": false,
+      "winner_label": "Telemetryruns_cal_targeted_lift_v4_padj_only",
+      "winner_score": -0.071835,
+      "gate_summary": {
+        "overall_clear": false,
+        "pass_share": 0.0,
+        "window_rows": []
+      }
+    },
+    {
+      "path": "slip_build.beam_width",
+      "current_value": 200,
+      "suggested_value": 200,
+      "confidence": "high",
+      "reason": "Current value remains the leading or statistically tied corpus choice after regime/time-window gates.",
+      "apply_now": false,
+      "winner_label": "Telemetryruns_cal_targeted_lift_v4_padj_only",
+      "winner_score": -0.071835,
+      "gate_summary": {
+        "overall_clear": false,
+        "pass_share": 0.0,
+        "window_rows": []
+      }
+    },
+    {
+      "path": "slip_build.max_slips_per_player",
+      "current_value": 4,
+      "suggested_value": 4,
+      "confidence": "high",
+      "reason": "Current value remains the leading or statistically tied corpus choice after regime/time-window gates.",
+      "apply_now": false,
+      "winner_label": "Telemetryruns_cal_targeted_lift_v4_padj_only",
+      "winner_score": -0.071835,
+      "gate_summary": {
+        "overall_clear": false,
+        "pass_share": 0.0,
+        "window_rows": []
+      }
+    }
+  ],
+  "leaderboard": [
+    {
+      "score": -0.071835,
+      "config_values": {
+        "pp_kernel.coeffs.DEFAULT.STANDARD.a": 0.3164,
+        "pp_kernel.coeffs.DEFAULT.STANDARD.b": -0.288,
+        "slip_rank.ev_payout_power": 2,
+        "slip_build.target_pool_mult": 200,
+        "slip_build.phase1_frac": 0.2,
+        "slip_build.phase1_pool_frac": 0.5,
+        "slip_build.beam_width": 200,
+        "slip_build.max_slips_per_player": 4
+      },
+      "strict3": 0.149062,
+      "strict4": 0.25303,
+      "strict5": 0.086364,
+      "ev3": 2.091763,
+      "ev4": 1.946009,
+      "ev5": 2.264814,
+      "hit3": 0.308437,
+      "hit4": 0.268205,
+      "hit5": 0.248984,
+      "strict3_std": 0.129394,
+      "strict4_std": 0.295414,
+      "strict5_std": 0.120357,
+      "corpus_metrics": {
+        "eval_rows": 40922,
+        "settled_eval_rows": 40922,
+        "mean_hit": 0.422682,
+        "mean_p_adj": 0.392756,
+        "mean_p_cal": 0.401711,
+        "brier_p_adj": 0.210116,
+        "brier_p_cal": 0.209801,
+        "logloss_p_adj": 0.60731,
+        "logloss_p_cal": 0.606476,
+        "games_used_lt5_share": 0.006444,
+        "role_ctx_outs_used_share": 0.195876,
+        "questionable_share": 0.0,
+        "q_out_frac_mean": 0.0,
+        "p_cal_equal_p_adj_share": 0.726336,
+        "run_count": 13
+      },
+      "score_components": {
+        "realized_core": 0.398986,
+        "pricing_secondary": 0.075631,
+        "stability_penalty": -0.545164,
+        "sample_penalty": -0.001289,
+        "short_slip_protection_penalty": -0.0,
+        "relative_consistency_bonus": 0.0
+      },
+      "relative_metrics": {
+        "delta_strict3": 0.0,
+        "delta_strict4": 0.0,
+        "delta_strict5": 0.0,
+        "delta_hit3": 0.0,
+        "delta_hit4": 0.0,
+        "delta_hit5": 0.0,
+        "delta_ev3": 0.0,
+        "delta_ev4": 0.0,
+        "delta_ev5": 0.0,
+        "delta_games_used_lt5_share": 0.0
+      },
+      "dominant_positive": "realized_core",
+      "dominant_negative": "stability_penalty",
+      "label": "Telemetryruns_cal_targeted_lift_v4_padj_only",
+      "rank": 1
+    }
+  ]
+}

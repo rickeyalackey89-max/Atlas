@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "generated_at": "2026-03-13T00:00:00Z",
+  "k_shrink": 1.0,
+  "standard_under_penalty": 1.0,
+  "mult": {
+    "FG3M|UNDER": 1.028,
+    "RA|UNDER": 1.012,
+    "PRA|UNDER": 1.012,
+    "REB|UNDER": 1.012,
+    "PA|UNDER": 1.008,
+    "PR|UNDER": 1.008,
+    "PR|OVER": 1.008,
+    "PRA|OVER": 1.008,
+    "PTS|OVER": 1.006,
+    "PA|OVER": 1.006
+  },
+  "cap": {
+    "min": 0.01,
+    "max": 0.99
+  }
+}

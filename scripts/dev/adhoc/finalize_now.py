@@ -11,7 +11,7 @@ from zoneinfo import ZoneInfo
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-FETCH = os.path.join(ROOT, "tools", "fetch_prizepicks_today.py")
+FETCH = os.path.join(ROOT, "tools", "fetch_apis.py")
 REBUILD = os.path.join(ROOT, "tools", "rebuild_today_from_any_raw.py")
 FILTER_LIVE = os.path.join(ROOT, "tools", "filter_recommendations_live.py")
 POST = os.path.join(ROOT, "tools", "postprocess_outputs.py")

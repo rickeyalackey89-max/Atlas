@@ -1,0 +1,17 @@
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\Users\rick\AppData\Local\Programs\Python\Python311\Lib\trace.py", line 740, in <module>
+    main()
+  File "C:\Users\rick\AppData\Local\Programs\Python\Python311\Lib\trace.py", line 728, in main
+    t.runctx(code, globs, globs)
+  File "C:\Users\rick\AppData\Local\Programs\Python\Python311\Lib\trace.py", line 450, in runctx
+    exec(cmd, globals, locals)
+  File "C:\Users\rick\projects\Atlas\src\Atlas\cli.py", line 611, in <module>
+    main()
+  File "C:\Users\rick\projects\Atlas\src\Atlas\cli.py", line 557, in main
+    raw_path = _parse_replay_raw_path(argv)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rick\projects\Atlas\src\Atlas\cli.py", line 504, in _parse_replay_raw_path
+    raise RuntimeError("Replay requires --raw <path_to_raw_json>")
+RuntimeError: Replay requires --raw <path_to_raw_json>

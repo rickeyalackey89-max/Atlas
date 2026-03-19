@@ -1,0 +1,61 @@
+.\run.ps1 :: & py -m Atlas.cli $mode @rest
+.\.venv\Scripts\Activate.ps1 :: New-Variable -Name _PYTHON_VENV_PROMPT_PREFIX -Description "Python virtual environment prompt prefix" -Scope Global -Option ReadOnly -Visibility Public -Value $Prompt
+.\scripts\dev\admin\Analyze-BakFiles.ps1 :: Test-Path -LiteralPath (Join-Path $p "run_today.py") -PathType Leaf
+.\scripts\dev\admin\Analyze-BakFiles.ps1 :: Join-Path $p "run_today.py"
+.\scripts\dev\analysis\backtest\Invoke-BacktestRoleLayer.ps1 :: Join-Path $PSScriptRoot 'backtest_role_layer_ctx.py'
+.\scripts\dev\analysis\backtest\Invoke-BacktestRoleLayer.ps1 :: Get-Command py -ErrorAction SilentlyContinue
+.\scripts\dev\analysis\backtest\Invoke-BacktestRoleLayer.ps1 :: Get-Command python -ErrorAction SilentlyContinue
+.\scripts\dev\analysis\backtest\Invoke-BacktestRoleLayer.ps1 :: Write-Host ("Python: {0}" -f $exe) -ForegroundColor DarkGray
+.\src\Atlas\Private\Assert-GamelogsFresh.ps1 :: & $PY -c "import pandas as pd; df=pd.read_csv(r'$GamelogsPath', usecols=['game_date']); df['game_date']=pd.to_datetime(df['game_date'], errors='coerce'); print(df['game_date'].max().date())"
+.\src\Atlas\Private\Resolve-AtlasPython.ps1 :: Get-Command python -ErrorAction SilentlyContinue
+.\src\Atlas\Private\Resolve-Python.ps1 :: & py -3 -c "import sys; print(sys.executable)" 2>$null
+.\src\Atlas\Public\Invoke-AtlasPythonMain.ps1 :: Resolve-AtlasPython -Python $Python -VenvPath $VenvPath
+.\src\Atlas\Public\Invoke-AtlasPythonMain.ps1 :: Join-Path $repoRoot 'src\main.py'
+.\src\Atlas\Public\Invoke-AtlasPythonMain.ps1 :: & $py $main @Args
+.\src\Atlas\Public\Invoke-AtlasRunAllAndPublish.ps1 :: & $py (Join-Path $AtlasRoot 'tools\refresh_nba_gamelogs.py')
+.\src\Atlas\Public\Invoke-AtlasRunAllAndPublish.ps1 :: Join-Path $AtlasRoot 'tools\refresh_nba_gamelogs.py'
+.\src\Atlas\Public\Invoke-AtlasRunAllAndPublish.ps1 :: & $py (Join-Path $AtlasRoot 'tools\build_audit_last5_board.py')
+.\src\Atlas\Public\Invoke-AtlasRunAllAndPublish.ps1 :: Join-Path $AtlasRoot 'tools\build_audit_last5_board.py'
+.\src\Atlas\Public\Invoke-AtlasRunAllAndPublish.ps1 :: & $py (Join-Path $AtlasRoot 'tools\export_cloudflare_payload.py')
+.\src\Atlas\Public\Invoke-AtlasRunAllAndPublish.ps1 :: Join-Path $AtlasRoot 'tools\export_cloudflare_payload.py'
+.\src\Atlas\Public\Invoke-AtlasRunTodayAndExport.ps1 :: Join-Path $AtlasRoot 'tools\run_today.py'
+.\src\Atlas\Public\Invoke-AtlasRunTodayAndExport.ps1 :: Join-Path $AtlasRoot 'tools\run_today_and_export.py'
+.\src\Atlas\Public\Invoke-AtlasRunTodayAndExport.ps1 :: Join-Path $AtlasRoot 'tools\run_model.py'
+.\src\Atlas\Public\Invoke-AtlasRunTodayAndExport.ps1 :: Join-Path $AtlasRoot 'scripts\run_today.py'
+.\src\Atlas\Public\Invoke-AtlasRunTodayAndExport.ps1 :: Join-Path $AtlasRoot 'scripts\run_today_and_export.py'
+.\src\Atlas\Public\Invoke-AtlasRunTodayAndExport.ps1 :: Join-Path $AtlasRoot 'run_today.py'
+.\src\Atlas\Public\Invoke-AtlasRunTodayAndExport.ps1 :: Join-Path $AtlasRoot 'run_today_and_export.py'
+.\src\Atlas\Public\Invoke-AtlasRunTodayAndExport.ps1 :: Join-Path $AtlasRoot 'src\run_today.py'
+.\src\Atlas\Public\Invoke-AtlasRunTodayAndExport.ps1 :: Join-Path $AtlasRoot 'src\run_today_and_export.py'
+.\src\Atlas\Public\Invoke-AtlasRunTodayAndExport.ps1 :: Write-Host "=== Atlas: Run model (python direct) ==="
+.\src\Atlas\Public\Invoke-AtlasRunTodayAndExport.ps1 :: Write-Host "=== Atlas: Python exe === $py"
+.\src\Atlas\Public\Invoke-AtlasRunTodayAndExport.ps1 :: Write-Host "=== Atlas: Python entry === $entry"
+.\src\Atlas\Public\Invoke-AtlasRunTodayAndExport.ps1 :: Write-Host "=== Atlas: Python args === $(@($Args) -join ' ')"
+.\src\Atlas\Public\Invoke-AtlasRunTodayAndExport.ps1 :: Start-Process -FilePath $py -ArgumentList $pyArgs -WorkingDirectory $AtlasRoot -NoNewWindow -PassThru
+.\tools\Apply-Atlas-Cleanup.ps1 :: Join-Path $root 'run_today_and_export.ps1'
+.\tools\Atlas-Cleanup-Report.ps1 :: Where-Object Extension -eq '.py'
+.\tools\Invoke-LeagueSim.ps1 :: Start-ThreadJob -Name "sim_$tm" -ArgumentList $tm, $outsRaw, $Stats -ScriptBlock {
+      param($team, $outs, $stats)
+      python .\tools\dev_role_scenario_dump.py --team $team --outs "$outs" --stats $stats *> $null
+      [pscustomobject]@{ Team=$team; Outs=$outs }
+    }
+.\tools\Invoke-LeagueSim.ps1 :: python .\tools\dev_role_scenario_dump.py --team $team --outs "$outs" --stats $stats *> $null
+.\tools\Invoke-LeagueSim.ps1 :: python .\tools\dev_role_scenario_dump.py --team $tm --outs "$outsFixed" --stats $Stats *> $null
+.\tools\Invoke-RunTodayAndExport.ps1 :: Join-Path $PSScriptRoot '..\..\..\run_today_and_export.ps1'
+.\tools\Run-Replay.ps1 :: Join-Path $RepoRoot "tools\telemetry_reader.py"
+.\tools\Run-Replay.ps1 :: Join-Path $RepoRoot "data\output\replay_runs"
+.\tools\Run-Replay.ps1 :: Write-Host ("[Run-Replay] RepoRoot : " + $RepoRoot)
+.\tools\Run-Replay.ps1 :: Write-Host ("[Run-Replay] OutDir   : " + $OutDir)
+.\tools\Run-Replay.ps1 :: Write-Host ("[Run-Replay] Python   : " + $Py)
+.\tools\Run-Replay.ps1 :: Write-Host ("[Run-Replay] Command  : " + ($args -join " "))
+.\tools\Run-Replay.ps1 :: & $Py @args
+.\tools\Run-Sandbox.ps1 :: Join-Path $auditDir ("sandbox_runlog_{0}.txt" -f $runId)
+.\tools\Run-Sandbox.ps1 :: Join-Path $auditDir ("sandbox_cmds_{0}.log" -f $runId)
+.\tools\Run-Sandbox.ps1 :: Write-Host "║   ATLAS SANDBOX — SCENARIO SANDBOX (ISOLATED OUTPUTS)                        ║"
+.\tools\Run-Sandbox.ps1 :: Write-Host ("🧾 Sandbox transcript: {0}" -f $runLog)
+.\tools\Run-Sandbox.ps1 :: Write-Host ("[SANDBOX] {0}" -f $timestamp)
+.\tools\Run-Sandbox.ps1 :: Write-Host "[ATLAS SANDBOX STOP] Scenario replay halted. ExitCode=$exitCode"
+.\tools\Run-Sandbox.ps1 :: Write-Host "[ATLAS SANDBOX COMPLETE] Scenario replay finished cleanly."
+.\tools\Write-AtlasBundle.ps1 :: Join-Path $root "data\output\sandbox_runs\$RunId"
+.\tools\Write-AtlasBundle.ps1 :: Add-IfExistsHash $codeHashes "run_today.py"          (Join-Path $root "run_today.py")
+.\tools\Write-AtlasBundle.ps1 :: Join-Path $root "run_today.py"

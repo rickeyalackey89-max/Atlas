@@ -1,0 +1,21 @@
+{
+  "report_date": "2026-02-18",
+  "report_label": "03:00PM",
+  "pulled_at_local": "2026-02-18T14:15:07-06:00",
+  "invalidated_players_count": 2,
+  "invalidated_players": [
+    {
+      "team": "AtlantaHawks",
+      "player": "Morales,Alex",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "AtlantaHawks",
+      "player": "Wagner,Franz",
+      "status": "OUT",
+      "reason": ""
+    }
+  ],
+  "policy": "Remove OUT/DOUBTFUL/QUESTIONABLE from eligibility. PROBABLE allowed but tagged."
+}

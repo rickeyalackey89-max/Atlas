@@ -1,0 +1,237 @@
+"""Telemetry-driven calibration layer for Atlas.
+
+This module is intentionally **optional** and **no-op by default**.
+
+Why it exists
+-------------
+Atlas already produces *telemetry* / evaluation artifacts (e.g. via
+``tools/backtest_snapshots_accuracy.py``). This module lets the live
+scoring path consume a small, explicit calibration artifact generated
+from that telemetry—without hard-coding constants in the engine.
+
+The calibration is applied late (in ``ensure_p_adj``) so it can be
+iterated quickly and reverted safely.
+
+Calibration JSON schema (v1)
+----------------------------
+File: ``data/model/telemetry_calibration.json``
+
+::
+
+  {
+    "version": 1,
+    "generated_at": "2026-02-11T20:15:00Z",
+    "k_shrink": 0.85,                 # shrink-to-0.5 factor (0..1.5)
+    "standard_under_penalty": 0.90,   # multiplier applied to STANDARD UNDER
+    "mult": {                         # optional extra multipliers
+      "PTS|OVER": 1.00,
+      "PTS|UNDER": 0.98,
+      "FG3M|OVER": 1.02
+    },
+    "bucket_rules": [                # optional upper/lower bucket cooling
+      {"min": 0.70, "max": 0.80, "mult": 0.995},
+      {"min": 0.80, "max": 0.90, "mult": 0.990},
+      {"min": 0.90, "max": 1.00, "mult": 0.980}
+    ],
+    "cap": {"min": 0.01, "max": 0.99}
+  }
+
+Only these fields are consumed. Unknown fields are ignored.
+"""
+
+from __future__ import annotations
+
+import json
+from dataclasses import dataclass
+from pathlib import Path
+from typing import Any, Dict, List, Optional, Tuple
+
+import pandas as pd
+
+
+@dataclass(frozen=True)
+class TelemetryCalibration:
+    version: int = 1
+    generated_at: str = ""
+    k_shrink: float = 1.0
+    standard_under_penalty: float = 0.90
+    mult: Dict[str, float] = None  # key: "STAT|DIRECTION"
+    bucket_rules: List[Tuple[float, float, float]] = None  # (min, max, mult)
+    cap_min: float = 0.01
+    cap_max: float = 0.99
+
+    @staticmethod
+    def from_json(d: Dict[str, Any]) -> "TelemetryCalibration":
+        mult = d.get("mult") or {}
+        if not isinstance(mult, dict):
+            mult = {}
+
+        bucket_rules_raw = d.get("bucket_rules") or []
+        bucket_rules: List[Tuple[float, float, float]] = []
+        if isinstance(bucket_rules_raw, list):
+            for rule in bucket_rules_raw:
+                if not isinstance(rule, dict):
+                    continue
+                try:
+                    lo = float(rule.get("min"))
+                    hi = float(rule.get("max"))
+                    mult_v = float(rule.get("mult", 1.0))
+                except Exception:
+                    continue
+                if 0.0 <= lo < hi <= 1.0:
+                    bucket_rules.append((lo, hi, mult_v))
+
+        cap = d.get("cap") or {}
+        cap_min = float(cap.get("min", 0.01))
+        cap_max = float(cap.get("max", 0.99))
+
+        return TelemetryCalibration(
+            version=int(d.get("version", 1)),
+            generated_at=str(d.get("generated_at", "")),
+            k_shrink=float(d.get("k_shrink", 1.0)),
+            standard_under_penalty=float(d.get("standard_under_penalty", 0.90)),
+            mult={str(k): float(v) for k, v in mult.items()},
+            bucket_rules=bucket_rules,
+            cap_min=cap_min,
+            cap_max=cap_max,
+        )
+
+
+def _default_calibration_path(project_root: Path) -> Path:
+    return project_root / "data" / "model" / "telemetry_calibration.json"
+
+
+def load_calibration(project_root: Path) -> Optional[TelemetryCalibration]:
+    """Load calibration from disk. Returns None if missing/unreadable."""
+    path = _default_calibration_path(project_root)
+    if not path.exists():
+        return None
+    try:
+        d = json.loads(path.read_text(encoding="utf-8"))
+        if not isinstance(d, dict):
+            return None
+        return TelemetryCalibration.from_json(d)
+    except Exception:
+        return None
+
+
+def apply_calibration(
+    scored: pd.DataFrame,
+    calib: TelemetryCalibration,
+    *,
+    apply_under_penalty: bool = True,
+) -> pd.DataFrame:
+    """Apply calibration to ``p_adj``.
+
+    Adds small diagnostic columns:
+      - telemetry_k_shrink
+      - telemetry_mult
+      - telemetry_bucket_mult
+      - telemetry_under_penalty
+    """
+    out = scored.copy()
+
+    if "p_adj" not in out.columns:
+        return out
+
+    out["p_adj"] = pd.to_numeric(out["p_adj"], errors="coerce").fillna(0.50).clip(0.0, 1.0)
+    out["tier"] = out.get("tier", "STANDARD").astype(str).str.upper().str.strip()
+    out["stat"] = out.get("stat", "").astype(str).str.upper().str.strip()
+    out["direction"] = out.get("direction", "").astype(str).str.upper().str.strip()
+
+    k = float(calib.k_shrink)
+    if k != 1.0:
+        out["p_adj"] = (0.5 + k * (out["p_adj"] - 0.5)).clip(0.0, 1.0)
+
+    under_pen = float(calib.standard_under_penalty)
+    if apply_under_penalty:
+        m_under_std = (out["tier"] == "STANDARD") & (out["direction"] == "UNDER")
+        if m_under_std.any() and under_pen != 1.0:
+            out.loc[m_under_std, "p_adj"] = (out.loc[m_under_std, "p_adj"] * under_pen).clip(0.0, 1.0)
+
+    mult_map = calib.mult or {}
+    if mult_map:
+        keys = (out["stat"] + "|" + out["direction"]).astype(str)
+        mult = keys.map(mult_map).fillna(1.0).astype(float)
+        out["p_adj"] = (out["p_adj"] * mult).clip(0.0, 1.0)
+    else:
+        mult = pd.Series(1.0, index=out.index, dtype=float)
+
+    bucket_mult = pd.Series(1.0, index=out.index, dtype=float)
+    for lo_b, hi_b, mult_b in (calib.bucket_rules or []):
+        mask = out["p_adj"].gt(lo_b) & out["p_adj"].le(hi_b)
+        if mask.any() and mult_b != 1.0:
+            bucket_mult.loc[mask] = float(mult_b)
+    if bucket_mult.ne(1.0).any():
+        out["p_adj"] = (out["p_adj"] * bucket_mult).clip(0.0, 1.0)
+
+    lo = float(calib.cap_min)
+    hi = float(calib.cap_max)
+    if 0.0 <= lo < hi <= 1.0:
+        out["p_adj"] = out["p_adj"].clip(lo, hi)
+
+    out["telemetry_k_shrink"] = float(k)
+    out["telemetry_under_penalty"] = float(under_pen)
+    out["telemetry_mult"] = pd.to_numeric(mult, errors="coerce").fillna(1.0)
+    out["telemetry_bucket_mult"] = pd.to_numeric(bucket_mult, errors="coerce").fillna(1.0)
+    return out
+
+
+def apply_calibration_to_column(
+    scored: pd.DataFrame,
+    calib: TelemetryCalibration,
+    *,
+    source_col: str = "p_cal",
+    out_col: str = "p_cal",
+    apply_under_penalty: bool = True,
+) -> pd.DataFrame:
+    """Apply telemetry calibration to an arbitrary probability column.
+
+    Keeps the existing ``apply_calibration`` semantics, but lets callers overlay
+    telemetry tuning on top of a precomputed ``p_cal`` surface instead of only
+    mutating ``p_adj``.
+    """
+    out = scored.copy()
+    if source_col not in out.columns:
+        key = (
+            out.get("stat", "").astype(str).str.upper().str.strip()
+            + "|"
+            + out.get("direction", "").astype(str).str.upper().str.strip()
+        ) if len(out.index) else pd.Series(dtype=str)
+        out["telemetry_k_shrink"] = 1.0
+        out["telemetry_under_penalty"] = 1.0
+        out["telemetry_mult"] = 1.0
+        out["telemetry_bucket_mult"] = 1.0
+        out["telemetry_cal_key"] = key if len(key) else ""
+        out["telemetry_cal_applied"] = False
+        return out
+
+    work = out.copy()
+    work["p_adj"] = pd.to_numeric(out[source_col], errors="coerce").fillna(0.50).clip(0.0, 1.0)
+    work = apply_calibration(work, calib, apply_under_penalty=apply_under_penalty)
+
+    out[out_col] = pd.to_numeric(work["p_adj"], errors="coerce").fillna(pd.to_numeric(out[source_col], errors="coerce")).clip(0.0, 1.0)
+    out["telemetry_k_shrink"] = pd.to_numeric(work.get("telemetry_k_shrink", 1.0), errors="coerce").fillna(1.0)
+    out["telemetry_under_penalty"] = pd.to_numeric(work.get("telemetry_under_penalty", 1.0), errors="coerce").fillna(1.0)
+    out["telemetry_mult"] = pd.to_numeric(work.get("telemetry_mult", 1.0), errors="coerce").fillna(1.0)
+    out["telemetry_bucket_mult"] = pd.to_numeric(work.get("telemetry_bucket_mult", 1.0), errors="coerce").fillna(1.0)
+
+    stat = out.get("stat", "").astype(str).str.upper().str.strip()
+    direction = out.get("direction", "").astype(str).str.upper().str.strip()
+    tier = out.get("tier", "STANDARD").astype(str).str.upper().str.strip()
+    out["telemetry_cal_key"] = (stat + "|" + direction).astype(str)
+
+    k = float(calib.k_shrink)
+    under_pen = float(calib.standard_under_penalty)
+    shrink_applied = (k != 1.0)
+    if apply_under_penalty and (under_pen != 1.0):
+        under_mask = (tier == "STANDARD") & (direction == "UNDER")
+    else:
+        under_mask = pd.Series(False, index=out.index)
+    mult_applied = pd.to_numeric(out["telemetry_mult"], errors="coerce").fillna(1.0).ne(1.0)
+    bucket_applied = pd.to_numeric(out["telemetry_bucket_mult"], errors="coerce").fillna(1.0).ne(1.0)
+    if shrink_applied:
+        out["telemetry_cal_applied"] = True
+    else:
+        out["telemetry_cal_applied"] = under_mask | mult_applied | bucket_applied
+    return out

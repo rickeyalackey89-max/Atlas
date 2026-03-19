@@ -1,35 +1,16 @@
-# atlas.ps1 (repo root) - canonical CLI entrypoint
-
-[CmdletBinding(PositionalBinding = $false)]
-param(
-  [Parameter(Position = 0)]
-  [ValidateSet('publish','today-export','live-publish','help')]
-  [string]$Command = 'publish',
-
-  [string]$AtlasRoot,
-  [string]$DashboardRoot,
-
-  [ValidateSet('pwsh','powershell')]
-  [string]$Shell = 'pwsh',
-
-  # Publish flags
-  [switch]$SkipRefresh,
-  [switch]$SkipDashboard,
-  [switch]$OnlyExport,
-  [switch]$SkipCloudflarePayload,
-
-  # Model safety flags
-  [switch]$SkipModel,
-  [switch]$AllowModelRun,
-
-  [Parameter(ValueFromRemainingArguments = $true)]
-  [string[]]$Args
-)
+# atlas.ps1 (repo root) - LEGACY CLI wrapper
+# Canonical production authority is: .\run.ps1
+# This script only forwards to run.ps1 to prevent mixed execution paths.
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-Import-Module (Join-Path $PSScriptRoot 'src\Atlas') -Force
+$run = Join-Path $PSScriptRoot 'run.ps1'
+if (-not (Test-Path -LiteralPath $run)) {
+    throw "Missing canonical runner: $run"
+}
 
-# Forward *bound* parameters so switches like -OnlyExport stay switches
-Invoke-Atlas @PSBoundParameters
+Write-Host "atlas.ps1 -> forwarding to canonical runner: .\run.ps1"
+
+& pwsh -NoProfile -ExecutionPolicy Bypass -File $run
+exit $LASTEXITCODE

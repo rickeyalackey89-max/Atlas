@@ -1,0 +1,246 @@
+# Experimental telemetry schema v2 config.
+#
+# This is a template / experiment file. It keeps the current engine settings,
+# but moves calibration-specific knobs into an explicit policy block and points
+# the live calibration path at the new family-based payload.
+
+pricing_engine: pp_kernel
+pp_kernel:
+  p_min: 0.01
+  p_max: 0.99
+  coeffs:
+    DEFAULT:
+      STANDARD:
+        a: 0.3164
+        b: -0.2880
+      GOBLIN:
+        a: -0.374114
+        b: -0.020276
+      DEMON:
+        a: -0.493783
+        b: -1.436801
+        c: -0.502224
+    PTS:
+      STANDARD:
+        a: 0.3164
+        b: -0.2880
+      GOBLIN:
+        a: -0.374114
+        b: -0.020276
+      DEMON:
+        a: -0.493783
+        b: -1.436801
+        c: -0.502224
+    REB:
+      STANDARD:
+        a: 0.3164
+        b: -0.2880
+      GOBLIN:
+        a: -0.374114
+        b: -0.020276
+      DEMON:
+        a: -0.493783
+        b: -1.436801
+        c: -0.502224
+    AST:
+      STANDARD:
+        a: 0.3164
+        b: -0.2880
+      GOBLIN:
+        a: -0.374114
+        b: -0.020276
+      DEMON:
+        a: -0.493783
+        b: -1.436801
+        c: -0.502224
+    FG3M:
+      STANDARD:
+        a: 0.3164
+        b: -0.2880
+      GOBLIN:
+        a: -0.374114
+        b: -0.020276
+      DEMON:
+        a: -0.493783
+        b: -1.436801
+        c: -0.502224
+    PRA:
+      STANDARD:
+        a: 0.3164
+        b: -0.2880
+      GOBLIN:
+        a: -0.374114
+        b: -0.020276
+      DEMON:
+        a: -0.493783
+        b: -1.436801
+        c: -0.502224
+    PR:
+      STANDARD:
+        a: 0.3164
+        b: -0.2880
+      GOBLIN:
+        a: -0.374114
+        b: -0.020276
+      DEMON:
+        a: -0.493783
+        b: -1.436801
+        c: -0.502224
+    PA:
+      STANDARD:
+        a: 0.3164
+        b: -0.2880
+      GOBLIN:
+        a: -0.374114
+        b: -0.020276
+      DEMON:
+        a: -0.493783
+        b: -1.436801
+        c: -0.502224
+    RA:
+      STANDARD:
+        a: 0.3164
+        b: -0.2880
+      GOBLIN:
+        a: -0.374114
+        b: -0.020276
+      DEMON:
+        a: -0.493783
+        b: -1.436801
+        c: -0.502224
+role_ctx:
+  enabled: true
+  projection_clamp_lo: 0.9
+  projection_clamp_hi: 1.2
+  projection_softcap_k: 0.9
+  variance_k: 0.65
+  variance_clamp_lo: 1.0
+  variance_clamp_hi: 1.1
+  combo_shrink: 0.5
+  min_games: 3
+  close_sens_mult: 0.35
+
+# Allocator / share-matrix tuning lives separately from calibration.
+# These knobs are the ones that shape role_ctx redistribution behavior.
+allocator:
+  weight_mode: blend
+  blend_alpha: 0.095
+  usage_power: 3.0
+  season_weight: 0.70
+  recent_weight: 0.30
+  recent_games: 10
+  min_games_new_team: 3
+  ramp_extra_recent: 0.50
+  share_matrix:
+    recent_days: 120
+    min_rotation_games: 7
+    min_rotation_avg_min: 9.0
+    min_pattern_games: 3
+    keep_zero_weights: false
+  support:
+    min_games_for_pattern: 6
+    teamshare_support_budget_floor: 0.75
+    teamshare_rel_effective_threshold: 0.25
+  rotation_reweight:
+    enabled: true
+    last_n_games: 10
+    a0: 3.0
+    sa: 1.0
+    m0: 10.0
+    sm: 3.0
+    floor: 0.05
+  depth:
+    enabled: true
+    ref_engines: 3.0
+    slope: 0.04
+    cap_min: 0.75
+    cap_max: 0.95
+    top_k: 8
+    concentration:
+      enabled: true
+      top_n: 3
+      floor: 0.45
+      span: 0.25
+      max_penalty: 0.06
+  role_guardrails:
+    enabled: true
+    min_outs: 2
+    removed_threshold:
+      PTS: 30.0
+      AST: 7.0
+      REB: 10.0
+    cap_mult:
+      PTS: 1.35
+      AST: 1.25
+      REB: 1.20
+    softness: 0.15
+slip_rank:
+  ev_payout_power: 2
+  modes:
+  - ev
+  - winprob
+  winprob_key: hit_prob
+  ev_key: ev_mult
+slip_build:
+  target_pool_mult: 200
+  phase1_frac: 0.2
+  phase1_pool_frac: 0.5
+  beam_width: 200
+  max_slips_per_player: 4
+  penalty:
+    team_w: 0.01
+    family_w: 0.006
+    frag_w: 0.01
+    team_power: 2.0
+    family_power: 2.0
+    frag_power: 1.0
+probability:
+  sims: 5000
+  offline_sims: 20000
+  seed: 7
+  lookback: 50
+  lookback_min_games: 8
+  lookback_cap: null
+  blowout:
+    threshold: 12.0
+    spread_sd: 8.0
+    dynamic: false
+    close_sens_mult: 0.35
+  minutes:
+    star_minute_drop: 6.0
+    role_minute_drop: 4.0
+    sensitivity_fn: linear
+  heater:
+    enabled: true
+    last_n: 10
+    min_hits: 8
+    bump_mult: 1.05
+optimizer:
+  top_n_slips: 10
+  seed: 7
+telemetry:
+  schema_version: 2
+  min_count: 100
+  pooling_tau: 200.0
+  max_deviation: 0.10
+  cap_min: 0.01
+  cap_max: 0.99
+  apply_only_p_cal_src_prefixes:
+    - p_adj
+  promote_pass_share: 0.9
+  prior_strength: 10
+  isotonic_kfold: 5
+  stat_direction_min_count: 250
+  stat_direction_max_deviation: 0.04
+  rolectx_min_count: 200
+  rolectx_max_deviation: 0.04
+  active_calibration: telemetry_calibration_v2
+  apply_active_calibration: true
+  active_calibration_path: data/model/telemetry_calibration.v2.json
+  calibration_policy:
+    allow_family_split: true
+    family_order:
+      - role_off
+      - role_on
+    strict_source_gating: true
+    note: recent-third or other time-window corrections remain audit-only until runtime inputs expose a stable equivalent.

@@ -1,0 +1,2704 @@
+{
+  "run_dir": "data\\output\\runs\\20260303_170902",
+  "legs_rows": 5866,
+  "p_cal": {
+    "min": 0.0182481751824817,
+    "p01": 0.03,
+    "p05": 0.05497588918591573,
+    "p25": 0.17535843661035463,
+    "med": 0.3119640287425603,
+    "p75": 0.46234134614812405,
+    "p95": 0.6544244008989422,
+    "max": 0.9047595240475952
+  },
+  "p_adj": {
+    "min": 0.03,
+    "p01": 0.03,
+    "p05": 0.0543014026834488,
+    "p25": 0.17282462999074089,
+    "med": 0.3073734193780635,
+    "p75": 0.4547782787612328,
+    "p95": 0.6404757046564653,
+    "max": 0.8471149057285039
+  },
+  "p_for_cal": {
+    "min": 0.0182481751824817,
+    "p01": 0.03,
+    "p05": 0.05497588918591573,
+    "p25": 0.17535843661035463,
+    "med": 0.3119640287425603,
+    "p75": 0.46234134614812405,
+    "p95": 0.6544244008989422,
+    "max": 0.9047595240475952
+  },
+  "games_used": {
+    "min": 0,
+    "p10": 39,
+    "med": 50,
+    "p90": 50,
+    "max": 50
+  },
+  "prob_audit": {
+    "overall": {
+      "p_role": {
+        "min": 4.999500049995001e-05,
+        "p01": 0.00907909209079087,
+        "p05": 0.07536746325367458,
+        "p25": 0.2398260173982601,
+        "med": 0.4249075092490751,
+        "p75": 0.6048895110488951,
+        "p95": 0.7969203079692031,
+        "max": 0.9999500049995,
+        "floor_share": 0.0,
+        "cap_share": 0.0
+      },
+      "p_adj": {
+        "min": 0.03,
+        "p01": 0.03,
+        "p05": 0.0543014026834488,
+        "p25": 0.17282462999074089,
+        "med": 0.3073734193780635,
+        "p75": 0.4547782787612328,
+        "p95": 0.6404757046564653,
+        "max": 0.8471149057285039,
+        "floor_share": 0.0,
+        "cap_share": 0.0
+      },
+      "p_cal": {
+        "min": 0.0182481751824817,
+        "p01": 0.03,
+        "p05": 0.05497588918591573,
+        "p25": 0.17535843661035463,
+        "med": 0.3119640287425603,
+        "p75": 0.46234134614812405,
+        "p95": 0.6544244008989422,
+        "max": 0.9047595240475952,
+        "floor_share": 0.0,
+        "cap_share": 0.0
+      },
+      "games_used_lt5_share": 0.016706443914081145,
+      "over_share": 0.8774292533242414,
+      "under_share": 0.12257074667575861
+    },
+    "by_tier": {
+      "DEMON": {
+        "rows": 2659,
+        "p_role": {
+          "min": 4.999500049995001e-05,
+          "p01": 0.004787521247875164,
+          "p05": 0.04613538646135381,
+          "p25": 0.14208579142085787,
+          "med": 0.2422257774222578,
+          "p75": 0.3494150584941506,
+          "p95": 0.5207179282071792,
+          "max": 0.7922707729227078,
+          "floor_share": 0.0,
+          "cap_share": 0.0
+        },
+        "p_adj": {
+          "min": 0.03,
+          "p01": 0.03,
+          "p05": 0.03228603251575348,
+          "p25": 0.1027876157395331,
+          "med": 0.177391837902116,
+          "p75": 0.2731376871453207,
+          "p95": 0.41819333806449577,
+          "max": 0.6339903750303344,
+          "floor_share": 0.0,
+          "cap_share": 0.0
+        },
+        "p_cal": {
+          "min": 0.0182481751824817,
+          "p01": 0.03,
+          "p05": 0.03241985191186967,
+          "p25": 0.1043348362511016,
+          "med": 0.1804636033287663,
+          "p75": 0.27736441749218477,
+          "p95": 0.4251191500430844,
+          "max": 0.6339903750303344,
+          "floor_share": 0.0,
+          "cap_share": 0.0
+        },
+        "games_used_lt5_share": 0.01429108687476495,
+        "over_share": 1.0,
+        "under_share": 0.0,
+        "delta_p_adj_minus_p_role": {
+          "min": -0.29837488003086554,
+          "p01": -0.23140668621070515,
+          "p05": -0.16030180082799236,
+          "p25": -0.0815139827772336,
+          "med": -0.04616970242417451,
+          "p75": -0.024869113175818705,
+          "p95": -0.007621788543626801,
+          "max": 0.029950004999500048
+        }
+      },
+      "GOBLIN": {
+        "rows": 1769,
+        "p_role": {
+          "min": 4.999500049995001e-05,
+          "p01": 0.04716928307169277,
+          "p05": 0.2742625737426257,
+          "p25": 0.5388961103889611,
+          "med": 0.6558844115588441,
+          "p75": 0.7460753924607539,
+          "p95": 0.8519048095190479,
+          "max": 0.9991500849915008,
+          "floor_share": 0.0,
+          "cap_share": 0.0
+        },
+        "p_adj": {
+          "min": 0.03,
+          "p01": 0.0301971653560417,
+          "p05": 0.18749622881788894,
+          "p25": 0.3643896941424433,
+          "med": 0.4901201164375582,
+          "p75": 0.593552665745121,
+          "p95": 0.7091398079638439,
+          "max": 0.8471149057285039,
+          "floor_share": 0.0,
+          "cap_share": 0.0
+        },
+        "p_cal": {
+          "min": 0.03,
+          "p01": 0.0301971653560417,
+          "p05": 0.18814250115225706,
+          "p25": 0.3681570706384763,
+          "med": 0.4985266625869914,
+          "p75": 0.6091890810918908,
+          "p95": 0.7286312527284867,
+          "max": 0.9047595240475952,
+          "floor_share": 0.0,
+          "cap_share": 0.0
+        },
+        "games_used_lt5_share": 0.01921989824759751,
+        "over_share": 1.0,
+        "under_share": 0.0,
+        "delta_p_adj_minus_p_role": {
+          "min": -0.4742104336654177,
+          "p01": -0.40489212647009515,
+          "p05": -0.3313806996623232,
+          "p25": -0.19811105629091208,
+          "med": -0.12821495186829746,
+          "p75": -0.08555391905859272,
+          "p95": -0.046791458892931015,
+          "max": 0.029950004999500048
+        }
+      },
+      "STANDARD": {
+        "rows": 1438,
+        "p_role": {
+          "min": 4.999500049995001e-05,
+          "p01": 0.10892010798920101,
+          "p05": 0.22989701029897006,
+          "p25": 0.413008699130087,
+          "med": 0.5,
+          "p75": 0.586991300869913,
+          "p95": 0.7701029897010295,
+          "max": 0.9999500049995,
+          "floor_share": 0.0,
+          "cap_share": 0.0
+        },
+        "p_adj": {
+          "min": 0.03,
+          "p01": 0.06834803569058363,
+          "p05": 0.1547520903701681,
+          "p25": 0.2726321611403806,
+          "med": 0.37214033972789445,
+          "p75": 0.45851283097845996,
+          "p95": 0.582950093837681,
+          "max": 0.7515108171204261,
+          "floor_share": 0.0,
+          "cap_share": 0.0
+        },
+        "p_cal": {
+          "min": 0.03,
+          "p01": 0.06834803569058363,
+          "p05": 0.1547520903701681,
+          "p25": 0.27487281888137016,
+          "med": 0.37619166605115645,
+          "p75": 0.46409711416438715,
+          "p95": 0.5959609446299438,
+          "max": 0.8971602839716029,
+          "floor_share": 0.0,
+          "cap_share": 0.0
+        },
+        "games_used_lt5_share": 0.01808066759388039,
+        "over_share": 0.5,
+        "under_share": 0.5,
+        "delta_p_adj_minus_p_role": {
+          "min": -0.5631588939619343,
+          "p01": -0.40814139082503775,
+          "p05": -0.29726055884591324,
+          "p25": -0.1770320567633174,
+          "med": -0.11636429414180016,
+          "p75": -0.06691373297692364,
+          "p95": -0.035860077501317915,
+          "max": 0.029950004999500048
+        }
+      }
+    }
+  },
+  "role_ctx_audit": {
+    "role_ctx_mult": {
+      "min": 1.0,
+      "p01": 1.0,
+      "p05": 1.0,
+      "p25": 1.0,
+      "med": 1.0,
+      "p75": 1.0,
+      "p95": 1.1055206479919366,
+      "max": 1.186150850314832,
+      "std": 0.036103717622165146,
+      "iqr": 0.0
+    },
+    "extremes_top10": [
+      {
+        "prop_key": "Brandon Miller|PRA|OVER|34.5|DEMON",
+        "player": "Brandon Miller",
+        "stat": "PRA",
+        "tier": "DEMON",
+        "direction": "OVER",
+        "role_ctx_mult": 1.186150850314832,
+        "role_ctx_outs_used": 0,
+        "p_adj": 0.2413974278470236,
+        "p_role": 0.4300069993000699,
+        "p_cal": 0.2413974278470236
+      },
+      {
+        "prop_key": "Brandon Miller|PRA|OVER|24.5|GOBLIN",
+        "player": "Brandon Miller",
+        "stat": "PRA",
+        "tier": "GOBLIN",
+        "direction": "OVER",
+        "role_ctx_mult": 1.186150850314832,
+        "role_ctx_outs_used": 0,
+        "p_adj": 0.4429127786134032,
+        "p_role": 0.7889711028897111,
+        "p_cal": 0.4429127786134032
+      },
+      {
+        "prop_key": "Brandon Miller|PRA|OVER|28.5|GOBLIN",
+        "player": "Brandon Miller",
+        "stat": "PRA",
+        "tier": "GOBLIN",
+        "direction": "OVER",
+        "role_ctx_mult": 1.186150850314832,
+        "role_ctx_outs_used": 0,
+        "p_adj": 0.3667410986719054,
+        "p_role": 0.6532846715328468,
+        "p_cal": 0.3667410986719054
+      },
+      {
+        "prop_key": "Brandon Miller|PRA|OVER|29.5|GOBLIN",
+        "player": "Brandon Miller",
+        "stat": "PRA",
+        "tier": "GOBLIN",
+        "direction": "OVER",
+        "role_ctx_mult": 1.186150850314832,
+        "role_ctx_outs_used": 0,
+        "p_adj": 0.3456914450403198,
+        "p_role": 0.6157884211578842,
+        "p_cal": 0.3456914450403198
+      },
+      {
+        "prop_key": "Brandon Miller|PRA|OVER|31.5|STANDARD",
+        "player": "Brandon Miller",
+        "stat": "PRA",
+        "tier": "STANDARD",
+        "direction": "OVER",
+        "role_ctx_mult": 1.186150850314832,
+        "role_ctx_outs_used": 0,
+        "p_adj": 0.3024133571737798,
+        "p_role": 0.5386961303869613,
+        "p_cal": 0.3024133571737798
+      },
+      {
+        "prop_key": "Brandon Miller|PRA|OVER|36.5|DEMON",
+        "player": "Brandon Miller",
+        "stat": "PRA",
+        "tier": "DEMON",
+        "direction": "OVER",
+        "role_ctx_mult": 1.186150850314832,
+        "role_ctx_outs_used": 0,
+        "p_adj": 0.2024976679358535,
+        "p_role": 0.3607139286071393,
+        "p_cal": 0.2024976679358535
+      },
+      {
+        "prop_key": "Brandon Miller|PRA|UNDER|31.5|STANDARD",
+        "player": "Brandon Miller",
+        "stat": "PRA",
+        "tier": "STANDARD",
+        "direction": "UNDER",
+        "role_ctx_mult": 1.186150850314832,
+        "role_ctx_outs_used": 0,
+        "p_adj": 0.2589668720781871,
+        "p_role": 0.4613038696130387,
+        "p_cal": 0.2589668720781871
+      },
+      {
+        "prop_key": "Brandon Miller|PR|OVER|23.5|GOBLIN",
+        "player": "Brandon Miller",
+        "stat": "PR",
+        "tier": "GOBLIN",
+        "direction": "OVER",
+        "role_ctx_mult": 1.186150850314832,
+        "role_ctx_outs_used": 0,
+        "p_adj": 0.3931233312234927,
+        "p_role": 0.7002799720027997,
+        "p_cal": 0.3931233312234927
+      },
+      {
+        "prop_key": "Brandon Miller|PR|OVER|24.5|GOBLIN",
+        "player": "Brandon Miller",
+        "stat": "PR",
+        "tier": "GOBLIN",
+        "direction": "OVER",
+        "role_ctx_mult": 1.186150850314832,
+        "role_ctx_outs_used": 0,
+        "p_adj": 0.3716246183144333,
+        "p_role": 0.661983801619838,
+        "p_cal": 0.3716246183144333
+      },
+      {
+        "prop_key": "Brandon Miller|PR|OVER|26.5|GOBLIN",
+        "player": "Brandon Miller",
+        "stat": "PR",
+        "tier": "GOBLIN",
+        "direction": "OVER",
+        "role_ctx_mult": 1.186150850314832,
+        "role_ctx_outs_used": 0,
+        "p_adj": 0.3267186905670506,
+        "p_role": 0.581991800819918,
+        "p_cal": 0.3267186905670506
+      }
+    ],
+    "group_medians": {
+      "outs_used_gt0": {
+        "n": 419,
+        "role_ctx_mult_median": 1.0490701118865071,
+        "p_role_median": 0.4048095190480952,
+        "p_adj_median": 0.3160308265199268,
+        "delta_p_adj_minus_p_role_median": -0.07295710315362
+      },
+      "outs_used_eq0": {
+        "n": 5447,
+        "role_ctx_mult_median": 1.0,
+        "p_role_median": 0.4269073092690731,
+        "p_adj_median": 0.3067465548262957,
+        "delta_p_adj_minus_p_role_median": -0.08314198019340974
+      }
+    },
+    "corr_role_mult_vs_delta_p": -0.18667636706394258,
+    "outs_ctx_p_adj_ge_0.85_share": 0.0,
+    "outs_ctx_p_adj_ge_0.90_share": 0.0,
+    "outs_ctx_p_adj_ge_0.95_share": 0.0,
+    "outs_ctx_top10_by_p_adj": [
+      {
+        "prop_key": "Evan Mobley|PTS|OVER|11.5|GOBLIN",
+        "player": "Evan Mobley",
+        "stat": "PTS",
+        "tier": "GOBLIN",
+        "direction": "OVER",
+        "role_ctx_outs_used": 1,
+        "role_ctx_mult": 1.0764247409539942,
+        "p_role": 0.9047595240475952,
+        "p_adj": 0.835897064100508,
+        "p_cal": 0.9047595240475952
+      },
+      {
+        "prop_key": "Evan Mobley|REB|OVER|5.5|GOBLIN",
+        "player": "Evan Mobley",
+        "stat": "REB",
+        "tier": "GOBLIN",
+        "direction": "OVER",
+        "role_ctx_outs_used": 1,
+        "role_ctx_mult": 1.0314386872102377,
+        "p_role": 0.843065693430657,
+        "p_adj": 0.7788988336147907,
+        "p_cal": 0.843065693430657
+      },
+      {
+        "prop_key": "Evan Mobley|PTS|OVER|13.5|GOBLIN",
+        "player": "Evan Mobley",
+        "stat": "PTS",
+        "tier": "GOBLIN",
+        "direction": "OVER",
+        "role_ctx_outs_used": 1,
+        "role_ctx_mult": 1.0764247409539942,
+        "p_role": 0.8196680331966804,
+        "p_adj": 0.7572820006591054,
+        "p_cal": 0.8196680331966804
+      },
+      {
+        "prop_key": "Sam Merrill|FG3M|OVER|1.5|GOBLIN",
+        "player": "Sam Merrill",
+        "stat": "FG3M",
+        "tier": "GOBLIN",
+        "direction": "OVER",
+        "role_ctx_outs_used": 1,
+        "role_ctx_mult": 1.0243724875871063,
+        "p_role": 0.8117688231176883,
+        "p_adj": 0.7499840100458612,
+        "p_cal": 0.8117688231176883
+      },
+      {
+        "prop_key": "Jarrett Allen|REB|OVER|6.5|GOBLIN",
+        "player": "Jarrett Allen",
+        "stat": "REB",
+        "tier": "GOBLIN",
+        "direction": "OVER",
+        "role_ctx_outs_used": 1,
+        "role_ctx_mult": 1.0868238752498065,
+        "p_role": 0.8015698430156984,
+        "p_adj": 0.7405612879882548,
+        "p_cal": 0.8015698430156984
+      },
+      {
+        "prop_key": "DeMar DeRozan|AST|OVER|1.5|GOBLIN",
+        "player": "DeMar DeRozan",
+        "stat": "AST",
+        "tier": "GOBLIN",
+        "direction": "OVER",
+        "role_ctx_outs_used": 1,
+        "role_ctx_mult": 1.0382675298921482,
+        "p_role": 0.8879612038796121,
+        "p_adj": 0.7354445767191519,
+        "p_cal": 0.8879612038796121
+      },
+      {
+        "prop_key": "Nique Clifford|PTS|UNDER|13.5|STANDARD",
+        "player": "Nique Clifford",
+        "stat": "PTS",
+        "tier": "STANDARD",
+        "direction": "UNDER",
+        "role_ctx_outs_used": 2,
+        "role_ctx_mult": 1.0490701118865071,
+        "p_role": 0.8793620637936206,
+        "p_adj": 0.7283224289124014,
+        "p_cal": 0.8793620637936206
+      },
+      {
+        "prop_key": "DeMar DeRozan|PTS|OVER|9.5|GOBLIN",
+        "player": "DeMar DeRozan",
+        "stat": "PTS",
+        "tier": "GOBLIN",
+        "direction": "OVER",
+        "role_ctx_outs_used": 1,
+        "role_ctx_mult": 1.0183965864697102,
+        "p_role": 0.8665633436656335,
+        "p_adj": 0.7177220228744473,
+        "p_cal": 0.8665633436656335
+      },
+      {
+        "prop_key": "Russell Westbrook|PTS|OVER|9.5|GOBLIN",
+        "player": "Russell Westbrook",
+        "stat": "PTS",
+        "tier": "GOBLIN",
+        "direction": "OVER",
+        "role_ctx_outs_used": 2,
+        "role_ctx_mult": 1.0332791664459189,
+        "p_role": 0.855964403559644,
+        "p_adj": 0.7089435616242665,
+        "p_cal": 0.855964403559644
+      },
+      {
+        "prop_key": "Evan Mobley|PTS|OVER|14.5|GOBLIN",
+        "player": "Evan Mobley",
+        "stat": "PTS",
+        "tier": "GOBLIN",
+        "direction": "OVER",
+        "role_ctx_outs_used": 1,
+        "role_ctx_mult": 1.0764247409539942,
+        "p_role": 0.7621737826217378,
+        "p_adj": 0.7041637145500496,
+        "p_cal": 0.7621737826217378
+      }
+    ],
+    "outs_ctx_top10_by_delta_p_adj_minus_p_role": [
+      {
+        "prop_key": "Caleb Martin|FG3M|OVER|1.5|DEMON",
+        "player": "Caleb Martin",
+        "stat": "FG3M",
+        "tier": "DEMON",
+        "direction": "OVER",
+        "role_ctx_outs_used": 1,
+        "role_ctx_mult": 1.0421380773713318,
+        "p_role": 0.0182481751824817,
+        "p_adj": 0.03,
+        "p_cal": 0.0182481751824817
+      },
+      {
+        "prop_key": "Caleb Martin|PTS|OVER|11.5|DEMON",
+        "player": "Caleb Martin",
+        "stat": "PTS",
+        "tier": "DEMON",
+        "direction": "OVER",
+        "role_ctx_outs_used": 1,
+        "role_ctx_mult": 1.0421380773713318,
+        "p_role": 0.0213478652134786,
+        "p_adj": 0.03,
+        "p_cal": 0.0213478652134786
+      },
+      {
+        "prop_key": "Nique Clifford|PTS|OVER|19.5|DEMON",
+        "player": "Nique Clifford",
+        "stat": "PTS",
+        "tier": "DEMON",
+        "direction": "OVER",
+        "role_ctx_outs_used": 2,
+        "role_ctx_mult": 1.0490701118865071,
+        "p_role": 0.023947605239476,
+        "p_adj": 0.03,
+        "p_cal": 0.023947605239476
+      },
+      {
+        "prop_key": "Nique Clifford|AST|OVER|5.5|DEMON",
+        "player": "Nique Clifford",
+        "stat": "AST",
+        "tier": "DEMON",
+        "direction": "OVER",
+        "role_ctx_outs_used": 2,
+        "role_ctx_mult": 1.111558119463106,
+        "p_role": 0.026947305269473,
+        "p_adj": 0.03,
+        "p_cal": 0.026947305269473
+      },
+      {
+        "prop_key": "Brandon Williams|FG3M|OVER|2.5|DEMON",
+        "player": "Brandon Williams",
+        "stat": "FG3M",
+        "tier": "DEMON",
+        "direction": "OVER",
+        "role_ctx_outs_used": 1,
+        "role_ctx_mult": 1.0476599549677694,
+        "p_role": 0.0277472252774722,
+        "p_adj": 0.03,
+        "p_cal": 0.0277472252774722
+      },
+      {
+        "prop_key": "Caleb Martin|PTS|OVER|10.5|DEMON",
+        "player": "Caleb Martin",
+        "stat": "PTS",
+        "tier": "DEMON",
+        "direction": "OVER",
+        "role_ctx_outs_used": 1,
+        "role_ctx_mult": 1.0421380773713318,
+        "p_role": 0.0331466853314668,
+        "p_adj": 0.03,
+        "p_cal": 0.0331466853314668
+      },
+      {
+        "prop_key": "Nique Clifford|PTS|OVER|18.5|DEMON",
+        "player": "Nique Clifford",
+        "stat": "PTS",
+        "tier": "DEMON",
+        "direction": "OVER",
+        "role_ctx_outs_used": 2,
+        "role_ctx_mult": 1.0490701118865071,
+        "p_role": 0.0333466653334666,
+        "p_adj": 0.03,
+        "p_cal": 0.0333466653334666
+      },
+      {
+        "prop_key": "Jaylon Tyson|AST|OVER|4.5|DEMON",
+        "player": "Jaylon Tyson",
+        "stat": "AST",
+        "tier": "DEMON",
+        "direction": "OVER",
+        "role_ctx_outs_used": 1,
+        "role_ctx_mult": 1.03971854636615,
+        "p_role": 0.0784421557844215,
+        "p_adj": 0.0724718181783553,
+        "p_cal": 0.0784421557844215
+      },
+      {
+        "prop_key": "Jarrett Allen|REB|OVER|13.5|DEMON",
+        "player": "Jarrett Allen",
+        "stat": "REB",
+        "tier": "DEMON",
+        "direction": "OVER",
+        "role_ctx_outs_used": 1,
+        "role_ctx_mult": 1.0868238752498065,
+        "p_role": 0.1085391460853914,
+        "p_adj": 0.1002780862110959,
+        "p_cal": 0.1085391460853914
+      },
+      {
+        "prop_key": "Sam Merrill|REB|OVER|4.5|DEMON",
+        "player": "Sam Merrill",
+        "stat": "REB",
+        "tier": "DEMON",
+        "direction": "OVER",
+        "role_ctx_outs_used": 1,
+        "role_ctx_mult": 1.0108757948917726,
+        "p_role": 0.1114388561143885,
+        "p_adj": 0.1029570954235526,
+        "p_cal": 0.1114388561143885
+      }
+    ]
+  },
+  "slip_files": [
+    "recommended_3leg.csv",
+    "recommended_3leg_winprob.csv",
+    "recommended_4leg.csv",
+    "recommended_4leg_winprob.csv",
+    "recommended_5leg.csv",
+    "recommended_5leg_winprob.csv",
+    "System\\recommended_3leg.csv",
+    "System\\recommended_3leg_winprob.csv",
+    "System\\recommended_4leg.csv",
+    "System\\recommended_4leg_winprob.csv",
+    "System\\recommended_5leg.csv",
+    "System\\recommended_5leg_winprob.csv",
+    "Windfall\\recommended_3leg.csv",
+    "Windfall\\recommended_3leg_winprob.csv",
+    "Windfall\\recommended_4leg.csv",
+    "Windfall\\recommended_4leg_winprob.csv",
+    "Windfall\\recommended_5leg.csv",
+    "Windfall\\recommended_5leg_winprob.csv"
+  ],
+  "slips": [
+    {
+      "file": "recommended_3leg.csv",
+      "rows": 25,
+      "hit_prob": {
+        "min": 0.1867109953719968,
+        "p01": 0.19877667210869343,
+        "p05": 0.23798272735399525,
+        "p25": 0.3086160292468114,
+        "med": 0.3683966229674676,
+        "p75": 0.4321258929984563,
+        "p95": 0.48633359199551024,
+        "max": 0.5094301979688024
+      },
+      "ev": {
+        "min": 1.7506553712610624,
+        "p01": 1.773120277473708,
+        "p05": 1.849336100404765,
+        "p25": 2.205145250102136,
+        "med": 2.441656754333011,
+        "p75": 2.6771928777199343,
+        "p95": 2.8176464311868648,
+        "max": 2.8782509724441208
+      },
+      "payout_mult": {
+        "min": 6.0,
+        "p01": 6.0,
+        "p05": 6.0,
+        "p25": 6.0,
+        "med": 6.0,
+        "p75": 6.0,
+        "p95": 6.0,
+        "max": 6.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "payout_mult_eff": {
+        "min": 5.41839912662582,
+        "p01": 5.480753012955585,
+        "p05": 5.700438905809943,
+        "p25": 6.148000619084833,
+        "med": 6.707294114039478,
+        "p75": 7.194906371621164,
+        "p95": 7.8343454219462085,
+        "max": 9.376284282417938,
+        "std": 0.8942619147633509,
+        "iqr": 1.0469057525363308
+      },
+      "kernel_mult": {
+        "min": 0.9030665211043034,
+        "p01": 0.9134588354925975,
+        "p05": 0.9500731509683238,
+        "p25": 1.024666769847472,
+        "med": 1.117882352339913,
+        "p75": 1.1991510619368606,
+        "p95": 1.305724236991035,
+        "max": 1.5627140470696563,
+        "std": 0.14904365246055848,
+        "iqr": 0.17448429208938854
+      },
+      "tier_mix_legs": {
+        "STANDARD": 50,
+        "GOBLIN": 25,
+        "DEMON": 0,
+        "OTHER": 0
+      },
+      "player_exposure": {
+        "players": 30,
+        "max": 5,
+        "top10": [
+          {
+            "player": "Brandon Williams",
+            "count": 5
+          },
+          {
+            "player": "Daniel Gafford",
+            "count": 5
+          },
+          {
+            "player": "Dwight Powell",
+            "count": 5
+          },
+          {
+            "player": "P.J. Washington",
+            "count": 5
+          },
+          {
+            "player": "Russell Westbrook",
+            "count": 5
+          },
+          {
+            "player": "Evan Mobley",
+            "count": 4
+          },
+          {
+            "player": "Khris Middleton",
+            "count": 4
+          },
+          {
+            "player": "LaMelo Ball",
+            "count": 4
+          },
+          {
+            "player": "Caleb Martin",
+            "count": 3
+          },
+          {
+            "player": "Daeqwon Plowden",
+            "count": 3
+          }
+        ]
+      }
+    },
+    {
+      "file": "recommended_3leg_winprob.csv",
+      "rows": 25,
+      "hit_prob": {
+        "min": 0.4008337187078018,
+        "p01": 0.40136962311141144,
+        "p05": 0.40386378575867926,
+        "p25": 0.4206199652501018,
+        "med": 0.46995113153788,
+        "p75": 0.4843461540916905,
+        "p95": 0.4980188490498096,
+        "max": 0.5094301979688024
+      },
+      "ev": {
+        "min": 2.405002312246811,
+        "p01": 2.408217738668469,
+        "p05": 2.423182714552076,
+        "p25": 2.5237197915006107,
+        "med": 2.81970678922728,
+        "p75": 2.906076924550143,
+        "p95": 2.9881130942988574,
+        "max": 3.056581187812814
+      },
+      "payout_mult": {
+        "min": 6.0,
+        "p01": 6.0,
+        "p05": 6.0,
+        "p25": 6.0,
+        "med": 6.0,
+        "p75": 6.0,
+        "p95": 6.0,
+        "max": 6.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "payout_mult_eff": {
+        "min": 6.0,
+        "p01": 6.0,
+        "p05": 6.0,
+        "p25": 6.0,
+        "med": 6.0,
+        "p75": 6.0,
+        "p95": 6.0,
+        "max": 6.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "kernel_mult": {
+        "min": 1.0,
+        "p01": 1.0,
+        "p05": 1.0,
+        "p25": 1.0,
+        "med": 1.0,
+        "p75": 1.0,
+        "p95": 1.0,
+        "max": 1.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "tier_mix_legs": {
+        "STANDARD": 50,
+        "GOBLIN": 25,
+        "DEMON": 0,
+        "OTHER": 0
+      },
+      "player_exposure": {
+        "players": 31,
+        "max": 5,
+        "top10": [
+          {
+            "player": "Caleb Martin",
+            "count": 5
+          },
+          {
+            "player": "Cason Wallace",
+            "count": 5
+          },
+          {
+            "player": "Dwight Powell",
+            "count": 5
+          },
+          {
+            "player": "Khris Middleton",
+            "count": 5
+          },
+          {
+            "player": "Nique Clifford",
+            "count": 5
+          },
+          {
+            "player": "P.J. Washington",
+            "count": 5
+          },
+          {
+            "player": "Precious Achiuwa",
+            "count": 5
+          },
+          {
+            "player": "Evan Mobley",
+            "count": 4
+          },
+          {
+            "player": "Guerschon Yabusele",
+            "count": 4
+          },
+          {
+            "player": "Russell Westbrook",
+            "count": 4
+          }
+        ]
+      }
+    },
+    {
+      "file": "recommended_4leg.csv",
+      "rows": 25,
+      "hit_prob": {
+        "min": 0.165910355652578,
+        "p01": 0.17036404247734288,
+        "p05": 0.18973485152649575,
+        "p25": 0.2492470070022351,
+        "med": 0.2634953704625894,
+        "p75": 0.2987909156041012,
+        "p95": 0.379497885838962,
+        "max": 0.4008468395958153
+      },
+      "ev": {
+        "min": 1.5364648277250474,
+        "p01": 1.5480985587798692,
+        "p05": 1.627602490586757,
+        "p25": 1.9210644720953431,
+        "med": 2.018851837127284,
+        "p75": 2.1479889226691657,
+        "p95": 2.480627979491165,
+        "max": 2.754758851200457
+      },
+      "payout_mult": {
+        "min": 10.0,
+        "p01": 10.0,
+        "p05": 10.0,
+        "p25": 10.0,
+        "med": 10.0,
+        "p75": 10.0,
+        "p95": 10.0,
+        "max": 10.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "payout_mult_eff": {
+        "min": 6.287787632684947,
+        "p01": 6.310502648680858,
+        "p05": 6.396478385321308,
+        "p25": 7.165763160758578,
+        "med": 7.570314654928261,
+        "p75": 7.8868892662601775,
+        "p95": 8.71781139213598,
+        "max": 9.260813296925583,
+        "std": 0.7263419862791987,
+        "iqr": 0.7211261055015994
+      },
+      "kernel_mult": {
+        "min": 0.6287787632684947,
+        "p01": 0.6310502648680858,
+        "p05": 0.6396478385321308,
+        "p25": 0.7165763160758578,
+        "med": 0.7570314654928261,
+        "p75": 0.7886889266260178,
+        "p95": 0.8717811392135979,
+        "max": 0.9260813296925584,
+        "std": 0.07263419862791987,
+        "iqr": 0.07211261055015994
+      },
+      "tier_mix_legs": {
+        "STANDARD": 50,
+        "GOBLIN": 50,
+        "DEMON": 0,
+        "OTHER": 0
+      },
+      "player_exposure": {
+        "players": 35,
+        "max": 5,
+        "top10": [
+          {
+            "player": "Daniel Gafford",
+            "count": 5
+          },
+          {
+            "player": "Dwight Powell",
+            "count": 5
+          },
+          {
+            "player": "Kon Knueppel",
+            "count": 5
+          },
+          {
+            "player": "LaMelo Ball",
+            "count": 5
+          },
+          {
+            "player": "Malik Monk",
+            "count": 5
+          },
+          {
+            "player": "Maxime Raynaud",
+            "count": 5
+          },
+          {
+            "player": "Miles Bridges",
+            "count": 5
+          },
+          {
+            "player": "P.J. Washington",
+            "count": 5
+          },
+          {
+            "player": "Sandro Mamukelashvili",
+            "count": 5
+          },
+          {
+            "player": "Brandon Williams",
+            "count": 4
+          }
+        ]
+      }
+    },
+    {
+      "file": "recommended_4leg_winprob.csv",
+      "rows": 25,
+      "hit_prob": {
+        "min": 0.2981084073383385,
+        "p01": 0.29814542539390426,
+        "p05": 0.29890255802052224,
+        "p25": 0.3333466515510789,
+        "med": 0.3544406482083223,
+        "p75": 0.3633687435492657,
+        "p95": 0.3975641560227431,
+        "max": 0.4157133097488945
+      },
+      "ev": {
+        "min": 2.9810840733833857,
+        "p01": 2.9814542539390434,
+        "p05": 2.989025580205223,
+        "p25": 3.3334665155107897,
+        "med": 3.5444064820832235,
+        "p75": 3.6336874354926567,
+        "p95": 3.975641560227432,
+        "max": 4.157133097488945
+      },
+      "payout_mult": {
+        "min": 10.0,
+        "p01": 10.0,
+        "p05": 10.0,
+        "p25": 10.0,
+        "med": 10.0,
+        "p75": 10.0,
+        "p95": 10.0,
+        "max": 10.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "payout_mult_eff": {
+        "min": 10.0,
+        "p01": 10.0,
+        "p05": 10.0,
+        "p25": 10.0,
+        "med": 10.0,
+        "p75": 10.0,
+        "p95": 10.0,
+        "max": 10.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "kernel_mult": {
+        "min": 1.0,
+        "p01": 1.0,
+        "p05": 1.0,
+        "p25": 1.0,
+        "med": 1.0,
+        "p75": 1.0,
+        "p95": 1.0,
+        "max": 1.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "tier_mix_legs": {
+        "STANDARD": 50,
+        "GOBLIN": 50,
+        "DEMON": 0,
+        "OTHER": 0
+      },
+      "player_exposure": {
+        "players": 40,
+        "max": 5,
+        "top10": [
+          {
+            "player": "Caleb Martin",
+            "count": 5
+          },
+          {
+            "player": "Cason Wallace",
+            "count": 5
+          },
+          {
+            "player": "DeMar DeRozan",
+            "count": 5
+          },
+          {
+            "player": "Evan Mobley",
+            "count": 5
+          },
+          {
+            "player": "Guerschon Yabusele",
+            "count": 5
+          },
+          {
+            "player": "Khris Middleton",
+            "count": 5
+          },
+          {
+            "player": "Nique Clifford",
+            "count": 5
+          },
+          {
+            "player": "P.J. Washington",
+            "count": 5
+          },
+          {
+            "player": "Precious Achiuwa",
+            "count": 5
+          },
+          {
+            "player": "Russell Westbrook",
+            "count": 5
+          }
+        ]
+      }
+    },
+    {
+      "file": "recommended_5leg.csv",
+      "rows": 25,
+      "hit_prob": {
+        "min": 0.1560727050492876,
+        "p01": 0.15667584885199115,
+        "p05": 0.1621591421364527,
+        "p25": 0.1933458425443474,
+        "med": 0.2221978737664765,
+        "p75": 0.2522218904310405,
+        "p95": 0.29066793720396583,
+        "max": 0.3355538881355507
+      },
+      "ev": {
+        "min": 1.5945546924447085,
+        "p01": 1.599873380941561,
+        "p05": 1.6534036298008248,
+        "p25": 1.9576379834448363,
+        "med": 2.1238817238235725,
+        "p75": 2.2905450103111717,
+        "p95": 2.564243879926506,
+        "max": 2.583263184278907
+      },
+      "payout_mult": {
+        "min": 20.0,
+        "p01": 20.0,
+        "p05": 20.0,
+        "p25": 20.0,
+        "med": 20.0,
+        "p75": 20.0,
+        "p95": 20.0,
+        "max": 20.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "payout_mult_eff": {
+        "min": 7.633511860210253,
+        "p01": 7.747495186430765,
+        "p05": 8.220374753628159,
+        "p25": 9.166290345113126,
+        "med": 9.577680295906656,
+        "p75": 10.194581427972736,
+        "p95": 11.21435934952871,
+        "max": 12.013137140751764,
+        "std": 0.9401926085672783,
+        "iqr": 1.0282910828596101
+      },
+      "kernel_mult": {
+        "min": 0.3816755930105126,
+        "p01": 0.3873747593215382,
+        "p05": 0.41101873768140795,
+        "p25": 0.4583145172556563,
+        "med": 0.4788840147953328,
+        "p75": 0.5097290713986368,
+        "p95": 0.5607179674764354,
+        "max": 0.6006568570375881,
+        "std": 0.047009630428363904,
+        "iqr": 0.05141455414298046
+      },
+      "tier_mix_legs": {
+        "STANDARD": 50,
+        "GOBLIN": 75,
+        "DEMON": 0,
+        "OTHER": 0
+      },
+      "player_exposure": {
+        "players": 41,
+        "max": 5,
+        "top10": [
+          {
+            "player": "DeMar DeRozan",
+            "count": 5
+          },
+          {
+            "player": "Dejounte Murray",
+            "count": 5
+          },
+          {
+            "player": "Dennis Schr\u00f6der",
+            "count": 5
+          },
+          {
+            "player": "Dwight Powell",
+            "count": 5
+          },
+          {
+            "player": "Evan Mobley",
+            "count": 5
+          },
+          {
+            "player": "James Harden",
+            "count": 5
+          },
+          {
+            "player": "Khris Middleton",
+            "count": 5
+          },
+          {
+            "player": "Kon Knueppel",
+            "count": 5
+          },
+          {
+            "player": "LaMelo Ball",
+            "count": 5
+          },
+          {
+            "player": "P.J. Washington",
+            "count": 5
+          }
+        ]
+      }
+    },
+    {
+      "file": "recommended_5leg_winprob.csv",
+      "rows": 25,
+      "hit_prob": {
+        "min": 0.2231998828268457,
+        "p01": 0.22392648928826592,
+        "p05": 0.22708055007089198,
+        "p25": 0.2527968282852446,
+        "med": 0.2697169987374658,
+        "p75": 0.2831688993300955,
+        "p95": 0.30561031802250965,
+        "max": 0.3355538881355507
+      },
+      "ev": {
+        "min": 4.463997656536914,
+        "p01": 4.478529785765319,
+        "p05": 4.541611001417841,
+        "p25": 5.055936565704893,
+        "med": 5.394339974749316,
+        "p75": 5.663377986601911,
+        "p95": 6.112206360450193,
+        "max": 6.711077762711014
+      },
+      "payout_mult": {
+        "min": 20.0,
+        "p01": 20.0,
+        "p05": 20.0,
+        "p25": 20.0,
+        "med": 20.0,
+        "p75": 20.0,
+        "p95": 20.0,
+        "max": 20.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "payout_mult_eff": {
+        "min": 20.0,
+        "p01": 20.0,
+        "p05": 20.0,
+        "p25": 20.0,
+        "med": 20.0,
+        "p75": 20.0,
+        "p95": 20.0,
+        "max": 20.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "kernel_mult": {
+        "min": 1.0,
+        "p01": 1.0,
+        "p05": 1.0,
+        "p25": 1.0,
+        "med": 1.0,
+        "p75": 1.0,
+        "p95": 1.0,
+        "max": 1.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "tier_mix_legs": {
+        "STANDARD": 50,
+        "GOBLIN": 75,
+        "DEMON": 0,
+        "OTHER": 0
+      },
+      "player_exposure": {
+        "players": 45,
+        "max": 5,
+        "top10": [
+          {
+            "player": "Caleb Martin",
+            "count": 5
+          },
+          {
+            "player": "Cason Wallace",
+            "count": 5
+          },
+          {
+            "player": "DeMar DeRozan",
+            "count": 5
+          },
+          {
+            "player": "Dejounte Murray",
+            "count": 5
+          },
+          {
+            "player": "Dwight Powell",
+            "count": 5
+          },
+          {
+            "player": "Evan Mobley",
+            "count": 5
+          },
+          {
+            "player": "Kon Knueppel",
+            "count": 5
+          },
+          {
+            "player": "Nique Clifford",
+            "count": 5
+          },
+          {
+            "player": "P.J. Washington",
+            "count": 5
+          },
+          {
+            "player": "Precious Achiuwa",
+            "count": 5
+          }
+        ]
+      }
+    },
+    {
+      "file": "System\\recommended_3leg.csv",
+      "rows": 25,
+      "hit_prob": {
+        "min": 0.1867109953719968,
+        "p01": 0.19877667210869343,
+        "p05": 0.23798272735399525,
+        "p25": 0.3086160292468114,
+        "med": 0.3683966229674676,
+        "p75": 0.4321258929984563,
+        "p95": 0.48633359199551024,
+        "max": 0.5094301979688024
+      },
+      "ev": {
+        "min": 1.7506553712610624,
+        "p01": 1.773120277473708,
+        "p05": 1.849336100404765,
+        "p25": 2.205145250102136,
+        "med": 2.441656754333011,
+        "p75": 2.6771928777199343,
+        "p95": 2.8176464311868648,
+        "max": 2.8782509724441208
+      },
+      "payout_mult": {
+        "min": 6.0,
+        "p01": 6.0,
+        "p05": 6.0,
+        "p25": 6.0,
+        "med": 6.0,
+        "p75": 6.0,
+        "p95": 6.0,
+        "max": 6.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "payout_mult_eff": {
+        "min": 5.41839912662582,
+        "p01": 5.480753012955585,
+        "p05": 5.700438905809943,
+        "p25": 6.148000619084833,
+        "med": 6.707294114039478,
+        "p75": 7.194906371621164,
+        "p95": 7.8343454219462085,
+        "max": 9.376284282417938,
+        "std": 0.8942619147633509,
+        "iqr": 1.0469057525363308
+      },
+      "kernel_mult": {
+        "min": 0.9030665211043034,
+        "p01": 0.9134588354925975,
+        "p05": 0.9500731509683238,
+        "p25": 1.024666769847472,
+        "med": 1.117882352339913,
+        "p75": 1.1991510619368606,
+        "p95": 1.305724236991035,
+        "max": 1.5627140470696563,
+        "std": 0.14904365246055848,
+        "iqr": 0.17448429208938854
+      },
+      "tier_mix_legs": {
+        "STANDARD": 50,
+        "GOBLIN": 25,
+        "DEMON": 0,
+        "OTHER": 0
+      },
+      "player_exposure": {
+        "players": 30,
+        "max": 5,
+        "top10": [
+          {
+            "player": "Brandon Williams",
+            "count": 5
+          },
+          {
+            "player": "Daniel Gafford",
+            "count": 5
+          },
+          {
+            "player": "Dwight Powell",
+            "count": 5
+          },
+          {
+            "player": "P.J. Washington",
+            "count": 5
+          },
+          {
+            "player": "Russell Westbrook",
+            "count": 5
+          },
+          {
+            "player": "Evan Mobley",
+            "count": 4
+          },
+          {
+            "player": "Khris Middleton",
+            "count": 4
+          },
+          {
+            "player": "LaMelo Ball",
+            "count": 4
+          },
+          {
+            "player": "Caleb Martin",
+            "count": 3
+          },
+          {
+            "player": "Daeqwon Plowden",
+            "count": 3
+          }
+        ]
+      }
+    },
+    {
+      "file": "System\\recommended_3leg_winprob.csv",
+      "rows": 25,
+      "hit_prob": {
+        "min": 0.4008337187078018,
+        "p01": 0.40136962311141144,
+        "p05": 0.40386378575867926,
+        "p25": 0.4206199652501018,
+        "med": 0.46995113153788,
+        "p75": 0.4843461540916905,
+        "p95": 0.4980188490498096,
+        "max": 0.5094301979688024
+      },
+      "ev": {
+        "min": 2.405002312246811,
+        "p01": 2.408217738668469,
+        "p05": 2.423182714552076,
+        "p25": 2.5237197915006107,
+        "med": 2.81970678922728,
+        "p75": 2.906076924550143,
+        "p95": 2.9881130942988574,
+        "max": 3.056581187812814
+      },
+      "payout_mult": {
+        "min": 6.0,
+        "p01": 6.0,
+        "p05": 6.0,
+        "p25": 6.0,
+        "med": 6.0,
+        "p75": 6.0,
+        "p95": 6.0,
+        "max": 6.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "payout_mult_eff": {
+        "min": 6.0,
+        "p01": 6.0,
+        "p05": 6.0,
+        "p25": 6.0,
+        "med": 6.0,
+        "p75": 6.0,
+        "p95": 6.0,
+        "max": 6.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "kernel_mult": {
+        "min": 1.0,
+        "p01": 1.0,
+        "p05": 1.0,
+        "p25": 1.0,
+        "med": 1.0,
+        "p75": 1.0,
+        "p95": 1.0,
+        "max": 1.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "tier_mix_legs": {
+        "STANDARD": 50,
+        "GOBLIN": 25,
+        "DEMON": 0,
+        "OTHER": 0
+      },
+      "player_exposure": {
+        "players": 31,
+        "max": 5,
+        "top10": [
+          {
+            "player": "Caleb Martin",
+            "count": 5
+          },
+          {
+            "player": "Cason Wallace",
+            "count": 5
+          },
+          {
+            "player": "Dwight Powell",
+            "count": 5
+          },
+          {
+            "player": "Khris Middleton",
+            "count": 5
+          },
+          {
+            "player": "Nique Clifford",
+            "count": 5
+          },
+          {
+            "player": "P.J. Washington",
+            "count": 5
+          },
+          {
+            "player": "Precious Achiuwa",
+            "count": 5
+          },
+          {
+            "player": "Evan Mobley",
+            "count": 4
+          },
+          {
+            "player": "Guerschon Yabusele",
+            "count": 4
+          },
+          {
+            "player": "Russell Westbrook",
+            "count": 4
+          }
+        ]
+      }
+    },
+    {
+      "file": "System\\recommended_4leg.csv",
+      "rows": 25,
+      "hit_prob": {
+        "min": 0.165910355652578,
+        "p01": 0.17036404247734288,
+        "p05": 0.18973485152649575,
+        "p25": 0.2492470070022351,
+        "med": 0.2634953704625894,
+        "p75": 0.2987909156041012,
+        "p95": 0.379497885838962,
+        "max": 0.4008468395958153
+      },
+      "ev": {
+        "min": 1.5364648277250474,
+        "p01": 1.5480985587798692,
+        "p05": 1.627602490586757,
+        "p25": 1.9210644720953431,
+        "med": 2.018851837127284,
+        "p75": 2.1479889226691657,
+        "p95": 2.480627979491165,
+        "max": 2.754758851200457
+      },
+      "payout_mult": {
+        "min": 10.0,
+        "p01": 10.0,
+        "p05": 10.0,
+        "p25": 10.0,
+        "med": 10.0,
+        "p75": 10.0,
+        "p95": 10.0,
+        "max": 10.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "payout_mult_eff": {
+        "min": 6.287787632684947,
+        "p01": 6.310502648680858,
+        "p05": 6.396478385321308,
+        "p25": 7.165763160758578,
+        "med": 7.570314654928261,
+        "p75": 7.8868892662601775,
+        "p95": 8.71781139213598,
+        "max": 9.260813296925583,
+        "std": 0.7263419862791987,
+        "iqr": 0.7211261055015994
+      },
+      "kernel_mult": {
+        "min": 0.6287787632684947,
+        "p01": 0.6310502648680858,
+        "p05": 0.6396478385321308,
+        "p25": 0.7165763160758578,
+        "med": 0.7570314654928261,
+        "p75": 0.7886889266260178,
+        "p95": 0.8717811392135979,
+        "max": 0.9260813296925584,
+        "std": 0.07263419862791987,
+        "iqr": 0.07211261055015994
+      },
+      "tier_mix_legs": {
+        "STANDARD": 50,
+        "GOBLIN": 50,
+        "DEMON": 0,
+        "OTHER": 0
+      },
+      "player_exposure": {
+        "players": 35,
+        "max": 5,
+        "top10": [
+          {
+            "player": "Daniel Gafford",
+            "count": 5
+          },
+          {
+            "player": "Dwight Powell",
+            "count": 5
+          },
+          {
+            "player": "Kon Knueppel",
+            "count": 5
+          },
+          {
+            "player": "LaMelo Ball",
+            "count": 5
+          },
+          {
+            "player": "Malik Monk",
+            "count": 5
+          },
+          {
+            "player": "Maxime Raynaud",
+            "count": 5
+          },
+          {
+            "player": "Miles Bridges",
+            "count": 5
+          },
+          {
+            "player": "P.J. Washington",
+            "count": 5
+          },
+          {
+            "player": "Sandro Mamukelashvili",
+            "count": 5
+          },
+          {
+            "player": "Brandon Williams",
+            "count": 4
+          }
+        ]
+      }
+    },
+    {
+      "file": "System\\recommended_4leg_winprob.csv",
+      "rows": 25,
+      "hit_prob": {
+        "min": 0.2981084073383385,
+        "p01": 0.29814542539390426,
+        "p05": 0.29890255802052224,
+        "p25": 0.3333466515510789,
+        "med": 0.3544406482083223,
+        "p75": 0.3633687435492657,
+        "p95": 0.3975641560227431,
+        "max": 0.4157133097488945
+      },
+      "ev": {
+        "min": 2.9810840733833857,
+        "p01": 2.9814542539390434,
+        "p05": 2.989025580205223,
+        "p25": 3.3334665155107897,
+        "med": 3.5444064820832235,
+        "p75": 3.6336874354926567,
+        "p95": 3.975641560227432,
+        "max": 4.157133097488945
+      },
+      "payout_mult": {
+        "min": 10.0,
+        "p01": 10.0,
+        "p05": 10.0,
+        "p25": 10.0,
+        "med": 10.0,
+        "p75": 10.0,
+        "p95": 10.0,
+        "max": 10.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "payout_mult_eff": {
+        "min": 10.0,
+        "p01": 10.0,
+        "p05": 10.0,
+        "p25": 10.0,
+        "med": 10.0,
+        "p75": 10.0,
+        "p95": 10.0,
+        "max": 10.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "kernel_mult": {
+        "min": 1.0,
+        "p01": 1.0,
+        "p05": 1.0,
+        "p25": 1.0,
+        "med": 1.0,
+        "p75": 1.0,
+        "p95": 1.0,
+        "max": 1.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "tier_mix_legs": {
+        "STANDARD": 50,
+        "GOBLIN": 50,
+        "DEMON": 0,
+        "OTHER": 0
+      },
+      "player_exposure": {
+        "players": 40,
+        "max": 5,
+        "top10": [
+          {
+            "player": "Caleb Martin",
+            "count": 5
+          },
+          {
+            "player": "Cason Wallace",
+            "count": 5
+          },
+          {
+            "player": "DeMar DeRozan",
+            "count": 5
+          },
+          {
+            "player": "Evan Mobley",
+            "count": 5
+          },
+          {
+            "player": "Guerschon Yabusele",
+            "count": 5
+          },
+          {
+            "player": "Khris Middleton",
+            "count": 5
+          },
+          {
+            "player": "Nique Clifford",
+            "count": 5
+          },
+          {
+            "player": "P.J. Washington",
+            "count": 5
+          },
+          {
+            "player": "Precious Achiuwa",
+            "count": 5
+          },
+          {
+            "player": "Russell Westbrook",
+            "count": 5
+          }
+        ]
+      }
+    },
+    {
+      "file": "System\\recommended_5leg.csv",
+      "rows": 25,
+      "hit_prob": {
+        "min": 0.1560727050492876,
+        "p01": 0.15667584885199115,
+        "p05": 0.1621591421364527,
+        "p25": 0.1933458425443474,
+        "med": 0.2221978737664765,
+        "p75": 0.2522218904310405,
+        "p95": 0.29066793720396583,
+        "max": 0.3355538881355507
+      },
+      "ev": {
+        "min": 1.5945546924447085,
+        "p01": 1.599873380941561,
+        "p05": 1.6534036298008248,
+        "p25": 1.9576379834448363,
+        "med": 2.1238817238235725,
+        "p75": 2.2905450103111717,
+        "p95": 2.564243879926506,
+        "max": 2.583263184278907
+      },
+      "payout_mult": {
+        "min": 20.0,
+        "p01": 20.0,
+        "p05": 20.0,
+        "p25": 20.0,
+        "med": 20.0,
+        "p75": 20.0,
+        "p95": 20.0,
+        "max": 20.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "payout_mult_eff": {
+        "min": 7.633511860210253,
+        "p01": 7.747495186430765,
+        "p05": 8.220374753628159,
+        "p25": 9.166290345113126,
+        "med": 9.577680295906656,
+        "p75": 10.194581427972736,
+        "p95": 11.21435934952871,
+        "max": 12.013137140751764,
+        "std": 0.9401926085672783,
+        "iqr": 1.0282910828596101
+      },
+      "kernel_mult": {
+        "min": 0.3816755930105126,
+        "p01": 0.3873747593215382,
+        "p05": 0.41101873768140795,
+        "p25": 0.4583145172556563,
+        "med": 0.4788840147953328,
+        "p75": 0.5097290713986368,
+        "p95": 0.5607179674764354,
+        "max": 0.6006568570375881,
+        "std": 0.047009630428363904,
+        "iqr": 0.05141455414298046
+      },
+      "tier_mix_legs": {
+        "STANDARD": 50,
+        "GOBLIN": 75,
+        "DEMON": 0,
+        "OTHER": 0
+      },
+      "player_exposure": {
+        "players": 41,
+        "max": 5,
+        "top10": [
+          {
+            "player": "DeMar DeRozan",
+            "count": 5
+          },
+          {
+            "player": "Dejounte Murray",
+            "count": 5
+          },
+          {
+            "player": "Dennis Schr\u00f6der",
+            "count": 5
+          },
+          {
+            "player": "Dwight Powell",
+            "count": 5
+          },
+          {
+            "player": "Evan Mobley",
+            "count": 5
+          },
+          {
+            "player": "James Harden",
+            "count": 5
+          },
+          {
+            "player": "Khris Middleton",
+            "count": 5
+          },
+          {
+            "player": "Kon Knueppel",
+            "count": 5
+          },
+          {
+            "player": "LaMelo Ball",
+            "count": 5
+          },
+          {
+            "player": "P.J. Washington",
+            "count": 5
+          }
+        ]
+      }
+    },
+    {
+      "file": "System\\recommended_5leg_winprob.csv",
+      "rows": 25,
+      "hit_prob": {
+        "min": 0.2231998828268457,
+        "p01": 0.22392648928826592,
+        "p05": 0.22708055007089198,
+        "p25": 0.2527968282852446,
+        "med": 0.2697169987374658,
+        "p75": 0.2831688993300955,
+        "p95": 0.30561031802250965,
+        "max": 0.3355538881355507
+      },
+      "ev": {
+        "min": 4.463997656536914,
+        "p01": 4.478529785765319,
+        "p05": 4.541611001417841,
+        "p25": 5.055936565704893,
+        "med": 5.394339974749316,
+        "p75": 5.663377986601911,
+        "p95": 6.112206360450193,
+        "max": 6.711077762711014
+      },
+      "payout_mult": {
+        "min": 20.0,
+        "p01": 20.0,
+        "p05": 20.0,
+        "p25": 20.0,
+        "med": 20.0,
+        "p75": 20.0,
+        "p95": 20.0,
+        "max": 20.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "payout_mult_eff": {
+        "min": 20.0,
+        "p01": 20.0,
+        "p05": 20.0,
+        "p25": 20.0,
+        "med": 20.0,
+        "p75": 20.0,
+        "p95": 20.0,
+        "max": 20.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "kernel_mult": {
+        "min": 1.0,
+        "p01": 1.0,
+        "p05": 1.0,
+        "p25": 1.0,
+        "med": 1.0,
+        "p75": 1.0,
+        "p95": 1.0,
+        "max": 1.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "tier_mix_legs": {
+        "STANDARD": 50,
+        "GOBLIN": 75,
+        "DEMON": 0,
+        "OTHER": 0
+      },
+      "player_exposure": {
+        "players": 45,
+        "max": 5,
+        "top10": [
+          {
+            "player": "Caleb Martin",
+            "count": 5
+          },
+          {
+            "player": "Cason Wallace",
+            "count": 5
+          },
+          {
+            "player": "DeMar DeRozan",
+            "count": 5
+          },
+          {
+            "player": "Dejounte Murray",
+            "count": 5
+          },
+          {
+            "player": "Dwight Powell",
+            "count": 5
+          },
+          {
+            "player": "Evan Mobley",
+            "count": 5
+          },
+          {
+            "player": "Kon Knueppel",
+            "count": 5
+          },
+          {
+            "player": "Nique Clifford",
+            "count": 5
+          },
+          {
+            "player": "P.J. Washington",
+            "count": 5
+          },
+          {
+            "player": "Precious Achiuwa",
+            "count": 5
+          }
+        ]
+      }
+    },
+    {
+      "file": "Windfall\\recommended_3leg.csv",
+      "rows": 25,
+      "hit_prob": {
+        "min": 0.1138281023901554,
+        "p01": 0.11568649030674232,
+        "p05": 0.12462605503514752,
+        "p25": 0.1448280376453133,
+        "med": 0.1720023214749746,
+        "p75": 0.247057783180903,
+        "p95": 0.3016862810118312,
+        "max": 0.3148872795298327
+      },
+      "ev": {
+        "min": 1.0921746165048103,
+        "p01": 1.1017764046117309,
+        "p05": 1.1342286378283482,
+        "p25": 1.215114730109092,
+        "med": 1.3450248464216614,
+        "p75": 1.5696667772747286,
+        "p95": 1.7725788909921205,
+        "max": 1.794239188861623
+      },
+      "payout_mult": {
+        "min": 6.0,
+        "p01": 6.0,
+        "p05": 6.0,
+        "p25": 6.0,
+        "med": 6.0,
+        "p75": 6.0,
+        "p95": 6.0,
+        "max": 6.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "payout_mult_eff": {
+        "min": 5.637113013166281,
+        "p01": 5.68949611914087,
+        "p05": 5.877148353271778,
+        "p25": 6.353439900030883,
+        "med": 7.819806354284321,
+        "p75": 8.283730845662266,
+        "p95": 9.28018640609961,
+        "max": 9.594947061150936,
+        "std": 1.1147810516006205,
+        "iqr": 1.9302909456313824
+      },
+      "kernel_mult": {
+        "min": 0.9395188355277134,
+        "p01": 0.9482493531901449,
+        "p05": 0.9795247255452963,
+        "p25": 1.0589066500051472,
+        "med": 1.3033010590473868,
+        "p75": 1.3806218076103776,
+        "p95": 1.5466977343499348,
+        "max": 1.599157843525156,
+        "std": 0.1857968419334367,
+        "iqr": 0.3217151576052304
+      },
+      "tier_mix_legs": {
+        "STANDARD": 25,
+        "GOBLIN": 25,
+        "DEMON": 25,
+        "OTHER": 0
+      },
+      "player_exposure": {
+        "players": 36,
+        "max": 5,
+        "top10": [
+          {
+            "player": "DeMar DeRozan",
+            "count": 5
+          },
+          {
+            "player": "Kon Knueppel",
+            "count": 5
+          },
+          {
+            "player": "Miles Bridges",
+            "count": 5
+          },
+          {
+            "player": "P.J. Washington",
+            "count": 5
+          },
+          {
+            "player": "Josh Green",
+            "count": 4
+          },
+          {
+            "player": "Max Christie",
+            "count": 4
+          },
+          {
+            "player": "Brandon Williams",
+            "count": 3
+          },
+          {
+            "player": "James Harden",
+            "count": 3
+          },
+          {
+            "player": "LaMelo Ball",
+            "count": 3
+          },
+          {
+            "player": "Malik Monk",
+            "count": 3
+          }
+        ]
+      }
+    },
+    {
+      "file": "Windfall\\recommended_3leg_winprob.csv",
+      "rows": 25,
+      "hit_prob": {
+        "min": 0.341437525562489,
+        "p01": 0.3439018695508715,
+        "p05": 0.35197246986226405,
+        "p25": 0.3675684391983354,
+        "med": 0.4015717539790641,
+        "p75": 0.4168022891734346,
+        "p95": 0.44914819863089056,
+        "max": 0.4601623156431024
+      },
+      "ev": {
+        "min": 2.048625153374934,
+        "p01": 2.063411217305229,
+        "p05": 2.111834819173584,
+        "p25": 2.2054106351900127,
+        "med": 2.4094305238743843,
+        "p75": 2.5008137350406074,
+        "p95": 2.6948891917853435,
+        "max": 2.7609738938586146
+      },
+      "payout_mult": {
+        "min": 6.0,
+        "p01": 6.0,
+        "p05": 6.0,
+        "p25": 6.0,
+        "med": 6.0,
+        "p75": 6.0,
+        "p95": 6.0,
+        "max": 6.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "payout_mult_eff": {
+        "min": 6.0,
+        "p01": 6.0,
+        "p05": 6.0,
+        "p25": 6.0,
+        "med": 6.0,
+        "p75": 6.0,
+        "p95": 6.0,
+        "max": 6.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "kernel_mult": {
+        "min": 1.0,
+        "p01": 1.0,
+        "p05": 1.0,
+        "p25": 1.0,
+        "med": 1.0,
+        "p75": 1.0,
+        "p95": 1.0,
+        "max": 1.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "tier_mix_legs": {
+        "STANDARD": 25,
+        "GOBLIN": 25,
+        "DEMON": 25,
+        "OTHER": 0
+      },
+      "player_exposure": {
+        "players": 31,
+        "max": 5,
+        "top10": [
+          {
+            "player": "Caleb Martin",
+            "count": 5
+          },
+          {
+            "player": "DeMar DeRozan",
+            "count": 5
+          },
+          {
+            "player": "Derik Queen",
+            "count": 5
+          },
+          {
+            "player": "Evan Mobley",
+            "count": 5
+          },
+          {
+            "player": "Kon Knueppel",
+            "count": 5
+          },
+          {
+            "player": "Nique Clifford",
+            "count": 5
+          },
+          {
+            "player": "Russell Westbrook",
+            "count": 5
+          },
+          {
+            "player": "P.J. Washington",
+            "count": 4
+          },
+          {
+            "player": "Precious Achiuwa",
+            "count": 4
+          },
+          {
+            "player": "Cason Wallace",
+            "count": 3
+          }
+        ]
+      }
+    },
+    {
+      "file": "Windfall\\recommended_4leg.csv",
+      "rows": 25,
+      "hit_prob": {
+        "min": 0.0619840351552909,
+        "p01": 0.06326302653724872,
+        "p05": 0.06868172063179746,
+        "p25": 0.0875422904116959,
+        "med": 0.1138383923132844,
+        "p75": 0.1828285162168285,
+        "p95": 0.22269677795902748,
+        "max": 0.2613095264767917
+      },
+      "ev": {
+        "min": 1.3077695083727134,
+        "p01": 1.3208991220970345,
+        "p05": 1.3700588304365588,
+        "p25": 1.4984567799824602,
+        "med": 1.6639813507556502,
+        "p75": 2.118074989774444,
+        "p95": 2.4286459887343863,
+        "max": 2.5245303461485644
+      },
+      "payout_mult": {
+        "min": 10.0,
+        "p01": 10.0,
+        "p05": 10.0,
+        "p25": 10.0,
+        "med": 10.0,
+        "p75": 10.0,
+        "p95": 10.0,
+        "max": 10.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "payout_mult_eff": {
+        "min": 9.66107275225108,
+        "p01": 9.931390581270835,
+        "p05": 10.911381186774259,
+        "p25": 11.987200033687152,
+        "med": 14.193970400863412,
+        "p75": 16.808488493596943,
+        "p95": 20.926963114199133,
+        "max": 22.427687304189995,
+        "std": 3.332165406278065,
+        "iqr": 4.821288459909791
+      },
+      "kernel_mult": {
+        "min": 0.966107275225108,
+        "p01": 0.9931390581270835,
+        "p05": 1.091138118677426,
+        "p25": 1.198720003368715,
+        "med": 1.4193970400863412,
+        "p75": 1.6808488493596945,
+        "p95": 2.092696311419913,
+        "max": 2.2427687304189994,
+        "std": 0.3332165406278064,
+        "iqr": 0.4821288459909794
+      },
+      "tier_mix_legs": {
+        "STANDARD": 50,
+        "GOBLIN": 25,
+        "DEMON": 25,
+        "OTHER": 0
+      },
+      "player_exposure": {
+        "players": 44,
+        "max": 5,
+        "top10": [
+          {
+            "player": "Josh Green",
+            "count": 5
+          },
+          {
+            "player": "Kon Knueppel",
+            "count": 5
+          },
+          {
+            "player": "LaMelo Ball",
+            "count": 5
+          },
+          {
+            "player": "Miles Bridges",
+            "count": 5
+          },
+          {
+            "player": "P.J. Washington",
+            "count": 5
+          },
+          {
+            "player": "Brandon Miller",
+            "count": 4
+          },
+          {
+            "player": "Brandon Williams",
+            "count": 4
+          },
+          {
+            "player": "DeMar DeRozan",
+            "count": 4
+          },
+          {
+            "player": "Dwight Powell",
+            "count": 4
+          },
+          {
+            "player": "Immanuel Quickley",
+            "count": 4
+          }
+        ]
+      }
+    },
+    {
+      "file": "Windfall\\recommended_4leg_winprob.csv",
+      "rows": 25,
+      "hit_prob": {
+        "min": 0.2190725871473582,
+        "p01": 0.2195935651359828,
+        "p05": 0.222639541780114,
+        "p25": 0.2531049665454816,
+        "med": 0.2714044414568008,
+        "p75": 0.3023441366935317,
+        "p95": 0.31010260685866486,
+        "max": 0.3183535839931424
+      },
+      "ev": {
+        "min": 2.190725871473582,
+        "p01": 2.1959356513598283,
+        "p05": 2.2263954178011405,
+        "p25": 2.531049665454816,
+        "med": 2.7140444145680083,
+        "p75": 3.0234413669353173,
+        "p95": 3.101026068586649,
+        "max": 3.183535839931424
+      },
+      "payout_mult": {
+        "min": 10.0,
+        "p01": 10.0,
+        "p05": 10.0,
+        "p25": 10.0,
+        "med": 10.0,
+        "p75": 10.0,
+        "p95": 10.0,
+        "max": 10.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "payout_mult_eff": {
+        "min": 10.0,
+        "p01": 10.0,
+        "p05": 10.0,
+        "p25": 10.0,
+        "med": 10.0,
+        "p75": 10.0,
+        "p95": 10.0,
+        "max": 10.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "kernel_mult": {
+        "min": 1.0,
+        "p01": 1.0,
+        "p05": 1.0,
+        "p25": 1.0,
+        "med": 1.0,
+        "p75": 1.0,
+        "p95": 1.0,
+        "max": 1.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "tier_mix_legs": {
+        "STANDARD": 50,
+        "GOBLIN": 25,
+        "DEMON": 25,
+        "OTHER": 0
+      },
+      "player_exposure": {
+        "players": 36,
+        "max": 5,
+        "top10": [
+          {
+            "player": "Caleb Martin",
+            "count": 5
+          },
+          {
+            "player": "DeAndre Jordan",
+            "count": 5
+          },
+          {
+            "player": "Derik Queen",
+            "count": 5
+          },
+          {
+            "player": "Dwight Powell",
+            "count": 5
+          },
+          {
+            "player": "Evan Mobley",
+            "count": 5
+          },
+          {
+            "player": "Guerschon Yabusele",
+            "count": 5
+          },
+          {
+            "player": "Khris Middleton",
+            "count": 5
+          },
+          {
+            "player": "Kon Knueppel",
+            "count": 5
+          },
+          {
+            "player": "Nique Clifford",
+            "count": 5
+          },
+          {
+            "player": "P.J. Washington",
+            "count": 5
+          }
+        ]
+      }
+    },
+    {
+      "file": "Windfall\\recommended_5leg.csv",
+      "rows": 25,
+      "hit_prob": {
+        "min": 0.0449135793920997,
+        "p01": 0.04524996555920034,
+        "p05": 0.0464907717517678,
+        "p25": 0.059255111948879,
+        "med": 0.0845761564338428,
+        "p75": 0.1513699680359047,
+        "p95": 0.17607288046792147,
+        "max": 0.1967504361895421
+      },
+      "ev": {
+        "min": 1.1269575717932478,
+        "p01": 1.1372965621342583,
+        "p05": 1.188958879200354,
+        "p25": 1.4414874849231754,
+        "med": 1.6295072874990593,
+        "p75": 2.308238971830622,
+        "p95": 2.524556667815295,
+        "max": 2.556717050618435
+      },
+      "payout_mult": {
+        "min": 20.0,
+        "p01": 20.0,
+        "p05": 20.0,
+        "p25": 20.0,
+        "med": 20.0,
+        "p75": 20.0,
+        "p95": 20.0,
+        "max": 20.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "payout_mult_eff": {
+        "min": 12.99472113065807,
+        "p01": 13.257171169565622,
+        "p05": 14.089789907396856,
+        "p25": 15.522928242190838,
+        "med": 20.229566553280883,
+        "p75": 24.200735898300024,
+        "p95": 26.159001443903893,
+        "max": 26.819750635993454,
+        "std": 4.394482385208941,
+        "iqr": 8.677807656109186
+      },
+      "kernel_mult": {
+        "min": 0.6497360565329034,
+        "p01": 0.662858558478281,
+        "p05": 0.7044894953698428,
+        "p25": 0.7761464121095419,
+        "med": 1.0114783276640442,
+        "p75": 1.2100367949150013,
+        "p95": 1.3079500721951947,
+        "max": 1.340987531799673,
+        "std": 0.21972411926044705,
+        "iqr": 0.43389038280545933
+      },
+      "tier_mix_legs": {
+        "STANDARD": 50,
+        "GOBLIN": 50,
+        "DEMON": 25,
+        "OTHER": 0
+      },
+      "player_exposure": {
+        "players": 56,
+        "max": 5,
+        "top10": [
+          {
+            "player": "DeMar DeRozan",
+            "count": 5
+          },
+          {
+            "player": "Grant Williams",
+            "count": 5
+          },
+          {
+            "player": "Kon Knueppel",
+            "count": 5
+          },
+          {
+            "player": "LaMelo Ball",
+            "count": 5
+          },
+          {
+            "player": "Max Christie",
+            "count": 5
+          },
+          {
+            "player": "Miles Bridges",
+            "count": 5
+          },
+          {
+            "player": "P.J. Washington",
+            "count": 5
+          },
+          {
+            "player": "Russell Westbrook",
+            "count": 5
+          },
+          {
+            "player": "Dennis Schr\u00f6der",
+            "count": 4
+          },
+          {
+            "player": "Dwight Powell",
+            "count": 4
+          }
+        ]
+      }
+    },
+    {
+      "file": "Windfall\\recommended_5leg_winprob.csv",
+      "rows": 25,
+      "hit_prob": {
+        "min": 0.1678846984827002,
+        "p01": 0.16836396394589737,
+        "p05": 0.16998564772295865,
+        "p25": 0.1853566066971357,
+        "med": 0.203840907793547,
+        "p75": 0.2354413101013764,
+        "p95": 0.25237797550333513,
+        "max": 0.2602777687421335
+      },
+      "ev": {
+        "min": 3.3576939696540045,
+        "p01": 3.3672792789179478,
+        "p05": 3.3997129544591735,
+        "p25": 3.707132133942714,
+        "med": 4.076818155870941,
+        "p75": 4.708826202027528,
+        "p95": 5.047559510066703,
+        "max": 5.205555374842671
+      },
+      "payout_mult": {
+        "min": 20.0,
+        "p01": 20.0,
+        "p05": 20.0,
+        "p25": 20.0,
+        "med": 20.0,
+        "p75": 20.0,
+        "p95": 20.0,
+        "max": 20.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "payout_mult_eff": {
+        "min": 20.0,
+        "p01": 20.0,
+        "p05": 20.0,
+        "p25": 20.0,
+        "med": 20.0,
+        "p75": 20.0,
+        "p95": 20.0,
+        "max": 20.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "kernel_mult": {
+        "min": 1.0,
+        "p01": 1.0,
+        "p05": 1.0,
+        "p25": 1.0,
+        "med": 1.0,
+        "p75": 1.0,
+        "p95": 1.0,
+        "max": 1.0,
+        "std": 0.0,
+        "iqr": 0.0
+      },
+      "tier_mix_legs": {
+        "STANDARD": 50,
+        "GOBLIN": 50,
+        "DEMON": 25,
+        "OTHER": 0
+      },
+      "player_exposure": {
+        "players": 42,
+        "max": 5,
+        "top10": [
+          {
+            "player": "Caleb Martin",
+            "count": 5
+          },
+          {
+            "player": "Cason Wallace",
+            "count": 5
+          },
+          {
+            "player": "DeAndre Jordan",
+            "count": 5
+          },
+          {
+            "player": "DeMar DeRozan",
+            "count": 5
+          },
+          {
+            "player": "Derik Queen",
+            "count": 5
+          },
+          {
+            "player": "Dwight Powell",
+            "count": 5
+          },
+          {
+            "player": "Evan Mobley",
+            "count": 5
+          },
+          {
+            "player": "Guerschon Yabusele",
+            "count": 5
+          },
+          {
+            "player": "Khris Middleton",
+            "count": 5
+          },
+          {
+            "player": "Kon Knueppel",
+            "count": 5
+          }
+        ]
+      }
+    }
+  ],
+  "kernel_suggestions": {
+    "std_logit_p_adj_STANDARD": 0.65108832706761,
+    "sigma_leg_system_4": 0.047767902501290246,
+    "sigma_leg_system_5": 0.0435385704903388,
+    "sigma_leg_windfall_4": 0.11013888833261085,
+    "sigma_leg_windfall_5": 0.10151793076634594,
+    "target_sigma_leg_reason": "match_windfall_avg",
+    "target_sigma_leg": 0.10582840954947839,
+    "p0": 0.75,
+    "suggest_STANDARD_b_from_logit": -0.16254078770865293,
+    "suggest_STANDARD_a_from_logit": 0.17856930678652055,
+    "cur_sigma_leg_system_avg": 0.04565323649581453,
+    "b_current_source": "PTS",
+    "b_current": -0.24,
+    "sigma_ratio_target_over_current": 2.3180921589027035,
+    "sigma_ratio_cap": 1.2,
+    "suggest_STANDARD_b_from_sigma_ratio_raw": -0.5563421181366488,
+    "suggest_STANDARD_a_from_sigma_ratio_raw": 0.6112042876885676,
+    "suggest_STANDARD_b_from_sigma_ratio_step": -0.288,
+    "suggest_STANDARD_a_from_sigma_ratio_step": 0.3164003391364156
+  },
+  "p_cal_floor_share": 0.0,
+  "p_cal_cap_share": 0.0,
+  "recommendations": []
+}

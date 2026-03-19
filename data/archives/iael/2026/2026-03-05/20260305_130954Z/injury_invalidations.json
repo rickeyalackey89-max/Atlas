@@ -1,0 +1,501 @@
+{
+  "report_date": "2026-03-05",
+  "report_label": "08:00AM",
+  "pulled_at_local": "2026-03-05T07:09:51-06:00",
+  "invalidated_players_count": 82,
+  "invalidated_players": [
+    {
+      "team": "DallasMavericks",
+      "player": "BagleyIII,Marvin",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "DallasMavericks",
+      "player": "Cisse,Moussa",
+      "status": "QUESTIONABLE",
+      "reason": ""
+    },
+    {
+      "team": "DallasMavericks",
+      "player": "Flagg,Cooper",
+      "status": "QUESTIONABLE",
+      "reason": ""
+    },
+    {
+      "team": "DallasMavericks",
+      "player": "Irving,Kyrie",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "DallasMavericks",
+      "player": "LivelyII,Dereck",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "DallasMavericks",
+      "player": "Poulakidas,John",
+      "status": "QUESTIONABLE",
+      "reason": ""
+    },
+    {
+      "team": "DallasMavericks",
+      "player": "Smith,Tyler",
+      "status": "QUESTIONABLE",
+      "reason": ""
+    },
+    {
+      "team": "DenverNuggets",
+      "player": "Dickinson,Hunter",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "DenverNuggets",
+      "player": "Gordon,Aaron",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "DenverNuggets",
+      "player": "Johnson,Cameron",
+      "status": "QUESTIONABLE",
+      "reason": ""
+    },
+    {
+      "team": "DenverNuggets",
+      "player": "Jones,Curtis",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "DenverNuggets",
+      "player": "Jones,Spencer",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "DenverNuggets",
+      "player": "MurphyIII,Trey",
+      "status": "QUESTIONABLE",
+      "reason": ""
+    },
+    {
+      "team": "DenverNuggets",
+      "player": "Murray,Dejounte",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "DenverNuggets",
+      "player": "Oduro,Josh",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "DenverNuggets",
+      "player": "Watson,Peyton",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "DenverNuggets",
+      "player": "Williamson,Zion",
+      "status": "QUESTIONABLE",
+      "reason": ""
+    },
+    {
+      "team": "HoustonRockets",
+      "player": "Adams,Steven",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "HoustonRockets",
+      "player": "MooreJr.,Wendell",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "HoustonRockets",
+      "player": "Newton,Tristen",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "HoustonRockets",
+      "player": "Sengun,Alperen",
+      "status": "QUESTIONABLE",
+      "reason": ""
+    },
+    {
+      "team": "HoustonRockets",
+      "player": "Smith,Tolu",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "HoustonRockets",
+      "player": "SmithJr.,Jabari",
+      "status": "QUESTIONABLE",
+      "reason": ""
+    },
+    {
+      "team": "HoustonRockets",
+      "player": "Tate,Jae'Sean",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "HoustonRockets",
+      "player": "Thompson,Amen",
+      "status": "QUESTIONABLE",
+      "reason": ""
+    },
+    {
+      "team": "HoustonRockets",
+      "player": "VanVleet,Fred",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "MiamiHeat",
+      "player": "Curry,Seth",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "MiamiHeat",
+      "player": "Curry,Stephen",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "MiamiHeat",
+      "player": "Fontecchio,Simone",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "MiamiHeat",
+      "player": "Goldin,Vladislav",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "MiamiHeat",
+      "player": "Johnson,Keshad",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "MiamiHeat",
+      "player": "Jovic,Nikola",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "MiamiHeat",
+      "player": "Keels,Trevor",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "MiamiHeat",
+      "player": "Moody,Moses",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "MiamiHeat",
+      "player": "PaytonII,Gary",
+      "status": "QUESTIONABLE",
+      "reason": ""
+    },
+    {
+      "team": "MiamiHeat",
+      "player": "Porzingis,Kristaps",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "MiamiHeat",
+      "player": "Powell,Norman",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "MiamiHeat",
+      "player": "Richard,Will",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "MiamiHeat",
+      "player": "Rozier,Terry",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "MinnesotaTimberwolves",
+      "player": "Collins,Zach",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "MinnesotaTimberwolves",
+      "player": "Essengue,Noa",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "MinnesotaTimberwolves",
+      "player": "Freeman,Enrique",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "MinnesotaTimberwolves",
+      "player": "Giddey,Josh",
+      "status": "QUESTIONABLE",
+      "reason": ""
+    },
+    {
+      "team": "MinnesotaTimberwolves",
+      "player": "Ingles,Joe",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "MinnesotaTimberwolves",
+      "player": "Ivey,Jaden",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "MinnesotaTimberwolves",
+      "player": "Pullin,Zyon",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "MinnesotaTimberwolves",
+      "player": "Simons,Anfernee",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "MinnesotaTimberwolves",
+      "player": "Smith,Jalen",
+      "status": "DOUBTFUL",
+      "reason": ""
+    },
+    {
+      "team": "MinnesotaTimberwolves",
+      "player": "Williams,Patrick",
+      "status": "DOUBTFUL",
+      "reason": ""
+    },
+    {
+      "team": "MinnesotaTimberwolves",
+      "player": "Zikarsky,Rocco",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "OrlandoMagic",
+      "player": "Black,Anthony",
+      "status": "QUESTIONABLE",
+      "reason": ""
+    },
+    {
+      "team": "OrlandoMagic",
+      "player": "CarterJr.,Wendell",
+      "status": "QUESTIONABLE",
+      "reason": ""
+    },
+    {
+      "team": "OrlandoMagic",
+      "player": "Wagner,Franz",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "PhoenixSuns",
+      "player": "Brooks,Dillon",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "PhoenixSuns",
+      "player": "Goodwin,Jordan",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "PhoenixSuns",
+      "player": "Williams,Mark",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "SacramentoKings",
+      "player": "Cardwell,Dylan",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "SacramentoKings",
+      "player": "Hunter,De'Andre",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "SacramentoKings",
+      "player": "LaVine,Zach",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "SacramentoKings",
+      "player": "Murray,Keegan",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "SacramentoKings",
+      "player": "Sabonis,Domantas",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "SanAntonioSpurs",
+      "player": "Barnes,Harrison",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "SanAntonioSpurs",
+      "player": "Ingram,Brandon",
+      "status": "QUESTIONABLE",
+      "reason": ""
+    },
+    {
+      "team": "SanAntonioSpurs",
+      "player": "Ingram,Harrison",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "SanAntonioSpurs",
+      "player": "JonesGarcia,David",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "SanAntonioSpurs",
+      "player": "Lawson,A.J.",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "SanAntonioSpurs",
+      "player": "Martin,Alijah",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "SanAntonioSpurs",
+      "player": "Miller,Emanuel",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "SanAntonioSpurs",
+      "player": "Murray-Boyles,Collin",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "SanAntonioSpurs",
+      "player": "Plumlee,Mason",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "WashingtonWizards",
+      "player": "Davis,Anthony",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "WashingtonWizards",
+      "player": "Etienne,Tyson",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "WashingtonWizards",
+      "player": "George,Kyshawn",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "WashingtonWizards",
+      "player": "Gill,Anthony",
+      "status": "QUESTIONABLE",
+      "reason": ""
+    },
+    {
+      "team": "WashingtonWizards",
+      "player": "Johnson,Chaney",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "WashingtonWizards",
+      "player": "Liddell,E.J.",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "WashingtonWizards",
+      "player": "Powell,Drake",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "WashingtonWizards",
+      "player": "Russell,D'Angelo",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "WashingtonWizards",
+      "player": "Sarr,Alex",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "WashingtonWizards",
+      "player": "Vukcevic,Tristan",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "WashingtonWizards",
+      "player": "Watkins,Jamir",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "WashingtonWizards",
+      "player": "Whitmore,Cam",
+      "status": "OUT",
+      "reason": ""
+    }
+  ],
+  "policy": "Remove OUT/DOUBTFUL/QUESTIONABLE from eligibility. PROBABLE allowed but tagged."
+}
