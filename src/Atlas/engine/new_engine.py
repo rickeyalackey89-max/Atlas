@@ -26,6 +26,11 @@ from Atlas.core.share_name_key import share_name_key
 
 __all__ = ["NewEngine", "_run_score_board_new"]
 
+
+def _player_key(name: Any) -> str:
+    """Local alias for the shared canonical player join key."""
+    return share_name_key(name)
+
 def _normalize_iael_for_kernel(iael_df: pd.DataFrame | None) -> pd.DataFrame:
     """
     Kernel expects columns like: team, out_player, status (case-insensitive).
@@ -47,7 +52,7 @@ def _normalize_iael_for_kernel(iael_df: pd.DataFrame | None) -> pd.DataFrame:
         if "player_key" in cols:
             out = out.rename(columns={cols["player_key"]: "player_key"})
         elif "out_player" in out.columns:
-            out["player_key"] = out["out_player"].astype(str).map(share_name_key)
+            out["player_key"] = out["out_player"].astype(str).map(_player_key)
         return out[["team", "out_player", "player_key", "status"]].copy()
 
     # Normalize from invalidations schema
@@ -62,7 +67,7 @@ def _normalize_iael_for_kernel(iael_df: pd.DataFrame | None) -> pd.DataFrame:
         if "player_key" in cols:
             out = out.rename(columns={cols["player_key"]: "player_key"})
         else:
-            out["player_key"] = out["out_player"].astype(str).map(share_name_key)
+            out["player_key"] = out["out_player"].astype(str).map(_player_key)
         out["team"] = out["team"].astype(str).str.upper().str.strip()
         out["out_player"] = out["out_player"].astype(str).str.strip()
         out["player_key"] = out["player_key"].astype(str).str.strip()
@@ -202,32 +207,41 @@ class NewEngine(Engine):
         
         # CALIBRATION MAP (Phase 7A-3): emit p_for_cal / p_cal_src / p_cal (no overwrite)
         # Policy:
-        #   - Healthy teams: calibrate from p_adj
-        #   - Outs/injury context: calibrate from p_role
+        #   - Prefer p_role as the upstream calibration surface.
+        #   - Fallback to p_close_role / p_adj only if p_role is unavailable.
         # Map path is supplied via env ATLAS_CAL_MAP; if missing, p_cal := p_for_cal.
         try:
             from Atlas.engine.calibration_map import apply_calibration_column, get_calibration_path_from_env
 
             if "p_for_cal" not in scored.columns:
-                # ensure we pass a Series (not None) into pd.to_numeric
-                if "p_adj" in scored.columns:
-                    base_raw = scored["p_adj"]
-                elif "p" in scored.columns:
-                    base_raw = scored["p"]
+                if "p_role" in scored.columns:
+                    p_role = pd.to_numeric(scored["p_role"], errors="coerce")
+                    if "p_close_role" in scored.columns:
+                        p_role = p_role.fillna(pd.to_numeric(scored["p_close_role"], errors="coerce"))
+                    if "p_adj" in scored.columns:
+                        p_role = p_role.fillna(pd.to_numeric(scored["p_adj"], errors="coerce"))
+                    scored["p_for_cal"] = p_role
+                    scored["p_cal_src"] = "p_role"
                 else:
-                    base_raw = pd.Series(np.nan, index=scored.index)
-                base_p_adj = pd.to_numeric(base_raw, errors="coerce")
+                    # ensure we pass a Series (not None) into pd.to_numeric
+                    if "p_adj" in scored.columns:
+                        base_raw = scored["p_adj"]
+                    elif "p" in scored.columns:
+                        base_raw = scored["p"]
+                    else:
+                        base_raw = pd.Series(np.nan, index=scored.index)
+                    base_p_adj = pd.to_numeric(base_raw, errors="coerce")
 
-                if "p_role" in scored.columns and "role_ctx_outs_used" in scored.columns:
-                    outs_used = pd.to_numeric(scored["role_ctx_outs_used"], errors="coerce").fillna(0.0)
-                    use_role = outs_used > 0.0
-                    p_role_raw = scored["p_role"]
-                    p_role = pd.to_numeric(p_role_raw, errors="coerce")
-                    scored["p_for_cal"] = np.where(use_role, p_role, base_p_adj)
-                    scored["p_cal_src"] = np.where(use_role, "p_role", "p_adj")
-                else:
-                    scored["p_for_cal"] = base_p_adj
-                    scored["p_cal_src"] = "p_adj"
+                    if "p_close_role" in scored.columns and "role_ctx_outs_used" in scored.columns:
+                        outs_used = pd.to_numeric(scored["role_ctx_outs_used"], errors="coerce").fillna(0.0)
+                        use_close_role = outs_used > 0.0
+                        p_close_role_raw = scored["p_close_role"]
+                        p_close_role = pd.to_numeric(p_close_role_raw, errors="coerce")
+                        scored["p_for_cal"] = np.where(use_close_role, p_close_role, base_p_adj)
+                        scored["p_cal_src"] = np.where(use_close_role, "p_close_role", "p_adj")
+                    else:
+                        scored["p_for_cal"] = base_p_adj
+                        scored["p_cal_src"] = "p_adj"
 
             # Apply map if available; otherwise create identity p_cal
             map_path = get_calibration_path_from_env()
@@ -255,31 +269,6 @@ class NewEngine(Engine):
                 scored["p_cal_src"] = "p_adj"
             if "p_cal" not in scored.columns:
                 scored["p_cal"] = scored["p_for_cal"]
-
-        # TELEMETRY CALIBRATION OVERLAY (late overlay on p_cal; additive only)
-        try:
-            from Atlas.runtime.telemetry_calibration import load_calibration, apply_calibration_to_column
-
-            project_root = Path(__file__).resolve().parents[3]
-            tele_cal = load_calibration(project_root)
-
-            stat = scored["stat"].astype(str).str.upper().str.strip() if "stat" in scored.columns else pd.Series("", index=scored.index)
-            direction = scored["direction"].astype(str).str.upper().str.strip() if "direction" in scored.columns else pd.Series("", index=scored.index)
-            scored["telemetry_cal_key"] = (stat + "|" + direction).astype(str)
-            scored["telemetry_k_shrink"] = 1.0
-            scored["telemetry_under_penalty"] = 1.0
-            scored["telemetry_mult"] = 1.0
-            scored["telemetry_cal_applied"] = False
-
-            if tele_cal is not None and "p_cal" in scored.columns:
-                scored = apply_calibration_to_column(scored, tele_cal, source_col="p_cal", out_col="p_cal")
-                if "p_cal_src" not in scored.columns:
-                    scored["p_cal_src"] = "p_adj"
-                applied_mask = scored["telemetry_cal_applied"].astype(bool)
-                if applied_mask.any():
-                    scored.loc[applied_mask, "p_cal_src"] = scored.loc[applied_mask, "p_cal_src"].astype(str) + "+telemetry"
-        except Exception:
-            pass
 
 # PREP FOR OPTIMIZER (staged, unchanged)
         from Atlas.stages.prep_for_optimizer.prep_for_optimizer import run_prep_for_optimizer

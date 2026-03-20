@@ -1,9 +1,0 @@
-[DEBUG] Dropped 1201 invalid rows from today.csv (blank/unknown stat/line)
-[IAEL] Loaded invalidations=47. Report: 2026-02-28 07:30AM
-[IAEL] Removed 188 legs out of 3085 (statuses=['DOUBTFUL', 'OUT', 'QUESTIONABLE'])
-[IAEL] Sample removed:
-          player
- Donovan Clingan
-  Keyonte George
-  Kyshawn George
-Tristan Vukcevic

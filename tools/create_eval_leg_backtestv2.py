@@ -64,7 +64,31 @@ OUTPUT_APPEND_ORDER = [
     "eval_reconstructed",
     "eval_match_quality",
     "eval_stat_source",
+    "actual_delta",
+    "actual_abs_delta",
+    "brier_p",
+    "brier_p_role",
+    "brier_p_close",
+    "brier_p_close_raw",
+    "brier_p_close_role",
+    "brier_p_adj_pre_under_relief",
+    "brier_p_adj",
+    "brier_p_for_cal",
+    "brier_p_cal",
 ]
+
+
+EVAL_PROBABILITY_COLUMNS = (
+    "p",
+    "p_role",
+    "p_close",
+    "p_close_raw",
+    "p_close_role",
+    "p_adj_pre_under_relief",
+    "p_adj",
+    "p_for_cal",
+    "p_cal",
+)
 
 
 @dataclass
@@ -289,6 +313,15 @@ def reconstruct_eval(scored: pd.DataFrame, gamelogs: pd.DataFrame) -> Tuple[pd.D
         results_rows.append(out)
 
     add_df = pd.DataFrame(results_rows)
+    add_df["actual_delta"] = pd.to_numeric(add_df.get("actual"), errors="coerce") - pd.to_numeric(df.get("line"), errors="coerce")
+    add_df["actual_abs_delta"] = add_df["actual_delta"].abs()
+    hit = pd.to_numeric(add_df.get("hit"), errors="coerce")
+    for col in EVAL_PROBABILITY_COLUMNS:
+        if col not in df.columns:
+            continue
+        pred = pd.to_numeric(df[col], errors="coerce").clip(0.0, 1.0)
+        add_df[f"{col}_error"] = pred - hit
+        add_df[f"brier_{col}"] = add_df[f"{col}_error"] ** 2
 
     for col in OUTPUT_APPEND_ORDER:
         if col in add_df.columns:

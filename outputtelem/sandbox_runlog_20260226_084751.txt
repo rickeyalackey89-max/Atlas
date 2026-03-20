@@ -1,4 +1,0 @@
-  File "C:\Users\rick\projects\Atlas\tools\replay_scenario.py", line 294
-    return p.returncode
-    ^^^^^^^^^^^^^^^^^^^
-SyntaxError: 'return' outside function

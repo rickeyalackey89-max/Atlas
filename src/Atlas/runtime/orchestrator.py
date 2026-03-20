@@ -716,18 +716,6 @@ def run_today(
         def _append_cal_log(line: str) -> None:
             (ctx.audit_dir / "calibration_debug.log").open("a", encoding="utf-8").write(line + "\n")
 
-        def _find_latest_run_scored_leg_files(output_dir: Path) -> list[Path]:
-            candidates = [
-                p for p in output_dir.rglob("scored_legs*.csv")
-                if p.is_file() and p.stat().st_size > 0
-            ]
-            if not candidates:
-                return []
-            newest = max(candidates, key=lambda p: p.stat().st_mtime)
-            newest_dir = newest.parent
-            siblings = [newest_dir / "scored_legs.csv", newest_dir / "scored_legs_deduped.csv"]
-            return [p for p in siblings if p.exists() and p.is_file() and p.stat().st_size > 0]
-
         map_path = get_calibration_path_from_env()
         print(f"[CAL] ATLAS_CAL_MAP={map_path!r}")
 
@@ -735,12 +723,11 @@ def run_today(
             emit_event(ctx, "calibration_skipped", reason="map_missing_or_unreadable", map_path=map_path)
             print(f"[CAL] skipped: map missing/unreadable: {map_path!r}")
         else:
-            paths = _find_latest_run_scored_leg_files(OUTPUT_DIR)
-
-            # Also consider direct OUTPUT_DIR artifacts (best-effort)
-            for pth in [OUTPUT_DIR / "scored_legs.csv", OUTPUT_DIR / "scored_legs_deduped.csv"]:
-                if pth.exists() and pth.is_file() and pth.stat().st_size > 0 and pth not in paths:
-                    paths.append(pth)
+            paths = [
+                pth
+                for pth in [OUTPUT_DIR / "scored_legs.csv", OUTPUT_DIR / "scored_legs_deduped.csv"]
+                if pth.exists() and pth.is_file() and pth.stat().st_size > 0
+            ]
 
             patched: list[str] = []
             skipped: list[tuple[str, str]] = []
@@ -775,21 +762,30 @@ def run_today(
 
                 # ---- Ensure calibration lineage columns (schema contract) ----
                 # p_for_cal: probability actually fed into calibration
-                # p_cal_src: label of source column used
+                # p_cal_src: label of source column used (prefer p_role)
                 # role_ctx_outs_used: explicit outs usage field (copy of role_ctx_outs if present)
                 if "p_for_cal" not in df.columns or "p_cal_src" not in df.columns:
-                    if "data_health_flag" in df.columns:
-                        is_healthy = df["data_health_flag"].astype(str).str.lower().eq("healthy")
+                    if "p_role" in df.columns:
+                        p_role = pd.to_numeric(df["p_role"], errors="coerce")
+                        if "p_close_role" in df.columns:
+                            p_role = p_role.fillna(pd.to_numeric(df["p_close_role"], errors="coerce"))
+                        if "p_adj" in df.columns:
+                            p_role = p_role.fillna(pd.to_numeric(df["p_adj"], errors="coerce"))
+                        df["p_for_cal"] = p_role
+                        df["p_cal_src"] = "p_role"
                     else:
-                        is_healthy = pd.Series([True] * len(df), index=df.index)
+                        if "data_health_flag" in df.columns:
+                            is_healthy = df["data_health_flag"].astype(str).str.lower().eq("healthy")
+                        else:
+                            is_healthy = pd.Series([True] * len(df), index=df.index)
 
-                    has_p_role = "p_role" in df.columns
-                    p_adj_series = df["p_adj"]
-                    p_role_series = df["p_role"] if has_p_role else p_adj_series
+                        has_p_role = "p_role" in df.columns
+                        p_adj_series = df["p_adj"]
+                        p_role_series = df["p_role"] if has_p_role else p_adj_series
 
-                    df["p_for_cal"] = p_adj_series.where(is_healthy, p_role_series)
-                    df["p_cal_src"] = "p_adj"
-                    df.loc[~is_healthy, "p_cal_src"] = "p_role" if has_p_role else "p_adj"
+                        df["p_for_cal"] = p_adj_series.where(is_healthy, p_role_series)
+                        df["p_cal_src"] = "p_adj"
+                        df.loc[~is_healthy, "p_cal_src"] = "p_role" if has_p_role else "p_adj"
 
                 if "role_ctx_outs_used" not in df.columns:
                     # role_ctx_outs_used must be an integer count, not the outs list/string itself
@@ -819,36 +815,13 @@ def run_today(
                     else:
                         df["role_ctx_outs_used"] = 0
 
-                # Apply calibration to produce p_cal (this must NOT be nested under role_ctx_outs_used)
+                # Apply calibration to produce p_cal for the current live run outputs only.
                 try:
                     df = apply_calibration_column(df, map_path=map_path, in_col="p_for_cal", out_col="p_cal")
                 except Exception as e:
                     _append_cal_log(f"{csv_path} | CAL_FAIL | err={e}")
                     skipped.append((str(csv_path), f"cal_failed: {e}"))
                     continue
-
-                # Telemetry calibration overlay: late overlay on p_cal, additive only.
-                try:
-                    from Atlas.runtime.telemetry_calibration import load_calibration, apply_calibration_to_column
-
-                    stat = df.get("stat", "").astype(str).str.upper().str.strip()
-                    direction = df.get("direction", "").astype(str).str.upper().str.strip()
-                    df["telemetry_cal_key"] = (stat + "|" + direction).astype(str)
-                    df["telemetry_k_shrink"] = 1.0
-                    df["telemetry_under_penalty"] = 1.0
-                    df["telemetry_mult"] = 1.0
-                    df["telemetry_cal_applied"] = False
-
-                    tele_cal = load_calibration(PROJECT_ROOT)
-                    if tele_cal is not None and "p_cal" in df.columns:
-                        df = apply_calibration_to_column(df, tele_cal, source_col="p_cal", out_col="p_cal")
-                        if "p_cal_src" not in df.columns:
-                            df["p_cal_src"] = "p_adj"
-                        applied_mask = df["telemetry_cal_applied"].astype(bool)
-                        if applied_mask.any():
-                            df.loc[applied_mask, "p_cal_src"] = df.loc[applied_mask, "p_cal_src"].astype(str) + "+telemetry"
-                except Exception as e:
-                    _append_cal_log(f"{csv_path} | TELEMETRY_CAL_FAIL | err={e}")
 
                 try:
                     df.to_csv(csv_path, index=False, sep=sep)

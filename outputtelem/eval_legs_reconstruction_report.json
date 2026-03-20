@@ -1,0 +1,25 @@
+{
+  "run_dir": "outputtelem",
+  "source_scored_path": "outputtelem\\scored_legs_deduped.csv",
+  "output_eval_path": "outputtelem\\eval_legs.csv",
+  "report": {
+    "rows": 3609,
+    "matched_rows": 3224,
+    "unmatched_rows": 385,
+    "match_rate": 0.8933222499307287,
+    "quality_counts": {
+      "no_player_date_match": 385,
+      "player_date": 3224
+    },
+    "supported_stats": [
+      "AST",
+      "FG3M",
+      "PA",
+      "PR",
+      "PRA",
+      "PTS",
+      "RA",
+      "REB"
+    ]
+  }
+}

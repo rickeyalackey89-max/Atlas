@@ -8,8 +8,8 @@ HARD REQUIREMENT (your semantics):
 SMOOTH BEHAVIOR:
 - If Rotowire returns no rows / no events, do NOT silently proceed with empty spreads.
 - Instead:
-  1) Try to fall back to last-known-good file: data/input/rotowire_lines_last_good.json
-  2) If fallback exists and has events, write that into rotowire_lines.json (with a note)
+    1) Try to fall back to a game-date-pinned last-known-good file or same-slate archive copy
+    2) If fallback exists and has events, write that into rotowire_lines.json (with a note)
   3) If fallback missing/empty too, write the empty stub and exit non-zero.
 
 ENV:
@@ -46,6 +46,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import sys
 from dataclasses import dataclass
 from datetime import datetime, timezone
@@ -507,6 +508,52 @@ def _load_last_good(path: Path) -> Optional[Dict[str, Any]]:
     return None
 
 
+def _load_date_pinned_fallback(path: Path, game_date: str) -> Optional[Tuple[Dict[str, Any], Path]]:
+    candidates: List[Path] = [path]
+
+    for root in (
+        _repo_root() / "data" / "archives" / "iael",
+        _repo_root() / "archives" / "bundles",
+    ):
+        if root.exists():
+            candidates.extend(root.rglob("rotowire_lines.json"))
+            candidates.extend(root.rglob("rotowire_lines_last_good.json"))
+
+    seen: set[Path] = set()
+    best: Optional[Tuple[Tuple[int, str, str], Dict[str, Any], Path]] = None
+    for candidate in candidates:
+        if candidate in seen:
+            continue
+        seen.add(candidate)
+
+        obj = _load_last_good(candidate)
+        if obj is None:
+            continue
+
+        if str(obj.get("date", "")).strip() == game_date:
+            resolved = candidate.resolve()
+            default_resolved = path.resolve()
+            timestamp_matches = re.findall(r"\d{8}_\d{6}Z", str(candidate))
+            timestamp = timestamp_matches[-1] if timestamp_matches else ""
+            key = (1 if resolved == default_resolved else 0, timestamp, str(candidate))
+            if best is None or key > best[0]:
+                best = (key, obj, candidate)
+
+    if best is None:
+        return None
+    return best[1], best[2]
+
+
+def _write_fallback_output(out_path: Path, last_good_path: Path, obj: Dict[str, Any], note: str) -> None:
+    out_obj = dict(obj)
+    out_obj["note"] = note
+    out_obj["fetched_at"] = _now_utc_iso()
+    _write_json_atomic(out_path, out_obj)
+    if last_good_path.resolve() != out_path.resolve():
+        _write_json_atomic(last_good_path, out_obj)
+    _maybe_archive_live_rotowire(out_path)
+
+
 def _write_json_atomic(path: Path, obj: Dict[str, Any]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     tmp = path.with_suffix(path.suffix + ".tmp")
@@ -625,14 +672,11 @@ def main() -> int:
             print(f"[oddsapi] wrote {out_path} (events={len(oa_events)}) using FALLBACK")
             return 0
 
-        lg = _load_last_good(last_good_path)
-        if lg is not None:
-            lg2 = dict(lg)
-            lg2["note"] = f"STALE_FALLBACK_USED: http_{r.status_code}"
-            lg2["fetched_at"] = _now_utc_iso()
-            _write_json_atomic(out_path, lg2)
-            _maybe_archive_live_rotowire(out_path)
-            print(f"[rotowire] wrote {out_path} (events={len(lg2['events'])}) using LAST_GOOD fallback")
+        fallback = _load_date_pinned_fallback(last_good_path, game_date)
+        if fallback is not None:
+            lg, source_path = fallback
+            _write_fallback_output(out_path, last_good_path, lg, f"DATE_PINNED_FALLBACK_USED: http_{r.status_code}")
+            print(f"[rotowire] wrote {out_path} (events={len(lg['events'])}) using fallback from {source_path}")
             return 0
 
         return 2
@@ -660,14 +704,11 @@ def main() -> int:
             print(f"[oddsapi] wrote {out_path} (events={len(oa_events)}) using FALLBACK")
             return 0
 
-        lg = _load_last_good(last_good_path)
-        if lg is not None:
-            lg2 = dict(lg)
-            lg2["note"] = "STALE_FALLBACK_USED: got_html"
-            lg2["fetched_at"] = _now_utc_iso()
-            _write_json_atomic(out_path, lg2)
-            _maybe_archive_live_rotowire(out_path)
-            print(f"[rotowire] wrote {out_path} (events={len(lg2['events'])}) using LAST_GOOD fallback")
+        fallback = _load_date_pinned_fallback(last_good_path, game_date)
+        if fallback is not None:
+            lg, source_path = fallback
+            _write_fallback_output(out_path, last_good_path, lg, "DATE_PINNED_FALLBACK_USED: got_html")
+            print(f"[rotowire] wrote {out_path} (events={len(lg['events'])}) using fallback from {source_path}")
             return 0
 
         if allow_empty:
@@ -698,14 +739,11 @@ def main() -> int:
             print(f"[oddsapi] wrote {out_path} (events={len(oa_events)}) using FALLBACK")
             return 0
 
-        lg = _load_last_good(last_good_path)
-        if lg is not None:
-            lg2 = dict(lg)
-            lg2["note"] = f"STALE_FALLBACK_USED: not_json:{type(e).__name__}"
-            lg2["fetched_at"] = _now_utc_iso()
-            _write_json_atomic(out_path, lg2)
-            _maybe_archive_live_rotowire(out_path)
-            print(f"[rotowire] wrote {out_path} (events={len(lg2['events'])}) using LAST_GOOD fallback")
+        fallback = _load_date_pinned_fallback(last_good_path, game_date)
+        if fallback is not None:
+            lg, source_path = fallback
+            _write_fallback_output(out_path, last_good_path, lg, f"DATE_PINNED_FALLBACK_USED: not_json:{type(e).__name__}")
+            print(f"[rotowire] wrote {out_path} (events={len(lg['events'])}) using fallback from {source_path}")
             return 0
 
         if allow_empty:
@@ -751,14 +789,11 @@ def main() -> int:
             print(f"[oddsapi] wrote {out_path} (events={len(oa_events)}) using FALLBACK")
             return 0
 
-        lg = _load_last_good(last_good_path)
-        if lg is not None:
-            lg2 = dict(lg)
-            lg2["note"] = "STALE_FALLBACK_USED: empty_rows"
-            lg2["fetched_at"] = _now_utc_iso()
-            _write_json_atomic(out_path, lg2)
-            _maybe_archive_live_rotowire(out_path)
-            print(f"[rotowire] wrote {out_path} (events={len(lg2['events'])}) using LAST_GOOD fallback")
+        fallback = _load_date_pinned_fallback(last_good_path, game_date)
+        if fallback is not None:
+            lg, source_path = fallback
+            _write_fallback_output(out_path, last_good_path, lg, "DATE_PINNED_FALLBACK_USED: empty_rows")
+            print(f"[rotowire] wrote {out_path} (events={len(lg['events'])}) using fallback from {source_path}")
             return 0
 
         out_obj = {
@@ -870,13 +905,11 @@ def main() -> int:
         print(f"[oddsapi] wrote {out_path} (events={len(oa_events)}) using FALLBACK")
         return 0
 
-    lg = _load_last_good(last_good_path)
-    if lg is not None:
-        lg2 = dict(lg)
-        lg2["note"] = "STALE_FALLBACK_USED: parsed_zero_events"
-        lg2["fetched_at"] = _now_utc_iso()
-        _write_json_atomic(out_path, lg2)
-        print(f"[rotowire] wrote {out_path} (events={len(lg2['events'])}) using LAST_GOOD fallback")
+    fallback = _load_date_pinned_fallback(last_good_path, game_date)
+    if fallback is not None:
+        lg, source_path = fallback
+        _write_fallback_output(out_path, last_good_path, lg, "DATE_PINNED_FALLBACK_USED: parsed_zero_events")
+        print(f"[rotowire] wrote {out_path} (events={len(lg['events'])}) using fallback from {source_path}")
         return 0
 
     if allow_empty:

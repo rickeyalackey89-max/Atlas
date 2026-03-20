@@ -125,7 +125,7 @@ role_ctx:
 allocator:
   weight_mode: blend
   blend_alpha: 0.095
-  usage_power: 3.0
+  usage_power: 2.0
   season_weight: 0.70
   recent_weight: 0.30
   recent_games: 10
@@ -133,13 +133,13 @@ allocator:
   ramp_extra_recent: 0.50
   share_matrix:
     recent_days: 120
-    min_rotation_games: 7
+    min_rotation_games: 8
     min_rotation_avg_min: 9.0
-    min_pattern_games: 3
+    min_pattern_games: 5
     keep_zero_weights: false
   support:
-    min_games_for_pattern: 6
-    teamshare_support_budget_floor: 0.75
+    min_games_for_pattern: 8
+    teamshare_support_budget_floor: 0.65
     teamshare_rel_effective_threshold: 0.25
   rotation_reweight:
     enabled: true

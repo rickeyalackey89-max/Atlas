@@ -1,2 +1,0 @@
-n_days,n_sims,start_bankroll,median_final,mean_final,p_loss_vs_start,p_ruin,median_max_drawdown,p_drawdown_ge_25pct,p_drawdown_ge_50pct,kelly_fraction,max_f_per_slip,max_daily_f,min_edge,payout_b_3,payout_b_4,payout_b_5
-2,5000,1000.0,1000.0,1000.0,0.0,0.0,0.0,0.0,0.0,0.125,0.02,0.2,0.0,1.0,2.0,5.0

@@ -1,6 +1,0 @@
-Traceback (most recent call last):
-  File "<frozen runpy>", line 198, in _run_module_as_main
-  File "<frozen runpy>", line 88, in _run_code
-  File "C:\Users\rick\projects\Atlas\src\Atlas\engine\main.py", line 19, in <module>
-    from Atlas.core.payout_tables import FLEX_3, FLEX_4, FLEX_5, POWER_MULT
-ImportError: cannot import name 'FLEX_3' from 'Atlas.core.payout_tables' (C:\Users\rick\projects\Atlas\src\Atlas\core\payout_tables.py)

@@ -15,7 +15,6 @@ from Atlas.core.share_name_key import share_name_key
 # ============================================================
 
 import re
-import unicodedata
 
 _TEAM_NAME_TO_ABBR: Dict[str, str] = {
     # IAEL-style concatenated names -> 3-letter abbreviations
@@ -56,11 +55,6 @@ _SUFFIX_RE = re.compile(r"^([a-z]+)(iii|ii|iv|v|jr|sr)$", re.I)
 _CAMEL_SPLIT_RE = re.compile(r"(?<=[a-z])(?=[A-Z])")
 
 
-def _strip_diacritics(s: str) -> str:
-    s = unicodedata.normalize("NFKD", s)
-    return "".join(ch for ch in s if not unicodedata.combining(ch))
-
-
 def _norm_team(x: str) -> str:
     """Return 3-letter team abbreviation when possible."""
     raw = str(x or "").strip()
@@ -77,13 +71,14 @@ def _norm_team(x: str) -> str:
 
 
 def _player_key(x: str) -> str:
-    """Canonical player key used for joins across IAEL / gamelogs / share_matrix."""
+    """Local alias for the shared canonical player join key."""
     return share_name_key(x)
 
 
 def _norm_player(x: str) -> str:
     """Legacy wrapper; keep behavior stable but prefer _player_key for joins."""
     return str(x or "").strip()
+
 
 def _safe_float(x, default: float = np.nan) -> float:
     """
@@ -211,7 +206,7 @@ def _apply_power_transform(scores: Dict[str, float], power: float) -> Dict[str, 
     return out
 
 
-def _soft_cap_multiplier(mult: float, cap: float, softness: float = 0.35) -> float:
+def _soft_cap_multiplier(mult: float, cap: float, softness: float = 0.15) -> float:
     """
     Soft-cap a multiplier above `cap`.
 
@@ -220,7 +215,7 @@ def _soft_cap_multiplier(mult: float, cap: float, softness: float = 0.35) -> flo
 
     softness:
       0.0 -> hard cap
-      0.35 -> recommended (damps extremes, smooth)
+            0.15 -> current default
       1.0 -> no cap
     """
     try:
@@ -430,7 +425,7 @@ def build_trade_aware_usage_weights(
     base_w_season = float(getattr(cfg, "season_weight", 0.70) or 0.70)
     base_w_recent = float(getattr(cfg, "recent_weight", 0.30) or 0.30)
     recent_n = int(getattr(cfg, "recent_games", 10) or 10)
-    min_new = int(getattr(cfg, "min_games_new_team", 10) or 10)
+    min_new = int(getattr(cfg, "min_games_new_team", 3) or 3)
     ramp_extra = float(getattr(cfg, "ramp_extra_recent", 0.50) or 0.50)
 
     # NEW: usage sharpening
@@ -1024,7 +1019,7 @@ class ReallocConfig:
     season_weight: float = 0.70
     recent_weight: float = 0.30
     recent_games: int = 10
-    min_games_new_team: int = 10
+    min_games_new_team: int = 3
     ramp_extra_recent: float = 0.50
 
     # Replaceability-adjusted capture (depth)
@@ -1053,7 +1048,7 @@ class ReallocConfig:
 
     # Teamshare support debug/polish
     teamshare_rel_effective_threshold: float = 0.25
-    teamshare_support_budget_floor: float = 0.75
+    teamshare_support_budget_floor: float = 0.65
 
     # --------------------------------------------------------
     # NEW: Role expansion guardrails (soft caps on multipliers)
@@ -1077,7 +1072,7 @@ class ReallocConfig:
 
 def default_config() -> ReallocConfig:
     return ReallocConfig(
-        capture_rate={"PTS": 0.90, "REB": 0.95, "AST": 0.85},
+        capture_rate={"PTS": 0.88, "REB": 0.93, "AST": 0.82},
 
         dirichlet_alpha=8.0,
         min_games_for_pattern=8,
@@ -1120,13 +1115,13 @@ def default_config() -> ReallocConfig:
         rotation_floor=0.05,
 
         teamshare_rel_effective_threshold=0.25,
-        teamshare_support_budget_floor=0.75,
+        teamshare_support_budget_floor=0.65,
 
         # NEW guardrails defaults (tuned to your CHA double-out findings)
         role_guardrails_enabled=True,
         role_guardrails_min_outs=2,
         role_guardrails_removed_threshold={"PTS": 30.0, "AST": 7.0, "REB": 10.0},
-        role_guardrails_cap_mult={"PTS": 1.35, "AST": 1.25, "REB": 1.20},
+        role_guardrails_cap_mult={"PTS": 1.25, "AST": 1.18, "REB": 1.12},
         role_guardrails_softness=0.15,
 
         debug_prints=False,
@@ -1504,9 +1499,9 @@ def compute_role_multiplier(
     # Candidate pool + weights
     # ------------------------------------------------------------
     mode = str(getattr(cfg, "weight_mode", "teamshare") or "teamshare").lower().strip()
-    alpha_raw = float(getattr(cfg, "blend_alpha", 0.5) or 0.5)
+    alpha_raw = float(getattr(cfg, "blend_alpha", 0.2) or 0.2)
     alpha_raw = float(np.clip(alpha_raw, 0.0, 1.0))
-    usage_lb = int(getattr(cfg, "usage_lookback_games", 15) or 15)  # legacy
+    usage_lb = int(getattr(cfg, "usage_lookback_games", 20) or 20)  # legacy
 
     team_active = gl[(gl["team"] == team_u) & (gl[minutes_col] > 0)].copy()
 
@@ -1515,9 +1510,9 @@ def compute_role_multiplier(
         key=str.lower
     )
 
-    out_lc = {p.strip().lower() for p, _ in out_list}
+    out_keys = {out_k for out_k, _ in out_list if out_k}
     # drop out players from candidate pool using canonical keys
-    candidates = [p for p in candidates if _player_key(p) not in out_lc]
+    candidates = [p for p in candidates if _player_key(p) not in out_keys]
     if not candidates:
         return 1.0, {"reason": "no_candidates"}
 
@@ -1556,7 +1551,7 @@ def compute_role_multiplier(
 
     # Preserve the redistribution philosophy, but shrink the effect when the
     # share-matrix support for the current out pattern is weak.
-    support_floor = float(getattr(cfg, "teamshare_support_budget_floor", 0.75) or 0.75)
+    support_floor = float(getattr(cfg, "teamshare_support_budget_floor", 0.65) or 0.65)
     support_floor = float(np.clip(support_floor, 0.0, 1.0))
     # Support must be both present and consistent; weak out patterns should not
     # receive the same redistribution budget as fully-supported patterns.
@@ -1688,7 +1683,7 @@ def compute_role_multiplier(
         if not thresholds:
             thresholds = {"PTS": 30.0, "AST": 7.0, "REB": 10.0}
         if not caps:
-            caps = {"PTS": 1.35, "AST": 1.25, "REB": 1.20}
+            caps = {"PTS": 1.25, "AST": 1.18, "REB": 1.12}
 
         thr = float(thresholds.get(stat_u, float("inf")))
         capm = float(caps.get(stat_u, float("inf")))

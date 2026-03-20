@@ -285,7 +285,7 @@ def compute_role_multiplier(
     ben = _canon_name(player)
 
     outs = _extract_team_outs(iael_df, team_u)
-    outs_canon = [_canon_name(o) for o in outs if _canon_name(o)]
+    outs_canon = [canon for o in outs if (canon := _canon_name(o))]
     if not outs_canon:
         return 1.0, {
             "reason": "no_outs",

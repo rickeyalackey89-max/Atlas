@@ -27,7 +27,6 @@ import json
 import math
 import os
 import re
-import unicodedata
 from pathlib import Path
 from typing import Any
 
@@ -54,13 +53,7 @@ def _repo_root_from_here() -> Path:
 
 def _canon_name(s: str) -> str:
     """
-    Canonicalize player names for stable matching:
-    - Handle "Last,First" by swapping to "First Last" first
-    - NFKD deaccent
-    - lowercase
-    - strip punctuation
-    - remove common suffixes (jr, sr, ii, iii, iv, v)
-    - collapse whitespace
+    Local alias for the shared canonical player join key.
     """
     return share_name_key(s)
 
@@ -528,7 +521,7 @@ def compute_role_multiplier(
     ben = _canon_name(player)
 
     outs = _extract_team_outs(iael_df, team_u)
-    outs_canon = [_canon_name(o) for o in outs if _canon_name(o)]
+    outs_canon = [canon for o in outs if (canon := _canon_name(o))]
     if not outs_canon:
         return 1.0, {
             "reason": "no_outs",
@@ -865,8 +858,6 @@ def simulate_leg_probability_new(
                 if comp_reasons:
                     if all(r == "no_outs" for r in comp_reasons):
                         role_reason = "no_outs"
-                    elif all(r == "no_matches" for r in comp_reasons):
-                        role_reason = "no_matches"
                     elif any(r == "ok" for r in comp_reasons) and outs_used_sum_tmp > 0:
                         role_reason = "ok_combo"
                     else:

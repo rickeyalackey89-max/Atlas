@@ -217,6 +217,28 @@ def _default_calibration_path(project_root: Path) -> Path:
     return project_root / "data" / "model" / "telemetry_calibration.json"
 
 
+def seed_telemetry_columns(scored: pd.DataFrame, *, include_bucket_mult: bool = False) -> pd.DataFrame:
+    """Initialize telemetry diagnostic columns with no-op defaults."""
+    out = scored.copy()
+    if "stat" in out.columns:
+        stat = out["stat"].astype(str).str.upper().str.strip()
+    else:
+        stat = pd.Series("", index=out.index, dtype=str)
+    if "direction" in out.columns:
+        direction = out["direction"].astype(str).str.upper().str.strip()
+    else:
+        direction = pd.Series("", index=out.index, dtype=str)
+
+    out["telemetry_cal_key"] = (stat + "|" + direction).astype(str)
+    out["telemetry_k_shrink"] = 1.0
+    out["telemetry_under_penalty"] = 1.0
+    out["telemetry_mult"] = 1.0
+    if include_bucket_mult:
+        out["telemetry_bucket_mult"] = 1.0
+    out["telemetry_cal_applied"] = False
+    return out
+
+
 def load_calibration(project_root: Path) -> Optional[TelemetryCalibration]:
     """Load calibration from disk. Returns None if missing/unreadable."""
     path = _default_calibration_path(project_root)
@@ -353,18 +375,7 @@ def apply_calibration_to_column(
     """
     out = scored.copy()
     if source_col not in out.columns:
-        key = (
-            out.get("stat", "").astype(str).str.upper().str.strip()
-            + "|"
-            + out.get("direction", "").astype(str).str.upper().str.strip()
-        ) if len(out.index) else pd.Series(dtype=str)
-        out["telemetry_k_shrink"] = 1.0
-        out["telemetry_under_penalty"] = 1.0
-        out["telemetry_mult"] = 1.0
-        out["telemetry_bucket_mult"] = 1.0
-        out["telemetry_cal_key"] = key if len(key) else ""
-        out["telemetry_cal_applied"] = False
-        return out
+        return seed_telemetry_columns(out, include_bucket_mult=True)
 
     source_label_col = f"{source_col}_src"
     allowed_mask = _telemetry_source_allowed_mask(out, calib, source_label_col=source_label_col)

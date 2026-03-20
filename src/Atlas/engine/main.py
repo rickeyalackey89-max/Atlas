@@ -275,6 +275,11 @@ def normalize_person_name(name: Any) -> str:
     return " ".join(tokens)
 
 
+def _player_key(name: Any) -> str:
+    """Local alias for the shared canonical player join key."""
+    return share_name_key(name)
+
+
 def normalize_team_token(team: Any) -> str:
     return ("" if team is None else str(team)).strip().upper()
 
@@ -310,7 +315,7 @@ def load_iael_invalidations(
             df["team"] = ""
 
         df["player_norm"] = df["player"].apply(normalize_person_name)
-        df["player_key"] = df["player"].apply(share_name_key)
+        df["player_key"] = df["player"].apply(_player_key)
         df["team_norm"] = df["team"].apply(normalize_team_token)
 
         if "status" in df.columns:
@@ -739,7 +744,7 @@ def main() -> None:
 
     # CALIBRATION CONTRACT COLUMNS (schema enforcement)
     # p_for_cal: chosen upstream probability for calibration
-    # p_cal_src: source of p_for_cal ("p_adj" vs "p_role")
+    # p_cal_src: source of p_for_cal (prefer p_role)
     # p_cal: calibrated probability (identity here unless calibration stage overrides)
     if "role_ctx_outs_used" not in scored.columns:
         scored["role_ctx_outs_used"] = 0
@@ -747,36 +752,11 @@ def main() -> None:
 
     p_adj = pd.to_numeric(scored.get("p_adj", scored.get("p", 0.5)), errors="coerce").fillna(0.5).clip(0, 1) # type: ignore
     p_role = pd.to_numeric(scored.get("p_role", p_adj), errors="coerce").fillna(p_adj).clip(0, 1)
+    p_close_role = pd.to_numeric(scored.get("p_close_role", p_role), errors="coerce").fillna(p_role).clip(0, 1)
 
-    use_role = scored["role_ctx_outs_used"] > 0
-    scored["p_for_cal"] = np.where(use_role, p_role, p_adj)
-    scored["p_cal_src"] = np.where(use_role, "p_role", "p_adj")
+    scored["p_for_cal"] = p_role
+    scored["p_cal_src"] = "p_role"
     scored["p_cal"] = scored["p_for_cal"]
-
-    # TELEMETRY CALIBRATION OVERLAY (late overlay on p_cal; additive only)
-    try:
-        from Atlas.runtime.telemetry_calibration import load_calibration, apply_calibration_to_column
-
-        project_root = Path(__file__).resolve().parents[3]
-        tele_cal = load_calibration(project_root)
-
-        _ensure_col(scored, "stat", "")
-        _ensure_col(scored, "direction", "")
-        stat = scored["stat"].astype(str).str.upper().str.strip()
-        direction = scored["direction"].astype(str).str.upper().str.strip()
-        scored["telemetry_cal_key"] = (stat + "|" + direction).astype(str)
-        scored["telemetry_k_shrink"] = 1.0
-        scored["telemetry_under_penalty"] = 0.9
-        scored["telemetry_mult"] = 1.0
-        scored["telemetry_cal_applied"] = False
-
-        if tele_cal is not None and "p_cal" in scored.columns:
-            scored = apply_calibration_to_column(scored, tele_cal, source_col="p_cal", out_col="p_cal")
-            applied_mask = scored["telemetry_cal_applied"].astype(bool)
-            if applied_mask.any():
-                scored.loc[applied_mask, "p_cal_src"] = scored.loc[applied_mask, "p_cal_src"].astype(str) + "+telemetry"
-    except Exception:
-        pass
 
     # PREP FOR OPTIMIZER (staged)
     from Atlas.stages.prep_for_optimizer.prep_for_optimizer import run_prep_for_optimizer

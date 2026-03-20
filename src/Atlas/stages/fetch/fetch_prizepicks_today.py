@@ -50,6 +50,29 @@ def _parse_iso_datetime(s: Any) -> Optional[datetime]:
     except Exception:
         return None
 
+def _resolve_replay_now(payload: dict[str, Any]) -> datetime:
+    updated_candidates: list[datetime] = []
+    start_candidates: list[datetime] = []
+
+    for item in payload.get("data", []) or []:
+        attr = item.get("attributes", {}) or {}
+
+        updated_at = _parse_iso_datetime(attr.get("updated_at"))
+        if updated_at is not None:
+            updated_candidates.append(updated_at)
+
+        start_time = _parse_iso_datetime(attr.get("start_time"))
+        if start_time is not None:
+            start_candidates.append(start_time)
+
+    if updated_candidates:
+        return max(updated_candidates)
+
+    if start_candidates:
+        return min(start_candidates)
+
+    return datetime.now(timezone.utc)
+
 def _infer_tag(odds_type: Any) -> str:
     t = _clean_str(odds_type).upper()
     if "GOBLIN" in t:
@@ -128,7 +151,7 @@ def run_fetch(*, payload: dict[str, Any], is_replay: bool) -> pd.DataFrame:
             games_by_id[iid] = attr
 
     rows: list[dict[str, Any]] = []
-    now_utc = datetime.min.replace(tzinfo=timezone.utc) if is_replay else datetime.now(timezone.utc)
+    now_utc = _resolve_replay_now(payload) if is_replay else datetime.now(timezone.utc)
     TZ_CT = ZoneInfo("America/Chicago")
     now_ct = now_utc.astimezone(TZ_CT)
     today_ct = now_ct.date()

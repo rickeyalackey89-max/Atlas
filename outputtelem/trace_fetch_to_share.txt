@@ -1,3 +1,0 @@
-10:  File "C:\Users\rick\projects\Atlas\src\Atlas\cli.py", line 611, in <module>
-12:  File "C:\Users\rick\projects\Atlas\src\Atlas\cli.py", line 557, in main
-15:  File "C:\Users\rick\projects\Atlas\src\Atlas\cli.py", line 504, in _parse_replay_raw_path

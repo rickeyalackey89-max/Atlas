@@ -494,6 +494,39 @@ def _compute_hit(actual: float, line: float, direction: str) -> float:
     return float("nan")
 
 
+_EVAL_PROBABILITY_COLUMNS = (
+    "p",
+    "p_role",
+    "p_close",
+    "p_close_raw",
+    "p_close_role",
+    "p_adj_pre_under_relief",
+    "p_adj",
+    "p_for_cal",
+    "p_cal",
+)
+
+
+def _add_eval_score_columns(df: pd.DataFrame) -> pd.DataFrame:
+    scored = df.copy()
+    line = pd.to_numeric(scored.get("line", pd.Series(float("nan"), index=scored.index)), errors="coerce")
+    actual = pd.to_numeric(scored.get("actual", pd.Series(float("nan"), index=scored.index)), errors="coerce")
+    scored["actual_delta"] = actual - line
+    scored["actual_abs_delta"] = (actual - line).abs()
+
+    if "hit" in scored.columns:
+        hit = pd.to_numeric(scored["hit"], errors="coerce")
+        for col in _EVAL_PROBABILITY_COLUMNS:
+            if col not in scored.columns:
+                continue
+            pred = pd.to_numeric(scored[col], errors="coerce").clip(0.0, 1.0)
+            error_col = f"{col}_error"
+            brier_col = f"brier_{col}"
+            scored[error_col] = pred - hit
+            scored[brier_col] = scored[error_col] ** 2
+    return scored
+
+
 def _write_eval_legs(args: BacktestArgs, meta: BacktestMeta, engine_run_dir: Path) -> Path:
     deduped = pd.read_csv(engine_run_dir / "scored_legs_deduped.csv")
     logs = pd.read_csv(args.logs_path)
@@ -526,7 +559,7 @@ def _write_eval_legs(args: BacktestArgs, meta: BacktestMeta, engine_run_dir: Pat
         )
     ]
     merged["push"] = merged["hit"].isna().astype(int)
-    eval_df = merged[merged["hit"].notna()].copy()
+    eval_df = _add_eval_score_columns(merged[merged["hit"].notna()].copy())
     eval_path = engine_run_dir / "eval_legs.csv"
     eval_df.to_csv(eval_path, index=False, encoding="utf-8-sig")
     meta.eval_legs_path = str(eval_path.resolve())
