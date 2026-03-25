@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import os
 import random
+import re
 import time
 from datetime import datetime, timezone
 from pathlib import Path
@@ -125,14 +126,69 @@ def _get_payload(url: str, raw_path: Optional[str]) -> tuple[dict[str, Any], boo
 # Sticky-Union Roster Map
 # ---------------------------------------------------------------
 
+_PERSON_SUFFIX_RE = re.compile(r"\b(jr|sr|ii|iii|iv|v)\b\.?", re.IGNORECASE)
+
 def _is_valid_team_abbr(team: str) -> bool:
     """Check if team is a valid 3-letter uppercase NBA abbreviation."""
     return isinstance(team, str) and len(team) == 3 and team.isupper() and team.isalpha()
 
 
+def _normalize_person_key(name: Any) -> str:
+    s = "" if name is None else str(name)
+    s = s.strip().lower()
+    s = s.replace("’", "'")
+    s = s.replace(",", " ")
+    s = s.replace(".", " ")
+    s = s.replace("-", " ")
+    s = re.sub(r"[^\w\s']", " ", s)
+    s = _PERSON_SUFFIX_RE.sub("", s)
+    s = re.sub(r"\s+", " ", s).strip()
+    if not s:
+        return ""
+    parts = [part for part in s.split(" ") if part]
+    parts.sort()
+    return " ".join(parts)
+
+
+def _load_live_roster_map() -> pd.DataFrame:
+    """Pull the current-season NBA roster map from nba_api, if available."""
+    try:
+        from nba_api.stats.endpoints import CommonAllPlayers
+        from nba_api.stats.static import teams as nba_teams
+    except Exception:
+        return pd.DataFrame(columns=["player", "team", "player_norm"])
+
+    team_id_to_abbr = {t["id"]: t["abbreviation"] for t in nba_teams.get_teams()}
+
+    try:
+        cap = CommonAllPlayers(is_only_current_season=1)
+        df = cap.get_data_frames()[0].copy()
+    except Exception:
+        return pd.DataFrame(columns=["player", "team", "player_norm"])
+
+    if "DISPLAY_FIRST_LAST" not in df.columns or "TEAM_ID" not in df.columns:
+        return pd.DataFrame(columns=["player", "team", "player_norm"])
+
+    roster_df = df.copy()
+    roster_df["player"] = roster_df["DISPLAY_FIRST_LAST"].astype(str).str.strip()
+    roster_df["team"] = roster_df["TEAM_ID"].map(team_id_to_abbr).fillna("").astype(str).str.strip()
+    roster_df["player_norm"] = roster_df["player"].apply(_normalize_person_key)
+    roster_df = roster_df.loc[
+        roster_df["player"].ne("")
+        & roster_df["player_norm"].ne("")
+        & roster_df["team"].apply(_is_valid_team_abbr),
+        ["player", "team", "player_norm"],
+    ]
+    return roster_df.drop_duplicates(subset=["player_norm", "team"]).reset_index(drop=True)
+
+
 def _update_roster_map(final_df: pd.DataFrame, run_ts: str) -> None:
     """
-    Build sticky-union roster map from today's fetch and existing roster_map.csv.
+    Refresh roster_map.csv using the live roster pull as the authoritative source.
+
+    Existing player names are preserved when possible to avoid name drift; only team
+    values are updated from the live roster source. If the live roster source is not
+    available, fall back to the previous sticky-union behavior from today's fetch.
     Writes updates to roster_map.csv and audit files.
     """
     ROSTER_MAP_PATH = PROJECT_ROOT / "data" / "input" / "roster_map.csv"
@@ -153,9 +209,54 @@ def _update_roster_map(final_df: pd.DataFrame, run_ts: str) -> None:
         old_df = pd.read_csv(ROSTER_MAP_PATH)
         old_map = dict(zip(old_df["player"], old_df["team"]))
     
-    # Build new_map with sticky-union logic
+    live_roster_df = _load_live_roster_map()
+    live_map: dict[str, dict[str, str]] = {}
+    live_norms: set[str] = set()
+    if not live_roster_df.empty:
+        print(f"[ROSTER_MAP] Pulled live roster source: {len(live_roster_df)} players")
+        for _, row in live_roster_df.iterrows():
+            player = str(row.get("player", "")).strip()
+            team = str(row.get("team", "")).strip()
+            player_norm = str(row.get("player_norm", "")).strip()
+            if not player or not player_norm or not _is_valid_team_abbr(team):
+                continue
+            # Keep the first canonical name we see for each normalized player key.
+            live_map.setdefault(player_norm, {"player": player, "team": team})
+            live_norms.add(player_norm)
+
+    # Build new_map with authoritative live roster updates, preserving existing names.
     new_map = old_map.copy()
-    new_map.update(today_map)
+    if live_map:
+        # Update any existing roster rows whose normalized player name matches the live source.
+        old_norm_to_players: dict[str, list[str]] = {}
+        for player in old_map:
+            player_norm = _normalize_person_key(player)
+            if not player_norm:
+                continue
+            old_norm_to_players.setdefault(player_norm, []).append(player)
+
+        for player_norm, entry in live_map.items():
+            live_team = entry["team"]
+            existing_players = old_norm_to_players.get(player_norm, [])
+            if existing_players:
+                for player in existing_players:
+                    new_map[player] = live_team
+            else:
+                new_map[entry["player"]] = live_team
+
+        # Fill only truly unmapped players from today's fetch as a last-resort fallback.
+        # This avoids promoting board-derived team guesses when the live roster source is healthy.
+        for player, team in today_map.items():
+            if player in new_map:
+                continue
+            if player in old_map:
+                continue
+            if _normalize_person_key(player) in live_norms:
+                continue
+            new_map[player] = team
+    else:
+        # Fall back to the historical sticky-union behavior if the live roster pull fails.
+        new_map.update(today_map)
     
     # Detect conflicts (multiple teams per player in final_df)
     conflicts = []

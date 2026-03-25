@@ -1,0 +1,23 @@
+[
+  {
+    "step": 0.005,
+    "run": "20260322_101301",
+    "brier_p_adj": 0.2280595287686463,
+    "brier_p_cal": 0.2111937979595455,
+    "under_relief_applied_scored": 459
+  },
+  {
+    "step": 0.01,
+    "run": "20260322_101437",
+    "brier_p_adj": 0.22823367478262796,
+    "brier_p_cal": 0.21117577927194583,
+    "under_relief_applied_scored": 459
+  },
+  {
+    "step": 0.015,
+    "run": "20260322_101614",
+    "brier_p_adj": 0.2284091537239526,
+    "brier_p_cal": 0.21116578993296511,
+    "under_relief_applied_scored": 458
+  }
+]

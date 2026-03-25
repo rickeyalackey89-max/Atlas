@@ -198,7 +198,12 @@ def _source_weight_map(pri_cfg: dict[str, Any]) -> Dict[str, float]:
     return weights
 
 
-def apply_external_priors(df: pd.DataFrame, cfg: dict[str, Any]) -> pd.DataFrame:
+def apply_external_priors(
+    df: pd.DataFrame,
+    cfg: dict[str, Any],
+    *,
+    apply_probability: bool = True,
+) -> pd.DataFrame:
     global _DBG_WROTE
     out = df.copy()
 
@@ -318,9 +323,11 @@ def apply_external_priors(df: pd.DataFrame, cfg: dict[str, Any]) -> pd.DataFrame
         )
         merged["external_prior_sources"] = merged["sources"].fillna("").astype(str)
 
-        # Apply bounded nudge to p_adj (preferred) or p (fallback)
+        # Apply bounded nudge only when the caller wants the prior to affect the
+        # probability surface. The scored surface can still carry audit columns
+        # without being directly rewritten.
         target_col: Optional[str] = "p_adj" if "p_adj" in merged.columns else ("p" if "p" in merged.columns else None)
-        if target_col is not None:
+        if target_col is not None and apply_probability:
             merged["delta_p"] = (cap * merged["external_prior_score"]).clip(-abs(cap), abs(cap))
             merged[target_col] = (
                 pd.to_numeric(merged[target_col], errors="coerce") + merged["delta_p"]

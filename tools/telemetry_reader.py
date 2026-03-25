@@ -35,7 +35,7 @@ def _validate_out_root(repo_root: Path, p: Path) -> tuple[str, Path]:
 
     Allowed roots:
       1) <repo_root>/data/archives               (legacy)
-      2) <repo_root>/data/output/replay_runs    (telemetry replay)
+    2) <repo_root>/data/telemetry/replay_runs  (telemetry replay)
 
     Returns:
       (mode, resolved_path) where mode is "archives" or "replay_runs".
@@ -43,7 +43,7 @@ def _validate_out_root(repo_root: Path, p: Path) -> tuple[str, Path]:
     p = p.expanduser().resolve()
 
     archives_root = (repo_root / "data" / "archives").resolve()
-    replay_root = (repo_root / "data" / "output" / "replay_runs").resolve()
+    replay_root = (repo_root / "data" / "telemetry" / "replay_runs").resolve()
 
     def _norm(x: Path) -> str:
         return str(x).replace("\\", "/").lower()
@@ -85,7 +85,7 @@ def _get_raw_json_files(raw_dir: Path, limit: int) -> list[Path]:
     if not raw_dir.exists():
         raise RuntimeError(f"Raw directory not found: {raw_dir}")
     
-    files = list(raw_dir.glob("prizepicks_*.json"))
+    files = [p for p in raw_dir.glob("prizepicks_*.json") if not p.name.startswith("prizepicks_20260312_")]
     files.sort(key=lambda p: p.stat().st_mtime, reverse=True)
     return files[:limit]
 
@@ -106,7 +106,7 @@ def main(argv: list[str] | None = None) -> int:
         "--out-dir",
         required=True,
         help=(
-            "Output root under either data/archives (legacy) or data/output/replay_runs "
+            "Output root under either data/archives (legacy) or data/telemetry/replay_runs "
             "(telemetry replay)."
         ),
     )

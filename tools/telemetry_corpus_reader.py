@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import ast
 import json
 import math
 import re
@@ -16,8 +17,13 @@ from typing import Any, Dict, List, Optional, Tuple
 import numpy as np
 import pandas as pd
 import yaml
+from sklearn.isotonic import IsotonicRegression
 
 ID_RE = re.compile(r"\[id:(\d+)\]")
+LEG_RE = re.compile(
+    r"^(?P<player>.*?)\s+(?P<direction>OVER|UNDER)\s+(?P<stat>[A-Z0-9/]+)\s+(?P<line>[+-]?\d+(?:\.\d+)?)\s+\((?P<tier>[^)]+)\)\s+\[id:(?P<id>\d+)\]$",
+    re.IGNORECASE,
+)
 RECOMMENDED_RE = re.compile(r"recommended_(\d)leg(_winprob)?\.csv$", re.IGNORECASE)
 RUN_DIR_RE = re.compile(r"^\d{8}_\d{6}$")
 
@@ -155,6 +161,14 @@ def _load_json(path: Path) -> Any:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+def _find_repo_root(start: Path) -> Path:
+    p = start.resolve()
+    for parent in [p] + list(p.parents):
+        if (parent / "tools").is_dir() and (parent / "data").is_dir():
+            return parent
+    return p.parent
+
+
 def _read_csv(path: Path) -> pd.DataFrame:
     try:
         return pd.read_csv(path)
@@ -192,6 +206,414 @@ def _top_value_counts(series: pd.Series, limit: int = 10) -> List[Dict[str, Any]
         return []
     counts = s.astype(str).value_counts(dropna=False).head(limit)
     return [{"value": idx, "count": int(val)} for idx, val in counts.items()]
+
+
+def _parse_listish(value: Any) -> List[str]:
+    if value is None:
+        return []
+    try:
+        if pd.isna(value):
+            return []
+    except Exception:
+        pass
+    if isinstance(value, (list, tuple, set)):
+        return [str(v).strip() for v in value if str(v).strip()]
+    text = str(value).strip()
+    if not text:
+        return []
+    try:
+        parsed = ast.literal_eval(text)
+        if isinstance(parsed, (list, tuple, set)):
+            return [str(v).strip() for v in parsed if str(v).strip()]
+    except Exception:
+        pass
+    if "|" in text:
+        return [part.strip() for part in text.split("|") if part.strip()]
+    if "," in text:
+        return [part.strip() for part in text.split(",") if part.strip()]
+    return [text]
+
+
+def _normalize_text_key(value: Any) -> str:
+    return str(value).strip().lower()
+
+
+def _normalize_date_key(value: Any) -> str:
+    dt = pd.to_datetime(value, errors="coerce")
+    if pd.isna(dt):
+        return str(value).strip()
+    return dt.strftime("%Y-%m-%d")
+
+
+def _load_share_matrix(repo_root: Path) -> pd.DataFrame:
+    path = repo_root / "data" / "model" / "share_matrix.csv"
+    if not path.exists():
+        return pd.DataFrame()
+    try:
+        return pd.read_csv(path)
+    except Exception:
+        return pd.DataFrame()
+
+
+def _load_gamelog_lookup(repo_root: Path) -> Dict[str, Dict[str, Any]]:
+    path = repo_root / "data" / "gamelogs" / "nba_gamelogs.csv"
+    if not path.exists():
+        return {}
+    try:
+        df = pd.read_csv(path)
+    except Exception:
+        return {}
+    if df.empty or "player" not in df.columns or "game_date" not in df.columns:
+        return {}
+    lookup: Dict[str, Dict[str, Any]] = {}
+    for _, row in df.iterrows():
+        payload: Dict[str, Any] = {str(k): v for k, v in row.to_dict().items()}
+        player_key = _normalize_text_key(payload.get("player"))
+        date_key = _normalize_date_key(payload.get("game_date"))
+        team_key = _normalize_text_key(payload.get("team"))
+        if not player_key or not date_key:
+            continue
+        base_key = f"{player_key}|{date_key}"
+        team_keyed = f"{player_key}|{date_key}|{team_key}" if team_key else base_key
+        if base_key not in lookup:
+            lookup[base_key] = payload
+        if team_keyed not in lookup:
+            lookup[team_keyed] = payload
+    return lookup
+
+
+def _build_scored_lookup(scored_df: pd.DataFrame) -> Dict[str, List[Dict[str, Any]]]:
+    if scored_df is None or scored_df.empty:
+        return {}
+    lookup: Dict[str, List[Dict[str, Any]]] = {}
+    key_cols = [c for c in ["projection_id", "source_projection_id"] if c in scored_df.columns]
+    for _, row in scored_df.iterrows():
+        payload: Dict[str, Any] = {str(k): v for k, v in row.to_dict().items()}
+        for col in key_cols:
+            key = _normalize_id_token(payload.get(col))
+            if key:
+                lookup.setdefault(key, []).append(payload)
+    return lookup
+
+
+def _format_actual_result(actual_value: Any, stat: Any) -> Optional[str]:
+    actual_num = _safe_float(actual_value)
+    if not math.isfinite(actual_num):
+        return None
+    stat_text = str(stat).strip().upper() if pd.notna(stat) else ""
+    if not stat_text:
+        return None
+    if abs(actual_num - round(actual_num)) < 1e-9:
+        actual_text = str(int(round(actual_num)))
+    else:
+        actual_text = f"{actual_num:g}"
+    return f"{actual_text}{stat_text}"
+
+
+def _build_eval_lookup(eval_df: pd.DataFrame) -> Dict[str, Dict[str, Any]]:
+    if eval_df is None or eval_df.empty:
+        return {}
+    lookup: Dict[str, Dict[str, Any]] = {}
+    for _, row in eval_df.iterrows():
+        payload: Dict[str, Any] = {str(k): v for k, v in row.to_dict().items()}
+        actual_line = _format_actual_result(payload.get("actual"), payload.get("stat") or payload.get("stat_raw"))
+        actual_payload = {
+            "actual": _safe_float(payload.get("actual")),
+            "stat": payload.get("stat") or payload.get("stat_raw"),
+            "actual_line": actual_line,
+        }
+        for source_key in [payload.get("source_projection_id"), payload.get("projection_id")]:
+            key = _normalize_id_token(source_key)
+            if key and key not in lookup:
+                lookup[key] = actual_payload
+            raw = str(source_key).strip()
+            if raw and raw != key and raw not in lookup:
+                lookup[raw] = actual_payload
+    return lookup
+
+
+STAT_COLUMN_MAP = {
+    "PTS": ["pts"],
+    "POINTS": ["pts"],
+    "REB": ["reb"],
+    "REBS": ["reb"],
+    "REBOUND": ["reb"],
+    "REBOUNDS": ["reb"],
+    "AST": ["ast"],
+    "ASTS": ["ast"],
+    "ASSIST": ["ast"],
+    "ASSISTS": ["ast"],
+    "FG3M": ["fg3m"],
+    "3PM": ["fg3m"],
+    "3PTM": ["fg3m"],
+    "FGA": ["fga"],
+    "FTA": ["fta"],
+    "TOV": ["tov"],
+    "PA": ["pts", "ast"],
+    "PR": ["pts", "reb"],
+    "RA": ["reb", "ast"],
+    "PRA": ["pts", "reb", "ast"],
+}
+
+
+def _actual_value_from_gamelog(gamelog_row: Dict[str, Any], stat: Any, stat_raw: Any) -> Optional[float]:
+    if not gamelog_row:
+        return None
+    source_text = str(stat_raw or stat or "").upper().strip()
+    if not source_text:
+        return None
+    tokens = [token.strip() for token in source_text.replace("/", "+").split("+") if token.strip()]
+    if not tokens:
+        tokens = [source_text]
+    total = 0.0
+    matched = False
+    for token in tokens:
+        column_names = STAT_COLUMN_MAP.get(token, [])
+        if not column_names:
+            continue
+        for column_name in column_names:
+            value = _safe_float(gamelog_row.get(column_name))
+            if math.isfinite(value):
+                total += value
+                matched = True
+    if not matched:
+        return None
+    return total
+
+
+def _actual_line_from_gamelog(row: Dict[str, Any], gamelog_lookup: Dict[str, Dict[str, Any]]) -> Optional[str]:
+    player_key = _normalize_text_key(row.get("player") or row.get("player_key") or row.get("player_norm"))
+    date_key = _normalize_date_key(row.get("game_date"))
+    team_key = _normalize_text_key(row.get("team"))
+    if not player_key or not date_key:
+        return None
+    lookup_keys = [f"{player_key}|{date_key}"]
+    if team_key:
+        lookup_keys.insert(0, f"{player_key}|{date_key}|{team_key}")
+    gamelog_row = None
+    for key in lookup_keys:
+        gamelog_row = gamelog_lookup.get(key)
+        if gamelog_row:
+            break
+    if not gamelog_row:
+        return None
+    actual_value = _actual_value_from_gamelog(gamelog_row, row.get("stat"), row.get("stat_raw"))
+    if actual_value is None:
+        return None
+    return _format_actual_result(actual_value, row.get("stat") or row.get("stat_raw"))
+
+
+def _parse_actual_numeric(actual_line: Any) -> Optional[float]:
+    if actual_line is None:
+        return None
+    text = str(actual_line).strip().upper()
+    if not text or text == "N/A":
+        return None
+    m = re.match(r"^([+-]?\d+(?:\.\d+)?)", text)
+    if not m:
+        return None
+    value = _safe_float(m.group(1))
+    return value if math.isfinite(value) else None
+
+
+def _realized_leg_hit(scored_row: Dict[str, Any], eval_actual_lookup: Dict[str, Dict[str, Any]], gamelog_lookup: Dict[str, Dict[str, Any]]) -> Optional[float]:
+    leg_id = _normalize_id_token(scored_row.get("projection_id") or scored_row.get("source_projection_id"))
+    actual_text = None
+    actual_info = eval_actual_lookup.get(leg_id or "")
+    if isinstance(actual_info, dict) and actual_info.get("actual_line"):
+        actual_text = str(actual_info.get("actual_line"))
+    if not actual_text:
+        actual_text = _actual_line_from_gamelog(scored_row, gamelog_lookup)
+    actual_value = _parse_actual_numeric(actual_text)
+    line_value = _safe_float(scored_row.get("line") or scored_row.get("main_line") or scored_row.get("alt_line"))
+    direction = str(scored_row.get("direction") or "").upper().strip()
+    if actual_value is None or line_value is None or not math.isfinite(actual_value) or not math.isfinite(line_value) or direction not in {"OVER", "UNDER"}:
+        return None
+    if direction == "OVER":
+        return 1.0 if actual_value >= line_value - 1e-9 else 0.0
+    return 1.0 if actual_value <= line_value + 1e-9 else 0.0
+
+
+def _share_matrix_beneficiaries(
+    share_matrix: pd.DataFrame,
+    *,
+    team: Any,
+    out_player: str,
+    stat: Any,
+    limit: int = 3,
+) -> List[str]:
+    if share_matrix is None or share_matrix.empty:
+        return []
+    needed = {"team", "out_player", "beneficiary_player", "stat"}
+    if not needed.issubset(set(share_matrix.columns)):
+        return []
+    team_key = _normalize_text_key(team)
+    out_key = _normalize_text_key(out_player)
+    stat_key = _normalize_text_key(stat).upper()
+    sub = share_matrix.copy()
+    sub["team_key"] = sub["team"].astype(str).map(_normalize_text_key)
+    sub["out_key"] = sub["out_player"].astype(str).map(_normalize_text_key)
+    sub["stat_key"] = sub["stat"].astype(str).str.upper().str.strip()
+    sub = sub[(sub["team_key"] == team_key) & (sub["out_key"] == out_key) & (sub["stat_key"] == stat_key)]
+    if sub.empty:
+        return []
+    if "weight" in sub.columns:
+        sub["weight"] = pd.to_numeric(sub["weight"], errors="coerce").fillna(0.0)
+        grouped = sub.groupby("beneficiary_player", dropna=False)["weight"].sum().sort_values(ascending=False)
+        return [str(idx).strip() for idx in grouped.head(limit).index if str(idx).strip()]
+    grouped = sub.groupby("beneficiary_player", dropna=False).size().sort_values(ascending=False)
+    return [str(idx).strip() for idx in grouped.head(limit).index if str(idx).strip()]
+
+
+def _leg_context_from_row(row: Dict[str, Any], share_matrix: pd.DataFrame) -> Dict[str, Any]:
+    game_spread = _safe_float(row.get("game_spread"), float("nan"))
+    outs = _parse_listish(row.get("role_ctx_outs"))
+    team = row.get("team")
+    stat = row.get("stat") or row.get("stat_raw")
+    affected: List[str] = []
+    if outs and pd.notna(team) and str(team).strip() and pd.notna(stat) and str(stat).strip():
+        for out_player in outs:
+            for ben in _share_matrix_beneficiaries(share_matrix, team=team, out_player=out_player, stat=stat, limit=3):
+                if ben not in affected:
+                    affected.append(ben)
+    spread_text = f"{game_spread:+g}" if math.isfinite(game_spread) else "n/a"
+    outs_text = ", ".join(outs) if outs else "none"
+    affected_text = ", ".join(affected) if affected else "none"
+    actual_text = "n/a"
+    actual_info = row.get("_eval_actual_info")
+    if isinstance(actual_info, dict) and actual_info.get("actual_line"):
+        actual_text = str(actual_info.get("actual_line"))
+    if actual_text == "n/a":
+        gamelog_lookup = row.get("_gamelog_lookup")
+        if isinstance(gamelog_lookup, dict):
+            computed_actual = _actual_line_from_gamelog(row, gamelog_lookup)
+            if computed_actual:
+                actual_text = computed_actual
+    return {
+        "game_spread": None if not math.isfinite(game_spread) else round(game_spread, 6),
+        "outs": outs,
+        "affected_players": affected,
+        "actual_result": actual_text,
+        "context_line": f"spread={spread_text}; outs={outs_text}; affected={affected_text}; actual={actual_text}",
+    }
+
+
+def _slip_next_test_summary(row: Dict[str, Any], leg_results: List[Dict[str, Any]]) -> Dict[str, Any]:
+    strict_win = _safe_float(row.get("strict_win"))
+    if strict_win == 1.0:
+        return {
+            "kind": "anchor",
+            "failure_type": "anchor",
+            "weak_leg": None,
+            "next_test": "retain as winning anchor",
+            "why": "This slip hit cleanly and should be used as a positive reference pattern.",
+        }
+
+    missing_actuals = [leg for leg in leg_results if leg.get("status") == "unknown"]
+    misses = [leg for leg in leg_results if leg.get("status") == "miss"]
+    hits = [leg for leg in leg_results if leg.get("status") == "hit"]
+    role_ctx_on = any(_safe_float(leg.get("role_ctx_outs_used"), 0.0) > 0 for leg in leg_results)
+
+    def _classify_miss(leg: Dict[str, Any]) -> str:
+        actual_value = _safe_float(leg.get("actual_value"), float("nan"))
+        line_value = _safe_float(leg.get("line"), float("nan"))
+        direction = str(leg.get("direction") or "").upper().strip()
+        if not math.isfinite(actual_value) or not math.isfinite(line_value):
+            return "line_miss"
+        diff = actual_value - line_value
+        if abs(diff) <= 1.0:
+            return "push_adjacent"
+        if direction == "OVER":
+            return "over_miss"
+        if direction == "UNDER":
+            return "under_miss"
+        return "line_miss"
+
+    def _render_leg(leg: Dict[str, Any]) -> str:
+        player = str(leg.get("player") or "").strip() or "(unknown player)"
+        direction = str(leg.get("direction") or "").strip() or "?"
+        stat = str(leg.get("stat") or "").strip() or "?"
+        line = leg.get("line")
+        line_text = f"{line:g}" if isinstance(line, (int, float)) and math.isfinite(float(line)) else "?"
+        return f"{player} {direction} {stat} {line_text}"
+
+    if missing_actuals and len(missing_actuals) == len(leg_results):
+        weak_leg = _render_leg(missing_actuals[0])
+        return {
+            "kind": "coverage",
+            "failure_type": "coverage_gap",
+            "weak_leg": weak_leg,
+            "next_test": "verify gamelog / actual-line coverage",
+            "why": "The slip cannot be fully judged from the replay because all legs are missing actual results.",
+        }
+
+    if missing_actuals:
+        weak_leg = _render_leg(missing_actuals[0])
+        return {
+            "kind": "coverage",
+            "failure_type": "coverage_gap",
+            "weak_leg": weak_leg,
+            "next_test": "verify the missing-actual legs and replay the same slip",
+            "why": f"{len(missing_actuals)} leg(s) were missing actual results, so the reader should not treat this as a fully observed failure.",
+        }
+
+    if role_ctx_on:
+        weak_leg = _render_leg(sorted(leg_results, key=lambda leg: _safe_float(leg.get("role_ctx_outs_used"), 0.0), reverse=True)[0]) if leg_results else None
+        return {
+            "kind": "brittleness",
+            "failure_type": "role_context_brittleness",
+            "weak_leg": weak_leg,
+            "next_test": "run the role_ctx_on and recent_third slices",
+            "why": "This slip is tied to role-context inputs, so it is a good candidate for brittleness testing across those slices.",
+        }
+
+    if misses:
+        hardest_miss = sorted(misses, key=lambda leg: abs(_safe_float(leg.get("actual_value"), float("nan")) - _safe_float(leg.get("line"), float("nan"))) if math.isfinite(_safe_float(leg.get("actual_value"), float("nan"))) and math.isfinite(_safe_float(leg.get("line"), float("nan"))) else float("inf"))[0]
+        weak_leg = _render_leg(hardest_miss)
+        miss_types = {_classify_miss(leg) for leg in misses}
+        failure_type = next(iter(miss_types)) if len(miss_types) == 1 else "mixed_miss"
+        if failure_type == "line_miss":
+            failure_type = _classify_miss(hardest_miss)
+        if failure_type == "over_miss":
+            next_test = f"test upward threshold pressure around {weak_leg}"
+            why = f"The slip missed on an OVER leg at {weak_leg} and should be stress-tested for upward line pressure."
+        elif failure_type == "under_miss":
+            next_test = f"test downward threshold pressure around {weak_leg}"
+            why = f"The slip missed on an UNDER leg at {weak_leg} and should be stress-tested for downward line pressure."
+        elif failure_type == "push_adjacent":
+            next_test = f"test push-adjacent threshold around {weak_leg}"
+            why = f"The slip failed near the line at {weak_leg} and should be checked for push-adjacent fragility."
+        elif failure_type == "mixed_miss":
+            next_test = "stress the mixed miss contexts leg by leg"
+            why = "The slip contains multiple miss shapes, so the reader should split the legs and test each failure mode separately."
+        else:
+            next_test = f"test a tighter line-sensitivity around {weak_leg}"
+            why = f"The slip missed on {weak_leg} and should be stress-tested for hit-rate stability."
+        return {
+            "kind": "hit_rate",
+            "failure_type": failure_type,
+            "weak_leg": weak_leg,
+            "next_test": next_test,
+            "why": why,
+        }
+
+    if hits:
+        weak_leg = _render_leg(sorted(hits, key=lambda leg: _safe_float(leg.get("actual_value"), float("nan")) if math.isfinite(_safe_float(leg.get("actual_value"), float("nan"))) else float("inf"))[0]) if hits else None
+        return {
+            "kind": "mixed",
+            "failure_type": "mixed_non_hit",
+            "weak_leg": weak_leg,
+            "next_test": "stress the weakest non-hit leg contexts",
+            "why": "The slip is mixed; the reader should focus on the non-winning leg contexts and see whether they stay stable under replay.",
+        }
+
+    return {
+        "kind": "unknown",
+        "failure_type": "unknown",
+        "weak_leg": None,
+        "next_test": "inspect the replay slice manually",
+        "why": "The reader could not derive a stable next test from the available leg-level evidence.",
+    }
 
 
 def _runtime_identity_summary(scored_df: pd.DataFrame, args: argparse.Namespace) -> Dict[str, Any]:
@@ -306,14 +728,155 @@ def _promotion_blocker_hypotheses(winner_gate: Dict[str, Any], calibration_gate:
         if math.isfinite(pass_share) and pass_share <= 0.0:
             hints.append('variant_breadth_failure')
         elif math.isfinite(pass_share) and pass_share < 1.0:
-            hints.append('variant_time_window_instability')
+            hints.append('hit_rate_or_brittleness_instability')
         if severe > 0:
-            hints.append('protected_surface_or_regime_regressions')
+            hints.append('protected_surface_or_hit_rate_regressions')
     if calibration_improved and calibration_gate.get('overall_clear', False):
         hints.append('calibration_only_lead_not_variant_promotion')
     if not hints:
         hints.append('no_clear_blocker_detected')
     return hints
+
+
+def _promotion_standard() -> Dict[str, Any]:
+    return {
+        'kind': 'provisional_starting_standard',
+        'metric_scope': 'system_ev + system_winprob only; windfall excluded',
+        'score_gap_min': 0.0,
+        'variant_gate': {
+            'overall_clear': True,
+            'pass_share_min': 0.60,
+            'severe_regressions_max': 0,
+        },
+        'hit_rate_gate': {
+            'strict3_min_delta': 0.0,
+            'strict4_min_delta': 0.0,
+            'strict5_min_delta': 0.0,
+        },
+        'calibration_gate': {
+            'status': 'soft_overlay_only',
+            'note': 'Calibration can help the overlay, but it does not qualify a model for promotion by itself.',
+        },
+        'promotion_rule': 'This is a provisional starting standard for discovery: a model can be reviewed for promotion if it leads the corpus on system_ev and system_winprob evidence, clears the variant gate, and does not degrade strict3/strict4/strict5 versus the primary corpus. Calibration remains overlay-only.',
+        'note': 'The standard is intentionally soft while the new promotion metric set is still being discovered, and windfall is excluded until its later track is defined.',
+    }
+
+
+def _tuning_recommendations_summary(scorecard: Dict[str, Any], promotion_guard: Dict[str, Any], calib_recs: Dict[str, Any]) -> Dict[str, Any]:
+    protected = scorecard.get('protected_surfaces', {}) or {}
+    blockers = promotion_guard.get('blockers', []) or []
+    blocker_hints = set(promotion_guard.get('blocker_hypotheses', []) or [])
+    recommendations: List[Dict[str, Any]] = []
+
+    dominant_negative = protected.get('dominant_negative')
+    if dominant_negative == 'strict_window_volatility_penalty' or 'hit_rate_or_brittleness_instability' in blocker_hints:
+        recommendations.append({
+            'target': 'strict_window_volatility_penalty',
+            'priority': 'high',
+            'action': 'Inspect the gate weight that penalizes run-to-run strict3/strict4/strict5 volatility before touching the core coeffs.',
+            'why': 'The reader is losing score to hit-rate volatility and brittleness, not to a weak mean edge.',
+        })
+        recommendations.append({
+            'target': 'recent_third_and_role_ctx_on_slices',
+            'priority': 'high',
+            'action': 'Run a slice audit on recent_third and role_ctx_on to see whether the hit-rate instability is concentrated there.',
+            'why': 'Those slices are the most likely source of the gate failure.',
+        })
+
+    if 'protected_surface_or_hit_rate_regressions' in blocker_hints:
+        recommendations.append({
+            'target': 'protected_surface_penalties',
+            'priority': 'medium',
+            'action': 'Check whether the protected-surface penalty is too strong relative to the realized hit-rate gain.',
+            'why': 'The candidate may be paying too much for a small number of protected regressions.',
+        })
+
+    if _safe_float(scorecard.get('games_used_lt5_share'), 0.0) > 0.005:
+        recommendations.append({
+            'target': 'sample_penalty',
+            'priority': 'medium',
+            'action': 'Review whether the low-sample penalty is oversized for the current corpus mix.',
+            'why': 'A non-trivial share of rows still comes from low-game-count situations.',
+        })
+
+    if calib_recs.get('mode') == 'keep_identity' and calib_recs.get('candidate_scores'):
+        top = calib_recs['candidate_scores'][0]
+        top_candidate = top.get('candidate')
+        recommendations.append({
+            'target': 'calibration_path',
+            'priority': 'low',
+            'action': f'Keep the core coeffs fixed and use {top_candidate} as the only near-term calibration change.',
+            'why': 'Calibration remains a softer gate than hit-rate and brittleness promotion logic.',
+        })
+
+    if not recommendations:
+        recommendations.append({
+            'target': 'none',
+            'priority': 'low',
+            'action': 'No additional tuning recommendation is available beyond the current calibration-only lead.',
+            'why': 'The reader did not identify a clean next knob from this corpus.',
+        })
+
+    return {
+        'summary': 'Tune the hit-rate and brittleness gates first; do not change the core coeffs until the unstable slices clear.',
+        'recommendations': recommendations,
+        'blockers': blockers,
+    }
+
+
+def _promotion_standard_status(primary_label: str, config_recs: Dict[str, Any], calib_recs: Dict[str, Any], *, promotion_standard: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+    promotion_standard = promotion_standard or _promotion_standard()
+    leaderboard = config_recs.get('leaderboard', [])
+    winner = leaderboard[0] if leaderboard else {}
+    primary_score = next((x for x in leaderboard if x.get('label') == primary_label), {}) if isinstance(leaderboard, list) else {}
+    winner_gate = (((config_recs.get('recommendations') or [{}])[0]).get('gate_summary') if config_recs.get('recommendations') else {}) or {}
+    top_candidate = ((calib_recs.get('candidate_scores') or [{}])[0]) if calib_recs.get('candidate_scores') else {}
+    calibration_gate = (top_candidate.get('gate_summary') or {}) if isinstance(top_candidate, dict) else {}
+
+    score_gap = _safe_float(winner.get('score'), float('nan')) - _safe_float(leaderboard[1].get('score'), float('nan')) if len(leaderboard) > 1 else float('nan')
+    score_gap_min = _safe_float(promotion_standard.get('score_gap_min'), 0.01)
+    hit_rate_pass = True
+    for metric, delta_min in promotion_standard.get('hit_rate_gate', {}).items():
+        if not metric.startswith('strict'):
+            continue
+        winner_val = _safe_float(winner.get(metric), float('nan'))
+        primary_val = _safe_float(primary_score.get(metric), float('nan'))
+        if math.isfinite(winner_val) and math.isfinite(primary_val) and (winner_val - primary_val) < _safe_float(delta_min, 0.0):
+            hit_rate_pass = False
+            break
+
+    variant_gate = {
+        'overall_clear': bool(winner_gate.get('overall_clear', False)),
+        'pass_share': _safe_float(winner_gate.get('pass_share'), float('nan')),
+        'severe_regressions': _safe_int(winner_gate.get('severe_regressions'), 0),
+        'pass_share_min': _safe_float(promotion_standard.get('variant_gate', {}).get('pass_share_min'), 0.70),
+        'severe_regressions_max': _safe_int(promotion_standard.get('variant_gate', {}).get('severe_regressions_max'), 0),
+    }
+    variant_pass = variant_gate['overall_clear'] and (math.isfinite(variant_gate['pass_share']) and variant_gate['pass_share'] >= variant_gate['pass_share_min']) and variant_gate['severe_regressions'] <= variant_gate['severe_regressions_max']
+    calibration_soft = {
+        'overall_clear': bool(calibration_gate.get('overall_clear', False)),
+        'pass_share': _safe_float(calibration_gate.get('pass_share'), float('nan')),
+        'severe_regressions': _safe_int(calibration_gate.get('severe_regressions'), 0),
+        'status': promotion_standard.get('calibration_gate', {}).get('status'),
+    }
+
+    promotable = winner.get('label') != primary_label and math.isfinite(score_gap) and score_gap >= score_gap_min and variant_pass and hit_rate_pass
+    return {
+        'promotable': promotable,
+        'winner_label': winner.get('label', primary_label),
+        'primary_label': primary_label,
+        'score_gap': score_gap if math.isfinite(score_gap) else None,
+        'score_gap_min': score_gap_min,
+        'variant_gate': variant_gate,
+        'hit_rate_gate': {
+            'strict3_ok': _safe_float(winner.get('strict3'), float('nan')) >= _safe_float(primary_score.get('strict3'), float('nan')) if math.isfinite(_safe_float(winner.get('strict3'), float('nan'))) and math.isfinite(_safe_float(primary_score.get('strict3'), float('nan'))) else True,
+            'strict4_ok': _safe_float(winner.get('strict4'), float('nan')) >= _safe_float(primary_score.get('strict4'), float('nan')) if math.isfinite(_safe_float(winner.get('strict4'), float('nan'))) and math.isfinite(_safe_float(primary_score.get('strict4'), float('nan'))) else True,
+            'strict5_ok': _safe_float(winner.get('strict5'), float('nan')) >= _safe_float(primary_score.get('strict5'), float('nan')) if math.isfinite(_safe_float(winner.get('strict5'), float('nan'))) and math.isfinite(_safe_float(primary_score.get('strict5'), float('nan'))) else True,
+            'pass': hit_rate_pass,
+        },
+        'calibration_gate': calibration_soft,
+        'promotion_standard': promotion_standard,
+    }
 
 def _knob_advisor_summary(config_recs: Dict[str, Any], calib_recs: Dict[str, Any], runtime_identity: Dict[str, Any]) -> Dict[str, Any]:
     suggested_config_paths = [r.get('path') for r in config_recs.get('recommendations', []) if r.get('apply_now')]
@@ -334,7 +897,7 @@ def _knob_advisor_summary(config_recs: Dict[str, Any], calib_recs: Dict[str, Any
         likely_seam = 'telemetry_overlay'
         next_test = 'single_raw_sanity'
         advisory_class = 'calibration_only_lead'
-        rationale_parts.append(f"Calibration candidate {top_candidate_name} improved corpus Brier and is being treated as an artifact-level overlay lead.")
+        rationale_parts.append(f"Calibration candidate {top_candidate_name} improved corpus Brier and is being treated as a softer overlay lead, not a promotion signal.")
     elif runtime_identity.get('column_presence', {}).get('frag_under_applied'):
         likely_seam = 'fragility_path'
         next_test = 'diagnostic_only'
@@ -371,10 +934,12 @@ def _knob_advisor_summary(config_recs: Dict[str, Any], calib_recs: Dict[str, Any
 
 
 def _promotion_guard_summary(primary_label: str, config_recs: Dict[str, Any], calib_recs: Dict[str, Any]) -> Dict[str, Any]:
+    promotion_standard = _promotion_standard()
     leaderboard = config_recs.get('leaderboard', [])
     winner = leaderboard[0] if leaderboard else {}
     winner_label = winner.get('label', primary_label)
     winner_gate = (((config_recs.get('recommendations') or [{}])[0]).get('gate_summary') if config_recs.get('recommendations') else {}) or {}
+    winner_score = winner if isinstance(winner, dict) else {}
     top_candidate = ((calib_recs.get('candidate_scores') or [{}])[0]) if calib_recs.get('candidate_scores') else {}
     calibration_gate = (top_candidate.get('gate_summary') or {}) if isinstance(top_candidate, dict) else {}
     top_candidate_name = top_candidate.get('candidate') if isinstance(top_candidate, dict) else None
@@ -383,20 +948,62 @@ def _promotion_guard_summary(primary_label: str, config_recs: Dict[str, Any], ca
     blockers: List[Dict[str, Any]] = []
     reasons: List[str] = []
     verdict = 'keep_current_standard'
+    primary_score = next((x for x in leaderboard if x.get('label') == primary_label), {}) if isinstance(leaderboard, list) else {}
+
+    promotion_score_gap = None
+    if len(leaderboard) > 1:
+        winner_score_val = _safe_float(winner.get('score'), float('nan'))
+        second_score_val = _safe_float(leaderboard[1].get('score'), float('nan'))
+        if math.isfinite(winner_score_val) and math.isfinite(second_score_val):
+            promotion_score_gap = winner_score_val - second_score_val
+
+    hit_rate_details = {}
+    hit_rate_clear = True
+    for metric in ['strict3', 'strict4', 'strict5']:
+        winner_val = _safe_float(winner_score.get(metric), float('nan'))
+        primary_val = _safe_float(primary_score.get(metric), float('nan'))
+        hit_rate_details[metric] = {
+            'winner': winner_val if math.isfinite(winner_val) else None,
+            'primary': primary_val if math.isfinite(primary_val) else None,
+            'delta': (winner_val - primary_val) if math.isfinite(winner_val) and math.isfinite(primary_val) else None,
+            'passes': True if not (math.isfinite(winner_val) and math.isfinite(primary_val)) else winner_val >= primary_val,
+        }
+        if math.isfinite(winner_val) and math.isfinite(primary_val) and winner_val < primary_val:
+            hit_rate_clear = False
+
+    variant_pass_share = _safe_float(winner_gate.get('pass_share'), float('nan'))
+    variant_severe = _safe_int(winner_gate.get('severe_regressions'), 0)
+    variant_gate_ok = bool(winner_gate.get('overall_clear', False)) and (not math.isfinite(variant_pass_share) or variant_pass_share >= _safe_float(promotion_standard.get('variant_gate', {}).get('pass_share_min'), 0.70)) and variant_severe <= _safe_int(promotion_standard.get('variant_gate', {}).get('severe_regressions_max'), 0)
+    promotable = bool(
+        winner_label != primary_label and
+        promotion_score_gap is not None and promotion_score_gap >= _safe_float(promotion_standard.get('score_gap_min'), 0.01) and
+        variant_gate_ok and
+        hit_rate_clear
+    )
 
     if winner_label != primary_label:
         reasons.append(f'Variant winner is {winner_label}, not the primary corpus.')
     else:
         reasons.append('Primary corpus remains the top-ranked config winner, so no config promotion is supported.')
+    if not hit_rate_clear:
+        blockers.append({
+            'category': 'hit_rate_gate_failure',
+            'detail': 'Variant did not hold or improve the realized hit-rate metrics required by the promotion standard.',
+            'strict3': hit_rate_details.get('strict3'),
+            'strict4': hit_rate_details.get('strict4'),
+            'strict5': hit_rate_details.get('strict5'),
+        })
+        reasons.append('Variant did not hold or improve the realized hit-rate metrics required by the promotion standard.')
 
-    if not winner_gate.get('overall_clear', False):
+    if not variant_gate_ok:
         blockers.append({
             'category': 'variant_gate_failure',
-            'detail': 'Variant evidence did not clear regime/time-window promotion gates.',
-            'pass_share': winner_gate.get('pass_share'),
-            'severe_regressions': winner_gate.get('severe_regressions'),
+            'detail': 'Variant evidence did not clear the standardized variant gate.',
+            'pass_share': variant_pass_share,
+            'pass_share_min': _safe_float(promotion_standard.get('variant_gate', {}).get('pass_share_min'), 0.70),
+            'severe_regressions': variant_severe,
         })
-        reasons.append('Variant evidence did not clear regime/time-window promotion gates.')
+        reasons.append('Variant evidence did not clear the standardized variant gate.')
 
     if winner_label == primary_label:
         blockers.append({
@@ -408,19 +1015,19 @@ def _promotion_guard_summary(primary_label: str, config_recs: Dict[str, Any], ca
     if calib_recs.get('mode') == 'keep_identity':
         blockers.append({
             'category': 'calibration_policy_hold',
-            'detail': 'Calibration alternatives did not justify promotion over current identity/locked state.',
+            'detail': 'Calibration alternatives did not justify promotion over the current identity/locked state.',
             'top_candidate': top_candidate_name,
             'improvement_vs_current': top_improvement if math.isfinite(top_improvement) else None,
             'overall_clear': calibration_gate.get('overall_clear'),
             'pass_share': calibration_gate.get('pass_share'),
             'severe_regressions': calibration_gate.get('severe_regressions'),
         })
-        reasons.append('Calibration alternatives did not justify promotion over current identity/locked state.')
+        reasons.append('Calibration alternatives did not justify promotion over the current identity/locked state.')
 
     if calibration_improved:
         blockers.append({
             'category': 'calibration_only_candidate',
-            'detail': 'The leading candidate improves calibration, but the improvement is being treated as calibration-only rather than full variant promotion evidence.',
+            'detail': 'The leading candidate improves calibration, but calibration remains a softer gate than the realized hit-rate and brittleness gates.',
             'top_candidate': top_candidate_name,
             'improvement_vs_current': top_improvement if math.isfinite(top_improvement) else None,
         })
@@ -430,7 +1037,7 @@ def _promotion_guard_summary(primary_label: str, config_recs: Dict[str, Any], ca
 
     if not blockers:
         verdict = 'promote_candidate_ready_for_review'
-        reasons = ['Variant and calibration gates cleared for human review.']
+        reasons = ['Variant and calibration gates cleared for human review under the standardized promotion policy.']
     elif calibration_improved:
         verdict = 'keep_current_standard_with_calibration_only_lead'
 
@@ -445,9 +1052,19 @@ def _promotion_guard_summary(primary_label: str, config_recs: Dict[str, Any], ca
         'variant_gate_overall_clear': winner_gate.get('overall_clear'),
         'variant_gate_pass_share': winner_gate.get('pass_share'),
         'variant_gate_severe_regressions': winner_gate.get('severe_regressions'),
+        'hit_rate_gate_overall_clear': hit_rate_clear,
         'calibration_gate_overall_clear': calibration_gate.get('overall_clear'),
         'calibration_gate_pass_share': calibration_gate.get('pass_share'),
         'calibration_gate_severe_regressions': calibration_gate.get('severe_regressions'),
+        'promotion_standard': promotion_standard,
+        'promotion_score_gap': promotion_score_gap,
+        'promotion_score_gap_min': _safe_float(promotion_standard.get('score_gap_min'), 0.01),
+        'promotion_status': {
+            'promotable': promotable,
+            'variant_gate_ok': variant_gate_ok,
+            'hit_rate_clear': hit_rate_clear,
+            'score_gap_ok': promotion_score_gap is not None and promotion_score_gap >= _safe_float(promotion_standard.get('score_gap_min'), 0.01),
+        },
         'blockers': blockers,
         'blocker_hypotheses': blocker_hypotheses,
         'reasons': reasons,
@@ -506,14 +1123,20 @@ def _looks_like_run_dir(p: Path) -> bool:
     return False
 
 
+def _is_excluded_run_dir(p: Path) -> bool:
+    return p.name.startswith("20260312")
+
+
 def _iter_run_dirs(runs_dir: Path) -> List[Path]:
-    direct = sorted([p for p in runs_dir.iterdir() if _looks_like_run_dir(p)], key=lambda p: p.name)
+    direct = sorted([p for p in runs_dir.iterdir() if _looks_like_run_dir(p) and not _is_excluded_run_dir(p)], key=lambda p: p.name)
     if direct:
         return direct
 
     nested = []
     for path in runs_dir.rglob("*"):
         if not path.is_dir() or not _looks_like_run_dir(path):
+            continue
+        if _is_excluded_run_dir(path):
             continue
         if path.parent.name == "runs" or RUN_DIR_RE.match(path.name):
             nested.append(path)
@@ -530,7 +1153,80 @@ def _parse_leg_ids(row: pd.Series) -> List[str]:
     return ids
 
 
-def _slip_metrics_from_file(path: Path, eval_lookup: Dict[str, float], category: str, mode: str) -> Dict[str, Any]:
+def _parse_leg_spec(leg_text: Any) -> Dict[str, Any]:
+    text = str(leg_text or "").strip()
+    if not text:
+        return {}
+    m = LEG_RE.match(text)
+    if not m:
+        id_match = ID_RE.search(text)
+        return {"id": id_match.group(1)} if id_match else {}
+    spec = m.groupdict()
+    spec["id"] = spec.get("id")
+    spec["direction"] = str(spec.get("direction") or "").upper().strip()
+    spec["stat"] = str(spec.get("stat") or "").upper().strip()
+    spec["tier"] = str(spec.get("tier") or "").upper().strip()
+    spec["player"] = str(spec.get("player") or "").strip()
+    try:
+        spec["line"] = float(spec["line"])
+    except Exception:
+        spec["line"] = None
+    return spec
+
+
+def _select_scored_row(scored_lookup: Dict[str, List[Dict[str, Any]]], leg_text: Any) -> Optional[Dict[str, Any]]:
+    spec = _parse_leg_spec(leg_text)
+    leg_id = _normalize_id_token(spec.get("id"))
+    if not leg_id:
+        return None
+    candidates = scored_lookup.get(leg_id, [])
+    if not candidates:
+        return None
+    if len(candidates) == 1:
+        return candidates[0]
+
+    direction = str(spec.get("direction") or "").upper().strip()
+    stat = str(spec.get("stat") or "").upper().strip()
+    tier = str(spec.get("tier") or "").upper().strip()
+    player = str(spec.get("player") or "").strip().casefold()
+    line = spec.get("line")
+
+    def _matches(candidate: Dict[str, Any]) -> bool:
+        cand_direction = str(candidate.get("direction") or "").upper().strip()
+        cand_stat = str(candidate.get("stat") or candidate.get("stat_raw") or "").upper().strip()
+        cand_tier = str(candidate.get("tier") or "").upper().strip()
+        cand_player = str(candidate.get("player") or "").strip().casefold()
+        cand_line = _safe_float(candidate.get("line") or candidate.get("main_line") or candidate.get("alt_line"))
+        if direction and cand_direction != direction:
+            return False
+        if stat and cand_stat != stat:
+            return False
+        if tier and cand_tier and cand_tier != tier:
+            return False
+        if player and cand_player and cand_player != player:
+            return False
+        if line is not None and math.isfinite(line) and math.isfinite(cand_line) and abs(cand_line - float(line)) > 1e-9:
+            return False
+        return True
+
+    matches = [candidate for candidate in candidates if _matches(candidate)]
+    if len(matches) == 1:
+        return matches[0]
+    if matches:
+        return matches[0]
+    return candidates[0]
+
+
+def _slip_metrics_from_file(
+    path: Path,
+    eval_lookup: Dict[str, float],
+    eval_actual_lookup: Dict[str, Dict[str, Any]],
+    gamelog_lookup: Dict[str, Dict[str, Any]],
+    scored_lookup: Dict[str, List[Dict[str, Any]]],
+    share_matrix: pd.DataFrame,
+    category: str,
+    mode: str,
+) -> Dict[str, Any]:
     df = _read_csv(path)
     if df.empty:
         return {
@@ -542,18 +1238,91 @@ def _slip_metrics_from_file(path: Path, eval_lookup: Dict[str, float], category:
             "mean_ev_mult": float("nan"),
             "strict_win_rate": float("nan"),
             "mean_q_leg_count": float("nan"),
+            "examples": {"best": [], "worst": []},
         }
     strict_results: List[float] = []
     for _, row in df.iterrows():
-        ids = _parse_leg_ids(row)
-        vals = [eval_lookup.get(i) for i in ids] if ids else []
-        strict_results.append(1.0 if vals and all(v == 1.0 for v in vals) else (0.0 if vals and all(v is not None for v in vals) else float("nan")))
+        leg_texts = [str(row[col]) for col in row.index if col.startswith("leg_") and str(row[col]).strip()]
+        vals: List[Optional[float]] = []
+        for leg_text in leg_texts:
+            realized_hit: Optional[float] = None
+            scored_row = _select_scored_row(scored_lookup, leg_text)
+            if scored_row:
+                realized_hit = _realized_leg_hit(scored_row, eval_actual_lookup, gamelog_lookup)
+            if realized_hit is None:
+                leg_id = _normalize_id_token(_parse_leg_spec(leg_text).get("id"))
+                if leg_id:
+                    realized_hit = eval_lookup.get(leg_id)
+            vals.append(realized_hit)
+        resolved_vals = [v for v in vals if v is not None and not pd.isna(v)]
+        if not resolved_vals:
+            strict_results.append(float("nan"))
+        elif all(v == 1.0 for v in resolved_vals) and len(resolved_vals) == len(vals):
+            strict_results.append(1.0)
+        elif any(v == 0.0 for v in resolved_vals):
+            strict_results.append(0.0)
+        else:
+            strict_results.append(float("nan"))
     df = df.copy()
     df["strict_win"] = strict_results
     n_legs = None
     m = RECOMMENDED_RE.search(path.name)
     if m:
         n_legs = int(m.group(1))
+    def _example_rows(sub_df: pd.DataFrame, limit: int = 2) -> List[Dict[str, Any]]:
+        rows: List[Dict[str, Any]] = []
+        for _, row in sub_df.head(limit).iterrows():
+            leg_contexts: List[Dict[str, Any]] = []
+            leg_results: List[Dict[str, Any]] = []
+            for col in [c for c in row.index if c.startswith("leg_")]:
+                leg_text = row.get(col)
+                scored_row = _select_scored_row(scored_lookup, leg_text)
+                if scored_row:
+                    scored_row = dict(scored_row)
+                    leg_spec = _parse_leg_spec(leg_text)
+                    leg_id = _normalize_id_token(leg_spec.get("id")) or ""
+                    scored_row["_eval_actual_info"] = eval_actual_lookup.get(leg_id)
+                    scored_row["_gamelog_lookup"] = gamelog_lookup
+                    context = _leg_context_from_row(scored_row, share_matrix)
+                    actual_value = _parse_actual_numeric(context.get("actual_result"))
+                    line_value = _safe_float(scored_row.get("line") or scored_row.get("main_line") or scored_row.get("alt_line"))
+                    direction = str(scored_row.get("direction") or "").upper().strip()
+                    realized_hit = None
+                    if actual_value is not None and math.isfinite(actual_value) and math.isfinite(line_value) and direction in {"OVER", "UNDER"}:
+                        realized_hit = 1.0 if ((direction == "OVER" and actual_value >= line_value - 1e-9) or (direction == "UNDER" and actual_value <= line_value + 1e-9)) else 0.0
+                    context["realized_hit"] = realized_hit
+                    context["line"] = None if not math.isfinite(line_value) else round(line_value, 6)
+                    context["direction"] = direction
+                    context["stat"] = str(scored_row.get("stat") or scored_row.get("stat_raw") or "").strip().upper()
+                    context["player"] = str(scored_row.get("player") or "").strip()
+                    context["role_ctx_outs_used"] = _safe_float(scored_row.get("role_ctx_outs_used"), 0.0)
+                    leg_contexts.append(context)
+                    leg_results.append({
+                        "player": context.get("player"),
+                        "direction": context.get("direction"),
+                        "stat": context.get("stat"),
+                        "line": context.get("line"),
+                        "actual_value": actual_value,
+                        "status": "hit" if realized_hit == 1.0 else ("miss" if realized_hit == 0.0 else "unknown"),
+                        "role_ctx_outs_used": context.get("role_ctx_outs_used"),
+                    })
+            rows.append({
+                "slip_key": row.get("slip_key"),
+                "legs": row.get("legs"),
+                "hit_prob": _safe_float(row.get("hit_prob")),
+                "ev_mult": _safe_float(row.get("ev_mult")),
+                "strict_win": _safe_float(row.get("strict_win")),
+                "q_leg_count": _safe_float(row.get("q_leg_count")),
+                "leg_contexts": leg_contexts,
+                "context_line": " | ".join(ctx.get("context_line", "") for ctx in leg_contexts if ctx.get("context_line")),
+                "leg_results": leg_results,
+                "next_test": _slip_next_test_summary({str(k): v for k, v in row.to_dict().items()}, leg_results),
+            })
+        return rows
+
+    winners = df[df["strict_win"] == 1.0].sort_values(["hit_prob", "ev_mult"], ascending=[False, False], na_position="last")
+    losers = df[df["strict_win"] == 0.0].sort_values(["hit_prob", "ev_mult"], ascending=[True, True], na_position="last")
+
     return {
         "category": category,
         "mode": mode,
@@ -563,6 +1332,7 @@ def _slip_metrics_from_file(path: Path, eval_lookup: Dict[str, float], category:
         "mean_ev_mult": _mean(df["ev_mult"]) if "ev_mult" in df.columns else float("nan"),
         "strict_win_rate": _mean(df["strict_win"]) if "strict_win" in df.columns else float("nan"),
         "mean_q_leg_count": _mean(df["q_leg_count"]) if "q_leg_count" in df.columns else float("nan"),
+        "examples": {"best": _example_rows(winners), "worst": _example_rows(losers)},
     }
 
 
@@ -782,6 +1552,40 @@ def _transform_telemetry_key_role_off(df: pd.DataFrame, mult_map: Dict[str, floa
     p = _transform_under_penalty(df, under_penalty, k=k)
     applied_mult = pd.Series(1.0, index=df.index)
     applied_mult[role_off] = new_mult[role_off]
+    return (p * applied_mult).clip(0.0, 1.0)
+
+
+def _transform_telemetry_key_role_on(df: pd.DataFrame, mult_map: Dict[str, float], key_col: str = "telemetry_cal_key", role_col: str = "role_ctx_outs_used", k: float = 1.0, under_penalty: float = 1.0) -> pd.Series:
+    """
+    Conservative variant: apply per-telemetry-key multipliers only to rows
+    where role context is in effect (role_ctx_outs_used > 0).
+    """
+    if not mult_map or key_col not in df.columns:
+        return _transform_under_penalty(df, under_penalty, k=k)
+    key = df[key_col].astype(str).str.upper().str.strip()
+    new_mult = key.map(mult_map).fillna(1.0).astype(float)
+
+    if role_col in df.columns:
+        try:
+            role_vals = pd.to_numeric(df[role_col], errors="coerce")
+            role_on = role_vals.fillna(0) > 0
+        except Exception:
+            role_on = pd.Series(False, index=df.index)
+    else:
+        role_on = pd.Series(False, index=df.index)
+
+    if "p_cal" in df.columns and "telemetry_mult" in df.columns:
+        p_base = pd.to_numeric(df["p_cal"], errors="coerce").clip(0.0, 1.0)
+        existing_mult = pd.to_numeric(df["telemetry_mult"], errors="coerce").fillna(1.0)
+        existing_mult = existing_mult.replace(0.0, 1.0)
+        ratio = (new_mult / existing_mult).astype(float)
+        applied_ratio = pd.Series(1.0, index=df.index)
+        applied_ratio[role_on] = ratio[role_on]
+        return (p_base * applied_ratio).clip(0.0, 1.0)
+
+    p = _transform_under_penalty(df, under_penalty, k=k)
+    applied_mult = pd.Series(1.0, index=df.index)
+    applied_mult[role_on] = new_mult[role_on]
     return (p * applied_mult).clip(0.0, 1.0)
 
 
@@ -1012,6 +1816,122 @@ def _blend_probability_series(base: pd.Series, correction: pd.Series, mask: pd.S
     return out
 
 
+def _role_context_strength_series(df: pd.DataFrame, role_col: str = "role_ctx_outs_used", mult_col: str = "role_ctx_mult") -> pd.Series:
+    """Return a conservative 0..1 strength weight for role-context rows."""
+    strength = pd.Series(0.0, index=df.index, dtype=float)
+    if role_col in df.columns:
+        try:
+            role_vals = pd.to_numeric(df[role_col], errors="coerce").fillna(0.0).clip(lower=0.0)
+        except Exception:
+            role_vals = pd.Series(0.0, index=df.index, dtype=float)
+    else:
+        role_vals = pd.Series(0.0, index=df.index, dtype=float)
+
+    role_on = role_vals > 0.0
+    if not role_on.any():
+        return strength
+
+    outs_strength = 1.0 - np.exp(-(role_vals / 2.0))
+    outs_strength = pd.Series(outs_strength, index=df.index, dtype=float).clip(0.0, 1.0)
+
+    mult_strength = pd.Series(0.0, index=df.index, dtype=float)
+    if mult_col in df.columns:
+        try:
+            mult_vals = pd.to_numeric(df[mult_col], errors="coerce")
+            mult_vals = mult_vals.replace([np.inf, -np.inf], np.nan)
+            mult_strength = (mult_vals.sub(1.0).abs() / 0.25).fillna(0.0).clip(0.0, 1.0)
+        except Exception:
+            mult_strength = pd.Series(0.0, index=df.index, dtype=float)
+
+    minutes_strength = pd.Series(0.0, index=df.index, dtype=float)
+    if "minutes_s" in df.columns:
+        try:
+            minutes_vals = pd.to_numeric(df["minutes_s"], errors="coerce").replace([np.inf, -np.inf], np.nan).fillna(0.0)
+            minutes_strength = pd.Series(1.0 - np.exp(-(minutes_vals.clip(lower=0.0) / 18.0)), index=df.index, dtype=float).clip(0.0, 1.0)
+        except Exception:
+            minutes_strength = pd.Series(0.0, index=df.index, dtype=float)
+
+    games_strength = pd.Series(0.0, index=df.index, dtype=float)
+    if "games_used" in df.columns:
+        try:
+            games_vals = pd.to_numeric(df["games_used"], errors="coerce").replace([np.inf, -np.inf], np.nan).fillna(0.0)
+            games_strength = pd.Series(1.0 - np.exp(-(games_vals.clip(lower=0.0) / 12.0)), index=df.index, dtype=float).clip(0.0, 1.0)
+        except Exception:
+            games_strength = pd.Series(0.0, index=df.index, dtype=float)
+
+    usage_strength = pd.Series(0.0, index=df.index, dtype=float)
+    usage_col = "usage_dep_eff" if "usage_dep_eff" in df.columns else ("usage_dep" if "usage_dep" in df.columns else None)
+    if usage_col is not None:
+        try:
+            usage_vals = pd.to_numeric(df[usage_col], errors="coerce").replace([np.inf, -np.inf], np.nan).fillna(1.0)
+            usage_strength = ((usage_vals.sub(1.0).abs()) / 0.25).clip(0.0, 1.0)
+        except Exception:
+            usage_strength = pd.Series(0.0, index=df.index, dtype=float)
+
+    strength.loc[role_on] = (
+        0.55 * outs_strength.loc[role_on]
+        + 0.25 * mult_strength.loc[role_on]
+        + 0.10 * minutes_strength.loc[role_on]
+        + 0.05 * games_strength.loc[role_on]
+        + 0.05 * usage_strength.loc[role_on]
+    ).clip(0.0, 1.0)
+    return strength
+
+
+def _transform_telemetry_key_role_strength(df: pd.DataFrame, mult_map: Dict[str, float], key_col: str = "telemetry_cal_key", role_col: str = "role_ctx_outs_used", mult_col: str = "role_ctx_mult", k: float = 1.0, under_penalty: float = 1.0) -> pd.Series:
+    """Continuously interpolate between role-off and role-on telemetry-key behavior."""
+    if not mult_map or key_col not in df.columns:
+        return _transform_under_penalty(df, under_penalty, k=k)
+
+    role_strength = _role_context_strength_series(df, role_col=role_col, mult_col=mult_col)
+    role_off = _transform_telemetry_key_role_off(df, mult_map, key_col=key_col, role_col=role_col, k=k, under_penalty=under_penalty)
+    role_on = _transform_telemetry_key_role_on(df, mult_map, key_col=key_col, role_col=role_col, k=k, under_penalty=under_penalty)
+    return (role_off * (1.0 - role_strength) + role_on * role_strength).clip(0.0, 1.0)
+
+
+def _transform_isotonic_global(df: pd.DataFrame, source_col: str = "p_cal", y_col: str = "hit") -> pd.Series:
+    """Fit a single isotonic map on all available rows and predict on the same source surface."""
+    if source_col not in df.columns or y_col not in df.columns:
+        return pd.Series(np.nan, index=df.index, dtype=float)
+
+    work = pd.DataFrame({"p": pd.to_numeric(df[source_col], errors="coerce"), "y": pd.to_numeric(df[y_col], errors="coerce")}).dropna()
+    if work.empty or work["p"].nunique() < 2:
+        return pd.Series(np.nan, index=df.index, dtype=float)
+
+    iso = IsotonicRegression(out_of_bounds="clip")
+    iso.fit(work["p"].to_numpy(), work["y"].to_numpy())
+
+    source = pd.to_numeric(df[source_col], errors="coerce")
+    out = pd.Series(np.nan, index=df.index, dtype=float)
+    valid = source.notna()
+    out.loc[valid] = iso.predict(source.loc[valid].clip(0.0, 1.0).to_numpy())
+    return out.clip(0.0, 1.0)
+
+
+def _fit_isotonic_payload(df: pd.DataFrame, source_col: str = "p_cal", y_col: str = "hit") -> Dict[str, Any]:
+    """Return a runtime-friendly isotonic payload fragment with threshold arrays."""
+    if source_col not in df.columns or y_col not in df.columns:
+        return {}
+
+    work = pd.DataFrame({"p": pd.to_numeric(df[source_col], errors="coerce"), "y": pd.to_numeric(df[y_col], errors="coerce")}).dropna()
+    if work.empty or work["p"].nunique() < 2:
+        return {}
+
+    iso = IsotonicRegression(out_of_bounds="clip")
+    iso.fit(work["p"].to_numpy(), work["y"].to_numpy())
+
+    x_thresholds = getattr(iso, "X_thresholds_", None)
+    y_thresholds = getattr(iso, "y_thresholds_", None)
+    if x_thresholds is None or y_thresholds is None:
+        return {}
+
+    return {
+        "source_col": source_col,
+        "x_thresholds": [float(x) for x in x_thresholds],
+        "y_thresholds": [float(y) for y in y_thresholds],
+    }
+
+
 def _score_calibration_candidate(df: pd.DataFrame, name: str, p: pd.Series, meta: Dict[str, Any]) -> Dict[str, Any]:
     y = pd.to_numeric(df.get("hit", pd.Series()), errors="coerce")
     return {
@@ -1025,6 +1945,8 @@ def _score_calibration_candidate(df: pd.DataFrame, name: str, p: pd.Series, meta
 
 def analyze_run(run_dir: Path) -> Tuple[Dict[str, Any], List[Dict[str, Any]], pd.DataFrame]:
     run_id = run_dir.name
+    if run_id.startswith("20260312"):
+        raise ReaderError(f"Run {run_id} is excluded from corpus reads")
     eval_path = run_dir / "eval_legs.csv"
     scored_path = run_dir / "scored_legs_deduped.csv"
     if not eval_path.exists() or not scored_path.exists():
@@ -1034,6 +1956,7 @@ def analyze_run(run_dir: Path) -> Tuple[Dict[str, Any], List[Dict[str, Any]], pd
     if "source_projection_id" not in eval_df.columns or "hit" not in eval_df.columns:
         raise ReaderError(f"Run {run_id} eval_legs.csv is missing source_projection_id/hit")
     eval_lookup: Dict[str, float] = {}
+    eval_actual_lookup = _build_eval_lookup(eval_df)
     for v, hit in zip(eval_df["source_projection_id"], eval_df["hit"]):
         key = _normalize_id_token(v)
         if key is None:
@@ -1042,16 +1965,20 @@ def analyze_run(run_dir: Path) -> Tuple[Dict[str, Any], List[Dict[str, Any]], pd
         raw = str(v).strip()
         if raw and raw != key:
             eval_lookup[raw] = _safe_float(hit)
+    repo_root = _find_repo_root(run_dir)
+    share_matrix = _load_share_matrix(repo_root)
+    gamelog_lookup = _load_gamelog_lookup(repo_root)
+    scored_lookup = _build_scored_lookup(scored_df)
     slip_rows = []
-    for folder_name, category in [(None, "top"), ("System", "system"), ("Windfall", "windfall")]:
-        base = run_dir if folder_name is None else run_dir / folder_name
-        if not base.exists():
-            continue
+    slip_examples: Dict[str, Dict[str, List[Dict[str, Any]]]] = {}
+    base = run_dir / "System"
+    if base.exists():
         for path in sorted(base.glob("recommended_*leg*.csv")):
             mode = "winprob" if "_winprob" in path.name.lower() else "ev"
-            metrics = _slip_metrics_from_file(path, eval_lookup, category=category, mode=mode)
+            metrics = _slip_metrics_from_file(path, eval_lookup, eval_actual_lookup, gamelog_lookup, scored_lookup, share_matrix, category="system", mode=mode)
             metrics["run_id"] = run_id
             slip_rows.append(metrics)
+            slip_examples[f"system_{mode}_{metrics.get('n_legs')}"] = metrics.get("examples", {}) or {}
     scored = scored_df.copy()
     if "hit" not in scored.columns:
         key_col = None
@@ -1088,6 +2015,7 @@ def analyze_run(run_dir: Path) -> Tuple[Dict[str, Any], List[Dict[str, Any]], pd
         "run_metrics": run_metrics,
         "p_adj_buckets": _bucket_table(scored, "p_adj"),
         "p_cal_buckets": _bucket_table(scored, "p_cal") if "p_cal" in scored.columns else [],
+        "slip_examples": slip_examples,
     }, slip_rows, scored
 
 
@@ -1138,13 +2066,15 @@ def _corpus_metrics_from_per_run(per_run_df: pd.DataFrame) -> Dict[str, Any]:
 
 def _pick_summary_metric(system_ev_summary: pd.DataFrame, n: int, col: str) -> float:
     sub = system_ev_summary[system_ev_summary["n_legs"] == n]
-    return _safe_float(sub[col].iloc[0]) if not sub.empty else float("nan")
+    return _mean(sub[col]) if not sub.empty else float("nan")
 
 
 def _pick_run_metric(system_ev_per_run: pd.DataFrame, n: int, col: str) -> pd.Series:
     sub = system_ev_per_run[system_ev_per_run["n_legs"] == n].copy()
     if sub.empty:
         return pd.Series(dtype=float)
+    if "run_id" in sub.columns:
+        return pd.to_numeric(sub.groupby("run_id", dropna=False)[col].mean(), errors="coerce")
     return pd.to_numeric(sub[col], errors="coerce")
 
 
@@ -1393,14 +2323,57 @@ def _evaluate_calibration_gates(scored_df: pd.DataFrame, candidate_p: pd.Series,
         severe = delta <= -0.0010
         pass_count += int(passed)
         severe_regressions += int(severe)
-        rows.append({"slice": name, "rows": int(len(sub)), "delta_brier": delta, "pass": passed, "severe_regression": severe})
+        example_rows = _slice_example_rows(sub, candidate_p, baseline_p, limit=3)
+        rows.append({"slice": name, "rows": int(len(sub)), "delta_brier": delta, "pass": passed, "severe_regression": severe, "examples": example_rows})
     pass_share = (pass_count / eligible) if eligible else 0.0
     overall_clear = pass_share >= 0.70 and severe_regressions == 0
     return {"eligible_slices": eligible, "pass_count": pass_count, "pass_share": pass_share, "severe_regressions": severe_regressions, "overall_clear": overall_clear, "slice_rows": rows}
 
 
+def _slice_example_rows(sub: pd.DataFrame, candidate_p: pd.Series, baseline_p: pd.Series, limit: int = 3) -> Dict[str, List[Dict[str, Any]]]:
+    if sub.empty:
+        return {"helping": [], "hurting": []}
+
+    work = sub.copy()
+    work["candidate_p"] = pd.to_numeric(candidate_p.loc[work.index], errors="coerce")
+    work["baseline_p"] = pd.to_numeric(baseline_p.loc[work.index], errors="coerce")
+    if "hit" not in work.columns:
+        return {"helping": [], "hurting": []}
+    work["hit"] = pd.to_numeric(work["hit"], errors="coerce")
+    work = work[work[["candidate_p", "baseline_p", "hit"]].notna().all(axis=1)].copy()
+    if work.empty:
+        return {"helping": [], "hurting": []}
+
+    work["row_delta_brier"] = ((work["baseline_p"] - work["hit"]) ** 2) - ((work["candidate_p"] - work["hit"]) ** 2)
+    work = work.sort_values("row_delta_brier", ascending=False)
+
+    def _row_payload(row: pd.Series) -> Dict[str, Any]:
+        player = row.get("player") or row.get("player_key") or row.get("source_projection_id") or row.get("projection_id")
+        stat = row.get("stat_raw") or row.get("stat")
+        direction = row.get("direction")
+        leg = " ".join([str(x) for x in [player, direction, stat] if pd.notna(x) and str(x).strip()])
+        return {
+            "projection_id": row.get("projection_id") or row.get("source_projection_id"),
+            "player": player,
+            "team": row.get("team"),
+            "stat": stat,
+            "direction": direction,
+            "tier": row.get("tier"),
+            "leg": leg,
+            "role_ctx_outs_used": row.get("role_ctx_outs_used"),
+            "hit": _safe_float(row.get("hit")),
+            "candidate_p": _safe_float(row.get("candidate_p")),
+            "baseline_p": _safe_float(row.get("baseline_p")),
+            "row_delta_brier": _safe_float(row.get("row_delta_brier")),
+        }
+
+    helping = [_row_payload(row) for _, row in work.head(limit).iterrows()]
+    hurting = [_row_payload(row) for _, row in work.sort_values("row_delta_brier", ascending=True).head(limit).iterrows()]
+    return {"helping": helping, "hurting": hurting}
+
+
 def _variant_window_metrics(per_run_df: pd.DataFrame, slip_per_run_df: pd.DataFrame, run_ids: List[str]) -> Dict[str, float]:
-    sub_slips = slip_per_run_df[(slip_per_run_df["category"] == "system") & (slip_per_run_df["mode"] == "ev") & (slip_per_run_df["run_id"].astype(str).isin(run_ids))].copy()
+    sub_slips = slip_per_run_df[(slip_per_run_df["category"] == "system") & (slip_per_run_df["mode"].astype(str).str.lower().isin(["ev", "winprob"])) & (slip_per_run_df["run_id"].astype(str).isin(run_ids))].copy()
     out: Dict[str, float] = {}
     for n in [3,4,5]:
         sub = sub_slips[sub_slips["n_legs"] == n]
@@ -1454,10 +2427,11 @@ def _score_variant(
     per_run_df: pd.DataFrame,
     slip_metrics_df: pd.DataFrame,
     slip_per_run_df: pd.DataFrame,
+    weight_args: Optional[argparse.Namespace] = None,
     primary_reference: Optional[Dict[str, Any]] = None,
 ) -> Dict[str, Any]:
-    system_ev = slip_metrics_df[(slip_metrics_df["category"] == "system") & (slip_metrics_df["mode"] == "ev")].copy()
-    system_ev_per_run = slip_per_run_df[(slip_per_run_df["category"] == "system") & (slip_per_run_df["mode"] == "ev")].copy()
+    system_ev = slip_metrics_df[(slip_metrics_df["category"] == "system") & (slip_metrics_df["mode"].astype(str).str.lower().isin(["ev", "winprob"]))].copy()
+    system_ev_per_run = slip_per_run_df[(slip_per_run_df["category"] == "system") & (slip_per_run_df["mode"].astype(str).str.lower().isin(["ev", "winprob"]))].copy()
 
     strict3 = _pick_summary_metric(system_ev, 3, "strict_win_rate")
     strict4 = _pick_summary_metric(system_ev, 4, "strict_win_rate")
@@ -1481,8 +2455,10 @@ def _score_variant(
         + 0.55 * (strict5 if math.isfinite(strict5) else 0.0)
     )
     components["pricing_secondary"] = 0.012 * sum(v for v in [ev3, ev4, ev5] if math.isfinite(v))
-    components["stability_penalty"] = -1.00 * sum(v for v in [strict3_std, strict4_std, strict5_std] if math.isfinite(v))
-    components["sample_penalty"] = -0.20 * (corpus_metrics.get("games_used_lt5_share") or 0.0)
+    strict_window_weight = getattr(weight_args, "strict_window_volatility_weight", 1.0) if weight_args is not None else 1.0
+    sample_penalty_weight = getattr(weight_args, "sample_penalty_weight", 0.20) if weight_args is not None else 0.20
+    components["strict_window_volatility_penalty"] = -strict_window_weight * sum(v for v in [strict3_std, strict4_std, strict5_std] if math.isfinite(v))
+    components["sample_penalty"] = -sample_penalty_weight * (corpus_metrics.get("games_used_lt5_share") or 0.0)
 
     protection_penalty = 0.0
     consistency_bonus = 0.0
@@ -1698,14 +2674,23 @@ def build_calibration_recommendations(scored_df: pd.DataFrame, current_json: Any
     telemetry_map = _derive_telemetry_key_mult(scored_df, key_col="telemetry_cal_key", min_count=t_min_count, max_deviation=t_max_deviation, prior_strength=t_prior_strength)
     if telemetry_map:
         raw_candidates.append(("telemetry_key_light", _transform_telemetry_key(scored_df, telemetry_map, key_col="telemetry_cal_key", k=0.96, under_penalty=0.98), {"family": "telemetry_key", "mult_map": telemetry_map}))
+        if "p_cal" in scored_df.columns and "hit" in scored_df.columns:
+            isotonic_global = _transform_isotonic_global(scored_df, source_col="p_cal", y_col="hit")
+            isotonic_payload = _fit_isotonic_payload(scored_df, source_col="p_cal", y_col="hit")
+            raw_candidates.append(("isotonic_global_p_cal", isotonic_global, {"family": "isotonic_global", **isotonic_payload}))
+            for mix in [0.25, 0.40, 0.50, 0.60, 0.70, 0.75]:
+                raw_candidates.append((f"isotonic_blend_p_cal_{mix:.2f}", _blend_probability_series(scored_df["p_cal"], isotonic_global, isotonic_global.notna(), mix), {"family": "isotonic_blend", "mix": mix, **isotonic_payload}))
         # Conservative variant: only apply telemetry-key multipliers to rows without role-context
         if "role_ctx_outs_used" in scored_df.columns:
             raw_candidates.append(("telemetry_key_role_off_light", _transform_telemetry_key_role_off(scored_df, telemetry_map, key_col="telemetry_cal_key", role_col="role_ctx_outs_used", k=0.96, under_penalty=0.98), {"family": "telemetry_key_role_off", "mult_map": telemetry_map}))
+            raw_candidates.append(("telemetry_key_role_on_light", _transform_telemetry_key_role_on(scored_df, telemetry_map, key_col="telemetry_cal_key", role_col="role_ctx_outs_used", k=0.96, under_penalty=0.98), {"family": "telemetry_key_role_on", "mult_map": telemetry_map}))
+            raw_candidates.append(("telemetry_key_role_context_strength", _transform_telemetry_key_role_strength(scored_df, telemetry_map, key_col="telemetry_cal_key", role_col="role_ctx_outs_used", mult_col="role_ctx_mult", k=0.96, under_penalty=0.98), {"family": "telemetry_key_role_context_strength", "mult_map": telemetry_map, "strength_source": "role_ctx_outs_used+role_ctx_mult"}))
             # Blend variant: apply full multipliers to role-off and a small
             # blended fraction to role-on rows to cautiously extend benefits.
             raw_candidates.append(("telemetry_key_role_on_blend", _transform_telemetry_key_role_on_blend(scored_df, telemetry_map, key_col="telemetry_cal_key", role_col="role_ctx_outs_used", blend=0.1, k=0.96, under_penalty=0.98), {"family": "telemetry_key_role_on_blend", "mult_map": telemetry_map, "blend": 0.1}))
             if "run_id" in scored_df.columns:
                 base_role_off = _transform_telemetry_key_role_off(scored_df, telemetry_map, key_col="telemetry_cal_key", role_col="role_ctx_outs_used", k=0.96, under_penalty=0.98)
+                role_on_light = _transform_telemetry_key_role_on(scored_df, telemetry_map, key_col="telemetry_cal_key", role_col="role_ctx_outs_used", k=0.96, under_penalty=0.98)
                 role_on_blend = _transform_telemetry_key_role_on_blend(scored_df, telemetry_map, key_col="telemetry_cal_key", role_col="role_ctx_outs_used", blend=0.1, k=0.96, under_penalty=0.98)
                 role_on_mask = pd.to_numeric(scored_df["role_ctx_outs_used"], errors="coerce") > 0
                 run_ids = sorted(scored_df["run_id"].astype(str).dropna().unique().tolist())
@@ -1725,11 +2710,21 @@ def build_calibration_recommendations(scored_df: pd.DataFrame, current_json: Any
                             _blend_probability_series(base_role_off, role_on_blend, mask, mix),
                             {"family": "hybrid_role_off_plus_onblend", "focus": focus_name, "mix": mix, "base": "telemetry_key_role_off_light", "correction": "telemetry_key_role_on_blend"},
                         ))
+                        raw_candidates.append((
+                            f"hybrid_role_off_plus_onlight_{focus_name}_{mix:.2f}",
+                            _blend_probability_series(base_role_off, role_on_light, mask, mix),
+                            {"family": "hybrid_role_off_plus_onlight", "focus": focus_name, "mix": mix, "base": "telemetry_key_role_off_light", "correction": "telemetry_key_role_on_light"},
+                        ))
                 for mix in [0.02, 0.05]:
                     raw_candidates.append((
                         f"hybrid_role_off_plus_onblend_recent_third_micro_{mix:.2f}",
                         _blend_probability_series(base_role_off, role_on_blend, recent_third_micro_mask, mix),
                         {"family": "hybrid_role_off_plus_onblend_micro", "focus": "recent_third", "mix": mix, "base": "telemetry_key_role_off_light", "correction": "telemetry_key_role_on_blend"},
+                    ))
+                    raw_candidates.append((
+                        f"hybrid_role_off_plus_onlight_recent_third_micro_{mix:.2f}",
+                        _blend_probability_series(base_role_off, role_on_light, recent_third_micro_mask, mix),
+                        {"family": "hybrid_role_off_plus_onlight_micro", "focus": "recent_third", "mix": mix, "base": "telemetry_key_role_off_light", "correction": "telemetry_key_role_on_light"},
                     ))
             # If a calibration JSON was supplied and contains explicit multipliers
             # and a blend fraction, evaluate that exact payload as an additional
@@ -1786,6 +2781,8 @@ def build_calibration_recommendations(scored_df: pd.DataFrame, current_json: Any
         confidence = "medium"
         reason = f"Candidate {best['candidate']} cleared overall and regime/time-window gates with corpus Brier improvement {round(improvement, 6)}."
         suggested_payload = {"mode": best["meta"]["family"], "candidate": best["candidate"], "meta": best["meta"]}
+        if best["meta"].get("family") in {"isotonic_global", "isotonic_blend"} and isinstance(current_json, dict):
+            suggested_payload["pre_calibration"] = current_json
     elif best["candidate"] == "identity":
         reason = "Identity remains the best or statistically tied calibration candidate on the joined corpus."
     return {
@@ -1817,24 +2814,34 @@ def build_logic_recommendations(calibration_py_path: Optional[Path], calibration
 
 
 def build_config_recommendations(current_config_values: Dict[str, Any], primary_label: str, variant_rankings: List[Dict[str, Any]], variant_entries: Dict[str, Dict[str, Any]]) -> Dict[str, Any]:
+    promotion_standard = _promotion_standard()
     winner = variant_rankings[0]
     recs: List[Dict[str, Any]] = []
     win_cfg = winner.get("config_values", {})
-    threshold = 0.01
+    threshold = _safe_float(promotion_standard.get('score_gap_min'), 0.0)
     score_gap = winner["score"] - variant_rankings[1]["score"] if len(variant_rankings) > 1 else 0.0
     gate_summary = {"overall_clear": False, "pass_share": 0.0, "window_rows": []}
+    primary_score = variant_entries.get(primary_label, {}).get("score", {}) if primary_label in variant_entries else {}
+    hit_rate_gate_clear = True
+    if isinstance(primary_score, dict) and isinstance(winner, dict):
+        for metric in ["strict3", "strict4", "strict5"]:
+            winner_val = _safe_float(winner.get(metric), float("nan"))
+            primary_val = _safe_float(primary_score.get(metric), float("nan"))
+            if math.isfinite(winner_val) and math.isfinite(primary_val) and winner_val < primary_val:
+                hit_rate_gate_clear = False
+                break
     if winner["label"] != primary_label and winner["label"] in variant_entries and primary_label in variant_entries:
         gate_summary = _evaluate_variant_evidence(variant_entries[winner["label"]], variant_entries[primary_label])
-    promote = winner["label"] != primary_label and score_gap > threshold and gate_summary.get("overall_clear", False)
+    promote = winner["label"] != primary_label and score_gap >= threshold and gate_summary.get("overall_clear", False) and hit_rate_gate_clear
     for path, cur_val in current_config_values.items():
         suggested = win_cfg.get(path, cur_val)
         if promote and suggested != cur_val:
-            reason = f"Variant {winner['label']} led the corpus leaderboard by score gap {round(score_gap, 6)} and cleared regime/time-window gates for promotion."
+            reason = f"Variant {winner['label']} meets the provisional promotion standard: score gap {round(score_gap, 6)} >= {threshold}, variant gate clear, and strict3/strict4/strict5 do not regress versus the primary corpus."
             confidence = "medium"
             apply_now = True
         else:
             suggested = cur_val
-            reason = "Current value remains the leading or statistically tied corpus choice after regime/time-window gates."
+            reason = "Current value remains the leading or statistically tied corpus choice after the provisional promotion standard is applied."
             confidence = "high"
             apply_now = False
         recs.append({
@@ -1846,6 +2853,7 @@ def build_config_recommendations(current_config_values: Dict[str, Any], primary_
             "apply_now": apply_now,
             "winner_label": winner["label"],
             "winner_score": winner["score"],
+            "promotion_standard": promotion_standard,
             "gate_summary": gate_summary,
         })
     return {"recommendations": recs, "leaderboard": variant_rankings}
@@ -1919,9 +2927,18 @@ def _variant_entry(label: str, corpus_input: Path, config_path: Optional[Path]) 
     return {"label": label, "corpus_input": corpus_input, "config_path": config_path}
 
 
-def _build_markdown(summary: Dict[str, Any], config_recs: Dict[str, Any], calib_recs: Dict[str, Any], logic_recs: Dict[str, Any]) -> str:
+def _build_markdown(summary: Dict[str, Any], config_recs: Dict[str, Any], calib_recs: Dict[str, Any], logic_recs: Dict[str, Any], tuning_recs: Dict[str, Any]) -> str:
     lines = ["# Telemetry Corpus Reader — Full Reader v1.4", ""]
+
+    def _fmt_example(row: Dict[str, Any]) -> str:
+        leg = row.get("leg") or row.get("player") or row.get("projection_id") or "(unknown)"
+        delta = row.get("row_delta_brier")
+        return f"{leg} | delta={delta} | cand={row.get('candidate_p')} base={row.get('baseline_p')} hit={row.get('hit')}"
+
     lines.append(f"Generated: `{summary['generated_at']}`")
+    raw_json_name = summary.get("raw_json_name")
+    if raw_json_name:
+        lines.append(f"- RawJson: `{raw_json_name}`")
     lines.append("")
     lines.append("## Primary corpus")
     lines.append(f"- Label: `{summary['primary_label']}`")
@@ -1965,6 +2982,12 @@ def _build_markdown(summary: Dict[str, Any], config_recs: Dict[str, Any], calib_
         lines.append(f"- Candidate gate clear: `{knob_advisor.get('top_calibration_gate_overall_clear')}` pass_share=`{knob_advisor.get('top_calibration_gate_pass_share')}` severe_regressions=`{knob_advisor.get('top_calibration_gate_severe_regressions')}`")
     lines.append(f"- Reason: {knob_advisor.get('reason')}")
     lines.append("")
+    lines.append("## Tuning Recommendations")
+    if tuning_recs.get('summary'):
+        lines.append(f"- Summary: {tuning_recs.get('summary')}")
+    for rec in tuning_recs.get('recommendations', []):
+        lines.append(f"- `{rec.get('target')}` ({rec.get('priority')}): {rec.get('action')} {rec.get('why')}")
+    lines.append("")
     lines.append("## Promotion guard")
     lines.append(f"- Verdict: `{promotion_guard.get('verdict')}`")
     if promotion_guard.get('top_calibration_candidate'):
@@ -1978,7 +3001,7 @@ def _build_markdown(summary: Dict[str, Any], config_recs: Dict[str, Any], calib_
     lines.append("")
     lines.append("## Variant leaderboard")
     for row in config_recs["leaderboard"]:
-        lines.append(f"- `{row['label']}` score={round(row['score'], 6)} strict3={round(_safe_float(row['strict3'], 0.0), 4)} strict4={round(_safe_float(row['strict4'], 0.0), 4)} strict5={round(_safe_float(row['strict5'], 0.0), 4)} hit3={round(_safe_float(row['hit3'], 0.0), 4)} hit4={round(_safe_float(row['hit4'], 0.0), 4)} pos={row.get('dominant_positive')} neg={row.get('dominant_negative')}")
+        lines.append(f"- `{row['label']}` score={round(_safe_float(row.get('score')), 6)} strict3={round(_safe_float(row['strict3'], 0.0), 4)} strict4={round(_safe_float(row['strict4'], 0.0), 4)} strict5={round(_safe_float(row['strict5'], 0.0), 4)} hit3={round(_safe_float(row['hit3'], 0.0), 4)} hit4={round(_safe_float(row['hit4'], 0.0), 4)} pos={row.get('dominant_positive')} neg={row.get('dominant_negative')}")
     lines.append("")
     lines.append("## Config recommendations")
     for rec in config_recs["recommendations"]:
@@ -1989,6 +3012,94 @@ def _build_markdown(summary: Dict[str, Any], config_recs: Dict[str, Any], calib_
     top_candidates = calib_recs.get("candidate_scores", [])[:5]
     for cand in top_candidates:
         lines.append(f"  - `{cand['candidate']}` brier={round(_safe_float(cand['brier']), 6)} logloss={round(_safe_float(cand['logloss']), 6)} ece={round(_safe_float(cand['ece']), 6)}")
+    if top_candidates:
+        top_gate = (top_candidates[0].get("gate_summary") or {}) if isinstance(top_candidates[0], dict) else {}
+        failing_slices = [row for row in top_gate.get("slice_rows", []) if not row.get("pass")]
+        if failing_slices:
+            lines.append("")
+            lines.append("## Slice examples")
+            lines.append(f"- Top candidate `{top_candidates[0].get('candidate')}` failing slices with named rows:")
+            for slice_row in failing_slices:
+                lines.append(f"  - `{slice_row.get('slice')}` delta_brier={slice_row.get('delta_brier')} rows={slice_row.get('rows')}")
+                examples = slice_row.get("examples") or {}
+                hurting = examples.get("hurting", [])[:3]
+                helping = examples.get("helping", [])[:2]
+                if hurting:
+                    lines.append("    - hurting rows:")
+                    for row in hurting:
+                        lines.append(f"      - {_fmt_example(row)}")
+                if helping:
+                    lines.append("    - helping rows:")
+                    for row in helping:
+                        lines.append(f"      - {_fmt_example(row)}")
+    promotion_guard = summary.get("promotion_guard", {}) or {}
+    promotion_standard = promotion_guard.get("promotion_standard", {}) or {}
+    promotion_status = promotion_guard.get("promotion_status", {}) or {}
+    if promotion_standard:
+        lines.append("")
+        lines.append("## Provisional promotion standard")
+        if promotion_standard.get('note'):
+            lines.append(f"- Note: {promotion_standard.get('note')}")
+        if promotion_standard.get('metric_scope'):
+            lines.append(f"- Metric scope: {promotion_standard.get('metric_scope')}")
+        lines.append(f"- Rule: {promotion_standard.get('promotion_rule')}")
+        lines.append(f"- Score gap minimum: `{promotion_standard.get('score_gap_min')}`")
+        variant_gate = promotion_standard.get('variant_gate', {}) or {}
+        if variant_gate:
+            lines.append(f"- Variant gate: overall_clear=`{variant_gate.get('overall_clear')}` pass_share>=`{variant_gate.get('pass_share_min')}` severe_regressions<=`{variant_gate.get('severe_regressions_max')}`")
+        hit_rate_gate = promotion_standard.get('hit_rate_gate', {}) or {}
+        if hit_rate_gate:
+            lines.append(f"- Hit-rate gate: strict3>=primary, strict4>=primary, strict5>=primary")
+        calibration_gate = promotion_standard.get('calibration_gate', {}) or {}
+        if calibration_gate:
+            lines.append(f"- Calibration gate: `{calibration_gate.get('status')}`; {calibration_gate.get('note')}")
+        if promotion_status:
+            lines.append(f"- Current status: promotable=`{promotion_status.get('promotable')}` variant_gate_ok=`{promotion_status.get('variant_gate_ok')}` hit_rate_clear=`{promotion_status.get('hit_rate_clear')}` score_gap_ok=`{promotion_status.get('score_gap_ok')}`")
+    slip_examples = summary.get("slip_examples", {}) or {}
+    if slip_examples:
+        lines.append("")
+        lines.append("## Slip examples")
+        for run_id, run_examples in slip_examples.items():
+            if not isinstance(run_examples, dict):
+                continue
+            lines.append(f"- run `{run_id}`:")
+            for label, rows in run_examples.items():
+                if not isinstance(rows, dict):
+                    continue
+                best_rows = rows.get("best", []) or []
+                worst_rows = rows.get("worst", []) or []
+                if not best_rows and not worst_rows:
+                    continue
+                lines.append(f"  - `{label}` slips:")
+                if best_rows:
+                    lines.append("    - winning slips:")
+                    for row in best_rows[:2]:
+                        lines.append(f"      - {row.get('slip_key')} | hit_prob={row.get('hit_prob')} ev={row.get('ev_mult')} strict_win={row.get('strict_win')} q_legs={row.get('q_leg_count')}")
+                        legs = str(row.get('legs') or "").split(" | ")
+                        leg_contexts = row.get("leg_contexts") or []
+                        for idx, leg in enumerate(legs[:2]):
+                            actual_text = "n/a"
+                            if idx < len(leg_contexts) and isinstance(leg_contexts[idx], dict):
+                                actual_text = str(leg_contexts[idx].get("actual_result") or "n/a")
+                            lines.append(f"        - {leg.strip()} actual={actual_text}")
+                if worst_rows:
+                    lines.append("    - losing slips:")
+                    for row in worst_rows[:2]:
+                        lines.append(f"      - {row.get('slip_key')} | hit_prob={row.get('hit_prob')} ev={row.get('ev_mult')} strict_win={row.get('strict_win')} q_legs={row.get('q_leg_count')}")
+                        next_test = row.get("next_test") or {}
+                        if isinstance(next_test, dict):
+                            lines.append(f"        - failure type: {next_test.get('failure_type')}")
+                            if next_test.get("weak_leg"):
+                                lines.append(f"        - weak leg: {next_test.get('weak_leg')}")
+                        legs = str(row.get('legs') or "").split(" | ")
+                        leg_contexts = row.get("leg_contexts") or []
+                        for idx, leg in enumerate(legs[:2]):
+                            actual_text = "n/a"
+                            if idx < len(leg_contexts) and isinstance(leg_contexts[idx], dict):
+                                actual_text = str(leg_contexts[idx].get("actual_result") or "n/a")
+                            lines.append(f"        - {leg.strip()} actual={actual_text}")
+                        if isinstance(next_test, dict):
+                            lines.append(f"        - next test: {next_test.get('next_test')} | why={next_test.get('why')}")
     lines.append("")
     lines.append("## Logic recommendations")
     for rec in logic_recs["recommendations"]:
@@ -2002,6 +3113,9 @@ def run_reader(args: argparse.Namespace) -> Path:
     current_config_values = _extract_config_values(current_cfg)
     primary_label = args.primary_label or _infer_label(args.corpus_input)
     primary_paths, primary_per_run, primary_slips, primary_slips_per_run, primary_scored, primary_payloads = _read_corpus(args.corpus_input)
+    repo_root = _find_repo_root(args.output_root or args.corpus_input)
+    share_matrix = _load_share_matrix(repo_root)
+    scored_lookup = _build_scored_lookup(primary_scored)
     calibration_json = _load_json(args.calibration_json_path) if args.calibration_json_path and args.calibration_json_path.exists() else None
 
     variant_entry_list: List[Dict[str, Any]] = [_variant_entry(primary_label, args.corpus_input, args.config_path)]
@@ -2026,7 +3140,7 @@ def run_reader(args: argparse.Namespace) -> Path:
     primary_corpus_metrics = _corpus_metrics_from_per_run(primary_per_run)
     regime_tables = _regime_tables(primary_scored, primary_slips)
     drift_rows = _drift_table(primary_per_run)
-    primary_reference = _score_variant(current_config_values, primary_per_run, primary_slips, primary_slips_per_run, None)
+    primary_reference = _score_variant(current_config_values, primary_per_run, primary_slips, primary_slips_per_run, args, None)
     try:
         for entry in normalized_entries:
             if entry["label"] == primary_label:
@@ -2039,7 +3153,7 @@ def run_reader(args: argparse.Namespace) -> Path:
                     cfg_values = _extract_config_values(_load_yaml(Path(entry["config_path"])))
                 if paths.extracted_tmp and paths.extracted_tmp.exists():
                     shutil.rmtree(paths.extracted_tmp, ignore_errors=True)
-            scored = _score_variant(cfg_values, per_run_df, slip_metrics, slip_per_run_df, primary_reference)
+            scored = _score_variant(cfg_values, per_run_df, slip_metrics, slip_per_run_df, args, primary_reference)
             scored["label"] = entry["label"]
             variant_rankings.append(scored)
             variant_entries[entry["label"]] = {"score": scored, "per_run_df": per_run_df, "slip_metrics_df": slip_metrics, "slip_per_run_df": slip_per_run_df, "config_values": cfg_values}
@@ -2061,11 +3175,13 @@ def run_reader(args: argparse.Namespace) -> Path:
         }, calib_recs, protected_surfaces)
         knob_advisor = _knob_advisor_summary(config_recs, calib_recs, runtime_identity)
         promotion_guard = _promotion_guard_summary(primary_label, config_recs, calib_recs)
+        tuning_recs = _tuning_recommendations_summary(scorecard, promotion_guard, calib_recs)
 
         summary = {
             "generated_at": _now_utc(),
             "primary_label": primary_label,
             "corpus_input": str(args.corpus_input),
+            "raw_json_name": args.corpus_input.name if args.corpus_input.suffix.lower() == ".json" else None,
             "primary_runs_read": int(len(primary_per_run)),
             "primary_corpus_metrics": _round_value(primary_corpus_metrics),
             "primary_bucket_tables": {
@@ -2079,11 +3195,13 @@ def run_reader(args: argparse.Namespace) -> Path:
             "scorecard": _round_value(scorecard),
             "knob_advisor": _round_value(knob_advisor),
             "promotion_guard": _round_value(promotion_guard),
+                "tuning_recommendations": _round_value(tuning_recs),
+            "slip_examples": _round_value({x["run_metrics"]["run_id"]: x.get("slip_examples", {}) for x in primary_payloads}),
         }
 
         (output_dir / "corpus_summary.json").write_text(json.dumps(summary, indent=2), encoding="utf-8")
         (output_dir / "runtime_identity.json").write_text(json.dumps(_round_value(runtime_identity), indent=2), encoding="utf-8")
-        (output_dir / "corpus_summary.md").write_text(_build_markdown(summary, _round_value(config_recs), _round_value(calib_recs), _round_value(logic_recs)), encoding="utf-8")
+        (output_dir / "corpus_summary.md").write_text(_build_markdown(summary, _round_value(config_recs), _round_value(calib_recs), _round_value(logic_recs), _round_value(tuning_recs)), encoding="utf-8")
         (output_dir / "config_recommendations.json").write_text(json.dumps(_round_value(config_recs), indent=2), encoding="utf-8")
         (output_dir / "calibration_recommendations.json").write_text(json.dumps(_round_value(calib_recs), indent=2), encoding="utf-8")
         (output_dir / "logic_recommendations.json").write_text(json.dumps(_round_value(logic_recs), indent=2), encoding="utf-8")
@@ -2112,6 +3230,8 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--corpus-input", type=Path, required=True, help="Primary corpus folder or zip with runs/")
     p.add_argument("--primary-label", type=str, default=None, help="Optional friendly name for the primary corpus")
     p.add_argument("--config-path", type=Path, required=True, help="Path to current config.yaml")
+    p.add_argument("--strict-window-volatility-weight", type=float, default=1.0, help="Analysis-only multiplier for strict_window_volatility_penalty")
+    p.add_argument("--sample-penalty-weight", type=float, default=0.20, help="Analysis-only multiplier for sample_penalty")
     p.add_argument("--calibration-json-path", type=Path, default=None, help="Optional calibration json path")
     p.add_argument("--calibration-py-path", type=Path, default=None, help="Optional calibration.py path")
     p.add_argument("--calibration-map-py-path", type=Path, default=None, help="Optional calibration_map.py path")

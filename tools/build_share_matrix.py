@@ -1,11 +1,14 @@
 import argparse
+import json
+import os
 from pathlib import Path
 import sys
 import subprocess
 
 import pandas as pd
 
-from Atlas.model.team_share_reallocator import build_removed_share_matrix
+from Atlas.model.share_matrix_builder_v2 import emit_share_matrix_csv, generate_share_matrix_v2
+from Atlas.model.share_matrix_contract import require_valid_share_matrix
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
@@ -27,49 +30,40 @@ def main() -> None:
     p.add_argument("--min-pattern-games", type=int, default=3)
     p.add_argument("--keep-zero-weights", action="store_true", default=False)
     args = p.parse_args()
-    
-    # --- IAEL preflight: ensure normalized/latest.json is republished to newest snapshot ---
-    # --- “Do not remove. This is the guaranteed IAEL freshness hook for live runs.” --- Rick
-    refresh_path = PROJECT_ROOT / "tools" / "refresh_iael_today.py"
-    if refresh_path.exists():
-        print(f"[IAEL] Preflight refresh via {refresh_path}")
-        subprocess.run([sys.executable, str(refresh_path)], check=False)
-    else:
-        print(f"[IAEL] Preflight refresh missing: {refresh_path}")
+
+    snapshot_dir = os.environ.get("ATLAS_IAEL_SNAPSHOT_DIR")
+    has_run_snapshot = bool(snapshot_dir) or bool(os.environ.get("ATLAS_IAEL_INVALIDATIONS_PATH"))
+    if not has_run_snapshot:
+        # Standalone fallback: keep the old freshness hook, but avoid touching
+        # the live source when the caller already supplied a frozen run snapshot.
+        refresh_path = PROJECT_ROOT / "tools" / "refresh_iael_today.py"
+        if refresh_path.exists():
+            print(f"[IAEL] Preflight refresh via {refresh_path}")
+            subprocess.run([sys.executable, str(refresh_path)], check=False)
+        else:
+            print(f"[IAEL] Preflight refresh missing: {refresh_path}")
 
     logs_path = Path(args.logs)
     out_path = Path(args.out)
 
     logs = pd.read_csv(logs_path)
 
-    mat = build_removed_share_matrix(
+    mat = generate_share_matrix_v2(
         logs,
+        iael_df=None,
         recent_days=int(args.recent_days),
         min_rotation_games=int(args.min_rotation_games),
         min_rotation_avg_min=float(args.min_rotation_avg_min),
+        min_pattern_games=int(args.min_pattern_games),
+        keep_zero_weights=bool(args.keep_zero_weights),
     )
 
-    if "weight" in mat.columns:
-        mat["weight"] = pd.to_numeric(mat["weight"], errors="coerce").fillna(0.0)
-    else:
-        mat["weight"] = 0.0
+    if mat.empty:
+        raise RuntimeError("share matrix generation produced no rows")
 
-    if "games" in mat.columns:
-        mat["games"] = pd.to_numeric(mat["games"], errors="coerce").fillna(0).astype(int)
-    else:
-        mat["games"] = 0
+    require_valid_share_matrix(mat)
 
-    if not args.keep_zero_weights:
-        mat = mat[mat["weight"].abs() > 1e-12].copy()
-
-    mpg = int(args.min_pattern_games)
-    if mpg > 0:
-        mat = mat[mat["games"] >= mpg].copy()
-
-    mat = mat.reset_index(drop=True)
-
-    out_path.parent.mkdir(parents=True, exist_ok=True)
-    mat.to_csv(out_path, index=False)
+    emit_share_matrix_csv(mat, out_path)
     print(f"OK wrote {out_path} rows={len(mat)} (after cleanup)")
 
 

@@ -22,6 +22,8 @@ import sys
 from datetime import datetime, time, timedelta
 from pathlib import Path
 
+import pandas as pd
+
 def _local_now() -> datetime:
     # Windows local time; consistent with your printed timestamps
     return datetime.now()
@@ -192,6 +194,110 @@ def _assert_no_team_mismatches(root: Path, latest_norm: Path) -> None:
 
     raise RuntimeError(f"IAEL TEAM MISMATCHES: {len(mismatches)} (see {out})")
 
+
+def _sync_roster_map_from_latest_norm(root: Path, latest_norm: Path) -> int:
+    """
+    Update data/input/roster_map.csv from the current IAEL normalized rows.
+
+    This preserves the existing player strings in roster_map.csv and only updates
+    teams for normalized player-name matches. It is intentionally narrow so it can
+    correct stale active-player team labels without introducing naming drift.
+    """
+    roster_path = root / "data" / "input" / "roster_map.csv"
+    if not roster_path.exists() or not latest_norm.exists():
+        return 0
+
+    # Ensure Atlas imports resolve when the tool is run directly.
+    src_dir = root / "src"
+    if src_dir.exists():
+        sys.path.insert(0, str(src_dir))
+
+    from Atlas.core.iael_filter import normalize_person_name
+    from Atlas.engine.new_probability import _team_to_abbr
+
+    try:
+        data = json.loads(latest_norm.read_text(encoding="utf-8"))
+    except Exception:
+        return 0
+
+    rows = data if isinstance(data, list) else data.get("rows", [])
+    if not isinstance(rows, list) or not rows:
+        return 0
+
+    try:
+        roster_df = pd.read_csv(roster_path)
+    except Exception:
+        return 0
+
+    if "player" not in roster_df.columns or "team" not in roster_df.columns:
+        return 0
+
+    roster_df = roster_df.copy()
+    roster_df["player"] = roster_df["player"].astype(str).str.strip()
+    roster_df["team"] = roster_df["team"].astype(str).str.strip()
+    roster_df["player_norm"] = roster_df["player"].apply(normalize_person_name)
+
+    updates: list[dict[str, str]] = []
+    updated_rows = 0
+
+    for r in rows:
+        if not isinstance(r, dict):
+            continue
+
+        p_raw = (r.get("player") or "").strip()
+        team_raw = (r.get("team") or "").strip()
+        if not p_raw or not team_raw:
+            continue
+
+        p_norm = normalize_person_name(p_raw)
+        iael_team = _team_to_abbr(team_raw).strip().upper()
+        if not p_norm or not iael_team:
+            continue
+
+        mask = roster_df["player_norm"].astype(str).eq(p_norm)
+        if not bool(mask.any()):
+            continue
+
+        current_teams = roster_df.loc[mask, "team"].astype(str).str.strip()
+        if bool((current_teams == iael_team).all()):
+            continue
+
+        before_players = roster_df.loc[mask, "player"].astype(str).tolist()
+        before_teams = roster_df.loc[mask, "team"].astype(str).tolist()
+
+        roster_df.loc[mask, "team"] = iael_team
+        updated_rows += int(mask.sum())
+
+        for player_str, old_team in zip(before_players, before_teams):
+            updates.append(
+                {
+                    "player": player_str,
+                    "player_norm": p_norm,
+                    "old_team": old_team,
+                    "new_team": iael_team,
+                    "iael_team_raw": team_raw,
+                    "reason": (r.get("reason") or "").strip(),
+                }
+            )
+
+    if updated_rows <= 0:
+        return 0
+
+    roster_df.drop(columns=["player_norm"], inplace=True)
+    roster_df.to_csv(roster_path, index=False)
+
+    diag_dir = root / ".atlas_audit" / "diagnostics"
+    diag_dir.mkdir(parents=True, exist_ok=True)
+    ts = _local_now().strftime("%Y%m%d_%H%M%S")
+    audit_path = diag_dir / f"roster_map_iael_sync_{ts}.csv"
+    try:
+        pd.DataFrame(updates).to_csv(audit_path, index=False)
+        print(f"[IAEL] Synced roster_map.csv from latest IAEL: {updated_rows} row updates. Audit: {audit_path}")
+    except Exception:
+        print(f"[IAEL] Synced roster_map.csv from latest IAEL: {updated_rows} row updates.")
+
+    return updated_rows
+
 def _pulled_at_local_from_normalized(latest_norm: Path) -> datetime:
     """
     Determine pulled_at (local naive datetime) from the normalized JSON.
@@ -311,6 +417,7 @@ def main() -> int:
     _publish_latest_from_newest(root)
     latest_norm = root / "data" / "output" / "injury" / "normalized" / "latest.json"
     if latest_norm.exists():
+        _sync_roster_map_from_latest_norm(root, latest_norm)
         try:
             _assert_no_team_mismatches(root, latest_norm)
 

@@ -1,9 +1,11 @@
 from __future__ import annotations
 
+import json
 import logging
 import os
 import subprocess
 import sys
+import shutil
 import threading
 import time
 from dataclasses import dataclass
@@ -60,6 +62,13 @@ def _truncate(s: str, limit: int = 4000) -> str:
     return s[:limit] + f"\n...[truncated {len(s) - limit} chars]"
 
 
+def _output_root_for_run(ctx: RunContext) -> Path:
+    configured = (os.environ.get("ATLAS_OUT_DIR") or "").strip()
+    if configured:
+        return Path(configured).expanduser().resolve()
+    return (RUNS_DIR / ctx.run_id).resolve()
+
+
 def _csv_rowcount_fast(path: Path) -> Optional[int]:
     """Best-effort CSV data row count (excluding header). Returns None if missing/unreadable."""
     if not path.exists() or not path.is_file():
@@ -98,6 +107,163 @@ def _artifact_fingerprint(ctx: RunContext, label: str, path: Path) -> None:
         csv_rows=rows,
         size_bytes=(path.stat().st_size if exists else None),
     )
+
+
+def _prepare_iael_run_snapshot(ctx: RunContext, run_root: Path) -> dict[str, Path]:
+    """
+    Copy the current IAEL artifacts into a run-scoped snapshot directory and
+    point the active process at those copies.
+
+    This keeps the run reproducible even if the live IAEL dashboard changes
+    while the rest of the pipeline is executing.
+    """
+    snapshot_dir = run_root / "dashboard"
+    snapshot_dir.mkdir(parents=True, exist_ok=True)
+
+    strict_replay = _strict_replay_enabled()
+    if strict_replay:
+        sources = {
+            "invalidations": _require_env_path("ATLAS_IAEL_INVALIDATIONS_PATH", "IAEL invalidations snapshot"),
+            "status": _require_env_path("ATLAS_IAEL_STATUS_PATH", "IAEL status snapshot"),
+            "normalized": _require_env_path("ATLAS_IAEL_NORMALIZED_PATH", "IAEL normalized snapshot"),
+        }
+        role_metrics_path = os.environ.get("ATLAS_ROLE_METRICS_PATH", "").strip()
+        role_metrics_html_path = os.environ.get("ATLAS_ROLE_METRICS_HTML_PATH", "").strip()
+        role_metrics_manifest_path = os.environ.get("ATLAS_ROLE_METRICS_MANIFEST_PATH", "").strip()
+        if role_metrics_path:
+            sources["role_metrics"] = Path(role_metrics_path)
+        if role_metrics_html_path:
+            sources["role_metrics_html"] = Path(role_metrics_html_path)
+        if role_metrics_manifest_path:
+            sources["role_metrics_manifest"] = Path(role_metrics_manifest_path)
+    else:
+        source_dir = DATA_DIR / "output" / "dashboard"
+        sources = {
+            "invalidations": source_dir / "injury_invalidations_latest.json",
+            "status": source_dir / "status_latest.json",
+            "normalized": DATA_DIR / "output" / "injury" / "normalized" / "latest.json",
+            "role_metrics": source_dir / "role_metrics_latest.json",
+            "role_metrics_html": source_dir / "role_metrics_latest.html",
+            "role_metrics_manifest": source_dir / "role_metrics_snapshot_manifest.json",
+        }
+        role_metrics_path = str(source_dir / "role_metrics_latest.json")
+        role_metrics_html_path = str(source_dir / "role_metrics_latest.html")
+        role_metrics_manifest_path = str(source_dir / "role_metrics_snapshot_manifest.json")
+
+    copied: dict[str, Path] = {}
+    manifest: dict[str, dict[str, str]] = {}
+
+    for label, src in sources.items():
+        if not src.exists() or not src.is_file():
+            if strict_replay:
+                raise RuntimeError(f"Missing strict replay IAEL snapshot: {src}")
+            continue
+        if label == "invalidations":
+            dst = snapshot_dir / "injury_invalidations_latest.json"
+        elif label == "status":
+            dst = snapshot_dir / "status_latest.json"
+        elif label == "role_metrics":
+            dst = snapshot_dir / "role_metrics_latest.json"
+        elif label == "role_metrics_html":
+            dst = snapshot_dir / "role_metrics_latest.html"
+        elif label == "role_metrics_manifest":
+            dst = snapshot_dir / "role_metrics_snapshot_manifest.json"
+        else:
+            dst = snapshot_dir / "normalized_latest.json"
+
+        shutil.copy2(src, dst)
+        copied[label] = dst
+        manifest[label] = {
+            "source": str(src.resolve()),
+            "destination": str(dst.resolve()),
+            "sha256": sha256_file(dst) or "",
+        }
+
+    if not copied:
+        emit_event(ctx, "iael_snapshot_missing", source_dir=str(source_dir))
+        return {}
+
+    manifest_path = snapshot_dir / "injury_snapshot_manifest.json"
+    manifest_path.write_text(
+        json.dumps(
+            {
+                "run_id": ctx.run_id,
+                "generated_at": datetime.now().isoformat(timespec="seconds"),
+                "artifacts": manifest,
+            },
+            indent=2,
+            sort_keys=True,
+        ),
+        encoding="utf-8",
+    )
+
+    os.environ["ATLAS_IAEL_INVALIDATIONS_PATH"] = str(copied.get("invalidations", sources["invalidations"]))
+    os.environ["ATLAS_IAEL_STATUS_PATH"] = str(copied.get("status", sources["status"]))
+    os.environ["ATLAS_IAEL_NORMALIZED_PATH"] = str(copied.get("normalized", sources["normalized"]))
+    os.environ["ATLAS_IAEL_SNAPSHOT_DIR"] = str(snapshot_dir)
+    if "role_metrics" in copied:
+        os.environ["ATLAS_ROLE_METRICS_PATH"] = str(copied["role_metrics"])
+    elif role_metrics_path:
+        os.environ["ATLAS_ROLE_METRICS_PATH"] = role_metrics_path
+    if "role_metrics_html" in copied:
+        os.environ["ATLAS_ROLE_METRICS_HTML_PATH"] = str(copied["role_metrics_html"])
+    elif role_metrics_html_path:
+        os.environ["ATLAS_ROLE_METRICS_HTML_PATH"] = role_metrics_html_path
+    if "role_metrics_manifest" in copied:
+        os.environ["ATLAS_ROLE_METRICS_MANIFEST_PATH"] = str(copied["role_metrics_manifest"])
+    elif role_metrics_manifest_path:
+        os.environ["ATLAS_ROLE_METRICS_MANIFEST_PATH"] = role_metrics_manifest_path
+
+    emit_event(
+        ctx,
+        "iael_snapshot_prepared",
+        snapshot_dir=str(snapshot_dir),
+        invalidations_path=os.environ["ATLAS_IAEL_INVALIDATIONS_PATH"],
+        status_path=os.environ["ATLAS_IAEL_STATUS_PATH"],
+        normalized_path=os.environ["ATLAS_IAEL_NORMALIZED_PATH"],
+        manifest_path=str(manifest_path),
+    )
+
+    _artifact_fingerprint(ctx, "iael_invalidations_latest.json", Path(os.environ["ATLAS_IAEL_INVALIDATIONS_PATH"]))
+    _artifact_fingerprint(ctx, "status_latest.json", Path(os.environ["ATLAS_IAEL_STATUS_PATH"]))
+    _artifact_fingerprint(ctx, "normalized_latest.json", Path(os.environ["ATLAS_IAEL_NORMALIZED_PATH"]))
+    _artifact_fingerprint(ctx, "injury_snapshot_manifest.json", manifest_path)
+    if "role_metrics" in copied:
+        _artifact_fingerprint(ctx, "role_metrics_latest.json", copied["role_metrics"])
+    if "role_metrics_html" in copied:
+        _artifact_fingerprint(ctx, "role_metrics_latest.html", copied["role_metrics_html"])
+    if "role_metrics_manifest" in copied:
+        _artifact_fingerprint(ctx, "role_metrics_snapshot_manifest.json", copied["role_metrics_manifest"])
+
+    return {
+        "snapshot_dir": snapshot_dir,
+        "manifest_path": manifest_path,
+        "invalidations_path": Path(os.environ["ATLAS_IAEL_INVALIDATIONS_PATH"]),
+        "status_path": Path(os.environ["ATLAS_IAEL_STATUS_PATH"]),
+        "normalized_path": Path(os.environ["ATLAS_IAEL_NORMALIZED_PATH"]),
+        **({"role_metrics_path": copied["role_metrics"]} if "role_metrics" in copied else {}),
+        **({"role_metrics_html_path": copied["role_metrics_html"]} if "role_metrics_html" in copied else {}),
+        **({"role_metrics_manifest_path": copied["role_metrics_manifest"]} if "role_metrics_manifest" in copied else {}),
+    }
+
+
+def _prepare_rotowire_run_snapshot(*, game_date: str) -> Path:
+    source = _require_env_path("ATLAS_ROTOWIRE_LINES_PATH", "Rotowire snapshot")
+    out_path = DATA_DIR / "input" / "rotowire_lines.json"
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+
+    try:
+        obj = json.loads(source.read_text(encoding="utf-8"))
+    except Exception as exc:
+        raise RuntimeError(f"Failed to read strict replay Rotowire snapshot: {source}") from exc
+
+    source_date = str(obj.get("date", "")).strip()
+    if source_date and source_date != game_date:
+        raise RuntimeError(f"Strict replay Rotowire date mismatch: expected={game_date} found={source_date}")
+
+    shutil.copy2(source, out_path)
+    os.environ["ATLAS_ROTOWIRE_LINES_PATH"] = str(out_path)
+    return out_path
 
 
 def _csv_has_data_rows(path: Path) -> bool:
@@ -407,6 +573,20 @@ def _extra_env_for_raw(raw_path: Optional[str | Path]) -> dict[str, str]:
     return env
 
 
+def _strict_replay_enabled() -> bool:
+    return (os.environ.get("ATLAS_STRICT_REPLAY") or "").strip() == "1"
+
+
+def _require_env_path(name: str, label: str) -> Path:
+    raw = (os.environ.get(name) or "").strip()
+    if not raw:
+        raise RuntimeError(f"Strict replay requires {label} via {name}")
+    path = Path(raw).expanduser().resolve()
+    if not path.exists():
+        raise RuntimeError(f"Strict replay requires {label} at {path}")
+    return path
+
+
 def fetch_raw_only(*, raw_path: Optional[str | Path] = None, max_attempts: int = 3, sleep_s: float = 1.0) -> None:
     script = TOOLS_DIR / "fetch_apis.py"
     if not script.exists():
@@ -446,6 +626,12 @@ def fetch_rotowire_lines(*, game_date: str, raw_path: Optional[str | Path] = Non
     if not script.exists():
         raise FileNotFoundError(f"Missing tool: {script}")
 
+    if _strict_replay_enabled():
+        rotowire_path = _prepare_rotowire_run_snapshot(game_date=game_date)
+        _banner("REPLAY ROTOWIRE SNAPSHOT (pinned)")
+        print(f"[REPLAY] rotowire snapshot copied to: {rotowire_path}")
+        return
+
     extra_env = {
         "ROTOWIRE_GAME_DATE": game_date,
         "ROTOWIRE_BOOK": os.getenv("ROTOWIRE_BOOK", "mgm"),
@@ -453,6 +639,147 @@ def fetch_rotowire_lines(*, game_date: str, raw_path: Optional[str | Path] = Non
     }
 
     _run([_py(), str(script)], "FETCH ROTOWIRE (lines/spreads)", extra_env=extra_env)
+
+
+def _resolve_role_metrics_source() -> tuple[str, str, str]:
+    source_url = (os.environ.get("ATLAS_ROLE_METRICS_URL") or "").strip()
+    html_path = (os.environ.get("ATLAS_ROLE_METRICS_HTML_PATH") or "").strip()
+
+    if html_path:
+        path = Path(html_path).expanduser()
+        if path.exists() and path.is_file():
+            return "", str(path), "configured-html"
+
+    if source_url:
+        return source_url, "", "configured-url"
+
+    local_captures = []
+    for candidate in PROJECT_ROOT.glob("Fetch*.txt"):
+        if not candidate.is_file():
+            continue
+        try:
+            stat_result = candidate.stat()
+        except OSError:
+            continue
+        local_captures.append((stat_result.st_mtime, candidate.name.lower(), candidate))
+
+    if local_captures:
+        _, _, capture_path = max(local_captures)
+        resolved = str(capture_path)
+        os.environ["ATLAS_ROLE_METRICS_HTML_PATH"] = resolved
+        return "", resolved, "local-capture"
+
+    dashboard_html = DATA_DIR / "output" / "dashboard" / "role_metrics_latest.html"
+    if dashboard_html.exists() and dashboard_html.is_file():
+        resolved = str(dashboard_html)
+        os.environ["ATLAS_ROLE_METRICS_HTML_PATH"] = resolved
+        return "", resolved, "dashboard-fallback"
+
+    return "", "", "missing"
+
+
+def _resolve_strict_replay_role_metrics_artifacts() -> tuple[dict[str, str], str]:
+    dashboard_dir = DATA_DIR / "output" / "dashboard"
+
+    configured_json = (os.environ.get("ATLAS_ROLE_METRICS_PATH") or "").strip()
+    configured_html = (os.environ.get("ATLAS_ROLE_METRICS_HTML_PATH") or "").strip()
+    configured_manifest = (os.environ.get("ATLAS_ROLE_METRICS_MANIFEST_PATH") or "").strip()
+
+    json_path = Path(configured_json).expanduser() if configured_json else dashboard_dir / "role_metrics_latest.json"
+    html_path = Path(configured_html).expanduser() if configured_html else dashboard_dir / "role_metrics_latest.html"
+    manifest_path = Path(configured_manifest).expanduser() if configured_manifest else dashboard_dir / "role_metrics_snapshot_manifest.json"
+
+    if not json_path.exists() or not json_path.is_file():
+        raise RuntimeError(
+            "Strict replay requires a pinned role-metrics JSON artifact. "
+            "Set ATLAS_ROLE_METRICS_PATH or provide data/output/dashboard/role_metrics_latest.json."
+        )
+
+    resolved = {
+        "ATLAS_ROLE_METRICS_PATH": str(json_path),
+    }
+    source_kind = "configured" if configured_json else "dashboard-fallback"
+
+    if html_path.exists() and html_path.is_file():
+        resolved["ATLAS_ROLE_METRICS_HTML_PATH"] = str(html_path)
+        if configured_html:
+            source_kind = "configured"
+
+    if manifest_path.exists() and manifest_path.is_file():
+        resolved["ATLAS_ROLE_METRICS_MANIFEST_PATH"] = str(manifest_path)
+        if configured_manifest:
+            source_kind = "configured"
+
+    return resolved, source_kind
+
+
+def fetch_role_metrics_snapshot(*, game_date: str, raw_path: Optional[str | Path] = None) -> None:
+    extra_env = _extra_env_for_raw(raw_path)
+
+    configured_url = os.environ.get("ATLAS_ROLE_METRICS_URL", "").strip()
+    configured_html = os.environ.get("ATLAS_ROLE_METRICS_HTML_PATH", "").strip()
+    configured_json = os.environ.get("ATLAS_ROLE_METRICS_PATH", "").strip()
+    configured_manifest = os.environ.get("ATLAS_ROLE_METRICS_MANIFEST_PATH", "").strip()
+
+    if _strict_replay_enabled():
+        resolved_artifacts, source_kind = _resolve_strict_replay_role_metrics_artifacts()
+        os.environ.update(resolved_artifacts)
+        os.environ.pop("ATLAS_ROLE_METRICS_URL", None)
+
+        if configured_url:
+            print("[ROLE_METRICS] Ignoring ATLAS_ROLE_METRICS_URL during strict replay; replay requires pinned artifacts.")
+
+        if source_kind == "configured":
+            _banner("REPLAY ROLE METRICS (pinned)")
+            print("[ROLE_METRICS] Strict replay will use pinned role-metrics artifacts only.")
+        else:
+            _banner("REPLAY ROLE METRICS (dashboard fallback)")
+            print("[ROLE_METRICS] Strict replay found no explicit role-metrics paths; using pinned dashboard artifacts.")
+
+        print(f"[ROLE_METRICS] JSON: {os.environ['ATLAS_ROLE_METRICS_PATH']}")
+        if os.environ.get("ATLAS_ROLE_METRICS_HTML_PATH"):
+            print(f"[ROLE_METRICS] HTML: {os.environ['ATLAS_ROLE_METRICS_HTML_PATH']}")
+        if os.environ.get("ATLAS_ROLE_METRICS_MANIFEST_PATH"):
+            print(f"[ROLE_METRICS] Manifest: {os.environ['ATLAS_ROLE_METRICS_MANIFEST_PATH']}")
+        return
+
+    if configured_url or configured_html:
+        script = TOOLS_DIR / "fetch_role_metrics.py"
+        if not script.exists():
+            raise FileNotFoundError(f"Missing tool: {script}")
+
+        source_url, html_path, source_kind = _resolve_role_metrics_source()
+
+        if not source_url and not html_path:
+            _banner("ROLE METRICS FETCH (skipped)")
+            print("[ROLE_METRICS] No readable configured source was available; skipping metrics snapshot.")
+            return
+
+        cmd = [_py(), str(script), "--game-date", game_date]
+        if html_path:
+            cmd += ["--html-path", html_path]
+        elif source_url:
+            cmd += ["--url", source_url]
+
+        if source_kind == "dashboard-fallback":
+            _banner("ROLE METRICS FETCH (dashboard fallback)")
+            print(f"[ROLE_METRICS] No explicit source configured; using local dashboard snapshot: {html_path}")
+            print("[ROLE_METRICS] Manual runs can still override this with ATLAS_ROLE_METRICS_URL or ATLAS_ROLE_METRICS_HTML_PATH.")
+        elif source_kind == "local-capture":
+            _banner("ROLE METRICS FETCH (local capture)")
+            print(f"[ROLE_METRICS] No explicit source configured; using local capture: {html_path}")
+            print("[ROLE_METRICS] Manual runs can still override this with ATLAS_ROLE_METRICS_URL or ATLAS_ROLE_METRICS_HTML_PATH.")
+        _run(cmd, "FETCH ROLE METRICS (role awareness / VORP)", extra_env=extra_env)
+        return
+
+    script = TOOLS_DIR / "fetch_crafted_player_stats.py"
+    if not script.exists():
+        raise FileNotFoundError(f"Missing tool: {script}")
+
+    _banner("ROLE METRICS FETCH (craftednba api)")
+    print("[ROLE_METRICS] No explicit HTML source is configured; fetching the daily CraftedNBA API snapshot.")
+    print("[ROLE_METRICS] Set ATLAS_ROLE_METRICS_URL or ATLAS_ROLE_METRICS_HTML_PATH to force the legacy HTML parser.")
+    _run([_py(), str(script), "--game-date", game_date], "FETCH ROLE METRICS (craftednba api)", extra_env=extra_env)
 
 
 def build_share_matrix(*, raw_path: Optional[str | Path] = None) -> None:
@@ -623,16 +950,17 @@ def run_today(
 
     _artifact_fingerprint(ctx, "fetch_board.csv", board_path)
 
-    # 1b) Refresh rolling gamelogs (best-effort; must not block run)
-    try:
-        p = run_refresh_nba_gamelogs(PROJECT_ROOT, ctx.run_id)
-        logger.info("Gamelog refresh OK.\nSTDOUT:\n%s\nSTDERR:\n%s", p.stdout, p.stderr)
-    except subprocess.CalledProcessError as e:
-        logger.error(
-            "Gamelog refresh failed; continuing.\nSTDOUT:\n%s\nSTDERR:\n%s",
-            e.stdout,
-            e.stderr,
-        )
+    # 1b) Refresh rolling gamelogs only for non-replay runs.
+    if not _strict_replay_enabled():
+        try:
+            p = run_refresh_nba_gamelogs(PROJECT_ROOT, ctx.run_id)
+            logger.info("Gamelog refresh OK.\nSTDOUT:\n%s\nSTDERR:\n%s", p.stdout, p.stderr)
+        except subprocess.CalledProcessError as e:
+            logger.error(
+                "Gamelog refresh failed; continuing.\nSTDOUT:\n%s\nSTDERR:\n%s",
+                e.stdout,
+                e.stderr,
+            )
 
     # 2) Rebuild canonical today.csv (live or seeded)
     with StageTimer(ctx, "rebuild_today"):
@@ -656,12 +984,17 @@ def run_today(
     os.environ.pop("ROTOWIRE_LINES_URL", None)
     os.environ["ATLAS_GAME_DATE"] = game_date
 
+    # 2a.5) Fetch role metrics snapshot when configured, before the injury snapshot is frozen.
+    with StageTimer(ctx, "fetch_role_metrics_snapshot"):
+        fetch_role_metrics_snapshot(game_date=game_date, raw_path=raw_path)
+
     # 2b) Fetch Rotowire lines/spreads (MUST match game_date)
     with StageTimer(ctx, "fetch_rotowire_lines"):
         fetch_rotowire_lines(game_date=game_date, raw_path=raw_path)
 
     rotowire_path = DATA_DIR / "input" / "rotowire_lines.json"
-    assert_fresh(rotowire_path, max_age_hours=6, label="Rotowire lines")
+    if not _strict_replay_enabled():
+        assert_fresh(rotowire_path, max_age_hours=6, label="Rotowire lines")
     _artifact_fingerprint(ctx, "rotowire_lines.json", rotowire_path)
 
     # Extra safety: fresh-but-wrong-slate is still wrong
@@ -675,6 +1008,12 @@ def run_today(
     if rw_date and rw_date != game_date:
         emit_event(ctx, "rotowire_date_mismatch", expected=game_date, found=rw_date)
         raise SystemExit(f"[rotowire] rotowire_lines.json date mismatch: expected={game_date} found={rw_date}")
+
+    # Freeze the injury state for this run before model scoring starts.
+    run_root = _output_root_for_run(ctx)
+    iael_run_snapshot = _prepare_iael_run_snapshot(ctx, run_root)
+    if not iael_run_snapshot:
+        raise RuntimeError("IAEL snapshot could not be prepared for this run")
 
     # 3) Run model
     with StageTimer(ctx, "model_all"):
@@ -695,13 +1034,14 @@ def run_today(
         raise SystemExit(engine_res.returncode)
 
     # Fingerprint common outputs (best effort)
-    _artifact_fingerprint(ctx, "scored_legs.csv", OUTPUT_DIR / "scored_legs.csv")
-    _artifact_fingerprint(ctx, "scored_legs_deduped.csv", OUTPUT_DIR / "scored_legs_deduped.csv")
+    output_root = _output_root_for_run(ctx)
+    _artifact_fingerprint(ctx, "scored_legs.csv", output_root / "scored_legs.csv")
+    _artifact_fingerprint(ctx, "scored_legs_deduped.csv", output_root / "scored_legs_deduped.csv")
 
 # ---- Calibration post-process (additive) ----
     try:
         import pandas as pd
-        from Atlas.engine.calibration_map import apply_calibration_column, get_calibration_path_from_env
+        from Atlas.engine.calibration_map import apply_calibration_column
 
         (ctx.audit_dir / "calibration_marker.txt").write_text(
             "ENTERED CALIBRATION TRY BLOCK v3\n",
@@ -716,133 +1056,127 @@ def run_today(
         def _append_cal_log(line: str) -> None:
             (ctx.audit_dir / "calibration_debug.log").open("a", encoding="utf-8").write(line + "\n")
 
-        map_path = get_calibration_path_from_env()
-        print(f"[CAL] ATLAS_CAL_MAP={map_path!r}")
+        paths = [
+            pth
+            for pth in [OUTPUT_DIR / "scored_legs.csv", OUTPUT_DIR / "scored_legs_deduped.csv"]
+            if pth.exists() and pth.is_file() and pth.stat().st_size > 0
+        ]
 
-        if not map_path or not Path(map_path).exists():
-            emit_event(ctx, "calibration_skipped", reason="map_missing_or_unreadable", map_path=map_path)
-            print(f"[CAL] skipped: map missing/unreadable: {map_path!r}")
-        else:
-            paths = [
-                pth
-                for pth in [OUTPUT_DIR / "scored_legs.csv", OUTPUT_DIR / "scored_legs_deduped.csv"]
-                if pth.exists() and pth.is_file() and pth.stat().st_size > 0
-            ]
+        patched: list[str] = []
+        skipped: list[tuple[str, str]] = []
 
-            patched: list[str] = []
-            skipped: list[tuple[str, str]] = []
+        _append_cal_log("[CAL] telemetry overlay enabled")
+        _append_cal_log(
+            "[CAL] discovered_paths=" + "; ".join(str(p) for p in paths)
+            if paths else "[CAL] discovered_paths=<none>"
+        )
 
-            _append_cal_log(f"[CAL] map_path={map_path}")
-            _append_cal_log(
-                "[CAL] discovered_paths=" + "; ".join(str(p) for p in paths)
-                if paths else "[CAL] discovered_paths=<none>"
-            )
+        for csv_path in paths:
+            if not csv_path.exists():
+                _append_cal_log(f"{csv_path} | MISSING")
+                skipped.append((str(csv_path), "missing"))
+                continue
 
-            for csv_path in paths:
-                if not csv_path.exists():
-                    _append_cal_log(f"{csv_path} | MISSING")
-                    skipped.append((str(csv_path), "missing"))
-                    continue
+            sep = _detect_sep(csv_path)
 
-                sep = _detect_sep(csv_path)
+            try:
+                df = pd.read_csv(csv_path, sep=sep, low_memory=False)
+            except Exception as e:
+                _append_cal_log(f"{csv_path} | READ_FAIL | sep={repr(sep)} | err={e}")
+                skipped.append((str(csv_path), f"read_failed: {e}"))
+                continue
 
-                try:
-                    df = pd.read_csv(csv_path, sep=sep, low_memory=False)
-                except Exception as e:
-                    _append_cal_log(f"{csv_path} | READ_FAIL | sep={repr(sep)} | err={e}")
-                    skipped.append((str(csv_path), f"read_failed: {e}"))
-                    continue
+            if "p_adj" not in df.columns:
+                preview_cols = list(df.columns)[:10]
+                msg = f"p_adj not found (sep={sep!r}); cols_head={preview_cols}"
+                _append_cal_log(f"{csv_path} | SKIP | {msg}")
+                skipped.append((str(csv_path), msg))
+                continue
 
-                if "p_adj" not in df.columns:
-                    preview_cols = list(df.columns)[:10]
-                    msg = f"p_adj not found (sep={sep!r}); cols_head={preview_cols}"
-                    _append_cal_log(f"{csv_path} | SKIP | {msg}")
-                    skipped.append((str(csv_path), msg))
-                    continue
+            # ---- Ensure calibration lineage columns (schema contract) ----
+            # p_for_cal: probability actually fed into calibration
+            # p_cal_src: label of source column used (prefer stable upstream role/raw surface)
+            # role_ctx_outs_used: explicit outs usage field (copy of role_ctx_outs if present)
+            if "p_for_cal" not in df.columns or "p_cal_src" not in df.columns:
+                if "data_health_flag" in df.columns:
+                    is_healthy = df["data_health_flag"].astype(str).str.lower().eq("healthy")
+                else:
+                    is_healthy = pd.Series([True] * len(df), index=df.index)
 
-                # ---- Ensure calibration lineage columns (schema contract) ----
-                # p_for_cal: probability actually fed into calibration
-                # p_cal_src: label of source column used (prefer p_role)
-                # role_ctx_outs_used: explicit outs usage field (copy of role_ctx_outs if present)
-                if "p_for_cal" not in df.columns or "p_cal_src" not in df.columns:
-                    if "p_role" in df.columns:
-                        p_role = pd.to_numeric(df["p_role"], errors="coerce")
-                        if "p_close_role" in df.columns:
-                            p_role = p_role.fillna(pd.to_numeric(df["p_close_role"], errors="coerce"))
-                        if "p_adj" in df.columns:
-                            p_role = p_role.fillna(pd.to_numeric(df["p_adj"], errors="coerce"))
-                        df["p_for_cal"] = p_role
-                        df["p_cal_src"] = "p_role"
-                    else:
-                        if "data_health_flag" in df.columns:
-                            is_healthy = df["data_health_flag"].astype(str).str.lower().eq("healthy")
-                        else:
-                            is_healthy = pd.Series([True] * len(df), index=df.index)
+                has_p_role = "p_role" in df.columns
+                has_p_raw = "p" in df.columns
+                p_adj_series = pd.to_numeric(df["p_adj"], errors="coerce")
+                p_raw_series = pd.to_numeric(df["p"], errors="coerce") if has_p_raw else p_adj_series
+                p_role_series = pd.to_numeric(df["p_role"], errors="coerce") if has_p_role else p_raw_series
 
-                        has_p_role = "p_role" in df.columns
-                        p_adj_series = df["p_adj"]
-                        p_role_series = df["p_role"] if has_p_role else p_adj_series
+                df["p_for_cal"] = p_role_series
+                df["p_cal_src"] = "p_role" if has_p_role else ("p" if has_p_raw else "p_adj")
 
-                        df["p_for_cal"] = p_adj_series.where(is_healthy, p_role_series)
-                        df["p_cal_src"] = "p_adj"
-                        df.loc[~is_healthy, "p_cal_src"] = "p_role" if has_p_role else "p_adj"
+                if has_p_role:
+                    df["p_for_cal"] = pd.to_numeric(df["p_for_cal"], errors="coerce").fillna(p_role_series)
+                elif has_p_raw:
+                    df["p_for_cal"] = pd.to_numeric(df["p_for_cal"], errors="coerce").fillna(p_raw_series)
+                else:
+                    df["p_for_cal"] = pd.to_numeric(df["p_for_cal"], errors="coerce").fillna(p_adj_series)
+                fallback_cal_src = "p_role" if has_p_role else ("p" if has_p_raw else "p_adj")
+                df.loc[~is_healthy, "p_cal_src"] = fallback_cal_src
 
-                if "role_ctx_outs_used" not in df.columns:
-                    # role_ctx_outs_used must be an integer count, not the outs list/string itself
-                    if "role_ctx_outs" in df.columns:
-                        import ast
+            if "role_ctx_outs_used" not in df.columns:
+                # role_ctx_outs_used must be an integer count, not the outs list/string itself
+                if "role_ctx_outs" in df.columns:
+                    import ast
 
-                        def _count_outs(v) -> int:
-                            if v is None:
-                                return 0
-                            # If already a list/tuple/set
-                            if isinstance(v, (list, tuple, set)):
-                                return int(len(v))
-                            # If it's a string representation like "['a','b']"
-                            if isinstance(v, str):
-                                s = v.strip()
-                                if not s:
-                                    return 0
-                                try:
-                                    parsed = ast.literal_eval(s)
-                                    if isinstance(parsed, (list, tuple, set)):
-                                        return int(len(parsed))
-                                except Exception:
-                                    return 0
+                    def _count_outs(v) -> int:
+                        if v is None:
                             return 0
+                        # If already a list/tuple/set
+                        if isinstance(v, (list, tuple, set)):
+                            return int(len(v))
+                        # If it's a string representation like "['a','b']"
+                        if isinstance(v, str):
+                            s = v.strip()
+                            if not s:
+                                return 0
+                            try:
+                                parsed = ast.literal_eval(s)
+                                if isinstance(parsed, (list, tuple, set)):
+                                    return int(len(parsed))
+                            except Exception:
+                                return 0
+                        return 0
 
-                        df["role_ctx_outs_used"] = df["role_ctx_outs"].apply(_count_outs).astype(int)
-                    else:
-                        df["role_ctx_outs_used"] = 0
+                    df["role_ctx_outs_used"] = df["role_ctx_outs"].apply(_count_outs).astype(int)
+                else:
+                    df["role_ctx_outs_used"] = 0
 
-                # Apply calibration to produce p_cal for the current live run outputs only.
-                try:
-                    df = apply_calibration_column(df, map_path=map_path, in_col="p_for_cal", out_col="p_cal")
-                except Exception as e:
-                    _append_cal_log(f"{csv_path} | CAL_FAIL | err={e}")
-                    skipped.append((str(csv_path), f"cal_failed: {e}"))
-                    continue
+            # Apply calibration to produce p_cal for the current live run outputs only.
+            try:
+                df = apply_calibration_column(df, map_path=None, in_col="p_for_cal", out_col="p_cal")
+            except Exception as e:
+                _append_cal_log(f"{csv_path} | CAL_FAIL | err={e}")
+                skipped.append((str(csv_path), f"cal_failed: {e}"))
+                continue
 
-                try:
-                    df.to_csv(csv_path, index=False, sep=sep)
-                except Exception as e:
-                    _append_cal_log(f"{csv_path} | WRITE_FAIL | sep={repr(sep)} | err={e}")
-                    skipped.append((str(csv_path), f"write_failed: {e}"))
-                    continue
+            try:
+                df.to_csv(csv_path, index=False, sep=sep)
+            except Exception as e:
+                _append_cal_log(f"{csv_path} | WRITE_FAIL | sep={repr(sep)} | err={e}")
+                skipped.append((str(csv_path), f"write_failed: {e}"))
+                continue
 
-                patched.append(str(csv_path))
-                _append_cal_log(f"{csv_path} | OK | wrote p_cal | sep={repr(sep)}")
-                print(f"[CAL] wrote p_cal into {csv_path} (sep={sep!r})")
+            patched.append(str(csv_path))
+            _append_cal_log(f"{csv_path} | OK | wrote p_cal | sep={repr(sep)}")
+            print(f"[CAL] wrote p_cal into {csv_path} (sep={sep!r})")
 
-            emit_event(
-                ctx,
-                "calibration_applied",
-                map_path=map_path,
-                in_col="p_for_cal",
-                out_col="p_cal",
-                patched=patched,
-                skipped=skipped,
-            )
+        emit_event(
+            ctx,
+            "calibration_applied",
+            map_path=None,
+            in_col="p_for_cal",
+            out_col="p_cal",
+            patched=patched,
+            skipped=skipped,
+        )
 
     except Exception as e:
         emit_event(ctx, "calibration_failed", error=str(e))

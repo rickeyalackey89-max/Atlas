@@ -26,7 +26,7 @@ from Atlas.core.share_name_key import share_name_key
 
 def _player_key(x: str) -> str:
     """Canonical player key used for joins across IAEL / gamelogs / share_matrix.
-    Mirrors team_share_reallocator._player_key behavior (lowercased, stripped, basic suffix cleanup).
+    Mirrors the shared canonical player-key behavior (lowercased, stripped, basic suffix cleanup).
     """
     return share_name_key(x)
 

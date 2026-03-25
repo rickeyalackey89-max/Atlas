@@ -314,7 +314,7 @@ def main() -> int:
     workspace = analysis_root / "workspace"
     data_dir = workspace / "data"
     # Sandbox outputs
-    out_dir = (repo_root / "data" / "output" / "sandbox_runs" / scenario_id / ts).resolve()
+    out_dir = (repo_root / "data" / "telemetry" / "replay_runs" / scenario_id / ts).resolve()
     logs_dir = analysis_root / "logs"
 
     data_dir.mkdir(parents=True, exist_ok=True)
@@ -322,6 +322,21 @@ def main() -> int:
     logs_dir.mkdir(parents=True, exist_ok=True)
 
     payload = _load_payload(raw_path)
+
+    required_env = [
+        "ATLAS_IAEL_INVALIDATIONS_PATH",
+        "ATLAS_IAEL_STATUS_PATH",
+        "ATLAS_IAEL_NORMALIZED_PATH",
+        "ATLAS_ROTOWIRE_LINES_PATH",
+    ]
+    missing_env = [name for name in required_env if not (os.environ.get(name) or "").strip()]
+    if missing_env:
+        raise RuntimeError(
+            "Strict replay requires pinned snapshot paths via: " + ", ".join(missing_env)
+        )
+
+    os.environ["ATLAS_AUTHORITY"] = "replay"
+    os.environ["ATLAS_STRICT_REPLAY"] = "1"
 
     # Store raw snapshot in workspace for provenance
     (data_dir / "raw").mkdir(parents=True, exist_ok=True)

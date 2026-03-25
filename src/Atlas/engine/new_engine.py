@@ -110,6 +110,20 @@ def _run_score_board_new(
 
     # Minimal wiring only: pull role_ctx config once, pass-through to kernel.
     role_cfg = cfg.get("role_ctx") or None
+    under_relief_keys = (
+        "under_relief_factor",
+        "under_relief_haircut_min",
+        "under_relief_q_min",
+    )
+    under_relief_cfg = {
+        key: cfg[key]
+        for key in under_relief_keys
+        if key in cfg
+    }
+    if under_relief_cfg:
+        role_cfg = dict(role_cfg or {})
+        role_cfg.setdefault("enabled", False)
+        role_cfg.update(under_relief_cfg)
 
     rows: list[dict[str, Any]] = []
 
@@ -205,45 +219,38 @@ class NewEngine(Engine):
             scored["p_adj"] = scored["p"]
 
         
-        # CALIBRATION MAP (Phase 7A-3): emit p_for_cal / p_cal_src / p_cal (no overwrite)
+        # CALIBRATION (Phase 7A-3): emit p_for_cal / p_cal_src / p_cal (no overwrite)
         # Policy:
-        #   - Prefer p_role as the upstream calibration surface.
-        #   - Fallback to p_close_role / p_adj only if p_role is unavailable.
+        #   - Healthy teams: calibrate from p_adj
+        #   - Outs/injury context: calibrate from p_role
         # Map path is supplied via env ATLAS_CAL_MAP; if missing, p_cal := p_for_cal.
         try:
             from Atlas.engine.calibration_map import apply_calibration_column, get_calibration_path_from_env
 
             if "p_for_cal" not in scored.columns:
-                if "p_role" in scored.columns:
-                    p_role = pd.to_numeric(scored["p_role"], errors="coerce")
-                    if "p_close_role" in scored.columns:
-                        p_role = p_role.fillna(pd.to_numeric(scored["p_close_role"], errors="coerce"))
-                    if "p_adj" in scored.columns:
-                        p_role = p_role.fillna(pd.to_numeric(scored["p_adj"], errors="coerce"))
-                    scored["p_for_cal"] = p_role
-                    scored["p_cal_src"] = "p_role"
+                # ensure we pass a Series (not None) into pd.to_numeric
+                if "p_adj" in scored.columns:
+                    base_raw = scored["p_adj"]
+                elif "p" in scored.columns:
+                    base_raw = scored["p"]
                 else:
-                    # ensure we pass a Series (not None) into pd.to_numeric
-                    if "p_adj" in scored.columns:
-                        base_raw = scored["p_adj"]
-                    elif "p" in scored.columns:
-                        base_raw = scored["p"]
-                    else:
-                        base_raw = pd.Series(np.nan, index=scored.index)
-                    base_p_adj = pd.to_numeric(base_raw, errors="coerce")
+                    base_raw = pd.Series(np.nan, index=scored.index)
+                base_p_adj = pd.to_numeric(base_raw, errors="coerce")
 
-                    if "p_close_role" in scored.columns and "role_ctx_outs_used" in scored.columns:
-                        outs_used = pd.to_numeric(scored["role_ctx_outs_used"], errors="coerce").fillna(0.0)
-                        use_close_role = outs_used > 0.0
-                        p_close_role_raw = scored["p_close_role"]
-                        p_close_role = pd.to_numeric(p_close_role_raw, errors="coerce")
-                        scored["p_for_cal"] = np.where(use_close_role, p_close_role, base_p_adj)
-                        scored["p_cal_src"] = np.where(use_close_role, "p_close_role", "p_adj")
-                    else:
-                        scored["p_for_cal"] = base_p_adj
-                        scored["p_cal_src"] = "p_adj"
+                under_relief_applied = pd.to_numeric(scored.get("under_relief_applied", False), errors="coerce").fillna(0).astype(bool)
+                p_adj_source = np.where(under_relief_applied, "p_adj_under_relief", "p_adj")
 
-            # Apply map if available; otherwise create identity p_cal
+                if "p_role" in scored.columns and "role_ctx_outs_used" in scored.columns:
+                    outs_used = pd.to_numeric(scored["role_ctx_outs_used"], errors="coerce").fillna(0.0)
+                    use_role = outs_used > 0.0
+                    p_role_raw = scored["p_role"]
+                    p_role = pd.to_numeric(p_role_raw, errors="coerce")
+                    scored["p_for_cal"] = np.where(use_role, p_role, base_p_adj)
+                    scored["p_cal_src"] = np.where(use_role, "p_role", p_adj_source)
+                else:
+                    scored["p_for_cal"] = base_p_adj
+                    scored["p_cal_src"] = p_adj_source
+
             map_path = get_calibration_path_from_env()
             scored = apply_calibration_column(
                 scored,
@@ -262,6 +269,8 @@ class NewEngine(Engine):
                     base_raw = scored["p_adj"]
                 elif "p" in scored.columns:
                     base_raw = scored["p"]
+                elif "p_adj" in scored.columns:
+                    base_raw = scored["p_adj"]
                 else:
                     base_raw = pd.Series(np.nan, index=scored.index)
                 scored["p_for_cal"] = pd.to_numeric(base_raw, errors="coerce")
@@ -281,7 +290,7 @@ class NewEngine(Engine):
 
         # OPTIMIZER CFG
         optimizer_cfg = (cfg.get("optimizer", {}) or {})
-        top_n = _b.int(optimizer_cfg.get("top_n_slips", 25))
+        top_n = _b.int(optimizer_cfg.get("top_n_slips", 10))
         seed = _b.int(optimizer_cfg.get("seed", 7))
 
         pricing_engine = _b.str(cfg.get("pricing_engine", "atlas") or "atlas")

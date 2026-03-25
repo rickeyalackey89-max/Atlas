@@ -124,6 +124,21 @@ def write_bundle_zip(
             allow.append((cand, "audit/guardrail_state.json"))
             break
 
+    # Per-run IAEL snapshot artifacts (live run / replay / backtest compatibility)
+    if run_dir.exists():
+        dashboard_dir = run_dir / "dashboard"
+        for src_name, arc_name in (
+            ("injury_invalidations_latest.json", "dashboard/injury_invalidations_latest.json"),
+            ("status_latest.json", "dashboard/status_latest.json"),
+            ("injury_snapshot_manifest.json", "dashboard/injury_snapshot_manifest.json"),
+            ("role_metrics_latest.json", "dashboard/role_metrics_latest.json"),
+            ("role_metrics_latest.html", "dashboard/role_metrics_latest.html"),
+            ("role_metrics_snapshot_manifest.json", "dashboard/role_metrics_snapshot_manifest.json"),
+        ):
+            src = dashboard_dir / src_name
+            if src.exists() and src.is_file():
+                allow.append((src, arc_name))
+
 
     # Minimal deterministic inputs for strict replay (small allowlist)
     # Note: these are inputs, not "outputs". Run CSV artifacts remain under data/output/runs only.

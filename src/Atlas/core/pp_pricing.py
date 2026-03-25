@@ -106,7 +106,16 @@ def power_multiplier(*, base_mult: float, legs: list[dict[str, Any]], kernel: Ke
     """Compute a PP-kernel-adjusted Power multiplier."""
     mult = float(base_mult)
     for leg in legs:
-        p = float(leg.get("p_adj", leg.get("p_eff", 0.5)) or 0.5)
+        p = 0.5
+        for key in ("p_cal", "p_for_cal", "p_close_role", "p_close_adj", "p_role", "p_adj", "p_eff"):
+            candidate = leg.get(key, None)
+            try:
+                candidate_f = float(candidate)
+            except Exception:
+                continue
+            if math.isfinite(candidate_f):
+                p = candidate_f
+                break
         tier = str(leg.get("tier", leg.get("type", "STANDARD")) or "STANDARD")
         stat = str(leg.get("stat", leg.get("market", "")) or "")
         mult *= leg_factor(p_adj=p, tier=tier, stat=stat, kernel=kernel)

@@ -1,0 +1,25 @@
+{
+  "run_dir": "C:\\Users\\rick\\projects\\Atlas\\data\\telemetry\\replay_runs\\roleblend_actual_replay_20260323_calfix\\20260323_203441\\runs\\20260323_153531",
+  "source_scored_path": "C:\\Users\\rick\\projects\\Atlas\\data\\telemetry\\replay_runs\\roleblend_actual_replay_20260323_calfix\\20260323_203441\\runs\\20260323_153531\\scored_legs_deduped.csv",
+  "output_eval_path": "C:\\Users\\rick\\projects\\Atlas\\data\\telemetry\\replay_runs\\roleblend_actual_replay_20260323_calfix\\20260323_203441\\runs\\20260323_153531\\eval_legs.csv",
+  "report": {
+    "rows": 4469,
+    "matched_rows": 3957,
+    "unmatched_rows": 512,
+    "match_rate": 0.8854329827701947,
+    "quality_counts": {
+      "player_date": 3957,
+      "no_player_date_match": 512
+    },
+    "supported_stats": [
+      "AST",
+      "FG3M",
+      "PA",
+      "PR",
+      "PRA",
+      "PTS",
+      "RA",
+      "REB"
+    ]
+  }
+}

@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import json
+import shutil
 from datetime import datetime
 from pathlib import Path
 from typing import Optional, Callable
@@ -25,6 +27,8 @@ def run_publish_stage(
     wind3_winprob: Optional[pd.DataFrame] = None,
     wind4_winprob: Optional[pd.DataFrame] = None,
     wind5_winprob: Optional[pd.DataFrame] = None,
+    iael_invalidations_path: Optional[Path] = None,
+    iael_status_path: Optional[Path] = None,
     write_csv_clean: Optional[Callable[[pd.DataFrame, Path], Path]] = None,
 ) -> Path:
     """
@@ -75,6 +79,38 @@ def run_publish_stage(
     if wind5_winprob is not None:
         w(wind5_winprob, windfall_dir / "recommended_5leg_winprob.csv")
 
+    dashboard_dir = run_dir / "dashboard"
+    dashboard_dir.mkdir(parents=True, exist_ok=True)
+
+    snapshot_artifacts: dict[str, dict[str, str]] = {}
+    snapshot_manifest: dict[str, object] = {
+        "generated_at_utc": datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "run_dir": str(run_dir),
+        "artifacts": snapshot_artifacts,
+    }
+
+    def _copy_snapshot(src: Optional[Path], dst_name: str) -> None:
+        if src is None:
+            return
+        src_path = Path(src)
+        if not src_path.exists() or not src_path.is_file():
+            return
+        dst_path = dashboard_dir / dst_name
+        shutil.copy2(src_path, dst_path)
+        snapshot_artifacts[dst_name] = {
+            "source": str(src_path.resolve()),
+            "destination": str(dst_path.resolve()),
+        }
+
+    _copy_snapshot(iael_invalidations_path, "injury_invalidations_latest.json")
+    _copy_snapshot(iael_status_path, "status_latest.json")
+
+    if snapshot_artifacts:
+        (dashboard_dir / "injury_snapshot_manifest.json").write_text(
+            json.dumps(snapshot_manifest, indent=2, sort_keys=True),
+            encoding="utf-8",
+        )
+
     # Legacy mirrors SYSTEM (default)
     w(sys3, run_dir / "recommended_3leg.csv")
     w(sys4, run_dir / "recommended_4leg.csv")
@@ -114,5 +150,10 @@ def run_publish_stage(
         print(f" - {windfall_dir / 'recommended_4leg_winprob.csv'} (WINDFALL winprob)")
     if wind5_winprob is not None:
         print(f" - {windfall_dir / 'recommended_5leg_winprob.csv'} (WINDFALL winprob)")
+
+    if snapshot_artifacts:
+        print(f" - {dashboard_dir / 'injury_invalidations_latest.json'} (IAEL snapshot)")
+        print(f" - {dashboard_dir / 'status_latest.json'} (IAEL snapshot)")
+        print(f" - {dashboard_dir / 'injury_snapshot_manifest.json'} (IAEL snapshot manifest)")
 
     return run_dir

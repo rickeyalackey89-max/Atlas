@@ -95,17 +95,31 @@ def _family(stat: Any) -> str:
     return str(stat).strip().upper()
 
 
-def build_candidates(scored: pd.DataFrame, pool_size: int = 250) -> pd.DataFrame:
+def _pick_linear_prob_column(df: pd.DataFrame, *, prefer_calibrated: bool = True) -> str:
+    """Return the probability column to use for candidate building.
+
+    When ``prefer_calibrated`` is True, the current linear probability line is
+    read from the upstream replay surface first so downstream selection stays
+    aligned with the better-evaluated source when calibration lags.
+    """
+    if prefer_calibrated:
+        order = ["p_cal", "p_for_cal", "p_role", "p", "p_eff", "p_combo", "p_adj", "p_close"]
+    else:
+        order = ["p_for_cal", "p_role", "p", "p_cal", "p_eff", "p_combo", "p_adj", "p_close"]
+
+    for c in order:
+        if c in df.columns:
+            return c
+    return ""
+
+
+def build_candidates(scored: pd.DataFrame, pool_size: int = 250, *, prefer_calibrated_prob: bool = True) -> pd.DataFrame:
     if scored is None or len(scored) == 0:
         return pd.DataFrame()
 
     df = scored.copy()
 
-    p_col = None
-    for c in ["p_eff", "p_combo", "p_adj", "p", "p_close"]:
-        if c in df.columns:
-            p_col = c
-            break
+    p_col = _pick_linear_prob_column(df, prefer_calibrated=prefer_calibrated_prob)
 
     if p_col is None:
         df["p_eff"] = 0.50

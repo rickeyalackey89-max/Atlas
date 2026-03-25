@@ -1,0 +1,125 @@
+pricing_engine: pp_kernel
+pp_kernel:
+  p_min: 0.01
+  p_max: 0.99
+  coeffs:
+    DEFAULT:
+      STANDARD:
+        a: 0.3164
+        b: -0.2880
+      GOBLIN:
+        a: -0.374114
+        b: -0.020276
+      DEMON:
+        a: -0.493783
+        b: -1.436801
+        c: -0.502224
+    PTS:
+      STANDARD:
+        a: 0.3164
+        b: -0.2880
+      GOBLIN:
+        a: -0.374114
+        b: -0.020276
+      DEMON:
+        a: -0.493783
+        b: -1.436801
+        c: -0.502224
+    REB:
+      STANDARD:
+        a: 0.3164
+        b: -0.2880
+      GOBLIN:
+        a: -0.374114
+        b: -0.020276
+      DEMON:
+        a: -0.493783
+        b: -1.436801
+        c: -0.502224
+    AST:
+      STANDARD:
+        a: 0.3164
+        b: -0.2880
+      GOBLIN:
+        a: -0.374114
+        b: -0.020276
+      DEMON:
+        a: -0.493783
+        b: -1.436801
+        c: -0.502224
+    FG3M:
+      STANDARD:
+        a: 0.3164
+        b: -0.2880
+      GOBLIN:
+        a: -0.374114
+        b: -0.020276
+      DEMON:
+        a: -0.493783
+        b: -1.436801
+        c: -0.502224
+    PRA:
+      STANDARD:
+        a: 0.3164
+        b: -0.2880
+      GOBLIN:
+        a: -0.374114
+        b: -0.020276
+      DEMON:
+        a: -0.493783
+        b: -1.436801
+        c: -0.502224
+    PR:
+      STANDARD:
+        a: 0.3164
+        b: -0.2880
+      GOBLIN:
+        a: -0.374114
+        b: -0.020276
+      DEMON:
+        a: -0.493783
+        b: -1.436801
+        c: -0.502224
+    PA:
+      STANDARD:
+        a: 0.3164
+        b: -0.2880
+      GOBLIN:
+        a: -0.374114
+        b: -0.020276
+      DEMON:
+        a: -0.493783
+        b: -1.436801
+        c: -0.502224
+    RA:
+      STANDARD:
+        a: 0.3164
+        b: -0.2880
+      GOBLIN:
+        a: -0.374114
+        b: -0.020276
+      DEMON:
+        a: -0.493783
+        b: -1.436801
+        c: -0.502224
+telemetry:
+  schema_version: 2
+  active_calibration: telemetry_calibration_v2
+  apply_active_calibration: true
+
+
+  active_calibration_path: data/model/telemetry_calibration.v2.json
+  calibration_policy:
+    allow_family_split: true
+    family_order:
+      - role_off
+      - role_on
+    strict_source_gating: true
+slip_build:
+  target_pool_mult: 200
+  phase1_frac: 0.2
+  phase1_pool_frac: 0.5
+  beam_width: 200
+optimizer:
+  top_n_slips: 10
+  seed: 7

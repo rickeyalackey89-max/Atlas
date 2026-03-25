@@ -29,6 +29,10 @@ Atlas is driven by a small set of live inputs:
 - spread / game environment information
 - role and depth information from the teamshare layer
 
+Atlas can also ingest an external daily metrics adapter when it provides role-aware player context such as plus/minus, VORP, and minutes or usage projections. That adapter should be treated as an upstream enrichment layer and merged with the existing injury snapshot for the slate date.
+
+When that adapter is enabled, Atlas should preserve the snapshot under `data/output/dashboard/` with the other IAEL artifacts so replay bundles can carry the same role-state evidence forward.
+
 ## Main Processing Layers
 
 ### 1. Board Ingestion
@@ -92,6 +96,8 @@ This is the core math chain the model builds and then adjusts:
 - `under_relief_factor`, `under_relief_applied`
 
 These are the main fields to inspect when you want to understand whether the model math itself is moving correctly.
+
+The under-relief behavior is controlled by `role_ctx.under_relief_q_min`, `role_ctx.under_relief_haircut_min`, and `role_ctx.under_relief_factor` in `config.yaml`; together they determine which UNDER rows qualify and how much of the usual haircut is restored.
 
 ### 4. Role Allocation and Injury Redistribution
 These columns describe how the role layer reacted to injuries or availability shifts:

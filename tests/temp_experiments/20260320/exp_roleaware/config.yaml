@@ -1,0 +1,210 @@
+pricing_engine: pp_kernel
+pp_kernel:
+  p_min: 0.01
+  p_max: 0.99
+  coeffs:
+    DEFAULT:
+      STANDARD:
+        a: 0.3164
+        b: -0.288
+      GOBLIN:
+        a: -0.374114
+        b: -0.020276
+      DEMON:
+        a: -0.493783
+        b: -1.436801
+        c: -0.502224
+    PTS:
+      STANDARD:
+        a: 0.3164
+        b: -0.288
+      GOBLIN:
+        a: -0.374114
+        b: -0.020276
+      DEMON:
+        a: -0.493783
+        b: -1.436801
+        c: -0.502224
+    REB:
+      STANDARD:
+        a: 0.3164
+        b: -0.288
+      GOBLIN:
+        a: -0.374114
+        b: -0.020276
+      DEMON:
+        a: -0.493783
+        b: -1.436801
+        c: -0.502224
+    AST:
+      STANDARD:
+        a: 0.3164
+        b: -0.288
+      GOBLIN:
+        a: -0.374114
+        b: -0.020276
+      DEMON:
+        a: -0.493783
+        b: -1.436801
+        c: -0.502224
+    FG3M:
+      STANDARD:
+        a: 0.3164
+        b: -0.288
+      GOBLIN:
+        a: -0.374114
+        b: -0.020276
+      DEMON:
+        a: -0.493783
+        b: -1.436801
+        c: -0.502224
+    PRA:
+      STANDARD:
+        a: 0.3164
+        b: -0.288
+      GOBLIN:
+        a: -0.374114
+        b: -0.020276
+      DEMON:
+        a: -0.493783
+        b: -1.436801
+        c: -0.502224
+    PR:
+      STANDARD:
+        a: 0.3164
+        b: -0.288
+      GOBLIN:
+        a: -0.374114
+        b: -0.020276
+      DEMON:
+        a: -0.493783
+        b: -1.436801
+        c: -0.502224
+    PA:
+      STANDARD:
+        a: 0.3164
+        b: -0.288
+      GOBLIN:
+        a: -0.374114
+        b: -0.020276
+      DEMON:
+        a: -0.493783
+        b: -1.436801
+        c: -0.502224
+    RA:
+      STANDARD:
+        a: 0.3164
+        b: -0.288
+      GOBLIN:
+        a: -0.374114
+        b: -0.020276
+      DEMON:
+        a: -0.493783
+        b: -1.436801
+        c: -0.502224
+role_ctx:
+  enabled: true
+  projection_clamp_lo: 0.9
+  projection_clamp_hi: 1.2
+  projection_softcap_k: 0.9
+  variance_k: 0.65
+  variance_clamp_lo: 1.0
+  variance_clamp_hi: 1.1
+  combo_shrink: 0.5
+  min_games: 1
+  close_sens_mult: 0.35
+  under_relief_q_min: 0.10
+  under_relief_haircut_min: 0.05
+  under_relief_factor: 0.10
+slip_rank:
+  ev_payout_power: 2
+  modes:
+  - ev
+  - winprob
+  winprob_key: hit_prob
+  ev_key: ev_mult
+slip_build:
+  target_pool_mult: 200
+  phase1_frac: 0.2
+  phase1_pool_frac: 0.5
+  beam_width: 200
+  max_slips_per_player: 4
+  penalty:
+    team_w: 0.01
+    family_w: 0.006
+    frag_w: 0.01
+    team_power: 2.0
+    family_power: 2.0
+    frag_power: 1.0
+probability:
+  sims: 5000
+  offline_sims: 20000
+  seed: 7
+  lookback: 50
+  lookback_min_games: 8
+  lookback_cap: null
+  blowout:
+    threshold: 12.0
+    spread_sd: 8.0
+    dynamic: false
+    close_sens_mult: 0.35
+  minutes:
+    star_minute_drop: 6.0
+    role_minute_drop: 4.0
+    sensitivity_fn: linear
+  heater:
+    enabled: true
+    last_n: 10
+    min_hits: 8
+    bump_mult: 1.05
+optimizer:
+  top_n_slips: 10
+  seed: 7
+
+usage_power: 1.8
+
+telemetry:
+  min_count: 100
+  pooling_tau: 200.0
+  max_deviation: 0.05
+  cap_min: 0.01
+  cap_max: 0.99
+  apply_only_p_cal_src_prefixes:
+    - p_role
+    - p_close_role
+  promote_pass_share: 0.9
+  prior_strength: 10
+  isotonic_kfold: 5
+  stat_direction_min_count: 250
+  stat_direction_max_deviation: 0.04
+  rolectx_min_count: 200
+  rolectx_max_deviation: 0.04
+  active_calibration: isotonic_global_p_cal
+  apply_active_calibration: true
+  active_calibration_path: data/model/telemetry_calibration.json
+  experiments:
+    stat_direction_light:
+      path: data/model/telemetry_stat_direction_light.json
+      improvement_vs_current: 0.000548
+      pass_share: 0.727273
+      audit: .atlas_audit/diagnostics/telemetry_corpus/20260318_121447
+    stat_direction_rolectx_off:
+      path: data/model/telemetry_stat_direction_rolectx_off.json
+      improvement_vs_current: 0.00042
+      pass_share: 0.272727
+      audit: .atlas_audit/diagnostics/telemetry_corpus/20260318_121447
+    shrink_0.88:
+      path: data/model/telemetry_shrink_0.88.json
+      improvement_vs_current: 0.000328
+      pass_share: 0.181818
+      audit: .atlas_audit/diagnostics/telemetry_corpus/20260318_121447
+    isotonic_global_p_cal:
+      path: .atlas_audit/diagnostics/telemetry_corpus/20260320_165341/proposed_calibration.json
+      improvement_vs_current: 0.005421
+      pass_share: 1.0
+      audit: .atlas_audit/diagnostics/telemetry_corpus/20260320_165341
+    isotonic_blend_p_cal_0.50:
+      path: .atlas_audit/diagnostics/telemetry_corpus/20260320_165341/proposed_calibration.json
+      improvement_vs_current: 0.003799
+      pass_share: 1.0
+      audit: .atlas_audit/diagnostics/telemetry_corpus/20260320_165341

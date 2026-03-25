@@ -1,0 +1,21 @@
+[DEBUG] Dropped 1262 invalid rows from today.csv (blank/unknown stat/line)
+[IAEL][WARN] Missing invalidations file: C:\Users\rick\projects\Atlas\data\telemetry\replay_runs\small_corpus_soft92_atlas_bundle_20260316_181146\20260325_013808\dashboard\injury_invalidations_latest.json
+[IAEL][WARN] IAEL invalidations empty -> no injury filtering applied.
+Model run complete.
+Outputs folder: C:\Users\rick\projects\Atlas\data\telemetry\replay_runs\small_corpus_soft92_atlas_bundle_20260316_181146\20260325_013808
+Run folder: C:\Users\rick\projects\Atlas\data\telemetry\replay_runs\small_corpus_soft92_atlas_bundle_20260316_181146\20260325_013808\runs\20260324_203855
+Wrote:
+ - C:\Users\rick\projects\Atlas\data\telemetry\replay_runs\small_corpus_soft92_atlas_bundle_20260316_181146\20260325_013808\runs\20260324_203855\scored_legs.csv
+ - C:\Users\rick\projects\Atlas\data\telemetry\replay_runs\small_corpus_soft92_atlas_bundle_20260316_181146\20260325_013808\runs\20260324_203855\scored_legs_deduped.csv
+ - C:\Users\rick\projects\Atlas\data\telemetry\replay_runs\small_corpus_soft92_atlas_bundle_20260316_181146\20260325_013808\runs\20260324_203855\System\recommended_3leg.csv (SYSTEM)
+ - C:\Users\rick\projects\Atlas\data\telemetry\replay_runs\small_corpus_soft92_atlas_bundle_20260316_181146\20260325_013808\runs\20260324_203855\System\recommended_4leg.csv (SYSTEM)
+ - C:\Users\rick\projects\Atlas\data\telemetry\replay_runs\small_corpus_soft92_atlas_bundle_20260316_181146\20260325_013808\runs\20260324_203855\System\recommended_5leg.csv (SYSTEM)
+ - C:\Users\rick\projects\Atlas\data\telemetry\replay_runs\small_corpus_soft92_atlas_bundle_20260316_181146\20260325_013808\runs\20260324_203855\Windfall\recommended_3leg.csv (WINDFALL)
+ - C:\Users\rick\projects\Atlas\data\telemetry\replay_runs\small_corpus_soft92_atlas_bundle_20260316_181146\20260325_013808\runs\20260324_203855\Windfall\recommended_4leg.csv (WINDFALL)
+ - C:\Users\rick\projects\Atlas\data\telemetry\replay_runs\small_corpus_soft92_atlas_bundle_20260316_181146\20260325_013808\runs\20260324_203855\Windfall\recommended_5leg.csv (WINDFALL)
+ - C:\Users\rick\projects\Atlas\data\telemetry\replay_runs\small_corpus_soft92_atlas_bundle_20260316_181146\20260325_013808\runs\20260324_203855\System\recommended_3leg_winprob.csv (SYSTEM winprob)
+ - C:\Users\rick\projects\Atlas\data\telemetry\replay_runs\small_corpus_soft92_atlas_bundle_20260316_181146\20260325_013808\runs\20260324_203855\System\recommended_4leg_winprob.csv (SYSTEM winprob)
+ - C:\Users\rick\projects\Atlas\data\telemetry\replay_runs\small_corpus_soft92_atlas_bundle_20260316_181146\20260325_013808\runs\20260324_203855\System\recommended_5leg_winprob.csv (SYSTEM winprob)
+ - C:\Users\rick\projects\Atlas\data\telemetry\replay_runs\small_corpus_soft92_atlas_bundle_20260316_181146\20260325_013808\runs\20260324_203855\Windfall\recommended_3leg_winprob.csv (WINDFALL winprob)
+ - C:\Users\rick\projects\Atlas\data\telemetry\replay_runs\small_corpus_soft92_atlas_bundle_20260316_181146\20260325_013808\runs\20260324_203855\Windfall\recommended_4leg_winprob.csv (WINDFALL winprob)
+ - C:\Users\rick\projects\Atlas\data\telemetry\replay_runs\small_corpus_soft92_atlas_bundle_20260316_181146\20260325_013808\runs\20260324_203855\Windfall\recommended_5leg_winprob.csv (WINDFALL winprob)

@@ -1,0 +1,92 @@
+[
+  {
+    "label": "current",
+    "step": 0.003,
+    "run": "20260322_110135",
+    "brier_p_adj": 0.2279902435827097,
+    "brier_p_cal": 0.2112010484863602,
+    "under_relief_applied_scored": 459,
+    "rows": 4418
+  },
+  {
+    "label": "patchtest",
+    "step": 0.003,
+    "run": "20260322_110408",
+    "brier_p_adj": 0.2284902515265647,
+    "brier_p_cal": 0.21210965725095232,
+    "under_relief_applied_scored": 459,
+    "rows": 4463
+  },
+  {
+    "label": "current",
+    "step": 0.004,
+    "run": "20260322_110547",
+    "brier_p_adj": 0.22802485951713117,
+    "brier_p_cal": 0.21119742014782608,
+    "under_relief_applied_scored": 459,
+    "rows": 4418
+  },
+  {
+    "label": "patchtest",
+    "step": 0.004,
+    "run": "20260322_110833",
+    "brier_p_adj": 0.22852370471638744,
+    "brier_p_cal": 0.21210589832239318,
+    "under_relief_applied_scored": 459,
+    "rows": 4463
+  },
+  {
+    "label": "current",
+    "step": 0.005,
+    "run": "20260322_111023",
+    "brier_p_adj": 0.2280595287686463,
+    "brier_p_cal": 0.2111937979595455,
+    "under_relief_applied_scored": 459,
+    "rows": 4418
+  },
+  {
+    "label": "patchtest",
+    "step": 0.005,
+    "run": "20260322_111318",
+    "brier_p_adj": 0.2285572108828273,
+    "brier_p_cal": 0.2121021456653642,
+    "under_relief_applied_scored": 459,
+    "rows": 4463
+  },
+  {
+    "label": "current",
+    "step": 0.006,
+    "run": "20260322_111515",
+    "brier_p_adj": 0.22809425133725522,
+    "brier_p_cal": 0.21119018192151845,
+    "under_relief_applied_scored": 459,
+    "rows": 4418
+  },
+  {
+    "label": "patchtest",
+    "step": 0.006,
+    "run": "20260322_111817",
+    "brier_p_adj": 0.22859077002588424,
+    "brier_p_cal": 0.21209839927986546,
+    "under_relief_applied_scored": 459,
+    "rows": 4463
+  },
+  {
+    "label": "current",
+    "step": 0.007,
+    "run": "20260322_112015",
+    "brier_p_adj": 0.22812902722295783,
+    "brier_p_cal": 0.21118657203374497,
+    "under_relief_applied_scored": 459,
+    "rows": 4418
+  },
+  {
+    "label": "patchtest",
+    "step": 0.007,
+    "run": "20260322_112327",
+    "brier_p_adj": 0.22862438214555833,
+    "brier_p_cal": 0.21209465916589684,
+    "under_relief_applied_scored": 459,
+    "rows": 4463
+  }
+]

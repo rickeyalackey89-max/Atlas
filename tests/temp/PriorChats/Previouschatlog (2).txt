@@ -1,0 +1,5326 @@
+
+
+
+
+
+Invite team members
+
+PriorChatlog252.txt
+Document
+
+CHANGELOG_ORDERED_UPDATED_2026-03-06_LONGSNAPSHOT_v8.md
+File
+
+STATE_CURRENT_UPDATED_2026-03-06_LONGSNAPSHOT_v9.md
+File
+Snapshot for next chat (copy/paste)
+
+Context / operating constraints
+
+Atlas work must be auditable, small verified steps, and no blind patches. Prefer troubleshoot → isolate → fix.
+
+Avoid chat flooding; keep commands short and fully filled.
+
+Canonical entrypoint: py -m Atlas.cli live
+
+Goal is baseline selection for sim/config.yaml tuning, not endless debug. Oracle exists to help pick a trustworthy baseline + tuning knobs.
+
+What we were trying to do (goal)
+
+We want to start the simulation/backtest, pick 10 prior PrizePicks raw snapshots, replay the model on each, then compare:
+
+model outputs (p / p_adj / p_cal, role_ctx_mult, slip recommendations)
+vs
+
+actual outcomes (from consolidated game logs)
+
+Then decide:
+
+what “baseline config” should be
+
+what knobs to adjust (kernel, calibration, etc.)
+
+Files/folders involved (important)
+
+10 raw PP snapshots + outcomes live here:
+
+C:\Users\rick\projects\Atlas\data\telemetry\Last 10\
+
+prizepicks_*.json (10 raw board snapshots)
+
+*_games_logged.csv = “receipt/delta” files (audit only)
+
+Last10.csv = consolidated outcomes table (truth table to join against)
+
+We discovered Last10.csv was mistakenly an XLSX renamed .csv (binary “PK…” header). It has been fixed and now has this header:
+
+game_date,player,team,opp,minutes,pts,reb,ast,fg3m,fga,fta,tov,usg_proxy
+
+Role Context / Oracle story (what we fixed + why it matters)
+
+We had noise in oracle “possible misses” because:
+
+Some players had outs but should not get bumps (fringe outs), or combos should have no effect.
+
+In new_probability.py compute_role_multiplier we added Option 1 behavior:
+
+If there are patterns in share matrix for outs but no beneficiary match for that player/stat, return reason no_beneficiary_match (not no_matches).
+
+For combo stats we also saw combo_no_effect which should not count as a “miss”.
+
+We updated oracle miss logic so that:
+
+no_beneficiary_match and combo_no_effect are not treated as misses.
+Result: oracle “possible_misses_count” goes to 0 on those days (clean miss signal).
+
+We validated role_ctx tail looks sane on baseline-like day:
+
+Large bumps concentrated on impact team (CHA), sparse tail overall, no random bumps.
+
+Example run: 20260306_062337 with oracle later showing misses=0 and reasonable role_ctx distribution.
+
+The actual blocker that stopped us (current problem)
+
+We tried to run backtest/sim and hit:
+
+Snapshots in range 20260228-20260306: 177 (too many; would take hours)
+
+No evaluated rows produced (no outcomes matched).
+
+We then attempted to pass flags like:
+
+--raw-dir, --limit, --outcomes-csv
+…but your scripts do not support those flags yet, so we got:
+
+backtest_role_layer_ctx.py: error: unrecognized arguments --outcomes-csv ...
+
+telemetry_reader.py: error: the following arguments are required: --out-dir
+
+Reality of current code:
+
+tools/telemetry_reader.py requires --out-dir and uses --snapshot / --start / --end (no raw-dir / limit mode).
+
+scripts/dev/analysis/backtest/backtest_role_layer_ctx.py supports --snapshot and --logs-path (NOT --outcomes-csv).
+
+We fixed Last10.csv format (now real CSV), but backtest still produced “no outcomes matched.”
+
+What we need to do next (step-by-step plan)
+
+Step 1 — Stop the “177 snapshots” problem
+
+Do NOT run date-range scans.
+
+Run only the 10 PP raws you want by looping explicit snapshots.
+
+Use replay script for raw JSON: tools\Run-Replay.ps1 (blocked initially by execution policy; solved with Unblock-File earlier).
+
+Output will create snapshot CSVs / run folders.
+
+Step 2 — Use correct outcomes source
+
+Backtest should join against Last10.csv (consolidated) instead of the small daily receipt CSVs.
+
+The current backtest accepts --logs-path, so run it pointing to Last10.csv:
+
+--logs-path "...\Last 10\Last10.csv"
+
+Step 3 — If “no outcomes matched” persists
+
+Diagnose join mismatch:
+
+date format mismatch between snapshot game_date and Last10 game_date
+
+player normalization mismatch (suffixes, punctuation)
+
+stat naming mismatch (snapshot uses stat codes vs outcomes columns like pts/ast/fg3m)
+
+Step 4 — Minimal code updates (only if required)
+
+Add small compatibility layer in backtest script to map:
+
+stat → outcomes column (PTS->pts, AST->ast, FG3M->fg3m, etc.)
+
+normalize dates to YYYY-MM-DD
+
+normalize player names consistently
+
+Add an option to telemetry_reader to accept a folder+limit (optional), but we can avoid this by looping --snapshot explicitly.
+
+Commands that were relevant / learned
+
+PowerShell blocked Run-Replay.ps1 due to signing; fix:
+
+Unblock-File .\tools\Run-Replay.ps1
+
+Confirm Last10.csv is real:
+
+Get-Content "...Last10.csv" -TotalCount 1 (now prints proper header)
+
+Role_ctx validation was done with:
+
+reading scored_legs_deduped.csv, sorting role_ctx_mult desc, checking counts of >1.05, >1.10, >1.15
+
+Big realization: IAEL normalized uses key player (often “Last, First”), not player_name. Consumers must read player correctly.
+
+Current status at handoff
+
+Role context + oracle miss signal is clean (false positives removed).
+
+Baseline day looks plausible (single impact team, sensible tail).
+
+Backtest pipeline is not yet producing evaluated rows because the scripts are not yet wired to use the consolidated outcomes cleanly and are scanning too many snapshots unless controlled.
+
+Next chat should focus on: run 10 replays + run backtest against Last10.csv + fix join mapping if needed.
+
+MD updates request
+
+Please upload the .md files you want updated (attach them here).
+Once they’re attached, I’ll:
+
+update them to reflect the snapshot above,
+
+add the “Operating Rules” section,
+
+and include the exact step-by-step “10 raws → replay → backtest → baseline” workflow.
+
+Operating constraints
+
+Atlas development is auditable and drift-averse: one step (or two max) at a time; troubleshoot → isolate → fix; no blind patches; avoid chat flooding.
+
+Canonical run entry: py -m Atlas.cli live (Atlas runtime workspace; AtlasDashboard is separate).
+
+When giving commands: fully filled, copy/paste safe.
+
+Goal (what we’re actually doing)
+
+We’re building a simulation/backtest baseline to choose a trustworthy starting point for config.yaml tuning:
+
+Pick 10 prior PrizePicks raw JSON snapshots
+
+Replay the current model deterministically over each raw
+
+Compare model outputs vs actual outcomes
+
+Decide the baseline config and then what knobs to adjust (kernel/coefs/calibration/etc.)
+
+This is the reason Oracle exists: not to produce slips, but to help select baseline and measure regime/health.
+
+Where we got stuck (current blocker)
+
+We tried to run the backtest runner and saw:
+
+Snapshots in range 20260228-20260306: 177 → way too many scenarios; would take hours.
+
+No evaluated rows produced (no outcomes matched).
+
+Root cause(s):
+
+Selection logic can scan too many snapshots if we use date windows.
+
+Backtest is not matching predictions to outcomes: likely join key mismatch (date format, player normalization, stat mapping).
+
+Canonical data sources (IMPORTANT)
+
+Folder:
+
+C:\Users\rick\projects\Atlas\data\telemetry\Last 10\
+
+Contains:
+
+prizepicks_*.json → the 10 raw board snapshots we want to replay
+
+*_games_logged.csv → receipt/delta files (audit only; not good as truth table)
+
+Last10.csv → consolidated outcomes truth table
+
+We discovered Last10.csv was accidentally an Excel file renamed .csv (binary PK header). It was fixed and now is a real CSV with header:
+
+game_date,player,team,opp,minutes,pts,reb,ast,fg3m,fga,fta,tov,usg_proxy
+
+Toolchain reality (as-written)
+
+telemetry_reader
+
+tools/telemetry_reader.py requires --out-dir.
+
+It supports snapshot-forensic mode: --snapshot <file> (repeatable) and then runs the backtest script on exactly those snapshots. 
+
+telemetry_reader
+
+If you don’t pass snapshots, it uses date window selection and can select lots of files. 
+
+telemetry_reader
+
+backtest_role_layer_ctx
+
+scripts/dev/analysis/backtest/backtest_role_layer_ctx.py supports --snapshot and --logs-path (defaults to data/gamelogs/nba_gamelogs.csv). It does NOT accept --raw-dir, --limit, or --outcomes-csv in current version. (We saw “unrecognized arguments”.)
+
+Role Context + Oracle status (baseline readiness)
+
+Role context semantics are now interpretable:
+
+no_beneficiary_match = outs exist but there’s no beneficiary evidence for that player/stat (expected, often for fringe outs).
+
+combo_no_effect = combo has no bump (expected in some cases).
+
+Oracle “possible misses” was updated to exclude no_beneficiary_match and combo_no_effect, so misses become decision-grade (real failures only).
+
+Baseline day(s) on 2026-03-06 looked sane: concentrated tail on impact team (CHA), sparse global bumps, misses=0.
+
+Step-by-step next actions (to finish the tasks)
+
+Replay only the 10 raws (avoid 177)
+Use tools\Run-Replay.ps1 over the 10 JSON files in data/telemetry/Last 10.
+Note: PowerShell may block scripts if downloaded; fix with Unblock-File .\tools\Run-Replay.ps1.
+
+Run backtest in snapshot mode only (avoid date windows)
+Use --snapshot repeatedly so we explicitly control which snapshots are evaluated.
+
+Point backtest at the consolidated outcomes
+Run backtest with:
+
+--logs-path "C:\Users\rick\projects\Atlas\data\telemetry\Last 10\Last10.csv"
+
+If backtest still prints No evaluated rows produced (no outcomes matched):
+
+Diagnose join keys:
+
+Compare snapshot game_date vs Last10.csv game_date after normalization to YYYY-MM-DD
+
+Compare player overlap after normalization (case/whitespace/suffixes)
+
+Confirm stat mapping: snapshot uses stat codes (PTS/REB/AST/FG3M), outcomes use columns pts/reb/ast/fg3m
+
+Then do the minimal single-file fix in backtest_role_layer_ctx.py to normalize/join correctly.
+
+I’m aligning the state docs to the snapshot you gave, and I’m checking the attached markdown plus the recent chat log so the handoff stays consistent.
+
+I found the exact gaps: both state files already have the March 6 role-context and telemetry notes, but they don’t yet have the compact Operating Rules header or the explicit replay → backtest → baseline workflow you asked to preserve.
+
+Thought for 3m 9s
+I updated both markdowns and shifted the top of the state file to the current baseline-sim focus, while preserving the older history underneath. The new header keeps the Operating Rules aligned with the manifesto’s “debug first, one step at a time, no blind patches” contract 
+AtlasManifestoV1
+
+ and the baseline/backtest handoff now reflects the replay-only / Last10.csv / no-177-snapshot path from the prior log 
+PriorChatlog252
+
+ 
+PriorChatlog252
+
+. I also carried forward the March 6 telemetry blocker exactly as written in the current state/changelog: backtest still needs the one-file normalization fix after proving the join drift 
+CHANGELOG_ORDERED_UPDATED_2026-…
+
+ 
+STATE_CURRENT_UPDATED_2026-03-0…
+
+.
+
+Files:
+CHANGELOG_ORDERED_UPDATED_2026-03-06_LONGSNAPSHOT_v9.md
+STATE_CURRENT_UPDATED_2026-03-06_LONGSNAPSHOT_v10.md
+
+One note: the state file now has the new baseline-focused top section plus the older pricing-focused section below it, so nothing was lost.
+
+
+Sources
+
+This is the next chat. Please align yourself with this snapshot. Also, please read the last 300-400 lines of the priorchatlog for references to the exact spot we are at in this process. You also have the entire model as is at your disposal in the project folder. Atlas.zip - read manifesto also before we continue. THANK YOU! :)
+
+I’m syncing to the uploaded snapshot now: manifesto, the tail of the prior chat log, and the Atlas project archive so I can anchor on the exact handoff point rather than infer it.
+
+I’ve got the high-level handoff confirmed. I’m pulling the exact tail of the prior chat log and the Atlas archive structure now so I can lock the precise stopping point, not just the summary.
+
+I found the precise pivot in the prior chat: the real stopping point was after confirming the scripts do not yet support the new flags, and the next work item is the minimal one-file backtest join normalization against Last10.csv.
+
+Thought for 1m 15s
+Aligned.
+
+I reviewed the manifesto, the March 6 state/changelog snapshot, and the tail of the prior chat. The operating contract is clear: troubleshoot first, move one step at a time, avoid blind rewrites/zip drops, and keep chat/code volume low 
+AtlasManifestoV1
+
+
+The current project state is also clear:
+
+RoleCtx semantics are now baseline-safe in the sense you wanted: expected no-effects are labeled truthfully as no_beneficiary_match / combo_no_effect, and Oracle possible misses excludes those, so misses are now decision-grade rather than noise 
+STATE_CURRENT_UPDATED_2026-03-0…
+
+
+The actual current blocker is the telemetry/backtest baseline path: use the 10 raw PP snapshots in data/telemetry/Last 10/, use Last10.csv as the truth table, avoid broad date-window scans, and fix the prediction→outcome join mismatch only after proving where the keys drift 
+STATE_CURRENT_UPDATED_2026-03-0…
+
+ 
+STATE_CURRENT_UPDATED_2026-03-0…
+
+
+The prior chat ended at the point where the attempted new flags were confirmed unsupported by the current scripts, which is why the plan narrowed to explicit snapshot mode plus a minimal one-file backtest normalization fix rather than adding more runner behavior first 
+PriorChatlog252
+
+
+I also confirmed the Atlas archive is the full runtime workspace snapshot, including .atlas_audit with the March 6 oracle artifacts you were using as the baseline reference set, including oracle_20260306_062337, oracle_20260306_070059, and oracle_20260306_091530 in the archive tree.
+
+So my understanding of the exact spot we are at is:
+
+baseline objective, not debug-for-debug’s-sake
+
+RoleCtx/Oracle semantics are in good enough shape to proceed
+
+Last10.csv is the intended consolidated outcomes source
+
+the next real task is to run the 10-replay/backtest path in a controlled way and, if matches are still zero, make the smallest possible fix in backtest_role_layer_ctx.py for date/player/stat normalization
+
+I’m synced to this snapshot and ready to continue from there.
+
+
+Sources
+
+Uploaded image
+It ran from the last command the last chat gave me 
+
+Thought for 1m 54s
+Good. This is the first real confirmation that the backtest path is now functioning against Last10.csv for at least this snapshot.
+
+What this output means:
+
+The join is no longer broken for this file.
+
+It found outcome matches and scored them at scale: eval_legs=14112, then Legs: 56608 in the rolled summary.
+
+The old blocker, No evaluated rows produced, is not the active problem on this snapshot anymore.
+
+The bigger signal in the output is this:
+
+BASE avg p_adj: 0.3701
+
+ROLE avg p_adj: 0.3701
+
+BASE brier: 0.213239
+
+ROLE brier: 0.213271
+
+That means the role layer is effectively doing nothing in this run, or so little that it rounds out to identical averages and slightly worse Brier. So the pipeline is now operational, but this specific snapshot is not showing meaningful role-context lift.
+
+The calibration table is also telling you something important: every populated bin has hit_rate > avg_p_adj, often by a lot. So on this sample the model is broadly underconfident, not overconfident. That is baseline-tuning information, which is exactly what we wanted from this exercise.
+
+So the state now is:
+
+backtest wiring works
+
+consolidated outcomes file works
+
+snapshot-mode evaluation works
+
+next question is not “why no matches?”
+
+next question is “across the 10 raws, when does role context actually move predictions, and is that movement helpful or noise?”
+
+Best next move is to stop here and not patch anything yet. Run the same backtest on the 10 intended snapshots, one by one, against Last10.csv, and collect for each:
+
+snapshot name
+
+eval legs
+
+base brier
+
+role brier
+
+delta brier
+
+whether base/role avg p_adj differ materially
+
+If most of them look like this one, then the immediate conclusion is not “join bug,” it is “role layer currently has low activation or low measurable effect in replay/backtest conditions,” and then we inspect activation conditions before touching calibration or kernel.
+
+Send me the next 2–3 outputs and I’ll tell you whether we’re looking at a real inactive-role pattern versus just a quiet snapshot.
+
+
+We did change logic in multiple places so I didnt expect it to behave correctly. It should need adjustments
+
+Thought for 15s
+Agreed. One passing run only proves the pipe executes end-to-end now. It does not prove the behavior is correct.
+
+Given how many logic touchpoints changed, the right read is:
+
+the old blocker was wiring / matching
+
+that blocker appears cleared for this snapshot
+
+now we need to measure behavior drift, not assume correctness
+
+And your screenshot already hints that adjustments are likely needed:
+
+BASE and ROLE are basically identical
+
+ROLE is slightly worse on Brier
+
+calibration bins look broadly underconfident
+
+That combination usually means one of three things:
+
+the role layer is not activating much in this replay path,
+
+it is activating but getting washed out before evaluation,
+
+the join/eval path is working, but the changed logic shifted probability mass in a way that now needs retuning.
+
+Per your rule, we should not touch logic yet. We should first isolate where the drift is.
+
+The clean next step is:
+
+run a small sample of the 10 target raws
+
+for each one, capture:
+
+eval legs
+
+base brier
+
+role brier
+
+count of rows where p_adj_role != p_adj_base
+
+role reason mix (no_beneficiary_match, combo_no_effect, real applied reasons)
+
+distribution of role_ctx_mult
+
+That tells us whether the needed adjustment is:
+
+activation logic,
+
+multiplier magnitude,
+
+calibration layer,
+
+or just baseline coefficients.
+
+So yes — I agree it should probably need adjustments. I just would not let the existence of one successful run trigger edits yet. First we classify the failure mode, then we change one file at a time.
+
+Send the next output, or tell me which 3 snapshots from Last 10 you want to use as the first diagnostic batch.
+
+
+How can I point it at an entire folder?\
+
+Thought for 18s
+Right now, you don’t point backtest_role_layer_ctx.py at a folder directly. In the current flow, the script is being run in explicit --snapshot mode, and the prior log confirms the folder-style flags were not supported in the version you were using (--raw-dir, --limit, --outcomes-csv were rejected) 
+PriorChatlog252
+
+ 
+PriorChatlog252
+
+
+So the practical answer is:
+
+As-is: build the command by repeating --snapshot once per file.
+
+Not yet native: folder mode would require the small compatibility update we discussed earlier.
+
+For your current tools, the clean way to “point at a folder” is to let PowerShell expand the folder into repeated --snapshot args. Use this:
+
+cd C:\Users\rick\projects\Atlas; $snaps=Get-ChildItem "C:\Users\rick\projects\Atlas\data\board\snapshots\today_*.csv" | Sort-Object LastWriteTime -Descending | Select-Object -First 10; $args=@("scripts\dev\analysis\backtest\backtest_role_layer_ctx.py","--logs-path","C:\Users\rick\projects\Atlas\data\telemetry\Last 10\Last10.csv"); foreach($s in $snaps){ $args+=@("--snapshot",$s.FullName) }; py @args
+
+That matches the earlier “use repeated --snapshot so it never scans 177 files” approach from the prior handoff 
+PriorChatlog252
+
+
+If you want to point at the raw JSON folder instead of the generated snapshot CSV folder, that is a different step: replay the 10 raws first, then backtest the resulting today_*.csv snapshots. The prior log already narrowed that workflow to:
+
+replay the 10 raw prizepicks_*.json
+
+backtest only the selected snapshots
+
+use Last10.csv as the truth table 
+PriorChatlog252
+
+
+If you want, I can give you the matching one-liner for the raw JSON folder replay loop next.
+
+
+Sources
+
+Perfect. Thank you. Which gamelog file is it comparing to?
+
+Thought for 1m 3s
+In the command you ran, it is comparing to:
+
+C:\Users\rick\projects\Atlas\data\telemetry\Last 10\Last10.csv
+
+Because you explicitly passed:
+
+--logs-path "C:\Users\rick\projects\Atlas\data\telemetry\Last 10\Last10.csv"
+
+So for that run, it is not using the default gamelog file.
+
+Important distinction:
+
+Snapshot input: C:\Users\rick\projects\Atlas\data\board\snapshots\today_20260305_131610.csv
+
+Outcomes/truth file used for comparison: C:\Users\rick\projects\Atlas\data\telemetry\Last 10\Last10.csv
+
+If you do not pass --logs-path, the script’s default fallback is:
+
+C:\Users\rick\projects\Atlas\data\gamelogs\nba_gamelogs.csv
+
+So:
+
+your run used Last10.csv
+
+default behavior would use data\gamelogs\nba_gamelogs.csv
+
+That means the test you just ran is already on the consolidated truth table path we wanted.
+
+
+Uploaded image
+Well it ran sort of
+
+Thought for 9s
+Yes — “sort of” is the right read.
+
+What happened:
+
+Your command selected the 10 most recent today_*.csv files from data\board\snapshots.
+
+But the backtest only actually scored 2 snapshots:
+
+today_20260305_201429.csv
+
+today_20260306_021432.csv
+
+You can tell because it only printed two Scoring snapshot ... lines before the summary.
+
+Why that likely happened:
+
+The other 8 files probably had no matching outcomes in Last10.csv, so they were skipped or contributed zero evaluated legs.
+
+That is consistent with Last10.csv only covering a narrower set of completed games/dates than whatever happened to be in the most recent snapshot folder.
+
+So the loop worked, but the folder selection was too broad relative to the truth table coverage.
+
+What the result says about behavior:
+
+Backtest execution is functioning.
+
+Outcome join is functioning for at least those two snapshots.
+
+Role layer still looks basically inactive here:
+
+BASE avg p_adj: 0.3708
+
+ROLE avg p_adj: 0.3708
+
+BASE brier: 0.238392
+
+ROLE brier: 0.238417
+
+So again: operational, but not yet behaviorally “right.”
+
+Most important practical issue now:
+your folder selector is grabbing the wrong population of snapshots for this experiment. You do not want “latest 10 snapshot CSVs” from the board folder. You want the specific 10 PrizePicks raws / corresponding replay outputs tied to the Last 10 telemetry set.
+
+So the next move is:
+
+either replay the exact 10 raw JSON files from data\telemetry\Last 10\
+
+or explicitly pass the exact 10 snapshot CSVs that correspond to those raws
+
+Not “top 10 newest in snapshots folder,” because that folder can include unrelated runs.
+
+If you want, I’ll give you the exact one-line PowerShell command to target the 10 raw files in data\telemetry\Last 10\ next, instead of the generic board snapshot folder.
+
+
+Uploaded image
+They are all in there
+
+Thought for 8s
+Yes — the raw JSONs are all in there.
+
+But that is a different set from the files your last command actually used.
+
+You currently have two layers:
+
+data\telemetry\Last 10\prizepicks_*.json
+
+these are the 10 raw source boards you care about
+
+data\board\snapshots\today_*.csv
+
+these are the materialized snapshot CSVs sitting in the main snapshot folder from many runs, not necessarily just those 10 raws
+
+Your last folder command targeted this:
+
+C:\Users\rick\projects\Atlas\data\board\snapshots\today_*.csv
+
+So PowerShell grabbed the 10 newest snapshot CSVs from the general board folder, which is why only 2 ended up matching the truth coverage well enough to score.
+
+What you actually want is:
+
+take the 10 raw JSONs in data\telemetry\Last 10\
+
+replay those exact raws
+
+backtest the outputs produced from those exact raws against Last10.csv
+
+So the folder you showed is correct for the experiment source set, but it is not the same folder your last command read from.
+
+The clean way forward is to replay the exact 10 JSON files from that folder, not select “latest 10” from data\board\snapshots.
+
+Before I give you the exact replay command, I need one thing pinned down so I don’t hand you the wrong one-liner: does tools\Run-Replay.ps1 take a single raw path per run, or does it accept a folder/path list directly in your current version?
+
+
+If you run run-replay it will score the last snapshots in range of 7 days. We have done a ton of testing so that list was 177 which would take almost an entire day to score and be repetitive so I took 10 raws from each morning from the past 10 days of game slates and put them in a folder.
+
+Thought for 11s
+Exactly — that’s why Run-Replay.ps1 is the wrong lever for this experiment as currently wired.
+
+Your setup makes sense:
+
+the built-in replay/date-range path is too broad
+
+it will sweep a 7-day window
+
+your environment has a large accumulated snapshot population
+
+so you curated a controlled 10-raw cohort instead
+
+So the correct path is not “run replay normally.”
+It is:
+
+use those 10 curated raws as the experiment set
+
+process only those files
+
+then backtest only those outputs against Last10.csv
+
+That means the next thing we need is a way to run exactly one raw at a time from:
+
+C:\Users\rick\projects\Atlas\data\telemetry\Last 10\prizepicks_*.json
+
+without invoking the 7-day range behavior.
+
+There are really only two possibilities now:
+
+there is already a lower-level script/module in Atlas that accepts a single raw path directly, and Run-Replay.ps1 is just the broad wrapper
+
+there is not, and we make a small, controlled wrapper adjustment so it can take one explicit raw file at a time
+
+Given your rules, we should not guess. We should inspect the actual replay entrypoint and see what parameter it truly supports underneath.
+
+The next step I recommend is:
+
+inspect tools\Run-Replay.ps1
+
+inspect the Python target it calls
+
+identify the lowest-level entry that accepts a raw file path directly
+
+Once we find that, we can build the exact one-liner to iterate the 10 curated raws only, with no 177-file sweep.
+
+Paste the contents of tools\Run-Replay.ps1, or upload it, and I’ll pin the exact safe command path from there.
+
+
+Run-replay is just a wrapper, I know that. The file is telemetry reader
+
+Thought for 22s
+Right — and that’s the key distinction.
+
+Run-Replay.ps1 is only the shell wrapper. The behavior that matters for this experiment is in telemetry_reader.py, and in the prior log we already pinned the current reality:
+
+telemetry_reader.py requires --out-dir
+
+it supports explicit --snapshot
+
+it does not currently support --raw-dir / --limit in the version you were running 
+PriorChatlog252
+
+ 
+PriorChatlog252
+
+
+So the safe interpretation is:
+
+if you want to avoid the 177-snapshot scan, do not use its date-window mode
+
+drive it with repeated explicit --snapshot arguments instead
+
+and keep backtest_role_layer_ctx.py pointed at Last10.csv via --logs-path, since that was the path that finally produced evaluated rows 
+PriorChatlog252
+
+ 
+PriorChatlog252
+
+
+That means the clean next step is not to change replay logic yet. It is to feed telemetry_reader.py the exact 10 curated files explicitly, one by one, instead of letting anything scan by range.
+
+If you want the practical one-liner for telemetry_reader over those exact 10 raws in Last 10, use this pattern next:
+
+cd C:\Users\rick\projects\Atlas; $out="C:\Users\rick\projects\Atlas\data\telemetry\Last 10\out"; $files=Get-ChildItem "C:\Users\rick\projects\Atlas\data\telemetry\Last 10\prizepicks_*.json" | Sort-Object Name; $args=@("tools\telemetry_reader.py","--out-dir",$out); foreach($f in $files){ $args+=@("--snapshot",$f.FullName) }; py @args
+
+That matches the current tool shape we already established: explicit --snapshot mode, no range scan, no unsupported flags 
+PriorChatlog252
+
+
+One caution: if telemetry_reader expects snapshot CSVs rather than raw JSONs in your current build, this command will fail quickly, which is actually useful because it tells us whether telemetry_reader is being used as the replay runner or only as the backtest/telemetry aggregator in this branch.
+
+
+Sources
+
+RuntimeError: --out-dir must be under either C:\Users\rick\projects\Atlas\data\archives or C:\Users\rick\projects\Atlas\data\output\replay_runs. Got: C:\Users\rick\projects\Atlas\data\telemetry\Last 10\out
+
+Thought for 6s
+That error is good — it tells us the guardrail is working exactly as wired.
+
+telemetry_reader.py will only write under one of these:
+
+C:\Users\rick\projects\Atlas\data\archives
+
+C:\Users\rick\projects\Atlas\data\output\replay_runs
+
+So use one of those, not data\telemetry\Last 10\out.
+
+Use this instead:
+
+cd C:\Users\rick\projects\Atlas; $out="C:\Users\rick\projects\Atlas\data\output\replay_runs\last10_batch"; $files=Get-ChildItem "C:\Users\rick\projects\Atlas\data\telemetry\Last 10\prizepicks_*.json" | Sort-Object Name; $args=@("tools\telemetry_reader.py","--out-dir",$out); foreach($f in $files){ $args+=@("--snapshot",$f.FullName) }; py @args
+
+One important note before you run it: if telemetry_reader.py treats --snapshot as a snapshot CSV input rather than a raw JSON input, this will fail quickly. That would not be a bad result — it would prove the exact interface boundary and tell us we need the lower-level raw-to-snapshot entry instead.
+
+So the expected possibilities are:
+
+it runs, which means telemetry_reader can ingest your curated raw JSONs directly
+
+it errors on file type/format, which means telemetry_reader is only for snapshot/backtest orchestration and we need to drive the raw replay at the lower Python entrypoint
+
+Run that exact command and paste the first error line if it fails.
+
+
+Uploaded image
+
+Thought for 1m 30s
+Yeah — stop that run.
+
+What your screenshot proves is:
+
+telemetry_reader.py accepted the 10 JSON paths as --snapshot
+
+but it only did that because its resolver accepts any existing path
+
+then it handed those paths straight through to backtest_role_layer_ctx.py
+
+and that backtest loader is built to pd.read_csv() a snapshot board CSV, not a raw PrizePicks JSON
+
+That is why the screen only got as far as:
+
+Snapshots in range None-None: 10
+
+and did not advance to any Scoring snapshot ... lines.
+
+So the current state is:
+
+the wrapper is not rejecting the wrong file type
+
+but the underlying backtest path is still the snapshot-CSV evaluator, not a raw-JSON replay pipeline
+
+In other words, your intuition was right:
+those 10 raws are curated correctly, but this command path is still feeding them into the wrong stage.
+
+The real conclusion is:
+
+telemetry_reader --snapshot = explicit snapshot file mode
+
+not “raw replay file” mode
+
+the help/commentary around it is a little misleading because it resolves any path without validating extension/shape first
+
+So do not keep trying to force the raw JSONs through telemetry_reader.
+
+The correct next move is to identify the lower-level script that converts one raw prizepicks_*.json into the corresponding today_*.csv board snapshot, and then loop that exact entry over your 10 curated raws.
+
+We are now at the precise boundary we needed to prove:
+the 10-file experiment set is fine, but the current command is landing at the evaluator, not the raw-to-board replay stage.
+
+Send me the name/path of the Python file that actually builds a board snapshot from a raw PrizePicks JSON in your current model, and I’ll give you the exact one-line loop for the 10 curated raws.
+
+
+
+PIPELINE_FUNCTION_WALKTHROUGH.md
+File
+
+PIPELINE_CALL_CHAIN.md
+File
+
+trace_run_today.txt
+Document
+Please review the 
+
+Thought for 24s
+Reviewed. The docs and trace clarify the exact boundary we were missing.
+
+The important finding is that Atlas already has a single-raw execution spine below the wrapper. The pipeline docs show cli.py calling runtime.orchestrator.run_today(...), and the orchestrator exposes fetch_raw_only(raw_path=...), rebuild_today(raw_path=...), fetch_rotowire_lines(..., raw_path=...), build_share_matrix(..., raw_path=...), and run_today(..., raw_path=None) as part of the real stage graph. That means the model stack itself is already wired for an explicit raw path; the broad date-scan behavior is not coming from the core orchestrator path. 
+trace_run_today
+
+ 
+PIPELINE_CALL_CHAIN
+
+
+The trace backs that up. In cli.py, there is _parse_replay_raw_path(argv) and then run_today(...); inside the orchestrator trace, run_today carries raw_path, emits it into the audit event, and then passes that raw_path into fetch_raw_only. The trace also shows fetch_raw_only building extra environment from _extra_env_for_raw(raw_path) before invoking tools/fetch_prizepicks_today.py --raw-only. So a raw-specific path is a first-class concept in the runtime, not a hack. 
+trace_run_today
+
+ 
+trace_run_today
+
+ 
+trace_run_today
+
+
+That means the current failure mode is exactly what we suspected: telemetry_reader.py is the wrong layer for curated raw JSON replay. Prior chat plus your recent test prove that telemetry_reader’s --snapshot mode is acting as a snapshot/backtest runner, not a raw-to-board replay runner; when fed raw JSONs, it forwards them into backtest_role_layer_ctx.py instead of converting them into today_*.csv snapshot boards first. 
+PriorChatlog252
+
+ 
+PriorChatlog252
+
+
+So the clean read is:
+
+Core Atlas runtime: already supports explicit raw_path replay semantics. 
+trace_run_today
+
+
+Run-Replay.ps1: just a wrapper around that lower path, which is why the wrapper itself is not the root issue. 
+PriorChatlog252
+
+
+telemetry_reader.py: should not be used as the raw replay stage for the curated 10 JSONs in its current form. It is the layer that causes the “177 snapshots in range” problem unless driven only with proper snapshot CSVs. 
+PriorChatlog252
+
+
+Backtest: now works when pointed directly at a real snapshot CSV plus Last10.csv via --logs-path; that part is no longer the blocker. The remaining blocker is generating the right 10 snapshot CSVs from the curated 10 raws without hitting the broad range-scan path. 
+PriorChatlog252
+
+ 
+PriorChatlog252
+
+
+So the exact spot we are at now is:
+
+Do not force raw JSONs through telemetry_reader.
+
+Use the single-raw runtime path that the docs/trace prove already exists.
+
+Generate the 10 replayed snapshot/run outputs from the curated raws.
+
+Then run backtest only against those outputs with Last10.csv.
+
+This also matches the manifesto rule to troubleshoot, isolate, then fix instead of rewriting logic blindly. 
+AtlasManifestoV1
+
+
+The next thing I want to pin down is just one exact invocation surface: whether you want to drive that lower path via tools\Run-Replay.ps1 with ATLAS_REPLAY_RAW, or directly through the CLI/raw-path entry the trace implies exists. Once that is fixed, we can loop the 10 curated raws without touching telemetry_reader at all.
+
+
+Sources
+
+So you want to run 10 JSONS through sandbox mode and then backtest them with telemetry? 
+
+Thought for 8s
+Yes — conceptually, that is the right flow, but with one precision:
+
+Not “sandbox” in the sense of broad scenario/date scanning.
+
+It should be:
+
+run the 10 curated raw JSONs one at a time through the single-raw replay/runtime path
+
+let each raw produce its own normal replay/snapshot outputs
+
+then backtest those resulting outputs against Last10.csv
+
+So the flow is really:
+
+10 raw JSONs → single-raw replay path → 10 replayed snapshot/run outputs → backtest/evaluate against Last10.csv
+
+Why I’m drawing that distinction:
+
+telemetry_reader is not the raw replay stage for these JSONs
+
+it is the evaluation/orchestration layer that becomes dangerous when it scans ranges
+
+the docs/trace show Atlas already has a lower raw-path spine, which is what we want to use for the curated batch
+
+So yes, your summary is basically right, with this tweak:
+
+Replay/runtime on each of the 10 raws
+
+Then backtest/evaluate
+
+Do not use the broad range-scan path
+
+And to be explicit: I do not want to run them through the “177 snapshots in 7 days” behavior. I want the exact opposite: a controlled one-raw-at-a-time replay batch.
+
+
+Ok, so what is the next move?
+
+Thought for 29s
+Next move is not telemetry.
+
+Next move is to prove the single-raw replay path on one curated JSON, because the runtime/orchestrator already supports raw_path directly via run_today(...), fetch_raw_only(...), rebuild_today(...), and the raw-path env plumbing underneath 
+trace_run_today
+
+ 
+trace_run_today
+
+. The pipeline doc also confirms run_today(...) is the canonical stage graph and fetch_raw_only(...) is the raw-board entry stage 
+PIPELINE_FUNCTION_WALKTHROUGH
+
+ 
+PIPELINE_FUNCTION_WALKTHROUGH
+
+.
+
+So the immediate move is:
+
+Replay one known raw from Last 10 through the real runtime path
+
+Confirm it produces a fresh run folder / today snapshot
+
+Then loop the 10 raws
+
+Only after that, run backtest on the produced snapshots against Last10.csv
+
+Use this single-file proof run first:
+
+cd C:\Users\rick\projects\Atlas; $env:ATLAS_REPLAY_RAW="C:\Users\rick\projects\Atlas\data\telemetry\Last 10\prizepicks_20260305_131610.json"; .\tools\Run-Replay.ps1; Remove-Item Env:\ATLAS_REPLAY_RAW -ErrorAction SilentlyContinue
+
+Why this first:
+
+it avoids the 177-snapshot telemetry scan entirely, which was the exact blocker in the prior chat 
+PriorChatlog252
+
+
+it stays on the canonical replay/runtime spine instead of forcing raw JSONs into telemetry_reader, which we already proved is the wrong layer
+
+it gives us one fresh replay artifact to inspect before batching all 10
+
+What I want back from that one run:
+
+the new run_id
+
+whether it wrote a fresh today_*.csv
+
+whether it completed cleanly or failed at a specific stage
+
+If that single replay is clean, I’ll give you the exact 10-raw loop next, and then the exact explicit-snapshot backtest command against C:\Users\rick\projects\Atlas\data\telemetry\Last 10\Last10.csv, which is already the correct truth source for this experiment 
+PriorChatlog252
+
+ 
+PriorChatlog252
+
+
+
+Sources
+
+Snapshots in range 20260228-20260306: 177
+
+Thought for 37s
+Yep — that proves my last suggestion was the wrong path.
+
+What happened is exactly this:
+
+Run-Replay.ps1 did not honor the raw-file override in the way I expected.
+
+It dropped into the telemetry/date-window path and invoked backtest_role_layer_ctx.py --start 20260228 --end 20260306, which is why you got Snapshots in range 20260228-20260306: 177 again. 
+PriorChatlog252
+
+
+That is the same failure mode already captured in the prior log: telemetry is scanning by date window instead of using only the curated 10 raws. 
+PriorChatlog252
+
+
+So the correction is:
+
+Do not use Run-Replay.ps1 for this batch as-is.
+
+The next move is the small deterministic fix we had already converged on:
+
+update tools\telemetry_reader.py so that when a folder is provided it uses only prizepicks_*.json from that folder and ignores --start/--end
+
+keep backtest_role_layer_ctx.py pointed at Last10.csv as the outcomes source. That exact intended behavior is already spelled out in the prior handoff: if --raw-dir is set, select the JSONs in that folder and ignore the date scan. 
+PriorChatlog252
+
+ 
+PriorChatlog252
+
+
+So we are back to the smallest real fix:
+
+telemetry_reader.py
+
+add --raw-dir
+
+add --limit
+
+if --raw-dir is present, glob prizepicks_*.json there
+
+ignore start/end in that mode
+
+backtest_role_layer_ctx.py
+
+continue using --logs-path "...\Last10.csv" for the consolidated truth table, which is already the path that produced evaluated rows on your direct single-snapshot test. 
+PriorChatlog252
+
+
+That fits your manifesto rules better too: debug first, isolate the choke point, then make one small auditable change instead of fighting wrappers. 
+AtlasManifestoV1
+
+
+The next move is for me to help you patch tools\telemetry_reader.py only so it stops scanning 177 and takes exactly those 10 files.
+
+
+Sources
+
+
+telemetry_reader.py
+Python
+
+backtest_role_layer_ctx.py
+Python
+
+Thought for 11s
+Reviewed. The choke point is now explicit in the code.
+
+telemetry_reader.py is not a raw-JSON replay runner. Its --snapshot path only resolves existing files and then forwards them straight into backtest_role_layer_ctx.py as --snapshot ..., with no raw→board conversion stage in between 
+telemetry_reader
+
+
+And backtest_role_layer_ctx.py confirms why that fails for curated PP raws: load_board() does a direct pd.read_csv(path) and expects a snapshot board CSV with columns like player_norm/player, stat, line, and date-bearing snapshot filenames like today_YYYYMMDD...csv 
+backtest_role_layer_ctx
+
+
+So the exact issue is:
+
+you passed prizepicks_*.json
+
+telemetry_reader.py accepted them as generic “snapshots”
+
+backtest_role_layer_ctx.py tried to treat them as board CSVs
+
+therefore this path can never be the curated-raw replay solution as currently written
+
+There are also two concrete code findings:
+
+telemetry_reader.py already has a dead helper for raw folders:
+
+_get_raw_json_files(raw_dir, limit) exists
+
+but there are no CLI args wired to use it
+
+and nothing converts those raws into snapshot CSVs before invoking backtest 
+telemetry_reader
+
+
+backtest_role_layer_ctx.py has partial support for your intended outcomes flow:
+
+it now accepts --outcomes-csv
+
+but the logs-loading branch is malformed: after coercing pts/reb/ast/fg3m, the dangling else: logs = load_logs(...) is attached to the for loop, not the outcomes conditional, so it will overwrite the outcomes load unless one of those columns is missing. That needs to be fixed before trusting the consolidated Last10.csv path fully 
+backtest_role_layer_ctx
+
+
+So the next move is not to fight wrappers. It is the smallest two-step repair:
+
+Step 1
+Fix backtest_role_layer_ctx.py first:
+
+repair the --outcomes-csv branch so Last10.csv stays loaded
+
+keep normalization to player, player_norm, game_date, pts/reb/ast/fg3m
+
+Step 2
+Decide which small replay entry to wire:
+
+either add a true --raw-dir mode to telemetry_reader.py that first converts curated prizepicks_*.json into replayed snapshot CSVs
+
+or skip telemetry_reader.py for replay entirely and use the lower raw-path runtime directly, then use telemetry only for evaluation
+
+My recommendation is:
+
+fix backtest_role_layer_ctx.py first
+
+then inspect the lower raw replay entry rather than bloating telemetry_reader.py into a second orchestrator
+
+That keeps us inside your rule set: isolate, fix the smallest real defect, then proceed.
+
+
+Sources
+
+
+Invoke-BacktestRoleLayer.ps1
+File
+It used to call this before I built the new engine
+
+I’m checking that older wrapper now so we can compare the pre-engine behavior to the current telemetry path and see what actually changed, rather than guessing.
+
+I found the current choke points. I’m opening the old PowerShell wrapper itself now so I can compare what it used to call versus what the new telemetry path is doing today.
+
+Thought for 46s
+Yep — this confirms the old behavior.
+
+That old Invoke-BacktestRoleLayer.ps1 was just a thin wrapper around backtest_role_layer_ctx.py with:
+
+mandatory -Start / -End
+
+optional -NSims and -Seed
+
+PYTHONPATH pointed at src
+
+then a direct call to backtest_role_layer_ctx.py --start ... --end ... --nsims ... --seed ...
+
+So historically it was a date-range backtest launcher, not a raw-JSON replay tool.
+
+That lines up with what the current code still does conceptually:
+
+telemetry_reader.py prioritizes either exact --snapshot files or else falls back to date/range selection, and if no explicit range is passed it defaults to the last N days ending today 
+telemetry_reader
+
+ 
+telemetry_reader
+
+
+then it calls scripts/dev/analysis/backtest/backtest_role_layer_ctx.py as the downstream script 
+telemetry_reader
+
+
+and backtest_role_layer_ctx.py is built around snapshot-board CSV evaluation, with SNAPSHOT_DIR = ... data/board/snapshots and default logs from data/gamelogs/nba_gamelogs.csv 
+backtest_role_layer_ctx
+
+
+So the key insight is:
+
+Before the new engine, the wrapper was never solving “replay curated raw JSONs.”
+It was solving “run the ctx backtest over snapshots in a date range.”
+
+That explains the 177 behavior perfectly:
+
+the old flow was date-window oriented
+
+the current telemetry flow still has that same DNA
+
+your curated Last 10\prizepicks_*.json folder is a new experimental need that the old wrapper never handled
+
+So the practical conclusion is:
+
+we should stop expecting the legacy wrapper lineage to know what to do with curated raw JSONs
+
+the old path is still valid for snapshot-range evaluation
+
+but the curated 10-raw experiment needs a separate explicit bridge:
+
+either produce 10 snapshot CSVs from those raws first, then backtest
+
+or add a very small raw-folder mode that does that conversion intentionally before calling backtest
+
+That’s also why your current telemetry_reader.py behavior is not actually “broken” in the historical sense — it’s just still operating like the old wrapper family, which was designed for snapshot/date backtesting, not raw replay batching.
+
+
+Sources
+
+
+either produce 10 snapshot CSVs from those raws first, then backtest
+
+How do I do this?
+
+I’ve pinned the correct stage boundary now. I’m checking the actual rebuild tool interface so I can give you the exact safe path to generate snapshot CSVs from the 10 raws, instead of another wrapper guess.
+
+Thought for 1m 22s
+Yes. The clean way is to skip telemetry until you already have snapshot CSVs.
+
+Why: telemetry_reader.py only knows how to pass exact snapshot files through to backtest_role_layer_ctx.py, and backtest_role_layer_ctx.py loads those with pd.read_csv(...), so raw prizepicks_*.json can never be the direct input to that stage 
+telemetry_reader
+
+ 
+telemetry_reader
+
+.
+The rebuild stage is the one that turns a raw board into data/board/today.csv plus data/board/snapshots/today_<timestamp>.csv 
+PIPELINE_CALL_CHAIN
+
+.
+
+So the flow is:
+
+Use the rebuild tool directly on each raw JSON
+
+Let it write today_*.csv snapshots
+
+Pass those exact 10 snapshot CSVs into backtest
+
+Point backtest at Last10.csv
+
+Also, the rebuild script already supports replay via ATLAS_REPLAY_RAW and writes a fresh snapshot every time it runs 
+PIPELINE_CALL_CHAIN
+
+.
+
+Run one proof file first:
+
+cd C:\Users\rick\projects\Atlas; $env:ATLAS_REPLAY_RAW="C:\Users\rick\projects\Atlas\data\telemetry\Last 10\prizepicks_20260305_131610.json"; py .\tools\rebuild_today_from_any_raw.py; Remove-Item Env:\ATLAS_REPLAY_RAW -ErrorAction SilentlyContinue
+
+What success looks like:
+
+it prints Wrote: data\board\today.csv
+
+it prints Snapshot: data\board\snapshots\today_...csv
+
+Then do all 10 raws:
+
+cd C:\Users\rick\projects\Atlas; $files=Get-ChildItem "C:\Users\rick\projects\Atlas\data\telemetry\Last 10\prizepicks_*.json" | Sort-Object Name; foreach($f in $files){ Write-Host "n=== REBUILD $($f.Name) ==="; $env:ATLAS_REPLAY_RAW=$f.FullName; py .\tools\rebuild_today_from_any_raw.py }; Remove-Item Env:\ATLAS_REPLAY_RAW -ErrorAction SilentlyContinue`
+
+After that, backtest only the 10 newest snapshots against your consolidated truth table:
+
+cd C:\Users\rick\projects\Atlas; $snaps=Get-ChildItem .\data\board\snapshots\today_*.csv | Sort-Object LastWriteTime -Descending | Select-Object -First 10; $args=@("scripts\dev\analysis\backtest\backtest_role_layer_ctx.py","--logs-path","C:\Users\rick\projects\Atlas\data\telemetry\Last 10\Last10.csv"); foreach($s in $snaps){ $args+=@("--snapshot",$s.FullName) }; py @args
+
+That gives you exactly the workflow you wanted:
+10 curated raws → 10 generated snapshot CSVs → one controlled backtest batch
+and it avoids the 177-snapshot range scan entirely.
+
+Send me the first few lines from the single-file rebuild output before you do the full 10.
+
+
+Sources
+
+OverflowError: date value out of range
+
+That means the rebuild path did start, but it hit a date-handling bug while processing the raw. I’m checking the actual rebuild script and the trace/docs around raw replay date parsing so we can isolate the failing stage instead of guessing.
+
+I’m inspecting the actual rebuild script now. The likely cause is a raw replay date being interpreted incorrectly inside Stage 2, and I want the exact line before telling you to change anything.
+
+Thought for 4m 5s
+Found it.
+
+This is not a bad raw file. It’s a replay sentinel date bug in Stage 2 rebuild.
+
+What’s happening:
+
+replay mode is using a fake now_utc = datetime.min.replace(tzinfo=timezone.utc)
+
+then the code immediately converts that to Central time
+
+converting year 1 UTC to America/Chicago pushes it backward and underflows, which raises:
+
+OverflowError: date value out of range
+
+So the failure is happening before it even gets to meaningful raw processing.
+
+Why this fits the pipeline:
+
+Stage 2 is the rebuild step that turns raw board data into today.csv and snapshot CSVs 
+PIPELINE_CALL_CHAIN
+
+
+the walkthrough also confirms rebuild is the canonical “raw → normalized board” stage, which is exactly where your command died 
+PIPELINE_FUNCTION_WALKTHROUGH
+
+
+So the next move is one small fix in one file only:
+
+File
+src/Atlas/stages/rebuild/rebuild_today.py
+
+Problem block
+the replay branch is using datetime.min as the frozen clock sentinel.
+
+Minimal safe fix
+replace the replay sentinel with a safe timezone-aware date, like:
+
+datetime(1970, 1, 1, tzinfo=timezone.utc)
+
+or better:
+
+only compute now_ct/today_ct inside the non-replay branch, since replay doesn’t need CT “today” filtering anyway.
+
+Best minimal fix path:
+
+keep live logic unchanged
+
+in replay mode, do not use datetime.min
+
+use a safe early UTC date, or avoid the CT conversion entirely in replay
+
+The cleanest reasoning is:
+
+live mode needs “today in CT”
+
+replay mode only needs “don’t drop historical games because they started before now”
+
+so replay should not rely on an underflow-prone minimum datetime
+
+So yes: this is actually good news.
+We now know the exact choke point, and it’s a small Stage 2 replay bug, not a mystery in telemetry or the raw files.
+
+If you want, I’ll give you the exact 2-line replacement for that block next.
+
+
+Sources
+
+As long as it does not disturb the live mode at all we can do it.
+
+I isolated it to the replay-specific clock path, not the live path. I’m confirming the doc/trace references so the fix stays scoped to replay only.
+
+Thought for 31s
+Yes — this can be kept replay-only.
+
+Why I’m comfortable with it:
+
+the rebuild stage is the canonical Stage 2 board-normalization step, and it sits on both live and replay paths 
+PIPELINE_CALL_CHAIN
+
+
+your manifesto explicitly prefers a one-step, surgical troubleshooting change over broad rewrites 
+AtlasManifestoV1
+
+
+the failure we hit is specifically in the replay clock path, not in the live pipeline semantics
+
+So the safe rule is:
+
+do not touch the live branch
+
+only change the replay sentinel / replay-time handling inside src/Atlas/stages/rebuild/rebuild_today.py
+
+keep live CT “today” gating exactly as-is, since that gate was intentionally added to stop tomorrow props leaking into the live candidate pool 
+STATE_CURRENT_UPDATED_2026-03-0…
+
+
+The minimal safe shape is:
+
+in live mode: leave current now_utc -> now_ct -> today_ct behavior untouched
+
+in replay mode: stop using the underflow-prone minimum datetime sentinel; use a safe replay clock or bypass that CT conversion entirely
+
+That preserves the live behavior you care about:
+
+live still gates to today CT + not started yet in rebuild/fetch logic 
+STATE_CURRENT_UPDATED_2026-03-0…
+
+
+replay only stops crashing on historical raws
+
+So the next move I recommend is:
+
+make one file change only in rebuild_today.py
+
+rerun one curated raw
+
+confirm it writes:
+
+data/board/today.csv
+
+data/board/snapshots/today_<timestamp>.csv 
+PIPELINE_CALL_CHAIN
+
+
+only then batch the 10 raws
+
+That is the right boundary: a replay-only bug fix, with live mode left untouched.
+
+
+Sources
+
+OK so tell me what to change and lets do it
+
+I’m checking the exact replay clock block in the rebuild file now so I can give you the smallest replay-only edit instead of a guessed patch.
+
+Thought for 1m 54s
+Change one line in src/Atlas/stages/rebuild/rebuild_today.py.
+
+Find the replay-only branch where it sets the frozen clock to the minimum datetime. It will look like this or very close to it:
+
+now_utc = datetime.min.replace(tzinfo=timezone.utc)
+Replace it with:
+
+now_utc = datetime(1970, 1, 1, tzinfo=timezone.utc)
+Why this is safe:
+
+the crash is coming from converting datetime.min into Central time, which underflows
+
+1970-01-01 UTC is still “far in the past” for replay logic
+
+live mode is untouched because this only changes the replay sentinel
+
+Do not change the live branch or the CT “today” logic.
+
+After that, rerun the same single-raw rebuild you just ran. If it works, you should see it write a fresh today.csv and a today_*.csv snapshot.
+
+
+It worked. It rebuilt today
+
+Thought for 7s
+Perfect. That confirms the bug was replay-only and the live path stayed out of it.
+
+So the state is now:
+
+the rebuild stage can consume a curated historical raw
+
+it can generate a fresh today board from replay input
+
+the underflow blocker is gone
+
+Next move is straightforward:
+
+run the other 9 raws through the same rebuild path
+
+collect the 10 newest today_*.csv snapshots
+
+backtest those exact 10 snapshots against Last10.csv
+
+Use this for the full 10-raw rebuild batch:
+
+cd C:\Users\rick\projects\Atlas; $files=Get-ChildItem "C:\Users\rick\projects\Atlas\data\telemetry\Last 10\prizepicks_*.json" | Sort-Object Name; foreach($f in $files){ Write-Host "=== REBUILD $($f.Name) ==="; $env:ATLAS_REPLAY_RAW=$f.FullName; py .\tools\rebuild_today_from_any_raw.py }; Remove-Item Env:\ATLAS_REPLAY_RAW -ErrorAction SilentlyContinue
+
+Then backtest the 10 newest generated snapshots against the consolidated outcomes file:
+
+cd C:\Users\rick\projects\Atlas; $snaps=Get-ChildItem "C:\Users\rick\projects\Atlas\data\board\snapshots\today_*.csv" | Sort-Object LastWriteTime -Descending | Select-Object -First 10; $args=@("scripts\dev\analysis\backtest\backtest_role_layer_ctx.py","--logs-path","C:\Users\rick\projects\Atlas\data\telemetry\Last 10\Last10.csv"); foreach($s in $snaps){ $args+=@("--snapshot",$s.FullName) }; py @args
+
+What I want from that backtest output:
+
+number of snapshots actually scored
+
+BASE brier
+
+ROLE brier
+
+whether avg p_adj differs materially
+
+any “no outcomes matched” lines
+
+Once you paste that, we can decide whether the next adjustment belongs in role activation, calibration, or the snapshot/outcome join layer.
+
+
+
+backtest_role_layer_ctx_new_None_None.meta.json
+File
+
+backtest_role_layer_ctx_new_None_None.zip
+Zip Archive
+That backtest csv is absolutley MASSIVE 1.8GB
+
+I’m checking what’s actually inside that backtest artifact now so I can tell you whether the size is expected detail output versus a sign we’re over-writing unnecessary telemetry.
+
+Thought for 32s
+Yes — that size is telling us the script is dumping a full leg-level evaluation table, not just the summary.
+
+What came out is:
+
+a single CSV inside the zip: backtest_role_layer_ctx_new_None_None.csv
+
+uncompressed size about 190 MB
+
+metadata says 184,944 total rows and 182,784 evaluated non-push rows against Last10.csv 
+backtest_role_layer_ctx_new_Non…
+
+
+So this is not “10 summary rows.” It is the full per-leg backtest dataset for the batch.
+
+That means two things:
+
+The run actually worked at scale.
+
+The artifact is too heavy to use as the main decision surface for baseline tuning.
+
+For our purpose, the right move is not to inspect that giant CSV manually.
+We should use it only as a source table and reduce it to a compact summary:
+
+per snapshot
+
+base vs role Brier
+
+average p_adj
+
+count of evaluated legs
+
+maybe role activation counts / mean role_ctx_mult
+
+That gives you the baseline decision surface without hauling around a giant flat file.
+
+So the next move is:
+
+keep this artifact as proof the batch worked
+
+do not use the raw CSV as the working surface
+
+extract a small grouped summary from it and tune from that
+
+Also, the None_None in the filename is expected here because this run was driven by explicit snapshots rather than a start/end date window, while still using Last10.csv as the truth source 
+backtest_role_layer_ctx_new_Non…
+
+
+If you want, next I’ll help you reduce this output into the exact compact baseline table we actually need.
+
+
+Sources
+
+Sounds great
+
+Thought for a few seconds
+Good. The heavy batch is useful, but the next surface should be tiny.
+
+Use the giant backtest only to produce a compact summary with one row per snapshot. The fields we want are:
+
+snapshot
+
+evaluated legs
+
+base avg p_adj
+
+role avg p_adj
+
+base Brier
+
+role Brier
+
+delta Brier
+
+mean role_ctx_mult
+
+count of rows where role actually moved probability
+
+That will tell us whether the role layer is helping, inert, or hurting across the 10 curated days.
+
+Run this and paste the output:
+
+cd C:\Users\rick\projects\Atlas; py -c "import pandas as pd, numpy as np, zipfile; z=r'C:\Users\rick\projects\Atlas\backtest_role_layer_ctx_new_None_None.zip'; f=zipfile.ZipFile(z); name=[n for n in f.namelist() if n.endswith('.csv')][0]; df=pd.read_csv(f.open(name)); snap='snapshot' if 'snapshot' in df.columns else ('source_snapshot' if 'source_snapshot' in df.columns else None); base_p='p_adj_base' if 'p_adj_base' in df.columns else ('p_base' if 'p_base' in df.columns else None); role_p='p_adj_role' if 'p_adj_role' in df.columns else ('p_adj' if 'p_adj' in df.columns else None); y='result' if 'result' in df.columns else ('hit' if 'hit' in df.columns else None); mult='role_ctx_mult' if 'role_ctx_mult' in df.columns else None; moved=((df[role_p]-df[base_p]).abs()>1e-12) if base_p and role_p and base_p in df.columns and role_p in df.columns else pd.Series(False,index=df.index); g=df.groupby(snap,dropna=False); out=g.apply(lambda x: pd.Series({'eval_legs':len(x),'base_avg_p':x[base_p].mean() if base_p else np.nan,'role_avg_p':x[role_p].mean() if role_p else np.nan,'base_brier':((x[base_p]-x[y])**2).mean() if base_p and y else np.nan,'role_brier':((x[role_p]-x[y])**2).mean() if role_p and y else np.nan,'delta_brier':(((x[role_p]-x[y])**2).mean()-((x[base_p]-x[y])**2).mean()) if base_p and role_p and y else np.nan,'mean_role_ctx_mult':x[mult].mean() if mult and mult in x.columns else np.nan,'moved_rows':moved.loc[x.index].sum()})).reset_index(); print(out.to_string(index=False))"
+
+What I’m looking for:
+
+if moved_rows is near zero on most snapshots, role logic is not activating enough
+
+if moved_rows is healthy but delta_brier is mostly positive, role logic is active but harming accuracy
+
+if role_avg_p is consistently above realized hit rate, calibration is too aggressive
+
+if role_avg_p barely changes but calibration bins still show underconfidence, baseline calibration is the better next target
+
+Paste that summary table and I’ll tell you the next adjustment path.
+
+
+Uploaded image
+FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\rick\\projects\\Atlas\\backtest_role_layer_ctx_new_None_None.zip'
+
+Thought for a couple of seconds
+The file is in tools\reports, not the repo root.
+
+Use this exact command instead:
+
+cd C:\Users\rick\projects\Atlas; py -c "import pandas as pd, numpy as np, zipfile; z=r'C:\Users\rick\projects\Atlas\tools\reports\backtest_role_layer_ctx_new_None_None.zip'; f=zipfile.ZipFile(z); name=[n for n in f.namelist() if n.endswith('.csv')][0]; df=pd.read_csv(f.open(name)); snap='snapshot' if 'snapshot' in df.columns else ('source_snapshot' if 'source_snapshot' in df.columns else None); base_p='p_adj_base' if 'p_adj_base' in df.columns else ('p_base' if 'p_base' in df.columns else None); role_p='p_adj_role' if 'p_adj_role' in df.columns else ('p_adj' if 'p_adj' in df.columns else None); y='result' if 'result' in df.columns else ('hit' if 'hit' in df.columns else None); mult='role_ctx_mult' if 'role_ctx_mult' in df.columns else None; moved=((df[role_p]-df[base_p]).abs()>1e-12) if base_p and role_p and base_p in df.columns and role_p in df.columns else pd.Series(False,index=df.index); g=df.groupby(snap,dropna=False); out=g.apply(lambda x: pd.Series({'eval_legs':len(x),'base_avg_p':x[base_p].mean() if base_p else np.nan,'role_avg_p':x[role_p].mean() if role_p else np.nan,'base_brier':((x[base_p]-x[y])**2).mean() if base_p and y else np.nan,'role_brier':((x[role_p]-x[y])**2).mean() if role_p and y else np.nan,'delta_brier':(((x[role_p]-x[y])**2).mean()-((x[base_p]-x[y])**2).mean()) if base_p and role_p and y else np.nan,'mean_role_ctx_mult':x[mult].mean() if mult and mult in x.columns else np.nan,'moved_rows':moved.loc[x.index].sum()})).reset_index(); print(out.to_string(index=False))"
+
+If that throws a column-name error, paste the first error line and I’ll tighten the summarizer to the exact schema in your CSV.
+
+
+    raise TypeError("You have to supply one of 'by' and 'level'")
+TypeError: You have to supply one of 'by' and 'level'
+
+Thought for 4 seconds
+That error means the CSV does not have either of the snapshot columns I guessed, so groupby(...) got None.
+
+First, print the actual columns so we stop guessing. Run this:
+
+cd C:\Users\rick\projects\Atlas; py -c "import pandas as pd, zipfile; z=r'C:\Users\rick\projects\Atlas\tools\reports\backtest_role_layer_ctx_new_None_None.zip'; f=zipfile.ZipFile(z); name=[n for n in f.namelist() if n.endswith('.csv')][0]; df=pd.read_csv(f.open(name), nrows=5); print(list(df.columns))"
+
+Paste that output.
+
+If you want to keep moving immediately, use this safer version that will still summarize even if there is no snapshot column by collapsing everything into one batch row:
+
+cd C:\Users\rick\projects\Atlas; py -c "import pandas as pd, numpy as np, zipfile; z=r'C:\Users\rick\projects\Atlas\tools\reports\backtest_role_layer_ctx_new_None_None.zip'; f=zipfile.ZipFile(z); name=[n for n in f.namelist() if n.endswith('.csv')][0]; df=pd.read_csv(f.open(name)); cols=set(df.columns); snap=next((c for c in ['snapshot','source_snapshot','snapshot_file','board_snapshot'] if c in cols), None); base_p=next((c for c in ['p_adj_base','p_base'] if c in cols), None); role_p=next((c for c in ['p_adj_role','p_adj'] if c in cols), None); y=next((c for c in ['result','hit','actual'] if c in cols), None); mult='role_ctx_mult' if 'role_ctx_mult' in cols else None; if snap is None: df['_batch']='all'; snap='_batch'; moved=((df[role_p]-df[base_p]).abs()>1e-12) if base_p and role_p else pd.Series(False,index=df.index); g=df.groupby(snap, dropna=False); out=g.apply(lambda x: pd.Series({'eval_legs':len(x),'base_avg_p':x[base_p].mean() if base_p else np.nan,'role_avg_p':x[role_p].mean() if role_p else np.nan,'base_brier':((x[base_p]-x[y])**2).mean() if base_p and y else np.nan,'role_brier':((x[role_p]-x[y])**2).mean() if role_p and y else np.nan,'delta_brier':(((x[role_p]-x[y])**2).mean()-((x[base_p]-x[y])**2).mean()) if base_p and role_p and y else np.nan,'mean_role_ctx_mult':x[mult].mean() if mult else np.nan,'moved_rows':moved.loc[x.index].sum()})).reset_index(); print('COLUMNS=',list(df.columns)); print(out.to_string(index=False))"
+
+Most likely outcome: the file has no per-snapshot identifier, which means the script exported only one giant pooled batch. If that’s true, the next step is to derive a smaller summary by date or snapshot source from whatever columns actually exist.
+
+
+['projection_id', 'source_projection_id', 'game_id', 'game_date', 'home', 'opp', 'player_key', 'player', 'team', 'stat', 'stat_raw', 'stat_is_canonical', 'line', 'direction', 'tier', 'more_allowed', 'less_allowed', 'main_line', 'alt_line', 'is_main', 'odds_type', 'start_time', 'updated_at', 'player_norm', 'player_gl', 'team_gl', 'opp_gl', 'minutes', 'pts', 'reb', 'ast', 'fg3m', 'fga', 'fta', 'tov', 'usg_proxy', 'actual', 'hit', 'push', 'p_base', 'p_role_base', 'p_adj_base', 'p_close_base', 'p_close_raw_base', 'p_close_role_base', 'spread_base', 'q_blowout_base', 'minutes_s_base', 'minutes_s_close_base', 'is_star_base', 'fragility_base', 'fragility_abs_base', 'min_mean_base', 'min_std_base', 'rate_mean_base', 'rate_std_base', 'rate_mean_ctx_base', 'rate_std_ctx_base', 'role_ctx_mult_base', 'role_ctx_mult_raw_base', 'role_ctx_sigma_mult_base', 'role_ctx_reason_base', 'games_used_base', 'p_over_adj_base', 'p_role', 'p_role_role', 'p_adj_role', 'p_close_role', 'p_close_raw_role', 'p_close_role_role', 'spread_role', 'q_blowout_role', 'minutes_s_role', 'minutes_s_close_role', 'is_star_role', 'fragility_role', 'fragility_abs_role', 'min_mean_role', 'min_std_role', 'rate_mean_role', 'rate_std_role', 'rate_mean_ctx_role', 'rate_std_ctx_role', 'role_ctx_mult_role', 'role_ctx_mult_raw_role', 'role_ctx_sigma_mult_role', 'role_ctx_reason_role', 'games_used_role', 'p_over_adj_role', '__snapshot', 'snapshot_date']
+
+Thought for 13s
+Perfect. Now we have the exact schema.
+
+The per-snapshot key is:
+
+__snapshot
+
+And the outcome column is:
+
+actual
+
+Use this exact command:
+
+cd C:\Users\rick\projects\Atlas; py -c "import pandas as pd, numpy as np, zipfile; z=r'C:\Users\rick\projects\Atlas\tools\reports\backtest_role_layer_ctx_new_None_None.zip'; f=zipfile.ZipFile(z); name=[n for n in f.namelist() if n.endswith('.csv')][0]; df=pd.read_csv(f.open(name)); df=df[df['push']!=1].copy() if 'push' in df.columns else df.copy(); moved=(df['p_adj_role']-df['p_adj_base']).abs()>1e-12; out=df.groupby('__snapshot',dropna=False).apply(lambda x: pd.Series({'eval_legs':len(x),'snapshot_date':x['snapshot_date'].iloc[0] if 'snapshot_date' in x.columns else None,'base_avg_p':x['p_adj_base'].mean(),'role_avg_p':x['p_adj_role'].mean(),'base_brier':((x['p_adj_base']-x['actual'])**2).mean(),'role_brier':((x['p_adj_role']-x['actual'])**2).mean(),'delta_brier':((x['p_adj_role']-x['actual'])**2).mean()-((x['p_adj_base']-x['actual'])**2).mean(),'mean_role_ctx_mult':x['role_ctx_mult_role'].mean() if 'role_ctx_mult_role' in x.columns else np.nan,'moved_rows':moved.loc[x.index].sum(),'pct_moved':moved.loc[x.index].mean()})).reset_index().sort_values(['snapshot_date','__snapshot']); print(out.to_string(index=False))"
+
+This will give you the actual decision table we need:
+
+one row per replayed snapshot
+
+how much role moved probabilities
+
+whether role helped or hurt Brier on that day
+
+How to read it:
+
+pct_moved near 0.00 on most rows = role layer is mostly inert
+
+healthy pct_moved but positive delta_brier = role layer is active but hurting
+
+negative delta_brier = role layer helped that snapshot
+
+mean_role_ctx_mult near 1.00 everywhere = activation/magnitude is too weak
+
+Paste that output and I’ll tell you where the next adjustment belongs.
+
+
+
+Summary.txt
+Document
+
+Thought for 10s
+This is enough to make the next call.
+
+The role layer is definitely active, not inert:
+
+pct_moved is about 94% to 97% on every snapshot
+
+moved_rows is huge on every run
+
+so this is not an activation failure 
+Summary
+
+
+But the effect size is tiny and mostly not helping:
+
+mean_role_ctx_mult is exactly 1.0 in every row
+
+base_avg_p and role_avg_p are almost identical
+
+delta_brier is mixed, but extremely small in magnitude on most snapshots, with only one materially better day in this batch (-0.005041) and one moderate improvement (-0.001540) 
+Summary
+
+
+So the failure mode is now much clearer:
+
+not “role logic never fires”
+
+not “join is broken”
+
+not “telemetry is the blocker”
+
+It is this:
+
+the role layer is touching many rows, but the applied changes are so small that it is behaving like near-zero perturbation noise.
+
+That points to one of two underlying causes:
+
+the multiplier/magnitude path is getting compressed too hard before final p_adj_role
+
+the summary metric we should inspect next is not just role_ctx_mult_role, but the actual probability delta distribution:
+
+p_adj_role - p_adj_base
+
+by reason
+
+by stat
+
+by snapshot
+
+Because right now:
+
+rows are “moved”
+
+but average probabilities
+
+
+Sources
+
+Uploaded image
+Its literally telling us right here
+
+Thought for 21s
+Yes — you’re right. The console is telling us the important part directly, and I should tighten the read.
+
+What that screenshot proves:
+
+All 10 snapshots were selected: Snapshots in range None-None: 10
+
+They were actually scored, not skipped, because you got repeated Scoring snapshot ... lines.
+
+The join is not broken on this batch, because every scored snapshot printed Merge missing rates: p_adj_base=0.00%, p_adj_role=0.00% and the script computes those directly off the joined frame before appending the snapshot output 
+backtest_role_layer_ctx
+
+
+The final summary is built off hit, not actual, so the console BASE brier: 0.205439 is the trustworthy Brier surface here 
+backtest_role_layer_ctx
+
+ 
+backtest_role_layer_ctx
+
+
+So the corrected conclusion is:
+
+selection worked
+
+matching worked
+
+evaluation worked
+
+the current question is behavioral, not wiring
+
+And there is one more important correction:
+
+My quick summary script used actual for Brier instead of hit, which is why that table showed nonsense 200+ “brier” values. The backtest code clearly uses y = df_eval["hit"] and then computes Brier from p_adj_base / p_adj_role against that binary hit target 
+backtest_role_layer_ctx
+
+. So your console read is the right one, not the giant numbers from the ad hoc summary.
+
+What still matters from the compact summary is the movement pattern:
+
+role moved a very large share of rows (pct_moved roughly 94%–97%)
+
+but average probabilities barely changed
+
+and mean_role_ctx_mult sat at 1.0 across those snapshots 
+Summary
+
+
+So the real state now is:
+
+not a join problem
+
+not a “no outcomes matched” problem
+
+not an inactive role layer in the binary sense
+
+It’s this:
+
+role is touching lots of rows, but the net effect on final probabilities is extremely small.
+
+That is the exact next thing to inspect. The next best diagnostic is not another full replay. It is to measure the actual probability delta surface:
+
+p_adj_role - p_adj_base
+
+by role_ctx_reason_role
+
+by stat
+
+maybe by snapshot
+
+Because the backtest screen already told us the top-level truth: the pipeline is working, but role is not separating enough to matter materially in aggregate.
+
+Your catch was correct.
+
+
+Sources
+
+Ok, so lets test the actual math that is needed
+
+Thought for 16s
+Yes. The math to test next is not “did it run?” — that’s already proven. The backtest is scoring all 10 snapshots, the merges are clean, and Brier is computed against the binary hit target using (p - y)^2 on p_adj_base and p_adj_role 
+backtest_role_layer_ctx
+
+ 
+backtest_role_layer_ctx
+
+
+So the next test is:
+
+How big is the actual role-layer delta on final probabilities?
+
+Because right now the symptoms are:
+
+lots of rows changed
+
+but top-line avg p_adj barely moved
+
+and Brier barely moved
+
+That means we need to inspect:
+
+dp = p_adj_role - p_adj_base
+
+by role_ctx_reason_role
+
+by stat
+
+and overall magnitude bands
+
+Run this first:
+
+cd C:\Users\rick\projects\Atlas; py -c "import pandas as pd, zipfile; z=r'C:\Users\rick\projects\Atlas\tools\reports\backtest_role_layer_ctx_new_None_None.zip'; f=zipfile.ZipFile(z); n=[x for x in f.namelist() if x.endswith('.csv')][0]; df=pd.read_csv(f.open(n)); df=df[df['push']!=1].copy(); df['dp']=pd.to_numeric(df['p_adj_role'],errors='coerce')-pd.to_numeric(df['p_adj_base'],errors='coerce'); s=df['dp'].abs(); print('rows=',len(df)); print('mean_abs_dp=',round(s.mean(),6)); print('median_abs_dp=',round(s.median(),6)); print('p90_abs_dp=',round(s.quantile(0.90),6)); print('p95_abs_dp=',round(s.quantile(0.95),6)); print('p99_abs_dp=',round(s.quantile(0.99),6)); print('max_abs_dp=',round(s.max(),6)); print('gt_0.001=',int((s>0.001).sum())); print('gt_0.005=',int((s>0.005).sum())); print('gt_0.01 =',int((s>0.01).sum())); print('gt_0.02 =',int((s>0.02).sum()))"
+
+Then run this:
+
+cd C:\Users\rick\projects\Atlas; py -c "import pandas as pd, zipfile; z=r'C:\Users\rick\projects\Atlas\tools\reports\backtest_role_layer_ctx_new_None_None.zip'; f=zipfile.ZipFile(z); n=[x for x in f.namelist() if x.endswith('.csv')][0]; df=pd.read_csv(f.open(n)); df=df[df['push']!=1].copy(); df['dp']=pd.to_numeric(df['p_adj_role'],errors='coerce')-pd.to_numeric(df['p_adj_base'],errors='coerce'); out=df.groupby('role_ctx_reason_role',dropna=False).agg(rows=('dp','size'),mean_dp=('dp','mean'),mean_abs_dp=('dp',lambda s:s.abs().mean()),p95_abs_dp=('dp',lambda s:s.abs().quantile(0.95)),max_abs_dp=('dp',lambda s:s.abs().max())).reset_index().sort_values(['mean_abs_dp','rows'],ascending=[False,False]); print(out.to_string(index=False))"
+
+Then this:
+
+cd C:\Users\rick\projects\Atlas; py -c "import pandas as pd, zipfile; z=r'C:\Users\rick\projects\Atlas\tools\reports\backtest_role_layer_ctx_new_None_None.zip'; f=zipfile.ZipFile(z); n=[x for x in f.namelist() if x.endswith('.csv')][0]; df=pd.read_csv(f.open(n)); df=df[df['push']!=1].copy(); df['dp']=pd.to_numeric(df['p_adj_role'],errors='coerce')-pd.to_numeric(df['p_adj_base'],errors='coerce'); out=df.groupby('stat',dropna=False).agg(rows=('dp','size'),mean_dp=('dp','mean'),mean_abs_dp=('dp',lambda s:s.abs().mean()),p95_abs_dp=('dp',lambda s:s.abs().quantile(0.95)),max_abs_dp=('dp',lambda s:s.abs().max())).reset_index().sort_values('mean_abs_dp',ascending=False); print(out.to_string(index=False))"
+
+How to read it:
+
+If mean_abs_dp and p95_abs_dp are tiny, the role layer is mathematically being compressed before final p_adj.
+
+If only certain role_ctx_reason_role buckets show real movement, the issue is reason-path specific, not global.
+
+If one or two stats carry all the movement, we tune those paths first instead of touching the whole layer.
+
+Paste those three outputs and we’ll know whether the needed adjustment is:
+
+multiplier magnitude,
+
+clipping/compression after multiplier,
+
+or reason-path gating.
+
+
+Sources
+
+
+Aggregreate.txt
+Document
+
+Thought for 9s
+Yep. The math is telling us something very specific now.
+
+This is not an activation problem. It is an IAEL non-engagement problem.
+
+What the outputs prove:
+
+Role changes are happening on most rows, but they are tiny: mean absolute probability shift is 0.00238, median 0.001902, 95th percentile 0.006396, and max only 0.014977. 
+Aggregreate
+
+
+Every single row in the reason breakdown is no_iael — all 182,784 evaluated rows. There are zero applied beneficiary/outs reason paths in this batch. 
+Aggregreate
+
+
+Stat-level movement is similarly tiny across the board; nothing is standing out as a strong role-context effect. 
+Aggregreate
+
+
+So the conclusion is:
+
+the “role” branch is mathematically different from base,
+
+but not because IAEL is doing real work,
+
+it is only producing very small downstream drift while the entire batch reports role_ctx_reason_role = no_iael.
+
+That means the next test should be aimed at the real question:
+
+Why did replayed historical raws produce 100% no_iael?
+
+That is the actual blocker now, not probability math tuning.
+
+The likely branches to check are:
+
+historical replay is not loading the correct injury snapshot for those dates,
+
+replay is loading IAEL but team/player matching is failing,
+
+or replay rebuild/fetch path is not carrying injury context into the role stage the same way live runs do.
+
+So the next move should be diagnostic, not tuning:
+
+inspect one replayed run’s scored_legs_deduped.csv
+
+confirm whether role_ctx_reason, role_ctx_outs_used, and any IAEL-derived fields are all empty/zero there too
+
+then trace which injury snapshot was loaded for that replay date
+
+Because until IAEL actually engages, adjusting multiplier math is premature. We would be tuning noise around no_iael, not tuning the real role layer.
+
+
+Sources
+
+
+Problems'.txt
+Document
+So, we are going to pause this particular scenario and come right back to it once we have fixed what the main problem is and its still the main problem. First, your time change in rebuild today stopped my live run so I changed it back. Thats the first issue so we need to address that. Secondly, everything I have been working on and I still have team mismatches happening. These are the runs back to back
+
+Thought for 24s
+Two separate issues, and they should stay separate.
+
+First: the live failure is not proven to be caused by the replay-time sentinel change.
+
+Why I say that:
+
+In the first live run, fetch completed and rebuild started, but rebuild died with RuntimeError: Rebuild produced zero rows after expanding directions. 
+Problems'
+
+
+One minute later, the next live run went through the same path and rebuild succeeded normally, writing today.csv and a snapshot with Rows: 5906. 
+Problems'
+
+
+That pattern does not look like a deterministic “the code is broken every time” failure. It looks more like a transient board/raw-path condition or an edge case inside direction expansion on one fetch payload. So rolling that replay-only change back for safety was reasonable, but I would not label it the root cause yet.
+
+Second: the team-mismatch problem is definitely still the main live blocker.
+
+The second run shows IAEL refresh succeeding, but then hard-failing on four mismatches:
+
+Simpson, KJ — IAEL DEN, roster CHA
+
+Anderson, Kyle — IAEL MIN, roster UTA
+
+Kuminga, Jonathan — IAEL ATL, roster GSW
+
+Prince, Taurean — IAEL POR, roster MIL 
+Problems'
+
+
+Those are all classic stale-source / wrong-team alias cases, not random math drift. And because the pipeline is configured to treat roster-map team mismatches as fatal, this is exactly why the live run is still unsafe. 
+Problems'
+
+
+So the order I would use now is:
+
+Stabilize live rebuild
+
+Treat the zero-row expand failure as a separate bug.
+
+Do not touch replay math again until we isolate that specific expand-directions path on the failed raw.
+
+Fix team mismatches first
+
+This is still the main live problem.
+
+The four names strongly suggest roster map / transaction freshness issues rather than IAEL parser failure.
+
+The important read from your back-to-back logs is:
+
+run 1: rebuild edge-case failure
+
+run 2: rebuild ok, then IAEL team mismatch fatal
+
+therefore the persistent production blocker is still team mismatches, exactly as you said.
+
+The next move should be to inspect the mismatch audit plus the corresponding roster_map.csv rows for those four players, not to keep tuning replay/backtest. Upload the mismatch CSV or the relevant roster_map.csv lines for those names.
+
+
+Sources
+
+
+* In the first live run, fetch completed and rebuild started, but rebuild died with `RuntimeError: Rebuild produced zero rows after expanding directions`. Problems' * One minute later, the next live run went through the same path and rebuild succeeded normally, writing `today.csv` and a snapshot with `Rows: 5906`. Problems'
+
+First off all, I literally changed it back and it ran. It ran   File "C:\Users\rick\projects\Atlas\src\Atlas\stages\rebuild\rebuild_today.py", line 429, in run_rebuild
+    raise RuntimeError("Rebuild produced zero rows after expanding directions")
+RuntimeError: Rebuild produced zero rows after expanding directions which is directly lined to the raw. Theres dead code all over that file where the last chat basically bypassed the entire file for the build share matrix so the time exact is crucial. 
+
+Thought for 18s
+You’re right. If you reverted that time change and the live run immediately worked, then for practical purposes that edit was not safe for live and should stay out. I should not have pushed back on that.
+
+And your second point is also right: the zero-row failure is tied directly to raw handling inside rebuild, not some abstract transient. The failing run dies exactly at run_rebuild with RuntimeError("Rebuild produced zero rows after expanding directions") 
+Problems'
+
+, while the next run rebuilds from the fresh raw and writes today.csv / today_20260306_235447.csv with Rows: 5906 
+Problems'
+
+. Given your note that rebuild has dead/bypassed paths and the live slate gate is supposed to be strict CT “today + not started,” the clock path in rebuild is clearly a sensitive choke point, not something we should casually touch. That matches the current project notes that rebuild was supposed to preserve the strict CT slate gate specifically to prevent tomorrow props from re-entering via raw rebuild 
+STATE_CURRENT_UPDATED_2026-03-0…
+
+.
+
+So I’m aligned on these two truths:
+
+The replay-time change is out. It is not safe for live in this file as currently wired.
+
+The persistent main blocker is still IAEL team mismatch. Your succeeding live run gets through rebuild, Rotowire, and into share-matrix preflight, then hard-fails on four mismatches: Simpson/KJ, Kyle Anderson, Jonathan Kuminga, and Taurean Prince 
+Problems'
+
+.
+
+That means the right order now is:
+
+leave rebuild clock logic alone for the moment
+
+treat rebuild_today.py as fragile/live-sensitive
+
+go back to the actual production blocker: the mismatch path between IAEL and roster/team identity
+
+And the current project state already points to where that should be investigated: CTX role coverage depends on IAEL team normalization and on not clobbering normalized team/player keys inside compute_role_multiplier 
+STATE_CURRENT_UPDATED_2026-03-0…
+
+, while the earlier notes also show freshness/publish-to-latest was a separate source of bad IAEL behavior that had to be wired into build_share_matrix preflight 
+STATE_CURRENT_UPDATED_2026-03-0…
+
+.
+
+So the next move should be: inspect the mismatch audit itself and compare those four players across:
+
+the fresh IAEL normalized/latest payload,
+
+data\input\roster_map.csv,
+
+and the fresh board mapping from fetch.
+
+Upload the mismatch CSV or paste the four rows from:
+C:\Users\rick\projects\Atlas\.atlas_audit\diagnostics\iael_team_mismatches_20260306_175452.csv
+
+That’s the smallest, most auditable next step.
+
+
+Sources
+
+iael team mismatches 20260306 175452
+
+
+Its a file with little to nothing in it. 
+
+I’m opening that mismatch CSV directly now. If it’s basically empty, that tells us the hard stop is being raised upstream of the artifact write and we need to inspect the source rows another way.
+
+Thought for 24s
+That tracks. The mismatch CSV is not the useful artifact here.
+
+The real signal is in the run log itself, which already printed the four offending rows before the fatal:
+
+Simpson, KJ — IAEL DEN, roster CHA
+
+Anderson, Kyle — IAEL MIN, roster UTA
+
+Kuminga, Jonathan — IAEL ATL, roster GSW
+
+Prince, Taurean — IAEL POR, roster MIL 
+Problems'
+
+
+So the CSV being nearly empty means the hard stop is firing with the actionable rows already emitted to stdout, not that the mismatch disappeared.
+
+The important implication is:
+
+this is not a parser-garbage case like the earlier bogus 3-letter fragments
+
+these are stale/wrong team assignments relative to roster_map.csv
+
+and preflight is intentionally treating that as fatal, same as the earlier Davis/Russell/Hunter mismatch class that was resolved by patching the roster map rows directly 
+PriorChatlog252
+
+
+So the next smallest, auditable move is not to inspect that CSV further. It is to patch the four roster_map.csv team values to match what IAEL is currently labeling for tonight’s report:
+
+Simpson, KJ -> DEN
+
+Anderson, Kyle -> MIN
+
+Kuminga, Jonathan -> ATL
+
+Prince, Taurean -> POR
+
+That is the same stop-the-bleed pattern that already unblocked the prior mismatch set. 
+PriorChatlog252
+
+
+Use this exact command:
+
+cd C:\Users\rick\projects\Atlas; py -c "import pandas as pd; p=r'data\input\roster_map.csv'; df=pd.read_csv(p); df['player']=df['player'].astype(str); df['team']=df['team'].astype(str); fixes={'Simpson, KJ':'DEN','Anderson, Kyle':'MIN','Kuminga, Jonathan':'ATL','Prince, Taurean':'POR'}; df.loc[df['player'].isin(fixes.keys()),'team']=df.loc[df['player'].isin(fixes.keys()),'player'].map(fixes); df.to_csv(p,index=False); print('OK wrote',p); print(df[df['player'].isin(fixes.keys())].to_string(index=False))"
+
+Then rerun live. If that clears preflight, we’ve confirmed again that the persistent production blocker is stale roster-map team data, not the empty mismatch CSV.
+
+
+Sources
+
+That is exactly what I will not do is a work around. We solve the problem for good. This model is intended to run on its own live. I can not have it dieing out mid day and adding work arounds every afternoon. We need to figure out the issues and solve the problem at the root
+
+You’re right — patching roster rows by hand is not a solution. I’m isolating the actual failure path now so we can fix the source of truth or the matching logic once, not babysit it every afternoon.
+
+Thought for 20s
+You’re right. A manual row patch is a band-aid, and you’ve already said the system needs to survive live on its own.
+
+The evidence we already have points to the real root, not the workaround:
+
+Your own operating rule is debug first, one step at a time, no blind patches. 
+AtlasManifestoV1
+
+
+Earlier, the “fix the CSV rows” move was explicitly described as a temporary stop-the-bleed, with the real fix being a deterministic roster refresh so the mismatch class does not recur. 
+PriorChatlog252
+
+
+You had already moved toward the right long-term shape: piggyback roster-map refresh on the fetch/API path so roster_map.csv updates from the same board source Atlas is actually scoring, with audit diffs written each run. 
+PriorChatlog252
+
+ 
+PriorChatlog252
+
+
+The earlier notes also captured the key subtlety: a “team mismatch” is not always a real trade/stale-roster problem. Sometimes IAEL latest is stale, or the wrong report version is being read, so the mismatch guard is catching bad upstream state rather than bad roster_map state. 
+PriorChatlog252
+
+ 
+PriorChatlog252
+
+
+So the root-cause tree is:
+
+IAEL freshness/publish
+
+Are we comparing roster_map against the newest normalized injury snapshot, or against an older latest.json?
+
+This was already a known failure mode before publish-to-latest was wired in. 
+STATE_CURRENT_UPDATED_2026-03-0…
+
+
+Roster source-of-truth drift
+
+Is roster_map.csv being refreshed deterministically from the fetch board on every good run, or did that wiring regress?
+
+The intended durable design was exactly this “sticky union from fetch_board + audit diff” approach. 
+PriorChatlog252
+
+
+Mismatch semantics
+
+Are the flagged rows actually true team mismatches, or are they cases where IAEL is carrying stale/wrong statuses/teams for the wrong report version?
+
+You already called this out with MIN examples: the issue may be in the injury state being wrong, not simply roster team assignment. 
+PriorChatlog252
+
+ 
+PriorChatlog252
+
+
+So the next move should be a root-cause diagnostic sequence, not a patch:
+
+Step 1: prove what source each side is using
+
+current normalized/latest.json report label / pull time
+
+current data/input/roster_map.csv rows for the four flagged players
+
+current fetch-board rows for those same players from the same live run
+
+Step 2: classify each mismatch into one bucket
+
+stale IAEL latest
+
+stale roster_map
+
+fetch-board wrong team
+
+name/key collision
+
+Step 3: only then change one choke point
+
+if roster_map is stale: fix the roster refresh wiring in fetch
+
+if IAEL latest is stale: fix publish/latest path
+
+if fetch-board is wrong: fix board extraction contract
+
+if names collide: fix normalization/keying
+
+That is the durable path.
+
+The smallest concrete thing to do right now is not edit any player row. It is to inspect the three live artifacts for the four names from the same failing run:
+
+data/output/injury/normalized/latest.json
+
+data/input/roster_map.csv
+
+data/board/fetch_board.csv
+
+Paste those four-player slices, and we can classify the real failure source in one pass.
+
+
+Sources
+
+
+latest.json
+File
+roster map
+
+
+fetch board
+
+
+
+I’ve got latest.json. I’m pulling the matching rows for those four names from roster_map.csv and fetch_board.csv now so we can classify the source of truth drift cleanly.
+
+Thought for 1m 22s
+Yep — this isolates the root cause pretty cleanly.
+
+The mismatch guard is firing on four names that latest.json currently labels as:
+
+Simpson, KJ → DEN
+
+Anderson, Kyle → MIN
+
+Kuminga, Jonathan → ATL
+
+Prince, Taurean → POR 
+latest
+
+
+And the failing run log shows those exact four as IAEL-vs-roster mismatches, with the same IAEL teams and stale roster teams (CHA, UTA, GSW, MIL) before the fatal stop. 
+Problems'
+
+
+I also checked the two uploaded CSVs you attached:
+
+in roster_map.csv, those four players are present as KJ Simpson / CHA, Kyle Anderson / UTA, Jonathan Kuminga / GSW, Taurean Prince / MIL
+
+in the uploaded fetch_board.csv, none of those four appear at all
+
+That is the important part.
+
+So the root cause is not “fetch is assigning the wrong team today.”
+It is this:
+
+your current roster-map refresh model only refreshes players who are on today’s board, but these four off-board players are still being checked by IAEL preflight.
+
+That matches the exact design tradeoff already discussed earlier: a board-derived roster refresh is great for slate players, but “if a player isn’t on today’s board, they won’t be refreshed.” 
+PriorChatlog252
+
+ The sticky-union design you chose also keeps old team values when a player is not seen on the current board. 
+PriorChatlog252
+
+
+So this is the durable diagnosis:
+
+latest.json is fresh and coherent for the current report pull. 
+latest
+
+
+roster_map.csv is stale for off-board players.
+
+fetch_board.csv cannot fix those four on this run because they are not present on today’s slate.
+
+therefore the current “refresh roster from board + sticky union” strategy is insufficient for a hard-fail mismatch gate that evaluates IAEL rows beyond the current board universe.
+
+That means the real fix has to be one of these two:
+
+Change the roster source of truth
+
+move roster refresh from “today’s board only” to a full-league roster source, so off-board players update too. This was already the exact reason the earlier discussion split Option A vs full-roster Option B. 
+PriorChatlog252
+
+
+Change mismatch enforcement scope
+
+keep board-derived roster_map, but only hard-fail mismatches for players relevant to the current execution universe, instead of every IAEL row in the report.
+
+Given your goal of a self-running live model, I would not keep the current combination:
+
+board-only roster refresh
+
+plus full-report IAEL hard-fail
+
+Those two are logically incompatible.
+
+So the next move is not a workaround row edit. It is to choose the root fix path:
+
+A: upgrade roster refresh to full-league coverage
+
+B: scope the mismatch guard to board-relevant players only
+
+Because right now the system is doing exactly what it was wired to do, but the wiring assumptions conflict.
+
+The cleanest long-term version is probably:
+
+keep board-derived roster_map for slate identity,
+
+add a small full-roster refresh source for off-board team truth,
+
+and log diffs to audit before preflight.
+
+That would preserve the “auditable Atlas” shape you wanted while eliminating these afternoon stale-team deaths.
+
+
+Sources
+
+
+**A:** upgrade roster refresh to full-league coverage
+
+It would have to be this bc players out will not be on the board and therefore the matrix would never work.
+
+Thought for 25s
+Yes — exactly.
+
+If the model needs injury outs to drive role context and share-matrix logic, then a board-only roster map can never be sufficient, because many important outs will not appear on the PrizePicks board at all. That limitation was already baked into the earlier option split: board-derived refresh “naturally ignores players not on the slate,” while the full-roster option gives “full-league coverage every day” and handles players “even if not on the slate.” 
+PriorChatlog252
+
+ 
+PriorChatlog252
+
+
+So the decision is settled:
+
+not slate-only / board-only
+
+yes full-league roster coverage as the source of team truth
+
+That also matches the failure you just hit: board refresh cannot repair off-board players, but IAEL preflight still evaluates them, so the current design will keep dying unless roster truth covers the whole league. The earlier notes already framed this correctly: the board-derived path only solves drift “at least for players on today’s board,” which is not enough for your live injury/matrix path. 
+PriorChatlog252
+
+
+So the root fix path should now be:
+
+Add a full-roster refresh step that writes data/input/roster_map.csv for the whole league.
+
+Run it before IAEL mismatch enforcement.
+
+Keep the audit trail:
+
+write team changes to .atlas_audit/diagnostics/roster_map_updates_<ts>.csv
+
+include old team, new team, and source. 
+PriorChatlog252
+
+
+Keep fetch-board-derived team data for slate validation, but stop treating it as the only roster truth.
+
+The clean next move is to inspect the file that currently writes or refreshes roster_map.csv, then replace its source from “today’s board union” to “full-league roster pull,” one choke point only.
+
+
+Sources
+
+Lets do it
+
+I’m tracing the current roster-map refresh path now so we can swap the source at the actual choke point, not layer another side-script on top.
+
+I found the audit artifacts showing roster-map updates already exist in the model, which is useful — it means there is already a single refresh choke point rather than this being scattered everywhere.
+
+Thought for 5m 40s
+Do it at the source: one file, tools/fetch_apis.py.
+
+The current problem is the sticky-union logic in _update_roster_map(final_df, run_ts). It keeps yesterday’s stale teams for players who are not on today’s board, which is exactly why IAEL catches off-board outs and kills the run.
+
+Change only this
+Replace the current roster refresh behavior with:
+
+full current NBA roster
+plus
+today’s board as same-day override
+
+What to change in tools/fetch_apis.py
+1) Remove the “sticky union” behavior
+Inside _update_roster_map(...), do not start from old_map.copy() anymore.
+
+This line is the stale-team trap:
+
+new_map = old_map.copy()
+new_map.update(today_map)
+That is what preserves dead team assignments for off-board players.
+
+2) Add a full-roster base map
+Build a new helper in the same file, above _update_roster_map(...), conceptually like:
+
+call nba_api.stats.endpoints.commonallplayers.CommonAllPlayers
+
+current season only
+
+use DISPLAY_FIRST_LAST as player name
+
+use TEAM_ABBREVIATION as team
+
+keep only rows with valid 3-letter NBA team abbreviations
+
+return {player: team}
+
+Use the same nba_api dependency already present in the model.
+
+3) Compose the roster map like this
+Inside _update_roster_map(...):
+
+base_map = full current NBA roster
+
+today_map = players from final_df
+
+new_map = base_map.copy()
+
+new_map.update(today_map)
+
+That means:
+
+full league coverage for off-board outs
+
+same-day board still wins for active slate players
+
+4) Keep audit, but change the source labels
+Diff new_map against old_map exactly like now, but label source as:
+
+nba_current_roster for rows coming from the full-roster pull
+
+fetch_board_override for rows where today’s board overwrote the base roster team
+
+5) Do not change IAEL mismatch enforcement yet
+Leave refresh_iael_today.py alone for now.
+
+If this upstream fix is correct, the hard stop should remain useful instead of noisy.
+
+The exact target behavior after the edit
+Before:
+
+off-board players keep stale teams from old roster_map.csv
+
+IAEL sees current team
+
+hard fail every afternoon
+
+After:
+
+off-board players refresh from full-league roster truth
+
+on-board players can still be corrected by same-day PrizePicks board
+
+roster_map.csv becomes self-healing without hand edits
+
+What to verify right after
+Run one live fetch path and check:
+
+data/input/roster_map.csv
+
+.atlas_audit/diagnostics/roster_map_updates_<ts>.csv
+
+For the four names you just hit, they should update automatically before IAEL preflight.
+
+The one surgical file to change is:
+
+tools/fetch_apis.py
+
+And the one function to replace is:
+
+_update_roster_map(final_df, run_ts)
+
+If you want, paste just that updated function plus the new helper after you edit it, and I’ll sanity-check the logic before you run live.
+
+
+Uploaded image
+
+fetch_apis.py
+Python
+
+Thought for 19s
+Two root problems are visible here.
+
+First, your live run never reached fetch_apis.py.
+The failure happens inside _hard_live_iael_preflight(...) during IAEL_REFRESH, before fetch runs at all, which is why the same four stale roster teams are still being used in the fatal check. So even a perfect fetch_apis.py change cannot fix this particular failure path, because that file is downstream of the thing that died. 
+fetch_apis
+
+
+Second, the new full-roster helper in fetch_apis.py is not actually building a usable full roster anyway. In _get_full_nba_roster(), it calls nba_api.stats.static.players.get_active_players() and then tries to read DISPLAY_FIRST_LAST and TEAM_ABBREVIATION. That static players payload does not provide team membership in that shape, so team_abbr will be blank and your base_map will collapse to empty or near-empty. That means the current code would still not solve off-board outs even if it did run. 
+fetch_apis
+
+
+So the correct read is:
+
+Why this live run still failed: because IAEL preflight runs before fetch, so your fetch change was never consulted. 
+fetch_apis
+
+
+Why the fetch change is still insufficient: because _get_full_nba_roster() is using the wrong NBA API shape for team truth. 
+fetch_apis
+
+
+There is also one extra bug in the uploaded file: main() is called twice at the bottom, which would double-run fetch if this file were executed directly. 
+fetch_apis
+
+
+So the next real move is:
+
+Move roster-map refresh to a stage that runs before _hard_live_iael_preflight, or have preflight call that refresh itself.
+
+Use a real full-roster team source, not get_active_players() with nonexistent TEAM_ABBREVIATION.
+
+Remove the duplicate main() call.
+
+That is the root fix path. The current edit was placed in the wrong stage and uses the wrong roster source.
+
+
+Sources
+
+So what file?
+
+Thought for 19s
+src/Atlas/cli.py
+
+More specifically: the live choke point is _hard_live_iael_preflight(...).
+
+That is the file/function to change first, because your run is dying there, before fetch_apis.py ever executes. So any roster refresh that happens in fetch is too late.
+
+The correct root-fix order is:
+
+in src/Atlas/cli.py
+
+inside _hard_live_iael_preflight(...)
+
+refresh full-league roster_map first
+
+then run the IAEL mismatch check
+
+So the primary file is:
+
+src/Atlas/cli.py
+
+And the supporting implementation can live in a helper file, but the ordering choke point that must change is cli.py.
+
+If you want the clean shape, it should become:
+
+pull/parse IAEL
+
+refresh full-league roster_map.csv
+
+run mismatch enforcement
+
+continue live
+
+That is the real root fix boundary.
+
+
+Ok, so help me fix it. I'm so backwards I cant remember what we do. This model changes so much because of drift and alterations and I just want a working model. Its insane how many hours Ive put into this. It shouldnt be this hard
+
+Thought for 38s
+I get it. This has turned into too many hours of “fix one thing, drift two more,” and that’s exactly why we need to stop treating symptoms.
+
+The good news is we do know the right root now.
+
+The live failure is happening before fetch runs, so fetch_apis.py is the wrong place to solve this first. Your run is dying in IAEL preflight, and the earlier design notes already converged on the right durable shape: refresh roster truth right before mismatch enforcement, with an audit file, instead of hand-editing rows every afternoon. 
+PriorChatlog252
+
+ 
+PriorChatlog252
+
+
+The other key correction is that the attempted full-roster helper in fetch_apis.py is not a reliable source as written. The uploaded file shows _get_full_nba_roster() using get_active_players() and expecting team fields like TEAM_ABBREVIATION, which is exactly the wrong shape for trustworthy team truth. 
+fetch_apis
+
+ 
+fetch_apis
+
+
+So the fix path should be:
+
+What to change first
+Primary file: src/Atlas/cli.py
+Primary choke point: _hard_live_iael_preflight(...)
+
+What that function should do, in order
+Pull/parse IAEL and publish normalized/latest.json
+
+Run a dedicated roster refresh step
+
+Write data/input/roster_map.csv
+
+Write .atlas_audit/diagnostics/roster_map_updates_<ts>.csv
+
+Then run the IAEL team mismatch enforcement
+
+That is the same shape the earlier notes recommended when this first came up: a standalone tools/refresh_roster_map.py called right before IAEL mismatch checks, so the system is self-healing and auditable instead of hand-fed. 
+PriorChatlog252
+
+ 
+PriorChatlog252
+
+
+Why not solve it in fetch first
+Because the earlier “piggyback on fetch” idea was only fully sufficient for players seen on the current board, and you already proved the fatal mismatches include off-board outs. The prior notes explicitly called out that board-derived refresh naturally misses players who are not on today’s slate. 
+PriorChatlog252
+
+
+What the roster refresh tool should do
+Not sticky-union off yesterday’s stale CSV.
+
+It should build a fresh full-league player→team map every run, then optionally let today’s board override same-day slate players. The old sticky-union design was chosen earlier for convenience, but it is exactly why off-board outs keep surviving with stale teams. 
+PriorChatlog252
+
+
+So the concrete plan is:
+Keep the replay/rebuild clock issue parked
+
+Do not keep editing roster_map.csv manually
+
+Do not rely on fetch-first ordering
+
+Move roster refresh into live preflight, before mismatch enforcement
+
+Make that refresh full-league, not board-only
+
+And one cleanup item:
+
+remove the experimental full-roster logic from fetch_apis.py for now, or at least stop treating it as the live fix path, because that file is downstream of the failure and the helper is using the wrong payload shape. 
+fetch_apis
+
+
+The next exact step is: upload src/Atlas/cli.py. Then I can point to the precise insertion point in _hard_live_iael_preflight(...) and keep this to one small, auditable change path instead of another guess.
+
+
+Sources
+
+
+cli.py
+Python
+
+Thought for 29s
+You’re not crazy. The reason this feels impossible is that the failure is happening in the wrong place in the order.
+
+From cli.py, live currently does this:
+
+_hard_live_iael_preflight(repo_root)
+
+inside that, it directly runs tools/refresh_iael_today.py
+
+if that exits nonzero, live dies immediately 
+cli
+
+
+So if refresh_iael_today.py is where the mismatch fatal happens, then anything in fetch or later can never save the run.
+
+The fix path
+This is a two-file fix, but only one of them is the ordering choke point.
+
+File 1: src/Atlas/cli.py
+This is where you fix the order.
+
+File 2: tools/refresh_roster_map.py
+This is the new standalone full-league roster refresh that writes:
+
+data/input/roster_map.csv
+
+.atlas_audit/diagnostics/roster_map_updates_<ts>.csv
+
+What to change in cli.py
+Inside _hard_live_iael_preflight(repo_root), before this block:
+
+refresh_script = repo_root / "tools" / "refresh_iael_today.py"
+...
+code = subprocess.run([sys.executable, str(refresh_script)], cwd=str(repo_root)).returncode
+insert a new pre-step:
+
+call tools/refresh_roster_map.py
+
+require exit code 0
+
+then call refresh_iael_today.py
+
+So the live preflight order becomes:
+
+refresh full-league roster map
+
+refresh/pull/parse IAEL
+
+mismatch enforcement uses fresh roster map
+
+continue live
+
+That is the root ordering fix.
+
+Why this is the right place
+Because cli.py is the live authority surface, and right now it hands control straight to refresh_iael_today.py with no roster self-heal beforehand. That exact call path is in the uploaded file. 
+cli
+
+
+What refresh_roster_map.py must do
+Not board-only.
+Not sticky union from yesterday.
+
+It needs to build a fresh full-league player→team map every run.
+
+Use a real full-roster source, then optionally layer in same-day board overrides later if you want. But the key contract is:
+
+off-board injured players must still get current teams
+
+output must be deterministic
+
+write an audit diff every run
+
+Smallest concrete edit in cli.py
+Add this just before refresh_iael_today.py is invoked:
+
+roster_refresh_script = repo_root / "tools" / "refresh_roster_map.py"
+
+check existence
+
+subprocess.run([sys.executable, str(roster_refresh_script)], cwd=str(repo_root))
+
+if nonzero: raise RuntimeError("Step failed (ROSTER_REFRESH). ExitCode=...")
+
+Then leave the rest of _hard_live_iael_preflight(...) alone for now.
+
+Important correction
+Do not try to solve this in fetch_apis.py first.
+
+Your live run dies during IAEL preflight, and cli.py proves that happens before live gets to the rest of the engine path. 
+cli
+
+
+So what you do next
+Make the ordering change in src/Atlas/cli.py
+
+Add tools/refresh_roster_map.py
+
+Run live
+
+If it still dies, then the bug is inside roster refresh source/normalization, not the ordering anymore
+
+Paste back just the new preflight block from cli.py, and then we’ll pin the contract for refresh_roster_map.py without turning this into another drifting patch.
+
+
+Sources
+
+Please give me a copy paste block and I will place it correctly
+
+Thought for 19s
+Paste this inside _hard_live_iael_preflight(repo_root), immediately before the existing # Refresh IAEL (must succeed) block that currently runs tools/refresh_iael_today.py 
+cli
+
+. That keeps the live choke point in cli.py, which is where live calls _hard_live_iael_preflight(repo_root) before the engine runs 
+cli
+
+.
+
+    # Refresh full-league roster map first (must succeed)
+    roster_refresh_script = repo_root / "tools" / "refresh_roster_map.py"
+    if not roster_refresh_script.exists():
+        raise RuntimeError(f"Missing roster refresh tool: {roster_refresh_script}")
+
+    code = subprocess.run([sys.executable, str(roster_refresh_script)], cwd=str(repo_root)).returncode
+    if code != 0:
+        raise RuntimeError(f"Step failed (ROSTER_REFRESH). ExitCode={code}")
+So the order becomes:
+
+roster refresh
+
+IAEL refresh
+
+mismatch enforcement
+
+That is the right ordering because the current file goes straight into refresh_iael_today.py and aborts on nonzero exit today 
+cli
+
+.
+
+After you place that block, the next thing needed is tools/refresh_roster_map.py.
+
+
+Sources
+
+Ok i dont have that tool
+
+I’m checking the existing roster_map.csv shape first so the new tool writes the same columns and doesn’t create another drift point.
+
+Thought for 45s
+Save this as:
+
+tools/refresh_roster_map.py
+
+It matches the existing roster_map.csv shape of player, team that your current writer uses 
+fetch_apis
+
+ and follows the earlier agreed pattern of a standalone preflight tool that writes both data/input/roster_map.csv and an audit diff under .atlas_audit/diagnostics/roster_map_updates_<date>.csv 
+PriorChatlog252
+
+
+from __future__ import annotations
+
+import sys
+from datetime import datetime
+from pathlib import Path
+
+import pandas as pd
+
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+ROSTER_MAP_PATH = PROJECT_ROOT / "data" / "input" / "roster_map.csv"
+AUDIT_DIR = PROJECT_ROOT / ".atlas_audit" / "diagnostics"
+
+VALID_TEAMS = {
+    "ATL", "BOS", "BKN", "CHA", "CHI", "CLE", "DAL", "DEN", "DET",
+    "GSW", "HOU", "IND", "LAC", "LAL", "MEM", "MIA", "MIL", "MIN",
+    "NOP", "NYK", "OKC", "ORL", "PHI", "PHX", "POR", "SAC", "SAS",
+    "TOR", "UTA", "WAS",
+}
+
+
+def _season_string_for_today(today: datetime | None = None) -> str:
+    today = today or datetime.now()
+    year = today.year
+    # NBA season rolls over in October.
+    start_year = year if today.month >= 10 else year - 1
+    end_year_short = str((start_year + 1) % 100).zfill(2)
+    return f"{start_year}-{end_year_short}"
+
+
+def _is_valid_team(team: str) -> bool:
+    return isinstance(team, str) and team in VALID_TEAMS
+
+
+def _load_old_map() -> dict[str, str]:
+    if not ROSTER_MAP_PATH.exists():
+        return {}
+    df = pd.read_csv(ROSTER_MAP_PATH)
+    if "player" not in df.columns or "team" not in df.columns:
+        raise RuntimeError(f"Unexpected roster_map schema in {ROSTER_MAP_PATH}")
+    df["player"] = df["player"].astype(str).str.strip()
+    df["team"] = df["team"].astype(str).str.strip().str.upper()
+    df = df[(df["player"] != "") & (df["team"].apply(_is_valid_team))]
+    return dict(zip(df["player"], df["team"]))
+
+
+def _fetch_full_league_roster() -> dict[str, str]:
+    try:
+        from nba_api.stats.endpoints import commonallplayers
+    except Exception as exc:
+        raise RuntimeError(
+            "nba_api.stats.endpoints.commonallplayers is required for roster refresh"
+        ) from exc
+
+    seasons_to_try = [
+        _season_string_for_today(),
+        _season_string_for_today(datetime(datetime.now().year - 1, 11, 1)),
+    ]
+
+    last_exc = None
+    for season in seasons_to_try:
+        try:
+            endpoint = commonallplayers.CommonAllPlayers(
+                is_only_current_season=1,
+                league_id="00",
+                season=season,
+            )
+            df = endpoint.get_data_frames()[0].copy()
+            expected = {"DISPLAY_FIRST_LAST", "TEAM_ABBREVIATION"}
+            if not expected.issubset(df.columns):
+                raise RuntimeError(
+                    f"CommonAllPlayers missing expected columns. Got: {list(df.columns)}"
+                )
+
+            df["player"] = df["DISPLAY_FIRST_LAST"].astype(str).str.strip()
+            df["team"] = df["TEAM_ABBREVIATION"].astype(str).str.strip().str.upper()
+
+            df = df[(df["player"] != "") & (df["team"].apply(_is_valid_team))]
+            df = df.drop_duplicates(subset=["player"], keep="first").sort_values("player")
+
+            roster_map = dict(zip(df["player"], df["team"]))
+            if roster_map:
+                print(f"[ROSTER_MAP] Loaded {len(roster_map)} players from NBA API for season {season}")
+                return roster_map
+        except Exception as exc:
+            last_exc = exc
+
+    raise RuntimeError(f"Failed to fetch full NBA roster from nba_api: {last_exc}")
+
+
+def _write_outputs(old_map: dict[str, str], new_map: dict[str, str]) -> None:
+    ROSTER_MAP_PATH.parent.mkdir(parents=True, exist_ok=True)
+    AUDIT_DIR.mkdir(parents=True, exist_ok=True)
+
+    roster_df = pd.DataFrame(
+        [{"player": player, "team": team} for player, team in sorted(new_map.items())]
+    )
+    roster_df.to_csv(ROSTER_MAP_PATH, index=False)
+
+    updates = []
+    all_players = sorted(set(old_map) | set(new_map))
+    for player in all_players:
+        old_team = old_map.get(player, "")
+        new_team = new_map.get(player, "")
+        if old_team != new_team:
+            updates.append(
+                {
+                    "player": player,
+                    "old_team": old_team,
+                    "new_team": new_team,
+                    "source": "nba_current_roster",
+                }
+            )
+
+    ts = datetime.now().strftime("%Y%m%d_%H%M%S")
+    audit_path = AUDIT_DIR / f"roster_map_updates_{ts}.csv"
+    updates_df = pd.DataFrame(updates, columns=["player", "old_team", "new_team", "source"])
+    updates_df.to_csv(audit_path, index=False)
+
+    print(f"[ROSTER_MAP] Wrote {len(new_map)} entries to {ROSTER_MAP_PATH}")
+    print(f"[ROSTER_MAP] Wrote {len(updates)} updates to {audit_path}")
+
+
+def main() -> int:
+    old_map = _load_old_map()
+    new_map = _fetch_full_league_roster()
+    _write_outputs(old_map, new_map)
+    return 0
+
+
+if __name__ == "__main__":
+    try:
+        raise SystemExit(main())
+    except Exception as exc:
+        print(f"[ROSTER_MAP][ERROR] {exc}", file=sys.stderr)
+        raise
+After you save it, the next run should hit:
+
+refresh_roster_map.py
+
+refresh_iael_today.py
+
+which is the ordering you just inserted into cli.py.
+
+
+Sources
+
+
+Moredrift.txt
+Document
+So, we are now using a tool that refreshers a roster independently when we already have rosters being created down the pipeline? So tell me how you thought changing the order of operations is a good idea?
+
+Thought for 11s
+You’re right — changing the order that way was the wrong move.
+
+I introduced a new external network dependency before live could even reach the existing pipeline, even though roster information is already being created downstream. The result is exactly what your traceback shows: live now dies inside tools/refresh_roster_map.py on an NBA API timeout, before the model can do anything useful. 
+Moredrift
+
+
+That was bad design for this system because it violated two things at once:
+
+it duplicated roster truth instead of fixing the existing source-of-truth path
+
+it moved a fragile internet call into the live choke point
+
+So the correct move now is:
+
+Remove the new preflight roster refresh call from src/Atlas/cli.py
+
+Do not run tools/refresh_roster_map.py in live
+
+Go back to the existing roster-producing path and fix the real root there
+
+The real root is still what you pointed out:
+
+rosters are already being generated later in the pipeline
+
+IAEL mismatch is firing before that existing roster truth has a chance to refresh
+
+so the fix has to be about using the existing roster path correctly, not creating a second roster system
+
+So yes: my order-of-operations change was the wrong abstraction.
+
+What you should do immediately:
+
+remove the block I had you add to _hard_live_iael_preflight(...)
+
+leave refresh_roster_map.py out of the live path
+
+Delete this block from src/Atlas/cli.py:
+
+    # Refresh full-league roster map first (must succeed)
+    roster_refresh_script = repo_root / "tools" / "refresh_roster_map.py"
+    if not roster_refresh_script.exists():
+        raise RuntimeError(f"Missing roster refresh tool: {roster_refresh_script}")
+
+    code = subprocess.run([sys.executable, str(roster_refresh_script)], cwd=str(repo_root)).returncode
+    if code != 0:
+        raise RuntimeError(f"Step failed (ROSTER_REFRESH). ExitCode={code}")
+After that, the next step is to fix the actual existing roster source/update path, not add another one. The right target is the current roster-map creation/update logic and where IAEL preflight reads it relative to that lifecycle. That is where we should stay.
+
+
+Sources
+
+I already did. You know what I have a great idea. A comprimise. This was going to take place after all this was completed but since we are here we might as well go ahead and do it RIGHT NOW. Lets pinpoint file to file to file from fetch to build share matrix. We are going to start bypassing old legacy trash and deleting them from the model. Its pissing me off, in the process. We are going to organize the canonical order and simplify it
+
+I’m going to map the actual fetch → build-share-matrix path from the docs and the current runtime files, then I’ll reduce it into the canonical chain and call out which files are legacy/bypass candidates first.
+
+Thought for 25s
+Yes. That’s the right compromise.
+
+We stop adding side paths and we lock the canonical spine first, then we start cutting anything that does not belong on that spine.
+
+The docs already give us the canonical fetch → share-matrix order:
+
+py -m Atlas.cli live → src/Atlas/cli.py live branch → IAEL live preflight → Atlas.runtime.orchestrator.run_today(...) → Stage 1 fetch raw board → Stage 2 rebuild canonical today.csv → Stage 2b Rotowire → Stage 3 tools/build_share_matrix.py → then engine 
+PriorChatlog252
+
+ 
+PIPELINE_FUNCTION_WALKTHROUGH
+
+ 
+PIPELINE_CALL_CHAIN
+
+
+And the current live entry confirms the real gate/order today: cli.py calls _hard_live_iael_preflight(repo_root) before it imports orchestrator and calls run_today(authority="production") 
+cli
+
+. The trace confirms the same sequence in execution: live branch → _hard_live_iael_preflight → orchestrator run_today 
+trace_run_today
+
+ 
+trace_run_today
+
+.
+
+So the clean canonical chain we should freeze is:
+
+src/Atlas/cli.py
+
+live entry only
+
+IAEL preflight only
+
+then hand off to orchestrator
+
+src/Atlas/runtime/orchestrator.py
+
+the only stage sequencer
+
+Stage 1 fetch_raw_only(...)
+
+Stage 2 rebuild_today(...)
+
+Stage 2b fetch_rotowire_lines(...)
+
+Stage 3 build_share_matrix(...) 
+trace_run_today
+
+ 
+trace_run_today
+
+
+Stage tools only
+
+fetch tool writes data/board/fetch_board.csv
+
+rebuild tool writes data/board/today.csv
+
+share tool writes data/model/share_matrix.csv 
+PIPELINE_FUNCTION_WALKTHROUGH
+
+ 
+PIPELINE_CALL_CHAIN
+
+
+That is the spine.
+
+The reason this is the right thing to do is already in your manifesto: slow down, debug first, one or two steps at a time, avoid random scripts and rewrites unless there is a valid reason 
+AtlasManifestoV1
+
+.
+
+The first important simplification decision is this:
+
+cli.py should own only preflight/gating and mode selection.
+
+orchestrator.py should own all stage order.
+
+stage tools should do one thing each.
+
+anything that duplicates stage sequencing outside orchestrator is a legacy/bypass candidate.
+
+So from fetch to build-share-matrix, the cleanup target is:
+
+keep cli.py
+
+keep runtime/orchestrator.py
+
+keep the real stage tools:
+
+tools/fetch_prizepicks_today.py
+
+tools/rebuild_today_from_any_raw.py
+
+tools/fetch_rotowire_lines.py
+
+tools/build_share_matrix.py
+
+mark wrappers and alternate launchers as non-canonical unless they are purely thin shells
+
+The first files I would audit for bypass/legacy pressure are:
+
+tools/Run-Replay.ps1
+
+tools/telemetry_reader.py
+
+any old wrapper that calls backtest/range scanning directly instead of going through orchestrator
+because we already proved those are where the path drift and 177-snapshot behavior came from, while the canonical spine is orchestrator-driven 
+cli
+
+ 
+PriorChatlog252
+
+
+So the next move should be surgical and useful:
+
+We do a file-by-file inventory for just this slice:
+
+src/Atlas/cli.py
+
+src/Atlas/runtime/orchestrator.py
+
+tools/fetch_prizepicks_today.py
+
+tools/rebuild_today_from_any_raw.py
+
+src/Atlas/stages/rebuild/rebuild_today.py
+
+tools/fetch_rotowire_lines.py
+
+tools/build_share_matrix.py
+
+And for each one we answer only three things:
+
+canonical responsibility
+
+who calls it
+
+what should be deleted or bypassed because it duplicates that responsibility
+
+Start with src/Atlas/runtime/orchestrator.py and tools/build_share_matrix.py. Those two will tell us the true stage order and whether the IAEL/roster refresh logic belongs before share-matrix, inside share-matrix, or nowhere near it.
+
+
+Sources
+
+Give me a command to run a skeleton call for atlas. You will see what Im talking about. Theres wrappers here and there and logic misplaced and dead code. This is not an audit. This is a removal of waste.
+
+Thought for 18s
+Run this from repo root:
+
+cd C:\Users\rick\projects\Atlas; rg -n --hidden -S "py -m Atlas\.cli live|_hard_live_iael_preflight|run_today\(|fetch_raw_only\(|rebuild_today\(|fetch_rotowire_lines\(|build_share_matrix\(|refresh_iael_today\.py|telemetry_reader\.py|Run-Replay\.ps1|Run-Sandbox\.ps1|rebuild_today_from_any_raw\.py|fetch_prizepicks_today\.py" src tools *.ps1
+
+What it does:
+
+surfaces the real live spine
+
+shows every wrapper touching it
+
+exposes dead side paths and misplaced calls in one pass
+
+What I’d expect you to see:
+
+src/Atlas/cli.py
+
+src/Atlas/runtime/orchestrator.py
+
+stage tools
+
+wrapper junk like Run-Replay.ps1, telemetry_reader.py, old helper launchers
+
+After that, run this second command to collapse it into just filenames so the waste is easier to spot:
+
+cd C:\Users\rick\projects\Atlas; rg -l --hidden -S "py -m Atlas\.cli live|_hard_live_iael_preflight|run_today\(|fetch_raw_only\(|rebuild_today\(|fetch_rotowire_lines\(|build_share_matrix\(|refresh_iael_today\.py|telemetry_reader\.py|Run-Replay\.ps1|Run-Sandbox\.ps1|rebuild_today_from_any_raw\.py|fetch_prizepicks_today\.py" src tools *.ps1
+
+Paste that output and we can start cutting.
+
+
+I know what you gave me but thats not what Im looking for because it does not show the wrappers bc the code in the files are dead. Just moving between files so I want a call by call from fetch to buildshare matrix.
+
+What you want is runtime truth, not grep truth. So the right move is to trace the actual live call path and filter it down to the fetch → rebuild → Rotowire → build-share-matrix segment only.
+
+Thought for 30s
+Run this first. It gives you the real runtime call graph for a live invocation, not dead-code grep:
+
+cd C:\Users\rick\projects\Atlas; $env:PYTHONPATH="C:\Users\rick\projects\Atlas\src"; py -m trace --trackcalls -m Atlas.cli live 2>&1 | Tee-Object C:\Users\rick\projects\Atlas\.atlas_audit\trace_live_full.txt
+
+Then strip it down to just the path you care about, from IAEL/fetch through build-share-matrix:
+
+cd C:\Users\rick\projects\Atlas; rg -n "cli\.py|refresh_iael_today\.py|orchestrator\.py|fetch_prizepicks_today\.py|rebuild_today_from_any_raw\.py|rebuild_today\.py|fetch_rotowire_lines\.py|build_share_matrix\.py" C:\Users\rick\projects\Atlas\.atlas_audit\trace_live_full.txt | Tee-Object C:\Users\rick\projects\Atlas\.atlas_audit\trace_fetch_to_share.txt
+
+That will show you the actual file-to-file runtime path, including wrappers that really fire, and ignore dead code that only exists on disk.
+
+Paste trace_fetch_to_share.txt and we can start cutting waste.
+
+
+Cannot run file 'Atlas.cli' because: [Errno 2] No such file or directory: 'Atlas.cli'
+
+Thought for 16s
+Right — trace treated Atlas.cli like a filename, not a module target.
+
+Use the file path to cli.py instead:
+
+cd C:\Users\rick\projects\Atlas; $env:PYTHONPATH="C:\Users\rick\projects\Atlas\src"; py -m trace --trackcalls C:\Users\rick\projects\Atlas\src\Atlas\cli.py live 2>&1 | Tee-Object C:\Users\rick\projects\Atlas\.atlas_audit\trace_live_full.txt
+
+Then filter it down to the real fetch → build-share-matrix chain:
+
+cd C:\Users\rick\projects\Atlas; rg -n "cli\.py|refresh_iael_today\.py|orchestrator\.py|fetch_prizepicks_today\.py|rebuild_today_from_any_raw\.py|rebuild_today\.py|fetch_rotowire_lines\.py|build_share_matrix\.py" C:\Users\rick\projects\Atlas\.atlas_audit\trace_live_full.txt | Tee-Object C:\Users\rick\projects\Atlas\.atlas_audit\trace_fetch_to_share.txt
+
+If trackcalls is too noisy, use this tighter version instead:
+
+cd C:\Users\rick\projects\Atlas; $env:PYTHONPATH="C:\Users\rick\projects\Atlas\src"; py -m trace --trace C:\Users\rick\projects\Atlas\src\Atlas\cli.py live 2>&1 | Tee-Object C:\Users\rick\projects\Atlas\.atlas_audit\trace_live_full.txt
+
+The first command should get you the real runtime file-to-file chain.
+
+
+Uploaded image
+
+Thought for 11s
+Exactly — the trace proved your point.
+
+It never even reaches fetch. The live skeleton is blocked here:
+
+src/Atlas/cli.py
+
+_hard_live_iael_preflight(...)
+
+tools/refresh_iael_today.py
+
+fatal mismatch stop
+
+exit
+
+So if you want the real call-by-call from fetch to build_share_matrix, you need to run the same spine without the live preflight gate.
+
+Use this skeleton call instead:
+
+cd C:\Users\rick\projects\Atlas; $env:PYTHONPATH="C:\Users\rick\projects\Atlas\src"; py -m trace --trackcalls C:\Users\rick\projects\Atlas\src\Atlas\cli.py replay 2>&1 | Tee-Object C:\Users\rick\projects\Atlas\.atlas_audit\trace_replay_full.txt
+
+Then filter it to just the core path:
+
+cd C:\Users\rick\projects\Atlas; rg -n "cli\.py|orchestrator\.py|fetch_prizepicks_today\.py|fetch_raw_only|rebuild_today_from_any_raw\.py|rebuild_today\.py|fetch_rotowire_lines\.py|build_share_matrix\.py" C:\Users\rick\projects\Atlas\.atlas_audit\trace_replay_full.txt | Tee-Object C:\Users\rick\projects\Atlas\.atlas_audit\trace_fetch_to_share.txt
+
+That should show the actual downstream spine without IAEL killing it first.
+
+If replay still drags in junk, use the orchestrator directly and bypass cli entirely:
+
+cd C:\Users\rick\projects\Atlas; $env:PYTHONPATH="C:\Users\rick\projects\Atlas\src"; py -m trace --trackcalls -c "from Atlas.runtime.orchestrator import run_today; run_today(authority='production')" 2>&1 | Tee-Object C:\Users\rick\projects\Atlas\.atlas_audit\trace_orchestrator_full.txt
+
+Then filter it:
+
+cd C:\Users\rick\projects\Atlas; rg -n "orchestrator\.py|fetch_prizepicks_today\.py|fetch_raw_only|rebuild_today_from_any_raw\.py|rebuild_today\.py|fetch_rotowire_lines\.py|build_share_matrix\.py" C:\Users\rick\projects\Atlas\.atlas_audit\trace_orchestrator_full.txt | Tee-Object C:\Users\rick\projects\Atlas\.atlas_audit\trace_fetch_to_share.txt
+
+That is the runtime truth path you want for waste removal:
+
+no dead grep
+
+no wrapper assumptions
+
+just what actually fires from fetch to share matrix
+
+Paste trace_fetch_to_share.txt and we can start naming what gets deleted.
+
+
+Ok so we are not going to get anywhere with this until the model runs so lets fix the roster and lets then clean and simplify. It has to be this way
+
+Thought for 1m 7s
+Agreed. The root fix is not another preflight job.
+
+The real problem is the pipeline order:
+
+live currently runs _hard_live_iael_preflight(...) in cli.py before it ever reaches orchestrator/fetch 
+cli
+
+
+the canonical run chain shows fetch/rebuild/share-matrix all happen after that gate 
+PIPELINE_CALL_CHAIN
+
+ 
+PIPELINE_CALL_CHAIN
+
+
+but fetch_apis.py is already the place where roster_map is supposed to self-heal downstream, via _update_roster_map(final_df, run_ts) 
+fetch_apis
+
+ 
+fetch_apis
+
+
+So the durable fix is:
+
+keep roster self-heal in the existing fetch path
+
+stop IAEL preflight from hard-failing on stale roster_map before fetch gets a chance to refresh it
+
+fix the full-roster helper in fetch_apis.py so off-board outs can update too
+
+There are really only two files to touch:
+
+tools/fetch_apis.py
+
+tools/refresh_iael_today.py
+
+And the actual behavior should be:
+
+refresh_iael_today.py: log/team-mismatch audit, but do not fatal on roster mismatches
+
+fetch_apis.py: become the only roster refresh authority, and fix _get_full_nba_roster() because the current version is using get_active_players() while expecting DISPLAY_FIRST_LAST / TEAM_ABBREVIATION, which is the wrong payload shape for that code path 
+fetch_apis
+
+
+That gets you out of the contradiction:
+
+no extra independent roster preflight
+
+no manual row babysitting
+
+no live death before the existing roster-refresh stage runs
+
+The next exact move is: upload tools/refresh_iael_today.py.
+I already have fetch_apis.py. Once I have that file, I’ll give you the exact copy-paste edits for both files and keep it to the smallest real fix.
+
+
+Sources
+
+Hilarious, I literally said this to the chat last night is how do we debug without live runs and here we are full circle so lets do it
+
+Thought for 13s
+Exactly. Full circle.
+
+We fix the live path first, then clean the waste after the model can run again.
+
+To do that cleanly, I need the one file that is still making the live run die before fetch gets its chance:
+
+tools/refresh_iael_today.py
+
+Once you upload that, I’ll give you the smallest root fix:
+
+stop preflight from killing live on stale roster drift
+
+let the existing roster-refresh path run
+
+keep the mismatch audit intact so nothing gets hidden
+
+Then we can simplify the chain with the model actually running.
+
+
+
+refresh_iael_today.py
+Python
+
+Thought for 26s
+Yes. This is the file that is killing live.
+
+The root problem is right here in main():
+
+it runs the injury pipeline
+
+publishes normalized/latest.json
+
+then immediately calls _assert_no_team_mismatches(root, latest_norm)
+
+and that function raises, which exits live before fetch gets a chance to refresh anything 
+refresh_iael_today
+
+
+So the smallest real fix is:
+
+keep the mismatch audit
+stop hard-failing live here
+
+Do this in tools/refresh_iael_today.py.
+
+Replace this block in main():
+
+    _publish_latest_from_newest(root)
+    latest_norm = root / "data" / "output" / "injury" / "normalized" / "latest.json"
+    if latest_norm.exists():
+        _assert_no_team_mismatches(root, latest_norm)
+with this:
+
+    _publish_latest_from_newest(root)
+    latest_norm = root / "data" / "output" / "injury" / "normalized" / "latest.json"
+    if latest_norm.exists():
+        try:
+            _assert_no_team_mismatches(root, latest_norm)
+        except Exception as e:
+            print(f"[IAEL][WARN] Team mismatch audit failed pre-fetch: {e}", file=sys.stderr)
+Why this is the correct move:
+
+_assert_no_team_mismatches(...) already writes the audit CSV before raising, so you do not lose diagnostics 
+refresh_iael_today
+
+
+live will stop dying in IAEL preflight
+
+fetch can finally run and the existing roster update path gets a chance to do its job
+
+you are not adding a new side system; you are just removing the premature fatal gate
+
+What this does not change:
+
+freshness gate still runs
+
+invalidations/status handling still runs
+
+audit still gets written
+
+only the pre-fetch hard stop is removed
+
+After that change, run:
+
+cd C:\Users\rick\projects\Atlas; py -m Atlas.cli live
+
+If live gets past IAEL and into fetch, then we’ve confirmed the real issue was the premature mismatch fatal. Then we fix roster refresh at its actual source instead of in preflight.
+
+
+Sources
+
+
+Errors.txt
+Document
+
+Thought for 16s
+Good news: the roster issue is no longer the blocker. Live got through IAEL and into fetch, refreshed roster_map.csv to 536 entries, and only then failed trying to write data\board\fetch_board.csv with PermissionError: [Errno 13] Permission denied on all 3 retries. 
+Errors
+
+
+So the new root problem is simple:
+
+fetch_board.csv is locked by another process.
+
+Atlas is now failing at file output, not roster logic. 
+Errors
+
+
+Most likely causes:
+
+the CSV is open in Excel
+
+Explorer preview/details pane has a handle on it
+
+another Atlas process still has it open
+
+VS Code or a notebook is pinning it
+
+Do this first:
+
+Close data\board\fetch_board.csv everywhere.
+
+Close any Explorer window sitting in data\board\.
+
+Make sure no second Atlas run is active.
+
+Then run this exact command to check who still has Python open:
+
+Get-Process python,py -ErrorAction SilentlyContinue
+
+If anything stale is there, kill it:
+
+Get-Process python,py -ErrorAction SilentlyContinue | Stop-Process -Force
+
+Then rerun live.
+
+If you want to prove the lock before rerunning, use:
+
+Rename-Item C:\Users\rick\projects\Atlas\data\board\fetch_board.csv fetch_board_locked_test.csv
+
+If that rename fails, the file is still locked externally.
+
+So the state now is actually progress:
+
+IAEL no longer hard-stops the run
+
+roster refresh is occurring
+
+the next blocker is just the fetch_board.csv file handle collision. 
+Errors
+
+
+
+Sources
+
+Yep, I restarted VSCODE and my shell and its running but its still IAEL erroring which is weird because the injuries that its erroring on doesnt make sense bc the games have been started
+
+I’m checking the new error log now. If the flagged injuries are for games already underway, that usually means the IAEL check is using the full report instead of the still-actionable slate window.
+
+Thought for 31s
+Yes — that behavior is consistent with the way the pipeline is wired right now.
+
+What’s happening is:
+
+live runs _hard_live_iael_preflight(...) in cli.py before it ever hands off to the rest of the engine. That preflight runs tools/refresh_iael_today.py and only then continues to fetch/rebuild/etc. 
+cli
+
+
+Inside refresh_iael_today.py, the mismatch check reads normalized/latest.json and compares it against data/input/roster_map.csv. It is a roster/team validation pass; it is not scoped to “today’s unstarted board only.” 
+refresh_iael_today
+
+
+By contrast, the strict slate gate you added lives in the fetch stage and only keeps games on today CT and not started yet. That gate is downstream, and it only applies to PrizePicks board rows, not to the IAEL preflight universe. 
+STATE_CURRENT_UPDATED_2026-03-0…
+
+
+So your read is right:
+
+IAEL can still complain about players from games that have already started, because the IAEL preflight is validating the full injury/roster universe before the fetch-stage slate gate ever trims the board.
+
+That’s also why it feels weird in live:
+
+fetch is already proving it knows how to keep only still-actionable props — your log shows kept_today_upcoming=2897 while dropping future-date rows, and it refreshed roster_map.csv successfully before the file-lock issue hit. 
+Errors
+
+
+but the IAEL check is running earlier and on a broader set than the actionable slate.
+
+So the current root is not “IAEL parser is necessarily wrong.”
+It is more likely:
+
+preflight mismatch semantics are too broad for live.
+
+The clean fix direction is:
+
+keep IAEL refresh / publish-to-latest
+
+keep roster mismatch audit output
+
+but scope the live-fatal mismatch logic to the relevant universe:
+
+either only board-relevant teams/players
+
+or only not-started games
+
+or only impact-outs teams still on the live slate
+
+That lines up with your earlier baseline principle too: demand correctness on the relevant impact/on-board universe, not on every row in the report. 
+PriorChatlog252
+
+
+So the next move should be:
+
+do not chase the parser first
+
+change the mismatch enforcement in tools/refresh_iael_today.py so the audit still records everything, but the live stop only cares about the still-actionable slate universe
+
+That is the part to fix now.
+
+
+Sources
+
+Ok
+
+I’m pinning the smallest live-safe change now: keep the mismatch audit, but only let it block on the still-actionable slate instead of the whole IAEL report.
+
+Thought for 39s
+Yes. Make the mismatch gate care only about the still-actionable live slate when fetch_board.csv exists.
+
+Why this is the right move:
+
+refresh_iael_today.py currently checks all IAEL normalized rows against roster_map.csv 
+refresh_iael_today
+
+
+your fetch stage already applies the strict live slate gate, keeping only today CT + not started yet props, then writes data\board\fetch_board.csv 
+STATE_CURRENT_UPDATED_2026-03-0…
+
+
+a real run proved fetch_board.csv is being written after that gate with the trimmed slate universe 
+trace_run_today
+
+
+So the smallest fix is:
+only hard-check IAEL mismatches for teams that are actually present in data/board/fetch_board.csv.
+
+Paste block 1
+In tools/refresh_iael_today.py, inside _assert_no_team_mismatches(...), paste this block right after the roster lookup is built, before # Check mismatches (known players only):
+
+    # Optional scope-down: only enforce mismatches for teams on the current actionable slate.
+    # fetch_board.csv is already strict-gated upstream to today CT + not started yet.
+    active_teams: set[str] = set()
+    fetch_board_path = root / "data" / "board" / "fetch_board.csv"
+    if fetch_board_path.exists():
+        try:
+            with fetch_board_path.open("r", encoding="utf-8", newline="") as f:
+                rdr = csv.DictReader(f)
+                cols = [c.lower() for c in (rdr.fieldnames or [])]
+
+                team_col = None
+                for cand in ("team", "team_abbr", "team_u"):
+                    if cand in cols and rdr.fieldnames is not None:
+                        team_col = rdr.fieldnames[cols.index(cand)]
+                        break
+
+                opp_col = None
+                for cand in ("opp", "opponent"):
+                    if cand in cols and rdr.fieldnames is not None:
+                        opp_col = rdr.fieldnames[cols.index(cand)]
+                        break
+
+                home_col = None
+                for cand in ("home",):
+                    if cand in cols and rdr.fieldnames is not None:
+                        home_col = rdr.fieldnames[cols.index(cand)]
+                        break
+
+                for r in rdr:
+                    for col in (team_col, opp_col, home_col):
+                        if not col:
+                            continue
+                        v = (r.get(col) or "").strip().upper()
+                        if len(v) == 3 and v.isalpha():
+                            active_teams.add(v)
+
+            if active_teams:
+                print(f"[IAEL] Team mismatch scope limited to active fetch_board teams: {sorted(active_teams)}")
+            else:
+                print("[IAEL] fetch_board.csv found but no active teams parsed; mismatch audit will use full IAEL universe.")
+        except Exception as e:
+            print(f"[IAEL][WARN] Could not parse fetch_board.csv for mismatch scoping: {e}", file=sys.stderr)
+Paste block 2
+Then, in the mismatch loop, replace this:
+
+        iael_team = _team_to_abbr(team_raw).strip().upper()
+        if iael_team and roster_team and iael_team != roster_team:
+with this:
+
+        iael_team = _team_to_abbr(team_raw).strip().upper()
+
+        # If fetch_board exists, only enforce mismatches for teams still on the actionable slate.
+        if active_teams and iael_team not in active_teams:
+            continue
+
+        if iael_team and roster_team and iael_team != roster_team:
+What this changes
+If fetch_board.csv exists, mismatch enforcement is limited to teams still relevant to the live board.
+
+If fetch_board.csv does not exist, behavior stays the same.
+
+Audit still works.
+
+You stop getting nonsense mismatch pressure from games that already started or are no longer on the actionable slate.
+
+That is the smallest root-aligned fix without adding another source of truth or another wrapper.
+
+
+Sources
+
+
+refresh_iael_today.py
+Python
+Are we in the same file?
+
+Thought for 9s
+Yes — same file: tools/refresh_iael_today.py 
+refresh_iael_today
+
+
+In your current file, the place I’m talking about is inside:
+
+_assert_no_team_mismatches(root: Path, latest_norm: Path)
+
+And specifically:
+
+Paste block 1 after this section finishes building roster_lookup:
+
+    with roster_path.open("r", encoding="utf-8", newline="") as f:
+        ...
+        for r in rdr:
+            ...
+            roster_lookup.setdefault(k, t)
+Paste block 2 inside the mismatch loop, replacing this exact part:
+
+        iael_team = _team_to_abbr(team_raw).strip().upper()
+        if iael_team and roster_team and iael_team != roster_team:
+So yes, we are in the right file, and the right function. Nothing goes in main() for this change.
+
+
+Sources
+
+[IAEL] Preflight refresh via C:\Users\rick\projects\Atlas\tools\refresh_iael_today.py
+[IAEL] Running injury pipeline: C:\Users\rick\projects\Atlas\scripts\dev\adhoc\injury\injury_pull_and_parse.py
+[INJURY] target_date=2026-03-06
+OK: pulled https://ak-static.cms.nba.com/referee/injury/Injury-Report_2026-03-06_09_15PM.pdf -> 2026-03-06_09_15PM.json (rows=51) invalid=40
+[IAEL] Published latest.json <- 2026-03-06_09_15PM.json
+[IAEL] Team mismatch scope limited to active fetch_board teams: ['IND', 'LAC', 'LAL', 'SAS']
+[IAEL] Freshness OK: age=0.0 min (<=30) during enforced window.
+[IAEL] invalidations_latest.json: C:\Users\rick\projects\Atlas\data\output\dashboard\invalidations_latest.json
+[IAEL] Filled missing report_date with today=2026-03-06
+[IAEL] Published latest.json <- 2026-03-06_09_15PM.json
+
+Thought for 12s
+That looks correct.
+
+What changed:
+
+IAEL refreshed and published cleanly.
+
+Mismatch enforcement scoped itself to the active fetch-board teams only: IND, LAC, LAL, SAS.
+
+No fatal mismatch stop fired.
+
+Freshness check still ran.
+
+Latest publish still ran.
+
+So this means the new behavior is doing what we wanted:
+
+keep IAEL alive
+
+keep audit/freshness
+
+stop off-slate mismatch noise from killing live
+
+The only oddity is that latest.json was published twice in the same run. That is not fatal, but it is a cleanup target later.
+
+The important question now is simple: did the run continue past IAEL into fetch/rebuild/share-matrix successfully?
+
+
+Yes it ran to completion
+
+Excellent. That was the root blocker.
+
+So the live path is working again because:
+
+IAEL still refreshes
+
+freshness still enforces
+
+mismatch audit still exists
+
+but off-slate mismatch noise no longer kills the run before fetch
+
+That means we can now do the second half properly:
+clean and simplify the chain while the model is actually runnable.
+
+The first cleanup target is now obvious:
+
+remove the accidental double latest.json publish in refresh_iael_today.py
+
+then map the canonical live spine file by file and start deleting or bypassing legacy entry junk
+
+We should do that next, starting with:
+
+tools/refresh_iael_today.py
+
+src/Atlas/cli.py
+
+src/Atlas/runtime/orchestrator.py
+
+And lock:
+
+what each one is allowed to own
+
+what gets removed from each one
+
+
+So, to clarify. We "fixed" the mismatch issue by having the scope limited to active fetch board? but will the kill switch engage if there is an actual mismatch between players?
+
+Thought for 13s
+Yes — but only within the scoped live universe.
+
+What changed is:
+
+the mismatch check still runs in tools/refresh_iael_today.py
+
+it still compares IAEL team vs roster_map.csv team
+
+it still raises on a mismatch
+
+but only for teams present on the current actionable fetch_board.csv slate
+
+So the kill switch still exists for a real mismatch that matters to the live run.
+
+It will engage when all of these are true:
+
+fetch_board.csv exists
+
+the player’s IAEL team is on an active fetch-board team
+
+the player is known in roster_map.csv
+
+iael_team != roster_team
+
+It will not engage for:
+
+off-slate teams
+
+games already started and no longer on the actionable board
+
+stale off-board injury rows that are irrelevant to the current live run
+
+That means we did not remove the kill switch.
+We changed it from:
+
+“kill live on any mismatch anywhere in the report”
+
+to:
+
+“kill live on a mismatch that can affect the current board universe”
+
+That is the right live behavior for now.
+
+The tradeoff is important:
+
+this protects the model from bad roster truth on the current slate
+
+but it will not catch a mismatch for an off-board player until that player becomes relevant to the active slate again
+
+So: yes, the kill switch still works — just on the scoped set that can actually impact the live build.
+
+
+No, thats literally perfect. Keeps system instegrity but still fails when it is supposed too. So in my world that is now FIXED.
+
+Agreed. That one is fixed.
+
+You now have:
+
+IAEL refresh still enforced
+
+freshness still enforced
+
+mismatch audit still present
+
+kill switch still active for the current actionable slate
+
+no more irrelevant off-slate mismatches killing live
+
+That is a real fix, not a workaround.
+
+
+Ok, so if that is fixed then we have two major goals remaining. Backtest telemetry and cleanup. We have got to test and turn the knobs. The problem in RoleCTX is it doesnt have an actual baseline to model after so that was the whole point was to backtest to get to a baseline for the model. My cleanup was dead last on the list
+
+We’ve got the order now: cleanup drops back to third. First is telemetry/backtest to establish the baseline, then knob tuning, and only after that do we start cutting legacy paths.
+
+Thought for 28s
+Yes. Cleanup moves back to last.
+
+The documented objective is baseline selection for sim/config tuning: replay about 10 prior PrizePicks raws, compare model outputs to realized outcomes, then lock a baseline and choose the first knob(s) to move. Cleanup was never supposed to come first. 
+STATE_CURRENT_UPDATED_2026-03-0…
+
+ 
+PriorChatlog252
+
+
+And we now have enough signal to say what the telemetry track should target first:
+
+the 10-raw backtest path is working at scale against Last10.csv with 182,784 evaluated non-push rows, so the pipeline is usable for baseline work now. 
+backtest_role_layer_ctx_new_Non…
+
+
+RoleCtx is semantically in better shape, but the recent aggregate shows the role branch mostly produced tiny probability deltas, with mean absolute shift about 0.00238 and 95th percentile about 0.006396, which is too small to matter much for top-line Brier unless the right days/teams are isolated. 
+Aggregreate
+
+
+the March 6 snapshots were also mostly single-impact-team style days, which the state doc explicitly says is acceptable for a starting baseline but not enough for the final one. 
+STATE_CURRENT_UPDATED_2026-03-0…
+
+
+So the right remaining order is:
+
+Backtest telemetry baseline
+
+lock the exact 10-raw cohort
+
+rerun the replay/backtest path cleanly
+
+score against Last10.csv
+
+summarize by snapshot and by stat/reason
+
+decide what today’s baseline actually is
+
+Turn knobs
+
+once the baseline table is stable, choose one knob family only
+
+probably kernel/calibration first unless the telemetry proves RoleCtx magnitude is still the main limiter
+
+Cleanup
+
+only after the model is runnable and baseline-able
+
+then we simplify the canonical chain and remove wrappers/dead paths
+
+Given what we already learned, the immediate telemetry question is no longer “can we run it?” It is:
+
+what is the baseline on this 10-raw cohort,
+
+and is the first move a kernel/calibration move or a RoleCtx magnitude move?
+
+My recommendation is to do one compact telemetry pass next:
+
+per snapshot: eval legs, base Brier, role Brier, delta Brier
+
+overall calibration bins for p_adj and p_cal
+
+top stat buckets where p_adj_role - p_adj_base is actually material
+
+That gets you to a decision-grade baseline without touching cleanup yet.
+
+
+Sources
+
+Ok, we will have to fix the time properly thought.
+
+though
+
+Thought for 21s
+Yes — before we rely on replay/backtest as the baseline engine, we do need to fix the time path properly.
+
+Not the quick replay sentinel hack. The real one.
+
+Because right now we proved:
+
+the live mismatch issue is fixed
+
+live runs again
+
+but replay/backtest still depends on fragile time behavior in rebuild, and that can distort the baseline if we leave it half-broken
+
+So the order becomes:
+
+fix time handling correctly in rebuild/replay
+
+rerun the 10-raw telemetry path
+
+establish baseline
+
+turn knobs
+
+cleanup last
+
+And “fix time properly” should mean:
+
+live keeps strict CT today + not-started behavior
+
+replay uses the raw’s own slate/game timing semantics
+
+no fake minimum datetime
+
+no bypass that can bleed into live
+
+That needs to be done in the real rebuild time gate, not with another side patch.
+
+The next right step is to inspect the exact time-gating block in src/Atlas/stages/rebuild/rebuild_today.py and separate:
+
+live clock logic
+
+replay/raw-path logic
+
+Upload that file again and we’ll do the proper fix one block at a time.
+
+
+
+rebuild_today.py
+Python
+
+Thought for 22s
+Yes. The proper fix is in this file, and it should be replay-only by behavior, with live left untouched. The bad part is the replay clock sentinel and the replay-time filter in run_rebuild(...) 
+rebuild_today
+
+
+What is wrong now
+Right now the file does this:
+
+in replay: now_utc = datetime.min.replace(...)
+
+then it still uses a replay-time gate:
+if start_dt < now_utc: continue
+
+That is the wrong abstraction for replay. Replay should rebuild the board from the raw payload, not pretend there is a “current time” for filtering.
+
+What the fix should be
+Live: keep strict CT today + not-started logic exactly as-is
+
+Replay: require valid start_time, but do no current-time filtering at all
+
+Change 1
+Replace this block:
+
+    now_utc = datetime.min.replace(tzinfo=timezone.utc) if is_replay else datetime.now(timezone.utc)
+
+    TZ_CT = ZoneInfo("America/Chicago")
+    now_ct = now_utc.astimezone(TZ_CT)
+    today_ct = now_ct.date()
+with this:
+
+    TZ_CT = ZoneInfo("America/Chicago")
+
+    now_utc = None
+    now_ct = None
+    today_ct = None
+    if not is_replay:
+        now_utc = datetime.now(timezone.utc)
+        now_ct = now_utc.astimezone(TZ_CT)
+        today_ct = now_ct.date()
+Change 2
+Replace this whole section:
+
+        if not is_replay:
+            start_ct = start_dt.astimezone(TZ_CT)
+            if start_ct.date() != today_ct:
+                continue
+            if start_ct < now_ct:
+                continue
+        else:
+            # replay: preserve prior behavior (drop only if strictly before now_utc)
+            if start_dt < now_utc:
+                continue
+with this:
+
+        start_ct = start_dt.astimezone(TZ_CT)
+
+        if not is_replay:
+            if start_ct.date() != today_ct:
+                continue
+            if start_ct < now_ct:
+                continue
+        else:
+            # Replay mode: rebuild the board represented by the raw payload.
+            # Do not apply any "current time" filter here.
+            pass
+Change 3
+Replace this:
+
+        if not is_replay:
+            # use CT-local slate date (matches strict gate)
+            game_date = start_ct.date().isoformat()
+        else:
+            # replay: best-effort CT date
+            game_date = start_dt.astimezone(TZ_CT).date().isoformat()
+with this:
+
+        game_date = start_ct.date().isoformat()
+That keeps it simple and deterministic.
+
+Why this is the right fix
+no fake minimum datetime
+
+no replay underflow risk
+
+no live behavior change
+
+replay uses the raw’s own timestamps instead of an invented clock
+
+After that, replay should rebuild historical raws cleanly, while live still keeps the strict “today CT and not started yet” gate.
+
+
+Sources
+
+OK lets give it a shot
+
+Thought for 11s
+Run the same single-raw rebuild test again first:
+
+cd C:\Users\rick\projects\Atlas; $env:ATLAS_REPLAY_RAW="C:\Users\rick\projects\Atlas\data\telemetry\Last 10\prizepicks_20260305_131610.json"; py .\tools\rebuild_today_from_any_raw.py; Remove-Item Env:\ATLAS_REPLAY_RAW -ErrorAction SilentlyContinue
+
+What we want to see:
+
+no OverflowError
+
+no zero-row rebuild
+
+Wrote: data\board\today.csv
+
+Snapshot: data\board\snapshots\today_...csv
+
+If that passes, then we batch the 10 raws next. Paste the output from this one run first.
+
+
+Passed
+
+Thought for 13s
+Good. That means the time fix is behaving properly for replay.
+
+Current state:
+
+live path runs
+
+mismatch scope fix is working
+
+replay rebuild passes with the proper time handling
+
+baseline/backtest work can resume
+
+Next move is the full 10-raw rebuild batch, then the controlled backtest against Last10.csv.
+
+Run the 10 rebuilds:
+
+cd C:\Users\rick\projects\Atlas; $files=Get-ChildItem "C:\Users\rick\projects\Atlas\data\telemetry\Last 10\prizepicks_*.json" | Sort-Object Name; foreach($f in $files){ Write-Host "=== REBUILD $($f.Name) ==="; $env:ATLAS_REPLAY_RAW=$f.FullName; py .\tools\rebuild_today_from_any_raw.py }; Remove-Item Env:\ATLAS_REPLAY_RAW -ErrorAction SilentlyContinue
+
+Then run the backtest on the 10 newest snapshots:
+
+cd C:\Users\rick\projects\Atlas; $snaps=Get-ChildItem "C:\Users\rick\projects\Atlas\data\board\snapshots\today_*.csv" | Sort-Object LastWriteTime -Descending | Select-Object -First 10; $args=@("scripts\dev\analysis\backtest\backtest_role_layer_ctx.py","--logs-path","C:\Users\rick\projects\Atlas\data\telemetry\Last 10\Last10.csv"); foreach($s in $snaps){ $args+=@("--snapshot",$s.FullName) }; py @args
+
+After that, paste the console summary and we’ll move straight into baseline read + knob choice.
+
+
+OK, it ran end to end. Still says merge missing rates which I do not understand
+
+I’m checking the backtest script itself so I can explain exactly what “merge missing rates” means in this run, instead of hand-waving it.
+
+Thought for 18s
+“Merge missing rates” is narrower than it sounds. It is not saying the whole backtest failed.
+
+In this script, after actual outcomes are built, it left-joins the evaluated rows to the simulated outputs for BASE and ROLE on the leg key:
+
+player_norm
+
+stat
+
+line
+
+direction 
+backtest_role_layer_ctx
+
+ 
+backtest_role_layer_ctx
+
+
+Then it prints:
+
+percent of joined rows where p_adj_base is missing
+
+percent of joined rows where p_adj_role is missing 
+backtest_role_layer_ctx
+
+
+So “merge missing rates” means:
+
+Of the rows that made it into the evaluation frame, what fraction failed to find a matching simulated probability row after the join?
+
+Why that can still appear even when the run completed:
+
+the script appends the joined frame regardless
+
+then it evaluates only rows where p_adj_base / p_adj_role are actually present via mask_b and mask_r 
+backtest_role_layer_ctx
+
+
+so you can have some missing join rows and still get a full summary, Brier, calibration table, and output file 
+backtest_role_layer_ctx
+
+
+The important interpretation is:
+
+0.00% / 0.00% = ideal; every evaluation row found a simulated leg match
+
+small nonzero % = some rows in the evaluation frame did not line up with the simulated board on the join key
+
+large % = likely a real alignment problem in board vs eval rows
+
+The likely causes are exactly the leg-key normalization surfaces in this file:
+
+player normalization drift
+
+stat normalization drift
+
+line rounding drift
+
+directional expansion mismatch 
+backtest_role_layer_ctx
+
+ 
+backtest_role_layer_ctx
+
+
+One subtle point: this script does not join on game_date in that merge. game_date is normalized on frames, but the actual probability merge is only on LEG_KEY = ["player_norm","stat","line","direction"] 
+backtest_role_layer_ctx
+
+ 
+backtest_role_layer_ctx
+
+. So if you are seeing missing merge rates now, the first suspects are not date mismatches anymore — they are key-shape mismatches on player/stat/line/direction.
+
+So the practical read is:
+
+if your missing rates were tiny, it is mostly noise and the run is still usable
+
+if they were meaningfully above zero, the next debug is to inspect unmatched rows on those four join columns, not the whole telemetry path
+
+Paste the exact percentages it printed, and I’ll tell you whether it’s harmless residue or the next real blocker.
+
+
+Sources
+
+Is it using that days actual injury outs or how does it work exactly?
+
+I’m checking the actual backtest script flow so I can answer from the code path you just ran, not from the intended design.
+
+Thought for 19s
+Not directly. In the backtest you just ran, the script is not feeding that day’s IAEL injury snapshot into the simulator.
+
+What it actually does is:
+
+it loads the board snapshot CSV you pass with --snapshot
+
+it loads historical outcomes/gamelogs from --logs-path or --outcomes-csv
+
+then for each board row it calls simulate_leg_probability_new(...) with iael_df=None and only toggles role_cfg={"enabled": bool(use_role_layer)} between BASE and ROLE 
+backtest_role_layer_ctx
+
+
+So the answer is:
+
+BASE = role layer disabled
+
+ROLE = role layer enabled
+
+but in this script, ROLE is not being driven by a per-day loaded IAEL dataframe from the historical injury report, because iael_df is explicitly passed as None 
+backtest_role_layer_ctx
+
+
+That’s why your recent aggregate was so revealing:
+
+every evaluated row showed role_ctx_reason_role = no_iael
+
+the probability deltas were tiny, with mean absolute shift about 0.00238 and 95th percentile about 0.006396 
+Aggregreate
+
+
+So how does it work “exactly” right now?
+
+The script simulates probabilities from the board row plus the historical logs/outcomes table. 
+backtest_role_layer_ctx
+
+
+It produces two branches:
+
+BASE with role disabled
+
+ROLE with role enabled 
+backtest_role_layer_ctx
+
+
+But because iael_df=None, the ROLE branch is not replaying that day’s actual injury outs from IAEL. 
+backtest_role_layer_ctx
+
+
+The final evaluation then joins simulated probabilities to actual results and prints Brier/calibration summaries. 
+backtest_role_layer_ctx
+
+
+So the practical implication is:
+
+this backtest is currently giving you a kernel / role-toggle comparison under the current simulator path
+
+it is not yet a true historical IAEL replay backtest
+
+which means it can still help with some baseline work, but it cannot fully answer “how well did RoleCtx perform using the real outs from that historical slate?”
+
+That’s the core gap.
+
+If your goal is a true RoleCtx baseline, the eventual correct version needs to inject the historical injury context for each replayed day instead of leaving iael_df=None.
+
+
+Sources
+
+So if it is pulling data and using role ctx how can it possibly work correctly without the actual injury list?
+
+Thought for 11s
+It can’t, not for a true injury-context test.
+
+It can still “run” because the simulator has a fallback path:
+
+BASE disables role
+
+ROLE enables role logic
+
+but the backtest code you ran passes iael_df=None into simulate_leg_probability_new(...) 
+backtest_role_layer_ctx
+
+
+So what you are testing right now is closer to:
+
+the current probability engine
+
+with role machinery toggled on/off
+
+without the real historical injury report injected for that slate
+
+That is exactly why the aggregate came back with role_ctx_reason_role = no_iael everywhere and only tiny probability movement. 
+Aggregreate
+
+
+So your instinct is correct:
+
+if the goal is true RoleCtx baseline
+
+then this backtest is not yet correct
+
+because it is not replaying the actual injury outs for each historical day
+
+What it can still tell you:
+
+whether the non-IAEL parts of the model are sane
+
+whether the join/matching pipeline works
+
+whether kernel/calibration look roughly reasonable
+
+What it cannot tell you yet:
+
+whether RoleCtx is helping or hurting when driven by the real slate injury context
+
+So the next real requirement is now obvious:
+
+the backtest must load the historical injury snapshot for each replayed day and pass that into the simulator instead of iael_df=None.
+
+That is the missing piece between:
+
+“the script runs”
+and
+
+“this is a trustworthy RoleCtx baseline backtest”
+
+So yes — as currently wired, it cannot possibly be fully correct for RoleCtx. That’s the gap we need to fix next.
+
+
+Sources
+
+The goal is to get the best slips and an accurate baseline on the model not just a portion of the model
+
+I’m tightening this to the real objective now: not “can parts of it run,” but “does the backtest represent the same decision surface the live model uses to produce slips.”
+
+Thought for 22s
+Exactly. The baseline has to represent the whole decision stack that produces slips, not just a partial kernel test.
+
+Right now the canonical live chain is fetch → rebuild → Rotowire → share matrix / role context → engine / slips 
+PIPELINE_FUNCTION_WALKTHROUGH
+
+ 
+PIPELINE_FUNCTION_WALKTHROUGH
+
+ 
+PIPELINE_FUNCTION_WALKTHROUGH
+
+, and the slip outputs are the actual product surface the model ships 
+PIPELINE_CALL_CHAIN
+
+. So a backtest that does not replay the same contextual inputs cannot be your final baseline.
+
+The current backtest script is useful, but it is incomplete for that purpose. It calls simulate_leg_probability_new(...) with iael_df=None on every row while only toggling role_cfg on and off 
+backtest_role_layer_ctx
+
+. That is why your aggregate came back with role_ctx_reason_role = no_iael for all 182,784 evaluated rows, with only tiny probability shifts 
+Aggregreate
+
+ 
+Aggregreate
+
+. So this script can help check kernel/calibration plumbing, but it cannot be the true “best slips / full baseline” evaluator yet.
+
+So the target is now clear:
+
+We need a historical replay that feeds the same contextual stack the live model uses, meaning at minimum:
+
+historical board snapshot
+
+historical injury context for that slate
+
+historical share-matrix / RoleCtx behavior
+
+then the engine/slip outputs, not just isolated per-leg probabilities
+
+That also matches the original project goal you set: replay prior raw snapshots, compare model output to actuals, and use that to choose the baseline and tuning knobs 
+PriorChatlog252
+
+.
+
+So the next real work item is not cleanup. It is:
+
+Promote backtest from “probability engine test” to “historical full-context replay.”
+
+Inject per-day historical IAEL into the replay/backtest path instead of iael_df=None.
+
+Score not only per-leg calibration/Brier, but also the slip surface that the engine actually emits.
+
+That is the only way the baseline will mean what you want it to mean.
+
+The good news is the prerequisites are now mostly in place:
+
+live runs again
+
+replay rebuild time is fixed
+
+the 10-raw replay path can run end to end
+
+the current backtest already proves the snapshot/outcome matching machinery works at scale 
+backtest_role_layer_ctx
+
+
+So the next step should be one focused change:
+teach the replay/backtest path to load the historical injury artifact for each replayed day and pass it into the simulator.
+
+That is the missing bridge between:
+
+“backtest telemetry”
+and
+
+“a trustworthy full-model baseline for slips.”
+
+
+Sources
+
+ok
+
+Thought for 9s
+Next file is scripts/dev/analysis/backtest/backtest_role_layer_ctx.py.
+
+That is the choke point because it is the file currently calling the simulator with iael_df=None, which is the exact reason the backtest cannot represent the full live decision surface yet.
+
+So the next move is:
+
+inspect that file
+
+add per-snapshot historical IAEL loading
+
+pass the loaded IAEL dataframe into simulate_leg_probability_new(...)
+
+then rerun the 10-raw batch
+
+Upload the current backtest_role_layer_ctx.py again and I’ll point to the exact block to change.
+
+
+
+backtest_role_layer_ctx.py
+Python
+Alright, enough of the leadup lets just do it.
+
+I’ve got the exact choke point. I’m turning this backtest from “role toggle without injuries” into “load the historical IAEL snapshot per replayed slate and pass it into the simulator.”
+
+Thought for 24s
+Yes. This is the file, and this is the exact hole: right now score_board_newengine(...) always calls simulate_leg_probability_new(...) with iael_df=None, so the backtest can never represent the full live decision surface. 
+backtest_role_layer_ctx
+
+
+We fix it in-place with four small edits.
+
+1) Add the IAEL default path
+Paste this under DEFAULT_LOGS_PATH = ...
+
+DEFAULT_IAEL_DIR = PROJECT_ROOT / "data" / "output" / "injury" / "normalized"
+2) Add CLI args for historical IAEL loading
+Inside main(), add these args under --outcomes-csv:
+
+    ap.add_argument("--iael-dir", default=str(DEFAULT_IAEL_DIR),
+                    help="Directory containing historical normalized IAEL json snapshots")
+    ap.add_argument("--disable-iael", action="store_true",
+                    help="Force iael_df=None for comparison/debug")
+3) Add these helper functions
+Paste these helpers below load_logs(...) and above # ============================================================ # Scoring via New Engine
+
+def _coerce_iael_frame(obj: Any) -> pd.DataFrame:
+    if isinstance(obj, list):
+        df = pd.DataFrame(obj)
+    elif isinstance(obj, dict):
+        if isinstance(obj.get("rows"), list):
+            df = pd.DataFrame(obj["rows"])
+        elif isinstance(obj.get("data"), list):
+            df = pd.DataFrame(obj["data"])
+        else:
+            df = pd.DataFrame([obj])
+    else:
+        df = pd.DataFrame()
+
+    if df.empty:
+        return df
+
+    # Normalize likely key columns used downstream
+    if "player" not in df.columns:
+        for c in ("player_name", "name", "PLAYER"):
+            if c in df.columns:
+                df["player"] = df[c]
+                break
+    if "player" in df.columns:
+        df["player"] = df["player"].astype(str).str.strip()
+        df["player_norm"] = _normalize_player(df["player"])
+
+    if "team" not in df.columns:
+        for c in ("team_u", "abbr", "TEAM", "team_abbr"):
+            if c in df.columns:
+                df["team"] = df[c]
+                break
+    if "team" in df.columns:
+        df["team"] = df["team"].astype(str).str.upper().str.strip()
+        df["team_u"] = df["team"]
+
+    if "status" in df.columns:
+        df["status"] = df["status"].astype(str).str.upper().str.strip()
+
+    if "report_date" in df.columns:
+        df["report_date"] = pd.to_datetime(df["report_date"], errors="coerce").dt.normalize()
+
+    return df
+
+
+def _load_iael_json(path: Path) -> pd.DataFrame:
+    with path.open("r", encoding="utf-8") as f:
+        obj = json.load(f)
+    return _coerce_iael_frame(obj)
+
+
+def _pick_historical_iael_file(iael_dir: Path, snap: Path, board_df: pd.DataFrame) -> Path | None:
+    if not iael_dir.exists():
+        return None
+
+    snap_dt = _parse_date_from_filename(snap)
+    if snap_dt is None and "game_date" in board_df.columns:
+        vals = pd.to_datetime(board_df["game_date"], errors="coerce").dropna()
+        if not vals.empty:
+            snap_dt = vals.iloc[0].normalize()
+
+    if snap_dt is None:
+        return None
+
+    day_str = snap_dt.strftime("%Y-%m-%d")
+
+    # Prefer exact dated normalized snapshots like 2026-03-06_09_15PM.json
+    cands = sorted(iael_dir.glob(f"{day_str}_*.json"))
+    if cands:
+        return cands[-1]
+
+    # Fallback: exact day file without suffix
+    p = iael_dir / f"{day_str}.json"
+    if p.exists():
+        return p
+
+    return None
+
+
+def load_historical_iael_for_snapshot(iael_dir: Path, snap: Path, board_df: pd.DataFrame) -> pd.DataFrame | None:
+    chosen = _pick_historical_iael_file(iael_dir, snap, board_df)
+    if chosen is None:
+        print(f"[IAEL][BACKTEST] No historical IAEL file found for {snap.name} in {iael_dir}")
+        return None
+
+    df = _load_iael_json(chosen)
+    if df is None or df.empty:
+        print(f"[IAEL][BACKTEST] Historical IAEL file empty: {chosen.name}")
+        return None
+
+    print(f"[IAEL][BACKTEST] Using {chosen.name} for {snap.name} rows={len(df)}")
+    return df
+4) Wire the historical IAEL into the simulator
+4a) Change the function signature
+Replace this signature:
+
+def score_board_newengine(
+    *,
+    board_df: pd.DataFrame,
+    logs_df: pd.DataFrame,
+    use_role_layer: bool,
+    nsims: int,
+    seed: int,
+    lookback: int,
+    spread_sd: float,
+    blowout_threshold: float,
+    star_minute_drop: float,
+    role_minute_drop: float,
+) -> pd.DataFrame:
+with this:
+
+def score_board_newengine(
+    *,
+    board_df: pd.DataFrame,
+    logs_df: pd.DataFrame,
+    iael_df: pd.DataFrame | None,
+    use_role_layer: bool,
+    nsims: int,
+    seed: int,
+    lookback: int,
+    spread_sd: float,
+    blowout_threshold: float,
+    star_minute_drop: float,
+    role_minute_drop: float,
+) -> pd.DataFrame:
+4b) Replace the simulator call
+Replace:
+
+            iael_df=None,
+with:
+
+            iael_df=iael_df,
+4c) Load IAEL once per snapshot and pass it to both BASE and ROLE
+Inside the snapshot loop in main(), after:
+
+        sim_board = eval_df[keep_cols].copy()
+add:
+
+        iael_df = None
+        if not args.disable_iael:
+            iael_df = load_historical_iael_for_snapshot(
+                Path(args.iael_dir),
+                snap,
+                sim_board,
+            )
+Then change the two scorer calls.
+
+Replace the BASE call with:
+
+        base_out = score_board_newengine(
+            board_df=sim_board,
+            logs_df=logs,
+            iael_df=iael_df,
+            use_role_layer=False,
+            nsims=args.nsims,
+            seed=args.seed,
+            lookback=args.lookback,
+            spread_sd=args.spread_sd,
+            blowout_threshold=args.blowout_threshold,
+            star_minute_drop=args.star_minute_drop,
+            role_minute_drop=args.role_minute_drop,
+        )
+Replace the ROLE call with:
+
+        role_out = score_board_newengine(
+            board_df=sim_board,
+            logs_df=logs,
+            iael_df=iael_df,
+            use_role_layer=True,
+            nsims=args.nsims,
+            seed=args.seed,
+            lookback=args.lookback,
+            spread_sd=args.spread_sd,
+            blowout_threshold=args.blowout_threshold,
+            star_minute_drop=args.star_minute_drop,
+            role_minute_drop=args.role_minute_drop,
+        )
+What this changes
+Before:
+
+BASE = role off
+
+ROLE = role on
+
+but both had iael_df=None
+
+so the whole batch collapsed to no_iael behavior
+
+After:
+
+each replayed snapshot loads the historical normalized injury file for that slate date
+
+the simulator receives a real iael_df
+
+BASE still disables role
+
+ROLE now has a chance to use the actual outs/context for that day
+
+That is the first version of a real baseline backtest instead of a partial-model test. 
+backtest_role_layer_ctx
+
+
+Run it after the edit
+Use the same command shape as before, but now the backtest will auto-load IAEL by date from data\output\injury\normalized.
+
+If you want a control comparison, add --disable-iael on a second run and compare.
+
+The first thing I want back after you run it is:
+
+whether the console prints [IAEL][BACKTEST] Using ...
+
+whether role_ctx_reason_role is still all no_iael
+
+whether Brier / avg p_adj materially diverge more than before
+
+
+Sources
+
+  File "C:\Users\rick\projects\Atlas\scripts\dev\analysis\backtest\backtest_role_layer_ctx.py", line 787, in <module>
+    main()
+  File "C:\Users\rick\projects\Atlas\scripts\dev\analysis\backtest\backtest_role_layer_ctx.py", line 615, in main
+    if not args.disable_iael:
+           ^^^^^^^^^^^^^^^^^
+AttributeError: 'Namespace' object has no attribute 'disable_iael'
+
+Thought for 10s
+That means the new CLI arg did not get added where argparse is building args.
+
+Add this line in main() with the other ap.add_argument(...) calls, before args = ap.parse_args():
+
+    ap.add_argument("--disable-iael", action="store_true",
+                    help="Force iael_df=None for comparison/debug")
+And make sure this one is there too:
+
+    ap.add_argument("--iael-dir", default=str(DEFAULT_IAEL_DIR),
+                    help="Directory containing historical normalized IAEL json snapshots")
+The error is just saying:
+
+your code now references args.disable_iael
+
+but argparse never created that field
+
+So the likely cause is:
+
+the helper functions were added
+
+the main loop change was added
+
+but the two ap.add_argument(...) lines were missed or pasted outside main()
+
+After you add those, rerun the same command.
+
+
+Scoring snapshot today_20260307_024642.csv (eval legs=8736)
+[IAEL][BACKTEST] No historical IAEL file found for today_20260307_024642.csv in C:\Users\rick\projects\Atlas\data\output\injury\normalized
+
+Thought for 20s
+Good — the code path is working. The problem now is data availability, not wiring.
+
+What that message means:
+
+the backtest looked at today_20260307_024642.csv
+
+derived the slate date 2026-03-07
+
+searched C:\Users\rick\projects\Atlas\data\output\injury\normalized
+
+and did not find a matching historical IAEL file for that date
+
+So the new logic is functioning, but your historical IAEL archive is not there in the location/schema the loader expects.
+
+Most likely reasons:
+
+that folder mostly contains current/live normalized outputs, not a preserved day-by-day history
+
+or the filenames in that folder do not match YYYY-MM-DD_*.json
+
+or your 10 replayed snapshots span dates for which no normalized IAEL snapshots were retained
+
+Next move is to verify the filenames in that folder.
+
+Run this:
+
+cd C:\Users\rick\projects\Atlas; Get-ChildItem .\data\output\injury\normalized\*.json | Sort-Object Name | Select-Object -ExpandProperty Name
+
+What I’m expecting:
+
+either only latest.json plus a few recent files
+
+or a naming pattern different from what the loader is searching for
+
+If you want the backtest to be real, one of two things has to be true:
+
+you already have historical normalized IAEL snapshots saved somewhere else, and we point --iael-dir there
+
+you do not have them, and then we need to build that archive from the raw injury pull history before this can become a full-context baseline
+
+So this is actually a useful result:
+
+code now asks for the right thing
+
+now we know whether the missing piece is archived historical IAEL data or just the wrong folder/path
+
+Paste the file list output next.
+
+
+
+`2026-03-07`
+
+That doesnt even make any sense. that date is tomorrow today is 3/06/2026
+
+I’m checking the backtest file’s date-picking logic now, because you’re right: if it’s inferring 2026-03-07 from that filename on March 6 CT, that’s probably a timestamp-source bug, not a missing IAEL file problem.
+
+Thought for 19s
+You’re right — that doesn’t make sense for your use case.
+
+What’s happening is the backtest loader is currently deriving the IAEL date from the snapshot filename first, not from the slate’s actual game date. _parse_date_from_filename(...) explicitly pulls the first 8 digits after today_ and turns that into the date 
+backtest_role_layer_ctx
+
+. So for a file named today_20260307_024642.csv, it infers 2026-03-07 even if the slate itself is still the March 6 board.
+
+That means the current IAEL picker is using the file timestamp date, not the slate date. And for these replayed snapshots, that is wrong.
+
+Why this bites you:
+
+replay/build writes snapshot files with names like today_YYYYMMDD_HHMMSS.csv
+
+the YYYYMMDD in that filename is the snapshot/write stamp
+
+but the backtest should really key historical IAEL off the board’s game_date, not the write stamp
+
+The code already has support for a board-level game_date fallback in _coerce_game_date(...), which normalizes game_date/GAME_DATE/date columns on the board frame 
+backtest_role_layer_ctx
+
+. So the fix is not conceptual anymore — it’s just the picker order.
+
+The correct behavior should be:
+
+look at the snapshot board’s game_date
+
+use that as the IAEL day
+
+only fall back to filename parsing if game_date is missing
+
+So yes: this is a bug in the new historical IAEL loader logic, not a real “tomorrow injury file is missing” problem.
+
+The exact fix is to reverse the priority inside _pick_historical_iael_file(...):
+
+prefer board_df["game_date"]
+
+only use _parse_date_from_filename(snap) as fallback
+
+That will make the IAEL lookup align with the actual slate date instead of the snapshot filename stamp.
+
+
+Sources
+
+Alright good deal, I fixed it. Why is the scoring snapshot 5 hours in the future though? Thats odd and doesnt make any sense either
+
+I’m checking the snapshot-writing path now, because that kind of “future” timestamp is usually a timezone stamp mismatch, not a real forward-dated slate.
+
+Thought for 35s
+Yes — that odd “future” snapshot time is almost certainly just the snapshot write timestamp using a different timezone, not the slate itself being in the future.
+
+You already have proof of that in your own run log:
+
+the live run shows local console time around 2026-03-06 17:54:47
+
+and the rebuild immediately writes today_20260306_235447.csv 
+Problems'
+
+
+That is a clean 6-hour offset, which matches a UTC-style stamp being written while you’re reading the run in Central time.
+
+Two important clarifications:
+
+The snapshot filename is just a write stamp
+
+The pipeline walkthrough defines today_<timestamp>.csv as an append-only snapshot artifact written by rebuild 
+PIPELINE_FUNCTION_WALKTHROUGH
+
+
+It is not the authoritative slate date.
+
+The actual slate date in rebuild comes from the game start time
+
+rebuild_today.py derives game_date from start_dt.astimezone(TZ_CT).date().isoformat() 
+rebuild_today
+
+
+so the board’s real date logic is CT-based, even if the snapshot filename stamp is not.
+
+So the short version is:
+
+today_20260307_024642.csv does not mean the slate is March 7
+
+it means the file was stamped with a non-CT clock, very likely UTC
+
+the real slate date should be read from game_date, not from the filename
+
+And that is exactly why your IAEL loader needed to stop trusting the filename date first. The filename stamp can drift by timezone; the board’s game_date is the real source of truth.
+
+
+Sources
+
+Thats wild so PrizePicks servers are based in Europe. I did not know that
+
+Thought for 20s
+No — I would not infer anything about PrizePicks’ servers from that.
+
+What we actually know is much narrower:
+
+your live console was around 2026-03-06 17:54 CT
+
+rebuild wrote a snapshot named today_20260306_235447.csv immediately after 
+Problems'
+
+
+the real slate date inside rebuild is derived from start_dt.astimezone(TZ_CT).date() for game_date, so the board logic itself is CT-based 
+rebuild_today
+
+
+So the safest conclusion is:
+
+the snapshot filename timestamp is coming from a non-CT clock in your pipeline, very likely UTC
+
+that does not tell us anything reliable about where PrizePicks’ servers are located
+
+In other words:
+
+file stamp timezone mismatch: plausible
+
+“PrizePicks servers are in Europe”: not supported
+
+The filename is just a write stamp. The actual slate semantics are coming from the game start times and the CT conversion logic, not from that today_YYYYMMDD_HHMMSS.csv suffix.
+
+
+Sources
+
+No, that doesnt make sense either. It is 9:31 pm right now and this is what its showing me live as its running Scoring snapshot today_20260307_024642.csv (eval legs=8736)
+[IAEL][BACKTEST] Using 2026-03-05_12_45PM.json for today_20260307_024642.csv rows=92
+Merge missing rates: p_adj_base=0.00%, p_adj_role=0.00%
+Scoring snapshot today_20260307_024807.csv (eval legs=9606)
+[IAEL][BACKTEST] Using 2026-02-22_12_06PM.json for today_20260307_024807.csv rows=87
+
+I’m checking the exact picker logic again, because that second line is the real red flag now — not the snapshot stamp, but why a March 7 snapshot is pairing with a February 22 IAEL file.
+
+Thought for 51s
+It’s not actually 5 hours in the future.
+
+At 9:31 PM local, a filename like today_20260307_024642.csv is consistent with a UTC-stamped file that was written at about 8:46 PM Central the same night. So that stamp is not saying “tomorrow’s slate.” It’s just a different clock on the filename.
+
+The important distinction is:
+
+the backtest still parses the snapshot filename date with _parse_date_from_filename(...), which reads the YYYYMMDD after today_ 
+backtest_role_layer_ctx
+
+
+but the board itself also has a real game_date, and _coerce_game_date(...) is supposed to normalize that from the snapshot content 
+backtest_role_layer_ctx
+
+
+load_board(...) uses the filename date only as a fallback when it coerces game_date 
+backtest_role_layer_ctx
+
+
+So the filename stamp itself is not the real problem.
+
+The real bug now is this line:
+
+Using 2026-02-22_12_06PM.json for today_20260307_024807.csv
+
+That is wrong for a March 6/7 slate. If it is pulling a February 22 IAEL file for that snapshot, then the IAEL picker is still not keying off the correct slate date, or it is falling back to the wrong file when it can’t find an exact match.
+
+So the correct read is:
+
+snapshot timestamp: probably harmless timezone stamping
+
+IAEL file selection: still broken and needs fixing
+
+That second line is the one I would treat as the actual blocker now.
+
+
+Sources
+
+I dont think so, its actually pulling the right JSON its just writing the today csv weird [IAEL][BACKTEST] Using 2026-02-22_12_06PM.json for today_20260307_024807.csv rows=87
+Merge missing rates: p_adj_base=0.00%, p_adj_role=0.00%
+Scoring snapshot today_20260307_024808.csv (eval legs=5992)
+[IAEL][BACKTEST] Using 2026-02-25_11_42AM.json for today_20260307_024808.csv rows=31
+Merge missing rates: p_adj_base=0.00%, p_adj_role=0.00%
+Scoring snapshot today_20260307_024809.csv (eval legs=5074)
+[IAEL][BACKTEST] Using 2026-02-27_11_11AM.json for today_20260307_024809.csv rows=39
+
+I think you’re right about the distinction now. I’m checking the snapshot writer and the board date handling one more time so we separate “weird filename stamp” from “wrong IAEL day,” because those are two different problems.
+
+Thought for 35s
+Yes — I think your read is right.
+
+What those lines mean is:
+
+the IAEL file selection is probably correct
+
+the snapshot filename is not a slate-date identifier
+
+it is just the time the replay wrote the snapshot
+
+That matches the pipeline docs: rebuild writes data/board/snapshots/today_<timestamp>.csv as an append-only snapshot artifact, while the real board date lives inside the data as game_date 
+PIPELINE_FUNCTION_WALKTHROUGH
+
+. And in rebuild_today.py, game_date is derived from the game start time in Central time via start_dt.astimezone(TZ_CT).date().isoformat() 
+rebuild_today
+
+.
+
+So during your replay batch, this is the likely behavior:
+
+you replayed old raws now
+
+rebuild wrote fresh snapshot files now
+
+so all the filenames look like today_20260307_02xxxx.csv
+
+but the rows inside those files still carry the original historical game_date
+
+That would explain why you’re seeing:
+
+today_20260307_024807.csv
+
+paired with 2026-02-22_12_06PM.json
+
+That is not necessarily wrong. It means:
+
+file written now
+
+slate data from February 22
+
+So the actual bug was using the snapshot filename date to choose IAEL. The correct source is the board’s game_date, not the today_<timestamp>.csv suffix.
+
+So yes: the weird thing is the snapshot naming, not necessarily the IAEL selection. In replay mode, the filename is effectively a write timestamp, not a historical slate identifier.
+
+That also means we should stop trusting replay snapshot filenames for anything semantic. For replay:
+
+use game_date inside the board
+
+treat today_<timestamp>.csv as just an artifact name
+
+That part is now conceptually settled.
+
+
+Sources
+
+
+* you replayed old raws **now** * rebuild wrote fresh snapshot files **now** * so all the filenames look like `today_20260307_02xxxx.csv`
+
+Uploaded image
+That makes no sense at ALL. ITS 9:37PM 3/6/2026
+
+Thought for 1m 5s
+You’re right to call that out. My earlier wording was sloppy.
+
+What’s actually true is:
+
+the pipeline docs define data/board/snapshots/today_<timestamp>.csv as an append-only snapshot artifact; that filename is just an artifact stamp, not the authoritative slate date 
+PIPELINE_FUNCTION_WALKTHROUGH
+
+
+the backtest file literally parses the YYYYMMDD out of the filename when it wants a fallback date, via _parse_date_from_filename(...) 
+backtest_role_layer_ctx
+
+
+the real slate date in rebuild is carried in game_date, which is derived from the game start time after timezone conversion, not from the snapshot filename itself 
+PIPELINE_FUNCTION_WALKTHROUGH
+
+
+So the correct interpretation is:
+
+today_20260307_024807.csv does not mean “this is tomorrow’s slate”
+
+it means “this snapshot artifact got stamped with a clock that landed on 2026-03-07 02:48:07”
+
+At 9:37 PM on 3/6, that can make sense if the stamp is being written in UTC and the file was actually created around 8:48 PM CST:
+
+8:48 PM CST + 6 hours = 2:48 AM UTC on 3/7
+
+So the weirdness is the naming clock, not the board content.
+
+The important correction is:
+
+for replay, the filename is a write timestamp
+
+the historical slate identity should come from game_date inside the snapshot
+
+which is why using the filename to choose IAEL was the wrong move, and why your fix to prefer game_date was the right one
+
+So no, I’m not saying “all replayed snapshots naturally belong to tomorrow.”
+I’m saying the replay snapshot writer is stamping files with a current-time clock that crosses midnight in another timezone, while the board data inside still belongs to the historical slate.
+
+That naming is ugly, but it’s not nonsensical once you separate:
+
+artifact write time
+from
+
+slate date
+
+
+Sources
+
+You are right but I want it correctly telling me the time it reads telemetry. Semantics are important especially when backlogging and reviewing historical data
+
+Thought for 33s
+Agreed. You should fix the naming, not just mentally translate it.
+
+Right now the system treats today_<timestamp>.csv as an append-only artifact name, while the real slate identity lives in game_date inside the board rows 
+PriorChatlog252
+
+. The backtest also still has a filename-date fallback parser for today_YYYYMMDD..., which is exactly why bad semantics here can leak into analysis and telemetry review 
+PriorChatlog252
+
+.
+
+The correct rule should be:
+
+live snapshots: stamp with the live local write time, because they represent “today now”
+
+replay snapshots: name by the historical slate date, not the current write time
+
+optionally include the write stamp as a second field, but never as the primary identity
+
+So for replay, instead of something like:
+
+today_20260307_024807.csv
+
+it should look more like:
+
+replay_2026-02-22_1206PM_written_20260306_2137CT.csv
+
+or at minimum:
+
+today_20260222_1206PM.csv
+
+The important part is that the first date in the filename must match the slate being scored, not the clock on the machine when replay ran.
+
+Why this matters:
+
+your telemetry/backtest workflow depends on being able to inspect historical batches cleanly
+
+the backtest already uses explicit snapshots and can fall back to filename date parsing, so misleading names are dangerous noise 
+backtest_role_layer_ctx
+
+ 
+PriorChatlog252
+
+
+your own stated goal is backlog/review correctness, and that means artifact semantics have to be trustworthy
+
+So yes: this is worth fixing properly.
+
+The right implementation target is the snapshot writer in rebuild, not the backtest:
+
+keep game_date as the authoritative slate date
+
+when is_replay, derive the snapshot filename from game_date
+
+when live, keep the current live timestamp behavior
+
+if you want audit richness, append the write timestamp after the slate date rather than using it as the primary date
+
+That gives you filenames whose meaning matches the telemetry you are reviewing.
+
+
+Sources
+
+
+backtest_role_layer_ctx_new_None_None.meta.json
+File
+
+Thought for 15s
+This meta confirms the run itself was clean and using the right truth table:
+
+logs_path is your consolidated Last10.csv
+
+rows_total is 109,850
+
+rows_eval_no_push is 108,170
+
+nsims=20000, seed=1337, lookback=20
+
+start / end are null, so this was the explicit-snapshot batch path, not a date-window scan 
+backtest_role_layer_ctx_new_Non…
+
+
+So that part is solid.
+
+What it does not tell us is anything about the weird snapshot filename semantics. That is still a rebuild snapshot-writer issue, not a telemetry-meta issue.
+
+So the state now is:
+
+live path is fixed
+
+replay time handling is fixed
+
+backtest is running against the right outcomes file
+
+historical IAEL loading is at least being attempted per snapshot
+
+remaining semantic cleanup is the snapshot naming/writing behavior
+
+The immediate useful next move is not this meta file. It is to inspect the new backtest CSV contents and answer two things:
+
+did role_ctx_reason_role stop collapsing to no_iael everywhere?
+
+did ROLE materially separate from BASE now that historical IAEL is being loaded?
+
+If you want, next we should query the new backtest CSV for:
+
+reason mix
+
+mean absolute p_adj_role - p_adj_base
+
+per-snapshot base_brier vs role_brier
+
+That will tell us whether we finally have a real baseline surface or if there is still a historical-IAEL alignment gap.
+
+
+Sources
+
+Its right here in this massive file
+
+Stopped thinking
+Quick answer
+
+Stopped thinking
+Quick answer
+
+Uploaded image
+
+Thought for 25s
+Yep — use the massive CSV, not the meta. The meta only proves the run shape; the real answer is inside the backtest output itself. And your operating rule is still the right one here: one step at a time, debug first, no giant detours 
+AtlasManifestoV1
+
+
+Next useful step is very small:
+
+Run this against the CSV in tools\reports, not the zip/meta:
+
+cd C:\Users\rick\projects\Atlas; py -c "import pandas as pd; p=r'C:\Users\rick\projects\Atlas\tools\reports\backtest_role_layer_ctx_new_None_None.csv'; df=pd.read_csv(p, usecols=['role_ctx_reason_role','p_adj_base','p_adj_role']); df['dp']=(df['p_adj_role']-df['p_adj_base']).abs(); print(df.groupby('role_ctx_reason_role').agg(rows=('dp','size'),mean_abs_dp=('dp','mean')).sort_values('rows',ascending=False).to_string())"
+
+That tells us immediately whether the new run is still collapsing to no_iael or whether the historical IAEL load is actually engaging.
+
+After that, run this:
+
+cd C:\Users\rick\projects\Atlas; py -c "import pandas as pd; p=r'C:\Users\rick\projects\Atlas\tools\reports\backtest_role_layer_ctx_new_None_None.csv'; df=pd.read_csv(p, usecols=['__snapshot','hit','push','p_adj_base','p_adj_role']); df=df[df['push']!=1].copy(); out=df.groupby('__snapshot').apply(lambda x: pd.Series({'eval_legs':len(x),'base_brier':((x['p_adj_base']-x['hit'])**2).mean(),'role_brier':((x['p_adj_role']-x['hit'])**2).mean(),'delta_brier':((x['p_adj_role']-x['hit'])**2).mean()-((x['p_adj_base']-x['hit'])**2).mean()})).reset_index(); print(out.to_string(index=False))"
+
+Those two outputs will tell us:
+
+whether IAEL is actually being used now
+
+whether ROLE is meaningfully diverging from BASE on the real batch
+
+Paste those, and we’ll know whether the baseline is finally real or still partial.
+
+
+Sources
+
+role_ctx_reason_role
+no_outs               71728     0.002387
+ok_combo              17426     0.061722
+ok                    14046     0.041113
+combo_no_effect        4066     0.002189
+no_beneficiary_match   2584     0.002187
+PS C:\Users\rick\projects\Atlas> cd C:\Users\rick\projects\Atlas; py -c "import pandas as pd; p=r'C:\Users\rick\projects\Atlas\tools\reports\backtest_role_layer_ctx_new_None_None.csv'; df=pd.read_csv(p, usecols=['__snapshot','hit','push','p_adj_base','p_adj_role']); df=df[df['push']!=1].copy(); out=df.groupby('__snapshot').apply(lambda x: pd.Series({'eval_legs':len(x),'base_brier':((x['p_adj_base']-x['hit'])**2).mean(),'role_brier':((x['p_adj_role']-x['hit'])**2).mean(),'delta_brier':((x['p_adj_role']-x['hit'])**2).mean()-((x['p_adj_base']-x['hit'])**2).mean()})).reset_index(); print(out.to_string(index=False))"
+               __snapshot  eval_legs  base_brier  role_brier  delta_brier
+today_20260307_024642.csv    15856.0    0.230823    0.234818     0.003995
+today_20260307_024807.csv    17194.0    0.210921    0.210063    -0.000857
+today_20260307_024808.csv    10540.0    0.220707    0.217946    -0.002761
+today_20260307_024809.csv     9034.0    0.220545    0.216841    -0.003704
+today_20260307_024810.csv    20362.0    0.212790    0.212431    -0.000359
+today_20260307_024811.csv     8820.0    0.218616    0.216016    -0.002600
+today_20260307_024812.csv    10508.0    0.204803    0.204688    -0.000114
+today_20260307_024813.csv    15856.0    0.230823    0.234818     0.003995
+PS C:\Users\rick\projects\Atlas>
+
+Thought for 1m 13s
+This is finally useful.
+
+The important change is:
+
+RoleCtx is actually engaging now
+
+it is not collapsing to no_iael
+
+it is producing real movement where it should
+
+Your reason mix says that plainly:
+
+no_outs = 71,728 rows with tiny movement, which is normal
+
+ok_combo = 17,426 rows with mean abs delta 0.0617
+
+ok = 14,046 rows with mean abs delta 0.0411
+
+combo_no_effect and no_beneficiary_match stay tiny, which is also what we wanted
+
+So this is no longer a fake RoleCtx test. This is the first pass that actually resembles a real baseline surface.
+
+The second table says something just as important:
+
+ROLE improved Brier on most snapshots
+
+one snapshot clearly worsened: today_20260307_024642.csv
+
+and today_20260307_024813.csv has the exact same metrics, which strongly suggests a duplicate/repeated scenario in the batch
+
+That duplicate matters a lot.
+
+Because of it, I would not treat the aggregate as final yet:
+
+including the duplicate, the weighted net effect is basically flat to slightly worse
+
+excluding the duplicate repeat, the weighted net effect is modestly better for ROLE
+
+So the right interpretation is:
+
+Historical IAEL injection is now working
+
+RoleCtx is materially moving probabilities in the right buckets
+
+The batch likely contains at least one duplicate scenario
+
+You are now close to a usable baseline, but not done until the 10-snapshot cohort is deduped
+
+That means the next move is not another architecture detour.
+
+It is this:
+
+dedupe the replay cohort by the underlying historical slate/source
+
+rerun the same summary
+
+then lock the baseline off the deduped set
+
+After that, you’ll be in a position to answer the real knob question:
+
+whether ROLE should stay at current magnitude
+
+whether combo behavior needs tuning
+
+whether calibration/kernel is now the first knob instead
+
+So the immediate conclusion is:
+this was progress. Major progress.
+You now have a backtest that is close enough to start acting like a real baseline tool, but you need to remove the duplicate scenario contamination before trusting the headline aggregate.
+
+
+
+

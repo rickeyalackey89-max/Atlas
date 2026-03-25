@@ -15,6 +15,7 @@ from typing import Any, Optional
 
 import pandas as pd
 
+from Atlas.core.share_name_key import share_name_key
 from Atlas.stages.rebuild.rebuild_today import run_rebuild
 
 
@@ -537,15 +538,20 @@ def _write_eval_legs(args: BacktestArgs, meta: BacktestMeta, engine_run_dir: Pat
 
     deduped = deduped.copy()
     logs = logs.copy()
-    deduped["player_norm"] = deduped.get("player", pd.Series("", index=deduped.index)).astype(str).str.upper().str.strip()
-    logs["player_norm"] = logs["player"].astype(str).str.upper().str.strip()
+
+    deduped["player_board"] = deduped.get("player", pd.Series("", index=deduped.index)).astype(str)
+    deduped["player_key"] = deduped["player_board"].map(share_name_key)
+
+    logs = logs.rename(columns={"player": "player_gamelog"})
+    logs["player_key"] = logs["player_gamelog"].astype(str).map(share_name_key)
     deduped["game_date"] = pd.to_datetime(deduped["game_date"], errors="coerce").dt.normalize()
     logs["game_date"] = pd.to_datetime(logs["game_date"], errors="coerce").dt.normalize()
     for col in ["pts", "reb", "ast", "fg3m", "blk", "stl"]:
         if col in logs.columns:
             logs[col] = pd.to_numeric(logs[col], errors="coerce")
 
-    merged = deduped.merge(logs, on=["player_norm", "game_date"], how="left", suffixes=("", "_log"))
+    merged = deduped.merge(logs, on=["player_key", "game_date"], how="left", suffixes=("", "_log"))
+    merged["player"] = merged.get("player_gamelog", merged.get("player_board"))
     merged["actual"] = [
         _actual_from_row(stat, rec)
         for stat, rec in zip(merged.get("stat", pd.Series("", index=merged.index)), merged.to_dict(orient="records"))

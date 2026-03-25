@@ -158,6 +158,8 @@ from typing import Optional
 
 import yaml
 
+from Atlas.runtime.replay_eval import backfill_latest_replay_eval_legs
+
 
 # -----------------------------
 # Data structures
@@ -521,13 +523,25 @@ def main(argv: Optional[list[str]] = None) -> None:
         raw_path = _parse_replay_raw_path(argv)
 
         # Replay must never write to live surfaces (runs/latest).
-        # Route ALL outputs into data/output/replay_runs/<run_id>.
+        # Route ALL outputs into data/telemetry/replay_runs/<run_id>.
         run_id = datetime.now().strftime("%Y%m%d_%H%M%S")
         os.environ["ATLAS_AUTHORITY"] = "replay"
-        os.environ["ATLAS_OUT_DIR"] = str(repo_root / "data" / "output" / "replay_runs" / run_id)
+        os.environ["ATLAS_OUT_DIR"] = str(repo_root / "data" / "telemetry" / "replay_runs" / run_id)
 
         from Atlas.runtime.orchestrator import run_today
         run_today(authority="sandbox", raw_path=raw_path)  # keep behavior stable for step 1
+        output_root = Path(os.environ["ATLAS_OUT_DIR"]).resolve()
+        replay_truth_path = repo_root / "data" / "telemetry" / "Last 10" / "Last10.csv"
+        gamelogs_path = Path(
+            os.environ.get("ATLAS_GAMELOGS_PATH", str(repo_root / "data" / "gamelogs" / "nba_gamelogs.csv"))
+        ).resolve()
+        eval_path = backfill_latest_replay_eval_legs(
+            output_root=output_root,
+            gamelogs_path=[replay_truth_path, gamelogs_path],
+            repo_root=repo_root,
+            python_executable=sys.executable,
+        )
+        print(f"[REPLAY] eval_legs={eval_path}")
         return
 
     # TOOLS

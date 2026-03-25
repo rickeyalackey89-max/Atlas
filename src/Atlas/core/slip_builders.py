@@ -81,17 +81,22 @@ def _clip01(s: pd.Series) -> pd.Series:
     return pd.Series(arr, index=s.index)
 
 
-def _pick_best_prob_column(df: pd.DataFrame) -> str:
+def _pick_best_prob_column(df: pd.DataFrame, *, prefer_calibrated_prob: bool = False) -> str:
     """
     Probability preference order (best -> fallback).
 
-    1) p_cal_role   (calibrated role-adjusted)
-    2) p_cal        (calibrated base-adjusted)
-    3) p_adj_role   (raw role-adjusted)
-    4) p_adj        (raw base-adjusted; legacy)
-    5) p            (raw)
+    1) p_cal       (calibrated probability)
+    2) p_for_cal   (upstream probability fed into calibration)
+    3) p_role      (role-context probability)
+    4) p           (raw probability)
+    5) p_adj       (blowout / minutes adjusted probability)
+    6) p_eff       (legacy effective probability)
     """
-    for c in ("p_cal_role", "p_cal", "p_adj_role", "p_adj", "p"):
+    if prefer_calibrated_prob:
+        order = ("p_cal", "p_for_cal", "p_role", "p", "p_adj", "p_eff")
+    else:
+        order = ("p_for_cal", "p_cal", "p_role", "p", "p_adj", "p_eff")
+    for c in order:
         if c in df.columns:
             return c
     return ""
@@ -208,6 +213,9 @@ def build_slips_by_tier_buckets(
     mix = mixes[n_legs]
 
     df = legs_df.copy().reset_index(drop=True)
+    sb = cfg.get("slip_build", {}) if isinstance(cfg, dict) else {}
+    legacy_selector_scoring = bool(sb.get("legacy_selector_scoring", False))
+    prefer_calibrated_prob = bool(sb.get("prefer_calibrated_prob", False))
 
     if "projection_id" not in df.columns and "id" in df.columns:
         df = df.rename(columns={"id": "projection_id"})
@@ -236,28 +244,48 @@ def build_slips_by_tier_buckets(
         df["tier"] = pd.Series(["STANDARD"] * len(df), index=df.index, dtype=object)
 
     # ---- p_eff selection ----
-    best_prob_col = _pick_best_prob_column(df)
-
-    if "p_eff" not in df.columns:
-        if best_prob_col:
-            s = _to_float_series(df, best_prob_col, default=np.nan)
-            s = _nan_to_value(s, 0.50)
-            df["p_eff"] = _clip01(s)
-        else:
-            df["p_eff"] = pd.Series(np.full(len(df), 0.50, dtype="float64"), index=df.index)
+    if legacy_selector_scoring:
+        best_prob_col = ""
+        for c in ("p_cal_role", "p_cal", "p_adj_role", "p_adj", "p"):
+            if c in df.columns:
+                best_prob_col = c
+                break
     else:
-        base = _to_float_series(df, "p_eff", default=np.nan)
+        best_prob_col = _pick_best_prob_column(df, prefer_calibrated_prob=prefer_calibrated_prob)
 
+    if legacy_selector_scoring and "p_eff" in df.columns:
+        base = _to_float_series(df, "p_eff", default=np.nan)
         if best_prob_col:
             fb = _to_float_series(df, best_prob_col, default=0.50)
         else:
             fb = _to_float_series(df, "p_adj", default=0.50)
-
-        base_arr = base.to_numpy(copy=True)   # writable
+        base_arr = base.to_numpy(copy=True)
         fb_arr = fb.to_numpy(copy=False)
         mask = np.isnan(base_arr)
         base_arr[mask] = fb_arr[mask]
         df["p_eff"] = _clip01(pd.Series(base_arr, index=df.index))
+    elif best_prob_col:
+        source = _to_float_series(df, best_prob_col, default=np.nan)
+        source = _nan_to_value(source, 0.50)
+        df["p_eff"] = _clip01(source)
+    elif "p_eff" in df.columns:
+        df["p_eff"] = _clip01(_to_float_series(df, "p_eff", default=0.50).pipe(lambda s: _nan_to_value(s, 0.50)))
+    else:
+        df["p_eff"] = pd.Series(np.full(len(df), 0.50, dtype="float64"), index=df.index)
+
+    role_on_mask = pd.Series(np.zeros(len(df), dtype=bool), index=df.index)
+    if (not legacy_selector_scoring) and "role_ctx_outs_used" in df.columns:
+        role_on_mask = pd.to_numeric(df["role_ctx_outs_used"], errors="coerce").fillna(0.0) > 0.0
+        if role_on_mask.any():
+            role_surface: pd.Series | None = None
+            # Prefer the upstream probability surface first for role-on rows.
+            role_surface_order = ("p_cal", "p_for_cal", "p_close_adj", "p_close_role", "p_role") if prefer_calibrated_prob else ("p_for_cal", "p_cal", "p_close_adj", "p_close_role", "p_role")
+            for candidate_col in role_surface_order:
+                if candidate_col in df.columns:
+                    role_surface = _clip01(_to_float_series(df, candidate_col, default=0.50).pipe(lambda s: _nan_to_value(s, 0.50)))
+                    break
+            if role_surface is not None:
+                df.loc[role_on_mask, "p_eff"] = role_surface.loc[role_on_mask]
 
     # edge_score fallback = p_eff - 0.5 (keep exact math)
     if "edge_score" in df.columns:
@@ -275,6 +303,86 @@ def build_slips_by_tier_buckets(
         pe_arr = np.asarray(df["p_eff"].to_numpy(copy=False), dtype="float64")
         df["edge_score"] = pd.Series(pe_arr - 0.5, index=df.index)
 
+    role_bonus = pd.Series(np.zeros(len(df), dtype="float64"), index=df.index)
+    role_priority = pd.Series(np.zeros(len(df), dtype="float64"), index=df.index)
+    if (not legacy_selector_scoring) and "role_ctx_outs_used" in df.columns:
+        role_cfg = sb.get("role_ctx", {}) if isinstance(sb, dict) else {}
+
+        role_on_w = float(role_cfg.get("on_w", 0.0) or 0.0)
+        role_outs_w = float(role_cfg.get("outs_w", 0.0) or 0.0)
+        role_mult_w = float(role_cfg.get("mult_w", 0.0) or 0.0)
+        role_minutes_w = float(role_cfg.get("minutes_w", 0.0) or 0.0)
+        role_usage_w = float(role_cfg.get("usage_w", 0.0) or 0.0)
+        role_bonus_cap = float(role_cfg.get("bonus_cap", 0.0) or 0.0)
+        role_minutes_ref = float(role_cfg.get("minutes_ref", 0.50) or 0.50)
+        role_usage_ref = float(role_cfg.get("usage_ref", 1.00) or 1.00)
+
+        outs_used = _to_float_series(df, "role_ctx_outs_used", default=0.0)
+        role_on_mask = np.asarray(outs_used.to_numpy(copy=False), dtype="float64") > 0.0
+        if role_on_mask.any() and (role_on_w > 0.0 or role_outs_w > 0.0 or role_mult_w > 0.0 or role_minutes_w > 0.0 or role_usage_w > 0.0):
+            role_mult = _to_float_series(df, "role_ctx_mult", default=1.0)
+
+            if "minutes_s" in df.columns:
+                minutes_s = _to_float_series(df, "minutes_s", default=role_minutes_ref)
+            else:
+                minutes_s = pd.Series(np.full(len(df), role_minutes_ref, dtype="float64"), index=df.index)
+
+            if "usage_dep_eff" in df.columns:
+                usage_eff = _to_float_series(df, "usage_dep_eff", default=role_usage_ref)
+            elif "usage_dep" in df.columns:
+                usage_eff = _to_float_series(df, "usage_dep", default=role_usage_ref)
+            else:
+                usage_eff = pd.Series(np.full(len(df), role_usage_ref, dtype="float64"), index=df.index)
+
+            outs_arr = np.asarray(outs_used.to_numpy(copy=True), dtype="float64")
+            role_mult_arr = np.asarray(role_mult.to_numpy(copy=True), dtype="float64")
+            minutes_arr = np.asarray(minutes_s.to_numpy(copy=True), dtype="float64")
+            usage_arr = np.asarray(usage_eff.to_numpy(copy=True), dtype="float64")
+
+            outs_term = np.clip(outs_arr / 3.0, 0.0, 1.0)
+            mult_term = np.clip(role_mult_arr - 1.0, -0.20, 0.20) / 0.20
+            minutes_term = np.clip(minutes_arr - role_minutes_ref, -0.50, 0.50) / 0.50
+            usage_term = np.clip(usage_arr - role_usage_ref, -0.20, 0.20) / 0.20
+
+            bonus_arr = (
+                (role_on_w * 1.0)
+                + (role_outs_w * outs_term)
+                + (role_mult_w * mult_term)
+                + (role_minutes_w * minutes_term)
+                + (role_usage_w * usage_term)
+            )
+            bonus_arr = np.where(role_on_mask, bonus_arr, 0.0)
+            if role_bonus_cap > 0.0:
+                np.clip(bonus_arr, -role_bonus_cap, role_bonus_cap, out=bonus_arr)
+
+            role_bonus = pd.Series(bonus_arr, index=df.index)
+            role_priority_arr = np.where(role_on_mask, np.clip(np.maximum(bonus_arr, 0.0), 0.0, role_bonus_cap), 0.0)
+            role_priority = pd.Series(role_priority_arr, index=df.index)
+
+    df["role_ctx_allocator_bonus"] = role_bonus
+    df["role_ctx_allocator_priority"] = role_priority
+
+    edge_arr = np.asarray(df["edge_score"].to_numpy(copy=False), dtype="float64")
+    role_bonus_arr = np.asarray(role_bonus.to_numpy(copy=False), dtype="float64")
+    role_priority_arr = np.asarray(role_priority.to_numpy(copy=False), dtype="float64")
+    tier_arr = np.asarray(df["tier"].to_numpy(copy=False), dtype=object)
+    role_presence_arr = np.where(role_on_mask, np.where(tier_arr == "STANDARD", 0.75, 0.35), 0.0)
+    role_lift_arr = np.ones(len(df), dtype="float64")
+    if role_priority_arr.any():
+        if role_bonus_cap > 0.0:
+            lift_scale = np.clip(role_priority_arr / role_bonus_cap, 0.0, 1.0)
+        else:
+            lift_scale = np.zeros(len(df), dtype="float64")
+        role_lift_arr = np.where(role_priority_arr > 0.0, 1.0 + (0.75 * lift_scale), 1.0)
+
+    if legacy_selector_scoring:
+        df["allocator_score"] = pd.Series(edge_arr, index=df.index)
+    else:
+        df["allocator_score"] = pd.Series(
+            (edge_arr * role_lift_arr) + role_bonus_arr + role_presence_arr,
+            index=df.index,
+        )
+
     tier_counts = df["tier"].value_counts(dropna=False).to_dict()
 
     if (os.getenv("ATLAS_DEBUG_BUILDER") or "").strip() == "1":
@@ -285,7 +393,18 @@ def build_slips_by_tier_buckets(
         if tier_counts.get(needed, 0) == 0:
             return pd.DataFrame(columns=_EMPTY_SLIPS_COLS)
 
-    df = df.sort_values(["tier", "edge_score", "p_eff"], ascending=[True, False, False]).reset_index(drop=True)
+    if legacy_selector_scoring:
+        df = df.sort_values(["tier", "edge_score", "p_eff"], ascending=[True, False, False]).reset_index(drop=True)
+    elif "role_ctx_outs_used" in df.columns:
+        role_sort = pd.to_numeric(df["role_ctx_outs_used"], errors="coerce")
+        if not isinstance(role_sort, pd.Series):
+            role_sort = pd.Series(role_sort, index=df.index)
+        role_sort_arr = np.asarray(role_sort.to_numpy(copy=True), dtype="float64")
+        role_sort_arr[np.isnan(role_sort_arr)] = 0.0
+        df["role_ctx_outs_used_sort"] = pd.Series(role_sort_arr, index=df.index)
+        df = df.sort_values(["tier", "role_ctx_outs_used_sort", "allocator_score", "role_ctx_allocator_priority", "p_eff"], ascending=[True, False, False, False, False]).reset_index(drop=True)
+    else:
+        df = df.sort_values(["tier", "allocator_score", "role_ctx_allocator_priority", "p_eff"], ascending=[True, False, False, False]).reset_index(drop=True)
 
     buckets: dict[str, list[pd.Series]] = {}
     for t in required_tiers:
@@ -349,6 +468,10 @@ def build_slips_by_tier_buckets(
         pen_cfg = sb.get("penalty", {}) if isinstance(sb, dict) else {}
         team_w = float(pen_cfg.get("team_w", 0.0) or 0.0)
         family_w = float(pen_cfg.get("family_w", 0.0) or 0.0)
+        team_power = float(pen_cfg.get("team_power", 2.0) or 2.0)
+        family_power = float(pen_cfg.get("family_power", 2.0) or 2.0)
+        frag_power = float(pen_cfg.get("frag_power", 1.0) or 1.0)
+        leg_norm = float(max(1, int(n_legs) - 1))
 
         def _team_key(r: pd.Series) -> str:
             for k in ("team", "team_abbrev", "player_team"):
@@ -438,6 +561,20 @@ def build_slips_by_tier_buckets(
                 cfg=cfg,
             )
 
+            role_bonus_total = 0.0
+            role_on_count = 0
+            if not legacy_selector_scoring:
+                for r in chosen:
+                    try:
+                        role_bonus_total += float(r.get("role_ctx_allocator_bonus", 0.0) or 0.0)
+                    except Exception:
+                        pass
+                    try:
+                        if int(float(r.get("role_ctx_outs_used", 0) or 0)) > 0:
+                            role_on_count += 1
+                    except Exception:
+                        pass
+
             legs_str = scored.get("legs", "")
             if not mix_ok_fn(n_legs, legs_str):
                 continue
@@ -462,7 +599,8 @@ def build_slips_by_tier_buckets(
                 for _, n in team_counts.items():
                     over = n - 1
                     if over > 0:
-                        pen_team += team_w * float(over * over)
+                        ratio = float(over) / leg_norm
+                        pen_team += team_w * float(ratio ** team_power)
 
             # FAMILY penalty (quadratic overage)
             pen_family = 0.0
@@ -475,7 +613,8 @@ def build_slips_by_tier_buckets(
                 for _, n in fam_counts.items():
                     over = n - 1
                     if over > 0:
-                        pen_family += family_w * float(over * over)
+                        ratio = float(over) / leg_norm
+                        pen_family += family_w * float(ratio ** family_power)
 
             frag_w = float(pen_cfg.get("frag_w", 0.0))
 
@@ -491,7 +630,8 @@ def build_slips_by_tier_buckets(
                     if v == v:  # not NaN
                         frags.append(v)
                 if frags:
-                    pen_frag = frag_w * (sum(frags) / float(len(frags)))
+                    mean_frag = sum(frags) / float(len(frags))
+                    pen_frag = frag_w * float(mean_frag ** frag_power)
 
             pen_total = pen_team + pen_family + pen_frag
 
@@ -510,7 +650,11 @@ def build_slips_by_tier_buckets(
             scored["pen_family"] = pen_family
             scored["pen_frag"] = pen_frag
             scored["pen_total"] = pen_total
-            scored["score_adj"] = float(base_score - pen_total)
+            scored["role_ctx_bonus"] = role_bonus_total
+            scored["role_ctx_on_legs"] = int(role_on_count)
+            scored["role_ctx_on_share"] = float(role_on_count / len(chosen)) if chosen else 0.0
+            role_share_bonus = 0.0 if legacy_selector_scoring else 0.15 * float(role_on_count)
+            scored["score_adj"] = float(base_score - pen_total + role_bonus_total + role_share_bonus)
             scored["players"] = [p for p in players if p]
 
             # keep existing slip fields, just add penalties + adjusted score
@@ -557,6 +701,7 @@ def build_slips_by_tier_buckets(
     out["payout_mult_eff"] = pd.Series(pme_arr, index=out.index)
 
     mode = str(sort_mode).lower().strip()
+    winprob_mode = mode in ("hit", "hit_prob", "win", "winprob")
 
     # Prefer score_adj if present (Step 3.5). Fallback to legacy behavior if absent.
     has_score_adj = "score_adj" in out.columns
@@ -570,10 +715,7 @@ def build_slips_by_tier_buckets(
 
     if mode in ("hit", "hit_prob", "win", "winprob"):
         # WinProb = pure probability ordering (no payout/penalty noise)
-        keys = ["hit_prob"]
-        if "avg_p" in out.columns:
-            keys.append("avg_p")
-        out = out.sort_values(keys, ascending=[False] * len(keys)).reset_index(drop=True)
+        out = out.sort_values(["hit_prob"], ascending=[False]).reset_index(drop=True)
 
     else:
         # EV board: keep rank_ev for transparency, but sort by score_adj if present
@@ -589,6 +731,16 @@ def build_slips_by_tier_buckets(
     out = dedupe_slips_by_key(out).reset_index(drop=True)
     if out.empty:
         return out
+    candidate_pool = out.copy()
+    if (os.getenv("ATLAS_DEBUG_BUILDER") or "").strip() == "1":
+        role_dbg = pd.to_numeric(candidate_pool.get("role_ctx_on_legs", 0), errors="coerce")
+        if not isinstance(role_dbg, pd.Series):
+            role_dbg = pd.Series(role_dbg, index=candidate_pool.index)
+        role_dbg_arr = np.asarray(role_dbg.to_numpy(copy=True), dtype="float64")
+        role_dbg_arr[np.isnan(role_dbg_arr)] = 0.0
+        role_dbg_nz = int((role_dbg_arr > 0).sum())
+        role_dbg_max = float(role_dbg_arr.max()) if len(role_dbg_arr) else 0.0
+        print(f"[BUILDER][DEBUG] candidate_pool rows={len(candidate_pool)} role_nz={role_dbg_nz} role_max={role_dbg_max}")
 
     # -----------------------------
     # Step 4: Beam selection (C3) with portfolio exposure caps
@@ -596,6 +748,7 @@ def build_slips_by_tier_buckets(
     sb = cfg.get("slip_build", {}) if isinstance(cfg, dict) else {}
     beam_width = int(sb.get("beam_width", 100))
     max_slips_per_player = int(sb.get("max_slips_per_player", 5))
+    greedy_top_off_enabled = bool(sb.get("greedy_top_off_enabled", True))
     debug_builder = (os.getenv("ATLAS_DEBUG_BUILDER") or "").strip() == "1"
     rej_exposure_cap = 0
     rej_missing_players = 0
@@ -623,7 +776,7 @@ def build_slips_by_tier_buckets(
     has_legs_str = "legs" in out.columns
 
     # Precompute per-row slip score used for beam selection
-    if mode in ("hit", "hit_prob", "win", "winprob"):
+    if winprob_mode:
         scores = pd.to_numeric(out["hit_prob"], errors="coerce")
     else:
         scores = pd.to_numeric(
@@ -636,6 +789,18 @@ def build_slips_by_tier_buckets(
 
     score_arr = np.asarray(scores.to_numpy(copy=True), dtype="float64")  # writable
     score_arr[np.isnan(score_arr)] = -1e9  # send bad rows to bottom
+    beam_role_bonus = float((((cfg or {}).get("slip_build", {}) or {}).get("role_ctx", {}) or {}).get("beam_bonus", 25.0))
+    beam_score_arr = np.asarray(score_arr, dtype="float64").copy()
+    role_leg_counts = np.zeros(len(out), dtype=int)
+    if "role_ctx_on_legs" in out.columns:
+        role_leg_counts = np.asarray(pd.to_numeric(out["role_ctx_on_legs"], errors="coerce").fillna(0.0).to_numpy(copy=False), dtype="float64")
+        np.clip(role_leg_counts, 0.0, None, out=role_leg_counts)
+        role_leg_counts = role_leg_counts.astype(int, copy=False)
+    if role_leg_counts.any() and not winprob_mode:
+        beam_score_arr = beam_score_arr + (role_leg_counts.astype("float64") * beam_role_bonus)
+    role_ctx_cfg = ((cfg or {}).get("slip_build", {}) or {}).get("role_ctx", {}) if isinstance(cfg, dict) else {}
+    role_quota_per_10 = int(role_ctx_cfg.get("target_role_slips_per_10", role_ctx_cfg.get("min_role_legs_per_10", 4)) or 4)
+    role_target_slips = 0 if winprob_mode else max(0, int(np.ceil((float(top_n) * float(role_quota_per_10)) / 10.0)))
 
     row_players: list[list[str]] = []
     has_players_col = "players" in out.columns
@@ -680,18 +845,34 @@ def build_slips_by_tier_buckets(
         ps = list(dict.fromkeys(ps))
         row_players.append(ps)
 
-    # Limit the candidate window for beam expansion to keep runtime sane
-    # (If you want, we can expose this as a config knob later.)
-    cand_order = list(np.argsort(-score_arr))  # indices sorted by score desc
-    window_mult = 200          # starting window size factor
-    window_max_mult = 800      # how far we're willing to widen before failing
+    # Limit beam expansion independently from the candidate-pool size.
+    cand_order = list(np.argsort(-beam_score_arr))  # indices sorted by beam score desc
+    legacy_tied_window_defaults = bool(sb.get("legacy_tied_window_defaults", False))
+    if legacy_tied_window_defaults:
+        default_window_mult = max(int(target_pool_mult), 12)
+        default_window_max = max(default_window_mult, min(default_window_mult * 4, 48))
+        default_window_min = max(int(top_n) * 8, beam_width * 2, int(target_pool))
+    else:
+        default_window_mult = max(12, min(int(top_n) * 2, 24))
+        default_window_max = max(default_window_mult, min(default_window_mult * 2, 48))
+        default_window_min = max(int(top_n) * 8, min(beam_width * 2, int(top_n) * 20))
+
+    window_mult = int(sb.get("beam_window_mult", default_window_mult))
+    if window_mult < 4:
+        window_mult = 4
+
+    window_max_mult = int(sb.get("beam_window_max_mult", default_window_max))
+    if window_max_mult < window_mult:
+        window_max_mult = window_mult
+
+    window_min_size = int(sb.get("beam_window_min", default_window_min))
+    if window_min_size < int(top_n):
+        window_min_size = int(top_n)
     window_bumps = 0
-    cand_cap = max(int(top_n) * window_mult, 2000)
+    cand_cap = max(int(top_n) * window_mult, window_min_size)
+    cand_cap = min(len(cand_order), cand_cap)
     cand_order = cand_order[:cand_cap]
     beam_window_size = len(cand_order)
-
-    # Beam state: (total_score, selected_indices, exposure_counts_dict)
-    beam: list[tuple[float, list[int], dict[str, int]]] = [(0.0, [], {})]
 
     def _can_add(counts: dict[str, int], players: list[str]) -> bool:
         for p in players:
@@ -705,11 +886,42 @@ def build_slips_by_tier_buckets(
             nc[p] = nc.get(p, 0) + 1
         return nc
 
-    # Beam select top_n slips
-    for _step in range(int(top_n)):
-        next_beam: list[tuple[float, list[int], dict[str, int]]] = []
+    seed_selected: list[int] = []
+    seed_counts: dict[str, int] = {}
+    seed_total = 0.0
+    seed_role_count = 0
+    if role_target_slips > 0 and role_leg_counts.any():
+        for idx in np.argsort(-beam_score_arr):
+            role_legs = int(role_leg_counts[idx])
+            if role_legs <= 0:
+                continue
+            if seed_role_count >= role_target_slips:
+                break
+            keys = row_players[idx]
+            if not keys:
+                continue
+            if not _can_add(seed_counts, keys):
+                continue
+            seed_selected.append(int(idx))
+            seed_counts = _add_counts(seed_counts, keys)
+            seed_total += float(beam_score_arr[idx])
+            seed_role_count += 1
 
-        for total, sel, counts in beam:
+    if seed_selected:
+        seed_set = set(seed_selected)
+        cand_order = [idx for idx in cand_order if idx not in seed_set]
+    if (os.getenv("ATLAS_DEBUG_BUILDER") or "").strip() == "1":
+        print(f"[BUILDER][DEBUG] role seed count={len(seed_selected)} role_seed_slips={seed_role_count} quota={role_target_slips}")
+
+    # Beam state: (total_score, selected_indices, exposure_counts_dict, role_active_slip_count)
+    beam: list[tuple[float, list[int], dict[str, int], int]] = [(seed_total, list(seed_selected), dict(seed_counts), int(seed_role_count))]
+
+    # Beam select top_n slips
+    remaining_steps = max(0, int(top_n) - len(seed_selected))
+    for _step in range(remaining_steps):
+        next_beam: list[tuple[float, list[int], dict[str, int], int]] = []
+
+        for total, sel, counts, role_count in beam:
             used = set(sel)
             for idx in cand_order:
                 if idx in used:
@@ -722,10 +934,12 @@ def build_slips_by_tier_buckets(
                     rej_exposure_cap += 1
                     continue
 
-                new_total = total + float(score_arr[idx])
+                new_role_count = role_count + (1 if int(role_leg_counts[idx]) > 0 else 0)
+
+                new_total = total + float(beam_score_arr[idx])
                 new_sel = sel + [idx]
                 new_counts = _add_counts(counts, keys)
-                next_beam.append((new_total, new_sel, new_counts))
+                next_beam.append((new_total, new_sel, new_counts, new_role_count))
 
         if not next_beam:
             # Beam stalled. Try widening candidate window (NO cap relaxation).
@@ -733,8 +947,9 @@ def build_slips_by_tier_buckets(
                 window_mult = min(window_max_mult, window_mult * 2)
                 window_bumps += 1
 
-                cand_cap = max(int(top_n) * window_mult, 2000)
-                cand_order = list(np.argsort(-score_arr))
+                cand_cap = max(int(top_n) * window_mult, window_min_size)
+                cand_order = list(np.argsort(-beam_score_arr))
+                cand_cap = min(len(cand_order), cand_cap)
                 cand_order = cand_order[:cand_cap]
                 beam_window_size = len(cand_order)
 
@@ -748,30 +963,125 @@ def build_slips_by_tier_buckets(
             break
 
         # Keep best beam_width partial portfolios
-        next_beam.sort(key=lambda x: x[0], reverse=True)
+        next_beam.sort(key=lambda x: (x[3], x[0]), reverse=True)
         beam = next_beam[:beam_width]
 
     # Choose best completed portfolio (prefer exact size = top_n)
     best = None
-    for total, sel, counts in beam:
-        if len(sel) == int(top_n):
+    for total, sel, counts, role_count in beam:
+        if len(sel) == int(top_n) and role_count >= role_target_slips:
             best = (total, sel)
             break
     if best is None:
         # fallback: take the longest portfolio we could build
-        beam.sort(key=lambda x: (len(x[1]), x[0]), reverse=True)
+        beam.sort(key=lambda x: (len(x[1]), x[3], x[0]), reverse=True)
         best = (beam[0][0], beam[0][1])
 
-    selected_idx = best[1]
-    out = out.iloc[selected_idx].reset_index(drop=True)
+    selected_positions = list(best[1])
+    out = candidate_pool.iloc[selected_positions].reset_index(drop=True)
+
+    if role_target_slips > 0:
+        role_candidate_positions = [i for i in range(len(candidate_pool)) if int(role_leg_counts[i]) > 0]
+        role_candidate_positions.sort(key=lambda i: float(beam_score_arr[i]), reverse=True)
+
+        filler_candidates = list(range(len(candidate_pool)))
+        filler_candidates.sort(key=lambda i: float(beam_score_arr[i]), reverse=True)
+
+        forced_positions: list[int] = []
+        forced_counts: dict[str, int] = {}
+        forced_role_count = 0
+
+        for cand_idx in role_candidate_positions:
+            cand_role_legs = int(role_leg_counts[cand_idx])
+            if cand_role_legs <= 0:
+                continue
+            if forced_role_count >= role_target_slips:
+                break
+            cand_players = row_players[cand_idx]
+            if not cand_players:
+                continue
+            if not _can_add(forced_counts, cand_players):
+                continue
+            forced_positions.append(cand_idx)
+            forced_counts = _add_counts(forced_counts, cand_players)
+            forced_role_count += 1
+
+        if forced_role_count == role_target_slips:
+            combined_positions = list(forced_positions)
+            combined_counts = dict(forced_counts)
+            combined_set = set(combined_positions)
+
+            for idx in filler_candidates:
+                if len(combined_positions) >= int(top_n):
+                    break
+                if idx in combined_set:
+                    continue
+                if int(role_leg_counts[idx]) > 0:
+                    continue
+                if _can_add(combined_counts, row_players[idx]):
+                    combined_positions.append(idx)
+                    combined_set.add(idx)
+                    combined_counts = _add_counts(combined_counts, row_players[idx])
+
+            if len(combined_positions) == int(top_n):
+                selected_positions = list(combined_positions)
+                out = candidate_pool.iloc[selected_positions].reset_index(drop=True)
+                if (os.getenv("ATLAS_DEBUG_BUILDER") or "").strip() == "1":
+                    print(f"[BUILDER][DEBUG] greedy role rebuild applied | forced_role_slips={forced_role_count} combined_rows={len(combined_positions)}")
+
+    if greedy_top_off_enabled and len(selected_positions) < int(top_n):
+        selected_set = set(selected_positions)
+        selected_counts: dict[str, int] = {}
+        selected_role_count = 0
+
+        for pos in selected_positions:
+            selected_counts = _add_counts(selected_counts, row_players[pos])
+            if int(role_leg_counts[pos]) > 0:
+                selected_role_count += 1
+
+        preferred_fillers = list(range(len(candidate_pool)))
+        preferred_fillers.sort(
+            key=lambda i: (
+                1 if selected_role_count < role_target_slips and int(role_leg_counts[i]) > 0 else 0,
+                float(beam_score_arr[i]),
+            ),
+            reverse=True,
+        )
+
+        for pos in preferred_fillers:
+            if len(selected_positions) >= int(top_n):
+                break
+            if pos in selected_set:
+                continue
+            cand_players = row_players[pos]
+            if not cand_players:
+                continue
+            if not _can_add(selected_counts, cand_players):
+                continue
+            selected_positions.append(pos)
+            selected_set.add(pos)
+            selected_counts = _add_counts(selected_counts, cand_players)
+            if int(role_leg_counts[pos]) > 0:
+                selected_role_count += 1
+
+        out = candidate_pool.iloc[selected_positions].reset_index(drop=True)
+        if debug_builder and len(selected_positions) >= int(top_n):
+            print(
+                f"[BUILDER][DEBUG] greedy top-off applied | selected={len(selected_positions)} "
+                f"requested={int(top_n)} role_selected={selected_role_count}"
+            )
+    if (os.getenv("ATLAS_DEBUG_BUILDER") or "").strip() == "1":
+        if len(out) and "role_ctx_on_legs" in out.columns:
+            final_role_counts_arr = np.asarray(pd.to_numeric(out["role_ctx_on_legs"], errors="coerce"), dtype="float64")
+            final_role_count_dbg = int((np.nan_to_num(final_role_counts_arr, nan=0.0) > 0.0).sum())
+        else:
+            final_role_count_dbg = 0
+        print(f"[BUILDER][DEBUG] final selected role_active_slips={final_role_count_dbg} rows={len(out)}")
 
     out["beam_selected"] = 1
 
-    if mode in ("hit", "hit_prob", "win", "winprob"):
-        keys = ["hit_prob"]
-        if "avg_p" in out.columns:
-            keys.append("avg_p")
-        out = out.sort_values(keys, ascending=[False] * len(keys)).reset_index(drop=True)
+    if winprob_mode:
+        out = out.sort_values(["hit_prob"], ascending=[False]).reset_index(drop=True)
 
     if len(out) < int(top_n):
         raise RuntimeError(

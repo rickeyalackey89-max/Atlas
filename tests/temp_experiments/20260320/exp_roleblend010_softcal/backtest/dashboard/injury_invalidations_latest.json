@@ -1,0 +1,375 @@
+{
+  "report_date": "2026-03-17",
+  "report_label": "06:00PM",
+  "pulled_at_local": "2026-03-17T17:13:00-05:00",
+  "invalidated_players_count": 61,
+  "invalidated_players": [
+    {
+      "team": "WAS",
+      "player": "Black, Leaky",
+      "status": "OUT",
+      "reason": "Injury/Illness - Left Ankle; Sprain Injury/Illness - Right Retrocalcaneal;"
+    },
+    {
+      "team": "WAS",
+      "player": "Coulibaly, Bilal",
+      "status": "OUT",
+      "reason": "Bursitis"
+    },
+    {
+      "team": "WAS",
+      "player": "Davis, Anthony",
+      "status": "OUT",
+      "reason": "Injury/Illness - Left Finger; Sprain"
+    },
+    {
+      "team": "WAS",
+      "player": "George, Kyshawn",
+      "status": "OUT",
+      "reason": "Injury/Illness - Left Elbow; Sprain"
+    },
+    {
+      "team": "WAS",
+      "player": "Russell, D'Angelo",
+      "status": "OUT",
+      "reason": "Not With Team"
+    },
+    {
+      "team": "WAS",
+      "player": "Sarr, Alex",
+      "status": "OUT",
+      "reason": "Injury/Illness - Left Big Toe; Capsulitis Injury/Illness - Right Shoulder; Deep"
+    },
+    {
+      "team": "WAS",
+      "player": "Whitmore, Cam",
+      "status": "OUT",
+      "reason": "Vein Thrombosis"
+    },
+    {
+      "team": "WAS",
+      "player": "Young, Trae",
+      "status": "OUT",
+      "reason": "Injury/Illness - Right Quad; Contusion"
+    },
+    {
+      "team": "CHA",
+      "player": "Evbuomwan, Tosan",
+      "status": "OUT",
+      "reason": "G League - Two-Way"
+    },
+    {
+      "team": "CHA",
+      "player": "Hall, PJ",
+      "status": "OUT",
+      "reason": "G League - Two-Way"
+    },
+    {
+      "team": "CHA",
+      "player": "McNeeley, Liam",
+      "status": "OUT",
+      "reason": "G League - On Assignment"
+    },
+    {
+      "team": "CHA",
+      "player": "Reeves, Antonio",
+      "status": "OUT",
+      "reason": "G League - Two-Way"
+    },
+    {
+      "team": "CHA",
+      "player": "Salaun, Tidjane",
+      "status": "OUT",
+      "reason": "Injury/Illness - Left Calf; Strain"
+    },
+    {
+      "team": "ORL",
+      "player": "Black, Anthony",
+      "status": "OUT",
+      "reason": "Abdominal; Strain"
+    },
+    {
+      "team": "ORL",
+      "player": "Castleton, Colin",
+      "status": "OUT",
+      "reason": "G League - Two-Way"
+    },
+    {
+      "team": "ORL",
+      "player": "Isaac, Jonathan",
+      "status": "OUT",
+      "reason": "Injury/Illness - Left Knee; Sprain"
+    },
+    {
+      "team": "ORL",
+      "player": "Morales, Alex",
+      "status": "OUT",
+      "reason": "G League - Two-Way Injury/Illness - Left High Ankle; Sprain"
+    },
+    {
+      "team": "ORL",
+      "player": "Wagner, Franz",
+      "status": "OUT",
+      "reason": "Injury Management"
+    },
+    {
+      "team": "POR",
+      "player": "Jr., Craig",
+      "status": "OUT",
+      "reason": "Injury/Illness - Left Groin; Strain Injury/Illness - Right Quadricep;"
+    },
+    {
+      "team": "POR",
+      "player": "Proctor, Tyrese",
+      "status": "OUT",
+      "reason": "Strain"
+    },
+    {
+      "team": "POR",
+      "player": "Sarr, Olivier",
+      "status": "OUT",
+      "reason": "G League - Two-Way"
+    },
+    {
+      "team": "MIL",
+      "player": "Antetokounmpo, Alex",
+      "status": "OUT",
+      "reason": "G League - Two-Way"
+    },
+    {
+      "team": "MIL",
+      "player": "Antetokounmpo, Giannis",
+      "status": "OUT",
+      "reason": "Injury/Illness - Left Knee; Hyperextension; Bone Bruise"
+    },
+    {
+      "team": "MIN",
+      "player": "Beringer, Joan",
+      "status": "OUT",
+      "reason": "G League - On Assignment Injury/Illness - Right Knee;"
+    },
+    {
+      "team": "MIN",
+      "player": "Edwards, Anthony",
+      "status": "OUT",
+      "reason": "Inflammation"
+    },
+    {
+      "team": "MIN",
+      "player": "Freeman, Enrique",
+      "status": "OUT",
+      "reason": "G League - Two-Way"
+    },
+    {
+      "team": "MIN",
+      "player": "Phillips, Julian",
+      "status": "OUT",
+      "reason": "G League - On Assignment"
+    },
+    {
+      "team": "MIN",
+      "player": "Pullin, Zyon",
+      "status": "OUT",
+      "reason": "G League - Two-Way Injury/Illness - Right Shoulder;"
+    },
+    {
+      "team": "DEN",
+      "player": "II, DaRon",
+      "status": "OUT",
+      "reason": "G League - On Assignment"
+    },
+    {
+      "team": "DEN",
+      "player": "Jones, Curtis",
+      "status": "OUT",
+      "reason": "G League - Two-Way"
+    },
+    {
+      "team": "DEN",
+      "player": "Simpson, KJ",
+      "status": "OUT",
+      "reason": "G League - Two-Way Injury/Illness - Right Hamstring;"
+    },
+    {
+      "team": "DEN",
+      "player": "Watson, Peyton",
+      "status": "OUT",
+      "reason": "Strain"
+    },
+    {
+      "team": "SAC",
+      "player": "Jr., Patrick",
+      "status": "OUT",
+      "reason": "G League - Two-Way"
+    },
+    {
+      "team": "SAC",
+      "player": "Carter, Devin",
+      "status": "OUT",
+      "reason": "Injury/Illness - Right Calf; Contusion"
+    },
+    {
+      "team": "SAC",
+      "player": "Eubanks, Drew",
+      "status": "OUT",
+      "reason": "Injury/Illness - Left Thumb; UCL Tear Injury/Illness - Left Eye; Retinal"
+    },
+    {
+      "team": "SAC",
+      "player": "Hunter, De'Andre",
+      "status": "OUT",
+      "reason": "Repair Injury/Illness - Right 5th Finger;"
+    },
+    {
+      "team": "SAC",
+      "player": "LaVine, Zach",
+      "status": "OUT",
+      "reason": "Tendon Repair"
+    },
+    {
+      "team": "SAC",
+      "player": "Murray, Keegan",
+      "status": "OUT",
+      "reason": "Injury/Illness - Left Ankle; Sprain Injury/Illness - Left Knee; Meniscus"
+    },
+    {
+      "team": "SAC",
+      "player": "Sabonis, Domantas",
+      "status": "OUT",
+      "reason": "Repair"
+    },
+    {
+      "team": "SAC",
+      "player": "Stevens, Isaiah",
+      "status": "OUT",
+      "reason": "G League - Two-Way"
+    },
+    {
+      "team": "BOS",
+      "player": "Tonje, John",
+      "status": "OUT",
+      "reason": "G League - Two-Way Injury/Illness - Right Ring Finger;"
+    },
+    {
+      "team": "BOS",
+      "player": "Vucevic, Nikola",
+      "status": "OUT",
+      "reason": "Fracture"
+    },
+    {
+      "team": "BKN",
+      "player": "Demin, Egor",
+      "status": "OUT",
+      "reason": "Injury Management"
+    },
+    {
+      "team": "POR",
+      "player": "Sharpe, Day'Ron",
+      "status": "OUT",
+      "reason": "Injury/Illness - Left Thumb; UCL Tear"
+    },
+    {
+      "team": "CHI",
+      "player": "Collins, Zach",
+      "status": "OUT",
+      "reason": "Injury/Illness - Right 1st Toe; Surgery"
+    },
+    {
+      "team": "CHI",
+      "player": "Essengue, Noa",
+      "status": "OUT",
+      "reason": "Injury/Illness - Left Shoulder; Surgery Injury/Illness - Left Patellofemoral;"
+    },
+    {
+      "team": "CHI",
+      "player": "Ivey, Jaden",
+      "status": "OUT",
+      "reason": "Pain Syndrome"
+    },
+    {
+      "team": "CHI",
+      "player": "McClung, Mac",
+      "status": "OUT",
+      "reason": "G League - Two-Way Injury/Illness - Right Patellofemoral;"
+    },
+    {
+      "team": "CHI",
+      "player": "Okoro, Isaac",
+      "status": "DOUBTFUL",
+      "reason": "Pain Syndrome Injury/Illness - Left Fibular Head;"
+    },
+    {
+      "team": "CHI",
+      "player": "Simons, Anfernee",
+      "status": "OUT",
+      "reason": "Fracture"
+    },
+    {
+      "team": "DAL",
+      "player": "Irving, Kyrie",
+      "status": "OUT",
+      "reason": "Injury/Illness - Left Knee; Surgery Injury/Illness - Right Plantar Fascia;"
+    },
+    {
+      "team": "DAL",
+      "player": "Williams, Brandon",
+      "status": "DOUBTFUL",
+      "reason": "Protocol"
+    },
+    {
+      "team": "MEM",
+      "player": "Aldama, Santi",
+      "status": "OUT",
+      "reason": "Recovery Injury/Illness - Right 5th Finger;"
+    },
+    {
+      "team": "MEM",
+      "player": "Caldwell-Pope, Kentavious",
+      "status": "OUT",
+      "reason": "Surgery Recovery"
+    },
+    {
+      "team": "MEM",
+      "player": "Clarke, Brandon",
+      "status": "OUT",
+      "reason": "Injury/Illness - Right Calf; Strain Injury/Illness - Left Ankle; Surgery"
+    },
+    {
+      "team": "MEM",
+      "player": "Edey, Zach",
+      "status": "OUT",
+      "reason": "Recovery"
+    },
+    {
+      "team": "MEM",
+      "player": "Morant, Ja",
+      "status": "OUT",
+      "reason": "Injury/Illness - Left Elbow; UCL Sprain Injury/Illness - Right Great Toe; Surgery Recovery"
+    },
+    {
+      "team": "HOU",
+      "player": "Adams, Steven",
+      "status": "OUT",
+      "reason": "Injury/Illness - Left Ankle; Surgery"
+    },
+    {
+      "team": "HOU",
+      "player": "Newton, Tristen",
+      "status": "OUT",
+      "reason": "G League - Two-Way"
+    },
+    {
+      "team": "HOU",
+      "player": "Tate, Jae'Sean",
+      "status": "OUT",
+      "reason": "Injury/Illness - Right Knee; Sprain"
+    },
+    {
+      "team": "HOU",
+      "player": "VanVleet, Fred",
+      "status": "OUT",
+      "reason": "Injury/Illness - Right Knee; ACL Repair"
+    }
+  ],
+  "policy": "backtest_v2_from_normalized"
+}

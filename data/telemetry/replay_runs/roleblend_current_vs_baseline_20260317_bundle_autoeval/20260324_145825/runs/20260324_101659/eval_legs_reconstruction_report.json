@@ -1,0 +1,24 @@
+{
+  "run_dir": "C:\\Users\\rick\\projects\\Atlas\\data\\telemetry\\replay_runs\\roleblend_current_vs_baseline_20260317_bundle_autoeval\\20260324_145825\\runs\\20260324_101659",
+  "source_scored_path": "C:\\Users\\rick\\projects\\Atlas\\data\\telemetry\\replay_runs\\roleblend_current_vs_baseline_20260317_bundle_autoeval\\20260324_145825\\runs\\20260324_101659\\scored_legs_deduped.csv",
+  "output_eval_path": "C:\\Users\\rick\\projects\\Atlas\\data\\telemetry\\replay_runs\\roleblend_current_vs_baseline_20260317_bundle_autoeval\\20260324_145825\\runs\\20260324_101659\\eval_legs.csv",
+  "report": {
+    "rows": 4469,
+    "matched_rows": 0,
+    "unmatched_rows": 4469,
+    "match_rate": 0.0,
+    "quality_counts": {
+      "no_player_date_match": 4469
+    },
+    "supported_stats": [
+      "AST",
+      "FG3M",
+      "PA",
+      "PR",
+      "PRA",
+      "PTS",
+      "RA",
+      "REB"
+    ]
+  }
+}

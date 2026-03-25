@@ -277,6 +277,110 @@ def _usage_dependence_proxy(stat_u: str, base_rate_mu: float, line: float, expec
     }
 
 
+def _role_metrics_adjustment(row: Any) -> tuple[float, dict[str, float]]:
+    """Convert parsed role-metrics columns into a small bounded multiplier."""
+    weight_scale = 0.08
+    role_ctx_on = False
+    try:
+        if hasattr(row, "get"):
+            role_ctx_on = float(pd.to_numeric(pd.Series([row.get("role_ctx_outs_used", 0)]), errors="coerce").iloc[0]) > 0.0
+        elif isinstance(row, dict):
+            role_ctx_on = float(pd.to_numeric(pd.Series([row.get("role_ctx_outs_used", 0)]), errors="coerce").iloc[0]) > 0.0
+        else:
+            role_ctx_on = float(pd.to_numeric(pd.Series([getattr(row, "role_ctx_outs_used", 0)]), errors="coerce").iloc[0]) > 0.0
+    except Exception:
+        role_ctx_on = False
+
+    def _get(name: str) -> float:
+        try:
+            if hasattr(row, "get"):
+                value = row.get(name, None)
+            elif isinstance(row, dict):
+                value = row.get(name, None)
+            else:
+                value = getattr(row, name, None)
+            return float(pd.to_numeric(pd.Series([value]), errors="coerce").iloc[0])
+        except Exception:
+            return float("nan")
+
+    components: dict[str, float] = {}
+
+    def _add(name: str, raw_value: float, scale: float, weight: float) -> None:
+        if pd.isna(raw_value):
+            return
+        components[f"{name}_raw"] = float(raw_value)
+        components[f"{name}_scaled"] = float(np.tanh(float(raw_value) / max(scale, 1e-6)))
+        components[f"{name}_weighted"] = float(weight * components[f"{name}_scaled"])
+
+    _add("usg", _get("role_metrics_usg_pct"), 36.0, 0.020 * weight_scale)
+    if role_ctx_on:
+        _add("cpm", _get("role_metrics_cpm"), 5.0, 0.018 * weight_scale)
+        _add("vorp", _get("role_metrics_vorp"), 5.0, 0.016 * weight_scale)
+        _add("drip", _get("role_metrics_drip_total"), 9.0, 0.010 * weight_scale)
+    _add("darko", _get("role_metrics_darko"), 9.0, 0.006 * weight_scale)
+
+    score = float(sum(v for k, v in components.items() if k.endswith("_weighted")))
+    score = float(np.clip(score, -0.015, 0.015))
+    mult = float(np.clip(1.0 + score, 0.985, 1.015))
+    components["score"] = score
+    components["mult"] = mult
+    return mult, components
+
+
+
+def _bounded_role_rate_multiplier(
+    role_mult: float,
+    role_metrics_mult: float,
+    cfg: dict[str, Any] | None,
+) -> tuple[float, float, float, float, float]:
+    """Apply a conservative corridor to the combined role-rate uplift."""
+    try:
+        role_rate_clamp_lo = float((cfg or {}).get("role_rate_clamp_lo", 0.94))
+    except Exception:
+        role_rate_clamp_lo = 0.94
+    try:
+        role_rate_clamp_hi = float((cfg or {}).get("role_rate_clamp_hi", 1.08))
+    except Exception:
+        role_rate_clamp_hi = 1.08
+    try:
+        role_rate_softcap_k = float((cfg or {}).get("role_rate_softcap_k", 1.10))
+    except Exception:
+        role_rate_softcap_k = 1.10
+
+    role_rate_clamp_lo = float(np.clip(role_rate_clamp_lo, 0.80, 1.0))
+    role_rate_clamp_hi = float(np.clip(role_rate_clamp_hi, 1.0, 1.20))
+    role_rate_softcap_k = float(max(0.01, role_rate_softcap_k))
+
+    role_rate_mult_raw = float(max(0.0, float(role_mult)) * max(0.0, float(role_metrics_mult)))
+    if role_rate_mult_raw >= 1.0 and role_rate_clamp_hi > 1.0:
+        cap_bump = float(role_rate_clamp_hi - 1.0)
+        bump_raw = float(max(0.0, role_rate_mult_raw - 1.0))
+        bump_soft = float(
+            cap_bump
+            * (1.0 - float(np.exp(-role_rate_softcap_k * bump_raw / max(1e-12, cap_bump))))
+        )
+        role_rate_mult = 1.0 + bump_soft
+    elif role_rate_mult_raw < 1.0 and role_rate_clamp_lo < 1.0:
+        cap_drop = float(1.0 - role_rate_clamp_lo)
+        drop_raw = float(max(0.0, 1.0 - role_rate_mult_raw))
+        drop_soft = float(
+            cap_drop
+            * (1.0 - float(np.exp(-role_rate_softcap_k * drop_raw / max(1e-12, cap_drop))))
+        )
+        role_rate_mult = 1.0 - drop_soft
+    else:
+        role_rate_mult = role_rate_mult_raw
+
+    role_rate_mult = float(np.clip(role_rate_mult, role_rate_clamp_lo, role_rate_clamp_hi))
+    return (
+        float(role_rate_mult_raw),
+        float(role_rate_mult),
+        float(role_rate_clamp_lo),
+        float(role_rate_clamp_hi),
+        float(role_rate_softcap_k),
+    )
+
+
 
 
 def _directional_fragility_gap(direction: str, frag_gap_usage: float) -> float:
@@ -415,15 +519,21 @@ def _load_iael_status_latest() -> pd.DataFrame:
     try:
         candidates: list[Path] = []
 
+        strict_replay = (os.environ.get("ATLAS_STRICT_REPLAY") or "").strip() == "1"
+
         env_status = os.environ.get("ATLAS_IAEL_STATUS_PATH")
         if env_status:
             candidates.append(Path(env_status))
+
+        if strict_replay and not candidates:
+            raise RuntimeError("Strict replay requires ATLAS_IAEL_STATUS_PATH")
 
         env_out = os.environ.get("ATLAS_OUT_DIR")
         if env_out:
             candidates.append(Path(env_out) / "dashboard" / "status_latest.json")
 
-        candidates.append(Path("data/output/dashboard/status_latest.json"))
+        if not strict_replay:
+            candidates.append(Path("data/output/dashboard/status_latest.json"))
 
         j = None
         for p in candidates:
@@ -663,6 +773,58 @@ def _get_spread(row: pd.Series) -> float:
     return 0.0
 
 
+def _apply_under_relief(
+    *,
+    p_role: float,
+    p_adj: float,
+    direction: str,
+    stat_u: str,
+    q: float,
+    cfg: dict[str, Any] | None,
+) -> tuple[float, bool, float, float, float, float]:
+    under_relief_stats = {"PTS", "PRA", "PA", "PR", "RA", "REB", "AST", "FGM", "FG3M"}
+    try:
+        under_relief_factor = float((cfg or {}).get("under_relief_factor", 0.10))
+    except Exception:
+        under_relief_factor = 0.10
+    under_relief_factor = float(np.clip(under_relief_factor, 0.0, 1.0))
+    try:
+        under_relief_haircut_min = float((cfg or {}).get("under_relief_haircut_min", 0.05))
+    except Exception:
+        under_relief_haircut_min = 0.05
+    try:
+        under_relief_q_min = float((cfg or {}).get("under_relief_q_min", 0.10))
+    except Exception:
+        under_relief_q_min = 0.10
+
+    under_relief_haircut_min = float(max(0.0, under_relief_haircut_min))
+    under_relief_q_min = float(max(0.0, under_relief_q_min))
+
+    p_adj_pre_under_relief = float(p_adj)
+    under_relief_haircut = max(0.0, float(p_role) - float(p_adj_pre_under_relief))
+
+    under_relief_eligible = (
+        str(direction).upper() == "UNDER"
+        and str(stat_u).upper() in under_relief_stats
+        and float(q) >= under_relief_q_min
+        and float(under_relief_haircut) >= under_relief_haircut_min
+    )
+
+    if under_relief_eligible:
+        # under_relief_factor is the retained share of the haircut.
+        haircut_relief = float(under_relief_haircut) * under_relief_factor
+        p_adj = float(np.clip(p_adj_pre_under_relief + haircut_relief, 0.0, 1.0))
+
+    return (
+        float(p_adj),
+        bool(under_relief_eligible),
+        float(under_relief_haircut),
+        float(under_relief_factor),
+        float(under_relief_haircut_min),
+        float(under_relief_q_min),
+    )
+
+
 def _norm_cdf(z: float) -> float:
     return 0.5 * (1.0 + math.erf(z / math.sqrt(2.0)))
 
@@ -730,12 +892,24 @@ def simulate_leg_probability_new(
     g = get_player_window(gamelogs, player, lookback)
     s = summarize_stat(g, stat)
 
-    is_star = float(s.get("min_mean", 0.0)) >= 33.0
+    projected_minutes_raw = row.get("role_metrics_minutes_projection", row.get("minutes_projection", None)) if hasattr(row, "get") else None
+    projected_minutes = pd.to_numeric(pd.Series([projected_minutes_raw]), errors="coerce").iloc[0]
+    projected_minutes_val = float(projected_minutes) if pd.notna(projected_minutes) else float("nan")
+
+    role_metrics_mult = 1.0
+    role_metrics_debug: dict[str, float] = {}
+    try:
+        role_metrics_mult, role_metrics_debug = _role_metrics_adjustment(row)
+    except Exception:
+        role_metrics_mult = 1.0
+        role_metrics_debug = {}
+
+    is_star = float(projected_minutes_val if pd.notna(projected_minutes) else float(s.get("min_mean", 0.0))) >= 33.0
     minute_drop = float(star_minute_drop if is_star else role_minute_drop)
 
     q = blowout_probability(spread_mean=spread, threshold=blowout_threshold, sd=spread_sd)
 
-    mu_close = max(0.0, float(s.get("min_mean", 0.0)))
+    mu_close = max(0.0, float(projected_minutes_val if pd.notna(projected_minutes) else float(s.get("min_mean", 0.0))))
     sd_close = max(1.0, float(s.get("min_std", 1.0)))
 
     mu_blow = max(0.0, mu_close - minute_drop)
@@ -952,7 +1126,13 @@ def simulate_leg_probability_new(
     rate_sd_raw = rate_sd_base
 
     # Role-context channel parameters (ctx applied)
-    rate_mu_role = base_rate_mu * role_mult
+    rate_mu_role_mult_raw, rate_mu_role_mult, rate_mu_role_clamp_lo, rate_mu_role_clamp_hi, rate_mu_role_softcap_k = _bounded_role_rate_multiplier(
+        role_mult=role_mult,
+        role_metrics_mult=role_metrics_mult,
+        cfg=cfg,
+    )
+    rate_mu_role_raw = base_rate_mu * rate_mu_role_mult_raw
+    rate_mu_role = base_rate_mu * rate_mu_role_mult
     rate_sd_role = rate_sd_base * role_sigma_mult
 
     if rng is None:
@@ -1031,32 +1211,62 @@ def simulate_leg_probability_new(
     usage_risk_gate = _usage_risk_gate(q)
     usage_dep_eff = 1.0 + ((usage_dep_capped - 1.0) * usage_risk_gate)
 
-    # Directional UNDER blowout sensitivity: qualifying UNDERS keep some
-    # blowout awareness, but they should not take the same minutes/script
-    # haircut as fragile OVERS.
+    # Blowout sensitivity is direction-aware:
+    # - starter-like rows (role-active or high-minute) get a softer UNDER haircut
+    #   and a slightly harsher OVER haircut
+    # - bench-like rows get the opposite small tilt
+    # This keeps the blowout seam aligned with the basketball intuition: in a
+    # blowout, starters are more likely to lose 4Q run, while bench overs can
+    # benefit from garbage-time minutes.
     under_blowout_sens_stats = {"PTS", "PRA", "PA", "PR", "RA"}
     under_blowout_sens_q_min = 0.15
-    
-    # Role-context blowout sensitivity is now a smooth function of outs count.
-    # This avoids a hard off/on step when the current slate has a small number of outs.
-    def _role_ctx_under_blowout_sens_mult(outs_used: int) -> float:
-        outs_i = max(0, int(outs_used))
-        if outs_i <= 0:
-            return 0.75
-        return float(np.clip(0.75 + 0.025 * min(outs_i, 4), 0.75, 0.85))
+    try:
+        blowout_role_step = float((role_cfg or {}).get("blowout_role_step", 0.01))
+    except Exception:
+        blowout_role_step = 0.01
+    blowout_role_step = float(max(0.0, blowout_role_step))
 
-    under_blowout_sens_mult = _role_ctx_under_blowout_sens_mult(0)
-    
+    def _role_ctx_blowout_sens_mult(direction: str, outs_used: int, minutes_s_val: float) -> float:
+        outs_i = max(0, int(outs_used))
+        minutes_f = float(minutes_s_val)
+        is_role_active = outs_i > 0
+        is_starter_like = is_role_active or minutes_f >= 0.55
+        is_bench_like = (not is_role_active) and minutes_f <= 0.45
+
+        base = 0.75
+        if str(direction).upper() == "UNDER":
+            if is_starter_like:
+                return float(np.clip(base - blowout_role_step, 0.55, 0.90))
+            if is_bench_like:
+                return float(np.clip(base + blowout_role_step, 0.55, 0.90))
+        elif str(direction).upper() == "OVER":
+            if is_starter_like:
+                return float(np.clip(base + blowout_role_step, 0.55, 0.90))
+            if is_bench_like:
+                return float(np.clip(base - blowout_role_step, 0.55, 0.90))
+        return base
+
+    role_debug_obj = locals().get("role_debug")
+    role_ctx_outs_used_early = 0
+    if isinstance(role_debug_obj, dict):
+        try:
+            role_ctx_outs_used_early = int(role_debug_obj.get("outs_used") or 0)
+        except Exception:
+            role_ctx_outs_used_early = 0
+
+    blowout_sens_mult = _role_ctx_blowout_sens_mult(str(direction), role_ctx_outs_used_early, float(minutes_s))
+
     under_blowout_sens_eligible = (
         str(direction).upper() == "UNDER"
         and str(stat_u).upper() in under_blowout_sens_stats
         and float(q) >= under_blowout_sens_q_min
     )
     minutes_s_blowout = (
-        float(minutes_s) * float(under_blowout_sens_mult)
-        if under_blowout_sens_eligible
+        float(minutes_s) * float(blowout_sens_mult)
+        if under_blowout_sens_eligible or str(direction).upper() == "OVER"
         else float(minutes_s)
     )
+    under_blowout_sens_mult = float(blowout_sens_mult)
 
     p_adj = float(
         adjust_probability_for_blowout(
@@ -1086,30 +1296,25 @@ def simulate_leg_probability_new(
     # Safety clamp
     p_adj = float(np.clip(p_adj, 0.0, 1.0))
     p_close_adj = float(np.clip(p_close_adj, 0.0, 1.0))
-    # Experimental: reduced blowout haircut for tighter qualifying UNDER legs
-    under_relief_stats = {"PTS", "PRA", "PA", "PR", "RA", "REB", "AST", "FGM", "FG3M"}
-    under_relief_frag_min = 0.08
-    under_relief_q_min = 0.15
-    under_relief_factor = 0.00  # qualifying UNDERS take 00% of the usual haircut
-
-    # Baseline adjusted probability before any UNDER relief
+    # Experimental: reduced blowout haircut for tighter qualifying UNDER legs.
+    # under_relief_factor is the retained share of the haircut, so 0.10 keeps
+    # the adjustment tight while still allowing a small relief.
     p_adj_pre_under_relief = float(p_adj)
-
-    # Baseline fragility gate uses the current adjusted values
-    fragility_pre = float(max(0.0, p_close_adj - p_adj))
-
-    under_relief_eligible = (
-        str(direction).upper() == "UNDER"
-        and str(stat_u).upper() in under_relief_stats
-        and float(q) >= under_relief_q_min
-        and float(fragility_pre) >= under_relief_frag_min
+    (
+        p_adj,
+        under_relief_eligible,
+        under_relief_haircut,
+        under_relief_factor,
+        under_relief_haircut_min,
+        under_relief_q_min,
+    ) = _apply_under_relief(
+        p_role=float(p_role),
+        p_adj=float(p_adj_pre_under_relief),
+        direction=str(direction),
+        stat_u=str(stat_u),
+        q=float(q),
+        cfg=cfg,
     )
-
-    if under_relief_eligible:
-        # Infer the current haircut from p_role -> p_adj, then reduce only that haircut
-        haircut = max(0.0, float(p_role) - float(p_adj_pre_under_relief))
-        haircut_relief = haircut * (1.0 - under_relief_factor)
-        p_adj = float(np.clip(p_adj_pre_under_relief + haircut_relief, 0.0, 1.0))
 
     # Fragility (Atlas): usage lives ONLY inside the fragility channel.
     # Keep the core p_role -> p_adj haircut unchanged; usage only scales how
@@ -1164,6 +1369,8 @@ def simulate_leg_probability_new(
         "usage_burden_ratio": float(usage_debug.get("usage_burden_ratio", 1.0)),
         "usage_dep_raw": float(usage_debug.get("usage_dep_raw", usage_dep)),
         "p_adj_pre_under_relief": float(p_adj_pre_under_relief),
+        "under_relief_haircut": float(under_relief_haircut),
+        "under_relief_haircut_min": float(under_relief_haircut_min),
         "under_relief_factor": float(under_relief_factor if under_relief_eligible else 1.0),
         "under_relief_applied": bool(under_relief_eligible),
 
@@ -1175,9 +1382,16 @@ def simulate_leg_probability_new(
 
         # Context diagnostics
         "rate_mean_ctx": float(rate_mu_role),
+        "rate_mean_ctx_raw": float(rate_mu_role_raw),
         "rate_std_ctx": float(rate_sd_role),
+        "role_metrics_mult": float(role_metrics_mult),
         "role_ctx_mult": float(role_mult),
         "role_ctx_mult_raw": float(role_mult_raw),
+        "role_ctx_rate_mult": float(rate_mu_role_mult),
+        "role_ctx_rate_mult_raw": float(rate_mu_role_mult_raw),
+        "role_ctx_rate_clamp_lo": float(rate_mu_role_clamp_lo),
+        "role_ctx_rate_clamp_hi": float(rate_mu_role_clamp_hi),
+        "role_ctx_rate_softcap_k": float(rate_mu_role_softcap_k),
         "role_ctx_sigma_mult": float(role_sigma_mult),
         "role_ctx_reason": str(role_reason),
 
@@ -1225,9 +1439,13 @@ def simulate_leg_probability_new(
             else:
                 out[f"role_ctx_{k}"] = v
 
+    if role_metrics_debug:
+        for k, v in role_metrics_debug.items():
+            out[f"role_metrics_{k}"] = float(v)
+
     # Branch multiplier on role context activation (now after out dict is populated)
     role_ctx_outs_used = int(out.get("role_ctx_outs_used", 0)) if "role_ctx_outs_used" in out else 0
-    under_blowout_sens_mult = _role_ctx_under_blowout_sens_mult(role_ctx_outs_used)
+    under_blowout_sens_mult = _role_ctx_blowout_sens_mult(str(direction), role_ctx_outs_used, float(minutes_s))
     
     # Update p_adj if under blowout sensitivity was adjusted
     if under_blowout_sens_eligible and under_blowout_sens_mult != 0.75:

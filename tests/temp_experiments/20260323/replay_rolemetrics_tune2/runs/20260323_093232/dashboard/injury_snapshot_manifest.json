@@ -1,0 +1,14 @@
+{
+  "artifacts": {
+    "injury_invalidations_latest.json": {
+      "destination": "C:\\Users\\rick\\projects\\Atlas\\temp_experiments\\20260323\\replay_rolemetrics_tune2\\runs\\20260323_093232\\dashboard\\injury_invalidations_latest.json",
+      "source": "C:\\Users\\rick\\projects\\Atlas\\temp_experiments\\20260323\\replay_rolemetrics_tune2\\dashboard\\injury_invalidations_latest.json"
+    },
+    "status_latest.json": {
+      "destination": "C:\\Users\\rick\\projects\\Atlas\\temp_experiments\\20260323\\replay_rolemetrics_tune2\\runs\\20260323_093232\\dashboard\\status_latest.json",
+      "source": "C:\\Users\\rick\\projects\\Atlas\\temp_experiments\\20260323\\replay_rolemetrics_tune2\\dashboard\\status_latest.json"
+    }
+  },
+  "generated_at_utc": "2026-03-23T14:32:33Z",
+  "run_dir": "C:\\Users\\rick\\projects\\Atlas\\temp_experiments\\20260323\\replay_rolemetrics_tune2\\runs\\20260323_093232"
+}

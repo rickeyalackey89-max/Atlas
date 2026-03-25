@@ -1,0 +1,14 @@
+{
+  "artifacts": {
+    "injury_invalidations_latest.json": {
+      "destination": "C:\\Users\\rick\\projects\\Atlas\\data\\telemetry\\replay_runs\\roleblend_actual_replay_20260323_underpen98\\20260323_205638\\runs\\20260323_155728\\dashboard\\injury_invalidations_latest.json",
+      "source": "C:\\Users\\rick\\projects\\Atlas\\data\\output\\dashboard\\injury_invalidations_latest.json"
+    },
+    "status_latest.json": {
+      "destination": "C:\\Users\\rick\\projects\\Atlas\\data\\telemetry\\replay_runs\\roleblend_actual_replay_20260323_underpen98\\20260323_205638\\runs\\20260323_155728\\dashboard\\status_latest.json",
+      "source": "C:\\Users\\rick\\projects\\Atlas\\data\\output\\dashboard\\status_latest.json"
+    }
+  },
+  "generated_at_utc": "2026-03-23T20:57:28Z",
+  "run_dir": "C:\\Users\\rick\\projects\\Atlas\\data\\telemetry\\replay_runs\\roleblend_actual_replay_20260323_underpen98\\20260323_205638\\runs\\20260323_155728"
+}

@@ -21,5 +21,7 @@ def minutes_sensitivity(market: str) -> float:
     return 0.60
 
 def adjust_probability_for_blowout(p_raw: float, blowout_risk: float, sens: float) -> float:
-    p_adj = p_raw * (1.0 - blowout_risk * sens)
+    risk = max(0.0, min(1.0, float(blowout_risk) * float(sens)))
+    attenuation = (1.0 - risk) ** 1.35
+    p_adj = float(p_raw) * attenuation
     return max(0.03, min(0.97, p_adj))

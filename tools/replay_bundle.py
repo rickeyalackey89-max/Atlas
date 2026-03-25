@@ -1,12 +1,15 @@
 from __future__ import annotations
 
 import argparse
+import json
 import os
 import subprocess
 import sys
 import zipfile
 from datetime import datetime, timezone
 from pathlib import Path
+
+from Atlas.runtime.replay_eval import backfill_latest_replay_eval_legs
 
 
 def find_repo_root(start: Path) -> Path:
@@ -49,6 +52,35 @@ def _extract_bundle(bundle_zip: Path, dest_dir: Path) -> None:
         z.extractall(dest_dir)
 
 
+def _find_unique_file(root: Path, filename: str, *, parent_name: str | None = None) -> Path | None:
+    matches = [p for p in root.rglob(filename) if p.is_file()]
+    if parent_name is not None:
+        matches = [p for p in matches if p.parent.name == parent_name]
+    if len(matches) == 1:
+        return matches[0].resolve()
+    return None
+
+
+def _find_dashboard_snapshot_dir(data_dir: Path) -> Path | None:
+    candidates: list[Path] = []
+    runs_root = data_dir / "output" / "runs"
+    if runs_root.is_dir():
+        for run_dir in runs_root.iterdir():
+            dash = run_dir / "dashboard"
+            if (
+                dash.is_dir()
+                and (dash / "injury_invalidations_latest.json").is_file()
+                and (dash / "status_latest.json").is_file()
+                and (dash / "normalized_latest.json").is_file()
+            ):
+                candidates.append(dash)
+
+    if candidates:
+        candidates.sort(key=lambda p: p.stat().st_mtime_ns, reverse=True)
+        return candidates[0].resolve()
+    return None
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(
         description="Atlas sandbox replay from a FULL_RUN bundle zip (bundle-first, deterministic)."
@@ -73,8 +105,8 @@ def main() -> int:
     workspace = analysis_root / "workspace"
     logs_dir = analysis_root / "logs"
 
-    # SBX contract: outputs go to data/output/sandbox_runs/<scenario_id>/<ts>/...
-    out_dir = (repo_root / "data" / "output" / "sandbox_runs" / scenario_id / ts).resolve()
+    # Replay contract: outputs go to data/telemetry/replay_runs/<scenario_id>/<ts>/...
+    out_dir = (repo_root / "data" / "telemetry" / "replay_runs" / scenario_id / ts).resolve()
 
     workspace.mkdir(parents=True, exist_ok=True)
     logs_dir.mkdir(parents=True, exist_ok=True)
@@ -91,7 +123,9 @@ def main() -> int:
         else:
             raise FileNotFoundError(f"Bundle extract missing expected 'data/' folder: {bundle_zip}")
 
-    # Prefer bundled gamelogs, fall back to repo cache
+    replay_truth_path = repo_root / "data" / "telemetry" / "Last 10" / "Last10.csv"
+
+    # Prefer bundled gamelogs, fall back to repo cache for reconstruction-only fallback.
     bundled_gamelogs = data_dir / "gamelogs" / "nba_gamelogs.csv"
     repo_gamelogs = repo_root / "data" / "gamelogs" / "nba_gamelogs.csv"
     gamelogs_path = bundled_gamelogs if bundled_gamelogs.is_file() else repo_gamelogs
@@ -100,9 +134,26 @@ def main() -> int:
         return 2
 
     env = os.environ.copy()
+    env["ATLAS_AUTHORITY"] = "replay"
+    env["ATLAS_STRICT_REPLAY"] = "1"
     env["ATLAS_DATA_DIR"] = str(data_dir)
     env["ATLAS_OUT_DIR"] = str(out_dir)
     env["ATLAS_GAMELOGS_PATH"] = str(gamelogs_path)
+
+    raw_path = _find_unique_file(data_dir, "*.json", parent_name="raw")
+    if raw_path is not None:
+        env["ATLAS_REPLAY_RAW"] = str(raw_path)
+
+    rotowire_path = _find_unique_file(data_dir, "rotowire_lines.json", parent_name="input")
+    if rotowire_path is not None:
+        env["ATLAS_ROTOWIRE_LINES_PATH"] = str(rotowire_path)
+
+    snapshot_dir = _find_dashboard_snapshot_dir(data_dir)
+    if snapshot_dir is not None:
+        env["ATLAS_IAEL_SNAPSHOT_DIR"] = str(snapshot_dir)
+        env["ATLAS_IAEL_INVALIDATIONS_PATH"] = str(snapshot_dir / "injury_invalidations_latest.json")
+        env["ATLAS_IAEL_STATUS_PATH"] = str(snapshot_dir / "status_latest.json")
+        env["ATLAS_IAEL_NORMALIZED_PATH"] = str(snapshot_dir / "normalized_latest.json")
 
     cmd = [sys.executable, "-m", "Atlas.engine.main"]
 
@@ -126,6 +177,14 @@ def main() -> int:
         print("[REPLAY_BUNDLE] engine stderr tail:")
         print(tail)
         return p.returncode
+
+    eval_path = backfill_latest_replay_eval_legs(
+        output_root=out_dir,
+        gamelogs_path=[replay_truth_path, bundled_gamelogs, repo_gamelogs],
+        repo_root=repo_root,
+        python_executable=sys.executable,
+    )
+    print(f"[REPLAY_BUNDLE] eval_legs={eval_path}")
 
     print("[REPLAY_BUNDLE] OK")
     return 0

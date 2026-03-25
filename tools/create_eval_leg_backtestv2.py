@@ -11,6 +11,7 @@ from typing import Dict, Iterable, List, Optional, Tuple
 
 import pandas as pd
 
+from Atlas.core.share_name_key import share_name_key
 
 STAT_ALIASES: Dict[str, str] = {
     "PTS": "pts",
@@ -103,14 +104,7 @@ class RunResult:
 
 
 def normalize_name(value: object) -> str:
-    if value is None or (isinstance(value, float) and math.isnan(value)):
-        return ""
-    text = str(value).upper()
-    text = text.replace("JR.", "JR").replace("SR.", "SR")
-    text = text.replace("III", "3").replace("II", "2").replace("IV", "4")
-    text = re.sub(r"[^A-Z0-9]+", " ", text)
-    text = re.sub(r"\s+", " ", text).strip()
-    return text
+    return share_name_key(value)
 
 
 

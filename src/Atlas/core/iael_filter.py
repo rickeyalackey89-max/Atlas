@@ -58,7 +58,7 @@ def apply_iael_hard_filter(
     require_team_match: bool = False,
 ) -> pd.DataFrame:
     """
-    HARD FILTER: remove legs whose player is invalidated (OUT/DOUBTFUL/QUESTIONABLE).
+    HARD FILTER: remove legs whose player is invalidated (OUT/DOUBTFUL).
 
     - If require_team_match=False (default), match by player only (safer if your legs don't have team).
     - If require_team_match=True, will match by (team, player) when legs_df has a usable team column.
@@ -69,7 +69,7 @@ def apply_iael_hard_filter(
         print("[IAEL][WARN] IAEL invalidations empty -> no injury filtering applied.")
         return legs_df
 
-    hard_statuses = hard_statuses or {"OUT", "DOUBTFUL", "QUESTIONABLE"}
+    hard_statuses = hard_statuses or {"OUT", "DOUBTFUL"}
     iael = iael_df.copy()
     iael = iael[iael["status"].isin(set(s.upper() for s in hard_statuses))].copy()
     if iael.empty:

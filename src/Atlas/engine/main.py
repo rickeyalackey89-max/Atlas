@@ -298,6 +298,55 @@ def load_iael_invalidations(
         rows = obj.get("invalidated_players", []) or []
         df = pd.DataFrame(rows)
 
+        # Merge in the run-scoped normalized injury snapshot when available so
+        # QUESTIONABLE rows remain visible to soft-risk tagging.
+        normalized_rows: list[dict[str, Any]] = []
+        normalized_path = (os.environ.get("ATLAS_IAEL_NORMALIZED_PATH") or "").strip()
+        if normalized_path:
+            cand = Path(normalized_path)
+        else:
+            snapshot_dir = os.environ.get("ATLAS_IAEL_SNAPSHOT_DIR")
+            if not snapshot_dir:
+                raise RuntimeError("IAEL normalized snapshot is required for run-scoped injury loading")
+            cand = Path(snapshot_dir) / "normalized_latest.json"
+
+        if not cand.exists():
+            raise RuntimeError(f"Missing run-scoped injury snapshot: {cand}")
+
+        try:
+            norm_obj = json.loads(cand.read_text(encoding="utf-8"))
+        except Exception as exc:
+            raise RuntimeError(f"Failed to read run-scoped injury snapshot: {cand}") from exc
+
+        if isinstance(norm_obj, dict):
+            payload_rows = norm_obj.get("rows", []) or []
+            if isinstance(payload_rows, list):
+                normalized_rows = [r for r in payload_rows if isinstance(r, dict)]
+
+        if normalized_rows:
+            normalized_df = pd.DataFrame(normalized_rows)
+            if not normalized_df.empty:
+                if "player" not in normalized_df.columns and "name" in normalized_df.columns:
+                    normalized_df["player"] = normalized_df["name"]
+                if "team" not in normalized_df.columns:
+                    normalized_df["team"] = ""
+                if "status" not in normalized_df.columns:
+                    normalized_df["status"] = "OUT"
+
+                normalized_df["status"] = normalized_df["status"].astype(str).str.upper().str.strip()
+                normalized_df = normalized_df[normalized_df["status"].isin({"OUT", "DOUBTFUL", "QUESTIONABLE", "Q", "D", "O"})].copy()
+                if not normalized_df.empty:
+                    if df.empty:
+                        df = normalized_df
+                    else:
+                        for col in normalized_df.columns:
+                            if col not in df.columns:
+                                df[col] = ""
+                        for col in df.columns:
+                            if col not in normalized_df.columns:
+                                normalized_df[col] = ""
+                        df = pd.concat([df, normalized_df[df.columns]], ignore_index=True)
+
         if df.empty:
             if status_path.exists():
                 try:
@@ -356,7 +405,7 @@ def apply_iael_hard_filter(
         print("[IAEL][WARN] IAEL invalidations empty -> no injury filtering applied.")
         return legs_df
 
-    hard_statuses = hard_statuses or {"OUT", "DOUBTFUL", "QUESTIONABLE"}
+    hard_statuses = hard_statuses or {"OUT", "DOUBTFUL"}
     iael = iael_df.copy()
     iael = iael[iael["status"].isin({s.upper() for s in hard_statuses})].copy()
     if iael.empty:
@@ -408,8 +457,9 @@ def ensure_power_ev_columns(scored: pd.DataFrame) -> pd.DataFrame:
     _ensure_col(out, "p_adj", out["p"])
     out["p_adj"] = pd.to_numeric(out["p_adj"], errors="coerce").fillna(out["p"]).fillna(0.50).clip(0, 1)
 
-    _ensure_col(out, "hit_prob", out["p_adj"])
-    out["hit_prob"] = pd.to_numeric(out["hit_prob"], errors="coerce").fillna(out["p_adj"]).fillna(0.50).clip(0, 1)
+    hit_prob_default = out["p_adj"]
+    _ensure_col(out, "hit_prob", hit_prob_default)
+    out["hit_prob"] = pd.to_numeric(out["hit_prob"], errors="coerce").fillna(hit_prob_default).fillna(0.50).clip(0, 1)
 
     if "payout_modifier" not in out.columns:
         for alt in ("payout_mult", "payout_multiplier", "multiplier"):
@@ -733,6 +783,7 @@ def main() -> None:
         roster_map_path=str(ROSTER_MAP_PATH),
         slate_path=str(SLATE_PATH),
         default_game_date=game_date,
+        role_metrics_path=os.environ.get("ATLAS_ROLE_METRICS_PATH"),
     )
 
     iael_df = load_iael_invalidations()
@@ -743,8 +794,8 @@ def main() -> None:
     scored = _run_score_board_new(board=board, logs=logs, cfg=cfg, iael_df=iael_df)
 
     # CALIBRATION CONTRACT COLUMNS (schema enforcement)
-    # p_for_cal: chosen upstream probability for calibration
-    # p_cal_src: source of p_for_cal (prefer p_role)
+        # p_for_cal: chosen upstream probability for calibration
+    # p_cal_src: source of p_for_cal ("p_adj" vs "p_role")
     # p_cal: calibrated probability (identity here unless calibration stage overrides)
     if "role_ctx_outs_used" not in scored.columns:
         scored["role_ctx_outs_used"] = 0
@@ -752,11 +803,41 @@ def main() -> None:
 
     p_adj = pd.to_numeric(scored.get("p_adj", scored.get("p", 0.5)), errors="coerce").fillna(0.5).clip(0, 1) # type: ignore
     p_role = pd.to_numeric(scored.get("p_role", p_adj), errors="coerce").fillna(p_adj).clip(0, 1)
-    p_close_role = pd.to_numeric(scored.get("p_close_role", p_role), errors="coerce").fillna(p_role).clip(0, 1)
 
-    scored["p_for_cal"] = p_role
-    scored["p_cal_src"] = "p_role"
+    use_role = scored["role_ctx_outs_used"] > 0
+    under_relief_applied = pd.to_numeric(scored.get("under_relief_applied", False), errors="coerce").fillna(0).astype(bool)
+    p_adj_source = np.where(under_relief_applied, "p_adj_under_relief", "p_adj")
+    scored["p_for_cal"] = np.where(use_role, p_role, p_adj)
+    scored["p_cal_src"] = np.where(use_role, "p_role", p_adj_source)
     scored["p_cal"] = scored["p_for_cal"]
+
+    scored["p_for_cal_src"] = scored["p_cal_src"]
+
+    try:
+        from Atlas.runtime.telemetry_calibration import apply_calibration_to_column, load_calibration
+
+        telemetry_cfg = (cfg.get("telemetry", {}) or {})
+        if bool(telemetry_cfg.get("apply_active_calibration", True)):
+            raw_path = telemetry_cfg.get("active_calibration_path")
+            calib_path = None
+            if raw_path:
+                candidate = Path(str(raw_path))
+                calib_path = candidate if candidate.is_absolute() else (PROJECT_ROOT / candidate)
+
+            calib = load_calibration(PROJECT_ROOT, calibration_path=calib_path)
+            if calib is not None:
+                scored = apply_calibration_to_column(
+                    scored,
+                    calib,
+                    source_col="p_for_cal",
+                    out_col="p_cal",
+                    apply_under_penalty=True,
+                )
+    except Exception:
+        pass
+
+    if "p_cal" not in scored.columns:
+        scored["p_cal"] = scored["p_for_cal"]
 
     # PREP FOR OPTIMIZER (staged)
     from Atlas.stages.prep_for_optimizer.prep_for_optimizer import run_prep_for_optimizer
@@ -768,7 +849,7 @@ def main() -> None:
     )
 
     optimizer_cfg = (cfg.get("optimizer", {}) or {})
-    top_n = int(optimizer_cfg.get("top_n_slips", 25))
+    top_n = int(optimizer_cfg.get("top_n_slips", 10))
     seed = int(optimizer_cfg.get("seed", 7))
 
     from Atlas.stages.optimize.build_slips_today import run_build_slips
@@ -892,6 +973,8 @@ def main() -> None:
         wind3_winprob=wind3_win,
         wind4_winprob=wind4_win,
         wind5_winprob=wind5_win,
+        iael_invalidations_path=IAEL_INVALIDATIONS_PATH,
+        iael_status_path=IAEL_STATUS_PATH,
 
         write_csv_clean=write_csv_clean,
     )

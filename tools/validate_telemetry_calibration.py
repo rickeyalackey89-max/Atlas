@@ -115,7 +115,7 @@ def main():
         if off_mask.any():
             after['role_off'] = {'brier': brier(new_p[off_mask], y[off_mask]), 'logloss': logloss(new_p[off_mask], y[off_mask]), 'ece': ece(new_p[off_mask], y[off_mask])}
 
-    res = {'source_col': source_col, 'calibration_path': str(project / 'data' / 'model' / 'telemetry_calibration.json'), 'baseline': baseline, 'after': after}
+    res = {'source_col': source_col, 'calibration_path': str(project / 'data' / 'model' / 'telemetry_calibration.v2.json'), 'baseline': baseline, 'after': after}
     print(json.dumps(res, indent=2, sort_keys=True))
 
     try:

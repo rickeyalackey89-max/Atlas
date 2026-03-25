@@ -1,11 +1,13 @@
 import os
 import json
 import re
+from pathlib import Path
 from datetime import datetime, timezone
 from typing import Dict, List, Optional, Tuple
 from datetime import datetime, timezone, timedelta
 
 import pandas as pd
+from Atlas.core.share_name_key import share_name_key
 
 
 # -----------------------------
@@ -60,6 +62,151 @@ def _ensure_cols(df: pd.DataFrame, cols: List[str], fill_value=pd.NA) -> pd.Data
         if c not in df.columns:
             df[c] = fill_value
     return df
+
+
+def _resolve_role_metrics_path(role_metrics_path: str | None = None) -> Path | None:
+    env_path = (os.environ.get("ATLAS_ROLE_METRICS_PATH") or "").strip()
+    for candidate in (env_path, role_metrics_path or "", str(Path("data") / "output" / "dashboard" / "role_metrics_latest.json")):
+        if not candidate:
+            continue
+        path = Path(candidate)
+        if path.exists() and path.is_file():
+            return path
+    return None
+
+
+def _load_role_metrics_snapshot(role_metrics_path: str | None = None) -> pd.DataFrame:
+    path = _resolve_role_metrics_path(role_metrics_path)
+    if path is None:
+        return pd.DataFrame()
+
+    try:
+        obj = json.loads(path.read_text(encoding="utf-8"))
+    except Exception:
+        return pd.DataFrame()
+
+    rows = obj.get("rows", []) if isinstance(obj, dict) else obj
+    if not isinstance(rows, list) or not rows:
+        return pd.DataFrame()
+
+    df = pd.DataFrame([r for r in rows if isinstance(r, dict)])
+    if df.empty or "player" not in df.columns:
+        return pd.DataFrame()
+
+    if "game_date" not in df.columns:
+        df["game_date"] = str(obj.get("game_date", "")) if isinstance(obj, dict) else ""
+    if "team" not in df.columns:
+        df["team"] = ""
+
+    df["player_key"] = df["player"].astype(str).map(share_name_key)
+    df["game_date"] = df["game_date"].astype(str).str.strip()
+    df["team"] = df["team"].astype(str).str.strip().str.upper()
+
+    rename_map = {
+        "age": "role_metrics_age",
+        "minutes_projection": "role_metrics_minutes_projection",
+        "ts_pct": "role_metrics_ts_pct",
+        "rts_pct": "role_metrics_rts_pct",
+        "sq": "role_metrics_sq",
+        "three_par": "role_metrics_three_par",
+        "r3par": "role_metrics_r3par",
+        "ftr": "role_metrics_ftr",
+        "orb_pct": "role_metrics_orb_pct",
+        "rorb_pct": "role_metrics_rorb_pct",
+        "raorb": "role_metrics_raorb",
+        "drb_pct": "role_metrics_drb_pct",
+        "rdrb_pct": "role_metrics_rdrb_pct",
+        "radrb": "role_metrics_radrb",
+        "stl_pct": "role_metrics_stl_pct",
+        "radtov": "role_metrics_radtov",
+        "blk_pct": "role_metrics_blk_pct",
+        "tov_pct": "role_metrics_tov_pct",
+        "usg_pct": "role_metrics_usg_pct",
+        "ws": "role_metrics_ws",
+        "ctov_pct": "role_metrics_ctov_pct",
+        "bc": "role_metrics_bc",
+        "load": "role_metrics_load",
+        "pr": "role_metrics_pr",
+        "port": "role_metrics_port",
+        "role_awareness": "role_metrics_role_awareness",
+        "usage_projection": "role_metrics_usage_projection",
+        "starter_flag": "role_metrics_starter_flag",
+        "rotation_tier": "role_metrics_rotation_tier",
+        "depth_role": "role_metrics_depth_role",
+        "obpm": "role_metrics_obpm",
+        "dbpm": "role_metrics_dbpm",
+        "bpm": "role_metrics_bpm",
+        "plus_minus": "role_metrics_plus_minus",
+        "vorp": "role_metrics_vorp",
+        "odarko": "role_metrics_odarko",
+        "ddarko": "role_metrics_ddarko",
+        "darko": "role_metrics_darko",
+        "copm": "role_metrics_copm",
+        "cdpm": "role_metrics_cdpm",
+        "cpm": "role_metrics_cpm",
+        "odrip": "role_metrics_odrip",
+        "ddrip": "role_metrics_ddrip",
+        "drip_total": "role_metrics_drip_total",
+        "drip_offense": "role_metrics_drip_offense",
+        "drip_defense": "role_metrics_drip_defense",
+        "source_rank": "role_metrics_source_rank",
+        "snapshot_id": "role_metrics_snapshot_id",
+        "source_url": "role_metrics_source_url",
+        "fetched_at": "role_metrics_fetched_at",
+        "html_sha256": "role_metrics_html_sha256",
+    }
+    keep_cols = ["player_key", "game_date", "team"] + [c for c in rename_map if c in df.columns]
+    out = df[keep_cols].copy().rename(columns=rename_map)
+
+    for col in [
+        "role_metrics_age",
+        "role_metrics_plus_minus",
+        "role_metrics_vorp",
+        "role_metrics_minutes_projection",
+        "role_metrics_ts_pct",
+        "role_metrics_rts_pct",
+        "role_metrics_sq",
+        "role_metrics_three_par",
+        "role_metrics_r3par",
+        "role_metrics_ftr",
+        "role_metrics_orb_pct",
+        "role_metrics_rorb_pct",
+        "role_metrics_raorb",
+        "role_metrics_drb_pct",
+        "role_metrics_rdrb_pct",
+        "role_metrics_radrb",
+        "role_metrics_stl_pct",
+        "role_metrics_radtov",
+        "role_metrics_blk_pct",
+        "role_metrics_tov_pct",
+        "role_metrics_usg_pct",
+        "role_metrics_ws",
+        "role_metrics_ctov_pct",
+        "role_metrics_bc",
+        "role_metrics_load",
+        "role_metrics_pr",
+        "role_metrics_port",
+        "role_metrics_usage_projection",
+        "role_metrics_obpm",
+        "role_metrics_dbpm",
+        "role_metrics_bpm",
+        "role_metrics_odarko",
+        "role_metrics_ddarko",
+        "role_metrics_darko",
+        "role_metrics_copm",
+        "role_metrics_cdpm",
+        "role_metrics_cpm",
+        "role_metrics_odrip",
+        "role_metrics_ddrip",
+        "role_metrics_drip_total",
+        "role_metrics_drip_offense",
+        "role_metrics_drip_defense",
+        "role_metrics_source_rank",
+    ]:
+        if col in out.columns:
+            out[col] = pd.to_numeric(out[col], errors="coerce")
+
+    return out.drop_duplicates(subset=["player_key", "game_date", "team"], keep="last").reset_index(drop=True)
 
 
 # -----------------------------
@@ -258,6 +405,7 @@ def enrich_with_matchups(
     slate_path: str,
     default_game_date: str,
     rotowire_lines_path: str = r"C:\Users\rick\projects\Atlas\data\input\rotowire_lines.json",
+    role_metrics_path: str | None = None,
 ) -> pd.DataFrame:
     rotowire_lines_path = (os.environ.get("ATLAS_ROTOWIRE_LINES_PATH") or rotowire_lines_path or "").strip()
     """
@@ -386,5 +534,15 @@ def enrich_with_matchups(
     # Backward compatibility: keep 'spread' aligned to game_spread
     if "game_spread" in df.columns:
         df["spread"] = pd.to_numeric(df["game_spread"], errors="coerce")
+
+    role_metrics = _load_role_metrics_snapshot(role_metrics_path)
+    if not role_metrics.empty:
+        merge_keys = [c for c in ["player_key", "game_date", "team"] if c in df.columns and c in role_metrics.columns]
+        if merge_keys:
+            df["team"] = df["team"].astype(str).str.strip().str.upper()
+            role_metrics["team"] = role_metrics["team"].astype(str).str.strip().str.upper()
+            df["player_key"] = df["player_key"].astype(str).str.strip()
+            role_metrics["player_key"] = role_metrics["player_key"].astype(str).str.strip()
+            df = df.merge(role_metrics, on=merge_keys, how="left")
 
     return df

@@ -30,7 +30,7 @@ if 'p_adj' not in scored.columns:
         print('NO_PRED_COLUMN')
         raise SystemExit(3)
 
-map_path = str((proj / 'data' / 'model' / 'telemetry_calibration.json').resolve())
+map_path = str((proj / 'data' / 'model' / 'telemetry_calibration.v2.json').resolve())
 res = calibration_map.apply_calibration_column(scored, map_path=map_path, in_col='p_adj', out_col='p_cal', warn=False)
 
 print('rows', len(res))
