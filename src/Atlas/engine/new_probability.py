@@ -215,7 +215,26 @@ def _stat_specific_pressure_mult(stat_u: str, burden_ratio: float) -> float:
 
 
 
-def _usage_dependence_proxy(stat_u: str, base_rate_mu: float, line: float, expected_minutes: float) -> dict[str, float]:
+def _usage_dependence_proxy(
+    stat_u: str,
+    base_rate_mu: float,
+    line: float,
+    expected_minutes: float,
+    usg_pct: float | None = None,
+    ts_pct: float | None = None,
+    sq: float | None = None,
+    three_par: float | None = None,
+    ftr: float | None = None,
+    trb_pct: float | None = None,
+    orb_pct: float | None = None,
+    drb_pct: float | None = None,
+    ast_pct: float | None = None,
+    touches: float | None = None,
+    ast_usg: float | None = None,
+    box_creation: float | None = None,
+    offensive_load: float | None = None,
+    passer_rating: float | None = None,
+) -> dict[str, float]:
     """
     Internal Atlas proxy for usage dependence.
 
@@ -249,13 +268,13 @@ def _usage_dependence_proxy(stat_u: str, base_rate_mu: float, line: float, expec
 
     # Producer tier: a light proxy for sustained offensive burden per minute.
     if mu >= 1.10:
-        producer_mult = 1.05
+        producer_mult = 1.03
     elif mu >= 0.85:
-        producer_mult = 1.02
+        producer_mult = 1.01
     elif mu >= 0.60:
         producer_mult = 1.00
     else:
-        producer_mult = 0.98
+        producer_mult = 0.99
 
     # Pace-to-line pressure: how much per-minute output the line implicitly asks
     # the player to sustain in a competitive game script.
@@ -263,33 +282,155 @@ def _usage_dependence_proxy(stat_u: str, base_rate_mu: float, line: float, expec
     burden_ratio = target_rate / max(mu, 1e-6) if mu > 0 else 1.0
     pressure_mult = _stat_specific_pressure_mult(stat_u, burden_ratio)
 
-    usage_dep_raw = baseline * producer_mult * pressure_mult
-    usage_dep = float(np.clip(usage_dep_raw, 0.60, 1.18))
+    def _to_float(value: float | None) -> float:
+        try:
+            return float(pd.to_numeric(pd.Series([value]), errors="coerce").iloc[0])
+        except Exception:
+            return float("nan")
+
+    def _bounded_mult(value: float, *, center: float, scale: float, weight: float, clamp: tuple[float, float] = (0.97, 1.03)) -> tuple[float, float]:
+        if pd.isna(value):
+            return 0.0, 1.0
+        scaled = float(np.tanh((float(value) - center) / max(scale, 1e-6)))
+        mult = float(np.clip(1.0 + (weight * scaled), clamp[0], clamp[1]))
+        return scaled, mult
+
+    usg = _to_float(usg_pct)
+    ts = _to_float(ts_pct)
+    sq_val = _to_float(sq)
+    three_par_val = _to_float(three_par)
+    ftr_val = _to_float(ftr)
+    trb_val = _to_float(trb_pct)
+    orb_val = _to_float(orb_pct)
+    drb_val = _to_float(drb_pct)
+    ast_val = _to_float(ast_pct)
+    touches_val = _to_float(touches)
+    ast_usg_val = _to_float(ast_usg)
+    box_creation_val = _to_float(box_creation)
+    offensive_load_val = _to_float(offensive_load)
+    passer_rating_val = _to_float(passer_rating)
+
+    stat_norm = str(stat_u or "").upper().strip()
+    if stat_norm in {"PTS", "PRA", "PA", "PR", "RA"}:
+        usg_weight = 0.018
+    elif stat_norm in {"AST"}:
+        usg_weight = 0.012
+    elif stat_norm in {"FG3M", "3PM", "THREES"}:
+        usg_weight = 0.008
+    else:
+        usg_weight = 0.010
+
+    if pd.isna(usg):
+        usg_scaled = 0.0
+        usg_mult = 1.0
+    else:
+        usg_scaled = float(np.tanh((float(usg) - 26.5) / 12.0))
+        usg_mult = float(np.clip(1.0 + (usg_weight * usg_scaled), 0.99, 1.01))
+
+    scoring_ts_scaled, scoring_ts_mult = _bounded_mult(ts, center=58.0, scale=10.0, weight=0.006, clamp=(0.985, 1.015))
+    scoring_sq_scaled, scoring_sq_mult = _bounded_mult(sq_val, center=50.0, scale=22.0, weight=0.006, clamp=(0.985, 1.015))
+    scoring_ftr_scaled, scoring_ftr_mult = _bounded_mult(ftr_val, center=26.0, scale=18.0, weight=0.005, clamp=(0.985, 1.015))
+
+    threes_three_par_scaled, threes_three_par_mult = _bounded_mult(three_par_val, center=40.0, scale=22.0, weight=0.014)
+    threes_sq_scaled, threes_sq_mult = _bounded_mult(sq_val, center=55.0, scale=22.0, weight=0.010)
+    threes_ts_scaled, threes_ts_mult = _bounded_mult(ts, center=58.0, scale=10.0, weight=0.008)
+
+    rebound_trb_scaled, rebound_trb_mult = _bounded_mult(trb_val, center=13.0, scale=8.0, weight=0.014)
+    rebound_orb_scaled, rebound_orb_mult = _bounded_mult(orb_val, center=4.0, scale=4.0, weight=0.010)
+    rebound_drb_scaled, rebound_drb_mult = _bounded_mult(drb_val, center=10.0, scale=6.0, weight=0.010)
+
+    assist_ast_scaled, assist_ast_mult = _bounded_mult(ast_val, center=18.0, scale=12.0, weight=0.012)
+    assist_touches_scaled, assist_touches_mult = _bounded_mult(touches_val, center=55.0, scale=25.0, weight=0.010)
+    assist_ast_usg_scaled, assist_ast_usg_mult = _bounded_mult(ast_usg_val, center=0.85, scale=0.35, weight=0.012)
+    assist_bc_scaled, assist_bc_mult = _bounded_mult(box_creation_val, center=8.0, scale=4.0, weight=0.012)
+    assist_load_scaled, assist_load_mult = _bounded_mult(offensive_load_val, center=20.0, scale=10.0, weight=0.008)
+    assist_pr_scaled, assist_pr_mult = _bounded_mult(passer_rating_val, center=5.0, scale=2.0, weight=0.012)
+
+    scoring_mult = 1.0
+    if stat_norm == "PTS":
+        scoring_mult *= usg_mult
+        scoring_mult *= scoring_ts_mult
+        scoring_mult *= scoring_sq_mult
+        scoring_mult *= scoring_ftr_mult
+
+    assist_mult = 1.0
+    if stat_norm in {"AST", "PA", "PRA", "RA"}:
+        assist_mult *= assist_ast_mult
+        assist_mult *= assist_touches_mult
+        assist_mult *= assist_ast_usg_mult
+        assist_mult *= assist_bc_mult
+        assist_mult *= assist_load_mult
+        assist_mult *= assist_pr_mult
+
+    rebound_mult = 1.0
+    if stat_norm in {"REB", "PR", "PRA", "RA"}:
+        rebound_mult *= rebound_trb_mult
+        rebound_mult *= rebound_orb_mult
+        rebound_mult *= rebound_drb_mult
+
+    threes_mult = 1.0
+    if stat_norm in {"FG3M", "3PM", "THREES"}:
+        threes_mult *= threes_three_par_mult
+        threes_mult *= threes_sq_mult
+        threes_mult *= threes_ts_mult
+
+    # Current payload coverage is reliable for scoring/rebound families but not
+    # yet for the assist-family glossary fields. Keep assist/threes telemetry
+    # visible while only letting scoring/rebound shape the live usage route.
+    family_metric_mult = float(np.clip(scoring_mult * rebound_mult, 0.94, 1.06))
+
+    usage_dep_raw = baseline * producer_mult * pressure_mult * family_metric_mult
+    usage_dep = float(np.clip(usage_dep_raw, 0.75, 1.10))
 
     return {
         "usage_dep": usage_dep,
         "usage_baseline": float(baseline),
         "usage_producer_mult": float(producer_mult),
         "usage_pressure_mult": float(pressure_mult),
+        "usage_usg_pct": None if pd.isna(usg) else float(usg),
+        "usage_usg_scaled": float(usg_scaled),
+        "usage_usg_mult": float(usg_mult),
+        "usage_scoring_mult": float(scoring_mult),
+        "usage_assist_mult": float(assist_mult),
+        "usage_rebound_mult": float(rebound_mult),
+        "usage_threes_mult": float(threes_mult),
+        "usage_metric_mult": float(family_metric_mult),
+        "usage_ts_scaled": float(scoring_ts_scaled),
+        "usage_sq_scaled": float(scoring_sq_scaled),
+        "usage_ftr_scaled": float(scoring_ftr_scaled),
+        "usage_three_par_scaled": float(threes_three_par_scaled),
+        "usage_trb_scaled": float(rebound_trb_scaled),
+        "usage_ast_scaled": float(assist_ast_scaled),
+        "usage_touches_scaled": float(assist_touches_scaled),
+        "usage_ast_usg_scaled": float(assist_ast_usg_scaled),
+        "usage_bc_scaled": float(assist_bc_scaled),
+        "usage_load_scaled": float(assist_load_scaled),
+        "usage_pr_scaled": float(assist_pr_scaled),
         "usage_target_rate": float(target_rate),
         "usage_burden_ratio": float(burden_ratio),
         "usage_dep_raw": float(usage_dep_raw),
     }
 
 
-def _role_metrics_adjustment(row: Any) -> tuple[float, dict[str, float]]:
-    """Convert parsed role-metrics columns into a small bounded multiplier."""
-    weight_scale = 0.08
+def _role_metrics_adjustment(row: Any, *, role_ctx_on_override: bool | None = None) -> tuple[float, dict[str, float]]:
+    """Convert parsed role-metrics columns into a weak bounded prior."""
+    weight_scale = 0.04
     role_ctx_on = False
-    try:
-        if hasattr(row, "get"):
-            role_ctx_on = float(pd.to_numeric(pd.Series([row.get("role_ctx_outs_used", 0)]), errors="coerce").iloc[0]) > 0.0
-        elif isinstance(row, dict):
-            role_ctx_on = float(pd.to_numeric(pd.Series([row.get("role_ctx_outs_used", 0)]), errors="coerce").iloc[0]) > 0.0
-        else:
-            role_ctx_on = float(pd.to_numeric(pd.Series([getattr(row, "role_ctx_outs_used", 0)]), errors="coerce").iloc[0]) > 0.0
-    except Exception:
-        role_ctx_on = False
+    if role_ctx_on_override is None:
+        try:
+            if hasattr(row, "get"):
+                role_ctx_on = float(pd.to_numeric(pd.Series([row.get("role_ctx_outs_used", 0)]), errors="coerce").iloc[0]) > 0.0
+            elif isinstance(row, dict):
+                role_ctx_on = float(pd.to_numeric(pd.Series([row.get("role_ctx_outs_used", 0)]), errors="coerce").iloc[0]) > 0.0
+            else:
+                role_ctx_on = float(pd.to_numeric(pd.Series([getattr(row, "role_ctx_outs_used", 0)]), errors="coerce").iloc[0]) > 0.0
+        except Exception:
+            role_ctx_on = False
+    else:
+        role_ctx_on = bool(role_ctx_on_override)
+
+    if not role_ctx_on:
+        return 1.0, {"score": 0.0, "mult": 1.0, "gated": 1.0}
 
     def _get(name: str) -> float:
         try:
@@ -312,16 +453,14 @@ def _role_metrics_adjustment(row: Any) -> tuple[float, dict[str, float]]:
         components[f"{name}_scaled"] = float(np.tanh(float(raw_value) / max(scale, 1e-6)))
         components[f"{name}_weighted"] = float(weight * components[f"{name}_scaled"])
 
-    _add("usg", _get("role_metrics_usg_pct"), 36.0, 0.020 * weight_scale)
-    if role_ctx_on:
-        _add("cpm", _get("role_metrics_cpm"), 5.0, 0.018 * weight_scale)
-        _add("vorp", _get("role_metrics_vorp"), 5.0, 0.016 * weight_scale)
-        _add("drip", _get("role_metrics_drip_total"), 9.0, 0.010 * weight_scale)
-    _add("darko", _get("role_metrics_darko"), 9.0, 0.006 * weight_scale)
+    _add("cpm", _get("role_metrics_cpm"), 5.0, 0.010 * weight_scale)
+    _add("vorp", _get("role_metrics_vorp"), 5.0, 0.008 * weight_scale)
+    _add("drip", _get("role_metrics_drip_total"), 9.0, 0.006 * weight_scale)
+    _add("darko", _get("role_metrics_darko"), 9.0, 0.003 * weight_scale)
 
     score = float(sum(v for k, v in components.items() if k.endswith("_weighted")))
-    score = float(np.clip(score, -0.015, 0.015))
-    mult = float(np.clip(1.0 + score, 0.985, 1.015))
+    score = float(np.clip(score, -0.008, 0.008))
+    mult = float(np.clip(1.0 + score, 0.992, 1.008))
     components["score"] = score
     components["mult"] = mult
     return mult, components
@@ -405,19 +544,19 @@ def _usage_risk_gate(q_blowout: float) -> float:
     star overs.
 
     Gate shape:
-      - q <= 0.10: no usage inflation
-      - q >= 0.28: full usage effect available
+    - q <= 0.14: no usage inflation
+    - q >= 0.32: full usage effect available
       - in between: linear ramp
     """
     try:
         q = float(q_blowout)
     except Exception:
         q = 0.0
-    if q <= 0.10:
+    if q <= 0.14:
         return 0.0
-    if q >= 0.28:
+    if q >= 0.32:
         return 1.0
-    return float((q - 0.10) / 0.18)
+    return float((q - 0.14) / 0.18)
 
 
 def _usage_effect_cap(stat_u: str) -> float:
@@ -427,16 +566,112 @@ def _usage_effect_cap(stat_u: str) -> float:
     """
     stat = str(stat_u or '').upper().strip()
     if stat in {'PTS', 'PRA', 'PA', 'PR', 'RA'}:
-        return 1.12
+        return 1.06
     if stat in {'AST'}:
-        return 1.10
-    if stat in {'FG3M', '3PM', 'THREES'}:
-        return 1.08
-    if stat in {'REB'}:
-        return 1.05
-    if stat in {'BLK', 'STL', 'STOCKS'}:
         return 1.04
-    return 1.08
+    if stat in {'FG3M', '3PM', 'THREES'}:
+        return 1.03
+    if stat in {'REB'}:
+        return 1.02
+    if stat in {'BLK', 'STL', 'STOCKS'}:
+        return 1.01
+    return 1.03
+
+
+def _soft_ramp(value: float | None, start: float, full: float) -> float:
+    """Linear ramp that turns on at start and is full by full."""
+    try:
+        val = float(value)
+    except Exception:
+        return 0.0
+    lo = float(start)
+    hi = float(full)
+    if hi <= lo:
+        return 1.0 if val >= hi else 0.0
+    if val <= lo:
+        return 0.0
+    if val >= hi:
+        return 1.0
+    return float((val - lo) / (hi - lo))
+
+
+def _soft_ramp_inverse(value: float | None, zero_at: float, full_at: float) -> float:
+    """Inverse linear ramp that is full at low values and zero at high values."""
+    try:
+        val = float(value)
+    except Exception:
+        return 0.0
+    hi = float(zero_at)
+    lo = float(full_at)
+    if hi <= lo:
+        return 1.0 if val <= lo else 0.0
+    if val >= hi:
+        return 0.0
+    if val <= lo:
+        return 1.0
+    return float((hi - val) / (hi - lo))
+
+
+def _competitive_usage_bonus(
+    *,
+    stat_u: str,
+    direction: str,
+    usg_pct: float | None,
+    fragility: float,
+    q_blowout: float,
+    headroom: float,
+    cfg: dict[str, Any] | None = None,
+) -> tuple[float, dict[str, float]]:
+    """Small bonus for high-usage competitive-script legs.
+
+    This is the counterpart to usage-driven fragility:
+    - high-usage overs in dangerous scripts can be more fragile
+    - high-usage overs in tight, low-fragility scripts can earn a small bump
+
+    The bump is deliberately conservative:
+    - OVER only
+    - scoring/creator families only
+    - gated by real usage, low blowout risk, and low fragility
+    - capped by available close-channel headroom
+    """
+    stat = str(stat_u or '').upper().strip()
+    direction_u = str(direction or '').upper().strip()
+    eligible_stats = {'PTS', 'PRA', 'PA', 'PR', 'AST'}
+
+    try:
+        headroom_f = max(0.0, float(headroom))
+    except Exception:
+        headroom_f = 0.0
+
+    settings = cfg or {}
+    usage_min = float(settings.get('competitive_usage_usg_min', 27.0))
+    usage_full = float(settings.get('competitive_usage_usg_full', 33.0))
+    frag_zero = float(settings.get('competitive_usage_frag_max', 0.12))
+    frag_full = float(settings.get('competitive_usage_frag_full', 0.04))
+    q_zero = float(settings.get('competitive_usage_q_max', 0.18))
+    q_full = float(settings.get('competitive_usage_q_full', 0.08))
+    max_bump = max(0.0, float(settings.get('competitive_usage_max_bump', 0.006)))
+
+    usage_gate = _soft_ramp(usg_pct, usage_min, usage_full)
+    frag_gate = _soft_ramp_inverse(fragility, frag_zero, frag_full)
+    tight_gate = _soft_ramp_inverse(q_blowout, q_zero, q_full)
+    total_gate = float(usage_gate * frag_gate * tight_gate)
+
+    eligible = direction_u == 'OVER' and stat in eligible_stats and headroom_f > 0.0
+    uncapped_bonus = float(max_bump * total_gate) if eligible else 0.0
+    applied_bonus = float(min(headroom_f, uncapped_bonus)) if eligible else 0.0
+
+    return applied_bonus, {
+        'eligible': 1.0 if eligible else 0.0,
+        'usage_gate': float(usage_gate),
+        'frag_gate': float(frag_gate),
+        'tight_gate': float(tight_gate),
+        'total_gate': float(total_gate),
+        'max_bump': float(max_bump),
+        'headroom': float(headroom_f),
+        'bonus_uncapped': float(uncapped_bonus),
+        'bonus_applied': float(applied_bonus),
+    }
 
 def _fragility_root_inputs(row: pd.Series, stat_u: str, base_rate_mu: float, line: float, expected_minutes: float) -> tuple[float, dict[str, float]]:
     """
@@ -456,11 +691,33 @@ def _fragility_root_inputs(row: pd.Series, stat_u: str, base_rate_mu: float, lin
     except Exception:
         minutes_s = float(minutes_sensitivity(stat_u))
 
+    def _row_metric(name: str) -> float | None:
+        try:
+            raw = row.get(name, None)
+        except Exception:
+            raw = None
+        value = pd.to_numeric(pd.Series([raw]), errors='coerce').iloc[0]
+        return None if pd.isna(value) else float(value)
+
     usage_debug = _usage_dependence_proxy(
         stat_u=stat_u,
         base_rate_mu=base_rate_mu,
         line=line,
         expected_minutes=expected_minutes,
+        usg_pct=_row_metric('role_metrics_usg_pct'),
+        ts_pct=_row_metric('role_metrics_ts_pct'),
+        sq=_row_metric('role_metrics_sq'),
+        three_par=_row_metric('role_metrics_three_par'),
+        ftr=_row_metric('role_metrics_ftr'),
+        trb_pct=_row_metric('role_metrics_trb_pct'),
+        orb_pct=_row_metric('role_metrics_orb_pct'),
+        drb_pct=_row_metric('role_metrics_drb_pct'),
+        ast_pct=_row_metric('role_metrics_ast_pct'),
+        touches=_row_metric('role_metrics_touches'),
+        ast_usg=_row_metric('role_metrics_ast_usg'),
+        box_creation=_row_metric('role_metrics_bc'),
+        offensive_load=_row_metric('role_metrics_load'),
+        passer_rating=_row_metric('role_metrics_pr'),
     )
     return float(minutes_s), usage_debug
 
@@ -898,11 +1155,6 @@ def simulate_leg_probability_new(
 
     role_metrics_mult = 1.0
     role_metrics_debug: dict[str, float] = {}
-    try:
-        role_metrics_mult, role_metrics_debug = _role_metrics_adjustment(row)
-    except Exception:
-        role_metrics_mult = 1.0
-        role_metrics_debug = {}
 
     is_star = float(projected_minutes_val if pd.notna(projected_minutes) else float(s.get("min_mean", 0.0))) >= 33.0
     minute_drop = float(star_minute_drop if is_star else role_minute_drop)
@@ -1121,6 +1373,22 @@ def simulate_leg_probability_new(
         elif not team:
             role_reason = "no_team"
 
+    role_ctx_outs_used_for_metrics = 0
+    if isinstance(role_debug, dict):
+        try:
+            role_ctx_outs_used_for_metrics = int(role_debug.get("outs_used") or 0)
+        except Exception:
+            role_ctx_outs_used_for_metrics = 0
+
+    try:
+        role_metrics_mult, role_metrics_debug = _role_metrics_adjustment(
+            row,
+            role_ctx_on_override=role_ctx_outs_used_for_metrics > 0,
+        )
+    except Exception:
+        role_metrics_mult = 1.0
+        role_metrics_debug = {}
+
     # RAW channel parameters (no ctx)
     rate_mu_raw = base_rate_mu
     rate_sd_raw = rate_sd_base
@@ -1316,6 +1584,27 @@ def simulate_leg_probability_new(
         cfg=cfg,
     )
 
+    frag_gap_core_pre_bonus = max(0.0, p_close_adj - p_adj)
+    frag_gap_usage_pre_bonus = float(frag_gap_core_pre_bonus) * float(usage_dep_eff)
+    frag_gap_dir_pre_bonus = _directional_fragility_gap(
+        direction=str(direction),
+        frag_gap_usage=float(frag_gap_usage_pre_bonus),
+    )
+    eps = 1e-9
+    frag_pre_bonus = 0.0 if p_close_adj <= eps else max(0.0, frag_gap_dir_pre_bonus / p_close_adj)
+
+    competitive_usage_bonus, competitive_usage_debug = _competitive_usage_bonus(
+        stat_u=str(stat_u),
+        direction=str(direction),
+        usg_pct=usage_debug.get('usage_usg_pct'),
+        fragility=float(frag_pre_bonus),
+        q_blowout=float(q),
+        headroom=float(frag_gap_core_pre_bonus),
+        cfg=role_cfg or {},
+    )
+    p_adj_pre_competitive_usage = float(p_adj)
+    p_adj = float(np.clip(float(p_adj) + float(competitive_usage_bonus), 0.0, 1.0))
+
     # Fragility (Atlas): usage lives ONLY inside the fragility channel.
     # Keep the core p_role -> p_adj haircut unchanged; usage only scales how
     # breakable the OVER path is understood to be under game-script stress.
@@ -1326,7 +1615,6 @@ def simulate_leg_probability_new(
         frag_gap_usage=float(frag_gap_usage),
     )
 
-    eps = 1e-9
     frag = 0.0 if p_close_adj <= eps else max(0.0, frag_gap_dir / p_close_adj)
     frag_abs = max(0.0, frag_gap_dir)
 
@@ -1365,10 +1653,27 @@ def simulate_leg_probability_new(
         "usage_baseline": float(usage_debug.get("usage_baseline", 1.0)),
         "usage_producer_mult": float(usage_debug.get("usage_producer_mult", 1.0)),
         "usage_pressure_mult": float(usage_debug.get("usage_pressure_mult", 1.0)),
+        "usage_usg_pct": float(usage_debug.get("usage_usg_pct", 0.0) or 0.0),
+        "usage_usg_scaled": float(usage_debug.get("usage_usg_scaled", 0.0)),
+        "usage_usg_mult": float(usage_debug.get("usage_usg_mult", 1.0)),
+        "usage_scoring_mult": float(usage_debug.get("usage_scoring_mult", 1.0)),
+        "usage_assist_mult": float(usage_debug.get("usage_assist_mult", 1.0)),
+        "usage_rebound_mult": float(usage_debug.get("usage_rebound_mult", 1.0)),
+        "usage_threes_mult": float(usage_debug.get("usage_threes_mult", 1.0)),
+        "usage_metric_mult": float(usage_debug.get("usage_metric_mult", 1.0)),
         "usage_target_rate": float(usage_debug.get("usage_target_rate", 0.0)),
         "usage_burden_ratio": float(usage_debug.get("usage_burden_ratio", 1.0)),
         "usage_dep_raw": float(usage_debug.get("usage_dep_raw", usage_dep)),
         "p_adj_pre_under_relief": float(p_adj_pre_under_relief),
+        "p_adj_pre_competitive_usage": float(p_adj_pre_competitive_usage),
+        "competitive_usage_bonus": float(competitive_usage_bonus),
+        "competitive_usage_eligible": bool(competitive_usage_debug.get("eligible", 0.0) >= 0.5),
+        "competitive_usage_usage_gate": float(competitive_usage_debug.get("usage_gate", 0.0)),
+        "competitive_usage_frag_gate": float(competitive_usage_debug.get("frag_gate", 0.0)),
+        "competitive_usage_tight_gate": float(competitive_usage_debug.get("tight_gate", 0.0)),
+        "competitive_usage_total_gate": float(competitive_usage_debug.get("total_gate", 0.0)),
+        "competitive_usage_bonus_uncapped": float(competitive_usage_debug.get("bonus_uncapped", 0.0)),
+        "competitive_usage_headroom": float(competitive_usage_debug.get("headroom", 0.0)),
         "under_relief_haircut": float(under_relief_haircut),
         "under_relief_haircut_min": float(under_relief_haircut_min),
         "under_relief_factor": float(under_relief_factor if under_relief_eligible else 1.0),

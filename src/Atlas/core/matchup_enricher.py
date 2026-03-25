@@ -98,19 +98,29 @@ def _load_role_metrics_snapshot(role_metrics_path: str | None = None) -> pd.Data
     if "team" not in df.columns:
         df["team"] = ""
 
-    df["player_key"] = df["player"].astype(str).map(share_name_key)
-    df["game_date"] = df["game_date"].astype(str).str.strip()
+    if "player_key" in df.columns:
+        df["player_key"] = df["player_key"].astype(str).str.strip()
+        missing_player_key = df["player_key"] == ""
+        if missing_player_key.any():
+            df.loc[missing_player_key, "player_key"] = df.loc[missing_player_key, "player"].astype(str).map(share_name_key)
+    else:
+        df["player_key"] = df["player"].astype(str).map(share_name_key)
+    df["game_date"] = df["game_date"].astype(str).map(_norm_date_str)
     df["team"] = df["team"].astype(str).str.strip().str.upper()
 
     rename_map = {
         "age": "role_metrics_age",
         "minutes_projection": "role_metrics_minutes_projection",
+        "efg_pct": "role_metrics_efg_pct",
         "ts_pct": "role_metrics_ts_pct",
         "rts_pct": "role_metrics_rts_pct",
         "sq": "role_metrics_sq",
+        "spacing": "role_metrics_spacing",
         "three_par": "role_metrics_three_par",
         "r3par": "role_metrics_r3par",
         "ftr": "role_metrics_ftr",
+        "trb_pct": "role_metrics_trb_pct",
+        "ast_pct": "role_metrics_ast_pct",
         "orb_pct": "role_metrics_orb_pct",
         "rorb_pct": "role_metrics_rorb_pct",
         "raorb": "role_metrics_raorb",
@@ -128,6 +138,8 @@ def _load_role_metrics_snapshot(role_metrics_path: str | None = None) -> pd.Data
         "load": "role_metrics_load",
         "pr": "role_metrics_pr",
         "port": "role_metrics_port",
+        "touches": "role_metrics_touches",
+        "astusg": "role_metrics_ast_usg",
         "role_awareness": "role_metrics_role_awareness",
         "usage_projection": "role_metrics_usage_projection",
         "starter_flag": "role_metrics_starter_flag",
@@ -163,12 +175,16 @@ def _load_role_metrics_snapshot(role_metrics_path: str | None = None) -> pd.Data
         "role_metrics_plus_minus",
         "role_metrics_vorp",
         "role_metrics_minutes_projection",
+        "role_metrics_efg_pct",
         "role_metrics_ts_pct",
         "role_metrics_rts_pct",
         "role_metrics_sq",
+        "role_metrics_spacing",
         "role_metrics_three_par",
         "role_metrics_r3par",
         "role_metrics_ftr",
+        "role_metrics_trb_pct",
+        "role_metrics_ast_pct",
         "role_metrics_orb_pct",
         "role_metrics_rorb_pct",
         "role_metrics_raorb",
@@ -186,6 +202,8 @@ def _load_role_metrics_snapshot(role_metrics_path: str | None = None) -> pd.Data
         "role_metrics_load",
         "role_metrics_pr",
         "role_metrics_port",
+        "role_metrics_touches",
+        "role_metrics_ast_usg",
         "role_metrics_usage_projection",
         "role_metrics_obpm",
         "role_metrics_dbpm",
@@ -206,7 +224,7 @@ def _load_role_metrics_snapshot(role_metrics_path: str | None = None) -> pd.Data
         if col in out.columns:
             out[col] = pd.to_numeric(out[col], errors="coerce")
 
-    return out.drop_duplicates(subset=["player_key", "game_date", "team"], keep="last").reset_index(drop=True)
+    return out.drop_duplicates(subset=["player_key", "game_date"], keep="last").reset_index(drop=True)
 
 
 # -----------------------------
@@ -537,12 +555,14 @@ def enrich_with_matchups(
 
     role_metrics = _load_role_metrics_snapshot(role_metrics_path)
     if not role_metrics.empty:
-        merge_keys = [c for c in ["player_key", "game_date", "team"] if c in df.columns and c in role_metrics.columns]
+        if "player_key" not in df.columns:
+            df["player_key"] = df["player"].astype(str).map(share_name_key)
+        df["player_key"] = df["player_key"].astype(str).str.strip()
+        df["game_date"] = df["game_date"].astype(str).map(_norm_date_str)
+        merge_keys = [c for c in ["player_key", "game_date"] if c in df.columns and c in role_metrics.columns]
         if merge_keys:
+            merge_frame = role_metrics.drop(columns=["team"], errors="ignore")
             df["team"] = df["team"].astype(str).str.strip().str.upper()
-            role_metrics["team"] = role_metrics["team"].astype(str).str.strip().str.upper()
-            df["player_key"] = df["player_key"].astype(str).str.strip()
-            role_metrics["player_key"] = role_metrics["player_key"].astype(str).str.strip()
-            df = df.merge(role_metrics, on=merge_keys, how="left")
+            df = df.merge(merge_frame, on=merge_keys, how="left")
 
     return df

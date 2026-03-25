@@ -47,6 +47,23 @@ def _pick_latest_run_id(runs_dir: Path) -> Optional[str]:
     return best
 
 
+def _pinned_role_metrics_files(data_dir: Path, run_id: str) -> List[Tuple[Path, str]]:
+    pin_dir = data_dir / "archives" / "pins" / run_id
+    if not pin_dir.is_dir():
+        return []
+
+    pinned: List[Tuple[Path, str]] = []
+    for src_name, arc_name in (
+        ("role_metrics_latest.json", "dashboard/role_metrics_latest.json"),
+        ("role_metrics_latest.html", "dashboard/role_metrics_latest.html"),
+        ("role_metrics_snapshot_manifest.json", "dashboard/role_metrics_snapshot_manifest.json"),
+    ):
+        src = pin_dir / src_name
+        if src.exists() and src.is_file():
+            pinned.append((src, arc_name))
+    return pinned
+
+
 def write_bundle_zip(
     *,
     repo_root: Path,
@@ -138,6 +155,9 @@ def write_bundle_zip(
             src = dashboard_dir / src_name
             if src.exists() and src.is_file():
                 allow.append((src, arc_name))
+
+    # Role-metrics fallback: package the run-pinned snapshot when the run dashboard copy is absent.
+    allow.extend(_pinned_role_metrics_files(data_dir, run_id))
 
 
     # Minimal deterministic inputs for strict replay (small allowlist)

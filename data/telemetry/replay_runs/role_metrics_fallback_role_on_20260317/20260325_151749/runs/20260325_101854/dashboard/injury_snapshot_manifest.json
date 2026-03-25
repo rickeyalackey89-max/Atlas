@@ -1,0 +1,14 @@
+{
+  "artifacts": {
+    "injury_invalidations_latest.json": {
+      "destination": "C:\\Users\\rick\\projects\\Atlas\\data\\telemetry\\replay_runs\\role_metrics_fallback_role_on_20260317\\20260325_151749\\runs\\20260325_101854\\dashboard\\injury_invalidations_latest.json",
+      "source": "C:\\Users\\rick\\projects\\Atlas\\data\\archives\\iael\\2026\\2026-03-17\\20260317_110450Z\\injury_invalidations.json"
+    },
+    "status_latest.json": {
+      "destination": "C:\\Users\\rick\\projects\\Atlas\\data\\telemetry\\replay_runs\\role_metrics_fallback_role_on_20260317\\20260325_151749\\runs\\20260325_101854\\dashboard\\status_latest.json",
+      "source": "C:\\Users\\rick\\projects\\Atlas\\data\\archives\\iael\\2026\\2026-03-17\\20260317_110450Z\\status.json"
+    }
+  },
+  "generated_at_utc": "2026-03-25T15:18:55Z",
+  "run_dir": "C:\\Users\\rick\\projects\\Atlas\\data\\telemetry\\replay_runs\\role_metrics_fallback_role_on_20260317\\20260325_151749\\runs\\20260325_101854"
+}

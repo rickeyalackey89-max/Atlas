@@ -663,6 +663,102 @@ def _runtime_identity_summary(scored_df: pd.DataFrame, args: argparse.Namespace)
     }
 
 
+def _role_metrics_payload_summary(scored_df: pd.DataFrame) -> Dict[str, Any]:
+    stat_family_map = {
+        'PTS': 'scoring',
+        'PA': 'scoring',
+        'PR': 'scoring',
+        'PRA': 'scoring',
+        'REB': 'rebound',
+        'RA': 'rebound',
+        'AST': 'assist',
+        'FG3M': 'threes',
+        '3PM': 'threes',
+        'THREES': 'threes',
+    }
+    families = {
+        'scoring': ['role_metrics_usg_pct', 'role_metrics_ts_pct', 'role_metrics_sq', 'role_metrics_ftr'],
+        'rebound': ['role_metrics_trb_pct', 'role_metrics_orb_pct', 'role_metrics_drb_pct'],
+        'assist': ['role_metrics_ast_pct', 'role_metrics_touches', 'role_metrics_ast_usg', 'role_metrics_bc', 'role_metrics_load', 'role_metrics_pr'],
+        'threes': ['role_metrics_three_par', 'role_metrics_sq', 'role_metrics_ts_pct'],
+        'impact_priors': ['role_metrics_darko', 'role_metrics_vorp', 'role_metrics_cpm', 'role_metrics_drip_total'],
+    }
+    rows = int(len(scored_df))
+    snapshot_rows = int(scored_df['role_metrics_snapshot_id'].fillna('').astype(str).str.len().gt(0).sum()) if 'role_metrics_snapshot_id' in scored_df.columns else 0
+    role_ctx_on_rows = int(pd.to_numeric(scored_df.get('role_ctx_outs_used', pd.Series(dtype=float)), errors='coerce').fillna(0).gt(0).sum()) if rows else 0
+    family_summary: Dict[str, Any] = {}
+    warnings: list[str] = []
+    for family, columns in families.items():
+        available = [col for col in columns if col in scored_df.columns]
+        populated_any = pd.Series(False, index=scored_df.index) if rows else pd.Series(dtype=bool)
+        per_column = []
+        for col in available:
+            series = pd.to_numeric(scored_df[col], errors='coerce')
+            populated = int(series.notna().sum())
+            populated_any = populated_any | series.notna()
+            per_column.append({
+                'column': col,
+                'populated_rows': populated,
+                'populated_share': round(float(populated / rows), 6) if rows else 0.0,
+            })
+        populated_rows_any = int(populated_any.sum()) if rows and available else 0
+        family_summary[family] = {
+            'available_columns': available,
+            'missing_columns': [col for col in columns if col not in available],
+            'populated_rows_any': populated_rows_any,
+            'populated_share_any': round(float(populated_rows_any / rows), 6) if rows else 0.0,
+            'per_column': per_column,
+        }
+        if family == 'assist' and populated_rows_any == 0:
+            warnings.append('assist_family_metrics_missing_or_null')
+        if family == 'scoring' and populated_rows_any == 0:
+            warnings.append('scoring_family_metrics_missing_or_null')
+        if family == 'rebound' and populated_rows_any == 0:
+            warnings.append('rebound_family_metrics_missing_or_null')
+
+    assist_contract_required = ['role_metrics_ast_pct', 'role_metrics_touches', 'role_metrics_ast_usg', 'role_metrics_bc', 'role_metrics_load', 'role_metrics_pr']
+    assist_present = [col for col in assist_contract_required if col in scored_df.columns]
+    assist_populated = [col for col in assist_present if pd.to_numeric(scored_df[col], errors='coerce').notna().any()]
+
+    settled = scored_df[pd.to_numeric(scored_df.get('hit', pd.Series(dtype=float)), errors='coerce').isin([0, 1])].copy()
+    family_report: list[dict[str, Any]] = []
+    if not settled.empty and 'stat' in settled.columns:
+        settled['_family'] = settled['stat'].astype(str).str.upper().map(lambda x: stat_family_map.get(x, 'other'))
+        for family_name, grp in settled.groupby('_family', observed=False):
+            if grp.empty:
+                continue
+            family_report.append({
+                'family': family_name,
+                'rows': int(len(grp)),
+                'mean_brier_p_adj': _mean(grp.get('brier_p_adj', pd.Series(dtype=float))),
+                'mean_usage_metric_mult': _mean(grp.get('usage_metric_mult', pd.Series(dtype=float))),
+                'mean_usage_scoring_mult': _mean(grp.get('usage_scoring_mult', pd.Series(dtype=float))),
+                'mean_usage_assist_mult': _mean(grp.get('usage_assist_mult', pd.Series(dtype=float))),
+                'mean_usage_rebound_mult': _mean(grp.get('usage_rebound_mult', pd.Series(dtype=float))),
+                'mean_usage_threes_mult': _mean(grp.get('usage_threes_mult', pd.Series(dtype=float))),
+            })
+        family_report = sorted(family_report, key=lambda row: (-_safe_float(row.get('mean_brier_p_adj'), 0.0), str(row.get('family') or '')))
+    return _round_value({
+        'rows': rows,
+        'snapshot_rows': snapshot_rows,
+        'snapshot_share': round(float(snapshot_rows / rows), 6) if rows else 0.0,
+        'role_ctx_on_rows': role_ctx_on_rows,
+        'role_ctx_on_share': round(float(role_ctx_on_rows / rows), 6) if rows else 0.0,
+        'active_tuning_families': ['scoring', 'rebound'],
+        'diagnostic_only_families': ['assist', 'threes', 'impact_priors'],
+        'assist_payload_contract': {
+            'required_columns': assist_contract_required,
+            'present_columns': assist_present,
+            'populated_columns': assist_populated,
+            'missing_columns': [col for col in assist_contract_required if col not in assist_present],
+            'ready': len(assist_populated) == len(assist_contract_required),
+        },
+        'families': family_summary,
+        'family_contribution_report': family_report,
+        'warnings': sorted(set(warnings)),
+    })
+
+
 def _scorecard_summary(summary: Dict[str, Any], calib_recs: Dict[str, Any], protected_surfaces: Dict[str, Any]) -> Dict[str, Any]:
     metrics = summary.get('primary_corpus_metrics', {}) or {}
     top_candidates = []
@@ -690,6 +786,7 @@ def _scorecard_summary(summary: Dict[str, Any], calib_recs: Dict[str, Any], prot
         'games_used_lt5_share': metrics.get('games_used_lt5_share'),
         'role_ctx_outs_used_share': metrics.get('role_ctx_outs_used_share'),
         'questionable_share': metrics.get('questionable_share'),
+        'role_metrics_payload': summary.get('role_metrics_payload', {}),
         'protected_surfaces': protected_surfaces,
         'top_calibration_candidates': top_candidates,
     })
@@ -2969,6 +3066,24 @@ def _build_markdown(summary: Dict[str, Any], config_recs: Dict[str, Any], calib_
         lines.append(f"- Protected surfaces [{protected.get('label')}]: strict3=`{protected.get('strict3')}` strict4=`{protected.get('strict4')}` strict5=`{protected.get('strict5')}` hit3=`{protected.get('hit3')}` hit4=`{protected.get('hit4')}` hit5=`{protected.get('hit5')}`")
         if protected.get('dominant_positive') or protected.get('dominant_negative'):
             lines.append(f"- Protected surface tilt: pos=`{protected.get('dominant_positive')}` neg=`{protected.get('dominant_negative')}`")
+    role_metrics_payload = scorecard.get('role_metrics_payload', {}) or {}
+    if role_metrics_payload:
+        lines.append(f"- Role-metrics snapshot rows: `{role_metrics_payload.get('snapshot_rows')}` share=`{role_metrics_payload.get('snapshot_share')}`")
+        lines.append(f"- Active tuning families: `{', '.join(role_metrics_payload.get('active_tuning_families', []))}`")
+        if role_metrics_payload.get('warnings'):
+            lines.append(f"- Role-metrics warnings: `{', '.join(role_metrics_payload.get('warnings', []))}`")
+        assist_contract = role_metrics_payload.get('assist_payload_contract', {}) or {}
+        if assist_contract:
+            lines.append(f"- Assist payload ready: `{assist_contract.get('ready')}`")
+            if assist_contract.get('missing_columns'):
+                lines.append(f"- Assist payload missing: `{', '.join(assist_contract.get('missing_columns', []))}`")
+            if assist_contract.get('present_columns') and not assist_contract.get('populated_columns'):
+                lines.append("- Assist payload note: columns exist but are unpopulated in this corpus.")
+        family_report = role_metrics_payload.get('family_contribution_report') or []
+        for row in family_report[:6]:
+            lines.append(
+                f"- Family `{row.get('family')}` rows=`{row.get('rows')}` brier=`{row.get('mean_brier_p_adj')}` metric_mult=`{row.get('mean_usage_metric_mult')}` scoring=`{row.get('mean_usage_scoring_mult')}` assist=`{row.get('mean_usage_assist_mult')}` rebound=`{row.get('mean_usage_rebound_mult')}` threes=`{row.get('mean_usage_threes_mult')}`"
+            )
     lines.append("")
     lines.append("## Knob advisor")
     lines.append(f"- Likely seam: `{knob_advisor.get('likely_implicated_seam')}`")
@@ -3172,6 +3287,7 @@ def run_reader(args: argparse.Namespace) -> Path:
         scorecard = _scorecard_summary({
             "primary_runs_read": int(len(primary_per_run)),
             "primary_corpus_metrics": primary_corpus_metrics,
+            "role_metrics_payload": _role_metrics_payload_summary(primary_scored),
         }, calib_recs, protected_surfaces)
         knob_advisor = _knob_advisor_summary(config_recs, calib_recs, runtime_identity)
         promotion_guard = _promotion_guard_summary(primary_label, config_recs, calib_recs)
@@ -3192,6 +3308,7 @@ def run_reader(args: argparse.Namespace) -> Path:
             "drift_rows": _round_value(drift_rows),
             "variant_labels": [x["label"] for x in variant_rankings],
             "runtime_identity": _round_value(runtime_identity),
+            "role_metrics_payload": _round_value(_role_metrics_payload_summary(primary_scored)),
             "scorecard": _round_value(scorecard),
             "knob_advisor": _round_value(knob_advisor),
             "promotion_guard": _round_value(promotion_guard),

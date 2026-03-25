@@ -1,0 +1,147 @@
+{
+  "report_date": "2026-03-17",
+  "report_label": "08:00AM",
+  "pulled_at_local": "2026-03-17T07:19:36-05:00",
+  "invalidated_players_count": 23,
+  "invalidated_players": [
+    {
+      "team": "CHA",
+      "player": "Hall, PJ",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "CHA",
+      "player": "Reeves, Antonio",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "CHA",
+      "player": "Salaun, Tidjane",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "DEN",
+      "player": "II, DaRon",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "DEN",
+      "player": "Jones, Curtis",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "DEN",
+      "player": "Simpson, KJ",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "DEN",
+      "player": "Watson, Peyton",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "MIL",
+      "player": "Antetokounmpo, Alex",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "MIL",
+      "player": "Ryan, Cormac",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "MIN",
+      "player": "Beringer, Joan",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "MIN",
+      "player": "Edwards, Anthony",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "MIN",
+      "player": "Freeman, Enrique",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "MIN",
+      "player": "Phillips, Julian",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "MIN",
+      "player": "Pullin, Zyon",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "POR",
+      "player": "Jr., Craig",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "POR",
+      "player": "Proctor, Tyrese",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "POR",
+      "player": "Sarr, Olivier",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "SAC",
+      "player": "Carter, Devin",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "SAC",
+      "player": "Eubanks, Drew",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "SAC",
+      "player": "Hunter, De'Andre",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "SAC",
+      "player": "LaVine, Zach",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "SAC",
+      "player": "Murray, Keegan",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "SAC",
+      "player": "Sabonis, Domantas",
+      "status": "OUT",
+      "reason": ""
+    }
+  ],
+  "policy": "Remove OUT/DOUBTFUL from eligibility. PROBABLE allowed but tagged."
+}

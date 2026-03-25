@@ -1,0 +1,14 @@
+{
+  "artifacts": {
+    "injury_invalidations_latest.json": {
+      "destination": "C:\\Users\\rick\\projects\\Atlas\\data\\telemetry\\replay_runs\\role_active_usg_scan_atlas_bundle_20260317_072923\\20260325_141108\\runs\\20260325_091206\\dashboard\\injury_invalidations_latest.json",
+      "source": "C:\\Users\\rick\\projects\\Atlas\\data\\archives\\iael\\2026\\2026-03-17\\20260317_122604Z\\injury_invalidations.json"
+    },
+    "status_latest.json": {
+      "destination": "C:\\Users\\rick\\projects\\Atlas\\data\\telemetry\\replay_runs\\role_active_usg_scan_atlas_bundle_20260317_072923\\20260325_141108\\runs\\20260325_091206\\dashboard\\status_latest.json",
+      "source": "C:\\Users\\rick\\projects\\Atlas\\data\\archives\\iael\\2026\\2026-03-17\\20260317_122604Z\\status.json"
+    }
+  },
+  "generated_at_utc": "2026-03-25T14:12:06Z",
+  "run_dir": "C:\\Users\\rick\\projects\\Atlas\\data\\telemetry\\replay_runs\\role_active_usg_scan_atlas_bundle_20260317_072923\\20260325_141108\\runs\\20260325_091206"
+}

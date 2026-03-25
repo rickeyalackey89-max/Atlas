@@ -1,0 +1,232 @@
+{
+  "rows": 4469,
+  "snapshot_rows": 4030,
+  "snapshot_share": 0.901768,
+  "role_ctx_on_rows": 0,
+  "role_ctx_on_share": 0.0,
+  "active_tuning_families": [
+    "scoring",
+    "rebound"
+  ],
+  "diagnostic_only_families": [
+    "assist",
+    "threes",
+    "impact_priors"
+  ],
+  "assist_payload_contract": {
+    "required_columns": [
+      "role_metrics_ast_pct",
+      "role_metrics_touches",
+      "role_metrics_ast_usg",
+      "role_metrics_bc",
+      "role_metrics_load",
+      "role_metrics_pr"
+    ],
+    "present_columns": [
+      "role_metrics_bc",
+      "role_metrics_load",
+      "role_metrics_pr"
+    ],
+    "populated_columns": [],
+    "missing_columns": [
+      "role_metrics_ast_pct",
+      "role_metrics_touches",
+      "role_metrics_ast_usg"
+    ],
+    "ready": false
+  },
+  "families": {
+    "scoring": {
+      "available_columns": [
+        "role_metrics_usg_pct",
+        "role_metrics_ts_pct",
+        "role_metrics_sq",
+        "role_metrics_ftr"
+      ],
+      "missing_columns": [],
+      "populated_rows_any": 4030,
+      "populated_share_any": 0.901768,
+      "per_column": [
+        {
+          "column": "role_metrics_usg_pct",
+          "populated_rows": 4030,
+          "populated_share": 0.901768
+        },
+        {
+          "column": "role_metrics_ts_pct",
+          "populated_rows": 4030,
+          "populated_share": 0.901768
+        },
+        {
+          "column": "role_metrics_sq",
+          "populated_rows": 4030,
+          "populated_share": 0.901768
+        },
+        {
+          "column": "role_metrics_ftr",
+          "populated_rows": 4030,
+          "populated_share": 0.901768
+        }
+      ]
+    },
+    "rebound": {
+      "available_columns": [
+        "role_metrics_orb_pct",
+        "role_metrics_drb_pct"
+      ],
+      "missing_columns": [
+        "role_metrics_trb_pct"
+      ],
+      "populated_rows_any": 4030,
+      "populated_share_any": 0.901768,
+      "per_column": [
+        {
+          "column": "role_metrics_orb_pct",
+          "populated_rows": 4030,
+          "populated_share": 0.901768
+        },
+        {
+          "column": "role_metrics_drb_pct",
+          "populated_rows": 4030,
+          "populated_share": 0.901768
+        }
+      ]
+    },
+    "assist": {
+      "available_columns": [
+        "role_metrics_bc",
+        "role_metrics_load",
+        "role_metrics_pr"
+      ],
+      "missing_columns": [
+        "role_metrics_ast_pct",
+        "role_metrics_touches",
+        "role_metrics_ast_usg"
+      ],
+      "populated_rows_any": 0,
+      "populated_share_any": 0.0,
+      "per_column": [
+        {
+          "column": "role_metrics_bc",
+          "populated_rows": 0,
+          "populated_share": 0.0
+        },
+        {
+          "column": "role_metrics_load",
+          "populated_rows": 0,
+          "populated_share": 0.0
+        },
+        {
+          "column": "role_metrics_pr",
+          "populated_rows": 0,
+          "populated_share": 0.0
+        }
+      ]
+    },
+    "threes": {
+      "available_columns": [
+        "role_metrics_three_par",
+        "role_metrics_sq",
+        "role_metrics_ts_pct"
+      ],
+      "missing_columns": [],
+      "populated_rows_any": 4030,
+      "populated_share_any": 0.901768,
+      "per_column": [
+        {
+          "column": "role_metrics_three_par",
+          "populated_rows": 3934,
+          "populated_share": 0.880286
+        },
+        {
+          "column": "role_metrics_sq",
+          "populated_rows": 4030,
+          "populated_share": 0.901768
+        },
+        {
+          "column": "role_metrics_ts_pct",
+          "populated_rows": 4030,
+          "populated_share": 0.901768
+        }
+      ]
+    },
+    "impact_priors": {
+      "available_columns": [
+        "role_metrics_darko",
+        "role_metrics_vorp",
+        "role_metrics_cpm",
+        "role_metrics_drip_total"
+      ],
+      "missing_columns": [],
+      "populated_rows_any": 4030,
+      "populated_share_any": 0.901768,
+      "per_column": [
+        {
+          "column": "role_metrics_darko",
+          "populated_rows": 3938,
+          "populated_share": 0.881181
+        },
+        {
+          "column": "role_metrics_vorp",
+          "populated_rows": 4030,
+          "populated_share": 0.901768
+        },
+        {
+          "column": "role_metrics_cpm",
+          "populated_rows": 0,
+          "populated_share": 0.0
+        },
+        {
+          "column": "role_metrics_drip_total",
+          "populated_rows": 4030,
+          "populated_share": 0.901768
+        }
+      ]
+    }
+  },
+  "family_contribution_report": [
+    {
+      "family": "scoring",
+      "rows": 2340,
+      "mean_brier_p_adj": 0.274054,
+      "mean_usage_metric_mult": 1.001046,
+      "mean_usage_scoring_mult": 0.998675,
+      "mean_usage_assist_mult": 1.0,
+      "mean_usage_rebound_mult": 1.00237,
+      "mean_usage_threes_mult": 1.0
+    },
+    {
+      "family": "rebound",
+      "rows": 993,
+      "mean_brier_p_adj": 0.265517,
+      "mean_usage_metric_mult": 1.005281,
+      "mean_usage_scoring_mult": 1.0,
+      "mean_usage_assist_mult": 1.0,
+      "mean_usage_rebound_mult": 1.005281,
+      "mean_usage_threes_mult": 1.0
+    },
+    {
+      "family": "assist",
+      "rows": 355,
+      "mean_brier_p_adj": 0.242858,
+      "mean_usage_metric_mult": 1.0,
+      "mean_usage_scoring_mult": 1.0,
+      "mean_usage_assist_mult": 1.0,
+      "mean_usage_rebound_mult": 1.0,
+      "mean_usage_threes_mult": 1.0
+    },
+    {
+      "family": "threes",
+      "rows": 269,
+      "mean_brier_p_adj": 0.22014,
+      "mean_usage_metric_mult": 1.0,
+      "mean_usage_scoring_mult": 1.0,
+      "mean_usage_assist_mult": 1.0,
+      "mean_usage_rebound_mult": 1.0,
+      "mean_usage_threes_mult": 1.004884
+    }
+  ],
+  "warnings": [
+    "assist_family_metrics_missing_or_null"
+  ]
+}

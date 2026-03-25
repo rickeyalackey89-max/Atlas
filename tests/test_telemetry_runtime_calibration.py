@@ -27,7 +27,6 @@ class TelemetryRuntimeCalibrationTest(unittest.TestCase):
                 },
             }
         )
-
         df = pd.DataFrame(
             {
                 "stat": ["PTS", "PTS", "PTS"],
@@ -145,6 +144,50 @@ class TelemetryRuntimeCalibrationTest(unittest.TestCase):
         self.assertTrue(bool(result.loc[0, "telemetry_cal_applied"]))
         self.assertTrue(bool(result.loc[1, "telemetry_cal_applied"]))
         self.assertTrue(bool(result.loc[2, "telemetry_cal_applied"]))
+
+    def test_isotonic_hybrid_can_guard_nested_overlay_with_keep_identity(self) -> None:
+        calib = TelemetryCalibration.from_json(
+            {
+                "mode": "isotonic_hybrid",
+                "meta": {
+                    "source_col": "p_cal",
+                    "mix": 1.0,
+                    "x_thresholds": [0.3, 0.6],
+                    "y_thresholds": [0.2, 0.5],
+                    "protected_stat_directions": ["PRA|OVER"],
+                    "protected_role_ctx": "off",
+                    "protected_calibration": {
+                        "mode": "keep_identity"
+                    }
+                },
+                "pre_calibration": {
+                    "mode": "isotonic_global",
+                    "meta": {
+                        "source_col": "p_cal",
+                        "x_thresholds": [0.4, 0.7],
+                        "y_thresholds": [0.45, 0.8]
+                    }
+                }
+            }
+        )
+
+        df = pd.DataFrame(
+            {
+                "stat": ["PRA", "PA"],
+                "direction": ["OVER", "OVER"],
+                "tier": ["STANDARD", "STANDARD"],
+                "role_ctx_outs_used": [0, 0],
+                "p_cal": [0.7, 0.7],
+                "p_cal_src": ["p_adj", "p_adj"],
+            }
+        )
+
+        result = apply_calibration_to_column(df, calib, source_col="p_cal", out_col="p_out")
+
+        self.assertAlmostEqual(float(result.loc[0, "p_out"]), 0.8, places=12)
+        self.assertAlmostEqual(float(result.loc[1, "p_out"]), 0.5, places=12)
+        self.assertFalse(bool(result.loc[0, "telemetry_cal_applied"]))
+        self.assertTrue(bool(result.loc[1, "telemetry_cal_applied"]))
 
 
 if __name__ == "__main__":

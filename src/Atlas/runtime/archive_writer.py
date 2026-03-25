@@ -169,3 +169,87 @@ def archive_raw_json(
         res["errors"].append(f"manifest_failed: {e!r}")
 
     return res
+
+
+def archive_role_metrics_artifacts(
+    *,
+    repo_root: Path,
+    role_metrics_latest_json: Path,
+    ids: ArchiveIds,
+    role_metrics_latest_html: Optional[Path] = None,
+    role_metrics_manifest: Optional[Path] = None,
+) -> dict:
+    """
+    Archives role-metrics artifacts into:
+      data/archives/iael/YYYY/YYYY-MM-DD/<snapshot_id>/
+        {role_metrics_latest.json,role_metrics_latest.html,role_metrics_snapshot_manifest.json}
+    Also optionally pins them into:
+      data/archives/pins/<run_id>/
+    """
+    year = ids.date_dashed[0:4]
+    base = repo_root / "data" / "archives"
+
+    iael_snap_dir = base / "iael" / year / ids.date_dashed / ids.snapshot_id
+    iael_snap_dir.mkdir(parents=True, exist_ok=True)
+
+    json_dst = iael_snap_dir / "role_metrics_latest.json"
+    html_dst = iael_snap_dir / "role_metrics_latest.html"
+    manifest_dst = iael_snap_dir / "role_metrics_snapshot_manifest.json"
+
+    res = {
+        "run_id": ids.run_id,
+        "snapshot_id": ids.snapshot_id,
+        "date": ids.date_dashed,
+        "iael_snapshot_dir": str(iael_snap_dir),
+        "role_metrics_json_src": str(role_metrics_latest_json),
+        "role_metrics_json_dst": str(json_dst),
+        "role_metrics_html_src": str(role_metrics_latest_html) if role_metrics_latest_html else None,
+        "role_metrics_html_dst": str(html_dst) if role_metrics_latest_html else None,
+        "role_metrics_manifest_src": str(role_metrics_manifest) if role_metrics_manifest else None,
+        "role_metrics_manifest_dst": str(manifest_dst) if role_metrics_manifest else None,
+        "pinned": False,
+        "pin_dir": None,
+        "errors": [],
+    }
+
+    try:
+        if role_metrics_latest_json.exists():
+            shutil.copy2(role_metrics_latest_json, json_dst)
+        else:
+            res["errors"].append(f"missing: {role_metrics_latest_json}")
+
+        if role_metrics_latest_html is not None:
+            if role_metrics_latest_html.exists():
+                shutil.copy2(role_metrics_latest_html, html_dst)
+            else:
+                res["errors"].append(f"missing: {role_metrics_latest_html}")
+
+        if role_metrics_manifest is not None:
+            if role_metrics_manifest.exists():
+                shutil.copy2(role_metrics_manifest, manifest_dst)
+            else:
+                res["errors"].append(f"missing: {role_metrics_manifest}")
+    except Exception as e:
+        res["errors"].append(f"copy_failed: {e!r}")
+
+    if ids.run_id:
+        pin_dir = base / "pins" / ids.run_id
+        pin_dir.mkdir(parents=True, exist_ok=True)
+        try:
+            if json_dst.exists():
+                shutil.copy2(json_dst, pin_dir / "role_metrics_latest.json")
+            if role_metrics_latest_html is not None and html_dst.exists():
+                shutil.copy2(html_dst, pin_dir / "role_metrics_latest.html")
+            if role_metrics_manifest is not None and manifest_dst.exists():
+                shutil.copy2(manifest_dst, pin_dir / "role_metrics_snapshot_manifest.json")
+            res["pinned"] = True
+            res["pin_dir"] = str(pin_dir)
+        except Exception as e:
+            res["errors"].append(f"pin_failed: {e!r}")
+
+    try:
+        (iael_snap_dir / "role_metrics_archive_manifest.json").write_text(json.dumps(res, indent=2), encoding="utf-8")
+    except Exception as e:
+        res["errors"].append(f"manifest_failed: {e!r}")
+
+    return res

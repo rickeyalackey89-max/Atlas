@@ -1,0 +1,25 @@
+{
+  "run_dir": "C:\\Users\\rick\\projects\\Atlas\\data\\telemetry\\replay_runs\\role_ctx_corpus_20260316_bundle\\20260325_132835\\runs\\20260325_082931",
+  "source_scored_path": "C:\\Users\\rick\\projects\\Atlas\\data\\telemetry\\replay_runs\\role_ctx_corpus_20260316_bundle\\20260325_132835\\runs\\20260325_082931\\scored_legs_deduped.csv",
+  "output_eval_path": "C:\\Users\\rick\\projects\\Atlas\\data\\telemetry\\replay_runs\\role_ctx_corpus_20260316_bundle\\20260325_132835\\runs\\20260325_082931\\eval_legs.csv",
+  "report": {
+    "rows": 3609,
+    "matched_rows": 3478,
+    "unmatched_rows": 131,
+    "match_rate": 0.9637018564699362,
+    "quality_counts": {
+      "no_player_date_match": 131,
+      "player_date": 3478
+    },
+    "supported_stats": [
+      "AST",
+      "FG3M",
+      "PA",
+      "PR",
+      "PRA",
+      "PTS",
+      "RA",
+      "REB"
+    ]
+  }
+}

@@ -18,6 +18,7 @@ if SRC_DIR.exists():
     sys.path.insert(0, str(SRC_DIR))
 
 from Atlas.core.share_name_key import share_name_key
+from Atlas.runtime.archive_writer import archive_role_metrics_artifacts, resolve_archive_ids
 
 
 API_URL = "https://craftednba.com/api/player-stats"
@@ -353,6 +354,17 @@ def main() -> int:
         },
     }
     _write_json(manifest_path, manifest)
+
+    try:
+        archive_role_metrics_artifacts(
+            repo_root=PROJECT_ROOT,
+            role_metrics_latest_json=latest_json,
+            role_metrics_latest_html=latest_html,
+            role_metrics_manifest=manifest_path,
+            ids=resolve_archive_ids(),
+        )
+    except Exception as exc:
+        print(f"[CRAFTEDNBA] role-metrics archive skipped: {exc!r}")
 
     print(f"[CRAFTEDNBA] rows={len(rows)} snapshot_id={snapshot_id}")
     print(f"[CRAFTEDNBA] wrote: {latest_json}")

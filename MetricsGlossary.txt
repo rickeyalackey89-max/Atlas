@@ -1,0 +1,193 @@
+🎮
+New Games Hub — Daily NBA puzzles & challenges
+Play NBA Games →
+CraftedNBA Logo
+Maroon StarMembership
+Players
+Teams
+Draft
+Projections
+Scores
+My Five
+Roster Builder
+More
+CraftedNBA Logo
+Dashboard
+Season Finder
+My 5
+Rankings
+Projections
+Doppelgangers
+Give Feedback
+Hi, rickeyalackey89@gmail.com
+Glossary
+| CraftedNBA |
+CraftedOPM
+Offensive Crafted Plus Minus | ((standardizedODARKO x 2) + standardizedOLEBRON + standardizedODRIP + standardizedOBPM + standardizedOLA3RAPM) / 6
+
+33.3% ODARKO
+16.6% OLEBRON
+16.6% ODRIP
+16.6% OBPM
+16.6% OLA3RAPM
+An aggregate of many different plus minus metrics. First, we convert all variables to the same scale, then we combine them and divide by the number of variables. We then take this number and convert it to the MYRPM scale.
+SQ
+Shooting Quality
+((Spacing x 2) + ((Standardized Padded FT% + Standardized Padded 3P%) x 5)) / 7
+2 parts spacing + 5 parts padding shooting percentages, blended 75/25 with a player's career spacing rating, converted to a 1-100 point scale.
+*Spacing = (3PA * (((3P%*1.5) * 1.5) - 0.535))
+
+CraftedDPM
+Defensive Crafted Plus Minus | ((standardizedDDARKO x 2) + standardizedDLEBRON + standardizedDDRIP + (standardizedDBPM / 2) + (standardizedDLA3RAPM x 2)) / 6.5
+
+31% DDARKO
+31% D3RAPM
+15% DLEBRON
+15% DDRIP
+7% DBPM
+An aggregate of many different plus minus metrics. First, we convert all variables to the same scale, then we combine them and divide by the number of variables. We then take this number and convert it to the MYRPM scale.
+Offensive Load
+(Assists - (0.38 * Box Creation)) * 0.75) + FGA + FTA * 0.44 + Box Creation + Turnovers
+This formula comes from Ben Taylor of Backpicks.com Check him out, he's great.
+
+Box Creation
+A per 100 estimate of the number of open shots created for teammates | Ast*0.1843+(Pts+TOV)*0.0969-2.3021*(3pt proficiency)+0.0582*(Ast*(Pts+TOV)*3pt proficiency)-1.1942
+This formula comes from this article by Ben Taylor of Backpicks.com Check him out, he's great.
+
+Passer Rating
+An estimate of the quality of a players passing | Standardized Load + (Standardized Ast to Load Ratio * 3)+(Standardized Ast to Load Ratio (positional) / 1.75)-(Standardized TOV to Load Ratio * 2)+(Standardized Creation to Load Ratio / 2)+(Standardized Height / 5)
+We take this number and then convert it to a 1-10 scale. Both this and our Portability are versions inspired by the one's created by Ben Taylor from Backpicks.com Check him out, he's great.
+
+Portability
+TS% + (Standardized Shooting Ability x 2.5) + (Standardized CraftedDPM(positional) / 2) + (Standardized Versatility / 3) + (Standardized Passer Rating x 1.5) - (Standardized Load x .25) - (Standardized Box x .15)
+16% Scoring Efficiency
+40% Shooting Ability
+8% Defensive Ability
+5% Defensive Versatility
+25% Passing Ability
+6% Usage (penalize outliers)
+We take this number and then convert it to a 1-10 scale. Both this and our Passer Rating are inspired by the one's created by Ben Taylor from Backpicks.com Check him out, he's great.
+
+Shooting Proficiency
+(2/(1+EXP(-3PAper100))-1)*3FG%
+A measure of shooting quality that takes into account both attempts as well as accuracy.
+
+Spacing
+(3PA * (3P% * 1.5)) - EFG%
+A measure of shooting quality that takes into account both attempts as well as accuracy, with a slight adjustment towards attempts. In this case EFG% stands for the league average EFG% from that season.
+
+PTS_GAINED
+A metric that assesses the efficiency of a team's shot selection and execution relative to league averages, particularly focusing on shot locations that are known to be more efficient based on historical data. It’s derived from analyzing various shooting zones on the court, such as the rim, mid-range, and beyond the three-point line, and evaluating how a team performs in these zones compared to what's expected. A more detailed explanation of this stat is available here.
+
+PTS_SAVED
+a metric that assesses the efficiency of a team's opponents shot selection and execution relative to league averages, particularly focusing on shot locations that are known to be more efficient based on historical data. It’s derived from analyzing various shooting zones on the court, such as the rim, mid-range, and beyond the three-point line, and evaluating how a team's opponents perform in these zones compared to what's expected.
+
+| Basketball Reference |
+eFGpct
+Effective Field Goal Percent | (FG + 0.5 * 3P) / FGA | A measure of shooting efficiency that takes the added value of three pointers into account.
+
+TSpct
+True Shooting Percent | PTS / (2 * TSA) | A measure of shooting efficiency that takes threes and free throws into account.
+
+threePAr
+Three Point Attempt Rate - Percent of a players shot attempts that are three pointers.
+
+FTr
+Free Throw Rate - Number of free throw attemplts per field goal attempt.
+
+TRBpct
+Total Rebound Percent - The percentage of available rebounds a player corrals while he is on the floor.
+
+ASTpct
+Assist Percent - The percentage of teammate's field goals that a player assists while on the floor.
+
+STLpct
+Steal Percent - The number of opponent posessions that end with a steal by the player while on the floor.
+
+BLKpct
+Block Percent - The percentage of opponent two pointers that the player blocks while on the floor.
+
+TOVpct
+Turnover Percent - The number of turnovers a player commits per 100 plays.
+
+USGpct
+USage Percent | 100 * ((FGA + 0.44 * FTA + TOV) * (Tm MP / 5)) / (MP * (Tm FGA + 0.44 * Tm FTA + Tm TOV)) - | The percentage of plays a player uses while on the floor.
+
+WS
+Win Shares - The number of wins contributed by the player for the season.
+
+WSp48
+Win Shares per 48 Minutes - The number of wins contributed by the player per 48 minutes.
+
+BPM
+Box Plus Minus - An estimate of the number of points a player contributes above the league average player per 100 posessions.
+
+VORP
+Value over Replacement Player - A box score estimate of the points per 100 TEAM possessions that a player contributed above a replacement-level player, translated to an average team and prorated to an 82-game season.
+
+| NBA Stats Website |
+RADpg
+Rim Attempts Defended per Game - The number of shots within 3 feet of the basket that a player defends per game.
+
+DFGpct
+Defended Field Goal Percent - The percent that opposing players shoot within three feet against defending player.
+
+NDFGpct
+Non Defended Field Goal Percent - The percent that opposing players shoot within three feet against all other players.
+
+FGDiffpct
+Field Goal Percentage Difference - The difference between what opposing players shoot at the rim vs all other players as opposed to the player in question.
+
+DFL
+Deflections - The number of deflections a player gets per 36 minutes.
+
+Touches
+Touches - The number of times a player touches the ball per game.
+
+| BBall Index |
+LEBRON
+Luck-adjusted player Estimate using a Box prior Regularized ON-off
+
+| Kostya Medvedovsky |
+DARKO
+Daily Adjusted and Regressed Kalman Optimized projections - a machine learning-driven basketball player box-score score projection system. While DARKO is at its core a box-score projection system, it can also be used to generate plus-minus projections, similar in nature to RPM, PIPM, etc.
+
+| Ryan Davis |
+RAPM
+Regularized Adjusted Plus Minus
+
+LARAPM
+Luck Adjusted Regularized Adjusted Plus Minus
+
+LA3RAPM
+Luck Adjusted Three Year Regularized Adjusted Plus Minus
+
+| Nylon Calculus - Krishna Narsu & Patrick Miller |
+Versatility Rating
+- from the article linked above - "...The first step is to match the offensive player with their corresponding position. To do so, I used Krishna Narsu’s ( @Knarsu3) positional estimates, based on Basketball-Reference‘s play-by-play data. Krishna Narsu’s table is available here.
+
+I then calculated the percentage of time a player spent guarding each position, and squared the percentage for each position. The sum of the squares for each player is their raw versatility rating. Following the summation, I took the square-root of the raw rating in order to reduce the distance between the most and least-versatile defender (taking the natural-log would work as well), and normalized the data so the maximum number is 1. The smaller the rating, the more versatile defender."
+
+I have then taken this number and converted it to a scale from 1-100 with 100 being the most veratile defenders, and 0 being the least versatile.
+
+| FiveThirtyEight |
+RAPTOR
+Robust Algorithm (using) Player Tracking (and) On/Off Ratings
+
+| Cleaning the Glass |
+AstUsg
+Assist to Usage Percent | AST% / USG% | How often a player assists compared to their usage percent.
+
+Sign up for our newsletter
+Be the first to know about new features, upcoming releases and exclusive insights.
+
+Email Address
+Enter your email
+Notify me
+We care about the protection of your data.
+We will never sell your information.
+
+CraftedNBA Logo
+Follow Along:
+Twitter Logo
+© CraftedNBA, 2026

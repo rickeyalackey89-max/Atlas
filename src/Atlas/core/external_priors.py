@@ -20,7 +20,7 @@ Inputs
 
 
 Config (config.yaml) under optimizer.external_priors:
-  enabled: true
+    enabled: true
   path: "data/input/external_priors_today.csv"   # optional; csv only
   cap: 0.03          # max abs probability nudge applied to p_adj per leg
   scale: 3.0         # points scale for tanh(edge/scale) mapping (larger = gentler)
@@ -46,6 +46,7 @@ Debug
 
 Behavior
 - CSV is the only accepted input mode.
+- If the config omits optimizer.external_priors.enabled, priors stay off by default.
 - If the CSV is missing, unreadable, empty, or configured with a non-CSV path, we emit audit columns only and apply no prior nudge.
 """
 
@@ -208,7 +209,7 @@ def apply_external_priors(
     out = df.copy()
 
     pri_cfg = _get_external_priors_cfg(cfg)
-    enabled = bool(pri_cfg.get("enabled", True))
+    enabled = bool(pri_cfg.get("enabled", False))
 
     cap = float(pri_cfg.get("cap", 0.03))
     scale = float(pri_cfg.get("scale", 3.0))

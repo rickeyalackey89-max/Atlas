@@ -1,0 +1,21 @@
+
+BUNDLE atlas_bundle_20260317_060713.zip
+SETTLED=3957 ROLE_ON=346 USG_MULT_GT1=0
+RUN C:\Users\rick\projects\Atlas\data\telemetry\replay_runs\role_active_usg_scan_atlas_bundle_20260317_060713\20260325_140906\runs\20260325_091003
+
+BUNDLE atlas_bundle_20260317_072200.zip
+SETTLED=4147 ROLE_ON=360 USG_MULT_GT1=0
+RUN C:\Users\rick\projects\Atlas\data\telemetry\replay_runs\role_active_usg_scan_atlas_bundle_20260317_072200\20260325_141007\runs\20260325_091105
+
+BUNDLE atlas_bundle_20260317_072923.zip
+SETTLED=4162 ROLE_ON=361 USG_MULT_GT1=0
+RUN C:\Users\rick\projects\Atlas\data\telemetry\replay_runs\role_active_usg_scan_atlas_bundle_20260317_072923\20260325_141108\runs\20260325_091206
+
+BUNDLE atlas_bundle_20260317_152605.zip
+SETTLED=4082 ROLE_ON=363 USG_MULT_GT1=0
+RUN C:\Users\rick\projects\Atlas\data\telemetry\replay_runs\role_active_usg_scan_atlas_bundle_20260317_152605\20260325_141209\runs\20260325_091306
+
+BUNDLE atlas_bundle_20260317_171541.zip
+SETTLED=4292 ROLE_ON=362 USG_MULT_GT1=0
+RUN C:\Users\rick\projects\Atlas\data\telemetry\replay_runs\role_active_usg_scan_atlas_bundle_20260317_171541\20260325_141309\runs\20260325_091407
+
