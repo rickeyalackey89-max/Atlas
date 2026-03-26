@@ -102,6 +102,7 @@ class MatchupEnricherRoleMetricsTest(unittest.TestCase):
                 default_game_date="2026-03-17",
                 rotowire_lines_path=str(rotowire_path),
                 role_metrics_path=str(role_metrics_path),
+                attach_role_metrics=True,
             )
 
             self.assertEqual(len(enriched), 1)
@@ -191,6 +192,7 @@ class MatchupEnricherRoleMetricsTest(unittest.TestCase):
                 default_game_date="2026-03-17",
                 rotowire_lines_path=str(rotowire_path),
                 role_metrics_path=str(role_metrics_path),
+                attach_role_metrics=True,
             ).sort_values("player").reset_index(drop=True)
 
             self.assertEqual(len(enriched), 2)
@@ -201,6 +203,75 @@ class MatchupEnricherRoleMetricsTest(unittest.TestCase):
             self.assertEqual(enriched.loc[1, "role_metrics_snapshot_id"], "miles-snap")
             self.assertEqual(enriched.loc[0, "team"], "CHA")
             self.assertEqual(enriched.loc[1, "team"], "CHA")
+
+    def test_role_metrics_are_not_attached_without_explicit_opt_in(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            root = Path(tmpdir)
+            roster_path = root / "roster_map.csv"
+            slate_path = root / "slate.csv"
+            rotowire_path = root / "rotowire_lines.json"
+            role_metrics_path = root / "role_metrics_latest.json"
+
+            self._write_csv(
+                roster_path,
+                pd.DataFrame(
+                    [
+                        {"player": "LaMelo Ball", "team": "CHA"},
+                    ]
+                ),
+            )
+            self._write_csv(
+                slate_path,
+                pd.DataFrame(
+                    [
+                        {"game_date": "2026-03-17", "home_team": "CHA", "away_team": "CHI"},
+                    ]
+                ),
+            )
+            self._write_rotowire_json(rotowire_path, "2026-03-17")
+            self._write_role_metrics_json(
+                role_metrics_path,
+                {
+                    "game_date": "2026-03-17",
+                    "rows": [
+                        {
+                            "player": "LaMelo Ball",
+                            "player_key": "lamelo ball",
+                            "team": "Charlotte",
+                            "game_date": "2026-03-17",
+                            "usg_pct": 31.4,
+                            "snapshot_id": "snap-123",
+                        }
+                    ],
+                },
+            )
+
+            projections = pd.DataFrame(
+                [
+                    {
+                        "player": "LaMelo Ball",
+                        "team": "CHA",
+                        "opp": "CHI",
+                        "home": 1,
+                        "game_date": "2026-03-17",
+                        "stat": "PTS",
+                        "line": 24.5,
+                    }
+                ]
+            )
+
+            enriched = enrich_with_matchups(
+                projections=projections,
+                roster_map_path=str(roster_path),
+                slate_path=str(slate_path),
+                default_game_date="2026-03-17",
+                rotowire_lines_path=str(rotowire_path),
+                role_metrics_path=str(role_metrics_path),
+            )
+
+            self.assertEqual(len(enriched), 1)
+            self.assertNotIn("role_metrics_usg_pct", enriched.columns)
+            self.assertNotIn("role_metrics_snapshot_id", enriched.columns)
 
 
 if __name__ == "__main__":

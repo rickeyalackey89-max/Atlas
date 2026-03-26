@@ -1,0 +1,260 @@
+Current Atlas roadmap as of 2026-03-26.
+
+March 26 evening update:
+
+1. The structural blowout branch plus protected isotonic hybrid is now the live baseline.
+   - Root `config.yaml` now carries the structural `blowout.adjustment_rules` block.
+   - Live telemetry artifact remains `data/model/telemetry_calibration.isotonic_hybrid_protect_role_ctx_on.json`.
+
+2. The promoted baseline cleared both the truth-backed bundles and preserved live surfaces.
+   - Truth-backed bundles:
+     - 2026-03-17: `0.236504 / 0.218571` -> `0.234749 / 0.218266`
+     - 2026-03-18: `0.219035 / 0.215405` -> `0.218347 / 0.213472`
+     - aggregate: `0.226756 / 0.216804` -> `0.225597 / 0.215591`
+   - Preserved live surfaces:
+     - 2026-03-23 original live: `0.242612 / 0.233384`
+     - 2026-03-23 promoted calibration-only replay: `0.239062 / 0.227725`
+     - 2026-03-23 promoted structural replay: `0.237019 / 0.225511`
+     - 2026-03-24 original live overlap: `0.242463 / 0.241760`
+     - 2026-03-24 promoted calibration-only replay: `0.230939 / 0.222564`
+     - 2026-03-24 promoted structural replay: `0.229967 / 0.221364`
+
+3. The earlier statement that explicit blowout modeling was still blocked from live promotion is no longer current.
+   - The no-backwards blocker was resolved by combining the structural upstream branch with the corrected stacked `isotonic_hybrid_protect_role_ctx_on` payload.
+
+4. Best next step from the new baseline:
+   - build a broader settled corpus on the promoted structural surface and audit the remaining residual slices before any further upstream retune
+   - do not go back to a blind blowout parameter sweep first
+
+March 26 late-night update:
+
+1. A broad post-promotion v3 follow-up was rejected.
+   - Adding combo-scoring `OVER` support for `0.30 < q_blowout <= 0.35` plus stronger `FG3M` and `AST` high-q rules helped raw `p_adj` but regressed preserved-live calibrated Brier overall, with the giveback concentrated in March 24 combo-scoring mid-high-q and `FG3M` high-q rows.
+
+2. A narrow AST-only v4 follow-up cleared the no-backwards gate and is now the real live baseline.
+   - Change kept: high-q `AST OVER` rule only, from `minute_drop_mult 0.80 / sensitivity_mult 0.90` to `0.76 / 0.88`.
+   - Preserved live surfaces:
+     - 2026-03-23: `0.237019 / 0.225511` -> `0.236987 / 0.225482`
+     - 2026-03-24: `0.229967 / 0.221364` -> `0.229948 / 0.221370`
+     - aggregate matched effect: `0.233853 / 0.223650` -> `0.233828 / 0.223636`
+
+3. Best next step is still corpus expansion and residual audit, not another branch fan-out.
+   - The surviving improvement was tiny and highly localized.
+   - The next productive move is to measure the updated baseline on a broader settled corpus, then retarget only whichever residual slices remain stable there.
+
+What is already done and active in the live model:
+
+1. Bounded role context is live.
+   - The live config now includes an explicit `role_ctx` block with conservative clamps.
+   - The harmful automatic role-metrics snapshot attachment remains off.
+
+2. Calibration has already been rebuilt on the restored role_ctx surface.
+   - Live calibration points to the corpus-generated proposed calibration payload.
+
+3. Selection and model work have been separated in practice.
+   - Hard same-team blocking is active.
+   - Portfolio player-cap controls are active.
+   - Per-leg and per-sort-mode selector overrides are active.
+   - The current live selector winner is the hit-only 3-leg `max_slips_per_player = 2` override.
+
+4. The live selector winner was validated on two truth-backed bundles.
+   - 2026-03-17 replay: `brier_p_adj = 0.237643`, `brier_p_cal = 0.218143`
+   - 2026-03-18 replay: `brier_p_adj = 0.219639`, `brier_p_cal = 0.215933`
+   - The 3-leg winprob branch respected the promoted exposure cap on both runs.
+
+What has been explored heavily and is not the best next blind search area:
+
+1. Broad selector ranking sweeps.
+   - EV vs hit vs hybrid and several rank-weight tweaks were tried.
+   - These mostly failed to beat simpler diversification controls.
+
+2. Generic selector penalty sweeps.
+   - Family, fragility, and related ranking-side experiments were explored.
+   - None clearly beat the simpler hit-only 3-leg exposure cap winner.
+
+3. Broad automatic role-metrics attachment.
+   - This was a regression source and should stay off.
+
+4. More simulation-count changes.
+   - This remains low value relative to structural model changes.
+
+Highest-value remaining model-side lever:
+
+1. Explicit blowout modeling.
+   - The default blowout path is still structurally important.
+   - On the current live surface, the highest `q_blowout` bucket is still underpredicted in raw `p_adj` on both validated slates.
+   - 2026-03-17 live `>0.35 q_blowout` bucket:
+     - hit `0.4306`
+     - p_adj `0.2548`
+   - 2026-03-18 live `>0.35 q_blowout` bucket:
+     - hit `0.4191`
+     - p_adj `0.2773`
+
+Current blowout experiment status:
+
+1. The earlier explicit blowout attempt was too harsh and is not the right direction.
+
+2. A new conservative softening candidate was tested on both truth-backed slates with:
+   - `spread_sd: 11.0`
+   - `threshold_margin: 16.5`
+   - `star_minute_drop: 0.10`
+   - `role_minute_drop: 0.16`
+
+3. That candidate improved raw Brier on both slates:
+   - 2026-03-17 `brier_p_adj`: `0.237643 -> 0.234696`
+   - 2026-03-18 `brier_p_adj`: `0.219639 -> 0.218249`
+
+4. Calibrated Brier was mixed:
+   - 2026-03-17 `brier_p_cal`: `0.218143 -> 0.219129` (worse)
+   - 2026-03-18 `brier_p_cal`: `0.215933 -> 0.215172` (better)
+
+5. Two-slate average effect of the softened blowout candidate:
+   - `p_adj` Brier improved by `0.002168`
+   - `p_cal` Brier worsened by `0.000112`
+
+6. A narrower three-point follow-up sweep was run around that candidate:
+   - A: `spread_sd 10.25`, `threshold_margin 15.75`, `star_minute_drop 0.11`, `role_minute_drop 0.18`
+   - B: `spread_sd 10.5`, `threshold_margin 16.0`, `star_minute_drop 0.11`, `role_minute_drop 0.17`
+   - C: `spread_sd 10.0`, `threshold_margin 15.5`, `star_minute_drop 0.12`, `role_minute_drop 0.18`
+
+7. All three narrower candidates preserved the raw improvement and all three still had slight calibrated regressions on average.
+   - A two-slate average delta vs live:
+     - `p_adj`: `-0.001234`
+     - `p_cal`: `+0.000169`
+   - B two-slate average delta vs live:
+     - `p_adj`: `-0.001582`
+     - `p_cal`: `+0.000264`
+   - C two-slate average delta vs live:
+     - `p_adj`: `-0.000871`
+     - `p_cal`: `+0.000098`
+
+8. Candidate C is the cleanest upstream blowout candidate so far, but it is still not safe for live promotion under the no-backwards rule.
+
+9. A two-slate telemetry corpus was built from candidate C and run through `tools/telemetry_corpus_reader.py`.
+   - The reader wrote `.atlas_audit/diagnostics/telemetry_corpus/20260326_094940`
+   - Calibration recommendation: `keep_identity`
+   - Reason: calibration alternatives did not clear the reader's regime and time-window gates on that softened surface.
+
+10. Direction-aware UNDER blowout integration was tested directly in the live kernel and rejected.
+    - It can satisfy focused unit behavior, but both code-level repair variants regressed the truth-backed replay surface.
+    - Rejected replay results:
+       - 2026-03-17: `0.243964 / 0.232662` and `0.242822 / 0.231224`
+       - 2026-03-18: `0.218954 / 0.226219`
+    - Safe final state:
+       - keep `adjust_probability_for_blowout` direction-aware as a helper
+       - keep direct helper/unit coverage
+       - only use the directional blowout branch in-kernel for `OVER`
+       - keep `UNDER` on the neutral pre-relief path
+
+11. Narrow post-calibration trimming is the productive direction, but each seam still must be replay-gated.
+    - The targeted `UNDER REB` low-mid-q no-relief trim improved the two-slate aggregate and is the current best add-on to candidate C.
+    - A follow-up `COMBO UNDER` low-mid-q no-relief trim looked positive in isolated slice math, but full truth-backed replays regressed badly once row composition changed.
+    - Rejected replay results for that follow-up branch:
+       - 2026-03-17: `0.236578 / 0.229523`
+       - 2026-03-18: `0.219083 / 0.226046`
+    - Practical lesson:
+       - do not trust slice-only simulated retain blends for promotion; replay the full branch before keeping new hooks.
+
+12. Experiment configs for branch testing must be full copies of the current target config, not partial YAML overlays.
+    - The current target config carries critical calibration, role_ctx, under-relief, slip-build, and optimizer settings beyond the blowout/post-calibration block.
+    - Partial experiment configs can silently fall back to unrelated defaults and produce invalid replay comparisons.
+    - Fresh control reruns using the full target config reproduced exactly:
+       - 2026-03-17: `0.236504 / 0.218571`
+       - 2026-03-18: `0.219035 / 0.215405`
+    - Treat the earlier partial-config AST/FG3M branch results as invalid for decision-making.
+
+13. First fair post-target follow-up branch: non-role `REB OVER` with `0.20 < q_blowout <= 0.30`, trimming `p_cal` back toward `p_adj` with retain `0.20`.
+    - Full-copy config replay results:
+       - 2026-03-17: `0.236504 / 0.218718`
+       - 2026-03-18: `0.219035 / 0.215018`
+    - Two-slate aggregate:
+       - target config: `0.226756 / 0.216804`
+       - REB-over trim candidate: `0.226756 / 0.216653`
+    - Interpretation:
+       - this is the first fair next-branch improvement after the current target config
+       - it keeps raw `p_adj` unchanged
+       - it improves aggregate calibrated Brier by about `0.000151`
+       - it still gives back about `0.000147` on 2026-03-17, so it is promising but not yet promotion-safe under the no-backwards rule
+
+14. First structural upstream blowout-rule branch: `temp_experiments/blowout_structural_over_v1_20260326/config.yaml`.
+    - Code-level change:
+       - `new_probability.py` now supports general `blowout.adjustment_rules` so targeted family/direction/q-bucket blowout softening can happen in the kernel instead of through more post-calibration helpers.
+       - The first branch targeted the largest remaining raw misses:
+         - combo-scoring `OVER`, `q_blowout > 0.35`
+         - `AST OVER`, `q_blowout > 0.35`
+         - `FG3M OVER`, `q_blowout > 0.35`
+         - `REB OVER`, `0.20 < q_blowout <= 0.30`
+    - Full-copy replay results:
+       - 2026-03-17: `0.236504 / 0.218571` -> `0.234749 / 0.218510`
+       - 2026-03-18: `0.219035 / 0.215405` -> `0.218347 / 0.215635`
+       - aggregate: `0.226756 / 0.216804` -> `0.225597 / 0.216906`
+    - Slice result:
+       - intended high-q `OVER` slices all improved on raw `p_adj`
+       - calibrated effect was mixed and slightly regressed on aggregate
+    - Reader result on the two-run structural corpus:
+       - `.atlas_audit/diagnostics/telemetry_corpus/20260326_123103`
+       - verdict: `keep_current_standard`
+       - calibration recommendation: `keep_identity`
+       - top candidate `telemetry_key_role_on_light` worsened corpus Brier by about `0.000028`
+    - Reader result after adding scoped blowout-aware calibration support:
+       - runtime now supports scoped telemetry families keyed by `stat_directions` and `q_blowout` buckets
+       - `.atlas_audit/diagnostics/telemetry_corpus/20260326_124338`
+       - top candidate `telemetry_key_blowout_over_highq_0.55` improved corpus calibrated Brier by about `0.000114`
+       - the candidate still failed the current regime/time-window gates with `pass_share=0.0`, so the reader correctly kept `keep_identity`
+    - Interpretation:
+       - this is the first branch that clearly improves the upstream blowout surface on both truth-backed slates
+       - the blocker has shifted from calibration-family absence to calibration-policy / gate mismatch on the improved high-q OVER surface
+       - next step should be a focused slice/gate audit around the high-q OVER rows the scoped family helps and hurts, not another blind upstream retune first
+
+15. Protected isotonic hybrid overlay is now replay-valid on top of the structural branch.
+    - Reader lead:
+       - `.atlas_audit/diagnostics/telemetry_corpus/20260326_125802`
+       - top candidate: `isotonic_hybrid_protect_role_ctx_on`
+       - corpus calibrated Brier: `0.216906 -> 0.214907`
+    - Important fix:
+       - `tools/telemetry_corpus_reader.py` was patched so `isotonic_hybrid` payloads emit `pre_calibration`; the earlier `20260326_125200/proposed_calibration.json` was missing that stack and produced invalid replay results.
+    - Correct replay branch:
+       - `temp_experiments/blowout_structural_over_v1_iso_hybrid_rolectx_on_20260326/config.yaml`
+       - `active_calibration_path: .atlas_audit/diagnostics/telemetry_corpus/20260326_125802/proposed_calibration.json`
+    - Truth-backed replay results with corrected stacked payload:
+       - 2026-03-17 baseline structural: `0.234749 / 0.218510`
+       - 2026-03-17 protected hybrid: `0.234749 / 0.218266`
+       - 2026-03-18 baseline structural: `0.218347 / 0.215635`
+       - 2026-03-18 protected hybrid: `0.218347 / 0.213472`
+       - aggregate structural baseline: `0.225597 / 0.216906`
+       - aggregate protected hybrid: `0.225597 / 0.215591`
+    - Net effect vs structural baseline:
+       - `p_adj` unchanged on both slates and aggregate
+       - `p_cal` improved by `0.000244` on 2026-03-17
+       - `p_cal` improved by `0.002162` on 2026-03-18
+       - aggregate `p_cal` improved by `0.001315`
+    - Conclusion:
+       - this overlay clears the replay fidelity check and is the current no-backwards winner on top of the structural blowout branch
+
+Interpretation:
+
+1. The blowout seam is real.
+2. The direction should be softer, not harsher.
+3. The current softened path is promising upstream but is not ready for live promotion.
+4. Narrower softening helped reduce the calibration damage, but did not eliminate it.
+5. Directional UNDER is not the fix for that remaining gap.
+6. The existing corpus reader did not find a promotable calibration overlay on the best narrow candidate.
+
+Best next steps from here:
+
+1. Continue the explicit blowout track, but only with data-backed candidates that target the remaining 2026-03-17 calibration drift.
+
+2. Keep the current live selector winner in place while model-side blowout work continues.
+
+3. Keep future code-level blowout experiments focused on `OVER` or on post-`p_adj` / calibration-side handling; do not reopen live-kernel directional UNDER unless it is fully gated and replay-proven.
+
+4. If the next blowout iteration still improves raw Brier without clearing calibrated Brier, the remaining step is likely code-level refinement of the blowout application path rather than another config-only sweep.
+
+Short version:
+
+1. Role context: done.
+2. Surface recalibration: done.
+3. Selector diversification winner: done and live.
+4. Biggest remaining lever: explicit blowout modeling.
+5. Current evidence: softer blowout assumptions consistently improve raw Brier on both slates.
+6. Current blocker: neither config-only softening nor the reader's calibration overlay is enough yet to clear calibrated promotion safely.

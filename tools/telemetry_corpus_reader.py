@@ -1730,6 +1730,62 @@ def _transform_telemetry_key_role_on_blend(df: pd.DataFrame, mult_map: Dict[str,
     return (p * applied_mult).clip(0.0, 1.0)
 
 
+def _transform_telemetry_key_scoped(
+    df: pd.DataFrame,
+    mult_map: Dict[str, float],
+    *,
+    key_col: str = "telemetry_cal_key",
+    q_col: str = "q_blowout",
+    stat_directions: Optional[List[str]] = None,
+    q_min: Optional[float] = None,
+    q_max: Optional[float] = None,
+    role_ctx: str = "any",
+    k: float = 1.0,
+    under_penalty: float = 1.0,
+) -> pd.Series:
+    if not mult_map or key_col not in df.columns:
+        return _transform_under_penalty(df, under_penalty, k=k)
+
+    key = df[key_col].astype(str).str.upper().str.strip()
+    new_mult = key.map(mult_map).fillna(1.0).astype(float)
+    mask = pd.Series(True, index=df.index, dtype=bool)
+
+    if stat_directions:
+        mask &= key.isin({str(item).upper().strip() for item in stat_directions if str(item).strip()})
+
+    if q_min is not None or q_max is not None:
+        if q_col not in df.columns:
+            mask &= False
+        else:
+            q_vals = pd.to_numeric(df[q_col], errors="coerce")
+            if q_min is not None:
+                mask &= q_vals.ge(float(q_min))
+            if q_max is not None:
+                mask &= q_vals.le(float(q_max))
+
+    role_ctx_norm = str(role_ctx or "any").strip().lower()
+    if role_ctx_norm in {"on", "off"}:
+        if "role_ctx_outs_used" not in df.columns:
+            mask &= False
+        else:
+            role_on = pd.to_numeric(df["role_ctx_outs_used"], errors="coerce").fillna(0).astype(float) > 0
+            mask &= role_on if role_ctx_norm == "on" else ~role_on
+
+    if "p_cal" in df.columns and "telemetry_mult" in df.columns:
+        p_base = pd.to_numeric(df["p_cal"], errors="coerce").clip(0.0, 1.0)
+        existing_mult = pd.to_numeric(df["telemetry_mult"], errors="coerce").fillna(1.0)
+        existing_mult = existing_mult.replace(0.0, 1.0)
+        ratio = (new_mult / existing_mult).astype(float)
+        applied_ratio = pd.Series(1.0, index=df.index)
+        applied_ratio[mask] = ratio[mask]
+        return (p_base * applied_ratio).clip(0.0, 1.0)
+
+    p = _transform_under_penalty(df, under_penalty, k=k)
+    applied_mult = pd.Series(1.0, index=df.index)
+    applied_mult[mask] = new_mult[mask]
+    return (p * applied_mult).clip(0.0, 1.0)
+
+
 def _payload_prefix_allowed(value: Any, prefixes: Optional[List[str]], excludes: Optional[List[str]] = None) -> bool:
     src = str(value).strip().lower()
     if prefixes:
@@ -2027,6 +2083,29 @@ def _fit_isotonic_payload(df: pd.DataFrame, source_col: str = "p_cal", y_col: st
         "x_thresholds": [float(x) for x in x_thresholds],
         "y_thresholds": [float(y) for y in y_thresholds],
     }
+
+
+def _transform_isotonic_protected(
+    df: pd.DataFrame,
+    isotonic_probs: pd.Series,
+    *,
+    source_col: str = "p_cal",
+    protected_role_ctx: str = "",
+) -> pd.Series:
+    base = pd.to_numeric(df.get(source_col, pd.Series(dtype=float)), errors="coerce").clip(0.0, 1.0)
+    iso = pd.to_numeric(isotonic_probs, errors="coerce").clip(0.0, 1.0)
+    if base.empty:
+        return iso
+
+    protected_mask = pd.Series(False, index=df.index, dtype=bool)
+    role_ctx = str(protected_role_ctx or "").strip().lower()
+    if role_ctx in {"on", "off"}:
+        if "role_ctx_outs_used" not in df.columns:
+            return iso
+        role_on = pd.to_numeric(df["role_ctx_outs_used"], errors="coerce").fillna(0).astype(float) > 0
+        protected_mask = role_on if role_ctx == "on" else ~role_on
+
+    return iso.where(~protected_mask, base).clip(0.0, 1.0)
 
 
 def _score_calibration_candidate(df: pd.DataFrame, name: str, p: pd.Series, meta: Dict[str, Any]) -> Dict[str, Any]:
@@ -2399,6 +2478,21 @@ def _calibration_regime_slices(scored_df: pd.DataFrame) -> List[Tuple[str, pd.Da
             slices.append(("role_ctx_off", off.copy()))
         if len(on) >= 200:
             slices.append(("role_ctx_on", on.copy()))
+    if {"q_blowout", "telemetry_cal_key"}.issubset(scored_df.columns):
+        target_keys = {"PTS|OVER", "PRA|OVER", "PA|OVER", "PR|OVER", "RA|OVER", "AST|OVER", "FG3M|OVER"}
+        key_series = scored_df["telemetry_cal_key"].astype(str).str.upper().str.strip()
+        q_vals = pd.to_numeric(scored_df["q_blowout"], errors="coerce")
+        target_mask = key_series.isin(target_keys) & q_vals.ge(0.35)
+        target_rows = scored_df[target_mask]
+        if len(target_rows) >= 100:
+            slices.append(("blowout_over_highq_target", target_rows.copy()))
+        touched_rows = scored_df[target_mask]
+        untouched_rows = scored_df[~target_mask]
+        if len(untouched_rows) >= 200:
+            slices.append(("outside_blowout_over_highq_target", untouched_rows.copy()))
+        over_target_rows = scored_df[key_series.isin(target_keys)]
+        if len(over_target_rows) >= 200:
+            slices.append(("all_target_over_keys", over_target_rows.copy()))
     return slices
 
 
@@ -2408,6 +2502,8 @@ def _evaluate_calibration_gates(scored_df: pd.DataFrame, candidate_p: pd.Series,
     pass_count = 0
     severe_regressions = 0
     eligible = 0
+    improved_count = 0
+    untouched_count = 0
     for name, sub in slices:
         idx = sub.index
         cand_brier = _brier_from_arrays(candidate_p.loc[idx], sub.get("hit", pd.Series()))
@@ -2418,13 +2514,17 @@ def _evaluate_calibration_gates(scored_df: pd.DataFrame, candidate_p: pd.Series,
         delta = base_brier - cand_brier
         passed = delta >= 0.0005
         severe = delta <= -0.0010
+        improved = delta > 0.0
+        untouched = abs(delta) < 1e-12
         pass_count += int(passed)
         severe_regressions += int(severe)
+        improved_count += int(improved)
+        untouched_count += int(untouched)
         example_rows = _slice_example_rows(sub, candidate_p, baseline_p, limit=3)
-        rows.append({"slice": name, "rows": int(len(sub)), "delta_brier": delta, "pass": passed, "severe_regression": severe, "examples": example_rows})
+        rows.append({"slice": name, "rows": int(len(sub)), "delta_brier": delta, "pass": passed, "improved": improved, "untouched": untouched, "severe_regression": severe, "examples": example_rows})
     pass_share = (pass_count / eligible) if eligible else 0.0
     overall_clear = pass_share >= 0.70 and severe_regressions == 0
-    return {"eligible_slices": eligible, "pass_count": pass_count, "pass_share": pass_share, "severe_regressions": severe_regressions, "overall_clear": overall_clear, "slice_rows": rows}
+    return {"eligible_slices": eligible, "pass_count": pass_count, "pass_share": pass_share, "improved_count": improved_count, "untouched_count": untouched_count, "severe_regressions": severe_regressions, "overall_clear": overall_clear, "slice_rows": rows}
 
 
 def _slice_example_rows(sub: pd.DataFrame, candidate_p: pd.Series, baseline_p: pd.Series, limit: int = 3) -> Dict[str, List[Dict[str, Any]]]:
@@ -2771,10 +2871,48 @@ def build_calibration_recommendations(scored_df: pd.DataFrame, current_json: Any
     telemetry_map = _derive_telemetry_key_mult(scored_df, key_col="telemetry_cal_key", min_count=t_min_count, max_deviation=t_max_deviation, prior_strength=t_prior_strength)
     if telemetry_map:
         raw_candidates.append(("telemetry_key_light", _transform_telemetry_key(scored_df, telemetry_map, key_col="telemetry_cal_key", k=0.96, under_penalty=0.98), {"family": "telemetry_key", "mult_map": telemetry_map}))
+        blowout_over_keys = [key for key in ["PTS|OVER", "PRA|OVER", "PA|OVER", "PR|OVER", "RA|OVER", "AST|OVER", "FG3M|OVER"] if key in telemetry_map]
+        if blowout_over_keys and "q_blowout" in scored_df.columns:
+            for mix in [0.25, 0.40, 0.55]:
+                scoped_map = {key: 1.0 + ((float(telemetry_map[key]) - 1.0) * mix) for key in blowout_over_keys}
+                raw_candidates.append((
+                    f"telemetry_key_blowout_over_highq_{mix:.2f}",
+                    _transform_telemetry_key_scoped(
+                        scored_df,
+                        scoped_map,
+                        key_col="telemetry_cal_key",
+                        q_col="q_blowout",
+                        stat_directions=blowout_over_keys,
+                        q_min=0.35,
+                        k=0.96,
+                        under_penalty=0.98,
+                    ),
+                    {
+                        "family": "telemetry_scoped",
+                        "mult_map": scoped_map,
+                        "scope": {
+                            "stat_directions": blowout_over_keys,
+                            "q_blowout_min": 0.35,
+                        },
+                        "mix": mix,
+                    },
+                ))
         if "p_cal" in scored_df.columns and "hit" in scored_df.columns:
             isotonic_global = _transform_isotonic_global(scored_df, source_col="p_cal", y_col="hit")
             isotonic_payload = _fit_isotonic_payload(scored_df, source_col="p_cal", y_col="hit")
             raw_candidates.append(("isotonic_global_p_cal", isotonic_global, {"family": "isotonic_global", **isotonic_payload}))
+            if "role_ctx_outs_used" in scored_df.columns:
+                raw_candidates.append((
+                    "isotonic_hybrid_protect_role_ctx_on",
+                    _transform_isotonic_protected(scored_df, isotonic_global, source_col="p_cal", protected_role_ctx="on"),
+                    {
+                        "family": "isotonic_hybrid",
+                        "mix": 1.0,
+                        **isotonic_payload,
+                        "protected_role_ctx": "on",
+                        "protected_calibration": {"mode": "keep_identity"},
+                    },
+                ))
             for mix in [0.25, 0.40, 0.50, 0.60, 0.70, 0.75]:
                 raw_candidates.append((f"isotonic_blend_p_cal_{mix:.2f}", _blend_probability_series(scored_df["p_cal"], isotonic_global, isotonic_global.notna(), mix), {"family": "isotonic_blend", "mix": mix, **isotonic_payload}))
         # Conservative variant: only apply telemetry-key multipliers to rows without role-context
@@ -2878,7 +3016,7 @@ def build_calibration_recommendations(scored_df: pd.DataFrame, current_json: Any
         confidence = "medium"
         reason = f"Candidate {best['candidate']} cleared overall and regime/time-window gates with corpus Brier improvement {round(improvement, 6)}."
         suggested_payload = {"mode": best["meta"]["family"], "candidate": best["candidate"], "meta": best["meta"]}
-        if best["meta"].get("family") in {"isotonic_global", "isotonic_blend"} and isinstance(current_json, dict):
+        if best["meta"].get("family") in {"isotonic_global", "isotonic_blend", "isotonic_hybrid"} and isinstance(current_json, dict):
             suggested_payload["pre_calibration"] = current_json
     elif best["candidate"] == "identity":
         reason = "Identity remains the best or statistically tied calibration candidate on the joined corpus."
@@ -3129,13 +3267,15 @@ def _build_markdown(summary: Dict[str, Any], config_recs: Dict[str, Any], calib_
         lines.append(f"  - `{cand['candidate']}` brier={round(_safe_float(cand['brier']), 6)} logloss={round(_safe_float(cand['logloss']), 6)} ece={round(_safe_float(cand['ece']), 6)}")
     if top_candidates:
         top_gate = (top_candidates[0].get("gate_summary") or {}) if isinstance(top_candidates[0], dict) else {}
+        if top_gate:
+            lines.append(f"- Top gate stats: eligible=`{top_gate.get('eligible_slices')}` pass_count=`{top_gate.get('pass_count')}` improved_count=`{top_gate.get('improved_count')}` untouched_count=`{top_gate.get('untouched_count')}` pass_share=`{round(_safe_float(top_gate.get('pass_share')), 6)}`")
         failing_slices = [row for row in top_gate.get("slice_rows", []) if not row.get("pass")]
         if failing_slices:
             lines.append("")
             lines.append("## Slice examples")
             lines.append(f"- Top candidate `{top_candidates[0].get('candidate')}` failing slices with named rows:")
             for slice_row in failing_slices:
-                lines.append(f"  - `{slice_row.get('slice')}` delta_brier={slice_row.get('delta_brier')} rows={slice_row.get('rows')}")
+                lines.append(f"  - `{slice_row.get('slice')}` delta_brier={slice_row.get('delta_brier')} rows={slice_row.get('rows')} improved=`{slice_row.get('improved')}` untouched=`{slice_row.get('untouched')}`")
                 examples = slice_row.get("examples") or {}
                 hurting = examples.get("hurting", [])[:3]
                 helping = examples.get("helping", [])[:2]

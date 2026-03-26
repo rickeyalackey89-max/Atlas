@@ -1,0 +1,5416 @@
+- source: rotowire
+  league: NBA
+  player: AJ Green
+  stat: FG3M
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 2.6958004762691417
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: AJ Green
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 14.592779856352642
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: AJ Green
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 15.45446919593497
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: AJ Green
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 18.654766040054767
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: AJ Green
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 11.392483012232844
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Aaron Wiggins
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 14.19545360061573
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Aaron Wiggins
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 16.28351454342105
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Aaron Wiggins
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 18.2293349569811
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Aaron Wiggins
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 12.24963318705568
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Aaron Wiggins
+  stat: RA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 5.97970176992542
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Ace Bailey
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 18.07995767584134
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Ace Bailey
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 21.978978581072088
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Ace Bailey
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 24.15843287090952
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Ace Bailey
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 15.900503386003903
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Ace Bailey
+  stat: REB
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 6.078475195068184
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Adem Bona
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 11.655073564314971
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Al Horford
+  stat: AST
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 1.9183606292515627
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Al Horford
+  stat: FG3M
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 1.5191169801211544
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Al Horford
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 14.971598232376987
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Al Horford
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 16.88995886162855
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Al Horford
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 8.834661780986238
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Al Horford
+  stat: REB
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 6.13693645139075
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Alex Sarr
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 20.374022014271603
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Alex Sarr
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 26.07216544755936
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Alex Sarr
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 29.08438713669139
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Alex Sarr
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 17.36180032513957
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Alex Sarr
+  stat: RA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 11.72258681155182
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Alex Sarr
+  stat: REB
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 8.710365122419786
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Andre Drummond
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 15.45020326454769
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Andre Drummond
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 7.129467245043896
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Andre Drummond
+  stat: RA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 9.37644858123428
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Anthony Black
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 18.81111752223314
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Anthony Black
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 19.41344005449772
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Anthony Black
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 23.57804695814641
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Anthony Black
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 14.646510618584443
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Anthony Black
+  stat: RA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 8.93153633956197
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Anthony Black
+  stat: REB
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 4.766929435913274
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Ausar Thompson
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 14.568365363526102
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Ausar Thompson
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 17.984726252082638
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Ausar Thompson
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 20.3711791409515
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Ausar Thompson
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 12.181912474657238
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Ausar Thompson
+  stat: RA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 8.189266666294262
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Ausar Thompson
+  stat: REB
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 5.802813777425398
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Austin Reaves
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 18.05098886225436
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Austin Reaves
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 17.752830336929954
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Austin Reaves
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 21.343654048035088
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Austin Reaves
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 14.460165151149226
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Austin Reaves
+  stat: RA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 6.88348889688586
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Ayo Dosunmu
+  stat: AST
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 6.169224227064738
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Ayo Dosunmu
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 22.697768533545226
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Ayo Dosunmu
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 21.14502329120076
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Ayo Dosunmu
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 27.314247518265496
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Ayo Dosunmu
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 16.528544306480484
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Ayo Dosunmu
+  stat: RA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 10.785703211785012
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Bam Adebayo
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 25.124103717049945
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Bam Adebayo
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 32.84364755073869
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Bam Adebayo
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 36.17875331065771
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Bam Adebayo
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 21.78899795713092
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Bam Adebayo
+  stat: RA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 14.389755353526798
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Bam Adebayo
+  stat: REB
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 11.054649593607772
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Ben Sheppard
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 17.317048268912774
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Ben Sheppard
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 19.83302145387311
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Ben Sheppard
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 22.50911489855936
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Ben Sheppard
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 14.640954824226526
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Bilal Coulibaly
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 15.595578087759828
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Bilal Coulibaly
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 17.198252241644692
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Bilal Coulibaly
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 20.283117132256383
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Bilal Coulibaly
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 12.510713197148135
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Bilal Coulibaly
+  stat: REB
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 4.687539044496557
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Bobby Portis
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 24.388817328573182
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Bobby Portis
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 31.976591093669413
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Bobby Portis
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 35.49860196757585
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Bobby Portis
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 20.866806454666744
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Bobby Portis
+  stat: RA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 14.63179551290911
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Bobby Portis
+  stat: REB
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 11.10978463900267
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Brandin Podziemski
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 21.78959482242095
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Brandin Podziemski
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 23.69856051115085
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Brandin Podziemski
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 28.30888163276558
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Brandin Podziemski
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 17.17927370080622
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Brandin Podziemski
+  stat: RA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 11.129607931959358
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Brice Sensabaugh
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 20.94095615724324
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Brice Sensabaugh
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 15.880818967161474
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Bruce Brown
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 9.606195023067496
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Bruce Brown
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 13.418728838317977
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Bub Carrington
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 16.97511475939057
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Bub Carrington
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 16.780549678708912
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Bub Carrington
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 21.8132162690256
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Bub Carrington
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 11.942448169073884
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Bub Carrington
+  stat: RA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 9.870768099951718
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Buddy Hield
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 10.474442239765962
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Buddy Hield
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 8.150107265267224
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: CJ McCollum
+  stat: AST
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 4.7803928068243255
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: CJ McCollum
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 21.658574856261566
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: CJ McCollum
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 21.0343364995625
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: CJ McCollum
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 25.814729306386823
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: CJ McCollum
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 16.878182049437243
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: CJ McCollum
+  stat: RA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 8.936547256949584
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: CJ McCollum
+  stat: REB
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 4.156154450125258
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Cade Cunningham
+  stat: AST
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 7.809731358745795
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Cade Cunningham
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 34.98221413055397
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Cade Cunningham
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 33.44993516749874
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Cade Cunningham
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 41.25966652624453
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Cade Cunningham
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 27.172482771808177
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Cade Cunningham
+  stat: RA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 14.087183754436351
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Cade Cunningham
+  stat: REB
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 6.277452395690559
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Caleb Martin
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 14.663914167439
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Cam Thomas
+  stat: FG3M
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 1.83000983741141
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Cam Thomas
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 18.84867141260327
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Cam Thomas
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 18.493813950059412
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Cam Thomas
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 20.976319851917665
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Cam Thomas
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 16.36616551074502
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Cason Wallace
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 10.935979910647616
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Cason Wallace
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 11.797527865839143
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Cason Wallace
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 14.105514076725273
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Cason Wallace
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 8.62799369976149
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Cason Wallace
+  stat: RA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 5.477520376963782
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Chet Holmgren
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 19.93865257894493
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Chet Holmgren
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 26.637041247933155
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Chet Holmgren
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 28.93904811767532
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Chet Holmgren
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 17.636645709202767
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Chet Holmgren
+  stat: RA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 11.302402408472547
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Chet Holmgren
+  stat: REB
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 9.000395538730388
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Coby White
+  stat: AST
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 5.939070040032142
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Coby White
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 27.15319100167913
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Coby White
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 26.034426602014697
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Coby White
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 31.97349664204684
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Coby White
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 21.214120961646984
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Coby White
+  stat: RA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 10.759375680399854
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Coby White
+  stat: REB
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 4.820305640367712
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Cody Williams
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 11.753419888061206
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Cody Williams
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 13.283276257004443
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Cole Anthony
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 10.442636122437984
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Cole Anthony
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 10.494260422385135
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Cole Anthony
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 13.129212581894528
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Collin Gillespie
+  stat: AST
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 5.635494904093441
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Collin Gillespie
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 18.535828898477924
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Collin Gillespie
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 17.10393133504792
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Collin Gillespie
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 22.739426239141363
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Collin Gillespie
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 12.900333994384482
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Collin Gillespie
+  stat: RA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 9.83909224475688
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Cooper Flagg
+  stat: AST
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 4.824964375901725
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Cooper Flagg
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 24.93825367975561
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Cooper Flagg
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 28.178204676899945
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Cooper Flagg
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 33.00316905280167
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Cooper Flagg
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 20.11328930385389
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Cooper Flagg
+  stat: REB
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 8.064915373046057
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Corey Kispert
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 12.57812229851134
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Corey Kispert
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 13.919575123610375
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Corey Kispert
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 15.729150890202034
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Corey Kispert
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 10.768546531919682
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Dalen Terry
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 13.528880040163765
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Dalen Terry
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 14.612840491888305
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Dalen Terry
+  stat: REB
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 4.7610886970743245
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Daniel Gafford
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 20.956478133952587
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Daniel Gafford
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 22.67813457319926
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Daniel Gafford
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 12.344017629965172
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Daniel Gafford
+  stat: REB
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 8.612460503987416
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Davion Mitchell
+  stat: AST
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 3.772490429983273
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Davion Mitchell
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 13.861105445305665
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Davion Mitchell
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 12.77666808193149
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Davion Mitchell
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 16.54915851191476
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Davion Mitchell
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 10.08861501532239
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Davion Mitchell
+  stat: REB
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 2.6880530666091005
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Day'Ron Sharpe
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 10.328052631696249
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Day'Ron Sharpe
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 15.865223505710173
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Day'Ron Sharpe
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 17.986607582604407
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Day'Ron Sharpe
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 8.206668554802015
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Day'Ron Sharpe
+  stat: RA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 9.779939027802392
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Day'Ron Sharpe
+  stat: REB
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 7.658554950908158
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: De'Anthony Melton
+  stat: AST
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 2.661965362412299
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: De'Anthony Melton
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 14.01509052609634
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: De'Anthony Melton
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 15.309304548216094
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: De'Anthony Melton
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 17.971269910628394
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: De'Anthony Melton
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 11.35312516368404
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: De'Anthony Melton
+  stat: RA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 6.618144746944353
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Deandre Ayton
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 21.025542128705005
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Deandre Ayton
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 22.44483338943676
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Deandre Ayton
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 11.829718478987957
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Deandre Ayton
+  stat: REB
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 9.195823649717047
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Derrick White
+  stat: AST
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 5.593681290354209
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Derrick White
+  stat: FG3M
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 2.918126107215216
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Derrick White
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 25.047745479167627
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Derrick White
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 25.122564867290365
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Derrick White
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 30.716246157644573
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Derrick White
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 19.45406418881342
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Derrick White
+  stat: RA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 11.262181968831154
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Desmond Bane
+  stat: AST
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 4.151256571936016
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Desmond Bane
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 23.38848186912668
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Desmond Bane
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 24.985054283345672
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Desmond Bane
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 29.13631085528169
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Desmond Bane
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 19.237225297190665
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Desmond Bane
+  stat: RA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 9.899085558091024
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Desmond Bane
+  stat: REB
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 5.747828986155009
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Dillon Brooks
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 20.93013897556871
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Dillon Brooks
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 23.27419690952983
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Dillon Brooks
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 25.90517285008252
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Dillon Brooks
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 18.299163035016026
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Dillon Brooks
+  stat: RA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 7.606009815066496
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Dillon Brooks
+  stat: REB
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 4.975033874513809
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Donovan Clingan
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 13.999903781412211
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Donovan Clingan
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 23.72738085681882
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Donovan Clingan
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 25.986376832228338
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Donovan Clingan
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 11.740907806002692
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Donovan Clingan
+  stat: RA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 14.245469026225646
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Donovan Clingan
+  stat: REB
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 11.986473050816125
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Draymond Green
+  stat: AST
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 5.36195435498401
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Draymond Green
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 17.572808801397887
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Draymond Green
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 19.497696467450485
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Draymond Green
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 24.859650822434496
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Draymond Green
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 12.210854446413876
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Draymond Green
+  stat: RA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 12.648796376020618
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Draymond Green
+  stat: REB
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 7.286842021036608
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Duncan Robinson
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 13.651615534874615
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Duncan Robinson
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 14.073137780143576
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Duncan Robinson
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 16.342960343832964
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Duncan Robinson
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 11.381792971185227
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Duncan Robinson
+  stat: RA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 4.961167372647735
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Dyson Daniels
+  stat: AST
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 3.7221156057094023
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Dyson Daniels
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 15.163220167162974
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Dyson Daniels
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 18.690576794796
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Dyson Daniels
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 22.412692400505403
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Dyson Daniels
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 11.441104561453573
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Dyson Daniels
+  stat: RA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 10.971587839051832
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Dyson Daniels
+  stat: REB
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 7.249472233342429
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Egor Demin
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 14.388656386539012
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Egor Demin
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 13.926493875630406
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Egor Demin
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 18.3996150225614
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Egor Demin
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 9.91553523960802
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Gary Trent
+  stat: AST
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 1.903942243128818
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Gary Trent
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 15.43081967152595
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Gary Trent
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 10.728183846905836
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Grayson Allen
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 22.21518025132701
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Grayson Allen
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 23.210905039133536
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Grayson Allen
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 27.30459201414152
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Grayson Allen
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 18.12149327631903
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Grayson Allen
+  stat: RA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 9.183098737822489
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Grayson Allen
+  stat: REB
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 5.089411762814507
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Isaac Okoro
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 14.694559208999896
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Isaac Okoro
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 16.02313368073531
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Isaac Okoro
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 18.59999965764078
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Isaiah Collier
+  stat: AST
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 8.998243006426936
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Isaiah Collier
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 23.88663910268178
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Isaiah Collier
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 19.497372111556565
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Isaiah Collier
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 28.4956151179835
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Isaiah Collier
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 14.888396096254844
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Isaiah Collier
+  stat: RA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 13.607219021728657
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Isaiah Collier
+  stat: REB
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 4.608976015301719
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Isaiah Hartenstein
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 12.767410872881111
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Isaiah Hartenstein
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 18.345510041396032
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Isaiah Hartenstein
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 21.14239680780394
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Isaiah Hartenstein
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 9.970524106473205
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Isaiah Hartenstein
+  stat: RA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 11.171872701330734
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Isaiah Hartenstein
+  stat: REB
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 8.374985934922828
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Isaiah Jackson
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 21.65391082786499
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Isaiah Jackson
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 22.477164971326964
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Isaiah Jackson
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 13.669816541849292
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Isaiah Stewart
+  stat: FG3M
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 0.4624782967179897
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Isaiah Stewart
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 14.32916822758323
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Isaiah Stewart
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 16.23572393662777
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Isaiah Stewart
+  stat: REB
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 6.925399488898469
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Jaime Jaquez
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 21.082648444107857
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Jaime Jaquez
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 24.917238652851093
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Jaime Jaquez
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 28.651302321890107
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Jaime Jaquez
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 17.348584775068844
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Jaime Jaquez
+  stat: RA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 11.302717546821262
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Jaime Jaquez
+  stat: REB
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 7.568653877782249
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Jake LaRavia
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 12.02844138349214
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Jake LaRavia
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 14.741851242063571
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Jake LaRavia
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 16.217822634668025
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Jake LaRavia
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 10.552469990887689
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Jalen Brunson
+  stat: AST
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 7.294083262951919
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Jalen Brunson
+  stat: FG3M
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 2.499077608523862
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Jalen Brunson
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 32.20242537681401
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Jalen Brunson
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 28.76872460572485
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Jalen Brunson
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 36.06280786867677
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Jalen Brunson
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 24.90834211386209
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Jalen Brunson
+  stat: RA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 11.15446575481468
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Jalen Duren
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 15.458364882329494
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Jalen Duren
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 24.63019352010843
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Jalen Duren
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 27.271593264717875
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Jalen Duren
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 12.81696513772005
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Jalen Duren
+  stat: RA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 14.454628126997823
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Jalen Duren
+  stat: REB
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 11.81322838238838
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Jalen Green
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 14.324652896514174
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Jalen Green
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 15.274249230927126
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Jalen Green
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 17.32638115583614
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Jalen Green
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 12.27252097160516
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Jalen Johnson
+  stat: FG3M
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 1.394490177889267
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Jalen Johnson
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 28.39126922182601
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Jalen Johnson
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 31.717882553649808
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Jalen Johnson
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 39.17606611073181
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Jalen Johnson
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 20.933085664744013
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Jalen Johnson
+  stat: RA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 18.2429804459878
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Jalen Johnson
+  stat: REB
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 10.784796888905795
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Jalen Pickett
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 7.759986405546102
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Jalen Pickett
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 5.511653477514372
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Jalen Smith
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 18.19728349618704
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Jalen Smith
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 29.072784721806208
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Jalen Smith
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 30.5188009208182
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Jalen Smith
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 16.751267297175048
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Jalen Suggs
+  stat: AST
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 4.380459050268166
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Jalen Suggs
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 18.1414444286772
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Jalen Suggs
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 18.39393804716161
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Jalen Suggs
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 22.774397097429777
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Jalen Suggs
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 13.760985378409032
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Jalen Suggs
+  stat: RA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 9.013411719020745
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Jamal Murray
+  stat: AST
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 5.672619708998024
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Jamal Murray
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 27.605217683395196
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Jamal Murray
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 26.629598734244844
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Jamal Murray
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 32.302218443242865
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Jamal Murray
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 21.93259797439717
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Jamal Murray
+  stat: RA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 10.3696204688457
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Jarace Walker
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 22.59693011137137
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Jarace Walker
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 27.03106388185565
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Jarace Walker
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 31.436221749889715
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Jarace Walker
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 18.19177224333731
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Jared McCain
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 8.558196302516244
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Jay Huff
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 19.199879337747845
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Jay Huff
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 24.253440860889796
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Jay Huff
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 26.767250459275512
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Jay Huff
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 16.686069739362125
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Jay Huff
+  stat: RA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 10.081180719913387
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Jay Huff
+  stat: REB
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 7.567371121527667
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Jaylen Brown
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 29.986433426860067
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Jaylen Brown
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 32.94413437436592
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Jaylen Brown
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 37.82368048660232
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Jaylen Brown
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 25.106887314623663
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Jaylen Brown
+  stat: RA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 12.716793171978662
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Jaylen Brown
+  stat: REB
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 7.837247059742255
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Jerami Grant
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 15.833097363690053
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Jerami Grant
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 17.65801537937323
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Jerami Grant
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 19.74829332328768
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Jerami Grant
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 13.7428194197756
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Jerami Grant
+  stat: REB
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 3.9151959595976287
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Johnny Furphy
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 16.898904575678618
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Johnny Furphy
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 21.14169607530049
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Johnny Furphy
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 24.26166073718556
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Johnny Furphy
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 13.77893991379355
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Johnny Furphy
+  stat: REB
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 7.362756161506946
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Jonas Valanciunas
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 14.22233208712171
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Jonas Valanciunas
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 7.8117941715077635
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Jonas Valanciunas
+  stat: REB
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 6.410537915613948
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Jordan Walsh
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 12.444634766451417
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Josh Hart
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 16.507520825558075
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Josh Hart
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 21.826106597838724
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Josh Hart
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 26.310726238379736
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Josh Hart
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 12.022901185017062
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Josh Hart
+  stat: RA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 14.287825053362674
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Josh Hart
+  stat: REB
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 9.803205412821663
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Jrue Holiday
+  stat: AST
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 3.910844891466304
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Jrue Holiday
+  stat: FG3M
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 1.5147624334799303
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Jrue Holiday
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 14.642888035673105
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Jrue Holiday
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 14.790369537061764
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Jrue Holiday
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 18.70121442852807
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Jrue Holiday
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 10.7320431442068
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Jrue Holiday
+  stat: RA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 7.96917128432127
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Justin Champagnie
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 9.43285517420464
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Justin Champagnie
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 13.580281019900177
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Justin Champagnie
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 14.728702485489633
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Justin Champagnie
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 8.284433708615182
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Justin Champagnie
+  stat: RA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 6.444268776874449
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Jusuf Nurkic
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 18.583760128926023
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Jusuf Nurkic
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 27.40406277252377
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Jusuf Nurkic
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 31.596010943080916
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Jusuf Nurkic
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 14.391811958368876
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Karl-Anthony Towns
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 23.08890889193703
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Karl-Anthony Towns
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 34.48590861582039
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Karl-Anthony Towns
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 37.55032134140337
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Karl-Anthony Towns
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 20.02449616635405
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Karl-Anthony Towns
+  stat: RA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 17.525825175049317
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Karl-Anthony Towns
+  stat: REB
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 14.46141244946634
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Kelly Oubre
+  stat: AST
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 1.7315005345510095
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Kelly Oubre
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 15.691913037694697
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Kelly Oubre
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 20.105964980608316
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Kelly Oubre
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 21.837465515159323
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Kelly Oubre
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 13.960412503143688
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Kelly Oubre
+  stat: RA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 7.877053012015637
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Kelly Oubre
+  stat: REB
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 6.145552477464628
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Khris Middleton
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 18.19839961532855
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Khris Middleton
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 18.22551947311079
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Khris Middleton
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 22.02711440894098
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Khris Middleton
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 14.39680467949836
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Khris Middleton
+  stat: RA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 7.63030972944262
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Klay Thompson
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 17.04717943498287
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Klay Thompson
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 18.767465563042183
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Klay Thompson
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 20.991241344696768
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Klay Thompson
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 14.823403653328285
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Kristaps Porzingis
+  stat: AST
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 1.235286666173396
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Kristaps Porzingis
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 11.50391632700685
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Kristaps Porzingis
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 15.037112859598118
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Kristaps Porzingis
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 16.27239952577151
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Kristaps Porzingis
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 10.268629660833454
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Kyle Filipowski
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 20.567161179564224
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Kyle Filipowski
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 23.29780228138812
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Kyle Filipowski
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 12.77176753002287
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Kyle Kuzma
+  stat: AST
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 4.000301132153364
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Kyle Kuzma
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 20.828157331986173
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Kyle Kuzma
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 24.013527716076734
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Kyle Kuzma
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 28.013828848230094
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Kyle Kuzma
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 16.82785619983281
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Kyle Kuzma
+  stat: RA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 11.18597264839729
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Kyle Kuzma
+  stat: REB
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 7.185671516243924
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Kyshawn George
+  stat: AST
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 4.1159048997317536
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Kyshawn George
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 20.895199995547976
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Kyshawn George
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 24.008147775638875
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Kyshawn George
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 28.124052675370628
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Kyshawn George
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 16.779295095816224
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Landry Shamet
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 10.102335208747595
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Landry Shamet
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 12.399339396699284
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Landry Shamet
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 8.448692992229915
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Landry Shamet
+  stat: RA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 3.950646404469367
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Lauri Markkanen
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 24.47892235743717
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Lauri Markkanen
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 29.26290212555846
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Lauri Markkanen
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 31.5846935474103
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Lauri Markkanen
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 22.15713093558533
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Lauri Markkanen
+  stat: RA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 9.427562611824971
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Lauri Markkanen
+  stat: REB
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 7.1057711899731295
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: LeBron James
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 26.11899819551558
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: LeBron James
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 26.72317708770625
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: LeBron James
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 32.852218081131134
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: LeBron James
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 19.989957202090693
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: LeBron James
+  stat: RA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 12.862260879040443
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: LeBron James
+  stat: REB
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 6.733219885615558
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Luguentz Dort
+  stat: AST
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 1.7416741014011785
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Luguentz Dort
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 11.755610444135304
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Luguentz Dort
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 14.51381501169724
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Luguentz Dort
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 16.255489113098417
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Luguentz Dort
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 10.013936342734128
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Luguentz Dort
+  stat: RA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 6.241552770364292
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Luka Doncic
+  stat: AST
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 7.511073583934141
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Luka Doncic
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 34.220931936770505
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Luka Doncic
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 34.687421229591195
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Luka Doncic
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 42.198494813525336
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Luka Doncic
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 26.709858352836363
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Luka Doncic
+  stat: RA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 15.488636460688976
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Luka Doncic
+  stat: REB
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 7.977562876754834
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Luka Garza
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 12.315916232420992
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Luka Garza
+  stat: REB
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 4.8269322587572
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Luke Kennard
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 8.329439744528488
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Luke Kennard
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 6.020305828089335
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Marcus Smart
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 11.82588370267042
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Marcus Smart
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 12.006622219496892
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Marcus Smart
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 14.604133709886067
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Marcus Smart
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 9.228372212281243
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Marcus Smart
+  stat: RA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 5.375761497604825
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Mark Williams
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 14.279172966317653
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Mark Williams
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 22.07231652653479
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Mark Williams
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 23.898927838774352
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Mark Williams
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 12.452561654078092
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Mark Williams
+  stat: REB
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 9.6197548724567
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Matas Buzelis
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 20.55693581787525
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Matas Buzelis
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 25.0826958825338
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Matas Buzelis
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 28.12836324472563
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Matas Buzelis
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 17.51126845568342
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Matas Buzelis
+  stat: REB
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 7.57142742685038
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Max Christie
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 18.31413178944181
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Max Christie
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 19.746076123994527
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Max Christie
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 23.147550090884472
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Max Christie
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 14.912657822551864
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Max Christie
+  stat: REB
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 4.833418301442665
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Michael Porter
+  stat: FG3M
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 3.474764331738129
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Michael Porter
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 24.64799224425788
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Michael Porter
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 28.78798862420248
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Michael Porter
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 31.923674997299923
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Michael Porter
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 21.51230587116044
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Michael Porter
+  stat: RA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 10.411369126139489
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Michael Porter
+  stat: REB
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 7.2756827530420445
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Mikal Bridges
+  stat: AST
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 3.299277360850087
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Mikal Bridges
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 19.197479575095038
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Mikal Bridges
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 20.139266055246413
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Mikal Bridges
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 23.4385434160965
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Mikal Bridges
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 15.898202214244948
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Mikal Bridges
+  stat: RA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 7.540341201851554
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Moses Moody
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 15.882990762093552
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Moses Moody
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 18.129954537620705
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Moses Moody
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 19.957627493066266
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Moses Moody
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 14.055317806647992
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Moses Moody
+  stat: REB
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 4.074636730972712
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Myles Turner
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 20.010479846566053
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Myles Turner
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 26.083097607862435
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Myles Turner
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 28.4429091870325
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Myles Turner
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 17.650668267395986
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Naji Marshall
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 20.12449472528765
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Naji Marshall
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 22.979023514032512
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Naji Marshall
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 26.966297619766507
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Naji Marshall
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 16.13722061955366
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Naji Marshall
+  stat: RA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 10.829077000212852
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Naji Marshall
+  stat: REB
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 6.841802894478855
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Neemias Queta
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 22.859894301117013
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Neemias Queta
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 13.416846543949127
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Neemias Queta
+  stat: REB
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 9.443047757167886
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Nic Claxton
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 13.325350023585816
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Nic Claxton
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 18.892761764922547
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Nic Claxton
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 21.345972457335293
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Nic Claxton
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 10.87213933117307
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Nic Claxton
+  stat: RA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 10.47383312616222
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Nic Claxton
+  stat: REB
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 8.020622433749475
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Nickeil Alexander-Walker
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 23.350071459810454
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Nickeil Alexander-Walker
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 24.17279546548444
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Nickeil Alexander-Walker
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 28.445604878059672
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Nickeil Alexander-Walker
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 19.077262047235223
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Nickeil Alexander-Walker
+  stat: RA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 9.36834283082445
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Nickeil Alexander-Walker
+  stat: REB
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 5.095533418249215
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Nikola Jokic
+  stat: AST
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 6.866196768734368
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Nikola Jokic
+  stat: FG3M
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 1.7313742939835777
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Nikola Jokic
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 29.817055147301204
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Nikola Jokic
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 34.68672826897992
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Nikola Jokic
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 41.55292503771429
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Nikola Jokic
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 22.950858378566835
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Nikola Jokic
+  stat: RA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 18.602066659147454
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Nikola Jokic
+  stat: REB
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 11.735869890413086
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Nikola Jovic
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 20.783357812942324
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Nikola Jovic
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 15.077273508433478
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Nikola Jovic
+  stat: REB
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 5.7060843045088445
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Noah Clowney
+  stat: AST
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 1.6558898780182425
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Noah Clowney
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 13.216177835350138
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Noah Clowney
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 17.01475810038921
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Noah Clowney
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 18.67064797840745
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Noah Clowney
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 11.560287957331894
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Noah Clowney
+  stat: RA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 7.110360021075558
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Nolan Traore
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 8.685418315160547
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: OG Anunoby
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 18.710445584175226
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: OG Anunoby
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 22.495066646897747
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: OG Anunoby
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 24.66094978357343
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: OG Anunoby
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 16.544562447499544
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: OG Anunoby
+  stat: RA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 8.116387336073885
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: OG Anunoby
+  stat: REB
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 5.950504199398204
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Oso Ighodaro
+  stat: AST
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 1.5284032742370317
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Oso Ighodaro
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 13.843151853843375
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Oso Ighodaro
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 15.37155512808041
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Oso Ighodaro
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 8.542169892615142
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Oso Ighodaro
+  stat: REB
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 5.300981961228234
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Paolo Banchero
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 28.54126837956464
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Paolo Banchero
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 33.20257204019296
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Paolo Banchero
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 37.64175933111143
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Paolo Banchero
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 24.102081088646173
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Paolo Banchero
+  stat: RA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 13.539678242465255
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Patrick Williams
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 18.736910268695404
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Patrick Williams
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 12.573809015266278
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Patrick Williams
+  stat: RA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 9.115826049587945
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Payton Pritchard
+  stat: AST
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 5.580321099413977
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Payton Pritchard
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 24.50848140721429
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Payton Pritchard
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 24.41734399117805
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Payton Pritchard
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 29.99766509059203
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Payton Pritchard
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 18.92816030780031
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Payton Pritchard
+  stat: REB
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 5.489183683377737
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Pelle Larsson
+  stat: AST
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 3.596635037218028
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Pelle Larsson
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 13.105784992857489
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Pelle Larsson
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 16.929888785771908
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Pelle Larsson
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 20.526523822989937
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Pelle Larsson
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 9.509149955639458
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Pelle Larsson
+  stat: RA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 11.01737386735048
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Peyton Watson
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 15.86041726082475
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Peyton Watson
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 20.951455216905664
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Peyton Watson
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 23.142466821289243
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Peyton Watson
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 13.669405656441173
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Peyton Watson
+  stat: REB
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 7.2820495604644915
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Quentin Grimes
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 18.197968211599697
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Quentin Grimes
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 19.07154574293853
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Quentin Grimes
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 22.41195751185268
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Quinten Post
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 11.604209093822146
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Quinten Post
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 7.834313882759559
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Robert Williams
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 14.62769905616616
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Robert Williams
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 16.09890260468282
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Robert Williams
+  stat: RA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 9.015037400338011
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Robert Williams
+  stat: REB
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 7.54383385182135
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Ronald Holland
+  stat: FG3M
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 0.6902290403418903
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Ronald Holland
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 9.213904671196833
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Ronald Holland
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 10.866385361309812
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Ronald Holland
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 12.2967385670185
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Ronald Holland
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 7.783551465488145
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Ronald Holland
+  stat: REB
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 3.0828338958216674
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Royce O'Neale
+  stat: FG3M
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 2.144709414657342
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Royce O'Neale
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 13.83998249899138
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Royce O'Neale
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 17.177823249738942
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Royce O'Neale
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 20.393111100080542
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Royce O'Neale
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 10.62469464864978
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Royce O'Neale
+  stat: RA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 9.768416451430763
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Royce O'Neale
+  stat: REB
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 6.553128601089162
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Rui Hachimura
+  stat: FG3M
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 1.2392217773435732
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Rui Hachimura
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 10.161155083940104
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Rui Hachimura
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 12.912357284675048
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Rui Hachimura
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 14.07184520667904
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Rui Hachimura
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 9.001667161936112
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Ryan Rollins
+  stat: AST
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 6.550361448465277
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Ryan Rollins
+  stat: FG3M
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 1.7568595396533055
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Ryan Rollins
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 22.62490686420457
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Ryan Rollins
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 21.12026811116629
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Ryan Rollins
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 27.670629559631568
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Ryan Rollins
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 16.074545415739294
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Ryan Rollins
+  stat: RA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 11.596084143892272
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Ryan Rollins
+  stat: REB
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 5.045722695426996
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Sam Hauser
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 16.28418511122052
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Sam Hauser
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 11.04707918093328
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Sam Hauser
+  stat: REB
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 5.23710593028724
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Shaedon Sharpe
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 25.94786227677216
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Shaedon Sharpe
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 27.90166711850541
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Shaedon Sharpe
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 31.51059464242975
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Shaedon Sharpe
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 22.33893475284782
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Shaedon Sharpe
+  stat: RA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 9.171659889581932
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Shaedon Sharpe
+  stat: REB
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 5.562732365657597
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Shai Gilgeous-Alexander
+  stat: AST
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 6.402891152291403
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Shai Gilgeous-Alexander
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 37.60187807499392
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Shai Gilgeous-Alexander
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 36.64752122328349
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Shai Gilgeous-Alexander
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 43.05041237557489
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Shai Gilgeous-Alexander
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 31.19898692270252
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Shai Gilgeous-Alexander
+  stat: RA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 11.851425452872377
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Shai Gilgeous-Alexander
+  stat: REB
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 5.448534300580972
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Simone Fontecchio
+  stat: FG3M
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 1.4726345410203123
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Simone Fontecchio
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 10.351991823563797
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Simone Fontecchio
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 12.703077127644937
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Simone Fontecchio
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 13.855672016241932
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Simone Fontecchio
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 9.1993969349668
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Simone Fontecchio
+  stat: REB
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 3.503680192678136
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Spencer Jones
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 12.804086019022858
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Spencer Jones
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 7.682869574109759
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Terance Mann
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 9.260595625315895
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Terance Mann
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 9.94531359824956
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Terance Mann
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 12.074045194388257
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Terance Mann
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 7.131864029177201
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Terance Mann
+  stat: RA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 4.942181165211053
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Terance Mann
+  stat: REB
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 2.813449569072358
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Tim Hardaway
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 12.942176199805312
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Tim Hardaway
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 14.419969842208854
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Tim Hardaway
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 15.879163267319262
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Tim Hardaway
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 11.482982774694904
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Tobias Harris
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 16.177667280668157
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Tobias Harris
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 20.26579335266111
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Tobias Harris
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 22.29971735244638
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Tobias Harris
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 14.143743280882887
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Tobias Harris
+  stat: RA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 8.155974071563493
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Tobias Harris
+  stat: REB
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 6.122050071778223
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Toumani Camara
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 15.878259141748126
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Toumani Camara
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 18.925968234720184
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Toumani Camara
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 21.497674429160675
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Toumani Camara
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 13.306552947307637
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Toumani Camara
+  stat: RA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 8.191121481853038
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Toumani Camara
+  stat: REB
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 5.619415287412548
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Tristan da Silva
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 10.565527682586968
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Tristan da Silva
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 13.272879756815716
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Tristan da Silva
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 15.01369632361448
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Tristan da Silva
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 8.824711115788205
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Tyler Kolek
+  stat: AST
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 2.769288502578606
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Tyler Kolek
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 12.08464290838174
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Tyler Kolek
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 11.793096365019744
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Tyler Kolek
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 14.562384867598348
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Tyler Kolek
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 9.315354405803134
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Tyrese Maxey
+  stat: AST
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 7.705291085643098
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Tyrese Maxey
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 33.95254247697227
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Tyrese Maxey
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 30.70678465089119
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Tyrese Maxey
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 38.41207573653429
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Tyrese Maxey
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 26.24725139132917
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Tyrese Maxey
+  stat: RA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 12.164824345205115
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Tyrese Maxey
+  stat: REB
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 4.459533259562019
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Tyus Jones
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 7.087449463629337
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Tyus Jones
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 3.954482317675968
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: VJ Edgecombe
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 21.266214348569218
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: VJ Edgecombe
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 21.35687665324899
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: VJ Edgecombe
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 26.041546656891335
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: VJ Edgecombe
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 16.58154434492687
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: VJ Edgecombe
+  stat: RA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 9.46000231196447
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: VJ Edgecombe
+  stat: REB
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 4.77533230832212
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Wendell Carter
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 20.39967858484112
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Wendell Carter
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 22.49155050464967
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Wendell Carter
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 11.307048461504223
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Wendell Carter
+  stat: RA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 11.184502043145446
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Wendell Carter
+  stat: REB
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 9.092630123336896
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Will Riley
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 12.068104807237106
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Will Riley
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 13.757516339749898
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Will Riley
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 15.436493951834136
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Will Riley
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 10.389127195152868
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Will Riley
+  stat: RA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 5.04736675668127
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Zaccharie Risacher
+  stat: PA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 13.73512144382972
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Zaccharie Risacher
+  stat: PR
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 15.593809322762086
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Zaccharie Risacher
+  stat: PRA
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 16.994226065329013
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Zaccharie Risacher
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 12.334704701262794
+  confidence: 1.0
+  notes: .nan
+- source: rotowire
+  league: NBA
+  player: Ziaire Williams
+  stat: PTS
+  asof_ts: '2026-02-03 19:03:34'
+  projection: 0.0
+  confidence: 1.0
+  notes: .nan

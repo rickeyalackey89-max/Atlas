@@ -424,6 +424,7 @@ def build_slips_by_tier_buckets(
     target_pool_mult = int(sb.get("target_pool_mult", 10))
     phase1_frac = float(sb.get("phase1_frac", 0.30))
     phase1_pool_frac = float(sb.get("phase1_pool_frac", 0.60))
+    no_same_team_within_slip = bool(sb.get("no_same_team_within_slip", False))
 
     # Clamp to safe ranges (prevents config typos from breaking sampling).
     if phase1_frac < 0.05:
@@ -553,6 +554,17 @@ def build_slips_by_tier_buckets(
             if len(set(players)) != len(players):
                 continue
 
+            # Optional hard constraint: no two legs from the same team within a slip.
+            if no_same_team_within_slip:
+                chosen_teams: list[str] = []
+                for r in chosen:
+                    tk = _team_key(r)
+                    if not tk:
+                        continue
+                    chosen_teams.append(tk)
+                if len(set(chosen_teams)) != len(chosen_teams):
+                    continue
+
             scored = _score_slip(
                 chosen,
                 n_legs,
@@ -617,6 +629,9 @@ def build_slips_by_tier_buckets(
                         pen_family += family_w * float(ratio ** family_power)
 
             frag_w = float(pen_cfg.get("frag_w", 0.0))
+            role_ctx_share_w = float(pen_cfg.get("role_ctx_share_w", 0.0) or 0.0)
+            role_ctx_share_allow = float(pen_cfg.get("role_ctx_share_allow", 1.0) or 1.0)
+            role_ctx_share_power = float(pen_cfg.get("role_ctx_share_power", 2.0) or 2.0)
 
             pen_frag = 0.0
             if frag_w > 0:
@@ -633,14 +648,27 @@ def build_slips_by_tier_buckets(
                     mean_frag = sum(frags) / float(len(frags))
                     pen_frag = frag_w * float(mean_frag ** frag_power)
 
-            pen_total = pen_team + pen_family + pen_frag
+            pen_role_ctx = 0.0
+            if role_ctx_share_w > 0.0 and chosen:
+                role_ctx_share = float(role_on_count / len(chosen))
+                over = max(role_ctx_share - role_ctx_share_allow, 0.0)
+                if over > 0.0:
+                    pen_role_ctx = role_ctx_share_w * float(over ** role_ctx_share_power)
+
+            pen_total = pen_team + pen_family + pen_frag + pen_role_ctx
 
             # Compute base score for this candidate (depends on sort_mode)
             hit_prob = float(scored.get("hit_prob", 0.0) or 0.0)
             payout_mult = float(scored.get("payout_mult_eff", scored.get("payout_mult", 0.0)) or 0.0)
 
-            if str(sort_mode or "").lower() == "winprob":
+            mode = str(sort_mode or "").lower().strip()
+            if mode in ("hit", "hit_prob", "win", "winprob"):
                 base_score = hit_prob
+            elif mode == "hybrid":
+                k = float(((cfg or {}).get("slip_rank", {}) or {}).get("ev_payout_power", 1) or 1)
+                hybrid_ev_weight = float(((cfg or {}).get("slip_rank", {}) or {}).get("hybrid_ev_weight", 0.35) or 0.35)
+                hybrid_ev_weight = float(np.clip(hybrid_ev_weight, 0.0, 1.0))
+                base_score = hit_prob * (payout_mult ** (k * hybrid_ev_weight))
             else:
                 # EV board: rank_ev = hit_prob * payout_mult^k (k from slip_rank.ev_payout_power)
                 k = float(((cfg or {}).get("slip_rank", {}) or {}).get("ev_payout_power", 1) or 1)
@@ -649,11 +677,15 @@ def build_slips_by_tier_buckets(
             scored["pen_team"] = pen_team
             scored["pen_family"] = pen_family
             scored["pen_frag"] = pen_frag
+            scored["pen_role_ctx"] = pen_role_ctx
             scored["pen_total"] = pen_total
             scored["role_ctx_bonus"] = role_bonus_total
             scored["role_ctx_on_legs"] = int(role_on_count)
             scored["role_ctx_on_share"] = float(role_on_count / len(chosen)) if chosen else 0.0
-            role_share_bonus = 0.0 if legacy_selector_scoring else 0.15 * float(role_on_count)
+            role_share_bonus_w = 0.15
+            if isinstance(cfg, dict):
+                role_share_bonus_w = float(((cfg.get("slip_rank", {}) or {}).get("role_ctx_share_bonus_w", 0.15)) or 0.0)
+            role_share_bonus = 0.0 if legacy_selector_scoring else role_share_bonus_w * float(role_on_count)
             scored["score_adj"] = float(base_score - pen_total + role_bonus_total + role_share_bonus)
             scored["players"] = [p for p in players if p]
 
@@ -702,6 +734,7 @@ def build_slips_by_tier_buckets(
 
     mode = str(sort_mode).lower().strip()
     winprob_mode = mode in ("hit", "hit_prob", "win", "winprob")
+    hybrid_mode = mode == "hybrid"
 
     # Prefer score_adj if present (Step 3.5). Fallback to legacy behavior if absent.
     has_score_adj = "score_adj" in out.columns
@@ -714,8 +747,26 @@ def build_slips_by_tier_buckets(
         out["score_adj"] = pd.Series(sa_arr, index=out.index)
 
     if mode in ("hit", "hit_prob", "win", "winprob"):
-        # WinProb = pure probability ordering (no payout/penalty noise)
-        out = out.sort_values(["hit_prob"], ascending=[False]).reset_index(drop=True)
+        use_score_adj_for_winprob = False
+        if isinstance(cfg, dict):
+            use_score_adj_for_winprob = bool(((cfg.get("slip_rank", {}) or {}).get("use_score_adj_for_winprob", False)))
+        if has_score_adj and use_score_adj_for_winprob:
+            out = out.sort_values(["score_adj", "hit_prob"], ascending=[False, False]).reset_index(drop=True)
+        else:
+            # WinProb = pure probability ordering (no payout/penalty noise)
+            out = out.sort_values(["hit_prob"], ascending=[False]).reset_index(drop=True)
+
+    elif hybrid_mode:
+        k = float(cfg.get("slip_rank", {}).get("ev_payout_power", 1)) if isinstance(cfg, dict) else 1.0
+        hybrid_ev_weight = float(((cfg or {}).get("slip_rank", {}) or {}).get("hybrid_ev_weight", 0.35) or 0.35) if isinstance(cfg, dict) else 0.35
+        hybrid_ev_weight = float(np.clip(hybrid_ev_weight, 0.0, 1.0))
+        pm_col = "payout_mult_eff" if "payout_mult_eff" in out.columns else "payout_mult"
+        out["rank_hybrid"] = out["hit_prob"] * (out[pm_col] ** (k * hybrid_ev_weight))
+
+        if has_score_adj:
+            out = out.sort_values(["score_adj", "rank_hybrid", "hit_prob"], ascending=[False, False, False]).reset_index(drop=True)
+        else:
+            out = out.sort_values(["rank_hybrid", "hit_prob"], ascending=[False, False]).reset_index(drop=True)
 
     else:
         # EV board: keep rank_ev for transparency, but sort by score_adj if present

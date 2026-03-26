@@ -61,6 +61,7 @@ def run_score_board(
             star_minute_drop=star_drop,
             role_minute_drop=role_drop,
             iael_df=iael_df,
+            blowout_cfg=blow,
         )
 
         games_used = int((info or {}).get("games_used", 0) or 0)

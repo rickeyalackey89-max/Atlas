@@ -424,6 +424,7 @@ def enrich_with_matchups(
     default_game_date: str,
     rotowire_lines_path: str = r"C:\Users\rick\projects\Atlas\data\input\rotowire_lines.json",
     role_metrics_path: str | None = None,
+    attach_role_metrics: bool = False,
 ) -> pd.DataFrame:
     rotowire_lines_path = (os.environ.get("ATLAS_ROTOWIRE_LINES_PATH") or rotowire_lines_path or "").strip()
     """
@@ -553,7 +554,7 @@ def enrich_with_matchups(
     if "game_spread" in df.columns:
         df["spread"] = pd.to_numeric(df["game_spread"], errors="coerce")
 
-    role_metrics = _load_role_metrics_snapshot(role_metrics_path)
+    role_metrics = _load_role_metrics_snapshot(role_metrics_path) if attach_role_metrics else pd.DataFrame()
     if not role_metrics.empty:
         if "player_key" not in df.columns:
             df["player_key"] = df["player"].astype(str).map(share_name_key)

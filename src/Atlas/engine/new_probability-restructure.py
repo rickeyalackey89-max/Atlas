@@ -796,6 +796,7 @@ def simulate_leg_probability_new(
             p_raw=float(p_role),
             blowout_risk=float(q),
             sens=float(minutes_s),
+            direction=str(direction),
         )
     )
 
@@ -813,6 +814,7 @@ def simulate_leg_probability_new(
             p_raw=float(p_close_role),
             blowout_risk=float(q),
             sens=float(minutes_s_close),
+            direction=str(direction),
         )
     )
 

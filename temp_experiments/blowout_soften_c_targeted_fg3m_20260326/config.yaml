@@ -1,0 +1,15 @@
+blowout:
+  spread_sd: 10.0
+  threshold_margin: 15.5
+  star_minute_drop: 0.12
+  role_minute_drop: 0.18
+
+telemetry:
+  post_calibration:
+    combo_under_midq_blend_retain: 0.40
+    combo_under_highq_blend_retain: 0.68
+    combo_under_lowmidq_blend_retain: 0.55
+    combo_under_midq_ra_trim_retain: 0.35
+    combo_over_high_fragility_lift_factor: 0.36
+    under_reb_lowmidq_no_relief_retain: 0.0
+    fg3m_over_highq_blowout_lift_factor: 0.55

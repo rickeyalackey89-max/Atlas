@@ -1,0 +1,14 @@
+{
+  "artifacts": {
+    "injury_invalidations_latest.json": {
+      "destination": "C:\\Users\\rick\\projects\\Atlas\\data\\telemetry\\replay_runs\\20260326_135456\\runs\\20260326_135657\\dashboard\\injury_invalidations_latest.json",
+      "source": "C:\\Users\\rick\\projects\\Atlas\\data\\telemetry\\replay_runs\\20260326_135456\\dashboard\\injury_invalidations_latest.json"
+    },
+    "status_latest.json": {
+      "destination": "C:\\Users\\rick\\projects\\Atlas\\data\\telemetry\\replay_runs\\20260326_135456\\runs\\20260326_135657\\dashboard\\status_latest.json",
+      "source": "C:\\Users\\rick\\projects\\Atlas\\data\\telemetry\\replay_runs\\20260326_135456\\dashboard\\status_latest.json"
+    }
+  },
+  "generated_at_utc": "2026-03-26T18:56:57Z",
+  "run_dir": "C:\\Users\\rick\\projects\\Atlas\\data\\telemetry\\replay_runs\\20260326_135456\\runs\\20260326_135657"
+}

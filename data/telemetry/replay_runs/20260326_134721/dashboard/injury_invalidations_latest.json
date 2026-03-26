@@ -1,0 +1,87 @@
+{
+  "report_date": "2026-03-24",
+  "report_label": "07:00AM",
+  "pulled_at_local": "2026-03-24T06:14:22-05:00",
+  "invalidated_players_count": 13,
+  "invalidated_players": [
+    {
+      "team": "CHA",
+      "player": "Evbuomwan, Tosan",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "CHA",
+      "player": "Hall, PJ",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "CHA",
+      "player": "Reeves, Antonio",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "CHA",
+      "player": "Salaun, Tidjane",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "CLE",
+      "player": "Allen, Jarrett",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "CLE",
+      "player": "Enaruna, Tristan",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "PHX",
+      "player": "Brooks, Dillon",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "PHX",
+      "player": "Coffey, Amir",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "PHX",
+      "player": "Highsmith, Haywood",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "PHX",
+      "player": "Williams, Mark",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "POR",
+      "player": "Jr., Craig",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "POR",
+      "player": "Sarr, Olivier",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "POR",
+      "player": "Tyson, Jaylon",
+      "status": "OUT",
+      "reason": ""
+    }
+  ],
+  "policy": "Remove OUT/DOUBTFUL from eligibility. PROBABLE allowed but tagged."
+}

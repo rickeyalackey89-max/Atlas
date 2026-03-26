@@ -24,11 +24,12 @@ from Atlas.runtime.archive_writer import archive_role_metrics_artifacts, resolve
 
 DEFAULT_DASHBOARD_DIR = PROJECT_ROOT / "data" / "output" / "dashboard"
 DEFAULT_SNAPSHOT_DIR = PROJECT_ROOT / "data" / "output" / "role_metrics" / "snapshots"
-PARSER_VERSION = "1"
+PARSER_VERSION = "2"
 
 _HEADER_FIELD_MAP = {
     "age": "age",
     "mp": "minutes_projection",
+    "touches": "touches",
     "ts%": "ts_pct",
     "rts%": "rts_pct",
     "sq": "sq",
@@ -51,7 +52,15 @@ _HEADER_FIELD_MAP = {
     "bc": "bc",
     "load": "load",
     "pr": "pr",
+    "astusg": "ast_usg",
+    "ast usg": "ast_usg",
     "port": "port",
+    "craftedopm": "crafted_opm",
+    "crafted opm": "crafted_opm",
+    "crafteddpm": "crafted_dpm",
+    "crafted dpm": "crafted_dpm",
+    "craftedwarp": "crafted_warp",
+    "crafted warp": "crafted_warp",
     "plus/minus": "plus_minus",
     "plus minus": "plus_minus",
     "plus-minus": "plus_minus",

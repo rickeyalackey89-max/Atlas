@@ -214,6 +214,30 @@ def _stat_specific_pressure_mult(stat_u: str, burden_ratio: float) -> float:
     return 0.98
 
 
+def _role_metrics_role_ctx_active(row: Any, role_cfg: dict[str, Any] | None = None) -> bool:
+    try:
+        role_metrics_require_role_ctx = bool((role_cfg or {}).get('role_metrics_require_role_ctx', False))
+    except Exception:
+        role_metrics_require_role_ctx = False
+
+    try:
+        role_metrics_min_role_ctx_outs = int((role_cfg or {}).get('role_metrics_min_role_ctx_outs', 0) or 0)
+    except Exception:
+        role_metrics_min_role_ctx_outs = 0
+    if role_metrics_require_role_ctx:
+        role_metrics_min_role_ctx_outs = max(1, role_metrics_min_role_ctx_outs)
+
+    try:
+        if hasattr(row, 'get'):
+            raw_outs = row.get('role_ctx_outs_used', 0)
+        else:
+            raw_outs = getattr(row, 'role_ctx_outs_used', 0)
+        role_ctx_outs_used = float(pd.to_numeric(pd.Series([raw_outs]), errors='coerce').iloc[0])
+    except Exception:
+        role_ctx_outs_used = 0.0
+    return role_ctx_outs_used >= float(role_metrics_min_role_ctx_outs)
+
+
 
 def _usage_dependence_proxy(
     stat_u: str,
@@ -387,7 +411,7 @@ def _usage_dependence_proxy(
         "usage_baseline": float(baseline),
         "usage_producer_mult": float(producer_mult),
         "usage_pressure_mult": float(pressure_mult),
-        "usage_usg_pct": None if pd.isna(usg) else float(usg),
+        "usage_usg_pct": float("nan") if pd.isna(usg) else float(usg),
         "usage_usg_scaled": float(usg_scaled),
         "usage_usg_mult": float(usg_mult),
         "usage_scoring_mult": float(scoring_mult),
@@ -464,6 +488,137 @@ def _role_metrics_adjustment(row: Any, *, role_ctx_on_override: bool | None = No
     components["score"] = score
     components["mult"] = mult
     return mult, components
+
+
+def _crafted_role_workload_adjustment(
+    row: Any,
+    stat_u: str,
+    *,
+    direction: str | None = None,
+    role_cfg: dict[str, Any] | None = None,
+    role_ctx_on_override: bool | None = None,
+) -> tuple[float, dict[str, float]]:
+    """Convert CraftedNBA role/workload fields into a bounded stat-family prior."""
+    enabled = bool((role_cfg or {}).get("crafted_role_workload_enabled", False))
+    if not enabled:
+        return 1.0, {"score": 0.0, "mult": 1.0, "enabled": 0.0}
+
+    if role_ctx_on_override is None:
+        role_ctx_on = _role_metrics_role_ctx_active(row, role_cfg)
+    else:
+        role_ctx_on = bool(role_ctx_on_override)
+    if not role_ctx_on:
+        return 1.0, {"score": 0.0, "mult": 1.0, "enabled": 1.0, "gated": 1.0}
+
+    if bool((role_cfg or {}).get("crafted_role_workload_over_only", False)) and str(direction or "").upper() != "OVER":
+        return 1.0, {"score": 0.0, "mult": 1.0, "enabled": 1.0, "direction_gated": 1.0}
+
+    def _get(name: str) -> float:
+        try:
+            if hasattr(row, "get"):
+                value = row.get(name, None)
+            elif isinstance(row, dict):
+                value = row.get(name, None)
+            else:
+                value = getattr(row, name, None)
+            return float(pd.to_numeric(pd.Series([value]), errors="coerce").iloc[0])
+        except Exception:
+            return float("nan")
+
+    def _scale(raw_value: float, center: float, scale: float) -> float | None:
+        if pd.isna(raw_value):
+            return None
+        return float(np.tanh((float(raw_value) - float(center)) / max(float(scale), 1e-6)))
+
+    def _add(components: dict[str, float], name: str, raw_value: float, center: float, scale: float, weight: float) -> None:
+        scaled = _scale(raw_value, center, scale)
+        if scaled is None:
+            return
+        components[f"{name}_raw"] = float(raw_value)
+        components[f"{name}_scaled"] = float(scaled)
+        components[f"{name}_weighted"] = float(weight * scaled)
+
+    stat_norm = str(stat_u or "").upper().strip()
+    components: dict[str, float] = {"enabled": 1.0}
+
+    if stat_norm in {"PTS", "PRA", "PA", "PR", "RA"}:
+        _add(components, "usage_projection", _get("role_metrics_usage_projection"), 24.0, 9.0, 0.007)
+        _add(components, "usg_pct", _get("role_metrics_usg_pct"), 26.5, 12.0, 0.005)
+        _add(components, "load", _get("role_metrics_load"), 20.0, 10.0, 0.005)
+        _add(components, "touches", _get("role_metrics_touches"), 55.0, 25.0, 0.003)
+        _add(components, "ts_pct", _get("role_metrics_ts_pct"), 58.0, 10.0, 0.004)
+        _add(components, "sq", _get("role_metrics_sq"), 50.0, 22.0, 0.004)
+        _add(components, "ftr", _get("role_metrics_ftr"), 26.0, 18.0, 0.003)
+
+    if stat_norm in {"AST", "PA", "PRA", "RA"}:
+        _add(components, "ast_pct", _get("role_metrics_ast_pct"), 18.0, 12.0, 0.006)
+        _add(components, "touches", _get("role_metrics_touches"), 55.0, 25.0, 0.006)
+        _add(components, "ast_usg", _get("role_metrics_ast_usg"), 0.85, 0.35, 0.007)
+        _add(components, "bc", _get("role_metrics_bc"), 8.0, 4.0, 0.006)
+        _add(components, "load", _get("role_metrics_load"), 20.0, 10.0, 0.004)
+        _add(components, "pr", _get("role_metrics_pr"), 5.0, 2.0, 0.006)
+
+    if stat_norm in {"REB", "PR", "PRA", "RA"}:
+        _add(components, "trb_pct", _get("role_metrics_trb_pct"), 13.0, 8.0, 0.007)
+        _add(components, "orb_pct", _get("role_metrics_orb_pct"), 4.0, 4.0, 0.004)
+        _add(components, "drb_pct", _get("role_metrics_drb_pct"), 10.0, 6.0, 0.005)
+
+    if stat_norm in {"FG3M", "3PM", "THREES"}:
+        _add(components, "three_par", _get("role_metrics_three_par"), 40.0, 22.0, 0.008)
+        _add(components, "sq", _get("role_metrics_sq"), 55.0, 22.0, 0.006)
+        _add(components, "ts_pct", _get("role_metrics_ts_pct"), 58.0, 10.0, 0.004)
+        _add(components, "usage_projection", _get("role_metrics_usage_projection"), 22.0, 10.0, 0.003)
+
+    score = float(sum(v for k, v in components.items() if k.endswith("_weighted")))
+    score = float(np.clip(score, -0.015, 0.020))
+    mult = float(np.clip(1.0 + score, 0.985, 1.020))
+    components["score"] = score
+    components["mult"] = mult
+    return mult, components
+
+
+def _crafted_role_workload_minutes_projection(
+    row: Any,
+    *,
+    role_cfg: dict[str, Any] | None = None,
+    role_ctx_on_override: bool | None = None,
+) -> float | None:
+    enabled = bool((role_cfg or {}).get("crafted_role_workload_enabled", False))
+    if not enabled:
+        return None
+
+    if role_ctx_on_override is None:
+        role_ctx_on = _role_metrics_role_ctx_active(row, role_cfg)
+    else:
+        role_ctx_on = bool(role_ctx_on_override)
+    if not role_ctx_on:
+        return None
+
+    try:
+        base_minutes = float(pd.to_numeric(pd.Series([row.get("minutes_projection", None)]), errors="coerce").iloc[0])
+    except Exception:
+        base_minutes = float("nan")
+    try:
+        crafted_minutes = float(pd.to_numeric(pd.Series([row.get("role_metrics_minutes_projection", None)]), errors="coerce").iloc[0])
+    except Exception:
+        crafted_minutes = float("nan")
+
+    if pd.isna(base_minutes) and pd.isna(crafted_minutes):
+        return None
+    if pd.isna(base_minutes):
+        return float(crafted_minutes) if pd.notna(crafted_minutes) else None
+    if pd.isna(crafted_minutes):
+        return float(base_minutes)
+
+    blend = float((role_cfg or {}).get("crafted_role_workload_minutes_blend", 0.35) or 0.35)
+    ratio_lo = float((role_cfg or {}).get("crafted_role_workload_minutes_ratio_lo", 0.92) or 0.92)
+    ratio_hi = float((role_cfg or {}).get("crafted_role_workload_minutes_ratio_hi", 1.08) or 1.08)
+    blend = float(np.clip(blend, 0.0, 1.0))
+    ratio_lo = float(np.clip(ratio_lo, 0.75, 1.0))
+    ratio_hi = float(np.clip(ratio_hi, 1.0, 1.25))
+
+    ratio = float(np.clip(float(crafted_minutes) / max(float(base_minutes), 1e-6), ratio_lo, ratio_hi))
+    return float(base_minutes) * (1.0 + ((ratio - 1.0) * blend))
 
 
 
@@ -580,6 +735,8 @@ def _usage_effect_cap(stat_u: str) -> float:
 
 def _soft_ramp(value: float | None, start: float, full: float) -> float:
     """Linear ramp that turns on at start and is full by full."""
+    if value is None:
+        return 0.0
     try:
         val = float(value)
     except Exception:
@@ -597,6 +754,8 @@ def _soft_ramp(value: float | None, start: float, full: float) -> float:
 
 def _soft_ramp_inverse(value: float | None, zero_at: float, full_at: float) -> float:
     """Inverse linear ramp that is full at low values and zero at high values."""
+    if value is None:
+        return 0.0
     try:
         val = float(value)
     except Exception:
@@ -673,7 +832,14 @@ def _competitive_usage_bonus(
         'bonus_applied': float(applied_bonus),
     }
 
-def _fragility_root_inputs(row: pd.Series, stat_u: str, base_rate_mu: float, line: float, expected_minutes: float) -> tuple[float, dict[str, float]]:
+def _fragility_root_inputs(
+    row: pd.Series,
+    stat_u: str,
+    base_rate_mu: float,
+    line: float,
+    expected_minutes: float,
+    role_cfg: dict[str, Any] | None = None,
+) -> tuple[float, dict[str, float]]:
     """
     Return Atlas fragility root inputs:
       - minutes_s: hard base from legacy minutes sensitivity seam
@@ -691,7 +857,11 @@ def _fragility_root_inputs(row: pd.Series, stat_u: str, base_rate_mu: float, lin
     except Exception:
         minutes_s = float(minutes_sensitivity(stat_u))
 
+    role_ctx_on = _role_metrics_role_ctx_active(row, role_cfg)
+
     def _row_metric(name: str) -> float | None:
+        if not role_ctx_on:
+            return None
         try:
             raw = row.get(name, None)
         except Exception:
@@ -1107,6 +1277,120 @@ def blowout_probability(*, spread_mean: float, threshold: float, sd: float) -> f
     return float(max(0.0, min(1.0, p)))
 
 
+def _blowout_stat_families(stat_u: str) -> set[str]:
+    stat = str(stat_u or "").upper().strip()
+    families = {"all"}
+    if stat in {"PTS", "PRA", "PA", "PR", "RA"}:
+        families.add("combo_scoring")
+    elif stat == "REB":
+        families.add("rebounds")
+    elif stat == "AST":
+        families.add("assists")
+    elif stat in {"FG3M", "3PM", "THREES"}:
+        families.add("threes")
+    elif stat in {"BLK", "STL", "STOCKS"}:
+        families.add("stocks")
+    else:
+        families.add("other")
+    return families
+
+
+def _resolve_blowout_rule_adjustments(
+    *,
+    blowout_cfg: dict[str, Any] | None,
+    stat_u: str,
+    direction: str,
+    q_blowout: float,
+    role_ctx_outs_used: int,
+    minutes_s: float,
+    is_star: bool,
+) -> dict[str, Any]:
+    rules = (blowout_cfg or {}).get("adjustment_rules", [])
+    if not isinstance(rules, list) or not rules:
+        return {
+            "minute_drop_mult": 1.0,
+            "sensitivity_mult": 1.0,
+            "applied_rules": [],
+        }
+
+    stat_norm = str(stat_u or "").upper().strip()
+    direction_norm = str(direction or "").upper().strip()
+    families = _blowout_stat_families(stat_norm)
+    role_on = int(role_ctx_outs_used or 0) > 0
+    starter_like = bool(is_star) or role_on or float(minutes_s) >= 0.55
+    q_val = float(q_blowout)
+
+    minute_drop_mult = 1.0
+    sensitivity_mult = 1.0
+    applied_rules: list[str] = []
+
+    for idx, raw_rule in enumerate(rules):
+        if not isinstance(raw_rule, dict):
+            continue
+
+        rule_name = str(raw_rule.get("name", f"rule_{idx + 1}")).strip() or f"rule_{idx + 1}"
+        rule_direction = str(raw_rule.get("direction", "")).strip().upper()
+        if rule_direction and rule_direction != direction_norm:
+            continue
+
+        raw_stats = raw_rule.get("stats")
+        if isinstance(raw_stats, list) and raw_stats:
+            allowed_stats = {str(item).upper().strip() for item in raw_stats if str(item).strip()}
+            if stat_norm not in allowed_stats:
+                continue
+
+        raw_families = raw_rule.get("families")
+        if isinstance(raw_families, list) and raw_families:
+            allowed_families = {str(item).lower().strip() for item in raw_families if str(item).strip()}
+            if not families.intersection(allowed_families):
+                continue
+
+        role_ctx_mode = str(raw_rule.get("role_ctx", "any")).strip().lower()
+        if role_ctx_mode == "on" and not role_on:
+            continue
+        if role_ctx_mode == "off" and role_on:
+            continue
+
+        starter_like_req = raw_rule.get("starter_like")
+        if isinstance(starter_like_req, bool) and starter_like_req != starter_like:
+            continue
+
+        try:
+            min_q = float(raw_rule.get("min_q", 0.0))
+        except Exception:
+            min_q = 0.0
+        try:
+            max_q = float(raw_rule.get("max_q", 1.0))
+        except Exception:
+            max_q = 1.0
+        if q_val < min_q or q_val > max_q:
+            continue
+
+        try:
+            rule_minute_mult = float(raw_rule.get("minute_drop_mult", 1.0))
+        except Exception:
+            rule_minute_mult = 1.0
+        try:
+            rule_sens_mult = float(raw_rule.get("sensitivity_mult", 1.0))
+        except Exception:
+            rule_sens_mult = 1.0
+
+        if not math.isfinite(rule_minute_mult) or rule_minute_mult <= 0.0:
+            rule_minute_mult = 1.0
+        if not math.isfinite(rule_sens_mult) or rule_sens_mult <= 0.0:
+            rule_sens_mult = 1.0
+
+        minute_drop_mult *= rule_minute_mult
+        sensitivity_mult *= rule_sens_mult
+        applied_rules.append(rule_name)
+
+    return {
+        "minute_drop_mult": float(np.clip(minute_drop_mult, 0.25, 1.50)),
+        "sensitivity_mult": float(np.clip(sensitivity_mult, 0.25, 1.50)),
+        "applied_rules": applied_rules,
+    }
+
+
 # -------------------------------------------------------------------
 # Kernel
 # -------------------------------------------------------------------
@@ -1123,6 +1407,7 @@ def simulate_leg_probability_new(
     *,
     iael_df: pd.DataFrame | None = None,
     role_cfg: dict | None = None,
+    blowout_cfg: dict[str, Any] | None = None,
     rng: np.random.Generator | None = None,
 ) -> dict:
     """
@@ -1149,7 +1434,22 @@ def simulate_leg_probability_new(
     g = get_player_window(gamelogs, player, lookback)
     s = summarize_stat(g, stat)
 
-    projected_minutes_raw = row.get("role_metrics_minutes_projection", row.get("minutes_projection", None)) if hasattr(row, "get") else None
+    role_ctx_on_for_external_metrics = _role_metrics_role_ctx_active(row, role_cfg)
+    crafted_minutes_projection = _crafted_role_workload_minutes_projection(
+        row,
+        role_cfg=role_cfg,
+        role_ctx_on_override=role_ctx_on_for_external_metrics,
+    )
+
+    if hasattr(row, "get"):
+        if crafted_minutes_projection is not None:
+            projected_minutes_raw = crafted_minutes_projection
+        elif not role_ctx_on_for_external_metrics:
+            projected_minutes_raw = row.get("minutes_projection", None)
+        else:
+            projected_minutes_raw = row.get("role_metrics_minutes_projection", row.get("minutes_projection", None))
+    else:
+        projected_minutes_raw = None
     projected_minutes = pd.to_numeric(pd.Series([projected_minutes_raw]), errors="coerce").iloc[0]
     projected_minutes_val = float(projected_minutes) if pd.notna(projected_minutes) else float("nan")
 
@@ -1157,15 +1457,12 @@ def simulate_leg_probability_new(
     role_metrics_debug: dict[str, float] = {}
 
     is_star = float(projected_minutes_val if pd.notna(projected_minutes) else float(s.get("min_mean", 0.0))) >= 33.0
-    minute_drop = float(star_minute_drop if is_star else role_minute_drop)
+    minute_drop_base = float(star_minute_drop if is_star else role_minute_drop)
 
     q = blowout_probability(spread_mean=spread, threshold=blowout_threshold, sd=spread_sd)
 
     mu_close = max(0.0, float(projected_minutes_val if pd.notna(projected_minutes) else float(s.get("min_mean", 0.0))))
     sd_close = max(1.0, float(s.get("min_std", 1.0)))
-
-    mu_blow = max(0.0, mu_close - minute_drop)
-    sd_blow = max(1.0, sd_close)
 
     base_rate_mu = float(s.get("rate_mean", 0.0))
     rate_sd_base = max(0.01, float(s.get("rate_std", 0.01)))
@@ -1380,11 +1677,63 @@ def simulate_leg_probability_new(
         except Exception:
             role_ctx_outs_used_for_metrics = 0
 
+    role_ctx_outs_used_early = 0
+    if isinstance(role_debug, dict):
+        try:
+            role_ctx_outs_used_early = int(role_debug.get("outs_used") or 0)
+        except Exception:
+            role_ctx_outs_used_early = 0
+
+    minutes_s_seed = row.get("minutes_s", None)
     try:
-        role_metrics_mult, role_metrics_debug = _role_metrics_adjustment(
-            row,
-            role_ctx_on_override=role_ctx_outs_used_for_metrics > 0,
-        )
+        minutes_s_for_rules = float(minutes_s_seed) if minutes_s_seed is not None else float(minutes_sensitivity(stat_u))
+    except Exception:
+        minutes_s_for_rules = float(minutes_sensitivity(stat_u))
+
+    blowout_rule_debug = _resolve_blowout_rule_adjustments(
+        blowout_cfg=blowout_cfg,
+        stat_u=str(stat_u),
+        direction=str(direction),
+        q_blowout=float(q),
+        role_ctx_outs_used=role_ctx_outs_used_early,
+        minutes_s=float(minutes_s_for_rules),
+        is_star=bool(is_star),
+    )
+
+    minute_drop = float(
+        max(0.0, float(minute_drop_base) * float(blowout_rule_debug.get("minute_drop_mult", 1.0)))
+    )
+    mu_blow = max(0.0, mu_close - minute_drop)
+    sd_blow = max(1.0, sd_close)
+
+    role_ctx_on_for_metrics = _role_metrics_role_ctx_active(
+        {"role_ctx_outs_used": role_ctx_outs_used_for_metrics},
+        role_cfg,
+    )
+    crafted_role_workload_enabled = bool((role_cfg or {}).get("crafted_role_workload_enabled", False))
+    crafted_use_impact_prior = bool((role_cfg or {}).get("crafted_role_workload_use_impact_prior", False))
+
+    try:
+        if crafted_role_workload_enabled:
+            role_metrics_mult, role_metrics_debug = _crafted_role_workload_adjustment(
+                row,
+                stat_u=str(stat_u),
+                direction=str(direction),
+                role_cfg=role_cfg,
+                role_ctx_on_override=role_ctx_on_for_metrics,
+            )
+            if crafted_use_impact_prior:
+                impact_mult, impact_debug = _role_metrics_adjustment(
+                    row,
+                    role_ctx_on_override=role_ctx_on_for_metrics,
+                )
+                role_metrics_mult = float(np.clip(float(role_metrics_mult) * float(impact_mult), 0.98, 1.03))
+                role_metrics_debug.update({f"impact_{k}": v for k, v in impact_debug.items()})
+        else:
+            role_metrics_mult, role_metrics_debug = _role_metrics_adjustment(
+                row,
+                role_ctx_on_override=role_ctx_on_for_metrics,
+            )
     except Exception:
         role_metrics_mult = 1.0
         role_metrics_debug = {}
@@ -1472,6 +1821,7 @@ def simulate_leg_probability_new(
         base_rate_mu=base_rate_mu,
         line=line,
         expected_minutes=mu_close,
+        role_cfg=role_cfg,
     )
     usage_dep = float(usage_debug.get("usage_dep", 1.0))
     usage_dep_cap = _usage_effect_cap(stat_u)
@@ -1487,16 +1837,28 @@ def simulate_leg_probability_new(
     # blowout, starters are more likely to lose 4Q run, while bench overs can
     # benefit from garbage-time minutes.
     under_blowout_sens_stats = {"PTS", "PRA", "PA", "PR", "RA"}
+    combo_over_relief_stats = {"PTS", "PRA", "PA", "PR", "RA"}
     under_blowout_sens_q_min = 0.15
     try:
         blowout_role_step = float((role_cfg or {}).get("blowout_role_step", 0.01))
     except Exception:
         blowout_role_step = 0.01
     blowout_role_step = float(max(0.0, blowout_role_step))
+    try:
+        combo_over_high_q_relief_min_q = float((role_cfg or {}).get("combo_over_high_q_relief_min_q", 0.30))
+    except Exception:
+        combo_over_high_q_relief_min_q = 0.30
+    try:
+        combo_over_high_q_relief_step = float((role_cfg or {}).get("combo_over_high_q_relief_step", 0.12))
+    except Exception:
+        combo_over_high_q_relief_step = 0.12
+    combo_over_high_q_relief_step = float(max(0.0, combo_over_high_q_relief_step))
 
-    def _role_ctx_blowout_sens_mult(direction: str, outs_used: int, minutes_s_val: float) -> float:
+    def _role_ctx_blowout_sens_mult(direction: str, stat_name: str, outs_used: int, minutes_s_val: float, q_blowout: float) -> float:
         outs_i = max(0, int(outs_used))
         minutes_f = float(minutes_s_val)
+        q_f = float(q_blowout)
+        stat_norm = str(stat_name).upper().strip()
         is_role_active = outs_i > 0
         is_starter_like = is_role_active or minutes_f >= 0.55
         is_bench_like = (not is_role_active) and minutes_f <= 0.45
@@ -1509,20 +1871,24 @@ def simulate_leg_probability_new(
                 return float(np.clip(base + blowout_role_step, 0.55, 0.90))
         elif str(direction).upper() == "OVER":
             if is_starter_like:
-                return float(np.clip(base + blowout_role_step, 0.55, 0.90))
+                over_mult = float(np.clip(base + blowout_role_step, 0.55, 0.90))
+                if stat_norm in combo_over_relief_stats and q_f >= combo_over_high_q_relief_min_q:
+                    over_mult = float(np.clip(over_mult - combo_over_high_q_relief_step, 0.55, 0.90))
+                return over_mult
             if is_bench_like:
                 return float(np.clip(base - blowout_role_step, 0.55, 0.90))
         return base
 
-    role_debug_obj = locals().get("role_debug")
-    role_ctx_outs_used_early = 0
-    if isinstance(role_debug_obj, dict):
-        try:
-            role_ctx_outs_used_early = int(role_debug_obj.get("outs_used") or 0)
-        except Exception:
-            role_ctx_outs_used_early = 0
-
-    blowout_sens_mult = _role_ctx_blowout_sens_mult(str(direction), role_ctx_outs_used_early, float(minutes_s))
+    blowout_sens_mult = _role_ctx_blowout_sens_mult(
+        str(direction),
+        str(stat_u),
+        role_ctx_outs_used_early,
+        float(minutes_s),
+        float(q),
+    )
+    blowout_sens_mult = float(
+        float(blowout_sens_mult) * float(blowout_rule_debug.get("sensitivity_mult", 1.0))
+    )
 
     under_blowout_sens_eligible = (
         str(direction).upper() == "UNDER"
@@ -1541,6 +1907,7 @@ def simulate_leg_probability_new(
             p_raw=float(p_role),
             blowout_risk=float(q),
             sens=float(minutes_s_blowout),
+            direction=(str(direction) if str(direction).upper() == "OVER" else None),
         )
     )
 
@@ -1558,6 +1925,7 @@ def simulate_leg_probability_new(
             p_raw=float(p_close_role),
             blowout_risk=float(q),
             sens=float(minutes_s_close),
+            direction=str(direction),
         )
     )
 
@@ -1633,6 +2001,12 @@ def simulate_leg_probability_new(
         "spread": float(spread),
         "q_blowout": float(q),
         "minutes_s": float(minutes_s),
+        "blowout_minute_drop_base": float(minute_drop_base),
+        "blowout_minute_drop": float(minute_drop),
+        "blowout_rule_minute_drop_mult": float(blowout_rule_debug.get("minute_drop_mult", 1.0)),
+        "blowout_rule_sensitivity_mult": float(blowout_rule_debug.get("sensitivity_mult", 1.0)),
+        "blowout_rule_count": int(len(blowout_rule_debug.get("applied_rules", []))),
+        "blowout_rules_applied": "|".join(str(x) for x in blowout_rule_debug.get("applied_rules", [])),
         "minutes_s_blowout": float(minutes_s_blowout),
         "under_blowout_sens_mult": float(under_blowout_sens_mult),
         "under_blowout_sens_eligible": bool(under_blowout_sens_eligible),
@@ -1690,6 +2064,7 @@ def simulate_leg_probability_new(
         "rate_mean_ctx_raw": float(rate_mu_role_raw),
         "rate_std_ctx": float(rate_sd_role),
         "role_metrics_mult": float(role_metrics_mult),
+        "crafted_role_workload_enabled": bool(crafted_role_workload_enabled),
         "role_ctx_mult": float(role_mult),
         "role_ctx_mult_raw": float(role_mult_raw),
         "role_ctx_rate_mult": float(rate_mu_role_mult),
@@ -1747,24 +2122,5 @@ def simulate_leg_probability_new(
     if role_metrics_debug:
         for k, v in role_metrics_debug.items():
             out[f"role_metrics_{k}"] = float(v)
-
-    # Branch multiplier on role context activation (now after out dict is populated)
-    role_ctx_outs_used = int(out.get("role_ctx_outs_used", 0)) if "role_ctx_outs_used" in out else 0
-    under_blowout_sens_mult = _role_ctx_blowout_sens_mult(str(direction), role_ctx_outs_used, float(minutes_s))
-    
-    # Update p_adj if under blowout sensitivity was adjusted
-    if under_blowout_sens_eligible and under_blowout_sens_mult != 0.75:
-        # Recalculate with adjusted multiplier
-        minutes_s_blowout_updated = float(minutes_s) * float(under_blowout_sens_mult)
-        out["p_adj"] = float(
-            adjust_probability_for_blowout(
-                p_raw=float(p_role),
-                blowout_risk=float(q),
-                sens=float(minutes_s_blowout_updated),
-            )
-        )
-        out["p_adj"] = float(np.clip(out["p_adj"], 0.0, 1.0))
-        out["minutes_s_blowout"] = float(minutes_s_blowout_updated)
-        out["under_blowout_sens_mult"] = float(under_blowout_sens_mult)
 
     return out

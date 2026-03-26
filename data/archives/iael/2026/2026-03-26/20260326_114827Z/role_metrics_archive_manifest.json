@@ -1,0 +1,15 @@
+{
+  "run_id": null,
+  "snapshot_id": "20260326_114827Z",
+  "date": "2026-03-26",
+  "iael_snapshot_dir": "C:\\Users\\rick\\projects\\Atlas\\data\\archives\\iael\\2026\\2026-03-26\\20260326_114827Z",
+  "role_metrics_json_src": "C:\\Users\\rick\\projects\\Atlas\\data\\output\\dashboard\\role_metrics_latest.json",
+  "role_metrics_json_dst": "C:\\Users\\rick\\projects\\Atlas\\data\\archives\\iael\\2026\\2026-03-26\\20260326_114827Z\\role_metrics_latest.json",
+  "role_metrics_html_src": "C:\\Users\\rick\\projects\\Atlas\\data\\output\\dashboard\\role_metrics_latest.html",
+  "role_metrics_html_dst": "C:\\Users\\rick\\projects\\Atlas\\data\\archives\\iael\\2026\\2026-03-26\\20260326_114827Z\\role_metrics_latest.html",
+  "role_metrics_manifest_src": "C:\\Users\\rick\\projects\\Atlas\\data\\output\\dashboard\\role_metrics_snapshot_manifest.json",
+  "role_metrics_manifest_dst": "C:\\Users\\rick\\projects\\Atlas\\data\\archives\\iael\\2026\\2026-03-26\\20260326_114827Z\\role_metrics_snapshot_manifest.json",
+  "pinned": false,
+  "pin_dir": null,
+  "errors": []
+}

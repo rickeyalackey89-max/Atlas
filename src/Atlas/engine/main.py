@@ -89,6 +89,339 @@ def _ensure_col(df: pd.DataFrame, col: str, default: Any) -> None:
         df[col] = default
 
 
+def _combo_under_midq_telemetry_blend_mask(
+    scored: pd.DataFrame,
+    *,
+    use_role: pd.Series,
+    under_relief_applied: pd.Series,
+) -> pd.Series:
+    stat = scored.get("stat", pd.Series("", index=scored.index)).astype(str).str.upper().str.strip()
+    direction = scored.get("direction", pd.Series("", index=scored.index)).astype(str).str.upper().str.strip()
+    q_blowout = pd.to_numeric(scored.get("q_blowout", pd.Series(0.0, index=scored.index)), errors="coerce").fillna(0.0)
+    combo_stats = {"PTS", "PRA", "PA", "PR", "RA"}
+    return (
+        ~use_role.fillna(False).astype(bool)
+        & under_relief_applied.fillna(False).astype(bool)
+        & stat.isin(combo_stats)
+        & direction.eq("UNDER")
+        & q_blowout.gt(0.20)
+        & q_blowout.le(0.30)
+    )
+
+
+def _apply_combo_under_midq_telemetry_blend(
+    scored: pd.DataFrame,
+    *,
+    use_role: pd.Series,
+    under_relief_applied: pd.Series,
+    retain: float = 0.40,
+) -> pd.DataFrame:
+    out = scored.copy()
+    retain_f = float(np.clip(retain, 0.0, 1.0))
+    blend_mask = _combo_under_midq_telemetry_blend_mask(
+        out,
+        use_role=use_role,
+        under_relief_applied=under_relief_applied,
+    )
+    out["telemetry_combo_under_midq_blend_applied"] = blend_mask.astype(bool)
+    out["telemetry_combo_under_midq_blend_retain"] = np.where(blend_mask, retain_f, 1.0)
+    if not blend_mask.any():
+        return out
+
+    p_adj = pd.to_numeric(out.get("p_adj", 0.5), errors="coerce").fillna(0.5).clip(0.0, 1.0)
+    p_cal = pd.to_numeric(out.get("p_cal", p_adj), errors="coerce").fillna(p_adj).clip(0.0, 1.0)
+    blended = p_adj + ((p_cal - p_adj) * retain_f)
+    out.loc[blend_mask, "p_cal"] = blended.loc[blend_mask].clip(0.0, 1.0)
+    return out
+
+
+def _combo_under_highq_telemetry_blend_mask(
+    scored: pd.DataFrame,
+    *,
+    use_role: pd.Series,
+    under_relief_applied: pd.Series,
+) -> pd.Series:
+    stat = scored.get("stat", pd.Series("", index=scored.index)).astype(str).str.upper().str.strip()
+    direction = scored.get("direction", pd.Series("", index=scored.index)).astype(str).str.upper().str.strip()
+    q_blowout = pd.to_numeric(scored.get("q_blowout", pd.Series(0.0, index=scored.index)), errors="coerce").fillna(0.0)
+    combo_stats = {"PTS", "PRA", "PA", "PR", "RA"}
+    return (
+        ~use_role.fillna(False).astype(bool)
+        & under_relief_applied.fillna(False).astype(bool)
+        & stat.isin(combo_stats)
+        & direction.eq("UNDER")
+        & q_blowout.gt(0.30)
+    )
+
+
+def _apply_combo_under_highq_telemetry_blend(
+    scored: pd.DataFrame,
+    *,
+    use_role: pd.Series,
+    under_relief_applied: pd.Series,
+    retain: float = 0.68,
+) -> pd.DataFrame:
+    out = scored.copy()
+    retain_f = float(np.clip(retain, 0.0, 1.0))
+    blend_mask = _combo_under_highq_telemetry_blend_mask(
+        out,
+        use_role=use_role,
+        under_relief_applied=under_relief_applied,
+    )
+    out["telemetry_combo_under_highq_blend_applied"] = blend_mask.astype(bool)
+    out["telemetry_combo_under_highq_blend_retain"] = np.where(blend_mask, retain_f, 1.0)
+    if not blend_mask.any():
+        return out
+
+    p_adj = pd.to_numeric(out.get("p_adj", 0.5), errors="coerce").fillna(0.5).clip(0.0, 1.0)
+    p_cal = pd.to_numeric(out.get("p_cal", p_adj), errors="coerce").fillna(p_adj).clip(0.0, 1.0)
+    blended = p_adj + ((p_cal - p_adj) * retain_f)
+    out.loc[blend_mask, "p_cal"] = blended.loc[blend_mask].clip(0.0, 1.0)
+    return out
+
+
+def _combo_under_lowmidq_telemetry_blend_mask(
+    scored: pd.DataFrame,
+    *,
+    use_role: pd.Series,
+    under_relief_applied: pd.Series,
+) -> pd.Series:
+    stat = scored.get("stat", pd.Series("", index=scored.index)).astype(str).str.upper().str.strip()
+    direction = scored.get("direction", pd.Series("", index=scored.index)).astype(str).str.upper().str.strip()
+    q_blowout = pd.to_numeric(scored.get("q_blowout", pd.Series(0.0, index=scored.index)), errors="coerce").fillna(0.0)
+    combo_stats = {"PTS", "PRA", "PA", "PR", "RA"}
+    return (
+        ~use_role.fillna(False).astype(bool)
+        & under_relief_applied.fillna(False).astype(bool)
+        & stat.isin(combo_stats)
+        & direction.eq("UNDER")
+        & q_blowout.gt(0.10)
+        & q_blowout.le(0.20)
+    )
+
+
+def _apply_combo_under_lowmidq_telemetry_blend(
+    scored: pd.DataFrame,
+    *,
+    use_role: pd.Series,
+    under_relief_applied: pd.Series,
+    retain: float = 0.55,
+) -> pd.DataFrame:
+    out = scored.copy()
+    retain_f = float(np.clip(retain, 0.0, 1.0))
+    blend_mask = _combo_under_lowmidq_telemetry_blend_mask(
+        out,
+        use_role=use_role,
+        under_relief_applied=under_relief_applied,
+    )
+    out["telemetry_combo_under_lowmidq_blend_applied"] = blend_mask.astype(bool)
+    out["telemetry_combo_under_lowmidq_blend_retain"] = np.where(blend_mask, retain_f, 1.0)
+    if not blend_mask.any():
+        return out
+
+    p_adj = pd.to_numeric(out.get("p_adj", 0.5), errors="coerce").fillna(0.5).clip(0.0, 1.0)
+    p_cal = pd.to_numeric(out.get("p_cal", p_adj), errors="coerce").fillna(p_adj).clip(0.0, 1.0)
+    blended = p_adj + ((p_cal - p_adj) * retain_f)
+    out.loc[blend_mask, "p_cal"] = blended.loc[blend_mask].clip(0.0, 1.0)
+    return out
+
+
+def _combo_under_midq_ra_trim_mask(
+    scored: pd.DataFrame,
+    *,
+    use_role: pd.Series,
+    under_relief_applied: pd.Series,
+) -> pd.Series:
+    stat = scored.get("stat", pd.Series("", index=scored.index)).astype(str).str.upper().str.strip()
+    direction = scored.get("direction", pd.Series("", index=scored.index)).astype(str).str.upper().str.strip()
+    q_blowout = pd.to_numeric(scored.get("q_blowout", pd.Series(0.0, index=scored.index)), errors="coerce").fillna(0.0)
+    return (
+        ~use_role.fillna(False).astype(bool)
+        & under_relief_applied.fillna(False).astype(bool)
+        & stat.eq("RA")
+        & direction.eq("UNDER")
+        & q_blowout.gt(0.20)
+        & q_blowout.le(0.30)
+    )
+
+
+def _apply_combo_under_midq_ra_trim(
+    scored: pd.DataFrame,
+    *,
+    use_role: pd.Series,
+    under_relief_applied: pd.Series,
+    retain: float = 0.35,
+) -> pd.DataFrame:
+    out = scored.copy()
+    retain_f = float(np.clip(retain, 0.0, 1.0))
+    blend_mask = _combo_under_midq_ra_trim_mask(
+        out,
+        use_role=use_role,
+        under_relief_applied=under_relief_applied,
+    )
+    out["telemetry_combo_under_midq_ra_trim_applied"] = blend_mask.astype(bool)
+    out["telemetry_combo_under_midq_ra_trim_retain"] = np.where(blend_mask, retain_f, 1.0)
+    if not blend_mask.any():
+        return out
+
+    p_adj = pd.to_numeric(out.get("p_adj", 0.5), errors="coerce").fillna(0.5).clip(0.0, 1.0)
+    p_cal = pd.to_numeric(out.get("p_cal", p_adj), errors="coerce").fillna(p_adj).clip(0.0, 1.0)
+    blended = p_adj + ((p_cal - p_adj) * retain_f)
+    out.loc[blend_mask, "p_cal"] = blended.loc[blend_mask].clip(0.0, 1.0)
+    return out
+
+
+def _under_reb_lowmidq_no_relief_trim_mask(
+    scored: pd.DataFrame,
+    *,
+    under_relief_applied: pd.Series,
+) -> pd.Series:
+    stat = scored.get("stat", pd.Series("", index=scored.index)).astype(str).str.upper().str.strip()
+    direction = scored.get("direction", pd.Series("", index=scored.index)).astype(str).str.upper().str.strip()
+    q_blowout = pd.to_numeric(scored.get("q_blowout", pd.Series(0.0, index=scored.index)), errors="coerce").fillna(0.0)
+    return (
+        ~under_relief_applied.fillna(False).astype(bool)
+        & stat.eq("REB")
+        & direction.eq("UNDER")
+        & q_blowout.gt(0.10)
+        & q_blowout.le(0.20)
+    )
+
+
+def _apply_under_reb_lowmidq_no_relief_trim(
+    scored: pd.DataFrame,
+    *,
+    under_relief_applied: pd.Series,
+    retain: float = 1.0,
+) -> pd.DataFrame:
+    out = scored.copy()
+    retain_f = float(np.clip(retain, 0.0, 1.5))
+    blend_mask = _under_reb_lowmidq_no_relief_trim_mask(
+        out,
+        under_relief_applied=under_relief_applied,
+    )
+    out["telemetry_under_reb_lowmidq_no_relief_trim_applied"] = blend_mask.astype(bool)
+    out["telemetry_under_reb_lowmidq_no_relief_trim_retain"] = np.where(blend_mask, retain_f, 1.0)
+    if not blend_mask.any():
+        return out
+
+    p_adj = pd.to_numeric(out.get("p_adj", 0.5), errors="coerce").fillna(0.5).clip(0.0, 1.0)
+    p_cal = pd.to_numeric(out.get("p_cal", p_adj), errors="coerce").fillna(p_adj).clip(0.0, 1.0)
+    blended = p_adj + ((p_cal - p_adj) * retain_f)
+    out.loc[blend_mask, "p_cal"] = blended.loc[blend_mask].clip(0.0, 1.0)
+    return out
+
+
+def _reb_over_midq_trim_mask(
+    scored: pd.DataFrame,
+    *,
+    use_role: pd.Series,
+) -> pd.Series:
+    stat = scored.get("stat", pd.Series("", index=scored.index)).astype(str).str.upper().str.strip()
+    direction = scored.get("direction", pd.Series("", index=scored.index)).astype(str).str.upper().str.strip()
+    q_blowout = pd.to_numeric(scored.get("q_blowout", pd.Series(0.0, index=scored.index)), errors="coerce").fillna(0.0)
+    return (
+        ~use_role.fillna(False).astype(bool)
+        & stat.eq("REB")
+        & direction.eq("OVER")
+        & q_blowout.gt(0.20)
+        & q_blowout.le(0.30)
+    )
+
+
+def _apply_reb_over_midq_trim(
+    scored: pd.DataFrame,
+    *,
+    use_role: pd.Series,
+    retain: float = 1.0,
+) -> pd.DataFrame:
+    out = scored.copy()
+    retain_f = float(np.clip(retain, 0.0, 1.0))
+    blend_mask = _reb_over_midq_trim_mask(out, use_role=use_role)
+    out["telemetry_reb_over_midq_trim_applied"] = blend_mask.astype(bool)
+    out["telemetry_reb_over_midq_trim_retain"] = np.where(blend_mask, retain_f, 1.0)
+    if not blend_mask.any():
+        return out
+
+    p_adj = pd.to_numeric(out.get("p_adj", 0.5), errors="coerce").fillna(0.5).clip(0.0, 1.0)
+    p_cal = pd.to_numeric(out.get("p_cal", p_adj), errors="coerce").fillna(p_adj).clip(0.0, 1.0)
+    blended = p_adj + ((p_cal - p_adj) * retain_f)
+    out.loc[blend_mask, "p_cal"] = blended.loc[blend_mask].clip(0.0, 1.0)
+    return out
+
+
+def _fg3m_over_highq_blowout_lift_mask(
+    scored: pd.DataFrame,
+    *,
+    use_role: pd.Series,
+) -> pd.Series:
+    stat = scored.get("stat", pd.Series("", index=scored.index)).astype(str).str.upper().str.strip()
+    direction = scored.get("direction", pd.Series("", index=scored.index)).astype(str).str.upper().str.strip()
+    q_blowout = pd.to_numeric(scored.get("q_blowout", pd.Series(0.0, index=scored.index)), errors="coerce").fillna(0.0)
+    return ~use_role.fillna(False).astype(bool) & stat.eq("FG3M") & direction.eq("OVER") & q_blowout.gt(0.35)
+
+
+def _apply_fg3m_over_highq_blowout_lift(
+    scored: pd.DataFrame,
+    *,
+    use_role: pd.Series,
+    factor: float = 0.0,
+) -> pd.DataFrame:
+    out = scored.copy()
+    factor_f = float(np.clip(factor, 0.0, 1.0))
+    lift_mask = _fg3m_over_highq_blowout_lift_mask(out, use_role=use_role)
+    out["telemetry_fg3m_over_highq_blowout_lift_applied"] = lift_mask.astype(bool)
+    out["telemetry_fg3m_over_highq_blowout_lift_factor"] = np.where(lift_mask, factor_f, 0.0)
+    if not lift_mask.any() or factor_f <= 0.0:
+        return out
+
+    p_adj = pd.to_numeric(out.get("p_adj", 0.5), errors="coerce").fillna(0.5).clip(0.0, 1.0)
+    p_role = pd.to_numeric(out.get("p_role", p_adj), errors="coerce").fillna(p_adj).clip(0.0, 1.0)
+    p_cal = pd.to_numeric(out.get("p_cal", p_adj), errors="coerce").fillna(p_adj).clip(0.0, 1.0)
+    lifted = p_cal + ((p_role - p_adj) * factor_f)
+    out.loc[lift_mask, "p_cal"] = lifted.loc[lift_mask].clip(0.0, 1.0)
+    return out
+
+
+def _combo_over_high_fragility_lift_mask(
+    scored: pd.DataFrame,
+    *,
+    use_role: pd.Series,
+) -> pd.Series:
+    stat = scored.get("stat", pd.Series("", index=scored.index)).astype(str).str.upper().str.strip()
+    direction = scored.get("direction", pd.Series("", index=scored.index)).astype(str).str.upper().str.strip()
+    fragility = pd.to_numeric(scored.get("fragility", pd.Series(0.0, index=scored.index)), errors="coerce").fillna(0.0)
+    combo_stats = {"PTS", "PRA", "PA", "PR", "RA"}
+    return (
+        ~use_role.fillna(False).astype(bool)
+        & stat.isin(combo_stats)
+        & direction.eq("OVER")
+        & fragility.gt(0.10)
+    )
+
+
+def _apply_combo_over_high_fragility_lift(
+    scored: pd.DataFrame,
+    *,
+    use_role: pd.Series,
+    factor: float = 0.36,
+) -> pd.DataFrame:
+    out = scored.copy()
+    factor_f = float(np.clip(factor, 0.0, 1.0))
+    lift_mask = _combo_over_high_fragility_lift_mask(out, use_role=use_role)
+    out["telemetry_combo_over_high_fragility_lift_applied"] = lift_mask.astype(bool)
+    out["telemetry_combo_over_high_fragility_lift_factor"] = np.where(lift_mask, factor_f, 0.0)
+    if not lift_mask.any():
+        return out
+
+    p_adj = pd.to_numeric(out.get("p_adj", 0.5), errors="coerce").fillna(0.5).clip(0.0, 1.0)
+    p_role = pd.to_numeric(out.get("p_role", p_adj), errors="coerce").fillna(p_adj).clip(0.0, 1.0)
+    p_cal = pd.to_numeric(out.get("p_cal", p_adj), errors="coerce").fillna(p_adj).clip(0.0, 1.0)
+    lifted = p_cal + ((p_role - p_adj) * factor_f)
+    out.loc[lift_mask, "p_cal"] = lifted.loc[lift_mask].clip(0.0, 1.0)
+    return out
+
+
 # -------------------------------------------------------------------
 # Gamelog stat helpers (Pylance-safe)
 # -------------------------------------------------------------------
@@ -764,6 +1097,8 @@ def build_slips_by_tier_buckets(
 def main() -> None:
     cfg = load_config()
     pricing_engine = str(cfg.get("pricing_engine", "atlas") or "atlas")
+    role_metrics_cfg = cfg.get("role_metrics") if isinstance(cfg.get("role_metrics"), dict) else {}
+    attach_role_metrics = bool(role_metrics_cfg.get("enabled", False))
 
     require_file(BOARD_PATH, "data/board/today.csv")
     require_file(LOGS_PATH, "data/gamelogs/nba_gamelogs.csv")
@@ -784,6 +1119,7 @@ def main() -> None:
         slate_path=str(SLATE_PATH),
         default_game_date=game_date,
         role_metrics_path=os.environ.get("ATLAS_ROLE_METRICS_PATH"),
+        attach_role_metrics=attach_role_metrics,
     )
 
     iael_df = load_iael_invalidations()
@@ -817,6 +1153,14 @@ def main() -> None:
         from Atlas.runtime.telemetry_calibration import apply_calibration_to_column, load_calibration
 
         telemetry_cfg = (cfg.get("telemetry", {}) or {})
+        post_calibration_cfg = (telemetry_cfg.get("post_calibration", {}) or {})
+
+        def _post_calibration_float(name: str, default: float) -> float:
+            try:
+                return float(post_calibration_cfg.get(name, default))
+            except Exception:
+                return float(default)
+
         if bool(telemetry_cfg.get("apply_active_calibration", True)):
             raw_path = telemetry_cfg.get("active_calibration_path")
             calib_path = None
@@ -832,6 +1176,50 @@ def main() -> None:
                     source_col="p_for_cal",
                     out_col="p_cal",
                     apply_under_penalty=True,
+                )
+                scored = _apply_combo_under_midq_telemetry_blend(
+                    scored,
+                    use_role=use_role,
+                    under_relief_applied=under_relief_applied,
+                    retain=_post_calibration_float("combo_under_midq_blend_retain", 0.40),
+                )
+                scored = _apply_combo_under_highq_telemetry_blend(
+                    scored,
+                    use_role=use_role,
+                    under_relief_applied=under_relief_applied,
+                    retain=_post_calibration_float("combo_under_highq_blend_retain", 0.68),
+                )
+                scored = _apply_combo_under_lowmidq_telemetry_blend(
+                    scored,
+                    use_role=use_role,
+                    under_relief_applied=under_relief_applied,
+                    retain=_post_calibration_float("combo_under_lowmidq_blend_retain", 0.55),
+                )
+                scored = _apply_combo_under_midq_ra_trim(
+                    scored,
+                    use_role=use_role,
+                    under_relief_applied=under_relief_applied,
+                    retain=_post_calibration_float("combo_under_midq_ra_trim_retain", 0.35),
+                )
+                scored = _apply_under_reb_lowmidq_no_relief_trim(
+                    scored,
+                    under_relief_applied=under_relief_applied,
+                    retain=_post_calibration_float("under_reb_lowmidq_no_relief_retain", 1.0),
+                )
+                scored = _apply_reb_over_midq_trim(
+                    scored,
+                    use_role=use_role,
+                    retain=_post_calibration_float("reb_over_midq_trim_retain", 1.0),
+                )
+                scored = _apply_fg3m_over_highq_blowout_lift(
+                    scored,
+                    use_role=use_role,
+                    factor=_post_calibration_float("fg3m_over_highq_blowout_lift_factor", 0.0),
+                )
+                scored = _apply_combo_over_high_fragility_lift(
+                    scored,
+                    use_role=use_role,
+                    factor=_post_calibration_float("combo_over_high_fragility_lift_factor", 0.36),
                 )
     except Exception:
         pass
@@ -851,6 +1239,12 @@ def main() -> None:
     optimizer_cfg = (cfg.get("optimizer", {}) or {})
     top_n = int(optimizer_cfg.get("top_n_slips", 10))
     seed = int(optimizer_cfg.get("seed", 7))
+    slip_rank_cfg = (cfg.get("slip_rank", {}) or {}) if isinstance(cfg, dict) else {}
+    primary_sort_mode = str(slip_rank_cfg.get("primary_mode", "ev") or "ev").strip().lower()
+    if primary_sort_mode in {"win", "winprob", "hit_prob"}:
+        primary_sort_mode = "hit"
+    elif primary_sort_mode not in {"ev", "hit", "hybrid"}:
+        primary_sort_mode = "ev"
 
     from Atlas.stages.optimize.build_slips_today import run_build_slips
 
@@ -860,7 +1254,7 @@ def main() -> None:
         seed=seed,
         pricing_engine=pricing_engine,
         cfg=cfg,
-        sort_mode="ev",
+        sort_mode=primary_sort_mode,
     )
 
     sys3, sys4, sys5 = slips.sys3, slips.sys4, slips.sys5

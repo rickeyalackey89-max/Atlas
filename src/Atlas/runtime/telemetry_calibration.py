@@ -106,6 +106,7 @@ class TelemetryCalibration:
     protected_calibration: Optional["TelemetryCalibration"] = None
     protected_stat_directions: Tuple[str, ...] = ()
     protected_role_ctx: str = ""
+    scoped_families: Tuple[Dict[str, Any], ...] = ()
 
     @staticmethod
     def from_json(d: Dict[str, Any]) -> "TelemetryCalibration":
@@ -132,6 +133,14 @@ class TelemetryCalibration:
                 except Exception:
                     continue
             return tuple(vals)
+
+        def _maybe_float(raw: Any) -> Optional[float]:
+            try:
+                if raw is None:
+                    return None
+                return float(raw)
+            except Exception:
+                return None
 
         mode = str(d.get("mode", "")).strip().lower()
         if mode:
@@ -252,13 +261,15 @@ class TelemetryCalibration:
             mult: Dict[str, float] = {}
             mult_rolectx_on: Dict[str, float] = {}
             mult_rolectx_off: Dict[str, float] = {}
+            scoped_families: List[Dict[str, Any]] = []
             source_scales: List[Tuple[Tuple[str, ...], float]] = []
             families = d.get("families") or []
             if isinstance(families, list):
                 for family in families:
                     if not isinstance(family, dict):
                         continue
-                    role_ctx = str(family.get("role_ctx") or family.get("scope", {}).get("role_ctx") or family.get("context") or "").strip().lower()
+                    scope = family.get("scope") if isinstance(family.get("scope"), dict) else {}
+                    role_ctx = str(family.get("role_ctx") or scope.get("role_ctx") or family.get("context") or "").strip().lower()
                     source_prefixes_raw = family.get("p_cal_src_prefixes") or family.get("source_prefixes") or family.get("source_prefix") or family.get("p_cal_src")
                     if isinstance(source_prefixes_raw, list):
                         source_prefixes = _norm_prefixes(source_prefixes_raw)
@@ -279,6 +290,20 @@ class TelemetryCalibration:
 
                     family_mult = family.get("mult") or family.get("map") or {}
                     if not isinstance(family_mult, dict):
+                        continue
+                    stat_directions = _norm_prefixes(scope.get("stat_directions") if scope.get("stat_directions") is not None else family.get("stat_directions"))
+                    q_blowout_min = _maybe_float(scope.get("q_blowout_min") if scope.get("q_blowout_min") is not None else family.get("q_blowout_min", family.get("min_q")))
+                    q_blowout_max = _maybe_float(scope.get("q_blowout_max") if scope.get("q_blowout_max") is not None else family.get("q_blowout_max", family.get("max_q")))
+                    if stat_directions or q_blowout_min is not None or q_blowout_max is not None:
+                        scoped_families.append(
+                            {
+                                "role_ctx": role_ctx,
+                                "stat_directions": stat_directions,
+                                "q_blowout_min": q_blowout_min,
+                                "q_blowout_max": q_blowout_max,
+                                "mult": {str(k): float(v) for k, v in family_mult.items()},
+                            }
+                        )
                         continue
                     if role_ctx in {"on", "true", "1", "rolectx_on"}:
                         mult_rolectx_on.update({str(k): float(v) for k, v in family_mult.items()})
@@ -305,6 +330,7 @@ class TelemetryCalibration:
                 exclude_p_cal_src_prefixes=_norm_prefixes(policy.get("exclude_p_cal_src_prefixes") if policy else d.get("exclude_p_cal_src_prefixes")),
                 cap_min=cap_min,
                 cap_max=cap_max,
+                scoped_families=tuple(scoped_families),
             )
 
         mult = d.get("mult") or {}
@@ -604,8 +630,21 @@ def apply_calibration(
             if mask.any() and float(scale_val) != 1.0:
                 source_scale.loc[mask] = source_scale.loc[mask] * float(scale_val)
 
+    scoped_mult = pd.Series(1.0, index=out.index, dtype=float)
+    for family in tuple(getattr(calib, "scoped_families", ()) or ()):
+        if not isinstance(family, dict):
+            continue
+        family_map = family.get("mult") if isinstance(family.get("mult"), dict) else {}
+        if not family_map:
+            continue
+        family_mask = _scoped_family_mask(out, family)
+        if not family_mask.any():
+            continue
+        family_mult = keys.map({str(k).upper().strip(): float(v) for k, v in family_map.items()}).fillna(1.0).astype(float)
+        scoped_mult.loc[family_mask] = scoped_mult.loc[family_mask] * family_mult.loc[family_mask]
+
     # Final telemetry multiplier applied to p_adj (before bucket and caps)
-    mult = (base_mult * role_mult * source_scale).astype(float)
+    mult = (base_mult * role_mult * source_scale * scoped_mult).astype(float)
     out["p_adj"] = (out["p_adj"] * mult).clip(0.0, 1.0)
 
     bucket_mult = pd.Series(1.0, index=out.index, dtype=float)
@@ -655,6 +694,40 @@ def _telemetry_source_allowed_mask(
     if exclude_prefixes:
         allowed &= ~src.map(lambda x: any(x.startswith(prefix) for prefix in exclude_prefixes))
     return allowed.fillna(False)
+
+
+def _scoped_family_mask(scored: pd.DataFrame, family: Dict[str, Any]) -> pd.Series:
+    mask = pd.Series(True, index=scored.index, dtype=bool)
+
+    role_ctx = str(family.get("role_ctx") or "").strip().lower()
+    if role_ctx in {"off", "on"}:
+        if "role_ctx_outs_used" not in scored.columns:
+            return pd.Series(False, index=scored.index, dtype=bool)
+        role_on = pd.to_numeric(scored["role_ctx_outs_used"], errors="coerce").fillna(0).astype(float) > 0
+        mask &= role_on if role_ctx == "on" else ~role_on
+
+    stat_directions = tuple(family.get("stat_directions") or ())
+    if stat_directions:
+        if "telemetry_cal_key" in scored.columns:
+            stat_dir = scored["telemetry_cal_key"].astype(str).str.upper().str.strip()
+        elif {"stat", "direction"}.issubset(scored.columns):
+            stat_dir = (scored["stat"].astype(str).str.upper().str.strip() + "|" + scored["direction"].astype(str).str.upper().str.strip()).astype(str)
+        else:
+            return pd.Series(False, index=scored.index, dtype=bool)
+        mask &= stat_dir.isin({str(item).upper().strip() for item in stat_directions})
+
+    q_blowout_min = family.get("q_blowout_min")
+    q_blowout_max = family.get("q_blowout_max")
+    if q_blowout_min is not None or q_blowout_max is not None:
+        if "q_blowout" not in scored.columns:
+            return pd.Series(False, index=scored.index, dtype=bool)
+        q_vals = pd.to_numeric(scored["q_blowout"], errors="coerce")
+        if q_blowout_min is not None:
+            mask &= q_vals.ge(float(q_blowout_min))
+        if q_blowout_max is not None:
+            mask &= q_vals.le(float(q_blowout_max))
+
+    return mask.fillna(False)
 
 
 def apply_calibration_to_column(

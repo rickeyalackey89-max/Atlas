@@ -189,6 +189,51 @@ class TelemetryRuntimeCalibrationTest(unittest.TestCase):
         self.assertFalse(bool(result.loc[0, "telemetry_cal_applied"]))
         self.assertTrue(bool(result.loc[1, "telemetry_cal_applied"]))
 
+    def test_scoped_family_applies_only_to_high_q_target_keys(self) -> None:
+        calib = TelemetryCalibration.from_json(
+            {
+                "version": 2,
+                "base": {
+                    "k_shrink": 1.0,
+                    "standard_under_penalty": 1.0,
+                },
+                "families": [
+                    {
+                        "name": "high_q_over_scope",
+                        "mult": {
+                            "PTS|OVER": 1.05,
+                            "AST|OVER": 1.04,
+                        },
+                        "scope": {
+                            "stat_directions": ["PTS|OVER", "AST|OVER"],
+                            "q_blowout_min": 0.35,
+                        },
+                    }
+                ],
+            }
+        )
+        df = pd.DataFrame(
+            {
+                "stat": ["PTS", "PTS", "AST", "PTS"],
+                "direction": ["OVER", "OVER", "OVER", "UNDER"],
+                "tier": ["STANDARD", "STANDARD", "STANDARD", "STANDARD"],
+                "p_for_cal": [0.40, 0.40, 0.50, 0.60],
+                "p_for_cal_src": ["p_adj", "p_adj", "p_adj", "p_adj"],
+                "q_blowout": [0.40, 0.20, 0.38, 0.50],
+            }
+        )
+
+        result = apply_calibration_to_column(df, calib, source_col="p_for_cal", out_col="p_cal")
+
+        self.assertAlmostEqual(float(result.loc[0, "p_cal"]), 0.42, places=12)
+        self.assertAlmostEqual(float(result.loc[1, "p_cal"]), 0.40, places=12)
+        self.assertAlmostEqual(float(result.loc[2, "p_cal"]), 0.52, places=12)
+        self.assertAlmostEqual(float(result.loc[3, "p_cal"]), 0.60, places=12)
+        self.assertTrue(bool(result.loc[0, "telemetry_cal_applied"]))
+        self.assertFalse(bool(result.loc[1, "telemetry_cal_applied"]))
+        self.assertTrue(bool(result.loc[2, "telemetry_cal_applied"]))
+        self.assertFalse(bool(result.loc[3, "telemetry_cal_applied"]))
+
 
 if __name__ == "__main__":
     unittest.main()

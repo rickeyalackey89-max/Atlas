@@ -1,0 +1,37 @@
+pricing_engine: pp_kernel
+pp_kernel:
+  p_min: 0.01
+  p_max: 0.99
+telemetry:
+  schema_version: 2
+  active_calibration: isotonic_hybrid_roleoff_guarded
+  apply_active_calibration: true
+  active_calibration_path: data/model/telemetry_calibration.isotonic_hybrid_roleoff_guarded.json
+  calibration_policy:
+    allow_family_split: true
+    family_order:
+      - role_off
+      - role_on
+    strict_source_gating: true
+under_relief_factor: 0.11
+under_relief_haircut_min: 0.06
+under_relief_q_min: 0.12
+slip_rank:
+  primary_mode: hybrid
+  ev_payout_power: 2
+  hybrid_ev_weight: 0.10
+slip_build:
+  target_pool_mult: 200
+  phase1_frac: 0.2
+  phase1_pool_frac: 0.5
+  beam_width: 250
+  penalty:
+    team_w: 0.01
+    family_w: 0.006
+    frag_w: 0.01
+    team_power: 2.0
+    family_power: 2.0
+    frag_power: 1.0
+optimizer:
+  top_n_slips: 10
+  seed: 7

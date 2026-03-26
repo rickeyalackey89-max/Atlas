@@ -1,0 +1,169 @@
+pricing_engine: pp_kernel
+pp_kernel:
+  p_min: 0.01
+  p_max: 0.99
+  coeffs:
+    DEFAULT:
+      STANDARD:
+        a: 0.3164
+        b: -0.2880
+      GOBLIN:
+        a: -0.374114
+        b: -0.020276
+      DEMON:
+        a: -0.493783
+        b: -1.436801
+        c: -0.502224
+    PTS:
+      STANDARD:
+        a: 0.3164
+        b: -0.2880
+      GOBLIN:
+        a: -0.374114
+        b: -0.020276
+      DEMON:
+        a: -0.493783
+        b: -1.436801
+        c: -0.502224
+    REB:
+      STANDARD:
+        a: 0.3164
+        b: -0.2880
+      GOBLIN:
+        a: -0.374114
+        b: -0.020276
+      DEMON:
+        a: -0.493783
+        b: -1.436801
+        c: -0.502224
+    AST:
+      STANDARD:
+        a: 0.3164
+        b: -0.2880
+      GOBLIN:
+        a: -0.374114
+        b: -0.020276
+      DEMON:
+        a: -0.493783
+        b: -1.436801
+        c: -0.502224
+    FG3M:
+      STANDARD:
+        a: 0.3164
+        b: -0.2880
+      GOBLIN:
+        a: -0.374114
+        b: -0.020276
+      DEMON:
+        a: -0.493783
+        b: -1.436801
+        c: -0.502224
+    PRA:
+      STANDARD:
+        a: 0.3164
+        b: -0.2880
+      GOBLIN:
+        a: -0.374114
+        b: -0.020276
+      DEMON:
+        a: -0.493783
+        b: -1.436801
+        c: -0.502224
+    PR:
+      STANDARD:
+        a: 0.3164
+        b: -0.2880
+      GOBLIN:
+        a: -0.374114
+        b: -0.020276
+      DEMON:
+        a: -0.493783
+        b: -1.436801
+        c: -0.502224
+    PA:
+      STANDARD:
+        a: 0.3164
+        b: -0.2880
+      GOBLIN:
+        a: -0.374114
+        b: -0.020276
+      DEMON:
+        a: -0.493783
+        b: -1.436801
+        c: -0.502224
+    RA:
+      STANDARD:
+        a: 0.3164
+        b: -0.2880
+      GOBLIN:
+        a: -0.374114
+        b: -0.020276
+      DEMON:
+        a: -0.493783
+        b: -1.436801
+        c: -0.502224
+telemetry:
+  schema_version: 2
+  active_calibration: role_ctx_proposed_global
+  apply_active_calibration: true
+
+
+  active_calibration_path: .atlas_audit/diagnostics/telemetry_corpus/20260325_205443/proposed_calibration.json
+  calibration_policy:
+    allow_family_split: true
+    family_order:
+      - role_off
+      - role_on
+    strict_source_gating: true
+role_ctx:
+  enabled: true
+  projection_clamp_lo: 0.9
+  projection_clamp_hi: 1.2
+  projection_softcap_k: 0.9
+  variance_k: 0.65
+  variance_clamp_lo: 1.0
+  variance_clamp_hi: 1.1
+  combo_shrink: 0.5
+  min_games: 1
+  close_sens_mult: 0.35
+  under_relief_q_min: 0.10
+  under_relief_haircut_min: 0.05
+  under_relief_factor: 0.10
+under_relief_factor: 0.11
+under_relief_haircut_min: 0.06
+under_relief_q_min: 0.12
+slip_build:
+  no_same_team_within_slip: true
+  max_slips_per_player: 5
+  target_pool_mult: 200
+  phase1_frac: 0.2
+  phase1_pool_frac: 0.5
+  beam_width: 250
+  by_legs:
+    "4":
+      target_pool_mult: 300
+      phase1_frac: 0.40
+      phase1_pool_frac: 0.35
+      beam_width: 400
+    "5":
+      target_pool_mult: 400
+      phase1_frac: 0.40
+      phase1_pool_frac: 0.35
+      beam_width: 500
+  by_sort_mode:
+    hit:
+      by_legs:
+        "3":
+          max_slips_per_player: 1
+optimizer:
+  top_n_slips: 10
+  top_n_slips_by_legs:
+    "3": 10
+    "4": 6
+    "5": 10
+  top_n_slips_by_legs_by_sort_mode:
+    hit:
+      "3": 10
+      "4": 10
+      "5": 10
+  seed: 7

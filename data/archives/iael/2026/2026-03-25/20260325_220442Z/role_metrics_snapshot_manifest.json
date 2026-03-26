@@ -1,0 +1,17 @@
+{
+  "artifacts": {
+    "latest_html": "C:\\Users\\rick\\projects\\Atlas\\data\\output\\dashboard\\role_metrics_latest.html",
+    "latest_json": "C:\\Users\\rick\\projects\\Atlas\\data\\output\\dashboard\\role_metrics_latest.json",
+    "snapshot_html": "C:\\Users\\rick\\projects\\Atlas\\data\\output\\role_metrics\\snapshots\\2026-03-25\\craftednba_player_stats_20260325_20260325T220442Z.html",
+    "snapshot_json": "C:\\Users\\rick\\projects\\Atlas\\data\\output\\role_metrics\\snapshots\\2026-03-25\\craftednba_player_stats_20260325_20260325T220442Z.json"
+  },
+  "fetched_at": "2026-03-25T22:04:37Z",
+  "game_date": "2026-03-25",
+  "html_sha256": "eef645a4e895b37003a6d0295e8ec20090577e1d1d40c83c3ab4cc0751c3b20a",
+  "parser_version": "craftednba_api_v1",
+  "row_count": 518,
+  "schema_version": 1,
+  "snapshot_id": "craftednba_player_stats_20260325_20260325T220442Z",
+  "source_content_type": "application/json",
+  "source_url": "https://craftednba.com/api/player-stats"
+}

@@ -151,6 +151,7 @@ def _run_score_board_new(
             role_minute_drop=role_drop,
             iael_df=iael_df_kernel,
             role_cfg=role_cfg,
+            blowout_cfg=blow,
         ) or {}
 
         # Enforce string keys in kernel output too
