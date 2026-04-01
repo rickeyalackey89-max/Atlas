@@ -204,9 +204,10 @@ slip_build:
   prefer_calibrated_prob: true
   max_slips_per_player: 5
   target_pool_mult: 200
-  phase1_frac: 0.2
+  phase1_frac: 0.10
   phase1_pool_frac: 0.5
   beam_width: 250
+  min_leg_prob: 0.52
   penalty:
     team_w: 0.15
     team_power: 2.0

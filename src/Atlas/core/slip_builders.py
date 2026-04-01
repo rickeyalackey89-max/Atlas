@@ -384,6 +384,16 @@ def build_slips_by_tier_buckets(
             index=df.index,
         )
 
+    # --- Min leg probability filter ---
+    min_leg_prob = float(sb.get("min_leg_prob", 0.0) or 0.0)
+    if min_leg_prob > 0.0:
+        before_len = len(df)
+        df = df[df["p_eff"] >= min_leg_prob].reset_index(drop=True)
+        if (os.getenv("ATLAS_DEBUG_BUILDER") or "").strip() == "1":
+            print(f"[BUILDER][DEBUG] min_leg_prob={min_leg_prob:.3f} filter: {before_len} -> {len(df)} legs")
+        if df.empty:
+            return pd.DataFrame(columns=_EMPTY_SLIPS_COLS)
+
     tier_counts = df["tier"].value_counts(dropna=False).to_dict()
 
     if (os.getenv("ATLAS_DEBUG_BUILDER") or "").strip() == "1":
