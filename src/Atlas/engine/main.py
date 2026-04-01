@@ -1116,8 +1116,9 @@ def main() -> None:
     wind5_win = _annotate_q_slips(slips_winprob.wind5)
 
     from Atlas.stages.publish.publish_run_outputs import run_publish_stage
+    from Atlas.stages.publish.build_cloudflare_payload import build_cloudflare_payload
 
-    run_publish_stage(
+    run_dir = run_publish_stage(
         LOCAL_TZ=LOCAL_TZ,
         OUT_DIR=OUT_DIR,
         scored=scored,
@@ -1141,6 +1142,14 @@ def main() -> None:
 
         write_csv_clean=write_csv_clean,
     )
+
+    # Build dashboard payload from slip CSVs
+    try:
+        dashboard_dir = OUT_DIR / "dashboard"
+        payload_path = build_cloudflare_payload(run_dir, dashboard_dir)
+        print(f"Dashboard payload: {payload_path}")
+    except Exception as e:
+        print(f"Warning: failed to build dashboard payload: {e}", file=sys.stderr)
 
 if __name__ == "__main__":
     main()
