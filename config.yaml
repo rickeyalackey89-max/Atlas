@@ -199,7 +199,7 @@ blowout:
       minute_drop_mult: 0.90
       sensitivity_mult: 0.94
 slip_build:
-  no_same_team_within_slip: true
+  max_players_per_team: 2
   no_same_game_within_slip: true
   prefer_calibrated_prob: true
   max_slips_per_player: 5

@@ -12,6 +12,7 @@ Non-negotiables:
 import ast
 import os
 import random
+from collections import Counter
 from typing import Any
 
 import numpy as np
@@ -439,7 +440,7 @@ def build_slips_by_tier_buckets(
     target_pool_mult = int(sb.get("target_pool_mult", 10))
     phase1_frac = float(sb.get("phase1_frac", 0.30))
     phase1_pool_frac = float(sb.get("phase1_pool_frac", 0.60))
-    no_same_team_within_slip = bool(sb.get("no_same_team_within_slip", False))
+    max_players_per_team = int(sb.get("max_players_per_team", 1))  # 1 = strict, 2 = allow pairs
     no_same_game_within_slip = bool(sb.get("no_same_game_within_slip", False))
 
     # Clamp to safe ranges (prevents config typos from breaking sampling).
@@ -574,15 +575,16 @@ def build_slips_by_tier_buckets(
             if len(set(players)) != len(players):
                 continue
 
-            # Optional hard constraint: no two legs from the same team within a slip.
-            if no_same_team_within_slip:
+            # Optional hard constraint: max N players from the same team within a slip.
+            if max_players_per_team > 0:
                 chosen_teams: list[str] = []
                 for r in chosen:
                     tk = _team_key(r)
                     if not tk:
                         continue
                     chosen_teams.append(tk)
-                if len(set(chosen_teams)) != len(chosen_teams):
+                team_counts = Counter(chosen_teams)
+                if team_counts and max(team_counts.values()) > max_players_per_team:
                     continue
 
             # Optional hard constraint: no two legs from the same game within a slip.
