@@ -78,21 +78,35 @@ def build_cloudflare_payload(run_dir: Path, out_dir: Path) -> Path:
         "generated_at": datetime.now(LOCAL_TZ).isoformat(),
         "run_id": run_dir.name,
         "system": [],
+        "system_winprob": [],
         "windfall": [],
+        "windfall_winprob": [],
         "demonhunter": [],
     }
     
-    # System: top 3-leg, 4-leg, 5-leg
+    # System: top 3-leg, 4-leg, 5-leg (EV-based)
     for n in [3, 4, 5]:
         slip = _load_top_slip(run_dir / "System" / f"recommended_{n}leg.csv", "System")
         if slip:
             payload["system"].append(slip)
     
-    # Windfall: top 3-leg, 4-leg, 5-leg
+    # System winprob: top 3-leg, 4-leg, 5-leg (win probability based)
+    for n in [3, 4, 5]:
+        slip = _load_top_slip(run_dir / "System" / f"recommended_{n}leg_winprob.csv", "System WinProb")
+        if slip:
+            payload["system_winprob"].append(slip)
+    
+    # Windfall: top 3-leg, 4-leg, 5-leg (EV-based)
     for n in [3, 4, 5]:
         slip = _load_top_slip(run_dir / "Windfall" / f"recommended_{n}leg.csv", "Windfall")
         if slip:
             payload["windfall"].append(slip)
+    
+    # Windfall winprob: top 3-leg, 4-leg, 5-leg (win probability based)
+    for n in [3, 4, 5]:
+        slip = _load_top_slip(run_dir / "Windfall" / f"recommended_{n}leg_winprob.csv", "Windfall WinProb")
+        if slip:
+            payload["windfall_winprob"].append(slip)
     
     # Demonhunter: top 3-leg, 4-leg, 5-leg from single CSV
     demon_csv = run_dir / "demonhunter.csv"
