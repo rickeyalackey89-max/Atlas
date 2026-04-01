@@ -200,7 +200,7 @@ blowout:
       sensitivity_mult: 0.94
 slip_build:
   max_players_per_team: 2
-  no_same_game_within_slip: true
+  no_same_game_within_slip: false
   prefer_calibrated_prob: true
   max_slips_per_player: 5
   target_pool_mult: 200
