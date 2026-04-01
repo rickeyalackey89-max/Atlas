@@ -288,7 +288,20 @@ def build_slips_by_tier_buckets(
             if role_surface is not None:
                 df.loc[role_on_mask, "p_eff"] = role_surface.loc[role_on_mask]
 
+    # --- p_eff ceiling: cap overconfident probabilities BEFORE edge_score ---
+    # Calibration audit shows p_cal > 0.60 is massively overconfident
+    # (model says 87%+, reality is ~55%). Clamping before edge_score
+    # ensures the ranking also reflects the cap, not just hit_prob.
+    max_leg_prob = float(sb.get("max_leg_prob", 0.0) or 0.0)
+    if max_leg_prob > 0.0:
+        before_mean = float(df["p_eff"].mean())
+        df["p_eff"] = df["p_eff"].clip(upper=max_leg_prob)
+        if (os.getenv("ATLAS_DEBUG_BUILDER") or "").strip() == "1":
+            after_mean = float(df["p_eff"].mean())
+            print(f"[BUILDER][DEBUG] max_leg_prob={max_leg_prob:.3f} clamp: p_eff mean {before_mean:.3f} -> {after_mean:.3f}")
+
     # edge_score fallback = p_eff - 0.5 (keep exact math)
+    edge_cap = (max_leg_prob - 0.5) if max_leg_prob > 0.0 else None
     if "edge_score" in df.columns:
         es = pd.to_numeric(df["edge_score"], errors="coerce")
         if not isinstance(es, pd.Series):
@@ -299,6 +312,8 @@ def build_slips_by_tier_buckets(
         pe_arr = np.asarray(df["p_eff"].to_numpy(copy=False), dtype="float64")
         mask = np.isnan(es_arr)
         es_arr[mask] = pe_arr[mask] - 0.5
+        if edge_cap is not None:
+            np.clip(es_arr, None, edge_cap, out=es_arr)
         df["edge_score"] = pd.Series(es_arr, index=df.index)
     else:
         pe_arr = np.asarray(df["p_eff"].to_numpy(copy=False), dtype="float64")

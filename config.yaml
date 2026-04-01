@@ -208,6 +208,7 @@ slip_build:
   phase1_pool_frac: 0.5
   beam_width: 250
   min_leg_prob: 0.52
+  max_leg_prob: 0.0
   require_healthy_data: true
   max_same_stat: 2
   penalty:
@@ -215,26 +216,43 @@ slip_build:
     team_power: 2.0
     family_w: 0.10
     family_power: 2.0
-    frag_w: 0.20
+    frag_w: 0.0
     frag_power: 1.0
-    min_std_w: 0.10
+    min_std_w: 0.0
     min_std_ref: 6.0
   by_legs:
+    "3":
+      max_leg_prob: 0.0
+      penalty:
+        frag_w: 0.0
+        min_std_w: 0.0
     "4":
       target_pool_mult: 300
       phase1_frac: 0.40
       phase1_pool_frac: 0.35
       beam_width: 400
+      max_leg_prob: 0.55
+      penalty:
+        frag_w: 0.20
+        min_std_w: 0.10
     "5":
       target_pool_mult: 400
       phase1_frac: 0.40
       phase1_pool_frac: 0.35
       beam_width: 500
+      max_leg_prob: 0.70
+      penalty:
+        frag_w: 0.0
+        min_std_w: 0.0
   by_sort_mode:
     hit:
       by_legs:
         "3":
           max_slips_per_player: 2
+          max_leg_prob: 0.60
+          penalty:
+            frag_w: 0.0
+            min_std_w: 0.0
 optimizer:
   top_n_slips: 10
   top_n_slips_by_legs:
