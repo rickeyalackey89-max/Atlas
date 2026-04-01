@@ -269,6 +269,59 @@ def _archive_run_to_telemetry(repo_root: Path, run_id: str) -> None:
         print(f"[TELEM] Archive failed (non-fatal): {e}", file=sys.stderr)
 
 
+def _publish_to_cloudflare_dashboard(repo_root: Path) -> None:
+    """Copy payload to AtlasDashboard repo and git push to trigger Cloudflare deploy."""
+    try:
+        dashboard_repo = Path("C:/Users/rick/projects/AtlasDashboard")
+        if not dashboard_repo.exists():
+            print("[DASH] AtlasDashboard repo not found, skipping publish", file=sys.stderr)
+            return
+
+        # Copy payload
+        src_payload = repo_root / "data" / "output" / "dashboard" / "cloudflare_payload.json"
+        dst_payload = dashboard_repo / "public" / "data" / "cloudflare_payload.json"
+        if not src_payload.exists():
+            print("[DASH] No cloudflare_payload.json to publish", file=sys.stderr)
+            return
+
+        dst_payload.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(src_payload, dst_payload)
+
+        # Git add, commit, push
+        import subprocess
+        ts = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        subprocess.run(
+            ["git", "add", "public/data/cloudflare_payload.json"],
+            cwd=str(dashboard_repo),
+            check=True,
+            capture_output=True,
+        )
+        # Check if there are changes to commit
+        result = subprocess.run(
+            ["git", "diff", "--cached", "--quiet"],
+            cwd=str(dashboard_repo),
+            capture_output=True,
+        )
+        if result.returncode != 0:  # There are staged changes
+            subprocess.run(
+                ["git", "commit", "-m", f"Publish data ({ts})"],
+                cwd=str(dashboard_repo),
+                check=True,
+                capture_output=True,
+            )
+            subprocess.run(
+                ["git", "push"],
+                cwd=str(dashboard_repo),
+                check=True,
+                capture_output=True,
+            )
+            print(f"[DASH] Published to Cloudflare dashboard")
+        else:
+            print(f"[DASH] No payload changes to publish")
+    except Exception as e:
+        print(f"[DASH] Publish failed (non-fatal): {e}", file=sys.stderr)
+
+
 def _write_full_run_bundle(repo_root: Path, run_id: str) -> None:
     """Best-effort: emit a FULL_RUN bundle via the Python bundler (Phase 7C)."""
     try:
@@ -574,6 +627,7 @@ def main(argv: Optional[list[str]] = None) -> None:
             raise RuntimeError(f"Missing required publish tool: {publish_script}")
 
         _archive_run_to_telemetry(repo_root, run_id)
+        _publish_to_cloudflare_dashboard(repo_root)
         return
 
     # REPLAY
