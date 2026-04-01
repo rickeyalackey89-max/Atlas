@@ -40,3 +40,16 @@ daily to-dos/
 data/gamelogs/
 data/board/prizepicks_raw.json
 data/board/*.orig_backup
+
+# =========================
+# Binary / Large Data
+# =========================
+data/model/ensemble/
+data/model/*.json
+data/model/*.txt
+data/model/*.csv
+data/bundles/
+data/telemetry/
+data/archives/
+data/input/
+archives/bundles/

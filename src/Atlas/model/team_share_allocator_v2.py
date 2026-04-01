@@ -121,7 +121,7 @@ def compute_redistribution_cap(*, base_transfer_fraction: float, team_depth: flo
     team_depth = max(0.0, float(team_depth))
     base_transfer_fraction = max(0.0, float(base_transfer_fraction))
     multi_out_penalty = max(0.0, float(multi_out_penalty))
-    cap = base_transfer_fraction * max(0.25, 1.0 - 0.20 * team_depth) * max(0.60, 1.0 - multi_out_penalty)
+    cap = base_transfer_fraction * max(0.60, 1.0 - multi_out_penalty)
     return float(min(0.95, max(0.0, cap)))
 
 

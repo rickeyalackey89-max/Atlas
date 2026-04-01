@@ -21,6 +21,7 @@ def run_publish_stage(
     wind3: pd.DataFrame,
     wind4: pd.DataFrame,
     wind5: pd.DataFrame,
+    demonhunter: Optional[pd.DataFrame] = None,
     sys3_winprob: Optional[pd.DataFrame] = None,
     sys4_winprob: Optional[pd.DataFrame] = None,
     sys5_winprob: Optional[pd.DataFrame] = None,
@@ -78,6 +79,10 @@ def run_publish_stage(
         w(wind4_winprob, windfall_dir / "recommended_4leg_winprob.csv")
     if wind5_winprob is not None:
         w(wind5_winprob, windfall_dir / "recommended_5leg_winprob.csv")
+
+    # DEMONHUNTER – single CSV with best 3/4/5-leg all-DEMON slips
+    if demonhunter is not None and len(demonhunter) > 0:
+        w(demonhunter, run_dir / "demonhunter.csv")
 
     dashboard_dir = run_dir / "dashboard"
     dashboard_dir.mkdir(parents=True, exist_ok=True)

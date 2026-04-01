@@ -1,12 +1,65 @@
 # TOOL_REGISTRY.yaml
 # Atlas execution authority surface for tools.
-# NOTE: This file is replaced by patch to add refresh_iael_today (LIVE IAEL gate).
+# Updated 2026-03-31 after tools/ cleanup (22 deleted, 9 archived).
 tools:
-  - name: fetch_prizepicks_raw_only
+  # ── Production fetchers ──────────────────────────────────────────
+  - name: fetch_apis
     kind: python_script
-    path: tools/fetch_prizepicks_raw_only.py
-    modes: [both]
+    path: tools/fetch_apis.py
+    modes: [live]
     network: conditional
+
+  - name: fetch_bettingpros_props
+    kind: python_script
+    path: tools/fetch_bettingpros_props.py
+    modes: [live]
+    network: conditional
+    writes_surfaces: [input]
+
+  - name: fetch_crafted_player_stats
+    kind: python_script
+    path: tools/fetch_crafted_player_stats.py
+    modes: [live]
+    network: conditional
+
+  - name: fetch_nba_defense_stats
+    kind: python_script
+    path: tools/fetch_nba_defense_stats.py
+    modes: [live]
+    network: conditional
+    writes_surfaces: [input]
+
+  - name: fetch_role_metrics
+    kind: python_script
+    path: tools/fetch_role_metrics.py
+    modes: [live]
+    network: conditional
+
+  - name: fetch_rotowire_lines
+    kind: python_script
+    path: tools/fetch_rotowire_lines.py
+    modes: [live]
+    network: conditional
+
+  - name: refresh_nba_gamelogs
+    kind: python_script
+    path: tools/refresh_nba_gamelogs.py
+    modes: [live]
+    network: conditional
+
+  - name: refresh_iael_today
+    kind: python_script
+    path: tools/refresh_iael_today.py
+    modes: [live]
+    network: conditional
+    writes_surfaces: [output]
+
+  # ── Production pipeline ──────────────────────────────────────────
+  - name: build_share_matrix
+    kind: python_script
+    path: tools/build_share_matrix.py
+    modes: [both]
+    network: false
 
   - name: rebuild_today_from_any_raw
     kind: python_script
@@ -20,52 +73,59 @@ tools:
     modes: [live]
     network: false
 
-  - name: refresh_nba_gamelogs
-    kind: python_script
-    path: tools/refresh_nba_gamelogs.py
-    modes: [live]
-    network: conditional
-
   - name: validate_artifacts
     kind: python_script
     path: tools/validate_artifacts.py
     modes: [both]
     network: false
 
-  - name: pricing_kernel
-    kind: module
-    path: Atlas.tools.pricing_kernel
-    modes: [both]
-    network: false
-
-  - name: financial_multiplier_tool
+  # ── Replay / backtest ────────────────────────────────────────────
+  - name: replay_bundle
     kind: python_script
-    path: tools/financial_multiplier_tool.py
-    modes: [both]
-    network: false
-
-  - name: telemetry_reader_tool
-    kind: python_script
-    path: tools/telemetry_reader_tool.py
-    modes: [both]
-    network: false
-
-  - name: compare_engines_replay
-    kind: python_script
-    path: tools/compare_engines_replay.py
-    modes: [replay]
-    network: false
-    writes_surfaces: [analysis]
-
-  - name: run_sandbox_wrapper
-    kind: powershell
-    path: tools/run_sandbox_wrapper.ps1
+    path: tools/replay_bundle.py
     modes: [replay]
     network: false
 
-  - name: refresh_iael_today
+  - name: replay_scenario
     kind: python_script
-    path: tools/refresh_iael_today.py
-    modes: [live]
-    network: conditional
-    writes_surfaces: [output]
+    path: tools/replay_scenario.py
+    modes: [replay]
+    network: false
+
+  - name: create_eval_leg_backtestv2
+    kind: python_script
+    path: tools/create_eval_leg_backtestv2.py
+    modes: [replay]
+    network: false
+
+  # ── Telemetry ────────────────────────────────────────────────────
+  - name: telemetry_reader
+    kind: python_script
+    path: tools/telemetry_reader.py
+    modes: [both]
+    network: false
+
+  - name: telemetry_corpus_reader
+    kind: python_script
+    path: tools/telemetry_corpus_reader.py
+    modes: [both]
+    network: false
+
+  - name: telemetry_calibration_diagnostic
+    kind: python_script
+    path: tools/telemetry_calibration_diagnostic.py
+    modes: [both]
+    network: false
+
+  # ── Utilities ────────────────────────────────────────────────────
+  - name: oracle_tuner
+    kind: python_script
+    path: tools/oracle_tuner.py
+    modes: [both]
+    network: false
+
+  - name: financial_multiplier
+    kind: python_script
+    path: tools/financial_multiplier.py
+    modes: [both]
+    network: false

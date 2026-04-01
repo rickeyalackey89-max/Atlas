@@ -1,39 +1,47 @@
 @echo off
 setlocal
 
+REM ================================================================
+REM run_iael_morning.cmd — Early data pre-fetch (no model run)
+REM Schedule: ~9:00 AM ET  (before first live run)
+REM
+REM Refreshes external data sources so the 11 AM live run starts
+REM with warm caches: gamelogs, defense stats, role metrics,
+REM crafted player stats, rotowire lines.
+REM ================================================================
+
 set ATLAS_ROOT=C:\Users\rick\projects\Atlas
-set DASH_ROOT=C:\Users\rick\projects\AtlasDashboard
-set LOG=%ATLAS_ROOT%\data\output\telemetry\iael_runs.log
+set PY=%ATLAS_ROOT%\.venv\Scripts\python.exe
+set LOG=%ATLAS_ROOT%\data\telemetry\iael_runs.log
 
 cd /d %ATLAS_ROOT%
 echo.>> %LOG%
-echo ===== %date% %time% IAEL RUN START =====>> %LOG%
+echo ===== %date% %time% MORNING PRE-FETCH START =====>> %LOG%
 
-REM (1) Injury context (optional)
-python scripts\injury\injury_pull_and_parse.py >> %LOG% 2>&1
+%PY% tools\refresh_nba_gamelogs.py >> %LOG% 2>&1
 if errorlevel 1 (
-  echo [FAIL] injury_pull_and_parse >> %LOG%
-  exit /b 1
+  echo [WARN] refresh_nba_gamelogs failed >> %LOG%
 )
 
-REM (2) Generate latest outputs (THIS is the missing piece)
-python run_today.py >> %LOG% 2>&1
+%PY% tools\fetch_nba_defense_stats.py >> %LOG% 2>&1
 if errorlevel 1 (
-  echo [FAIL] run_today.py >> %LOG%
-  exit /b 1
+  echo [WARN] fetch_nba_defense_stats failed >> %LOG%
 )
 
-REM (3) Export to dashboard + commit + push (THIS is what makes mobile work)
-cd /d %DASH_ROOT%
-powershell -NoProfile -ExecutionPolicy Bypass -File publish-atlas.ps1 "%ATLAS_ROOT%" >> %LOG% 2>&1
+%PY% tools\fetch_role_metrics.py >> %LOG% 2>&1
 if errorlevel 1 (
-  echo [FAIL] publish-atlas.ps1 >> %LOG%
-  exit /b 1
+  echo [WARN] fetch_role_metrics failed >> %LOG%
 )
 
-REM (4) Notify
-cd /d %ATLAS_ROOT%
-python scripts\alerts\slack_notify.py >> %LOG% 2>&1
+%PY% tools\fetch_crafted_player_stats.py >> %LOG% 2>&1
+if errorlevel 1 (
+  echo [WARN] fetch_crafted_player_stats failed >> %LOG%
+)
 
-echo ===== %date% %time% IAEL RUN END =====>> %LOG%
+%PY% tools\fetch_rotowire_lines.py >> %LOG% 2>&1
+if errorlevel 1 (
+  echo [WARN] fetch_rotowire_lines failed >> %LOG%
+)
+
+echo ===== %date% %time% MORNING PRE-FETCH END =====>> %LOG%
 exit /b 0

@@ -144,7 +144,7 @@ class SlipParityTest(unittest.TestCase):
         )
 
         cfg = {
-            "slip_build": {"target_pool_mult": 10, "phase1_frac": 0.2, "phase1_pool_frac": 0.5, "beam_width": 10, "max_slips_per_player": 4, "penalty": {"team_w": 0.0, "family_w": 0.0, "frag_w": 0.0}},
+            "slip_build": {"target_pool_mult": 10, "phase1_frac": 0.2, "phase1_pool_frac": 0.5, "beam_width": 10, "max_slips_per_player": 4, "prefer_calibrated_prob": True, "penalty": {"team_w": 0.0, "family_w": 0.0, "frag_w": 0.0}},
             "slip_rank": {"ev_payout_power": 1},
         }
 

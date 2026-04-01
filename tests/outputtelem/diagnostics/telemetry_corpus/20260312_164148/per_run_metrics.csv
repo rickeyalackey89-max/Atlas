@@ -1,2 +1,0 @@
-run_id,eval_rows,settled_eval_rows,mean_hit,mean_p_adj,mean_p_cal,brier_p_adj,brier_p_cal,logloss_p_adj,logloss_p_cal,games_used_min,games_used_lt5_share,role_ctx_outs_used_share,questionable_share,q_out_frac_mean,p_cal_equal_p_adj_share
-20260312_123709,2181,2181,0.435122,0.347518,0.347224,0.230924,0.231861,0.659427,0.661088,28.0,0.0,0.080932,0.0,0.0,0.007106

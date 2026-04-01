@@ -366,7 +366,8 @@ def build_slips_by_tier_buckets(
     role_bonus_arr = np.asarray(role_bonus.to_numpy(copy=False), dtype="float64")
     role_priority_arr = np.asarray(role_priority.to_numpy(copy=False), dtype="float64")
     tier_arr = np.asarray(df["tier"].to_numpy(copy=False), dtype=object)
-    role_presence_arr = np.where(role_on_mask, np.where(tier_arr == "STANDARD", 0.75, 0.35), 0.0)
+    _any_role_w = (role_bonus.abs().sum() > 0.0) or (role_priority.abs().sum() > 0.0)
+    role_presence_arr = np.where(role_on_mask, np.where(tier_arr == "STANDARD", 0.75, 0.35), 0.0) if _any_role_w else np.zeros(len(df), dtype="float64")
     role_lift_arr = np.ones(len(df), dtype="float64")
     if role_priority_arr.any():
         if role_bonus_cap > 0.0:
@@ -402,7 +403,11 @@ def build_slips_by_tier_buckets(
         role_sort_arr = np.asarray(role_sort.to_numpy(copy=True), dtype="float64")
         role_sort_arr[np.isnan(role_sort_arr)] = 0.0
         df["role_ctx_outs_used_sort"] = pd.Series(role_sort_arr, index=df.index)
-        df = df.sort_values(["tier", "role_ctx_outs_used_sort", "allocator_score", "role_ctx_allocator_priority", "p_eff"], ascending=[True, False, False, False, False]).reset_index(drop=True)
+        # Sort by allocator_score first, then role context as a tiebreaker.
+        # Sorting role_ctx_outs_used as primary key concentrates top legs
+        # in too few teams, making no_same_team_within_slip impossible for
+        # 4-leg and 5-leg slips.
+        df = df.sort_values(["tier", "allocator_score", "role_ctx_outs_used_sort", "role_ctx_allocator_priority", "p_eff"], ascending=[True, False, False, False, False]).reset_index(drop=True)
     else:
         df = df.sort_values(["tier", "allocator_score", "role_ctx_allocator_priority", "p_eff"], ascending=[True, False, False, False]).reset_index(drop=True)
 
@@ -425,6 +430,7 @@ def build_slips_by_tier_buckets(
     phase1_frac = float(sb.get("phase1_frac", 0.30))
     phase1_pool_frac = float(sb.get("phase1_pool_frac", 0.60))
     no_same_team_within_slip = bool(sb.get("no_same_team_within_slip", False))
+    no_same_game_within_slip = bool(sb.get("no_same_game_within_slip", False))
 
     # Clamp to safe ranges (prevents config typos from breaking sampling).
     if phase1_frac < 0.05:
@@ -518,6 +524,10 @@ def build_slips_by_tier_buckets(
                 return "STOCKS"
             return "OTHER"
 
+        _dbg = (os.getenv("ATLAS_DEBUG_BUILDER") or "").strip() == "1"
+        if _dbg:
+            print(f"[BUILDER][DEBUG] _run_phase: phase_target={phase_target}, attempts_so_far={attempts}, max_attempts={max_attempts}, bucket_sizes={{{', '.join(f'{t}: {len(b)}' for t, b in phase_buckets.items())}}}")
+
         while attempts < int(max_attempts) and len(slips) < phase_target:
             attempts += 1
 
@@ -565,6 +575,22 @@ def build_slips_by_tier_buckets(
                 if len(set(chosen_teams)) != len(chosen_teams):
                     continue
 
+            # Optional hard constraint: no two legs from the same game within a slip.
+            if no_same_game_within_slip:
+                chosen_games: list[str] = []
+                for r in chosen:
+                    gid = ""
+                    for k in ("game_id", "gameId"):
+                        if k in r.index:
+                            v = str(r[k]).strip()
+                            if v and v.lower() != "nan":
+                                gid = v
+                                break
+                    if gid:
+                        chosen_games.append(gid)
+                if len(set(chosen_games)) != len(chosen_games):
+                    continue
+
             scored = _score_slip(
                 chosen,
                 n_legs,
@@ -594,6 +620,7 @@ def build_slips_by_tier_buckets(
             key = scored.get("slip_key") or legs_str
             if key in seen:
                 continue
+
 
             # ---------------------------
             # Step 3: diversification penalties
@@ -693,11 +720,18 @@ def build_slips_by_tier_buckets(
             seen.add(key)
             slips.append(scored)
 
+
     # Phase 1: exploit (top slice)
     _run_phase(buckets_p1, target_p1)
 
+    if (os.getenv("ATLAS_DEBUG_BUILDER") or "").strip() == "1":
+        print(f"[BUILDER][DEBUG] After phase1: slips={len(slips)}, attempts={attempts}, counters={_run_phase._last_counters if hasattr(_run_phase, '_last_counters') else 'N/A'}")
+
     # Phase 2: explore (full bucket) until full target_pool reached
     _run_phase(buckets_p2, target_pool)
+
+    if (os.getenv("ATLAS_DEBUG_BUILDER") or "").strip() == "1":
+        print(f"[BUILDER][DEBUG] After phase2: slips={len(slips)}, attempts={attempts}")
 
     out = pd.DataFrame(slips)
     if out.empty:
@@ -1277,3 +1311,53 @@ def build_system_slips(
     )
     out["beam_selected"] = 1
     return out
+
+
+# -------------------------------------------------------------------
+# DemonHunter – all-DEMON slips (best single 3/4/5-leg)
+# -------------------------------------------------------------------
+
+def _demon_mix_ok(n_legs: int, legs: Any) -> bool:
+    """Every leg must be DEMON."""
+    c = _tier_counts_from_legs(legs)
+    return c["DEMON"] == n_legs and c["GOBLIN"] == 0 and c["STANDARD"] == 0
+
+
+def build_demonhunter_slips(
+    legs_df: pd.DataFrame,
+    seed: int,
+    *,
+    pricing_engine: str,
+    sort_mode: str = "hit",
+    cfg: dict[str, Any],
+) -> pd.DataFrame:
+    """Return a single CSV-ready DataFrame with the best 3-leg, 4-leg, and 5-leg
+    all-DEMON slips (3 rows total).  Sorted by hit_prob so the best chance to
+    actually cash is ranked first within each leg count.
+    """
+    frames: list[pd.DataFrame] = []
+    for n_legs in (3, 4, 5):
+        mixes = {n_legs: {"DEMON": n_legs}}
+        df = build_slips_by_tier_buckets(
+            legs_df=legs_df,
+            n_legs=n_legs,
+            top_n=1,
+            payout_power_mult=POWER_MULT[n_legs],
+            payout_flex={3: FLEX_3, 4: FLEX_4, 5: FLEX_5}[n_legs],
+            pricing_engine=pricing_engine,
+            cfg=cfg,
+            seed=seed,
+            per_tier=400,
+            max_attempts=200000,
+            sort_mode=sort_mode,
+            mixes=mixes,
+            required_tiers=["DEMON"],
+            mix_ok_fn=_demon_mix_ok,
+        )
+        if df is not None and len(df) > 0:
+            df = expand_legs(df, n_legs)
+            frames.append(df.head(1))
+
+    if not frames:
+        return pd.DataFrame()
+    return pd.concat(frames, ignore_index=True)

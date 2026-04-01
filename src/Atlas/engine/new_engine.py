@@ -1,17 +1,12 @@
 from __future__ import annotations
 
 """
-New engine (Phase 7A-2 calibration injection; legacy oracle retained).
+New engine scoring kernel (v9d).
 
-Goal: relocate the legacy probability kernel behind the NewEngine seam WITHOUT
-changing behavior.
+Scores each board row through simulate_leg_probability_new, then applies
+calibration and the Phase 7A-2 / 7A-3 post-processing pipeline.
 
-Implementation strategy:
-- Keep PREP + OPTIMIZE stages identical to legacy.
-- Replace only the scoring kernel call inside the NewEngine path by using an
-  inlined score_board wrapper that calls `simulate_leg_probability_new`.
-
-No CLI changes. No publish changes. Legacy engine remains untouched.
+Entry point used by main.py:  _run_score_board_new()
 """
 
 from typing import Any, Optional
@@ -21,10 +16,9 @@ import builtins as _b  # prevents shadowed int/float/str from breaking static an
 import numpy as np
 import pandas as pd
 
-from Atlas.engine.api import Engine, EngineOutputs
 from Atlas.core.share_name_key import share_name_key
 
-__all__ = ["NewEngine", "_run_score_board_new"]
+__all__ = ["_run_score_board_new"]
 
 
 def _player_key(name: Any) -> str:
@@ -110,20 +104,6 @@ def _run_score_board_new(
 
     # Minimal wiring only: pull role_ctx config once, pass-through to kernel.
     role_cfg = cfg.get("role_ctx") or None
-    under_relief_keys = (
-        "under_relief_factor",
-        "under_relief_haircut_min",
-        "under_relief_q_min",
-    )
-    under_relief_cfg = {
-        key: cfg[key]
-        for key in under_relief_keys
-        if key in cfg
-    }
-    if under_relief_cfg:
-        role_cfg = dict(role_cfg or {})
-        role_cfg.setdefault("enabled", False)
-        role_cfg.update(under_relief_cfg)
 
     rows: list[dict[str, Any]] = []
 
@@ -151,7 +131,6 @@ def _run_score_board_new(
             role_minute_drop=role_drop,
             iael_df=iael_df_kernel,
             role_cfg=role_cfg,
-            blowout_cfg=blow,
         ) or {}
 
         # Enforce string keys in kernel output too
@@ -167,153 +146,3 @@ def _run_score_board_new(
         rows.append({**row_dict, **info2, "data_health_flag": data_health_flag})
 
     return pd.DataFrame(rows)
-
-
-class NewEngine(Engine):
-    name = "new"
-
-    def run(
-        self,
-        *,
-        board: pd.DataFrame,
-        logs: pd.DataFrame,
-        cfg: dict[str, Any],
-        iael_df: Optional[pd.DataFrame] = None,
-    ) -> EngineOutputs:
-        # Normalize Optional -> DataFrame for stages that are typed as requiring DataFrame
-        iael_df_norm: pd.DataFrame = iael_df if iael_df is not None else pd.DataFrame()
-
-        # SCORE (strict parity, relocated kernel)
-        scored = _run_score_board_new(board=board, logs=logs, cfg=cfg, iael_df=iael_df_norm)
-
-        # CALIBRATION (Phase 7A-2; post-simulation transform; NewEngine only)
-        # Locked policy: calibration stays ON (cannot be disabled via config).
-        cal = (cfg.get("calibration", {}) or {})
-        k = _b.float(cal.get("k", 0.7) or 0.7)
-        threshold = _b.float(cal.get("threshold", 0.80) or 0.80)
-
-        if "p" in scored.columns:
-            from Atlas.engine.calibration import apply_last10_bonus_logit
-
-            # If missing, calibration is a no-op.
-            if "rpd_last10_hitrate" in scored.columns:
-                p_s = pd.to_numeric(scored["p"], errors="coerce")
-                last10_s = pd.to_numeric(scored["rpd_last10_hitrate"], errors="coerce")
-
-                # Force clean numpy float arrays (fixes ExtensionArray/Categorical typing)
-                p = np.asarray(p_s, dtype=float)
-                last10 = np.asarray(last10_s, dtype=float)
-
-                p_cal = apply_last10_bonus_logit(p, last10, k, threshold=threshold)
-
-                # Preserve NaN positions from original p
-                m_nan = ~np.isfinite(p)
-                if m_nan.any():
-                    p_cal[m_nan] = p[m_nan]
-
-                scored["p"] = p_cal
-                if "p_adj" in scored.columns:
-                    scored["p_adj"] = p_cal
-
-        # If p_adj still isn't present, keep strict parity: p_adj := p
-        if "p" in scored.columns and "p_adj" not in scored.columns:
-            scored["p_adj"] = scored["p"]
-
-        
-        # CALIBRATION (Phase 7A-3): emit p_for_cal / p_cal_src / p_cal (no overwrite)
-        # Policy:
-        #   - Healthy teams: calibrate from p_adj
-        #   - Outs/injury context: calibrate from p_role
-        # Map path is supplied via env ATLAS_CAL_MAP; if missing, p_cal := p_for_cal.
-        try:
-            from Atlas.engine.calibration_map import apply_calibration_column, get_calibration_path_from_env
-
-            if "p_for_cal" not in scored.columns:
-                # ensure we pass a Series (not None) into pd.to_numeric
-                if "p_adj" in scored.columns:
-                    base_raw = scored["p_adj"]
-                elif "p" in scored.columns:
-                    base_raw = scored["p"]
-                else:
-                    base_raw = pd.Series(np.nan, index=scored.index)
-                base_p_adj = pd.to_numeric(base_raw, errors="coerce")
-
-                under_relief_applied = pd.to_numeric(scored.get("under_relief_applied", False), errors="coerce").fillna(0).astype(bool)
-                p_adj_source = np.where(under_relief_applied, "p_adj_under_relief", "p_adj")
-
-                if "p_role" in scored.columns and "role_ctx_outs_used" in scored.columns:
-                    outs_used = pd.to_numeric(scored["role_ctx_outs_used"], errors="coerce").fillna(0.0)
-                    use_role = outs_used > 0.0
-                    p_role_raw = scored["p_role"]
-                    p_role = pd.to_numeric(p_role_raw, errors="coerce")
-                    scored["p_for_cal"] = np.where(use_role, p_role, base_p_adj)
-                    scored["p_cal_src"] = np.where(use_role, "p_role", p_adj_source)
-                else:
-                    scored["p_for_cal"] = base_p_adj
-                    scored["p_cal_src"] = p_adj_source
-
-            map_path = get_calibration_path_from_env()
-            scored = apply_calibration_column(
-                scored,
-                map_path=map_path,
-                in_col="p_for_cal",
-                out_col="p_cal",
-                warn=False,
-            )
-            if "p_cal" not in scored.columns:
-                scored["p_cal"] = scored["p_for_cal"]
-        except Exception:
-            # Never fail the run due to calibration mapping; fall back to identity columns.
-            if "p_for_cal" not in scored.columns:
-                # ensure we pass a Series (not None) into pd.to_numeric
-                if "p_adj" in scored.columns:
-                    base_raw = scored["p_adj"]
-                elif "p" in scored.columns:
-                    base_raw = scored["p"]
-                elif "p_adj" in scored.columns:
-                    base_raw = scored["p_adj"]
-                else:
-                    base_raw = pd.Series(np.nan, index=scored.index)
-                scored["p_for_cal"] = pd.to_numeric(base_raw, errors="coerce")
-            if "p_cal_src" not in scored.columns:
-                scored["p_cal_src"] = "p_adj"
-            if "p_cal" not in scored.columns:
-                scored["p_cal"] = scored["p_for_cal"]
-
-# PREP FOR OPTIMIZER (staged, unchanged)
-        from Atlas.stages.prep_for_optimizer.prep_for_optimizer import run_prep_for_optimizer
-
-        scored, scored_for_optimizer = run_prep_for_optimizer(
-            scored=scored,
-            cfg=cfg,
-            iael_df=iael_df_norm,
-        )
-
-        # OPTIMIZER CFG
-        optimizer_cfg = (cfg.get("optimizer", {}) or {})
-        top_n = _b.int(optimizer_cfg.get("top_n_slips", 10))
-        seed = _b.int(optimizer_cfg.get("seed", 7))
-
-        pricing_engine = _b.str(cfg.get("pricing_engine", "atlas") or "atlas")
-
-        # BUILD SLIPS (staged, unchanged)
-        from Atlas.stages.optimize.build_slips_today import run_build_slips
-
-        slips = run_build_slips(
-            scored_for_optimizer=scored_for_optimizer,
-            top_n=top_n,
-            seed=seed,
-            pricing_engine=pricing_engine,
-            cfg=cfg,
-        )
-
-        return EngineOutputs(
-            scored=scored,
-            scored_for_optimizer=scored_for_optimizer,
-            sys3=slips.sys3,
-            sys4=slips.sys4,
-            sys5=slips.sys5,
-            wind3=slips.wind3,
-            wind4=slips.wind4,
-            wind5=slips.wind5,
-        )

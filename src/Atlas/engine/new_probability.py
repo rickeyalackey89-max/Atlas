@@ -33,7 +33,7 @@ from typing import Any
 import numpy as np
 import pandas as pd
 
-from Atlas.core.features import summarize_stat, get_player_window
+from Atlas.core.features import summarize_stat, get_player_window, compute_recent_form, compute_opp_defense_factor, compute_pace_factor
 from Atlas.core.minutes import adjust_probability_for_blowout, minutes_sensitivity
 from Atlas.core.share_name_key import share_name_key
 
@@ -691,6 +691,69 @@ def _directional_fragility_gap(direction: str, frag_gap_usage: float) -> float:
     return float(frag_gap_usage) if str(direction).upper() == "OVER" else 0.0
 
 
+def _under_fragility(
+    *,
+    p_adj: float,
+    p_close_adj: float,
+    usage_dep_eff: float,
+    direction: str,
+    q_blowout: float = 0.0,
+) -> tuple[float, float, float]:
+    """Compute UNDER-side fragility: how overconfident the UNDER probability is.
+
+    For UNDER legs the kernel systematically overshoots (mean p ~0.55 vs
+    actual hit 0.51).  The overshoot worsens when the model sees "easy
+    UNDER" conditions (high q_blowout, line well above expected).
+
+    Fragility here is proportional to how far p_adj sits above 0.50,
+    scaled by q_blowout (games with higher blowout risk show more
+    overshoot in the empirical data).
+
+    Returns (under_frag, under_frag_gap, under_frag_gap_usage).
+    ``under_frag`` is in [0, 1] and measures the dampening need.
+    """
+    if str(direction).upper() != "UNDER":
+        return 0.0, 0.0, 0.0
+    # How far above 0.50 is the UNDER probability?
+    overshoot = max(0.0, float(p_adj) - 0.50)
+    # Scale by blowout risk: overshoot is most harmful when q is high
+    q_scale = min(1.0, max(0.0, float(q_blowout)) / 0.20)   # ramps 0->1 over q 0->0.20
+    gap = overshoot * (0.60 + 0.40 * q_scale)  # base 60% + up to 40% from q
+    gap_usage = gap * float(usage_dep_eff)
+    # Normalise to [0, 1]
+    frag = min(1.0, gap_usage * 2.0)  # 0.50 overshoot * 2 -> frag=1.0
+    return float(frag), float(gap), float(gap_usage)
+
+
+def _apply_under_fragility_dampener(
+    *,
+    p_adj: float,
+    p_close_adj: float,
+    under_frag: float,
+    cfg: dict | None,
+) -> tuple[float, float]:
+    """Compress overconfident UNDER probabilities toward 0.50.
+
+    The UNDER kernel systematically overshoots: empirical hit rates
+    cluster near 50 % regardless of predicted p.  When *under_frag*
+    is high, pull ``p_adj`` back toward 0.50 by a fraction controlled
+    by ``under_frag_dampen_strength`` (default 0.40).
+
+    Returns (p_adj_dampened, dampen_amount).
+    """
+    try:
+        strength = float((cfg or {}).get("under_frag_dampen_strength", 0.70))
+    except Exception:
+        strength = 0.70
+    strength = float(max(0.0, min(1.0, strength)))
+
+    # Blend p_adj toward 0.50 proportional to under_frag * strength
+    blend = float(min(float(under_frag), 1.0)) * strength
+    p_dampened = float(p_adj) * (1.0 - blend) + 0.50 * blend
+    dampen_amount = float(p_adj) - float(p_dampened)
+    return float(p_dampened), float(dampen_amount)
+
+
 def _usage_risk_gate(q_blowout: float) -> float:
     """Conservative competitive-risk gate for usage-driven fragility.
 
@@ -741,6 +804,8 @@ def _soft_ramp(value: float | None, start: float, full: float) -> float:
         val = float(value)
     except Exception:
         return 0.0
+    if not math.isfinite(val):
+        return 0.0
     lo = float(start)
     hi = float(full)
     if hi <= lo:
@@ -759,6 +824,8 @@ def _soft_ramp_inverse(value: float | None, zero_at: float, full_at: float) -> f
     try:
         val = float(value)
     except Exception:
+        return 0.0
+    if not math.isfinite(val):
         return 0.0
     hi = float(zero_at)
     lo = float(full_at)
@@ -1432,7 +1499,9 @@ def simulate_leg_probability_new(
     spread = _get_spread(row)
 
     g = get_player_window(gamelogs, player, lookback)
-    s = summarize_stat(g, stat)
+    _hl_by_stat = (blowout_cfg or {}).get("recency_halflife_by_stat", {})
+    _hl_val = float(_hl_by_stat.get(stat.upper(), (blowout_cfg or {}).get("recency_halflife", 0)) or 0) or None
+    s = summarize_stat(g, stat, recency_halflife=_hl_val)
 
     role_ctx_on_for_external_metrics = _role_metrics_role_ctx_active(row, role_cfg)
     crafted_minutes_projection = _crafted_role_workload_minutes_projection(
@@ -1466,6 +1535,95 @@ def simulate_leg_probability_new(
 
     base_rate_mu = float(s.get("rate_mean", 0.0))
     rate_sd_base = max(0.01, float(s.get("rate_std", 0.01)))
+
+    # Rate std inflation — compensate for observed underestimation of outcome variance.
+    # Per-stat-type multipliers: combo stats need more inflation because the sim
+    # draws a single rate and misses the positive covariance between component
+    # stats that thickens the tails in real game outcomes.
+    _bcfg = blowout_cfg or {}
+    _per_stat_mult = _bcfg.get("rate_std_multiplier_by_stat", {})
+    stat_u = str(stat).upper().strip()
+    _rate_std_mult = float(_per_stat_mult.get(stat_u, _bcfg.get("rate_std_multiplier", 1.0)))
+    rate_sd_base = rate_sd_base * _rate_std_mult
+
+    # Small-sample variance inflation: inflate rate_std for players with few
+    # games so that their probabilities are pushed toward 0.50 instead of
+    # being overconfident.  The multiplier decays to 1.0 at `thin_window_games`
+    # and has no effect above that threshold.
+    _games_used = int(s.get("games", 0))
+    _thin_window_games = int(_bcfg.get("thin_window_games", 15))
+    _thin_window_max_mult = float(_bcfg.get("thin_window_max_mult", 1.6))
+    if 0 < _games_used < _thin_window_games:
+        _thin_frac = _games_used / _thin_window_games  # 0→1 as games approach threshold
+        _thin_mult = 1.0 + (_thin_window_max_mult - 1.0) * (1.0 - _thin_frac)
+        rate_sd_base = rate_sd_base * _thin_mult
+
+    # ------------------------------------------------------------
+    # Recent form + opponent defense adjustment (pre-sim rate shift)
+    # ------------------------------------------------------------
+    _recent_form_blend = float(_bcfg.get("recent_form_blend", 0.0))
+    _opp_defense_strength = float(_bcfg.get("opp_defense_strength", 0.0))
+    _form_debug: dict[str, Any] = {}
+
+    # Always compute z_line and opp_defense_rel for post-hoc calibrator
+    _min_mean_for_z = float(s.get("min_mean", 0.0))
+    _rate_std_raw = max(0.01, float(s.get("rate_std", 0.01)))
+    if base_rate_mu > 0 and _min_mean_for_z > 0:
+        _expected_stat = base_rate_mu * _min_mean_for_z
+        _z_line = (_expected_stat - line) / max(0.01, _rate_std_raw * _min_mean_for_z)
+    else:
+        _z_line = 0.0
+    _form_debug["z_line"] = float(np.clip(_z_line, -5.0, 5.0))
+
+    _opp_team = str(row.get("opp", "")).upper().strip()
+    if _opp_team and base_rate_mu > 0:
+        # Prefer NBA.com team defense CSV when available
+        _nba_def_rel = _bcfg.get("_nba_defense_lookup", {}).get((_opp_team, stat.upper()), None)
+        if _nba_def_rel is not None:
+            _opp_factor = 1.0 + float(_nba_def_rel)
+        else:
+            _opp_factor = compute_opp_defense_factor(gamelogs, _opp_team, stat, lookback=10)
+        _form_debug["opp_defense_factor"] = float(_opp_factor)
+        _form_debug["opp_defense_rel"] = float(np.clip(_opp_factor - 1.0, -0.5, 0.5))
+    else:
+        _opp_factor = 1.0
+        _form_debug["opp_defense_factor"] = 1.0
+        _form_debug["opp_defense_rel"] = 0.0
+
+    # Pace factor: game speed relative to league average
+    _pace_strength = float(_bcfg.get("pace_strength", 0.0))
+    if _opp_team and team:
+        _pace_factor = compute_pace_factor(gamelogs, team, _opp_team, lookback=10)
+        _form_debug["pace_factor"] = float(np.clip(_pace_factor, -0.15, 0.15))
+    else:
+        _pace_factor = 0.0
+        _form_debug["pace_factor"] = 0.0
+
+    # Apply pace as pre-sim rate adjustment (if enabled)
+    if _pace_strength > 0 and _pace_factor != 0.0 and base_rate_mu > 0:
+        _pace_adj = 1.0 + _pace_strength * _pace_factor
+        _old_rate_pace = base_rate_mu
+        base_rate_mu = base_rate_mu * _pace_adj
+        _form_debug["pace_rate_shift"] = float(base_rate_mu - _old_rate_pace)
+
+    if _recent_form_blend > 0 and base_rate_mu > 0:
+        _rf = compute_recent_form(g, stat, recent_n=10)
+        _recent_rate = _rf.get("recent_rate_mean")
+        if _recent_rate is not None and _rf.get("recent_games", 0) >= 3:
+            # Blend: rate_mean = (1 - w) * full_window + w * L10
+            _old_rate = base_rate_mu
+            base_rate_mu = (1.0 - _recent_form_blend) * base_rate_mu + _recent_form_blend * _recent_rate
+            _form_debug["recent_rate_L10"] = float(_recent_rate)
+            _form_debug["recent_form_shift"] = float(base_rate_mu - _old_rate)
+            _form_debug["recent_games"] = int(_rf["recent_games"])
+
+    if _opp_defense_strength > 0 and base_rate_mu > 0 and _opp_team:
+            # Apply as a dampened adjustment: rate *= 1 + strength * (factor - 1)
+            _opp_adj = 1.0 + _opp_defense_strength * (_opp_factor - 1.0)
+            _old_rate2 = base_rate_mu
+            base_rate_mu = base_rate_mu * _opp_adj
+            _form_debug["opp_defense_adj"] = float(_opp_adj)
+            _form_debug["opp_rate_shift"] = float(base_rate_mu - _old_rate2)
 
     # ------------------------------------------------------------
     # Role context adjustment (mean + conservative variance)
@@ -1703,6 +1861,34 @@ def simulate_leg_probability_new(
     minute_drop = float(
         max(0.0, float(minute_drop_base) * float(blowout_rule_debug.get("minute_drop_mult", 1.0)))
     )
+
+    # ------------------------------------------------------------
+    # Asymmetric blowout: favored team gets less minute drop + rate boost,
+    # underdog team gets more minute drop + rate penalty.
+    # Data shows: winning rotation players GAIN +0.8 PRA in blowouts;
+    # losing stars lose -6.4 PRA.  The current symmetric penalty is wrong.
+    # spread < 0 means team is favored (likely winning the blowout).
+    # ------------------------------------------------------------
+    _asym_cfg = _bcfg.get("asymmetric_blowout", {}) or {}
+    _asym_enabled = bool(_asym_cfg.get("enabled", False))
+    _favored_minute_scale = float(_asym_cfg.get("favored_minute_scale", 0.55))
+    _underdog_minute_scale = float(_asym_cfg.get("underdog_minute_scale", 1.35))
+    _favored_rate_boost = float(_asym_cfg.get("favored_rate_boost", 0.10))
+    _underdog_rate_penalty = float(_asym_cfg.get("underdog_rate_penalty", 0.08))
+
+    _blow_rate_mult = 1.0  # multiplier for per-minute rate in blowout draws
+
+    if _asym_enabled and abs(spread) > 1.0:
+        _team_favored = spread < 0  # negative spread = team is favored
+        if _team_favored:
+            # Favored team: less minute drop, higher per-min rate
+            minute_drop = minute_drop * _favored_minute_scale
+            _blow_rate_mult = 1.0 + _favored_rate_boost
+        else:
+            # Underdog team: more minute drop, lower per-min rate
+            minute_drop = minute_drop * _underdog_minute_scale
+            _blow_rate_mult = 1.0 - _underdog_rate_penalty
+
     mu_blow = max(0.0, mu_close - minute_drop)
     sd_blow = max(1.0, sd_close)
 
@@ -1758,11 +1944,17 @@ def simulate_leg_probability_new(
     # ------------------------------------------------------------
     # Shared random draws so RAW vs ROLE differ only by parameters
     # ------------------------------------------------------------
+    # Rate-minutes correlation: in reality, players who get more minutes
+    # tend to produce at a higher per-minute rate (they stay in because
+    # they're playing well).  ρ > 0 thickens the right tail of stat
+    # outcomes, which is exactly the bias direction the data shows.
+    _rate_min_corr = float(_bcfg.get("rate_min_correlation", 0.0))
+
     u = rng.random(sims)
 
     z_min_blow = rng.standard_normal(sims)
     z_min_close = rng.standard_normal(sims)
-    z_rate = rng.standard_normal(sims)
+    z_rate_indep = rng.standard_normal(sims)
 
     blow_mask = u < q
     close_mask = ~blow_mask
@@ -1772,45 +1964,191 @@ def simulate_leg_probability_new(
     minutes[close_mask] = mu_close + sd_close * z_min_close[close_mask]
     minutes = np.clip(minutes, 0.0, 48.0)
 
-    rate_raw = np.clip(rate_mu_raw + rate_sd_raw * z_rate, 0.0, None)
-    rate_role = np.clip(rate_mu_role + rate_sd_role * z_rate, 0.0, None)
+    # z_min shared across components (used for rate-minutes correlation)
+    z_min_used = np.where(blow_mask, z_min_blow, z_min_close) if _rate_min_corr != 0.0 else None
 
-    stat_raw = rate_raw * minutes
-    stat_role = rate_role * minutes
+    # ----------------------------------------------------------------
+    # Component-based combo simulation: decompose PRA/PR/PA/RA into
+    # individual stat draws with shared minutes.  Each component has its
+    # own rate distribution, providing correct variance structure
+    # without the inflated rate_std_multiplier needed by the single-rate
+    # approach.  Components are correlated through shared minutes draws.
+    # ----------------------------------------------------------------
+    _COMBO_COMPONENTS: dict[str, list[str]] = {
+        "PRA": ["PTS", "REB", "AST"],
+        "PR": ["PTS", "REB"],
+        "PA": ["PTS", "AST"],
+        "RA": ["REB", "AST"],
+    }
+    _combo_enabled = bool(_bcfg.get("combo_component_sim", False))
+    _is_combo = _combo_enabled and stat_u in _COMBO_COMPONENTS
 
-    if direction == "OVER":
-        hits_raw = stat_raw > line
-        hits_role = stat_role > line
-    elif direction == "UNDER":
-        hits_raw = stat_raw < line
-        hits_role = stat_role < line
+    if _is_combo:
+        # ----- COMBO: simulate with shared z_rate, per-component rates -----
+        _components = _COMBO_COMPONENTS[stat_u]
+        _hl_by_stat_combo = _bcfg.get("recency_halflife_by_stat", {})
+        _recency_hl_default = float(_bcfg.get("recency_halflife", 0) or 0) or None
+        stat_raw = np.zeros(sims, dtype=float)
+        stat_role = np.zeros(sims, dtype=float)
+        stat_raw_close_arr = np.zeros(sims, dtype=float)
+        stat_role_close_arr = np.zeros(sims, dtype=float)
+
+        # Close-only channel draws (shared minutes for all components)
+        z_min_close_only = rng.standard_normal(sims)
+        minutes_close_only = np.clip(mu_close + sd_close * z_min_close_only, 0.0, 48.0)
+
+        # Single shared z_rate for main channel (preserves single-factor
+        # correlation structure — all components move together on "good"
+        # vs "bad" game factor, differentiated only by per-component
+        # rate mean/std scaling).
+        _z_shared = rng.standard_normal(sims)
+        if _rate_min_corr != 0.0 and z_min_used is not None:
+            _z_shared = _rate_min_corr * z_min_used + np.sqrt(max(0.0, 1.0 - _rate_min_corr ** 2)) * _z_shared
+
+        _z_shared_close = rng.standard_normal(sims)
+        if _rate_min_corr != 0.0:
+            _z_shared_close = _rate_min_corr * z_min_close_only + np.sqrt(max(0.0, 1.0 - _rate_min_corr ** 2)) * _z_shared_close
+
+        for _comp in _components:
+            _recency_hl = float(_hl_by_stat_combo.get(_comp.upper(), 0) or 0) or _recency_hl_default
+            _s_comp = summarize_stat(g, _comp, recency_halflife=_recency_hl)
+            _comp_rate_mu = float(_s_comp.get("rate_mean", 0.0))
+            _comp_rate_sd = max(0.01, float(_s_comp.get("rate_std", 0.01)))
+
+            _comp_rate_raw = np.clip(_comp_rate_mu + _comp_rate_sd * _z_shared, 0.0, None)
+            _comp_rate_role = np.clip(_comp_rate_mu * rate_mu_role_mult + _comp_rate_sd * role_sigma_mult * _z_shared, 0.0, None)
+
+            stat_raw += _comp_rate_raw * minutes
+            stat_role += _comp_rate_role * minutes
+
+            # Close-only channel
+            _comp_raw_close = np.clip(_comp_rate_mu + _comp_rate_sd * _z_shared_close, 0.0, None)
+            _comp_role_close = np.clip(_comp_rate_mu * rate_mu_role_mult + _comp_rate_sd * role_sigma_mult * _z_shared_close, 0.0, None)
+
+            stat_raw_close_arr += _comp_raw_close * minutes_close_only
+            stat_role_close_arr += _comp_role_close * minutes_close_only
+
+        # Use combo stat for hit comparison (same as single-stat path)
+        if direction == "OVER":
+            hits_raw = stat_raw > line
+            hits_role = stat_role > line
+        elif direction == "UNDER":
+            hits_raw = stat_raw < line
+            hits_role = stat_role < line
+        else:
+            raise ValueError(f"Unknown direction: {direction}")
+
+        p_raw = _smoothed_prob(hits_raw)
+        p_role = _smoothed_prob(hits_role)
+
+        if direction == "OVER":
+            hits_close_raw = stat_raw_close_arr > line
+            hits_close_role = stat_role_close_arr > line
+        else:
+            hits_close_raw = stat_raw_close_arr < line
+            hits_close_role = stat_role_close_arr < line
+
+        p_close_raw = _smoothed_prob(hits_close_raw)
+        p_close_role = _smoothed_prob(hits_close_role)
+
     else:
-        raise ValueError(f"Unknown direction: {direction} (expected OVER or UNDER)")
+        # ----- SINGLE STAT: existing logic -----
+        # Build correlated z_rate from z_minutes and an independent component
+        if _rate_min_corr != 0.0 and z_min_used is not None:
+            z_rate = _rate_min_corr * z_min_used + np.sqrt(max(0.0, 1.0 - _rate_min_corr ** 2)) * z_rate_indep
+        else:
+            z_rate = z_rate_indep
 
-    p_raw = _smoothed_prob(hits_raw)
-    p_role = _smoothed_prob(hits_role)
+        # ----------------------------------------------------------------
+        # Rate draws: log-normal for right-skew (fixes UNDER bias from
+        # symmetric Normal overestimating left-tail / low-stat outcomes).
+        # E[rate] = rate_mu, Var[rate] ≈ rate_sd² (same moments as Normal).
+        # ----------------------------------------------------------------
+        _use_lognormal = bool(_bcfg.get("lognormal_rate", False))
+        _POISSON_STATS = frozenset({"FG3M", "3PM", "THREES", "BLK", "STL", "TOV", "AST", "REB"})
+        _use_poisson = bool(_bcfg.get("poisson_count", False)) and stat_u in _POISSON_STATS
 
-    # Close-only channel for fragility (same idea)
-    z_min_close_only = rng.standard_normal(sims)
-    z_rate_close_only = rng.standard_normal(sims)
+        if _use_lognormal and rate_mu_raw > 0 and rate_sd_raw > 0:
+            _cv2_raw = (rate_sd_raw / rate_mu_raw) ** 2
+            _sig_ln_raw = float(np.sqrt(np.log1p(_cv2_raw)))
+            _mu_ln_raw = float(np.log(rate_mu_raw)) - 0.5 * _sig_ln_raw ** 2
+            rate_raw = np.exp(_mu_ln_raw + _sig_ln_raw * z_rate)
+        else:
+            rate_raw = np.clip(rate_mu_raw + rate_sd_raw * z_rate, 0.0, None)
 
-    minutes_close_only = np.clip(mu_close + sd_close * z_min_close_only, 0.0, 48.0)
+        if _use_lognormal and rate_mu_role > 0 and rate_sd_role > 0:
+            _cv2_role = (rate_sd_role / rate_mu_role) ** 2
+            _sig_ln_role = float(np.sqrt(np.log1p(_cv2_role)))
+            _mu_ln_role = float(np.log(rate_mu_role)) - 0.5 * _sig_ln_role ** 2
+            rate_role = np.exp(_mu_ln_role + _sig_ln_role * z_rate)
+        else:
+            rate_role = np.clip(rate_mu_role + rate_sd_role * z_rate, 0.0, None)
 
-    rate_raw_close = np.clip(rate_mu_raw + rate_sd_raw * z_rate_close_only, 0.0, None)
-    rate_role_close = np.clip(rate_mu_role + rate_sd_role * z_rate_close_only, 0.0, None)
+        # Asymmetric blowout rate adjustment: boost/penalise per-min rate
+        # in blowout draws only (close draws are untouched).
+        if _asym_enabled and _blow_rate_mult != 1.0:
+            rate_raw[blow_mask] *= _blow_rate_mult
+            rate_role[blow_mask] *= _blow_rate_mult
 
-    stat_raw_close = rate_raw_close * minutes_close_only
-    stat_role_close = rate_role_close * minutes_close_only
+        # Stat outcome: Poisson for count stats (discrete, non-negative),
+        # continuous product for PTS / combo stats.
+        if _use_poisson:
+            stat_raw = rng.poisson(np.maximum(0.0, rate_raw * minutes)).astype(float)
+            stat_role = rng.poisson(np.maximum(0.0, rate_role * minutes)).astype(float)
+        else:
+            stat_raw = rate_raw * minutes
+            stat_role = rate_role * minutes
 
-    if direction == "OVER":
-        hits_close_raw = stat_raw_close > line
-        hits_close_role = stat_role_close > line
-    else:
-        hits_close_raw = stat_raw_close < line
-        hits_close_role = stat_role_close < line
+        if direction == "OVER":
+            hits_raw = stat_raw > line
+            hits_role = stat_role > line
+        elif direction == "UNDER":
+            hits_raw = stat_raw < line
+            hits_role = stat_role < line
+        else:
+            raise ValueError(f"Unknown direction: {direction} (expected OVER or UNDER)")
 
-    p_close_raw = _smoothed_prob(hits_close_raw)
-    p_close_role = _smoothed_prob(hits_close_role)
+        p_raw = _smoothed_prob(hits_raw)
+        p_role = _smoothed_prob(hits_role)
+
+        # Close-only channel for fragility (same idea)
+        z_min_close_only = rng.standard_normal(sims)
+        z_rate_close_indep = rng.standard_normal(sims)
+
+        if _rate_min_corr != 0.0:
+            z_rate_close_only = _rate_min_corr * z_min_close_only + np.sqrt(max(0.0, 1.0 - _rate_min_corr ** 2)) * z_rate_close_indep
+        else:
+            z_rate_close_only = z_rate_close_indep
+
+        minutes_close_only = np.clip(mu_close + sd_close * z_min_close_only, 0.0, 48.0)
+
+        # Close-only rate draws: same log-normal / Poisson logic as main channel
+        if _use_lognormal and rate_mu_raw > 0 and rate_sd_raw > 0:
+            rate_raw_close = np.exp(_mu_ln_raw + _sig_ln_raw * z_rate_close_only)
+        else:
+            rate_raw_close = np.clip(rate_mu_raw + rate_sd_raw * z_rate_close_only, 0.0, None)
+
+        if _use_lognormal and rate_mu_role > 0 and rate_sd_role > 0:
+            rate_role_close = np.exp(_mu_ln_role + _sig_ln_role * z_rate_close_only)
+        else:
+            rate_role_close = np.clip(rate_mu_role + rate_sd_role * z_rate_close_only, 0.0, None)
+
+        if _use_poisson:
+            stat_raw_close = rng.poisson(np.maximum(0.0, rate_raw_close * minutes_close_only)).astype(float)
+            stat_role_close = rng.poisson(np.maximum(0.0, rate_role_close * minutes_close_only)).astype(float)
+        else:
+            stat_raw_close = rate_raw_close * minutes_close_only
+            stat_role_close = rate_role_close * minutes_close_only
+
+        if direction == "OVER":
+            hits_close_raw = stat_raw_close > line
+            hits_close_role = stat_role_close > line
+        else:
+            hits_close_raw = stat_raw_close < line
+            hits_close_role = stat_role_close < line
+
+        p_close_raw = _smoothed_prob(hits_close_raw)
+        p_close_role = _smoothed_prob(hits_close_role)
 
     # ------------------------------------------------------------
     # Atlas fragility roots: legacy minutes base + staged usage proxy
@@ -1902,12 +2240,15 @@ def simulate_leg_probability_new(
     )
     under_blowout_sens_mult = float(blowout_sens_mult)
 
+    _post_sim_exp = float((blowout_cfg or {}).get("post_sim_exponent", 1.35))
+
     p_adj = float(
         adjust_probability_for_blowout(
             p_raw=float(p_role),
             blowout_risk=float(q),
             sens=float(minutes_s_blowout),
             direction=(str(direction) if str(direction).upper() == "OVER" else None),
+            post_sim_exponent=_post_sim_exp,
         )
     )
 
@@ -1926,6 +2267,7 @@ def simulate_leg_probability_new(
             blowout_risk=float(q),
             sens=float(minutes_s_close),
             direction=str(direction),
+            post_sim_exponent=_post_sim_exp,
         )
     )
 
@@ -1985,6 +2327,29 @@ def simulate_leg_probability_new(
 
     frag = 0.0 if p_close_adj <= eps else max(0.0, frag_gap_dir / p_close_adj)
     frag_abs = max(0.0, frag_gap_dir)
+
+    # UNDER-side fragility: measures overshoot above 0.50 scaled by q_blowout
+    # and dampens overconfident UNDER probabilities toward 0.50.
+    under_frag, under_frag_gap, under_frag_gap_usage = _under_fragility(
+        p_adj=float(p_adj),
+        p_close_adj=float(p_close_adj),
+        usage_dep_eff=float(usage_dep_eff),
+        direction=str(direction),
+        q_blowout=float(q),
+    )
+    p_adj_pre_under_frag_dampen = float(p_adj)
+    if under_frag > 0.0:
+        p_adj, under_frag_dampen_amount = _apply_under_fragility_dampener(
+            p_adj=float(p_adj),
+            p_close_adj=float(p_close_adj),
+            under_frag=float(under_frag),
+            cfg=cfg,
+        )
+        # Also update fragility to reflect the UNDER-side value
+        frag = float(under_frag)
+        frag_abs = float(under_frag_gap_usage)
+    else:
+        under_frag_dampen_amount = 0.0
 
     out: dict[str, Any] = {
         # Core outputs
@@ -2053,6 +2418,13 @@ def simulate_leg_probability_new(
         "under_relief_factor": float(under_relief_factor if under_relief_eligible else 1.0),
         "under_relief_applied": bool(under_relief_eligible),
 
+        # UNDER-side fragility (blowout-dependence dampener)
+        "under_frag": float(under_frag),
+        "under_frag_gap": float(under_frag_gap),
+        "under_frag_gap_usage": float(under_frag_gap_usage),
+        "under_frag_dampen_amount": float(under_frag_dampen_amount),
+        "p_adj_pre_under_frag_dampen": float(p_adj_pre_under_frag_dampen),
+
         # Stat summary diagnostics
         "min_mean": float(s.get("min_mean", 0.0)),
         "min_std": float(s.get("min_std", 0.0)),
@@ -2075,7 +2447,13 @@ def simulate_leg_probability_new(
         "role_ctx_sigma_mult": float(role_sigma_mult),
         "role_ctx_reason": str(role_reason),
 
+        # Recent form + opponent defense diagnostics
+        "recent_form_blend": float(_recent_form_blend),
+        "opp_defense_strength": float(_opp_defense_strength),
+        **{f"form_{k}": v for k, v in _form_debug.items()},
+
         "games_used": int(s.get("games", 0)),
+        "thin_window_mult": float(_thin_mult if 0 < _games_used < _thin_window_games else 1.0),
     }
 
     if isinstance(role_debug, dict):

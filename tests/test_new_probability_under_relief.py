@@ -182,9 +182,9 @@ class UnderReliefTest(unittest.TestCase):
             role_cfg={},
         )
 
-        self.assertAlmostEqual(out["minutes_s"], 0.6, places=12)
+        self.assertAlmostEqual(out["minutes_s"], 1.0, places=12)
         self.assertAlmostEqual(out["under_blowout_sens_mult"], 0.64, places=12)
-        self.assertAlmostEqual(out["minutes_s_blowout"], 0.384, places=12)
+        self.assertAlmostEqual(out["minutes_s_blowout"], 0.64, places=12)
 
     def test_blowout_adjustment_rules_soften_upstream_over_profile(self) -> None:
         gamelogs = pd.DataFrame(

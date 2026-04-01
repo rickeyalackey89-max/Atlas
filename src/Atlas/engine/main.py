@@ -3,11 +3,10 @@ from __future__ import annotations
 import ast
 import json
 import os
-import random
 import re
 from datetime import datetime
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 import numpy as np
 import pandas as pd
@@ -16,8 +15,11 @@ from zoneinfo import ZoneInfo
 
 from ..core.matchup_enricher import enrich_with_matchups
 from Atlas.core.share_name_key import share_name_key
-from Atlas.core.slip_scoring import _score_slip
-from Atlas.core.payout_tables import FLEX_3, FLEX_4, FLEX_5, POWER_MULT
+
+
+def _to_series(val: Any, **kwargs: Any) -> pd.Series:
+    """Thin wrapper around pd.to_numeric that tells Pyright the result is a Series."""
+    return cast(pd.Series, pd.to_numeric(val, **kwargs))
 
 # -------------------------------------------------------------------
 # Repo root finder (runtime invariant: repo root contains tools/ and data/)
@@ -128,8 +130,8 @@ def _apply_combo_under_midq_telemetry_blend(
     if not blend_mask.any():
         return out
 
-    p_adj = pd.to_numeric(out.get("p_adj", 0.5), errors="coerce").fillna(0.5).clip(0.0, 1.0)
-    p_cal = pd.to_numeric(out.get("p_cal", p_adj), errors="coerce").fillna(p_adj).clip(0.0, 1.0)
+    p_adj = _to_series(out.get("p_adj", 0.5), errors="coerce").fillna(0.5).clip(0.0, 1.0)
+    p_cal = _to_series(out.get("p_cal", p_adj), errors="coerce").fillna(p_adj).clip(0.0, 1.0)
     blended = p_adj + ((p_cal - p_adj) * retain_f)
     out.loc[blend_mask, "p_cal"] = blended.loc[blend_mask].clip(0.0, 1.0)
     return out
@@ -173,8 +175,8 @@ def _apply_combo_under_highq_telemetry_blend(
     if not blend_mask.any():
         return out
 
-    p_adj = pd.to_numeric(out.get("p_adj", 0.5), errors="coerce").fillna(0.5).clip(0.0, 1.0)
-    p_cal = pd.to_numeric(out.get("p_cal", p_adj), errors="coerce").fillna(p_adj).clip(0.0, 1.0)
+    p_adj = _to_series(out.get("p_adj", 0.5), errors="coerce").fillna(0.5).clip(0.0, 1.0)
+    p_cal = _to_series(out.get("p_cal", p_adj), errors="coerce").fillna(p_adj).clip(0.0, 1.0)
     blended = p_adj + ((p_cal - p_adj) * retain_f)
     out.loc[blend_mask, "p_cal"] = blended.loc[blend_mask].clip(0.0, 1.0)
     return out
@@ -219,8 +221,8 @@ def _apply_combo_under_lowmidq_telemetry_blend(
     if not blend_mask.any():
         return out
 
-    p_adj = pd.to_numeric(out.get("p_adj", 0.5), errors="coerce").fillna(0.5).clip(0.0, 1.0)
-    p_cal = pd.to_numeric(out.get("p_cal", p_adj), errors="coerce").fillna(p_adj).clip(0.0, 1.0)
+    p_adj = _to_series(out.get("p_adj", 0.5), errors="coerce").fillna(0.5).clip(0.0, 1.0)
+    p_cal = _to_series(out.get("p_cal", p_adj), errors="coerce").fillna(p_adj).clip(0.0, 1.0)
     blended = p_adj + ((p_cal - p_adj) * retain_f)
     out.loc[blend_mask, "p_cal"] = blended.loc[blend_mask].clip(0.0, 1.0)
     return out
@@ -264,8 +266,8 @@ def _apply_combo_under_midq_ra_trim(
     if not blend_mask.any():
         return out
 
-    p_adj = pd.to_numeric(out.get("p_adj", 0.5), errors="coerce").fillna(0.5).clip(0.0, 1.0)
-    p_cal = pd.to_numeric(out.get("p_cal", p_adj), errors="coerce").fillna(p_adj).clip(0.0, 1.0)
+    p_adj = _to_series(out.get("p_adj", 0.5), errors="coerce").fillna(0.5).clip(0.0, 1.0)
+    p_cal = _to_series(out.get("p_cal", p_adj), errors="coerce").fillna(p_adj).clip(0.0, 1.0)
     blended = p_adj + ((p_cal - p_adj) * retain_f)
     out.loc[blend_mask, "p_cal"] = blended.loc[blend_mask].clip(0.0, 1.0)
     return out
@@ -305,8 +307,8 @@ def _apply_under_reb_lowmidq_no_relief_trim(
     if not blend_mask.any():
         return out
 
-    p_adj = pd.to_numeric(out.get("p_adj", 0.5), errors="coerce").fillna(0.5).clip(0.0, 1.0)
-    p_cal = pd.to_numeric(out.get("p_cal", p_adj), errors="coerce").fillna(p_adj).clip(0.0, 1.0)
+    p_adj = _to_series(out.get("p_adj", 0.5), errors="coerce").fillna(0.5).clip(0.0, 1.0)
+    p_cal = _to_series(out.get("p_cal", p_adj), errors="coerce").fillna(p_adj).clip(0.0, 1.0)
     blended = p_adj + ((p_cal - p_adj) * retain_f)
     out.loc[blend_mask, "p_cal"] = blended.loc[blend_mask].clip(0.0, 1.0)
     return out
@@ -343,8 +345,8 @@ def _apply_reb_over_midq_trim(
     if not blend_mask.any():
         return out
 
-    p_adj = pd.to_numeric(out.get("p_adj", 0.5), errors="coerce").fillna(0.5).clip(0.0, 1.0)
-    p_cal = pd.to_numeric(out.get("p_cal", p_adj), errors="coerce").fillna(p_adj).clip(0.0, 1.0)
+    p_adj = _to_series(out.get("p_adj", 0.5), errors="coerce").fillna(0.5).clip(0.0, 1.0)
+    p_cal = _to_series(out.get("p_cal", p_adj), errors="coerce").fillna(p_adj).clip(0.0, 1.0)
     blended = p_adj + ((p_cal - p_adj) * retain_f)
     out.loc[blend_mask, "p_cal"] = blended.loc[blend_mask].clip(0.0, 1.0)
     return out
@@ -375,9 +377,9 @@ def _apply_fg3m_over_highq_blowout_lift(
     if not lift_mask.any() or factor_f <= 0.0:
         return out
 
-    p_adj = pd.to_numeric(out.get("p_adj", 0.5), errors="coerce").fillna(0.5).clip(0.0, 1.0)
-    p_role = pd.to_numeric(out.get("p_role", p_adj), errors="coerce").fillna(p_adj).clip(0.0, 1.0)
-    p_cal = pd.to_numeric(out.get("p_cal", p_adj), errors="coerce").fillna(p_adj).clip(0.0, 1.0)
+    p_adj = _to_series(out.get("p_adj", 0.5), errors="coerce").fillna(0.5).clip(0.0, 1.0)
+    p_role = _to_series(out.get("p_role", p_adj), errors="coerce").fillna(p_adj).clip(0.0, 1.0)
+    p_cal = _to_series(out.get("p_cal", p_adj), errors="coerce").fillna(p_adj).clip(0.0, 1.0)
     lifted = p_cal + ((p_role - p_adj) * factor_f)
     out.loc[lift_mask, "p_cal"] = lifted.loc[lift_mask].clip(0.0, 1.0)
     return out
@@ -414,9 +416,9 @@ def _apply_combo_over_high_fragility_lift(
     if not lift_mask.any():
         return out
 
-    p_adj = pd.to_numeric(out.get("p_adj", 0.5), errors="coerce").fillna(0.5).clip(0.0, 1.0)
-    p_role = pd.to_numeric(out.get("p_role", p_adj), errors="coerce").fillna(p_adj).clip(0.0, 1.0)
-    p_cal = pd.to_numeric(out.get("p_cal", p_adj), errors="coerce").fillna(p_adj).clip(0.0, 1.0)
+    p_adj = _to_series(out.get("p_adj", 0.5), errors="coerce").fillna(0.5).clip(0.0, 1.0)
+    p_role = _to_series(out.get("p_role", p_adj), errors="coerce").fillna(p_adj).clip(0.0, 1.0)
+    p_cal = _to_series(out.get("p_cal", p_adj), errors="coerce").fillna(p_adj).clip(0.0, 1.0)
     lifted = p_cal + ((p_role - p_adj) * factor_f)
     out.loc[lift_mask, "p_cal"] = lifted.loc[lift_mask].clip(0.0, 1.0)
     return out
@@ -851,244 +853,6 @@ def dedupe_over_under(scored: pd.DataFrame) -> pd.DataFrame:
     return out.drop_duplicates(subset=["prop_key"], keep="first").reset_index(drop=True)
 
 
-def expand_legs(df: pd.DataFrame, max_legs: int) -> pd.DataFrame:
-    out = df.copy()
-    if "legs" not in out.columns:
-        return out
-
-    def to_list(x: Any) -> list[str]:
-        if isinstance(x, list):
-            return [str(i).strip() for i in x]
-        if isinstance(x, str):
-            s = x.strip()
-            if s.startswith("[") and s.endswith("]"):
-                try:
-                    v = ast.literal_eval(s)
-                    if isinstance(v, list):
-                        return [str(i).strip() for i in v]
-                except Exception:
-                    pass
-            if " | " in s:
-                return [p.strip() for p in s.split(" | ") if p.strip()]
-            return [s] if s else []
-        return []
-
-    legs_list = out["legs"].apply(to_list)
-    for i in range(max_legs):
-        out[f"leg_{i+1}"] = legs_list.apply(lambda lst: lst[i] if i < len(lst) else "")
-    return out
-
-
-def dedupe_slips_by_key(df: pd.DataFrame) -> pd.DataFrame:
-    if df is None or len(df) == 0 or "legs" not in df.columns:
-        return df
-    out = df.copy()
-    out["slip_key"] = out["legs"].astype(str)
-    return out.drop_duplicates(subset=["slip_key"], keep="first")
-
-
-# -------------------------------------------------------------------
-# Tier mix contracts
-# -------------------------------------------------------------------
-
-
-def _tier_counts_from_legs(x: Any) -> dict[str, int]:
-    if x is None:
-        return {"STANDARD": 0, "GOBLIN": 0, "DEMON": 0}
-    s = str(x).upper()
-    return {"STANDARD": s.count("(STANDARD)"), "GOBLIN": s.count("(GOBLIN)"), "DEMON": s.count("(DEMON)")}
-
-
-def _windfall_mix_ok(n_legs: int, legs: Any) -> bool:
-    c = _tier_counts_from_legs(legs)
-    if n_legs == 3:
-        return c["GOBLIN"] == 1 and c["STANDARD"] == 1 and c["DEMON"] == 1
-    if n_legs == 4:
-        return c["GOBLIN"] == 1 and c["STANDARD"] == 2 and c["DEMON"] == 1
-    if n_legs == 5:
-        return c["GOBLIN"] == 2 and c["STANDARD"] == 2 and c["DEMON"] == 1
-    return True
-
-
-def _system_mix(n_legs: int, legs: Any) -> bool:
-    c = _tier_counts_from_legs(legs)
-    if n_legs == 3:
-        return c["GOBLIN"] == 1 and c["STANDARD"] == 2 and c["DEMON"] == 0
-    if n_legs == 4:
-        return c["GOBLIN"] == 2 and c["STANDARD"] == 2 and c["DEMON"] == 0
-    if n_legs == 5:
-        return c["GOBLIN"] == 3 and c["STANDARD"] == 2 and c["DEMON"] == 0
-    return True
-
-
-# -------------------------------------------------------------------
-# Builders
-# -------------------------------------------------------------------
-
-_EMPTY_SLIPS_COLS = ["n_legs", "legs", "hit_prob", "ev_mult", "avg_p", "avg_fragility", "slip_key"]
-
-
-def build_slips_by_tier_buckets(
-    *,
-    legs_df: pd.DataFrame,
-    n_legs: int,
-    top_n: int,
-    payout_power_mult: Any,
-    pricing_engine: str,
-    cfg: dict[str, Any],
-    seed: int = 7,
-    per_tier: int = 500,
-    max_attempts: int = 400000,
-    mixes: dict[int, dict[str, int]],
-    required_tiers: list[str],
-    mix_ok_fn,
-) -> pd.DataFrame:
-    if legs_df is None or len(legs_df) == 0:
-        return pd.DataFrame(columns=_EMPTY_SLIPS_COLS)
-
-    if n_legs not in mixes:
-        return pd.DataFrame(columns=_EMPTY_SLIPS_COLS)
-    mix = mixes[n_legs]
-
-    df = legs_df.copy().reset_index(drop=True)
-
-    if "projection_id" not in df.columns and "id" in df.columns:
-        df = df.rename(columns={"id": "projection_id"})
-
-    pid_series: pd.Series | None = None
-    if "projection_id" in df.columns:
-        pid_series = df["projection_id"]
-    elif "source_projection_id" in df.columns:
-        pid_series = df["source_projection_id"]
-
-    if pid_series is None:
-        df["projection_id"] = ""
-    else:
-        if "source_projection_id" in df.columns:
-            num = pd.to_numeric(pid_series, errors="coerce")
-            if float(num.isna().mean()) > 0.50:
-                pid_series = df["source_projection_id"]
-        df["projection_id"] = pid_series.astype(str).str.strip()
-
-    _ensure_col(df, "tier", "STANDARD")
-    df["tier"] = df["tier"].astype(str).str.upper().str.strip()
-
-    # --- p_eff (Pylance-safe, runtime-safe) ---
-    if "p_adj" not in df.columns:
-        df["p_adj"] = 0.50  # broadcast scalar -> Series
-
-    p_adj_s = pd.to_numeric(df["p_adj"], errors="coerce")
-    p_adj_s = p_adj_s.fillna(0.50).clip(0.0, 1.0)
-
-    if "p_eff" not in df.columns:
-        df["p_eff"] = p_adj_s
-    else:
-        df["p_eff"] = pd.to_numeric(df["p_eff"], errors="coerce").fillna(p_adj_s).clip(0.0, 1.0)
-
-    if "edge_score" not in df.columns:
-        df["edge_score"] = df["p_eff"] - 0.5
-    else:
-        df["edge_score"] = pd.to_numeric(df["edge_score"], errors="coerce").fillna(df["p_eff"] - 0.5)
-
-    tier_counts = df["tier"].value_counts(dropna=False).to_dict()
-    if os.getenv("ATLAS_DEBUG_BUILDER") == "1":
-        print(f"[BUILDER][DEBUG] leg_df tier counts: {tier_counts}")
-
-    for needed in required_tiers:
-        if tier_counts.get(needed, 0) == 0:
-            return pd.DataFrame(columns=_EMPTY_SLIPS_COLS)
-
-    df = df.sort_values(["tier", "edge_score", "p_eff"], ascending=[True, False, False]).reset_index(drop=True)
-
-    buckets: dict[str, list[pd.Series]] = {}
-    for t in required_tiers:
-        sub = df[df["tier"] == t].head(int(per_tier)).reset_index(drop=True)
-        buckets[t] = [sub.iloc[i] for i in range(len(sub))]
-
-    for t, need in mix.items():
-        if len(buckets.get(t, [])) < int(need):
-            return pd.DataFrame(columns=_EMPTY_SLIPS_COLS)
-
-    rng = random.Random(int(seed))
-    slips: list[dict[str, Any]] = []
-    seen: set[str] = set()
-
-    attempts = 0
-    target_pool = max(int(top_n) * 10, int(top_n))
-
-    while attempts < int(max_attempts) and len(slips) < target_pool:
-        attempts += 1
-
-        chosen: list[pd.Series] = []
-        for t, need in mix.items():
-            chosen.extend(rng.sample(buckets[t], int(need)))
-
-        pids: list[str] = []
-        players: list[str] = []
-        ok = True
-
-        for r in chosen:
-            if "projection_id" not in r.index:
-                ok = False
-                break
-
-            pid = str(r["projection_id"]).strip()
-            if not pid or pid.lower() == "nan":
-                ok = False
-                break
-            pids.append(pid)
-
-            player_name = str(r["player"]).strip().lower() if "player" in r.index else ""
-            players.append(player_name)
-
-        if not ok:
-            continue
-
-        if len(pids) != len(set(pids)):
-            continue
-        if len(players) != len(set(players)):
-            continue
-
-        scored = _score_slip(
-            chosen,
-            n_legs,
-            payout_power_mult,
-            pricing_engine=str(pricing_engine or "atlas"),
-            cfg=cfg,
-        )
-
-        legs_str = scored.get("legs", "")
-        if not mix_ok_fn(n_legs, legs_str):
-            continue
-
-        key = scored.get("slip_key") or legs_str
-        if key in seen:
-            continue
-
-        seen.add(key)
-        slips.append(scored)
-
-    # If we didn't build any slips, return an empty frame with expected columns
-    if not slips:
-        return pd.DataFrame(columns=_EMPTY_SLIPS_COLS)
-
-    out = pd.DataFrame(slips)
-    out["n_legs"] = int(n_legs)
-
-    # Ensure columns exist before numeric ops (avoid scalar -> .fillna issues)
-    if "hit_prob" not in out.columns:
-        out["hit_prob"] = 0.0
-    if "ev_mult" not in out.columns:
-        out["ev_mult"] = 0.0
-
-    out["hit_prob"] = pd.to_numeric(out["hit_prob"], errors="coerce").fillna(0.0)
-    out["ev_mult"] = pd.to_numeric(out["ev_mult"], errors="coerce").fillna(0.0)
-
-    out = out.sort_values(["ev_mult", "hit_prob"], ascending=[False, False]).reset_index(drop=True)
-    out = dedupe_slips_by_key(out).head(int(top_n)).reset_index(drop=True)
-    return out
-
-
 # -------------------------------------------------------------------
 # Main
 # -------------------------------------------------------------------
@@ -1097,7 +861,8 @@ def build_slips_by_tier_buckets(
 def main() -> None:
     cfg = load_config()
     pricing_engine = str(cfg.get("pricing_engine", "atlas") or "atlas")
-    role_metrics_cfg = cfg.get("role_metrics") if isinstance(cfg.get("role_metrics"), dict) else {}
+    _raw_rm = cfg.get("role_metrics")
+    role_metrics_cfg: dict[str, Any] = _raw_rm if isinstance(_raw_rm, dict) else {}
     attach_role_metrics = bool(role_metrics_cfg.get("enabled", False))
 
     require_file(BOARD_PATH, "data/board/today.csv")
@@ -1137,11 +902,11 @@ def main() -> None:
         scored["role_ctx_outs_used"] = 0
     scored["role_ctx_outs_used"] = pd.to_numeric(scored["role_ctx_outs_used"], errors="coerce").fillna(0).astype(int)
 
-    p_adj = pd.to_numeric(scored.get("p_adj", scored.get("p", 0.5)), errors="coerce").fillna(0.5).clip(0, 1) # type: ignore
-    p_role = pd.to_numeric(scored.get("p_role", p_adj), errors="coerce").fillna(p_adj).clip(0, 1)
+    p_adj = _to_series(scored.get("p_adj", scored.get("p", 0.5)), errors="coerce").fillna(0.5).clip(0, 1)
+    p_role = _to_series(scored.get("p_role", p_adj), errors="coerce").fillna(p_adj).clip(0, 1)
 
     use_role = scored["role_ctx_outs_used"] > 0
-    under_relief_applied = pd.to_numeric(scored.get("under_relief_applied", False), errors="coerce").fillna(0).astype(bool)
+    under_relief_applied = _to_series(scored.get("under_relief_applied", False), errors="coerce").fillna(0).astype(bool)
     p_adj_source = np.where(under_relief_applied, "p_adj_under_relief", "p_adj")
     scored["p_for_cal"] = np.where(use_role, p_role, p_adj)
     scored["p_cal_src"] = np.where(use_role, "p_role", p_adj_source)
@@ -1259,6 +1024,7 @@ def main() -> None:
 
     sys3, sys4, sys5 = slips.sys3, slips.sys4, slips.sys5
     wind3, wind4, wind5 = slips.wind3, slips.wind4, slips.wind5
+    demonhunter = slips.demonhunter
 
     from Atlas.core.iael_filter import normalize_person_name
 
@@ -1328,6 +1094,8 @@ def main() -> None:
     wind3 = _annotate_q_slips(wind3)
     wind4 = _annotate_q_slips(wind4)
     wind5 = _annotate_q_slips(wind5)
+    if demonhunter is not None and len(demonhunter) > 0:
+        demonhunter = _annotate_q_slips(demonhunter)
 
     # Secondary "no-kernel" slips for win-prob comparison (default outputs remain unchanged)
     slips_winprob = run_build_slips(
@@ -1360,6 +1128,7 @@ def main() -> None:
         wind3=wind3,
         wind4=wind4,
         wind5=wind5,
+        demonhunter=demonhunter,
         
         sys3_winprob=sys3_win,
         sys4_winprob=sys4_win,

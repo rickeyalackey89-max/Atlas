@@ -176,6 +176,8 @@ def write_bundle_zip(
     # If external priors are present, include them (small, improves determinism)
     for p in (
         data_dir / "input" / "external_priors_today.yaml",
+        data_dir / "input" / "external_priors_today.csv",
+        data_dir / "input" / "bettingpros_props_today.csv",
         data_dir / "input" / "rotowire_lines.json",
     ):
         if p.exists() and p.is_file():

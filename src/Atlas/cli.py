@@ -22,16 +22,17 @@ from __future__ import annotations
 
 import json
 import os
+import shutil
 import subprocess
 import sys
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
-from datetime import timezone, timedelta
-from datetime import datetime
+from typing import Optional
 
-import os
-import json
+import yaml
+
+from Atlas.runtime.replay_eval import backfill_latest_replay_eval_legs
 
 
 # -----------------------------
@@ -155,11 +156,6 @@ def _fs_enforce(repo_root: Path, tool: dict, mode: str, changes: dict[str, dict[
     if enforce == "hard":
         raise RuntimeError(msg)
     print(msg)
-from typing import Optional
-
-import yaml
-
-from Atlas.runtime.replay_eval import backfill_latest_replay_eval_legs
 
 
 # -----------------------------
@@ -245,6 +241,32 @@ def _latest_run_id(repo_root: Path) -> str | None:
         return None
     dirs.sort(key=lambda p: p.stat().st_mtime_ns, reverse=True)
     return dirs[0].name
+
+
+def _archive_run_to_telemetry(repo_root: Path, run_id: str) -> None:
+    """Copy key run artifacts into data/telemetry/ so every live run is tracked."""
+    try:
+        run_dir = repo_root / "data" / "output" / "runs" / run_id
+        telem_live = repo_root / "data" / "telemetry" / "live_runs" / run_id
+        telem_live.mkdir(parents=True, exist_ok=True)
+
+        for name in ("scored_legs_deduped.csv", "scored_board.csv", "meta.json", "slip_results.csv"):
+            src = run_dir / name
+            if src.exists():
+                shutil.copy2(src, telem_live / name)
+
+        bundles_dir = repo_root / "data" / "bundles"
+        telem_bundles = repo_root / "data" / "telemetry" / "bundles"
+        telem_bundles.mkdir(parents=True, exist_ok=True)
+        bundle_name = f"atlas_bundle_{run_id}.zip"
+        bundle_src = bundles_dir / bundle_name
+        if bundle_src.exists():
+            shutil.copy2(bundle_src, telem_live / bundle_name)
+            shutil.copy2(bundle_src, telem_bundles / bundle_name)
+
+        print(f"[TELEM] Archived run {run_id} to {telem_live}")
+    except Exception as e:
+        print(f"[TELEM] Archive failed (non-fatal): {e}", file=sys.stderr)
 
 
 def _write_full_run_bundle(repo_root: Path, run_id: str) -> None:
@@ -534,14 +556,12 @@ def main(argv: Optional[list[str]] = None) -> None:
         # normalized IAEL snapshots + any additional "latest" JSON artifacts.
         run_today(authority="production")
         print("[BUNDLE] attempting post-run bundle")
-        repo_root = Path(__file__).resolve().parents[2]
         runs_dir = repo_root / "data" / "output" / "runs"
         run_dirs = [p for p in runs_dir.iterdir() if p.is_dir()]
         run_dirs.sort(key=lambda p: p.stat().st_mtime, reverse=True)
         run_id = run_dirs[0].name
         print(f"[BUNDLE] inferred run_id={run_id}")
         _write_full_run_bundle(repo_root, run_id)
-        print("[LIVE] entered src/Atlas/cli.py live branch")
         
         # After a successful engine run, publish "latest placeable" artifacts.
         # This is intentionally implemented as a repo-local tool script (no legacy wrappers).
@@ -552,6 +572,8 @@ def main(argv: Optional[list[str]] = None) -> None:
                 raise RuntimeError(f"Post-run publish step failed. ExitCode={rc} script={publish_script}")
         else:
             raise RuntimeError(f"Missing required publish tool: {publish_script}")
+
+        _archive_run_to_telemetry(repo_root, run_id)
         return
 
     # REPLAY

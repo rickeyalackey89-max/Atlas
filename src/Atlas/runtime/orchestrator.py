@@ -641,6 +641,30 @@ def fetch_rotowire_lines(*, game_date: str, raw_path: Optional[str | Path] = Non
     _run([_py(), str(script)], "FETCH ROTOWIRE (lines/spreads)", extra_env=extra_env)
 
 
+def fetch_bettingpros_props(*, game_date: str, raw_path: Optional[str | Path] = None) -> None:
+    """Fetch BettingPros NBA player props → external_priors_today.csv (non-fatal)."""
+    script = TOOLS_DIR / "fetch_bettingpros_props.py"
+    if not script.exists():
+        logger.warning("fetch_bettingpros_props.py not found; skipping BettingPros fetch.")
+        return
+
+    if _strict_replay_enabled():
+        # In replay mode, the pinned external_priors_today.csv from the bundle is used.
+        _banner("REPLAY BETTINGPROS (skipped, using pinned priors)")
+        return
+
+    extra_env = {
+        "BETTINGPROS_GAME_DATE": game_date,
+    }
+
+    try:
+        _run([_py(), str(script)], "FETCH BETTINGPROS (player props)", extra_env=extra_env)
+    except Exception as e:
+        # Non-fatal: model can run without BettingPros data
+        logger.warning("BettingPros fetch failed (non-fatal): %s", e)
+        print(f"⚠️ BettingPros fetch failed (non-fatal): {e}", file=sys.stderr)
+
+
 def _resolve_role_metrics_source() -> tuple[str, str, str]:
     source_url = (os.environ.get("ATLAS_ROLE_METRICS_URL") or "").strip()
     html_path = (os.environ.get("ATLAS_ROLE_METRICS_HTML_PATH") or "").strip()
@@ -935,6 +959,11 @@ def run_today(
     )
     print(f"[OBS] audit log: {ctx.log_path}")
 
+    # ── Model contract check (warns on drift, logs to audit) ──
+    from Atlas.contracts.model_contract import enforce_contract
+    contract_ok = enforce_contract(PROJECT_ROOT, hard_stop=False)
+    emit_event(ctx, "contract_check", passed=contract_ok)
+
     # 1) Fetch raw board (live or seeded)
     with StageTimer(ctx, "fetch_raw_only"):
         fetch_raw_only(raw_path=raw_path, max_attempts=3, sleep_s=1.0)
@@ -996,6 +1025,12 @@ def run_today(
     if not _strict_replay_enabled():
         assert_fresh(rotowire_path, max_age_hours=6, label="Rotowire lines")
     _artifact_fingerprint(ctx, "rotowire_lines.json", rotowire_path)
+
+    # 2c) Fetch BettingPros player props → merge into external_priors_today.csv
+    with StageTimer(ctx, "fetch_bettingpros_props"):
+        fetch_bettingpros_props(game_date=game_date, raw_path=raw_path)
+    bp_priors_path = DATA_DIR / "input" / "external_priors_today.csv"
+    _artifact_fingerprint(ctx, "external_priors_today.csv", bp_priors_path)
 
     # Extra safety: fresh-but-wrong-slate is still wrong
     try:

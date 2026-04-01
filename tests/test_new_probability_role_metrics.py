@@ -326,6 +326,20 @@ class RoleMetricsAdjustmentTest(unittest.TestCase):
         self.assertEqual(bonus, 0.002)
         self.assertGreater(debug["bonus_uncapped"], bonus)
 
+    def test_competitive_usage_bonus_ignores_nan_usage(self) -> None:
+        bonus, debug = _competitive_usage_bonus(
+            stat_u="PTS",
+            direction="OVER",
+            usg_pct=float("nan"),
+            fragility=0.03,
+            q_blowout=0.06,
+            headroom=0.02,
+            cfg={},
+        )
+
+        self.assertEqual(bonus, 0.0)
+        self.assertEqual(debug["usage_gate"], 0.0)
+
 
 
 if __name__ == "__main__":

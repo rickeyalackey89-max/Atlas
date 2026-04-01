@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
-from typing import Any
+from dataclasses import dataclass, field
+from typing import Any, Optional
 
 import pandas as pd
 
@@ -14,6 +14,7 @@ class BuiltSlips:
     wind3: pd.DataFrame
     wind4: pd.DataFrame
     wind5: pd.DataFrame
+    demonhunter: Optional[pd.DataFrame] = None
 
 def _merge_cfg_dict(base: dict[str, Any], override: dict[str, Any]) -> dict[str, Any]:
     out = dict(base or {})
@@ -111,7 +112,7 @@ def run_build_slips(
     """
     # Local import to break circular dependency:
     # legacy.main imports this stage, so this stage must NOT import legacy.main at module import time.
-    from Atlas.core.slip_builders import build_system_slips, build_windfall_slips, expand_legs
+    from Atlas.core.slip_builders import build_system_slips, build_windfall_slips, build_demonhunter_slips, expand_legs
 
     cfg3, top_n3 = _cfg_for_n_legs(cfg, 3, top_n, sort_mode)
     cfg4, top_n4 = _cfg_for_n_legs(cfg, 4, top_n, sort_mode)
@@ -139,4 +140,9 @@ def run_build_slips(
         build_windfall_slips(scored_for_optimizer, 5, top_n5, seed, pricing_engine=pricing_engine, cfg=cfg5, sort_mode=sort_mode), 5
     )
 
-    return BuiltSlips(sys3=sys3, sys4=sys4, sys5=sys5, wind3=wind3, wind4=wind4, wind5=wind5)
+    # DEMONHUNTER – best single all-DEMON slip at each leg count
+    demonhunter = build_demonhunter_slips(
+        scored_for_optimizer, seed, pricing_engine=pricing_engine, sort_mode=sort_mode, cfg=cfg,
+    )
+
+    return BuiltSlips(sys3=sys3, sys4=sys4, sys5=sys5, wind3=wind3, wind4=wind4, wind5=wind5, demonhunter=demonhunter)
