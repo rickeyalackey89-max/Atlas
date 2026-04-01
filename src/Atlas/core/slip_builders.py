@@ -395,6 +395,16 @@ def build_slips_by_tier_buckets(
         if df.empty:
             return pd.DataFrame(columns=_EMPTY_SLIPS_COLS)
 
+    # --- Data health filter: exclude legs with missing/bad data ---
+    require_healthy_data = bool(sb.get("require_healthy_data", True))
+    if require_healthy_data and "data_health_flag" in df.columns:
+        before_len = len(df)
+        df = df[df["data_health_flag"] == "OK"].reset_index(drop=True)
+        if (os.getenv("ATLAS_DEBUG_BUILDER") or "").strip() == "1":
+            print(f"[BUILDER][DEBUG] data_health filter: {before_len} -> {len(df)} legs")
+        if df.empty:
+            return pd.DataFrame(columns=_EMPTY_SLIPS_COLS)
+
     tier_counts = df["tier"].value_counts(dropna=False).to_dict()
 
     if (os.getenv("ATLAS_DEBUG_BUILDER") or "").strip() == "1":
@@ -603,6 +613,23 @@ def build_slips_by_tier_buckets(
                 if len(set(chosen_games)) != len(chosen_games):
                     continue
 
+            # Optional hard constraint: max N legs of same stat type per slip
+            max_same_stat = int(sb.get("max_same_stat", 0) or 0)
+            if max_same_stat > 0:
+                stat_counts: dict[str, int] = {}
+                for r in chosen:
+                    st = ""
+                    for k in ("stat", "stat_type"):
+                        if k in r.index:
+                            v = str(r[k]).strip().upper()
+                            if v and v.lower() != "nan":
+                                st = v
+                                break
+                    if st:
+                        stat_counts[st] = stat_counts.get(st, 0) + 1
+                if stat_counts and max(stat_counts.values()) > max_same_stat:
+                    continue
+
             scored = _score_slip(
                 chosen,
                 n_legs,
@@ -687,6 +714,24 @@ def build_slips_by_tier_buckets(
                     mean_frag = sum(frags) / float(len(frags))
                     pen_frag = frag_w * float(mean_frag ** frag_power)
 
+            # Minutes volatility penalty (high min_std = unpredictable playing time)
+            min_std_w = float(pen_cfg.get("min_std_w", 0.0) or 0.0)
+            min_std_ref = float(pen_cfg.get("min_std_ref", 6.0) or 6.0)  # ~median
+            pen_min_std = 0.0
+            if min_std_w > 0:
+                min_stds = []
+                for rec in chosen:
+                    try:
+                        v = float(rec.get("min_std", 0.0))
+                    except Exception:
+                        v = 0.0
+                    if v == v:  # not NaN
+                        min_stds.append(v)
+                if min_stds:
+                    mean_min_std = sum(min_stds) / float(len(min_stds))
+                    excess = max(mean_min_std - min_std_ref, 0.0) / min_std_ref
+                    pen_min_std = min_std_w * excess
+
             pen_role_ctx = 0.0
             if role_ctx_share_w > 0.0 and chosen:
                 role_ctx_share = float(role_on_count / len(chosen))
@@ -694,7 +739,7 @@ def build_slips_by_tier_buckets(
                 if over > 0.0:
                     pen_role_ctx = role_ctx_share_w * float(over ** role_ctx_share_power)
 
-            pen_total = pen_team + pen_family + pen_frag + pen_role_ctx
+            pen_total = pen_team + pen_family + pen_frag + pen_min_std + pen_role_ctx
 
             # Compute base score for this candidate (depends on sort_mode)
             hit_prob = float(scored.get("hit_prob", 0.0) or 0.0)
@@ -716,6 +761,7 @@ def build_slips_by_tier_buckets(
             scored["pen_team"] = pen_team
             scored["pen_family"] = pen_family
             scored["pen_frag"] = pen_frag
+            scored["pen_min_std"] = pen_min_std
             scored["pen_role_ctx"] = pen_role_ctx
             scored["pen_total"] = pen_total
             scored["role_ctx_bonus"] = role_bonus_total

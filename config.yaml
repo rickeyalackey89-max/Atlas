@@ -208,6 +208,8 @@ slip_build:
   phase1_pool_frac: 0.5
   beam_width: 250
   min_leg_prob: 0.52
+  require_healthy_data: true
+  max_same_stat: 2
   penalty:
     team_w: 0.15
     team_power: 2.0
@@ -215,6 +217,8 @@ slip_build:
     family_power: 2.0
     frag_w: 0.20
     frag_power: 1.0
+    min_std_w: 0.10
+    min_std_ref: 6.0
   by_legs:
     "4":
       target_pool_mult: 300
