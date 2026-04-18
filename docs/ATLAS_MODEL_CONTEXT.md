@@ -1,6 +1,7 @@
 # Atlas Model Context
 
-> **Last updated:** 2026-03-31 — reflects v9d baseline and post-cleanup workspace state.
+> **Last updated:** 2026-04-15 — reflects v12 production ensemble (v16 was reverted).
+> **Config fingerprint:** `188fdb89e3faab4b`
 
 ---
 
@@ -16,36 +17,51 @@ Atlas is **not** just a probability calculator. It is a full decision pipeline:
 1. Fetch the current PrizePicks board and convert it to structured data.
 2. Freeze the injury state and redistribute production from out players to teammates.
 3. Score every leg through a Monte-Carlo probability kernel.
-4. Post-process with a 7-seed LightGBM ensemble calibrator (v9d).
+4. Post-process with a 7-seed LightGBM ensemble calibrator (v12).
 5. Apply telemetry-driven isotonic calibration.
 6. Build slips across three output families (System, Windfall, DemonHunter).
 7. Publish run artifacts and optional bundle zip.
 
 ---
 
-## Current Baseline — v9d
+## Current Production — v12
+
+> **Note:** v16 was trained and briefly promoted but reverted due to catastrophic
+> `p_cal=0.233` failures. All kernel params were reverted to pre-trainer defaults.
+> The production ensemble is v12, trained on v13 cache.
 
 | Metric | Value |
 |---|---|
-| **Ensemble LODO Brier** | 0.196266 |
-| **Ensemble LODO Hit Rate** | 69.86% |
-| **Reader Brier (p_adj)** | 0.20046 |
-| **Reader Corpus** | 49,956 legs / 22 runs |
-| **Features** | 33 (trimmed from 56 in v9c) |
-| **Temperature** | 0.98 |
+| **Ensemble LODO Brier** | **0.198097** |
+| **Features** | 35 (33 base + sb_over_prob, sb_line_diff) |
+| **Temperature** | 1.08 |
 | **Seeds** | 65536, 9999, 137, 999, 98765, 54321, 12345 |
-| **Architecture** | dn-d11nl50 (direction-split GBMs) |
-| **Training legs** | 171,214 across 33 dates |
-| **Previous version** | v9c (Brier 0.200908) |
+| **Architecture** | `dn-d11nl50-top7-33feat` (direction-split GBMs) |
+| **Training legs** | 94,328 across 43 dates |
+| **Training cache** | v13 resim cache |
+| **Config fingerprint** | `188fdb89e3faab4b` |
 
-Full metadata is stamped in `data/model/ensemble/ensemble_meta.json`.
+Canonical contract: `src/Atlas/contracts/model_contract.py`.
+Full metadata: `data/model/ensemble/ensemble_meta.json`.
+Resim caches: `data/model/_v13_resim_cache.pkl`.
+
+### LODO Brier Progression
+
+```
+v9d: 0.196266 (old kernel, not comparable)
+v10: 0.199598
+v12: 0.199212
+v14: 0.198097  ← current production (deployed as "v12" training on v13 cache)
+```
+
+Note: v15 (0.197612) and v16 (0.197440) were trained and tested but reverted.
 
 ### GBM Parameters
 
 | Parameter | OVER | UNDER |
 |---|---|---|
-| max_depth | 11 | 15 |
-| num_leaves | 50 | 90 |
+| max_depth | 8 | 11 |
+| num_leaves | 30 | 50 |
 | min_child_samples | 200 | 150 |
 | lambda_l2 | 1.0 | 6.0 |
 | learning_rate | 0.03 | 0.03 |
@@ -54,7 +70,7 @@ Full metadata is stamped in `data/model/ensemble/ensemble_meta.json`.
 The ensemble produces 14 model files (7 OVER + 7 UNDER, one per seed) stored in
 `data/model/ensemble/`.
 
-### v9d Feature List (33 features)
+### Feature List (35 features)
 
 ```
 z_line, min_cv, is_combo, bp_score_gated, bp_has, is_assists, is_threes,
@@ -62,10 +78,54 @@ games_norm, thin_flag, line_norm, is_home_feat, min_sensitivity,
 game_total_norm, is_b2b, l20_edge, l10_has, margin, stat_cat, tier_cat,
 l40_hr, logit_p_x_demon, player_te, player_stat_te, player_dir_te,
 player_n_norm, line_dist, tail_risk, line_tightness, margin_x_under,
-q_blowout, rate_cv, abs_logit_p, q_x_under
+q_blowout, rate_cv, abs_logit_p, q_x_under,
+sb_over_prob, sb_line_diff
 ```
 
 Categorical features: `stat_cat`, `tier_cat`.
+
+### Kernel Parameters (Pre-Trainer Defaults — Active in Production)
+
+The kernel trainer was run and produced optimized values, but those were reverted
+along with v16. Production is on pre-trainer defaults:
+
+| Parameter | Value |
+|---|---|
+| spread_sd | 10.0 |
+| threshold_margin | 15.5 |
+| star_minute_drop | 6.0 |
+| role_minute_drop | 0.5 |
+| post_sim_exponent | 0.3 |
+| rate_min_correlation | 0.35 |
+| thin_window_games | 15 |
+| thin_window_max_mult | 1.6 |
+| opp_defense_strength | 1.0 |
+| rate_std_PTS | 1.3 |
+| rate_std_AST | 1.2 |
+| rate_std_REB | 1.0 |
+| rate_std_FG3M | 1.0 |
+| rate_std_PRA | 1.3 |
+| rate_std_PR | 1.3 |
+| rate_std_PA | 1.3 |
+| rate_std_RA | 1.1 |
+
+### Role Context
+
+~24% of legs have active role context adjustments (`role_ctx_outs_used > 0`).
+The production GBM (v12) was trained on v13 cache data that includes role context
+effects in `p_role`, but does NOT include explicit role context features
+(`role_ctx_outs_n`, `role_ctx_mult_feat`) — those were added in v16 training and reverted.
+
+### Direction Split (OVER vs UNDER)
+
+| Direction | Brier | % of Legs | Calibration |
+|---|---|---|---|
+| OVER | 0.2094 | ~87.5% | Well-calibrated |
+| UNDER | 0.2596 | ~12.5% | +3.5pp overconfident, AUC ~0.52 |
+
+UNDER legs have near-random discrimination. The GBM partially compensates via
+`logit_p_x_under` and `margin_x_under` features. Direction-split isotonic
+calibration (`isotonic_direction_split.json`) provides additional UNDER correction.
 
 ---
 
@@ -136,12 +196,12 @@ The probability chain for each leg:
 p (raw MC) → p_role (role-adjusted) → p_adj (blowout-adjusted) → p_for_cal → p_cal (calibrated)
 ```
 
-### 5. Post-hoc Calibration (v9d Ensemble)
+### 5. Post-hoc Calibration (v12 Ensemble)
 `calibration.py` + `calibration_map.py`:
 
-The 7-seed LightGBM ensemble takes `p_adj` plus 33 features and produces a calibrated
+The 7-seed LightGBM ensemble takes `p_adj` plus 35 features and produces a calibrated
 probability. The ensemble averages predictions across all 7 seeds with temperature scaling
-(T=0.98). This is the primary probability used for slip building.
+(T=1.08). This is the primary probability used for slip building.
 
 ### 6. Telemetry Calibration (Isotonic)
 A secondary isotonic calibration layer trained on replay corpus outcomes. Currently using

@@ -35,6 +35,12 @@ def run_score_board(
     star_drop = float(blow.get("star_minute_drop", 0.12))
     role_drop = float(blow.get("role_minute_drop", 0.20))
 
+    # Build team/matchup blowout stats once for enriched q
+    from Atlas.engine.new_probability import _build_blowout_team_stats
+    _blowout_team_stats = _build_blowout_team_stats(logs, threshold=threshold)
+    if _blowout_team_stats:
+        blow["_blowout_team_stats"] = _blowout_team_stats
+
     rows: list[dict[str, Any]] = []
 
     for r in board.itertuples(index=False):

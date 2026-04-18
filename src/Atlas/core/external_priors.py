@@ -177,6 +177,13 @@ def _load_csv_priors(path: Path) -> pd.DataFrame:
         }
     )
 
+    # New market probability columns (optional — may not exist in older CSVs)
+    for col in ["over_prob", "under_prob", "over_rating", "under_rating", "opp_rank"]:
+        if col in df.columns:
+            out[col] = pd.to_numeric(df[col], errors="coerce")
+        else:
+            out[col] = np.nan
+
     out = out.dropna(subset=["player", "stat", "projection"])
     out = out[(out["player"] != "") & (out["stat"] != "")]
     return out
@@ -279,7 +286,17 @@ def apply_external_priors(
             max_conf=("confidence", "max"),
         ).reset_index()
         blended = blended.merge(agg, on=["player", "stat"], how="left")
-        blended = blended[["player", "stat", "mu", "sources", "n_sources", "max_conf"]]
+
+        # Carry market probability columns through the blend (take first non-NaN per player/stat)
+        for mp_col in ["over_prob", "under_prob", "over_rating", "under_rating", "opp_rank"]:
+            if mp_col in pri.columns:
+                mp_agg = grouped[mp_col].first().rename(mp_col).reset_index()
+                blended = blended.merge(mp_agg, on=["player", "stat"], how="left")
+
+        blended = blended[
+            ["player", "stat", "mu", "sources", "n_sources", "max_conf"]
+            + [c for c in ["over_prob", "under_prob", "over_rating", "under_rating", "opp_rank"] if c in blended.columns]
+        ]
 
         merged = out.merge(
             blended,
@@ -306,18 +323,56 @@ def apply_external_priors(
 
         safe_scale = scale if scale > 1e-9 else 1.0
 
-        # NA-safe tanh (vectorized). np.tanh(np.nan) -> nan, then we fill to 0 later.
+        # ── Signal 1: Projection edge score (existing) ──────────────
         x = merged["edge_at_pp_line"] / safe_scale
-        merged["external_prior_score"] = np.tanh(x).astype(float)  # nan ok
+        proj_score = np.tanh(x).astype(float)
+        proj_score = pd.to_numeric(proj_score, errors="coerce").fillna(0.0).clip(-1.0, 1.0)
 
-        merged["external_prior_score"] = (
-            pd.to_numeric(merged["external_prior_score"], errors="coerce")
-            .fillna(0.0)
-            .clip(-1.0, 1.0)
+        # ── Signal 2: Market probability divergence (new) ───────────
+        # Pick the market-implied probability matching this leg's direction.
+        # BettingPros over_prob = P(over), under_prob = P(under).
+        # Compare to Atlas p_adj: if market is more confident in the same
+        # direction, that's a bullish signal; less confident = bearish.
+        market_prob_weight = float(pri_cfg.get("market_prob_weight", 0.0))
+        mkt_prob = np.where(
+            merged["_ep_dir"] == "OVER",
+            pd.to_numeric(merged.get("over_prob"), errors="coerce"),
+            pd.to_numeric(merged.get("under_prob"), errors="coerce"),
         )
+        mkt_prob = pd.to_numeric(pd.Series(mkt_prob, index=merged.index), errors="coerce")
+
+        # Market divergence: how much more confident is the market than Atlas?
+        # Positive = market agrees with this direction more strongly.
+        target_col_name: Optional[str] = "p_adj" if "p_adj" in merged.columns else ("p" if "p" in merged.columns else None)
+        if target_col_name is not None:
+            atlas_p = pd.to_numeric(merged[target_col_name], errors="coerce")
+        else:
+            atlas_p = pd.Series(0.5, index=merged.index)
+
+        # Raw divergence: market_prob - atlas_prob (both are P(this direction wins))
+        mkt_divergence = (mkt_prob - atlas_p).fillna(0.0).clip(-0.5, 0.5)
+
+        # Normalize to [-1, 1] range (0.5 max divergence → 1.0 score)
+        mkt_score = (mkt_divergence / 0.5).clip(-1.0, 1.0)
+
+        # Gate: only apply market signal when direction agrees with projection
+        mkt_score_gated = np.where(merged["apply_prior"], mkt_score, 0.0)
+
+        # ── Combine signals ─────────────────────────────────────────
+        if market_prob_weight > 0 and mkt_prob.notna().any():
+            # Blend: (1-w)*projection_score + w*market_score
+            combined_score = (1.0 - market_prob_weight) * proj_score + market_prob_weight * mkt_score_gated
+        else:
+            combined_score = proj_score
+
+        merged["external_prior_score"] = pd.Series(combined_score, index=merged.index).fillna(0.0).clip(-1.0, 1.0)
 
         # Gate: if not apply, zero it out
         merged.loc[~merged["apply_prior"], "external_prior_score"] = 0.0
+
+        # Store market prob audit columns
+        merged["bp_market_prob"] = mkt_prob
+        merged["bp_market_divergence"] = mkt_divergence
 
         merged["external_prior_n"] = (
             merged["apply_prior"].astype(int) * merged["n_sources"].fillna(0).astype(int)
@@ -348,6 +403,8 @@ def apply_external_priors(
             "implied_direction",
             "apply_prior",
             "external_prior_score",
+            "bp_market_prob",
+            "bp_market_divergence",
             "external_prior_n",
             "external_prior_sources",
             "delta_p",

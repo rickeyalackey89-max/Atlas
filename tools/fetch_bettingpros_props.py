@@ -198,24 +198,31 @@ def _prop_to_row(prop: dict, asof_ts: str) -> Optional[Dict[str, str]]:
     # Build confidence from bet_rating (1-5 scale → 0.2-1.0)
     confidence = round(max(0.2, min(1.0, bet_rating / 5.0)), 4)
 
+    # Market-implied probabilities per side
+    over_info = prop.get("over", {})
+    under_info = prop.get("under", {})
+    over_prob = over_info.get("probability", "")
+    under_prob = under_info.get("probability", "")
+    over_rating = over_info.get("bet_rating", "")
+    under_rating = under_info.get("bet_rating", "")
+    line = over_info.get("consensus_line") or over_info.get("line", "")
+
+    # Opposition rank
+    extra = prop.get("extra", {})
+    opp = extra.get("opposition_rank", {})
+    opp_rank_val = opp.get("rank", "") if opp else ""
+
     # Performance data for notes
     perf = prop.get("performance") or {}
+    last_5 = perf.get("last_5") or {}
     last_10 = perf.get("last_10") or {}
+    last_20 = perf.get("last_20") or {}
+    season = perf.get("season") or {}
     over_10 = last_10.get("over", 0)
     under_10 = last_10.get("under", 0)
     total_10 = over_10 + under_10 + last_10.get("push", 0)
     streak = perf.get("streak", 0)
     streak_type = perf.get("streak_type", "")
-
-    opp_rank = ""
-    extra = prop.get("extra", {})
-    opp = extra.get("opposition_rank", {})
-    if opp:
-        opp_rank = f"opp_rank={opp.get('rank', '?')}"
-
-    over_info = prop.get("over", {})
-    under_info = prop.get("under", {})
-    line = over_info.get("consensus_line") or over_info.get("line", "")
 
     notes_parts = [
         f"side={recommended_side}",
@@ -225,8 +232,8 @@ def _prop_to_row(prop: dict, asof_ts: str) -> Optional[Dict[str, str]]:
         f"L10={over_10}o/{under_10}u/{total_10}g",
         f"streak={streak}{streak_type[0] if streak_type else ''}",
     ]
-    if opp_rank:
-        notes_parts.append(opp_rank)
+    if opp_rank_val:
+        notes_parts.append(f"opp_rank={opp_rank_val}")
 
     return {
         "source": "bettingpros",
@@ -236,6 +243,11 @@ def _prop_to_row(prop: dict, asof_ts: str) -> Optional[Dict[str, str]]:
         "asof_ts": asof_ts,
         "projection": str(proj_value),
         "confidence": str(confidence),
+        "over_prob": str(over_prob) if over_prob != "" else "",
+        "under_prob": str(under_prob) if under_prob != "" else "",
+        "over_rating": str(over_rating) if over_rating != "" else "",
+        "under_rating": str(under_rating) if under_rating != "" else "",
+        "opp_rank": str(opp_rank_val),
         "notes": "; ".join(notes_parts),
     }
 
@@ -259,7 +271,7 @@ def _props_to_csv_rows(props: List[dict], asof_ts: str) -> List[Dict[str, str]]:
 # Write / merge
 # ---------------------------------------------------------------------------
 
-CSV_FIELDS = ["source", "league", "player", "stat", "asof_ts", "projection", "confidence", "notes"]
+CSV_FIELDS = ["source", "league", "player", "stat", "asof_ts", "projection", "confidence", "over_prob", "under_prob", "over_rating", "under_rating", "opp_rank", "notes"]
 
 
 def _write_bp_csv(rows: List[Dict[str, str]], path: Path) -> None:
@@ -268,7 +280,7 @@ def _write_bp_csv(rows: List[Dict[str, str]], path: Path) -> None:
         writer = csv.DictWriter(f, fieldnames=CSV_FIELDS)
         writer.writeheader()
         writer.writerows(rows)
-    print(f"[BP] Wrote {len(rows)} rows → {path}")
+    print(f"[BP] Wrote {len(rows)} rows -> {path}")
 
 
 def _merge_into_external_priors(bp_rows: List[Dict[str, str]], merged_path: Path) -> None:
@@ -288,10 +300,13 @@ def _merge_into_external_priors(bp_rows: List[Dict[str, str]], merged_path: Path
 
     merged_path.parent.mkdir(parents=True, exist_ok=True)
     with merged_path.open("w", newline="", encoding="utf-8") as f:
-        writer = csv.DictWriter(f, fieldnames=CSV_FIELDS)
+        writer = csv.DictWriter(f, fieldnames=CSV_FIELDS, extrasaction="ignore")
         writer.writeheader()
-        writer.writerows(all_rows)
-    print(f"[BP] Merged external priors: {len(existing_rows)} existing + {len(bp_rows)} bettingpros = {len(all_rows)} total → {merged_path}")
+        for row in all_rows:
+            # Ensure all fields present (non-BP rows won't have new columns)
+            safe_row = {k: row.get(k, "") for k in CSV_FIELDS}
+            writer.writerow(safe_row)
+    print(f"[BP] Merged external priors: {len(existing_rows)} existing + {len(bp_rows)} bettingpros = {len(all_rows)} total -> {merged_path}")
 
 
 def _archive_snapshot(bp_csv_path: Path, game_date: str, archive_dir: Path) -> None:
@@ -299,7 +314,7 @@ def _archive_snapshot(bp_csv_path: Path, game_date: str, archive_dir: Path) -> N
     archive_name = f"bettingpros_props_{game_date}.csv"
     dest = archive_dir / archive_name
     shutil.copy2(str(bp_csv_path), str(dest))
-    print(f"[BP] Archived → {dest}")
+    print(f"[BP] Archived -> {dest}")
 
 
 # ---------------------------------------------------------------------------
@@ -332,7 +347,7 @@ def main() -> int:
 
     asof_ts = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S")
     rows = _props_to_csv_rows(all_props, asof_ts)
-    print(f"[BP] Converted {len(all_props)} raw props → {len(rows)} unique CSV rows")
+    print(f"[BP] Converted {len(all_props)} raw props -> {len(rows)} unique CSV rows")
 
     if not rows:
         print("[BP] 0 usable rows after conversion. Skipping.")

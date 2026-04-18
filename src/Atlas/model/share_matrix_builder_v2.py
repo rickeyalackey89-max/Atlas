@@ -37,6 +37,7 @@ def generate_share_matrix_v2(
     gamelogs: pd.DataFrame,
     *,
     iael_df: Optional[pd.DataFrame] = None,
+    role_metrics_df: Optional[pd.DataFrame] = None,
     recent_days: int = 140,
     min_rotation_games: int = 6,
     min_rotation_avg_min: float = 8.0,
@@ -51,6 +52,7 @@ def generate_share_matrix_v2(
     return _build_share_matrix_v2_impl(
         gamelogs,
         iael_df=iael_df,
+        role_metrics_df=role_metrics_df,
         recent_days=recent_days,
         min_rotation_games=min_rotation_games,
         min_rotation_avg_min=min_rotation_avg_min,
@@ -64,6 +66,7 @@ def build_and_write_share_matrix_v2(
     out_path: str | Path,
     *,
     iael_df: Optional[pd.DataFrame] = None,
+    role_metrics_df: Optional[pd.DataFrame] = None,
     recent_days: int = 140,
     min_rotation_games: int = 6,
     min_rotation_avg_min: float = 8.0,
@@ -73,6 +76,7 @@ def build_and_write_share_matrix_v2(
     mat = generate_share_matrix_v2(
         gamelogs,
         iael_df=iael_df,
+        role_metrics_df=role_metrics_df,
         recent_days=recent_days,
         min_rotation_games=min_rotation_games,
         min_rotation_avg_min=min_rotation_avg_min,

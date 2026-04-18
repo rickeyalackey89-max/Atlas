@@ -12,7 +12,10 @@ from __future__ import annotations
 
 import copy
 import itertools
+import os
 import sys
+from concurrent.futures import ProcessPoolExecutor, as_completed
+from functools import partial
 from pathlib import Path
 from typing import Any
 
@@ -21,32 +24,56 @@ import yaml
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
+from Atlas.core.fingerprint import build_manifest, config_fingerprint
 from Atlas.core.slip_builders import build_slips_by_tier_buckets
 from Atlas.stages.optimize.build_slips_today import _cfg_for_n_legs
 
+_TAG_FILE = Path(__file__).resolve().parents[1] / "data" / "telemetry" / "replay_runs" / ".corpus_tag"
+_CORPUS_TAG = _TAG_FILE.read_text().strip() if _TAG_FILE.exists() else "kernel_v2_perstat_corr015"
+
 # ── data paths ──────────────────────────────────────────────────────
-BASE = Path(r"D:\AtlasTestMarch26\telemetry_replay_runs")
+BASE = Path(__file__).resolve().parents[1] / "data" / "telemetry" / "replay_runs"
 RUN_DATES = [
+    "20260208", "20260209", "20260210", "20260211", "20260212",
+    "20260215", "20260219",
+    "20260225", "20260226", "20260227", "20260228",
+    "20260301", "20260302", "20260303", "20260304", "20260305",
+    "20260306", "20260307", "20260308", "20260309", "20260310",
     "20260315", "20260316", "20260317", "20260318",
     "20260319", "20260320", "20260321", "20260322",
+    "20260323", "20260324", "20260325", "20260326",
+    "20260328", "20260329", "20260330", "20260331",
+    "20260401", "20260402", "20260403", "20260404",
+    "20260405", "20260406", "20260407",
 ]
 
 # ── categories to train ─────────────────────────────────────────────
+# Only 3-leg EV/HIT here — 4/5-leg EV/HIT are handled by
+# leg_trainer_v5_ev.py / leg_trainer_v5_hit.py with deeper grids,
+# and all DEMON categories by demonhunter_trainer_v4.py.
 CATEGORIES = [
     ("3-leg EV",  3, "ev"),
     ("3-leg HIT", 3, "hit"),
-    ("4-leg EV",  4, "ev"),
-    ("5-leg EV",  5, "ev"),
 ]
 
 # ── parameter grid ──────────────────────────────────────────────────
 # Each key maps to a list of candidate values to sweep.
+# v12 data-driven: max_leg_prob shifted to 0.65-0.80 (overconfidence zone
+# where p_cal>0.80 hit rate=63%, cal gap=-27%).  min_std_w dropped — zero
+# hit-rate signal across quartiles (44.7%-46.2%).
 PARAM_GRID: dict[str, list[Any]] = {
-    "max_leg_prob":  [0.0, 0.55, 0.58, 0.60, 0.65, 0.70],
-    "min_leg_prob":  [0.50, 0.52, 0.55],
-    "frag_w":        [0.0, 0.20],
-    "min_std_w":     [0.0, 0.10],
+    "max_leg_prob":       [0.0, 0.65, 0.70, 0.75, 0.78, 0.80],
+    "min_leg_prob":       [0.50, 0.52, 0.55],
+    "frag_w":             [0.0, 0.20],
+    "stat_family_mode":   ["coarse", "fine"],
+    "beam_window_growth": [1.5, 2.0],
 }
+
+# Multi-seed evaluation for stability (single seed=42 gave only 41 binary
+# outcomes per combo — too noisy).  3 seeds × top-3 slips each.
+SEEDS = [42, 137, 9999]
+TOP_N_PER_SEED = 3
+N_WORKERS = max(1, (os.cpu_count() or 1) - 1)
 
 # ── tier mixes (fixed) ──────────────────────────────────────────────
 MIXES = {
@@ -55,7 +82,20 @@ MIXES = {
     5: {"STANDARD": 3, "DEMON": 2},
 }
 
+DEMON_MIXES = {
+    3: {"DEMON": 3},
+    4: {"DEMON": 4},
+    5: {"DEMON": 5},
+}
+
 PAYOUT_FLEX = {"3": 2.25, "4": 5.0, "5": 10.0}
+
+
+def _demon_mix_ok(n_legs: int, legs: Any) -> bool:
+    s = str(legs or "")
+    return (s.count("(DEMON)") == n_legs
+            and s.count("(GOBLIN)") == 0
+            and s.count("(STANDARD)") == 0)
 
 
 # ── data loading ────────────────────────────────────────────────────
@@ -63,7 +103,7 @@ def load_all_dates() -> list[tuple[str, pd.DataFrame, dict]]:
     """Return [(date, scored_df, truth_dict), ...]"""
     loaded = []
     for date in RUN_DATES:
-        run_dir = BASE / f"kernel_v2_perstat_corr015_{date}"
+        run_dir = BASE / f"{_CORPUS_TAG}_{date}"
         if not run_dir.exists():
             continue
         eval_files = list(run_dir.rglob("eval_legs.csv"))
@@ -121,33 +161,50 @@ def evaluate_top_slip(slip_row, truth: dict) -> tuple[bool, int, int]:
 
 
 # ── builder wrapper ─────────────────────────────────────────────────
-def build_top1(scored_df: pd.DataFrame, cfg: dict, n_legs: int,
-               sort_mode: str) -> pd.Series | None:
-    """Build slips and return top-1, or None."""
-    resolved_cfg, top_n = _cfg_for_n_legs(cfg, n_legs, 10, sort_mode)
-    sb = resolved_cfg.get("slip_build", {})
-    try:
-        slips = build_slips_by_tier_buckets(
-            legs_df=scored_df,
-            n_legs=n_legs,
-            top_n=10,
-            payout_power_mult=1.0,
-            payout_flex=PAYOUT_FLEX,
-            pricing_engine="atlas",
-            cfg=resolved_cfg,
-            seed=42,
-            per_tier=500,
-            max_attempts=100_000,
-            sort_mode=sort_mode,
-            mixes=MIXES,
-            required_tiers=["STANDARD", "DEMON"],
-            mix_ok_fn=lambda n, s: True,
-        )
-    except Exception:
-        return None
-    if slips is None or slips.empty:
-        return None
-    return slips.iloc[0]
+def build_top_slips(scored_df: pd.DataFrame, cfg: dict, n_legs: int,
+                    sort_mode: str) -> list[pd.Series]:
+    """Build slips across multiple seeds and return top slips list."""
+    is_demon = sort_mode == "demon"
+    effective_sort = "hit" if is_demon else sort_mode
+    resolved_cfg, top_n = _cfg_for_n_legs(cfg, n_legs, 10, effective_sort)
+    mixes = DEMON_MIXES if is_demon else MIXES
+    mix_ok = _demon_mix_ok if is_demon else (lambda n, s: True)
+    required = ["DEMON"] if is_demon else ["STANDARD", "DEMON"]
+    results: list[pd.Series] = []
+    for seed in SEEDS:
+        try:
+            slips = build_slips_by_tier_buckets(
+                legs_df=scored_df,
+                n_legs=n_legs,
+                top_n=TOP_N_PER_SEED,
+                payout_power_mult=1.0,
+                payout_flex=PAYOUT_FLEX,
+                pricing_engine="atlas",
+                cfg=resolved_cfg,
+                seed=seed,
+                per_tier=500,
+                max_attempts=100_000,
+                sort_mode=effective_sort,
+                mixes=mixes,
+                required_tiers=required,
+                mix_ok_fn=mix_ok,
+            )
+        except Exception:
+            continue
+        if slips is not None and not slips.empty:
+            for i in range(min(TOP_N_PER_SEED, len(slips))):
+                results.append(slips.iloc[i])
+    return results
+
+
+# ── worker process globals ──────────────────────────────────────────
+_worker_data: list[tuple[str, pd.DataFrame, dict]] = []
+
+
+def _init_worker(data: list[tuple[str, pd.DataFrame, dict]]):
+    """Called once per worker process to set shared data."""
+    global _worker_data
+    _worker_data = data
 
 
 # ── scoring a parameter combo across all dates ──────────────────────
@@ -156,9 +213,9 @@ def score_combo(
     base_cfg: dict,
     n_legs: int,
     sort_mode: str,
-    data: list[tuple[str, pd.DataFrame, dict]],
 ) -> dict[str, Any]:
     """Score one parameter combination. Returns metrics dict."""
+    data = _worker_data
     cfg = copy.deepcopy(base_cfg)
     sb = cfg.setdefault("slip_build", {})
     pen = sb.setdefault("penalty", {})
@@ -171,27 +228,31 @@ def score_combo(
             sb[k] = v
 
     total_slip_wins = 0
+    total_slips_eval = 0
     total_dates = 0
     total_legs_matched = 0
     total_legs_hit = 0
 
     for date, scored_df, truth in data:
-        top1 = build_top1(scored_df, cfg, n_legs, sort_mode)
-        if top1 is None:
+        top_slips = build_top_slips(scored_df, cfg, n_legs, sort_mode)
+        if not top_slips:
             continue
         total_dates += 1
-        all_hit, matched, hit_count = evaluate_top_slip(top1, truth)
-        if all_hit:
-            total_slip_wins += 1
-        total_legs_matched += matched
-        total_legs_hit += hit_count
+        for slip_row in top_slips:
+            total_slips_eval += 1
+            all_hit, matched, hit_count = evaluate_top_slip(slip_row, truth)
+            if all_hit:
+                total_slip_wins += 1
+            total_legs_matched += matched
+            total_legs_hit += hit_count
 
-    slip_rate = total_slip_wins / max(total_dates, 1)
+    slip_rate = total_slip_wins / max(total_slips_eval, 1)
     leg_rate = total_legs_hit / max(total_legs_matched, 1)
 
     return {
         "combo": combo,
         "slip_wins": total_slip_wins,
+        "slips_eval": total_slips_eval,
         "dates": total_dates,
         "slip_rate": slip_rate,
         "legs_hit": total_legs_hit,
@@ -209,6 +270,10 @@ def main():
     data = load_all_dates()
     print(f"Loaded {len(data)} dates of replay data.\n")
 
+    # Set module-level data for main-process baseline calls too
+    global _worker_data
+    _worker_data = data
+
     # Generate all combos
     param_names = sorted(PARAM_GRID.keys())
     all_values = [PARAM_GRID[k] for k in param_names]
@@ -223,25 +288,35 @@ def main():
         print(f"{'='*60}")
 
         results = []
-        for i, combo in enumerate(combos):
-            if (i + 1) % 50 == 0:
-                print(f"  ... {i+1}/{len(combos)} combos tested")
-            result = score_combo(combo, base_cfg, n_legs, sort_mode, data)
-            results.append(result)
+        done = 0
+        with ProcessPoolExecutor(
+            max_workers=N_WORKERS,
+            initializer=_init_worker,
+            initargs=(data,),
+        ) as pool:
+            futures = {
+                pool.submit(score_combo, combo, base_cfg, n_legs, sort_mode): combo
+                for combo in combos
+            }
+            for future in as_completed(futures):
+                done += 1
+                if done % 10 == 0:
+                    print(f"  ... {done}/{len(combos)} combos tested")
+                results.append(future.result())
 
         # Sort by composite score (slip wins first, leg rate tiebreaker)
         results.sort(key=lambda r: r["score"], reverse=True)
 
         best = results[0]
         print(f"\n  BEST: {best['combo']}")
-        print(f"  Slip wins: {best['slip_wins']}/{best['dates']} = {best['slip_rate']:.1%}")
+        print(f"  Slip wins: {best['slip_wins']}/{best['slips_eval']} = {best['slip_rate']:.1%}")
         print(f"  Leg rate:  {best['legs_hit']}/{best['legs_matched']} = {best['leg_rate']:.1%}")
         print()
 
         # Show top-5
         print("  TOP 5 COMBOS:")
         for rank, r in enumerate(results[:5], 1):
-            print(f"    #{rank}: slips={r['slip_wins']}/{r['dates']} ({r['slip_rate']:.0%})"
+            print(f"    #{rank}: slips={r['slip_wins']}/{r['slips_eval']} ({r['slip_rate']:.0%})"
                   f"  legs={r['legs_hit']}/{r['legs_matched']} ({r['leg_rate']:.0%})"
                   f"  | {r['combo']}")
         print()
@@ -256,8 +331,8 @@ def main():
     # Baseline: run with current config (no overrides)
     print("\nCURRENT CONFIG (baseline):")
     for cat_name, n_legs, sort_mode in CATEGORIES:
-        r = score_combo({}, base_cfg, n_legs, sort_mode, data)
-        print(f"  {cat_name:12s}: slips={r['slip_wins']}/{r['dates']} ({r['slip_rate']:.0%})"
+        r = score_combo({}, base_cfg, n_legs, sort_mode)
+        print(f"  {cat_name:12s}: slips={r['slip_wins']}/{r['slips_eval']} ({r['slip_rate']:.0%})"
               f"  legs={r['legs_hit']}/{r['legs_matched']} ({r['leg_rate']:.0%})")
 
     print("\nOPTIMAL PER-CATEGORY:")
@@ -265,12 +340,12 @@ def main():
     total_wins_optimal = 0
     for cat_name, n_legs, sort_mode in CATEGORIES:
         best = best_per_category[cat_name]
-        baseline = score_combo({}, base_cfg, n_legs, sort_mode, data)
+        baseline = score_combo({}, base_cfg, n_legs, sort_mode)
         total_wins_baseline += baseline["slip_wins"]
         total_wins_optimal += best["slip_wins"]
         delta_slip = best["slip_wins"] - baseline["slip_wins"]
         sign = "+" if delta_slip >= 0 else ""
-        print(f"  {cat_name:12s}: slips={best['slip_wins']}/{best['dates']} ({best['slip_rate']:.0%})"
+        print(f"  {cat_name:12s}: slips={best['slip_wins']}/{best['slips_eval']} ({best['slip_rate']:.0%})"
               f"  legs={best['legs_hit']}/{best['legs_matched']} ({best['leg_rate']:.0%})"
               f"  [{sign}{delta_slip} slips vs baseline]")
         print(f"    config: {best['combo']}")
@@ -343,6 +418,28 @@ def main():
                                 print(f"            {k2}: {v2}")
                         else:
                             print(f"          {k}: {v}")
+
+    # Save results with config fingerprint
+    results_out = {
+        "_manifest": build_manifest(
+            source="slip_builder_trainer", cfg=base_cfg,
+            ensemble_dir=base_cfg.get("posthoc_calibrator", {}).get("ensemble_dir"),
+        ),
+        "categories": {},
+    }
+    for cat_name, n_legs, sort_mode in CATEGORIES:
+        best = best_per_category[cat_name]
+        results_out["categories"][cat_name] = {
+            "combo": best["combo"],
+            "slip_wins": best["slip_wins"],
+            "slip_rate": round(best["slip_rate"], 4),
+            "leg_rate": round(best["leg_rate"], 4),
+        }
+    out_path = Path(__file__).resolve().parent / "slip_builder_trainer_results.yaml"
+    with open(out_path, "w") as f:
+        yaml.dump(results_out, f, default_flow_style=False, sort_keys=False)
+    print(f"\n  Config fingerprint: {results_out['_manifest']['config_fingerprint']}")
+    print(f"  Results saved to: {out_path}")
 
 
 if __name__ == "__main__":

@@ -2,11 +2,11 @@
 setlocal enabledelayedexpansion
 
 REM ================================================================
-REM run_iael_230pm.cmd — Afternoon live re-run
-REM Schedule: ~2:30 PM ET
+REM run_iael_530pm.cmd — Evening pre-slate live run
+REM Schedule: ~5:30 PM ET
 REM
-REM Full Atlas live pipeline with updated injury/line data.
-REM Same as 11am but captures afternoon line movements.
+REM Full Atlas live pipeline with latest injury/line data.
+REM Captures final injury updates before evening tip-offs.
 REM ================================================================
 
 set ATLAS_ROOT=C:\Users\rick\projects\Atlas
@@ -17,7 +17,7 @@ set ODDSAPI_KEY=3f9cb58724c78a06a555ecef04cc55dd
 
 cd /d %ATLAS_ROOT%
 echo.>> %LOG%
-echo ===== %date% %time% 230PM LIVE RUN START =====>> %LOG%
+echo ===== %date% %time% 530PM LIVE RUN START =====>> %LOG%
 
 REM (1) Full live pipeline (IAEL preflight + fetch + score + publish + bundle)
 %PY% -m Atlas.cli live >> %LOG% 2>&1
@@ -36,7 +36,7 @@ if errorlevel 1 (
 REM (3) Archive run artifacts to telemetry
 cd /d %ATLAS_ROOT%
 set TODAY_TAG=%date:~10,4%%date:~4,2%%date:~7,2%
-set TELEM_LIVE=%ATLAS_ROOT%\data\telemetry\live_runs\%TODAY_TAG%_230pm
+set TELEM_LIVE=%ATLAS_ROOT%\data\telemetry\live_runs\%TODAY_TAG%_530pm
 if not exist "%TELEM_LIVE%" mkdir "%TELEM_LIVE%"
 
 REM Find the latest run directory
@@ -59,5 +59,5 @@ if defined LATEST_BUNDLE (
   echo [TELEM] Bundle !LATEST_BUNDLE! archived >> %LOG%
 )
 
-echo ===== %date% %time% 230PM LIVE RUN END =====>> %LOG%
+echo ===== %date% %time% 530PM LIVE RUN END =====>> %LOG%
 exit /b 0

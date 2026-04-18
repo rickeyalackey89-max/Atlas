@@ -180,7 +180,33 @@ def _score_slip(
     cfg: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     ps = [float(r.get("p_eff", 0.5)) for r in rows]
-    hit_prob = _prod(ps)
+    # Use unclamped probability for hit_prob so winprob rankings differentiate slips
+    ps_raw = [float(r.get("p_eff_raw", r.get("p_eff", 0.5))) for r in rows]
+    hit_prob = _prod(ps_raw)
+
+    # --- Same-game correlation adjustment (config-gated) ---
+    corr_cfg = ((cfg or {}).get("slip_build", {}) or {}).get("correlation_adj", {}) if cfg else {}
+    corr_enabled = bool(corr_cfg.get("enabled", False))
+    if corr_enabled and len(rows) >= 2:
+        same_team_pen = float(corr_cfg.get("same_team_penalty", 0.02) or 0.02)
+        hedge_bonus = float(corr_cfg.get("hedge_bonus", 0.01) or 0.01)
+        corr_mult = 1.0
+        for i in range(len(rows)):
+            ti = str(rows[i].get("team", rows[i].get("team_abbrev", ""))).strip().upper()
+            di = str(rows[i].get("direction", "")).strip().upper()
+            for j in range(i + 1, len(rows)):
+                tj = str(rows[j].get("team", rows[j].get("team_abbrev", ""))).strip().upper()
+                dj = str(rows[j].get("direction", "")).strip().upper()
+                if not ti or not tj:
+                    continue
+                if ti == tj:
+                    # Same team, same direction: positively correlated -> penalty
+                    if di == dj:
+                        corr_mult *= (1.0 - same_team_pen)
+                    else:
+                        # Same team, opposite direction: hedged -> slight bonus
+                        corr_mult *= (1.0 + hedge_bonus)
+        hit_prob = float(hit_prob * max(corr_mult, 0.5))
 
     atlas_power_mult = _as_float(payout_power_mult, None)
     pe = str(pricing_engine or "atlas").strip().lower()

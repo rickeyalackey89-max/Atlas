@@ -235,7 +235,7 @@ def build_slips_by_tier_buckets(
             if float(num.isna().mean()) > 0.50:
                 pid_series = df["source_projection_id"]
 
-        df["projection_id"] = _series_to_str(pid_series, index=df.index, default="").map(lambda x: x.strip())
+        df["projection_id"] = _series_to_str(pid_series, index=df.index, default="").map(lambda x: str(x).strip())
 
     if "tier" in df.columns:
         df["tier"] = _series_to_str(df["tier"], index=df.index, default="STANDARD").map(
@@ -288,17 +288,62 @@ def build_slips_by_tier_buckets(
             if role_surface is not None:
                 df.loc[role_on_mask, "p_eff"] = role_surface.loc[role_on_mask]
 
-    # --- p_eff ceiling: cap overconfident probabilities BEFORE edge_score ---
-    # Calibration audit shows p_cal > 0.60 is massively overconfident
-    # (model says 87%+, reality is ~55%). Clamping before edge_score
-    # ensures the ranking also reflects the cap, not just hit_prob.
+    # --- Trained leg adjustments: correct calibration biases per stat/direction/tier ---
+    leg_adj = sb.get("leg_adjustments") if isinstance(sb, dict) else None
+    if isinstance(leg_adj, dict):
+        adj_arr = np.zeros(len(df), dtype="float64")
+
+        # by_direction: e.g. {"under": -0.08, "over": 0.0}
+        by_dir = leg_adj.get("by_direction")
+        if isinstance(by_dir, dict) and "direction" in df.columns:
+            dir_col = df["direction"].astype(str).str.strip().str.lower()
+            for d_key, d_val in by_dir.items():
+                d_val = float(d_val or 0.0)
+                if d_val != 0.0:
+                    mask = dir_col == str(d_key).strip().lower()
+                    adj_arr[mask.to_numpy()] += d_val
+
+        # by_tier: e.g. {"GOBLIN": 0.05, "DEMON": -0.03}
+        by_tier = leg_adj.get("by_tier")
+        if isinstance(by_tier, dict) and "tier" in df.columns:
+            tier_col = df["tier"].astype(str).str.strip().str.upper()
+            for t_key, t_val in by_tier.items():
+                t_val = float(t_val or 0.0)
+                if t_val != 0.0:
+                    mask = tier_col == str(t_key).strip().upper()
+                    adj_arr[mask.to_numpy()] += t_val
+
+        # by_stat_direction: e.g. {"REB_under": -0.10, "AST_under": -0.12}
+        by_sd = leg_adj.get("by_stat_direction")
+        if isinstance(by_sd, dict) and "stat" in df.columns and "direction" in df.columns:
+            stat_col = df["stat"].astype(str).str.strip().str.upper()
+            dir_col = df["direction"].astype(str).str.strip().str.lower()
+            sd_key_col = stat_col + "_" + dir_col
+            for sd_key, sd_val in by_sd.items():
+                sd_val = float(sd_val or 0.0)
+                if sd_val != 0.0:
+                    mask = sd_key_col == str(sd_key).strip().upper()
+                    adj_arr[mask.to_numpy()] += sd_val
+
+        if np.any(adj_arr != 0.0):
+            before_mean = float(df["p_eff"].mean())
+            df["p_eff"] = _clip01(df["p_eff"] + pd.Series(adj_arr, index=df.index))
+            if (os.getenv("ATLAS_DEBUG_BUILDER") or "").strip() == "1":
+                after_mean = float(df["p_eff"].mean())
+                n_adj = int(np.sum(adj_arr != 0.0))
+                print(f"[BUILDER][DEBUG] leg_adjustments: {n_adj} legs adjusted, p_eff mean {before_mean:.3f} -> {after_mean:.3f}")
+
+    # --- p_eff ceiling: CLAMP overconfident legs BEFORE edge_score ---
+    # Trainer optimized max_leg_prob as a clamp (clip), not a filter.
+    # Clamping preserves the leg in the pool at the cap value;
+    # filtering removes it entirely and starves the beam search.
+    # Keep unclamped p_eff_raw so hit_prob reflects actual probability.
     max_leg_prob = float(sb.get("max_leg_prob", 0.0) or 0.0)
+    df["p_eff_raw"] = df["p_eff"].copy()
     if max_leg_prob > 0.0:
-        before_mean = float(df["p_eff"].mean())
         df["p_eff"] = df["p_eff"].clip(upper=max_leg_prob)
         if (os.getenv("ATLAS_DEBUG_BUILDER") or "").strip() == "1":
-            after_mean = float(df["p_eff"].mean())
-            print(f"[BUILDER][DEBUG] max_leg_prob={max_leg_prob:.3f} clamp: p_eff mean {before_mean:.3f} -> {after_mean:.3f}")
+            print(f"[BUILDER][DEBUG] max_leg_prob={max_leg_prob:.3f} clamp applied")
 
     # edge_score fallback = p_eff - 0.5 (keep exact math)
     edge_cap = (max_leg_prob - 0.5) if max_leg_prob > 0.0 else None
@@ -410,6 +455,29 @@ def build_slips_by_tier_buckets(
         if df.empty:
             return pd.DataFrame(columns=_EMPTY_SLIPS_COLS)
 
+    # --- Min edge filter: exclude legs below edge threshold ---
+    min_edge = float(sb.get("min_edge", 0.0) or 0.0)
+    if min_edge > 0.0 and "edge_score" in df.columns:
+        before_len = len(df)
+        df = df[df["edge_score"] >= min_edge].reset_index(drop=True)
+        if (os.getenv("ATLAS_DEBUG_BUILDER") or "").strip() == "1":
+            print(f"[BUILDER][DEBUG] min_edge={min_edge:.3f} filter: {before_len} -> {len(df)} legs")
+        if df.empty:
+            return pd.DataFrame(columns=_EMPTY_SLIPS_COLS)
+
+    # --- Stat+direction exclusion filter ---
+    exclude_sd = sb.get("exclude_stat_directions")
+    if isinstance(exclude_sd, (list, tuple)) and len(exclude_sd) > 0 and "stat" in df.columns and "direction" in df.columns:
+        before_len = len(df)
+        sd_key_col = df["stat"].astype(str).str.strip().str.upper() + "_" + df["direction"].astype(str).str.strip().str.lower()
+        exclude_set = {str(x).strip().upper() for x in exclude_sd}
+        keep_mask = ~sd_key_col.str.upper().isin(exclude_set)
+        df = df[keep_mask].reset_index(drop=True)
+        if (os.getenv("ATLAS_DEBUG_BUILDER") or "").strip() == "1":
+            print(f"[BUILDER][DEBUG] exclude_stat_directions filter: {before_len} -> {len(df)} legs (excluded {exclude_set})")
+        if df.empty:
+            return pd.DataFrame(columns=_EMPTY_SLIPS_COLS)
+
     # --- Data health filter: exclude legs with missing/bad data ---
     require_healthy_data = bool(sb.get("require_healthy_data", True))
     if require_healthy_data and "data_health_flag" in df.columns:
@@ -417,6 +485,17 @@ def build_slips_by_tier_buckets(
         df = df[df["data_health_flag"] == "OK"].reset_index(drop=True)
         if (os.getenv("ATLAS_DEBUG_BUILDER") or "").strip() == "1":
             print(f"[BUILDER][DEBUG] data_health filter: {before_len} -> {len(df)} legs")
+        if df.empty:
+            return pd.DataFrame(columns=_EMPTY_SLIPS_COLS)
+
+    # --- Minimum games filter: exclude G-League callups / thin-sample players ---
+    min_nba_games = int(sb.get("min_nba_games", 0))
+    if min_nba_games > 0 and "games_used" in df.columns:
+        before_len = len(df)
+        games_col = pd.to_numeric(df["games_used"], errors="coerce").fillna(0)
+        df = df[games_col >= min_nba_games].reset_index(drop=True)
+        if (os.getenv("ATLAS_DEBUG_BUILDER") or "").strip() == "1":
+            print(f"[BUILDER][DEBUG] min_nba_games filter ({min_nba_games}): {before_len} -> {len(df)} legs")
         if df.empty:
             return pd.DataFrame(columns=_EMPTY_SLIPS_COLS)
 
@@ -465,7 +544,7 @@ def build_slips_by_tier_buckets(
     target_pool_mult = int(sb.get("target_pool_mult", 10))
     phase1_frac = float(sb.get("phase1_frac", 0.30))
     phase1_pool_frac = float(sb.get("phase1_pool_frac", 0.60))
-    max_players_per_team = int(sb.get("max_players_per_team", 1))  # 1 = strict, 2 = allow pairs
+    max_players_per_team = int(sb.get("max_players_per_team", 2))  # 2 = allow pairs (production default)
     no_same_game_within_slip = bool(sb.get("no_same_game_within_slip", False))
 
     # Clamp to safe ranges (prevents config typos from breaking sampling).
@@ -524,8 +603,9 @@ def build_slips_by_tier_buckets(
                         return v
             return ""
 
+        _stat_family_mode = str(sb.get("stat_family_mode", "coarse") or "coarse").strip().lower()
+
         def _family_key(r: pd.Series) -> str:
-            # usage/variance buckets (Decision B=3)
             s = ""
             for k in ("stat", "stat_type", "market"):
                 if k in r.index:
@@ -534,6 +614,13 @@ def build_slips_by_tier_buckets(
                         break
             u = s.upper()
 
+            # --- Fine mode: per-stat identity (PTS != AST != PRA) ---
+            if _stat_family_mode == "fine":
+                if u:
+                    return u
+                return "OTHER"
+
+            # --- Coarse mode (legacy default): 5 buckets ---
             usage = {
                 "PTS", "POINTS",
                 "AST", "ASSISTS",
@@ -643,6 +730,25 @@ def build_slips_by_tier_buckets(
                     if st:
                         stat_counts[st] = stat_counts.get(st, 0) + 1
                 if stat_counts and max(stat_counts.values()) > max_same_stat:
+                    continue
+
+            # Optional hard constraint: max N legs of a given direction per slip
+            max_dir_per_slip = sb.get("max_direction_per_slip")
+            if isinstance(max_dir_per_slip, dict):
+                dir_counts: dict[str, int] = {}
+                for r in chosen:
+                    d = ""
+                    if "direction" in r.index:
+                        d = str(r["direction"]).strip().lower()
+                    if d and d != "nan":
+                        dir_counts[d] = dir_counts.get(d, 0) + 1
+                dir_ok = True
+                for d_key, d_max in max_dir_per_slip.items():
+                    d_max = int(d_max or n_legs)
+                    if dir_counts.get(str(d_key).strip().lower(), 0) > d_max:
+                        dir_ok = False
+                        break
+                if not dir_ok:
                     continue
 
             scored = _score_slip(
@@ -794,8 +900,12 @@ def build_slips_by_tier_buckets(
             slips.append(scored)
 
 
-    # Phase 1: exploit (top slice)
+    # Phase 1: exploit (top slice) — cap at half the budget so phase 2 always runs
+    phase1_attempt_cap = max_attempts // 2
+    saved_max = max_attempts
+    max_attempts = phase1_attempt_cap
     _run_phase(buckets_p1, target_p1)
+    max_attempts = saved_max  # restore full budget for phase 2
 
     if (os.getenv("ATLAS_DEBUG_BUILDER") or "").strip() == "1":
         print(f"[BUILDER][DEBUG] After phase1: slips={len(slips)}, attempts={attempts}, counters={_run_phase._last_counters if hasattr(_run_phase, '_last_counters') else 'N/A'}")
@@ -1032,11 +1142,30 @@ def build_slips_by_tier_buckets(
     cand_order = cand_order[:cand_cap]
     beam_window_size = len(cand_order)
 
+    # Soft exposure penalty config (gated — defaults to OFF / hard cap only)
+    _soft_exposure_cfg = sb.get("soft_exposure", {}) if isinstance(sb, dict) else {}
+    _soft_exposure_enabled = bool(_soft_exposure_cfg.get("enabled", False))
+    _soft_exposure_threshold = int(_soft_exposure_cfg.get("threshold", max(1, max_slips_per_player - 1)))
+    _soft_exposure_penalty = float(_soft_exposure_cfg.get("penalty_per_extra", 0.05) or 0.05)
+    # Hard cap stays at max_slips_per_player regardless of soft penalty mode
+    _soft_hard_cap = int(_soft_exposure_cfg.get("hard_cap", max_slips_per_player + 1))
+
     def _can_add(counts: dict[str, int], players: list[str]) -> bool:
+        cap = _soft_hard_cap if _soft_exposure_enabled else max_slips_per_player
         for p in players:
-            if counts.get(p, 0) + 1 > max_slips_per_player:
+            if counts.get(p, 0) + 1 > cap:
                 return False
         return True
+
+    def _exposure_penalty(counts: dict[str, int], players: list[str]) -> float:
+        if not _soft_exposure_enabled:
+            return 0.0
+        pen = 0.0
+        for p in players:
+            over = (counts.get(p, 0) + 1) - _soft_exposure_threshold
+            if over > 0:
+                pen += _soft_exposure_penalty * float(over * over)  # quadratic
+        return pen
 
     def _add_counts(counts: dict[str, int], players: list[str]) -> dict[str, int]:
         nc = dict(counts)
@@ -1094,15 +1223,19 @@ def build_slips_by_tier_buckets(
 
                 new_role_count = role_count + (1 if int(role_leg_counts[idx]) > 0 else 0)
 
-                new_total = total + float(beam_score_arr[idx])
+                exp_pen = _exposure_penalty(counts, keys)
+                new_total = total + float(beam_score_arr[idx]) - exp_pen
                 new_sel = sel + [idx]
                 new_counts = _add_counts(counts, keys)
                 next_beam.append((new_total, new_sel, new_counts, new_role_count))
 
         if not next_beam:
             # Beam stalled. Try widening candidate window (NO cap relaxation).
+            beam_window_growth = float(sb.get("beam_window_growth", 2.0) or 2.0)
+            if beam_window_growth < 1.1:
+                beam_window_growth = 1.1
             if window_mult < window_max_mult:
-                window_mult = min(window_max_mult, window_mult * 2)
+                window_mult = min(window_max_mult, int(window_mult * beam_window_growth + 0.5))
                 window_bumps += 1
 
                 cand_cap = max(int(top_n) * window_mult, window_min_size)
@@ -1242,13 +1375,17 @@ def build_slips_by_tier_buckets(
         out = out.sort_values(["hit_prob"], ascending=[False]).reset_index(drop=True)
 
     if len(out) < int(top_n):
-        raise RuntimeError(
+        import warnings
+        warnings.warn(
             "Beam could not assemble requested portfolio size without relaxing constraints: "
             f"selected={len(out)} requested={int(top_n)} "
             f"beam_window_size={beam_window_size} "
             f"rej_exposure_cap={rej_exposure_cap} rej_missing_players={rej_missing_players} "
-            f"window_mult={window_mult} window_bumps={window_bumps}"
+            f"window_mult={window_mult} window_bumps={window_bumps}",
+            stacklevel=2,
         )
+        if len(out) == 0:
+            return out
 
     # HARD ASSERT: portfolio exposure must bind off canonical players list
     if "players" not in out.columns:
@@ -1408,8 +1545,30 @@ def build_demonhunter_slips(
     all-DEMON slips (3 rows total).  Sorted by hit_prob so the best chance to
     actually cash is ranked first within each leg count.
     """
+    demon_cfg = (cfg.get("demonhunter") or {}) if isinstance(cfg, dict) else {}
+    demon_by_legs = demon_cfg.get("by_legs") or {}
+    demon_default_per_tier = int(demon_cfg.get("per_tier", 400))
+
     frames: list[pd.DataFrame] = []
     for n_legs in (3, 4, 5):
+        # Merge demonhunter per-leg overrides into slip_build
+        leg_override_raw = demon_by_legs.get(str(n_legs)) or demon_by_legs.get(n_legs) or {}
+        leg_override = dict(leg_override_raw)  # copy to avoid mutating config
+        leg_per_tier = int(leg_override.pop("per_tier", demon_default_per_tier))
+        if leg_override:
+            merged_cfg = dict(cfg)
+            sb = dict(merged_cfg.get("slip_build") or {})
+            for k, v in leg_override.items():
+                if isinstance(v, dict) and isinstance(sb.get(k), dict):
+                    nested = dict(sb[k])
+                    nested.update(v)
+                    sb[k] = nested
+                else:
+                    sb[k] = v
+            merged_cfg["slip_build"] = sb
+        else:
+            merged_cfg = cfg
+
         mixes = {n_legs: {"DEMON": n_legs}}
         df = build_slips_by_tier_buckets(
             legs_df=legs_df,
@@ -1418,9 +1577,9 @@ def build_demonhunter_slips(
             payout_power_mult=POWER_MULT[n_legs],
             payout_flex={3: FLEX_3, 4: FLEX_4, 5: FLEX_5}[n_legs],
             pricing_engine=pricing_engine,
-            cfg=cfg,
+            cfg=merged_cfg,
             seed=seed,
-            per_tier=400,
+            per_tier=leg_per_tier,
             max_attempts=200000,
             sort_mode=sort_mode,
             mixes=mixes,

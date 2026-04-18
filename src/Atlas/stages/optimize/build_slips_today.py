@@ -129,15 +129,26 @@ def run_build_slips(
         build_system_slips(scored_for_optimizer, 5, top_n5, seed, pricing_engine=pricing_engine, cfg=cfg5, sort_mode=sort_mode), 5
     )
 
-    # WINDFALL
+    # WINDFALL — strip System-specific exclusions that starve DEMON-tier legs
+    def _windfall_cfg(resolved: dict) -> dict:
+        out = dict(resolved)
+        sb = dict(out.get("slip_build") or {})
+        sb.pop("exclude_stat_directions", None)
+        sb.pop("min_edge", None)
+        out["slip_build"] = sb
+        return out
+
+    wcfg3 = _windfall_cfg(cfg3)
+    wcfg4 = _windfall_cfg(cfg4)
+    wcfg5 = _windfall_cfg(cfg5)
     wind3 = expand_legs(
-        build_windfall_slips(scored_for_optimizer, 3, top_n3, seed, pricing_engine=pricing_engine, cfg=cfg3, sort_mode=sort_mode), 3
+        build_windfall_slips(scored_for_optimizer, 3, top_n3, seed, pricing_engine=pricing_engine, cfg=wcfg3, sort_mode=sort_mode), 3
     )
     wind4 = expand_legs(
-        build_windfall_slips(scored_for_optimizer, 4, top_n4, seed, pricing_engine=pricing_engine, cfg=cfg4, sort_mode=sort_mode), 4
+        build_windfall_slips(scored_for_optimizer, 4, top_n4, seed, pricing_engine=pricing_engine, cfg=wcfg4, sort_mode=sort_mode), 4
     )
     wind5 = expand_legs(
-        build_windfall_slips(scored_for_optimizer, 5, top_n5, seed, pricing_engine=pricing_engine, cfg=cfg5, sort_mode=sort_mode), 5
+        build_windfall_slips(scored_for_optimizer, 5, top_n5, seed, pricing_engine=pricing_engine, cfg=wcfg5, sort_mode=sort_mode), 5
     )
 
     # DEMONHUNTER – best single all-DEMON slip at each leg count

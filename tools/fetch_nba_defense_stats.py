@@ -246,7 +246,7 @@ def write_csv(
         w = csv.DictWriter(f, fieldnames=CSV_FIELDS)
         w.writeheader()
         w.writerows(rows)
-    print(f"[NBA DEFENSE] Wrote {len(rows)} rows → {out_path}")
+    print(f"[NBA DEFENSE] Wrote {len(rows)} rows -> {out_path}")
 
     # Archive
     archive_dir = Path(archive_dir or _default_archive_dir())
@@ -259,7 +259,7 @@ def write_csv(
     archive_path = archive_dir / archive_name
     if not archive_path.exists():
         shutil.copy2(out_path, archive_path)
-        print(f"[NBA DEFENSE] Archived → {archive_path}")
+        print(f"[NBA DEFENSE] Archived -> {archive_path}")
 
     return out_path
 

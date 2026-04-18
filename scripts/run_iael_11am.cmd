@@ -13,6 +13,7 @@ set ATLAS_ROOT=C:\Users\rick\projects\Atlas
 set DASH_ROOT=C:\Users\rick\projects\AtlasDashboard
 set PY=%ATLAS_ROOT%\.venv\Scripts\python.exe
 set LOG=%ATLAS_ROOT%\data\telemetry\iael_runs.log
+set ODDSAPI_KEY=3f9cb58724c78a06a555ecef04cc55dd
 
 cd /d %ATLAS_ROOT%
 echo.>> %LOG%

@@ -1323,6 +1323,73 @@ def _norm_cdf(z: float) -> float:
     return 0.5 * (1.0 + math.erf(z / math.sqrt(2.0)))
 
 
+# -------------------------------------------------------------------
+# Rotation tier classification for blowout minute adjustments
+# -------------------------------------------------------------------
+
+def _classify_rotation_tier(
+    row: pd.Series,
+    projected_minutes: float,
+    *,
+    blowout_cfg: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    """
+    Classify a player into a rotation tier using CraftedNBA signals and
+    projected minutes.  Returns a dict with 'tier' (star/starter/rotation/bench)
+    and 'minute_drop_key' for config lookup.
+
+    Empirical blowout minute deltas follow a continuous curve
+    (delta = slope × base_min + intercept), but this function still provides
+    a tier label for diagnostic purposes.
+
+    Starters/stars lose minutes in blowouts; bench players on the losing team
+    GAIN garbage-time minutes (crossover at ~14 min baseline).
+    """
+    cfg = blowout_cfg or {}
+    rot_cfg = cfg.get("rotation_tiers", {}) or {}
+
+    # Thresholds (configurable, with sane defaults)
+    star_min_thresh = float(rot_cfg.get("star_minutes", 33.0))
+    starter_min_thresh = float(rot_cfg.get("starter_minutes", 26.0))
+    rotation_min_thresh = float(rot_cfg.get("rotation_minutes", 16.0))
+    bench_min_thresh = float(rot_cfg.get("bench_minutes", 10.0))
+
+    # CraftedNBA usage as a secondary signal
+    usg = _safe_float_np(row.get("role_metrics_usg_pct", None))
+    load = _safe_float_np(row.get("role_metrics_load", None))
+
+    pm = projected_minutes if math.isfinite(projected_minutes) else 0.0
+
+    # Star: high-minute starters who get pulled first in blowouts
+    if pm >= star_min_thresh or (pm >= 30.0 and usg >= 0.25):
+        return {"tier": "star", "minute_drop_key": "star_minute_drop",
+                "blowout_minute_sign": -1, "minutes": pm, "usg": usg}
+
+    # Starter: regular starters, also lose minutes in blowouts
+    if pm >= starter_min_thresh or (pm >= 22.0 and usg >= 0.18):
+        return {"tier": "starter", "minute_drop_key": "starter_minute_drop",
+                "blowout_minute_sign": -1, "minutes": pm, "usg": usg}
+
+    # Rotation: mid-rotation players, slight minute loss
+    if pm >= rotation_min_thresh or (pm >= 12.0 and load >= 0.10):
+        return {"tier": "rotation", "minute_drop_key": "role_minute_drop",
+                "blowout_minute_sign": -1, "minutes": pm, "usg": usg}
+
+    # Bench: data shows they also lose minutes (or break even) in blowouts
+    return {"tier": "bench", "minute_drop_key": "bench_minute_drop",
+            "blowout_minute_sign": -1, "minutes": pm, "usg": usg}
+
+
+def _safe_float_np(x: Any, default: float = 0.0) -> float:
+    try:
+        if x is None:
+            return default
+        v = float(x)
+        return v if math.isfinite(v) else default
+    except Exception:
+        return default
+
+
 def blowout_probability(*, spread_mean: float, threshold: float, sd: float) -> float:
     """
     Two-tailed probability that |margin| >= threshold when margin ~ Normal(mean=spread_mean, sd=sd).
@@ -1342,6 +1409,167 @@ def blowout_probability(*, spread_mean: float, threshold: float, sd: float) -> f
     if not math.isfinite(p):
         return 0.0
     return float(max(0.0, min(1.0, p)))
+
+
+# -------------------------------------------------------------------
+# Enriched blowout probability: spread + team/matchup history
+# -------------------------------------------------------------------
+
+_BLOWOUT_TEAM_CACHE: dict[str, Any] | None = None
+
+
+def _build_blowout_team_stats(gamelogs: pd.DataFrame, threshold: float = 15.5, lookback_days: int = 120) -> dict[str, Any]:
+    """
+    Build per-team and per-matchup blowout propensity stats from gamelogs.
+
+    Returns a dict with:
+      team_blowout_rate[team] -> float  (how often this team is in blowouts)
+      team_margin_sd[team] -> float     (this team's game-to-game margin volatility)
+      matchup_blowout_rate[(team,opp)] -> float  (H2H blowout rate, min 2 games)
+    """
+    if gamelogs is None or gamelogs.empty:
+        return {}
+
+    gl = gamelogs.copy()
+    gl["game_date"] = pd.to_datetime(gl["game_date"], errors="coerce")
+    gl = gl[gl["game_date"].notna()].copy()
+
+    if lookback_days > 0:
+        cutoff = gl["game_date"].max() - pd.Timedelta(days=lookback_days)
+        gl = gl[gl["game_date"] >= cutoff].copy()
+
+    if gl.empty:
+        return {}
+
+    # Aggregate to game-team level
+    game_team = gl.groupby(["game_date", "team", "opp"]).agg(
+        team_pts=("pts", "sum"),
+    ).reset_index()
+
+    # Self-join to get opponent points
+    merged = game_team.merge(
+        game_team[["game_date", "team", "team_pts"]].rename(
+            columns={"team": "opp", "team_pts": "opp_pts"}
+        ),
+        on=["game_date", "opp"],
+        how="inner",
+    )
+    if merged.empty:
+        return {}
+
+    merged["margin"] = merged["team_pts"] - merged["opp_pts"]
+    merged["abs_margin"] = merged["margin"].abs()
+    merged["is_blowout"] = merged["abs_margin"] >= threshold
+
+    # Per-team blowout rate and margin volatility
+    team_stats = merged.groupby("team").agg(
+        games=("is_blowout", "count"),
+        blowout_rate=("is_blowout", "mean"),
+        margin_sd=("abs_margin", "std"),
+    ).to_dict("index")
+
+    team_blowout_rate = {t: v["blowout_rate"] for t, v in team_stats.items() if v["games"] >= 5}
+    team_margin_sd = {t: v["margin_sd"] for t, v in team_stats.items()
+                      if v["games"] >= 5 and math.isfinite(v.get("margin_sd", 0.0))}
+
+    # Per-matchup blowout rate (min 2 games for signal)
+    matchup = merged.groupby(["team", "opp"]).agg(
+        games=("is_blowout", "count"),
+        blowout_rate=("is_blowout", "mean"),
+    )
+    matchup_blowout_rate = {
+        (t, o): row["blowout_rate"]
+        for (t, o), row in matchup.iterrows()
+        if row["games"] >= 2
+    }
+
+    # League-average blowout rate as baseline
+    league_blowout_rate = float(merged["is_blowout"].mean())
+
+    return {
+        "team_blowout_rate": team_blowout_rate,
+        "team_margin_sd": team_margin_sd,
+        "matchup_blowout_rate": matchup_blowout_rate,
+        "league_blowout_rate": league_blowout_rate,
+        "league_margin_sd": float(merged["margin"].std()) if len(merged) > 10 else 16.0,
+    }
+
+
+def compute_enriched_blowout_q(
+    *,
+    spread_mean: float,
+    threshold: float,
+    sd: float,
+    team: str,
+    opp: str,
+    blowout_team_stats: dict[str, Any] | None = None,
+    matchup_weight: float = 0.25,
+    team_weight: float = 0.15,
+) -> tuple[float, dict[str, Any]]:
+    """
+    Enriched blowout probability that blends:
+      1. Spread-based Normal CDF (primary signal)
+      2. Team historical blowout propensity (secondary)
+      3. Head-to-head matchup blowout rate (tertiary, strongest when available)
+
+    Returns (q_enriched, debug_dict).
+    """
+    # Base spread model
+    q_spread = blowout_probability(spread_mean=spread_mean, threshold=threshold, sd=sd)
+
+    debug = {
+        "q_spread": float(q_spread),
+        "q_team_adj": 0.0,
+        "q_matchup_adj": 0.0,
+        "team_blowout_rate": None,
+        "opp_blowout_rate": None,
+        "matchup_blowout_rate": None,
+    }
+
+    if not blowout_team_stats:
+        return q_spread, debug
+
+    league_rate = float(blowout_team_stats.get("league_blowout_rate", 0.33))
+    team_rates = blowout_team_stats.get("team_blowout_rate", {})
+    matchup_rates = blowout_team_stats.get("matchup_blowout_rate", {})
+
+    team_u = str(team).upper().strip()
+    opp_u = str(opp).upper().strip()
+
+    # Team-level adjustment: average both teams' blowout propensity relative to league
+    team_rate = team_rates.get(team_u)
+    opp_rate = team_rates.get(opp_u)
+    debug["team_blowout_rate"] = team_rate
+    debug["opp_blowout_rate"] = opp_rate
+
+    team_adj = 0.0
+    if team_rate is not None and opp_rate is not None and league_rate > 0:
+        # Both teams' propensity averaged, expressed as deviation from league mean
+        pair_rate = (team_rate + opp_rate) / 2.0
+        team_adj = (pair_rate - league_rate) * team_weight
+    elif team_rate is not None and league_rate > 0:
+        team_adj = (team_rate - league_rate) * team_weight * 0.5
+    elif opp_rate is not None and league_rate > 0:
+        team_adj = (opp_rate - league_rate) * team_weight * 0.5
+
+    debug["q_team_adj"] = float(team_adj)
+
+    # Matchup-level adjustment: H2H blowout history
+    matchup_rate = matchup_rates.get((team_u, opp_u))
+    debug["matchup_blowout_rate"] = matchup_rate
+
+    matchup_adj = 0.0
+    if matchup_rate is not None and league_rate > 0:
+        matchup_adj = (matchup_rate - league_rate) * matchup_weight
+
+    debug["q_matchup_adj"] = float(matchup_adj)
+
+    # Blend: spread is primary, team/matchup add bounded adjustments
+    q_enriched = q_spread + team_adj + matchup_adj
+    q_enriched = float(max(0.02, min(0.85, q_enriched)))
+
+    debug["q_enriched"] = float(q_enriched)
+    return q_enriched, debug
 
 
 def _blowout_stat_families(stat_u: str) -> set[str]:
@@ -1525,10 +1753,53 @@ def simulate_leg_probability_new(
     role_metrics_mult = 1.0
     role_metrics_debug: dict[str, float] = {}
 
-    is_star = float(projected_minutes_val if pd.notna(projected_minutes) else float(s.get("min_mean", 0.0))) >= 33.0
-    minute_drop_base = float(star_minute_drop if is_star else role_minute_drop)
+    _pm_for_tier = float(projected_minutes_val if pd.notna(projected_minutes) else float(s.get("min_mean", 0.0)))
+    is_star = _pm_for_tier >= 33.0
 
-    q = blowout_probability(spread_mean=spread, threshold=blowout_threshold, sd=spread_sd)
+    # Rotation-tier-aware blowout minute adjustment
+    _rot = _classify_rotation_tier(row, _pm_for_tier, blowout_cfg=blowout_cfg)
+    _rot_tier = str(_rot.get("tier", "rotation"))
+
+    # Continuous blowout minute-delta curve replaces discrete tier drops.
+    # delta = slope × base_min + intercept; positive = player GAINS minutes.
+    # Empirical fits:  win: -0.2446×base+2.41 (crossover 9.9 min)
+    #                  loss: -0.3206×base+5.54 (crossover 17.3 min)
+    # Averaged single curve: -0.28×base+4.0 (crossover ~14 min)
+    _bcfg_rot = blowout_cfg or {}
+    _curve_cfg = _bcfg_rot.get("blowout_curve", {}) or {}
+    _curve_slope = float(_curve_cfg.get("slope", -0.28))
+    _curve_intercept = float(_curve_cfg.get("intercept", 4.0))
+    _curve_max_gain = float(_curve_cfg.get("max_gain", 5.0))
+    _curve_max_drop = float(_curve_cfg.get("max_drop", 12.0))
+
+    # minute_delta: positive = gain minutes, negative = lose minutes
+    _base_min_for_curve = float(_pm_for_tier) if _pm_for_tier > 0 else 0.0
+    minute_delta_raw = _curve_slope * _base_min_for_curve + _curve_intercept
+    minute_delta = max(-_curve_max_drop, min(_curve_max_gain, minute_delta_raw))
+
+    # Convert to drop convention: positive minute_drop = fewer minutes in blowout
+    minute_drop_base = -minute_delta
+
+    # Enriched blowout probability: spread + team/matchup history
+    _blowout_team_stats = (blowout_cfg or {}).get("_blowout_team_stats")
+    _opp_team_for_blow = str(row.get("opp", "")).upper().strip()
+    _matchup_w = float((blowout_cfg or {}).get("matchup_blowout_weight", 0.25))
+    _team_w = float((blowout_cfg or {}).get("team_blowout_weight", 0.15))
+
+    if _blowout_team_stats:
+        q, _blowout_enrich_debug = compute_enriched_blowout_q(
+            spread_mean=spread,
+            threshold=blowout_threshold,
+            sd=spread_sd,
+            team=team,
+            opp=_opp_team_for_blow,
+            blowout_team_stats=_blowout_team_stats,
+            matchup_weight=_matchup_w,
+            team_weight=_team_w,
+        )
+    else:
+        q = blowout_probability(spread_mean=spread, threshold=blowout_threshold, sd=spread_sd)
+        _blowout_enrich_debug = {}
 
     mu_close = max(0.0, float(projected_minutes_val if pd.notna(projected_minutes) else float(s.get("min_mean", 0.0))))
     sd_close = max(1.0, float(s.get("min_std", 1.0)))
@@ -1545,6 +1816,12 @@ def simulate_leg_probability_new(
     stat_u = str(stat).upper().strip()
     _rate_std_mult = float(_per_stat_mult.get(stat_u, _bcfg.get("rate_std_multiplier", 1.0)))
     rate_sd_base = rate_sd_base * _rate_std_mult
+
+    # Direction-aware inflation: UNDER legs are near-coin-flip (AUC ~0.52);
+    # inflating their rate_std pushes p toward 0.50, reducing overconfidence.
+    if direction == "UNDER":
+        _under_mult = float(_bcfg.get("rate_std_under_mult", 1.0))
+        rate_sd_base = rate_sd_base * _under_mult
 
     # Small-sample variance inflation: inflate rate_std for players with few
     # games so that their probabilities are pushed toward 0.50 instead of
@@ -1649,6 +1926,7 @@ def simulate_leg_probability_new(
     role_sigma_mult = 1.0
     role_reason = "not_applied"
     role_debug: dict[str, Any] | None = None
+    _damp_applied: list[str] = []
 
     stat_u = str(stat).upper().strip()
     STAT_COMPONENTS: dict[str, list[str]] = {
@@ -1706,6 +1984,9 @@ def simulate_leg_probability_new(
                 role_mult_raw = 1.0 + b0
                 role_debug = comp_debug[0]
                 role_reason = str(role_debug.get("reason", "ok")) if isinstance(role_debug, dict) else "ok"
+                combo_outs_used_sum = int(
+                    role_debug.get("outs_used", 0) or 0
+                ) if isinstance(role_debug, dict) else 0
             else:
                 comp = np.array(comp_mults, dtype=float)
                 bumps = np.clip(comp - 1.0, 0.0, 0.95)
@@ -1803,6 +2084,44 @@ def simulate_leg_probability_new(
 
             role_mult_raw = role_mult_raw if np.isfinite(role_mult_raw) and role_mult_raw > 0 else 1.0
 
+            # ── Pre-softcap dampening ──────────────────────────────
+            _bump_pre = max(0.0, role_mult_raw - 1.0)
+            _damp_applied: list[str] = []
+
+            # (A) Star-beneficiary dampening: high-minute players are at
+            #     capacity and do not meaningfully absorb extra production.
+            _ben_min_mean = float(s.get("min_mean", 0.0) or 0.0)
+            _star_ben_damp = float(cfg.get("star_beneficiary_damp", 0.25))
+            _core_ben_damp = float(cfg.get("core_beneficiary_damp", 0.60))
+            if _ben_min_mean >= 33.0:
+                _bump_pre *= _star_ben_damp
+                _damp_applied.append(f"star_ben({_ben_min_mean:.0f}m,x{_star_ben_damp})")
+            elif _ben_min_mean >= 28.0:
+                _bump_pre *= _core_ben_damp
+                _damp_applied.append(f"core_ben({_ben_min_mean:.0f}m,x{_core_ben_damp})")
+
+            # (B) DEMON tier gating: market-efficient legs don't benefit
+            _pp_tier = str(row.get("tier", "")).upper().strip()
+            _demon_damp = float(cfg.get("demon_tier_damp", 0.0))
+            if _pp_tier == "DEMON":
+                _bump_pre *= _demon_damp
+                _damp_applied.append(f"demon(x{_demon_damp})")
+
+            # (C) Direction-aware scaling: OVER benefits much less than UNDER
+            _over_damp = float(cfg.get("over_direction_damp", 0.50))
+            if direction == "OVER" and _over_damp < 1.0:
+                _bump_pre *= _over_damp
+                _damp_applied.append(f"over(x{_over_damp})")
+
+            # (D) Multi-injury boost: when 3+ players are out, redistribution
+            #     signal is stronger — amplify the bump.
+            _multi_inj_boost = float(cfg.get("multi_injury_boost", 1.0))
+            if _multi_inj_boost > 1.0 and combo_outs_used_sum >= 3:
+                _bump_pre *= _multi_inj_boost
+                _damp_applied.append(f"multi_inj({combo_outs_used_sum}out,x{_multi_inj_boost})")
+
+            role_mult_raw = 1.0 + _bump_pre
+
             # Soft-cap to proj_hi
             k_soft = float(cfg.get("projection_softcap_k", 1.35))
             rm = float(role_mult_raw)
@@ -1889,7 +2208,9 @@ def simulate_leg_probability_new(
             minute_drop = minute_drop * _underdog_minute_scale
             _blow_rate_mult = 1.0 - _underdog_rate_penalty
 
-    mu_blow = max(0.0, mu_close - minute_drop)
+    # Continuous curve: starters lose minutes, bench gains garbage time.
+    # minute_drop can be negative (= minute gain) for low-baseline players.
+    mu_blow = max(0.0, min(48.0, mu_close - minute_drop))
     sd_blow = max(1.0, sd_close)
 
     role_ctx_on_for_metrics = _role_metrics_role_ctx_active(
@@ -2241,14 +2562,17 @@ def simulate_leg_probability_new(
     under_blowout_sens_mult = float(blowout_sens_mult)
 
     _post_sim_exp = float((blowout_cfg or {}).get("post_sim_exponent", 1.35))
+    _post_sim_crossover = float(_curve_cfg.get("crossover", 14.0))
 
     p_adj = float(
         adjust_probability_for_blowout(
             p_raw=float(p_role),
             blowout_risk=float(q),
             sens=float(minutes_s_blowout),
-            direction=(str(direction) if str(direction).upper() == "OVER" else None),
+            direction=str(direction),
             post_sim_exponent=_post_sim_exp,
+            base_minutes=float(mu_close),
+            curve_crossover=_post_sim_crossover,
         )
     )
 
@@ -2268,6 +2592,8 @@ def simulate_leg_probability_new(
             sens=float(minutes_s_close),
             direction=str(direction),
             post_sim_exponent=_post_sim_exp,
+            base_minutes=float(mu_close),
+            curve_crossover=_post_sim_crossover,
         )
     )
 
@@ -2365,6 +2691,9 @@ def simulate_leg_probability_new(
         # Blowout + minutes diagnostics
         "spread": float(spread),
         "q_blowout": float(q),
+        "q_blowout_spread_only": float(_blowout_enrich_debug.get("q_spread", q)),
+        "q_blowout_team_adj": float(_blowout_enrich_debug.get("q_team_adj", 0.0)),
+        "q_blowout_matchup_adj": float(_blowout_enrich_debug.get("q_matchup_adj", 0.0)),
         "minutes_s": float(minutes_s),
         "blowout_minute_drop_base": float(minute_drop_base),
         "blowout_minute_drop": float(minute_drop),
@@ -2377,6 +2706,9 @@ def simulate_leg_probability_new(
         "under_blowout_sens_eligible": bool(under_blowout_sens_eligible),
         "minutes_s_close": float(minutes_s_close),  # ✅ new: shows reduced close sensitivity
         "is_star": bool(is_star),
+        "rotation_tier": str(_rot_tier),
+        "blowout_minute_delta": float(minute_delta),
+        "blowout_base_min_for_curve": float(_base_min_for_curve),
 
         # Fragility (aligned to adjusted channel)
         "fragility": float(frag),
@@ -2446,6 +2778,7 @@ def simulate_leg_probability_new(
         "role_ctx_rate_softcap_k": float(rate_mu_role_softcap_k),
         "role_ctx_sigma_mult": float(role_sigma_mult),
         "role_ctx_reason": str(role_reason),
+        "role_ctx_damp_applied": ",".join(_damp_applied) if _damp_applied else "",
 
         # Recent form + opponent defense diagnostics
         "recent_form_blend": float(_recent_form_blend),

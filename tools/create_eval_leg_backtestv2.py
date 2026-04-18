@@ -279,7 +279,11 @@ def reconstruct_eval(scored: pd.DataFrame, gamelogs: pd.DataFrame) -> Tuple[pd.D
             for col in ["player", "team_log", "opp_log", "minutes", "pts", "reb", "ast", "fg3m", "fga", "fta", "tov", "usg_proxy"]:
                 out[col] = selected.get(col)
             out["player_log"] = selected.get("player")
-            actual, stat_src = derive_actual_row(pd.concat([row, selected]))
+            # Merge row + selected without duplicate indices: selected (gamelog) wins for stat cols
+            merged = row.copy()
+            for k, v in selected.items():
+                merged[k] = v
+            actual, stat_src = derive_actual_row(merged)
             hit, push = settle_leg(actual, row.get("line"), row.get("direction"))
         else:
             out.update({

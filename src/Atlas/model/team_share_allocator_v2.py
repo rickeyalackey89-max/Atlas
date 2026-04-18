@@ -96,24 +96,45 @@ def _stat_alias(stat: str) -> str:
     }.get(str(stat or "").upper().strip(), str(stat or "").upper().strip())
 
 
-def classify_outgoing_player(*, usage: float, minutes: float, team_depth: float, role_index: float) -> OutgoingPlayerClass:
+def classify_outgoing_player(
+    *,
+    usage: float,
+    minutes: float,
+    team_depth: float,
+    role_index: float,
+    odarko: float = 0.0,
+    copm: float = 0.0,
+) -> OutgoingPlayerClass:
     """
     Classify the outgoing player by leverage and likely replaceability.
 
     usage is expected to be a 0..1 share-like value, minutes are raw minutes,
     role_index is normalized to 0..1 within the team.
+    odarko/copm are offensive DARKO and CPM ratings from CraftedNBA — higher
+    values indicate greater offensive impact that will be missed when out.
     """
     usage = max(0.0, float(usage))
     minutes = max(0.0, float(minutes))
     team_depth = max(0.0, float(team_depth))
     role_index = max(0.0, float(role_index))
+    odarko = _safe_float(odarko, 0.0)
+    copm = _safe_float(copm, 0.0)
+
+    # Advanced-metric bump: high-impact players (by DARKO/CPM) can be promoted
+    # one tier above what box-score usage alone suggests.  The bump is bounded
+    # so it cannot skip more than one tier.
+    adv_bump = False
+    if odarko >= 3.0 or copm >= 3.0:
+        adv_bump = True
 
     if usage >= 0.28 or minutes >= 30.0 or role_index >= 0.75:
         return OutgoingPlayerClass(label="star", transfer_fraction=0.72, depth_multiplier=max(0.35, 1.0 - 0.20 * team_depth))
-    if usage >= 0.16 or minutes >= 24.0 or role_index >= 0.50:
-        return OutgoingPlayerClass(label="core", transfer_fraction=0.54, depth_multiplier=max(0.45, 1.0 - 0.15 * team_depth))
-    if usage >= 0.08 or minutes >= 14.0 or role_index >= 0.25:
-        return OutgoingPlayerClass(label="role", transfer_fraction=0.32, depth_multiplier=max(0.60, 1.0 - 0.10 * team_depth))
+    if usage >= 0.16 or minutes >= 24.0 or role_index >= 0.50 or (adv_bump and (usage >= 0.12 or minutes >= 20.0)):
+        label = "core_adv" if adv_bump and usage < 0.16 and minutes < 24.0 and role_index < 0.50 else "core"
+        return OutgoingPlayerClass(label=label, transfer_fraction=0.54, depth_multiplier=max(0.45, 1.0 - 0.15 * team_depth))
+    if usage >= 0.08 or minutes >= 14.0 or role_index >= 0.25 or (adv_bump and (usage >= 0.05 or minutes >= 10.0)):
+        label = "role_adv" if adv_bump and usage < 0.08 and minutes < 14.0 and role_index < 0.25 else "role"
+        return OutgoingPlayerClass(label=label, transfer_fraction=0.32, depth_multiplier=max(0.60, 1.0 - 0.10 * team_depth))
     return OutgoingPlayerClass(label="bench", transfer_fraction=0.12, depth_multiplier=max(0.80, 1.0 - 0.05 * team_depth))
 
 
@@ -326,7 +347,21 @@ def _candidate_score(row: pd.Series, stat_u: str, team_max_min: float) -> float:
     if team_max_min > 0:
         min_share = max(0.0, _safe_float(row.get("avg_min", 0.0)) / team_max_min)
     role_headroom = 0.40 + 0.60 * _clamp(float(row.get("role_index", 0.0)), 0.0, 1.0)
-    raw = (0.70 * stat_share + 0.30 * min_share) * role_headroom
+
+    # Advanced-metric capability boost: players with higher offensive DARKO or
+    # DRIP projections are better positioned to absorb extra production.
+    # The boost is multiplicative and capped at 1.25x so it nudges without
+    # overwhelming the box-score signal.
+    odarko = _safe_float(row.get("odarko", 0.0), 0.0)
+    drip_off = _safe_float(row.get("drip_offense", 0.0), 0.0)
+    adv_best = max(odarko, drip_off)
+    if adv_best >= 1.0:
+        # Linear ramp from 1.0x at adv_best=1.0 to 1.25x at adv_best>=5.0
+        adv_mult = 1.0 + 0.0625 * min(adv_best - 1.0, 4.0)
+    else:
+        adv_mult = 1.0
+
+    raw = (0.70 * stat_share + 0.30 * min_share) * role_headroom * adv_mult
     return max(0.0, raw)
 
 
@@ -361,6 +396,7 @@ def build_share_matrix_v2(
     gamelogs: pd.DataFrame,
     *,
     iael_df: pd.DataFrame | None = None,
+    role_metrics_df: pd.DataFrame | None = None,
     recent_days: int = 140,
     min_rotation_games: int = 6,
     min_rotation_avg_min: float = 8.0,
@@ -374,6 +410,10 @@ def build_share_matrix_v2(
     - higher leverage injuries export more share
     - deeper teams absorb less of that share
     - multiple outs reduce the redistributable budget
+
+    role_metrics_df (optional): CraftedNBA snapshot with odarko, copm, drip_offense
+    columns keyed by player_key.  Used to improve outgoing-player classification
+    and candidate absorption scoring.
     """
     logs = _normalize_logs(gamelogs, recent_days=recent_days)
     if logs.empty:
@@ -407,6 +447,29 @@ def build_share_matrix_v2(
 
     team_max_minutes = base.groupby("team_u")["avg_min"].max().to_dict()
     base["role_index"] = base.apply(lambda r: _player_role_index(base.loc[base["team_u"] == r["team_u"]], r["player_key"]), axis=1)
+
+    # Merge CraftedNBA advanced metrics (DARKO, CPM, DRIP) onto base for
+    # smarter outgoing-player classification and candidate absorption scoring.
+    _ADV_COLS = ["odarko", "copm", "drip_offense"]
+    for col in _ADV_COLS:
+        base[col] = 0.0
+    if role_metrics_df is not None and not role_metrics_df.empty:
+        rm = role_metrics_df.copy()
+        if "player_key" not in rm.columns and "player" in rm.columns:
+            rm["player_key"] = rm["player"].astype(str).map(share_name_key)
+        if "player_key" in rm.columns:
+            avail = [c for c in _ADV_COLS if c in rm.columns]
+            if avail:
+                rm_dedup = rm.drop_duplicates(subset=["player_key"], keep="last")
+                merge_cols = ["player_key"] + avail
+                base = base.merge(
+                    rm_dedup[merge_cols].rename(columns={c: f"_rm_{c}" for c in avail}),
+                    on="player_key",
+                    how="left",
+                )
+                for c in avail:
+                    base[c] = pd.to_numeric(base[f"_rm_{c}"], errors="coerce").fillna(0.0)
+                    base.drop(columns=[f"_rm_{c}"], inplace=True)
 
     base_lookup = {
         (str(r["team_u"]), str(r["player_key"])): r
@@ -470,6 +533,8 @@ def build_share_matrix_v2(
                 minutes=out_avg_min,
                 team_depth=team_depth,
                 role_index=role_index,
+                odarko=_safe_float(out_base.get("odarko", 0.0)),
+                copm=_safe_float(out_base.get("copm", 0.0)),
             )
             out_frac = _clamp(_safe_float(out_row.get("out_frac", 0.0)), 0.0, 1.0)
             transfer = compute_redistribution_cap(

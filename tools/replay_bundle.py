@@ -1,10 +1,12 @@
 from __future__ import annotations
 
 import argparse
+import csv
 import json
 import os
 import subprocess
 import sys
+import tempfile
 import zipfile
 from datetime import datetime, timezone
 from pathlib import Path
@@ -117,7 +119,7 @@ def _role_metrics_payload_summary(df: pd.DataFrame) -> dict[str, object]:
     settled = df[pd.to_numeric(df.get("hit", pd.Series(dtype=float)), errors="coerce").isin([0, 1])].copy()
     family_report: list[dict[str, object]] = []
     if not settled.empty and "stat" in settled.columns:
-        settled["_family"] = settled["stat"].astype(str).str.upper().map(lambda x: ROLE_METRICS_STAT_FAMILY_MAP.get(x, "other"))
+        settled["_family"] = settled["stat"].astype(str).str.upper().map(lambda x: ROLE_METRICS_STAT_FAMILY_MAP.get(str(x), "other"))
         for family_name, grp in settled.groupby("_family", observed=False):
             if grp.empty:
                 continue
@@ -131,7 +133,10 @@ def _role_metrics_payload_summary(df: pd.DataFrame) -> dict[str, object]:
                 "mean_usage_rebound_mult": round(float(pd.to_numeric(grp.get("usage_rebound_mult", pd.Series(dtype=float)), errors="coerce").fillna(1.0).mean()), 6),
                 "mean_usage_threes_mult": round(float(pd.to_numeric(grp.get("usage_threes_mult", pd.Series(dtype=float)), errors="coerce").fillna(1.0).mean()), 6),
             })
-        family_report.sort(key=lambda row: (-float(row.get("mean_brier_p_adj") or 0.0), str(row.get("family") or "")))
+        def _sort_key(row: dict[str, object]) -> tuple[float, str]:
+            b = float(row.get("mean_brier_p_adj") or 0.0)  # type: ignore[arg-type]
+            return (-b, str(row.get("family") or ""))
+        family_report.sort(key=_sort_key)
 
     warnings = sorted(set(warnings))
     return {
@@ -171,27 +176,30 @@ def _write_role_metrics_payload_summary(eval_path: Path) -> Path | None:
     md_lines.append(f"- Rows: `{summary['rows']}`")
     md_lines.append(f"- Snapshot rows: `{summary['snapshot_rows']}` ({summary['snapshot_share']})")
     md_lines.append(f"- Role-context active rows: `{summary['role_ctx_on_rows']}` ({summary['role_ctx_on_share']})")
-    md_lines.append(f"- Active tuning families: `{', '.join(summary['active_tuning_families'])}`")
-    if summary.get("warnings"):
-        md_lines.append(f"- Warnings: `{', '.join(summary['warnings'])}`")
-    assist_contract = summary.get("assist_payload_contract") or {}
+    _active_families: list[str] = summary.get("active_tuning_families") or []  # type: ignore[assignment]
+    md_lines.append(f"- Active tuning families: `{', '.join(_active_families)}`")
+    _warnings: list[str] = summary.get("warnings") or []  # type: ignore[assignment]
+    if _warnings:
+        md_lines.append(f"- Warnings: `{', '.join(_warnings)}`")
+    assist_contract: dict[str, object] = summary.get("assist_payload_contract") or {}  # type: ignore[assignment]
     if assist_contract:
         md_lines.append(f"- Assist payload ready: `{assist_contract.get('ready')}`")
-        missing = assist_contract.get("missing_columns") or []
+        missing: list[str] = assist_contract.get("missing_columns") or []  # type: ignore[assignment]
         if missing:
             md_lines.append(f"- Assist payload missing: `{', '.join(missing)}`")
     md_lines.append("")
     md_lines.append("## Family Coverage")
-    for family, family_summary in (summary.get("families") or {}).items():
+    _families: dict[str, dict[str, object]] = summary.get("families") or {}  # type: ignore[assignment]
+    for family, family_summary in _families.items():
         md_lines.append(f"- `{family}` populated_rows_any=`{family_summary.get('populated_rows_any')}` share=`{family_summary.get('populated_share_any')}`")
-        missing = family_summary.get("missing_columns") or []
+        missing: list[str] = family_summary.get("missing_columns") or []  # type: ignore[assignment]
         if missing:
             md_lines.append(f"  - missing: `{', '.join(missing)}`")
-    family_report = summary.get("family_contribution_report") or []
-    if family_report:
+    _family_report: list[dict[str, object]] = summary.get("family_contribution_report") or []  # type: ignore[assignment]
+    if _family_report:
         md_lines.append("")
         md_lines.append("## Family Contribution Report")
-        for row in family_report:
+        for row in _family_report:
             md_lines.append(
                 f"- `{row.get('family')}` rows=`{row.get('rows')}` brier=`{row.get('mean_brier_p_adj')}` metric_mult=`{row.get('mean_usage_metric_mult')}` scoring=`{row.get('mean_usage_scoring_mult')}` assist=`{row.get('mean_usage_assist_mult')}` rebound=`{row.get('mean_usage_rebound_mult')}` threes=`{row.get('mean_usage_threes_mult')}`"
             )
@@ -368,7 +376,7 @@ def _score_candidate_datetime(candidate_dt: datetime | None, candidate_game_date
 
 
 def _find_best_role_metrics_artifacts(repo_root: Path, target_utc: datetime | None) -> dict[str, Path]:
-    candidates: list[tuple[tuple[int, int, float, int], dict[str, Path]]] = []
+    candidates: list[tuple[tuple[int, int, float, int, int], dict[str, Path]]] = []
 
     def add_candidate(priority: int, json_path: Path, html_path: Path | None = None, manifest_path: Path | None = None) -> None:
         if not json_path.is_file():
@@ -538,6 +546,41 @@ def _find_best_normalized_snapshot(repo_root: Path, target_local: datetime | Non
     return candidates[0][2]
 
 
+CSV_FIELDS = [
+    "source", "league", "player", "stat", "asof_ts", "projection",
+    "confidence", "over_prob", "under_prob", "over_rating", "under_rating",
+    "opp_rank", "notes",
+]
+
+
+def _merge_priors_with_oddsapi(bundled_priors: Path, oddsapi_csv: Path) -> Path:
+    """Merge bundled BettingPros priors with OddsAPI historical data into a temp CSV."""
+    existing_rows: list[dict[str, str]] = []
+    if bundled_priors.is_file():
+        with bundled_priors.open("r", encoding="utf-8") as f:
+            for row in csv.DictReader(f):
+                if row.get("source", "").strip().lower() != "oddsapi":
+                    existing_rows.append(row)
+
+    oa_rows: list[dict[str, str]] = []
+    if oddsapi_csv.is_file():
+        with oddsapi_csv.open("r", encoding="utf-8") as f:
+            for row in csv.DictReader(f):
+                oa_rows.append(row)
+
+    all_rows = existing_rows + oa_rows
+    merged = bundled_priors.parent / "external_priors_merged.csv"
+    with merged.open("w", newline="", encoding="utf-8") as f:
+        writer = csv.DictWriter(f, fieldnames=CSV_FIELDS, extrasaction="ignore")
+        writer.writeheader()
+        for row in all_rows:
+            safe_row = {k: row.get(k, "") for k in CSV_FIELDS}
+            writer.writerow(safe_row)
+
+    print(f"[REPLAY_BUNDLE] Merged priors: {len(existing_rows)} existing + {len(oa_rows)} oddsapi = {len(all_rows)} total")
+    return merged
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(
         description="Atlas sandbox replay from a FULL_RUN bundle zip (bundle-first, deterministic)."
@@ -550,6 +593,7 @@ def main() -> int:
     )
     ap.add_argument("--scenario-id", default="", help="Scenario id used for output/archives folder naming.")
     ap.add_argument("--keep-workspace", action="store_true", help="Keep extracted bundle workspace (debug).")
+    ap.add_argument("--oddsapi-overlay", default="", help="Path to OddsAPI historical CSV to merge into bundled priors.")
     args = ap.parse_args()
 
     repo_root = find_repo_root(Path(__file__).parent)
@@ -641,6 +685,40 @@ def main() -> int:
         return 2
 
     cmd = [sys.executable, "-m", "Atlas.engine.main"]
+
+    # Pin external priors from bundle (deterministic replay), merging OddsAPI overlay if provided
+    bundled_priors = data_dir / "input" / "external_priors_today.csv"
+    oddsapi_overlay = Path(args.oddsapi_overlay) if args.oddsapi_overlay else None
+    if bundled_priors.is_file() and oddsapi_overlay and oddsapi_overlay.is_file():
+        # Merge bundled BettingPros + OddsAPI historical into one file
+        merged = _merge_priors_with_oddsapi(bundled_priors, oddsapi_overlay)
+        env["ATLAS_EXTERNAL_PRIORS_CSV_PATH"] = str(merged)
+        print(f"[REPLAY_BUNDLE] external priors merged: bundle + oddsapi -> {merged}")
+    elif oddsapi_overlay and oddsapi_overlay.is_file() and not bundled_priors.is_file():
+        # No bundle priors, but OddsAPI available — use OddsAPI alone
+        env["ATLAS_EXTERNAL_PRIORS_CSV_PATH"] = str(oddsapi_overlay)
+        print(f"[REPLAY_BUNDLE] external priors from oddsapi only={oddsapi_overlay}")
+    elif bundled_priors.is_file():
+        env["ATLAS_EXTERNAL_PRIORS_CSV_PATH"] = str(bundled_priors)
+        print(f"[REPLAY_BUNDLE] external priors pinned={bundled_priors}")
+    else:
+        print("[REPLAY_BUNDLE] No bundled external_priors_today.csv — priors will use repo default")
+
+    # Rebuild share matrix with this bundle's IAEL snapshot (mimics live orchestrator Stage 3)
+    sm_cmd = [sys.executable, str(repo_root / "tools" / "build_share_matrix.py")]
+    print(f"[REPLAY_BUNDLE] Rebuilding share matrix with pinned IAEL")
+    sm_result = subprocess.run(sm_cmd, cwd=str(repo_root), env=env, capture_output=True, text=True)
+    if sm_result.returncode != 0:
+        tail = "\n".join((sm_result.stderr or "").splitlines()[-10:])
+        print(f"[REPLAY_BUNDLE] WARN share matrix build failed: {tail}")
+    else:
+        sm_path = repo_root / "data" / "model" / "share_matrix.csv"
+        if sm_path.exists():
+            try:
+                sm_rows = sum(1 for _ in open(sm_path, encoding="utf-8")) - 1
+                print(f"[REPLAY_BUNDLE] share_matrix.csv rebuilt: {sm_rows} rows")
+            except Exception:
+                pass
 
     stdout_path = logs_dir / "engine_stdout.txt"
     stderr_path = logs_dir / "engine_stderr.txt"

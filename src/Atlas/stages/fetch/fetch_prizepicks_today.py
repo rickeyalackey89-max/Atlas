@@ -15,7 +15,7 @@ Contract:
 """
 
 import re
-from datetime import datetime, timezone
+from datetime import date, datetime, timezone
 from typing import Any, Optional
 
 import pandas as pd
@@ -156,6 +156,17 @@ def run_fetch(*, payload: dict[str, Any], is_replay: bool) -> pd.DataFrame:
     now_ct = now_utc.astimezone(TZ_CT)
     today_ct = now_ct.date()
 
+    # In replay mode, if the board was captured the evening before the slate,
+    # derive today_ct from the earliest game start instead of the payload timestamp.
+    if is_replay:
+        game_dates: set[date] = set()
+        for gattr in games_by_id.values():
+            st = _parse_iso_datetime(gattr.get("start_time"))
+            if st:
+                game_dates.add(st.astimezone(TZ_CT).date())
+        if game_dates and today_ct not in game_dates:
+            today_ct = min(game_dates)
+
     kept_today_upcoming = 0
     dropped_no_start = 0
     dropped_future_date = 0
@@ -187,8 +198,8 @@ def run_fetch(*, payload: dict[str, Any], is_replay: bool) -> pd.DataFrame:
             dropped_future_date += 1
             continue
 
-        # drop if already started
-        if dt_start_ct < now_ct:
+        # drop if already started (skip in replay — we need the full historical board)
+        if not is_replay and dt_start_ct < now_ct:
             dropped_past += 1
             continue
 
@@ -238,7 +249,7 @@ def run_fetch(*, payload: dict[str, Any], is_replay: bool) -> pd.DataFrame:
 
         start_time = gattr.get("start_time")
         dt = _parse_iso_datetime(start_time)
-        if dt and dt < now_utc:
+        if not is_replay and dt and dt < now_utc:
             continue
 
         game_date = ""

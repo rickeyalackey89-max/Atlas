@@ -82,6 +82,7 @@ def build_cloudflare_payload(run_dir: Path, out_dir: Path) -> Path:
         "windfall": [],
         "windfall_winprob": [],
         "demonhunter": [],
+        "gamescript": [],
     }
     
     # System: top 3-leg, 4-leg, 5-leg (EV-based)

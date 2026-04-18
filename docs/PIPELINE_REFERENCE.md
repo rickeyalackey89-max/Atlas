@@ -102,7 +102,7 @@ src/Atlas/
 │   ├── calibration.py              # GBM ensemble calibrator
 │   ├── calibration_map.py          # Telemetry calibration overlay
 │   ├── main.py                     # Main pipeline (load → score → calibrate → build → publish)
-│   ├── new_engine.py               # v9d scoring kernel entry point
+│   ├── new_engine.py               # v14 scoring kernel entry point
 │   └── new_probability.py          # Monte Carlo probability + role context
 ├── model/                          # Model artifacts and builders
 │   ├── share_matrix_builder_v2.py  # Share matrix construction

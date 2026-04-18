@@ -14,6 +14,29 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
 DEFAULT_LOGS_PATH = PROJECT_ROOT / "data" / "gamelogs" / "nba_gamelogs.csv"
 DEFAULT_OUT_PATH  = PROJECT_ROOT / "data" / "model" / "share_matrix.csv"
+DEFAULT_ROLE_METRICS_PATH = PROJECT_ROOT / "data" / "output" / "dashboard" / "role_metrics_latest.json"
+
+
+def _load_role_metrics() -> pd.DataFrame | None:
+    """Load the CraftedNBA role-metrics snapshot for DARKO/CPM/DRIP enrichment."""
+    env_path = (os.environ.get("ATLAS_ROLE_METRICS_PATH") or "").strip()
+    for candidate in (env_path, str(DEFAULT_ROLE_METRICS_PATH)):
+        if not candidate:
+            continue
+        p = Path(candidate)
+        if p.exists() and p.is_file():
+            try:
+                obj = json.loads(p.read_text(encoding="utf-8"))
+                rows = obj.get("rows", []) if isinstance(obj, dict) else obj
+                if isinstance(rows, list) and rows:
+                    df = pd.DataFrame([r for r in rows if isinstance(r, dict)])
+                    if not df.empty and "player" in df.columns:
+                        print(f"[SHARE_MATRIX] Loaded role metrics from {p} ({len(df)} players)")
+                        return df
+            except Exception as exc:
+                print(f"[SHARE_MATRIX] Failed to load role metrics from {p}: {exc}")
+    print("[SHARE_MATRIX] No role metrics snapshot found — DARKO/CPM/DRIP enrichment skipped")
+    return None
 
 
 def main() -> None:
@@ -48,9 +71,12 @@ def main() -> None:
 
     logs = pd.read_csv(logs_path)
 
+    role_metrics = _load_role_metrics()
+
     mat = generate_share_matrix_v2(
         logs,
         iael_df=None,
+        role_metrics_df=role_metrics,
         recent_days=int(args.recent_days),
         min_rotation_games=int(args.min_rotation_games),
         min_rotation_avg_min=float(args.min_rotation_avg_min),
@@ -59,7 +85,11 @@ def main() -> None:
     )
 
     if mat.empty:
-        raise RuntimeError("share matrix generation produced no rows")
+        # Valid in replay when no injuries are active — write header-only file
+        from Atlas.model.share_matrix_contract import REQUIRED_COLUMNS
+        pd.DataFrame(columns=sorted(REQUIRED_COLUMNS)).to_csv(out_path, index=False)
+        print(f"OK wrote {out_path} rows=0 (no active injuries — empty share matrix)")
+        return
 
     require_valid_share_matrix(mat)
 

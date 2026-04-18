@@ -2,11 +2,68 @@ from __future__ import annotations
 
 import json
 import shutil
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
-from typing import Optional, Callable
+from typing import Any, Optional, Callable
 
 import pandas as pd
+import yaml
+
+from Atlas.core.fingerprint import (
+    config_fingerprint,
+    read_ensemble_meta,
+    build_manifest,
+    _sanitize_keys,
+)
+
+
+def write_run_manifest(
+    run_dir: Path,
+    cfg: dict,
+    ensemble_dir: str | Path | None = None,
+) -> Path:
+    """
+    Write run_manifest.json — the single source of truth for what config
+    and model were used in this run. Every replay and live run gets one.
+    """
+    # Build the core manifest from the shared module
+    manifest = build_manifest(
+        source="run_publish",
+        cfg=cfg,
+        ensemble_dir=ensemble_dir,
+    )
+
+    # Enrich with run-specific details the shared manifest doesn't include
+    ensemble_meta = read_ensemble_meta(ensemble_dir)
+    telemetry = cfg.get("telemetry", {}) or {}
+    posthoc = cfg.get("posthoc_calibrator", {}) or {}
+
+    manifest["ensemble"] = {
+        "version": ensemble_meta.get("version", "unknown"),
+        "architecture": ensemble_meta.get("architecture", "unknown"),
+        "features": ensemble_meta.get("features", []),
+        "n_features": len(ensemble_meta.get("features", [])),
+        "lodo_brier": ensemble_meta.get("lodo_brier_ensemble"),
+        "training_cache": ensemble_meta.get("training_cache"),
+        "training_dates": ensemble_meta.get("training_dates"),
+        "training_legs": ensemble_meta.get("training_legs"),
+        "temperature": ensemble_meta.get("temperature"),
+        "seeds": ensemble_meta.get("ensemble_seeds", []),
+    }
+    manifest["calibration"] = {
+        "posthoc_enabled": posthoc.get("enabled"),
+        "ensemble_dir": posthoc.get("ensemble_dir"),
+        "active_calibration": telemetry.get("active_calibration"),
+        "apply_active_calibration": telemetry.get("apply_active_calibration"),
+    }
+    manifest["full_config"] = _sanitize_keys(cfg)
+
+    out_path = run_dir / "run_manifest.json"
+    out_path.write_text(
+        json.dumps(manifest, indent=2, sort_keys=False, default=str),
+        encoding="utf-8",
+    )
+    return out_path
 
 
 def run_publish_stage(
@@ -31,6 +88,8 @@ def run_publish_stage(
     iael_invalidations_path: Optional[Path] = None,
     iael_status_path: Optional[Path] = None,
     write_csv_clean: Optional[Callable[[pd.DataFrame, Path], Path]] = None,
+    cfg: Optional[dict] = None,
+    ensemble_dir: Optional[str | Path] = None,
 ) -> Path:
     """
     Publish Stage (IO only).
@@ -50,6 +109,11 @@ def run_publish_stage(
     system_dir = run_dir / "System"
     windfall_dir.mkdir(parents=True, exist_ok=True)
     system_dir.mkdir(parents=True, exist_ok=True)
+
+    # ── Run manifest: capture EXACTLY what config + model produced this run ──
+    if cfg is not None:
+        manifest_path = write_run_manifest(run_dir, cfg, ensemble_dir=ensemble_dir)
+        print(f" - {manifest_path} (config fingerprint)")
 
     w(scored, run_dir / "scored_legs.csv")
     w(scored_for_optimizer, run_dir / "scored_legs_deduped.csv")

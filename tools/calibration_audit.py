@@ -12,7 +12,9 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from Atlas.core.slip_builders import build_slips_by_tier_buckets
 
-base = Path(r'D:\AtlasTestMarch26\telemetry_replay_runs')
+base = Path(__file__).resolve().parents[1] / "data" / "telemetry" / "replay_runs"
+_TAG_FILE = base / ".corpus_tag"
+_CORPUS_TAG = _TAG_FILE.read_text().strip() if _TAG_FILE.exists() else "kernel_v2_perstat_corr015"
 run_dates = ['20260315', '20260316', '20260317', '20260318',
              '20260319', '20260320', '20260321', '20260322']
 
@@ -62,7 +64,7 @@ def main():
     all_legs = []  # (prob, hit, stat, direction, tier)
 
     for date in run_dates:
-        run_dir = base / f'kernel_v2_perstat_corr015_{date}'
+        run_dir = base / f'{_CORPUS_TAG}_{date}'
         if not run_dir.exists(): continue
         eval_files = list(run_dir.rglob('eval_legs.csv'))
         scored_files = list(run_dir.rglob('scored_legs_deduped.csv'))
@@ -161,7 +163,7 @@ def main():
     rank_hits = defaultdict(lambda: {'wins': 0, 'total': 0, 'leg_hits': 0, 'leg_total': 0})
 
     for date in run_dates:
-        run_dir = base / f'kernel_v2_perstat_corr015_{date}'
+        run_dir = base / f'{_CORPUS_TAG}_{date}'
         if not run_dir.exists(): continue
         eval_files = list(run_dir.rglob('eval_legs.csv'))
         scored_files = list(run_dir.rglob('scored_legs_deduped.csv'))

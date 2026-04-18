@@ -105,6 +105,12 @@ def _run_score_board_new(
     # Minimal wiring only: pull role_ctx config once, pass-through to kernel.
     role_cfg = cfg.get("role_ctx") or None
 
+    # Build team/matchup blowout stats once for enriched q
+    from Atlas.engine.new_probability import _build_blowout_team_stats
+    _blowout_team_stats = _build_blowout_team_stats(logs, threshold=threshold)
+    if _blowout_team_stats:
+        blow["_blowout_team_stats"] = _blowout_team_stats
+
     rows: list[dict[str, Any]] = []
 
     iael_df_kernel = _normalize_iael_for_kernel(iael_df)
@@ -131,6 +137,7 @@ def _run_score_board_new(
             role_minute_drop=role_drop,
             iael_df=iael_df_kernel,
             role_cfg=role_cfg,
+            blowout_cfg=blow,
         ) or {}
 
         # Enforce string keys in kernel output too

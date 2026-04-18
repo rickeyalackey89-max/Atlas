@@ -1,22 +1,21 @@
 """
 src/Atlas/contracts/model_contract.py
 
-CANONICAL MODEL CONTRACT — v9d
+CANONICAL MODEL CONTRACT — v17
 ==============================
 ⚠️  READ BEFORE MODIFYING ANY MODEL PARAMETERS  ⚠️
 
-This module is the single source of truth for the v9d production model.
+This module is the single source of truth for the v17 production model.
 It is loaded and validated at the start of every live run via the
 orchestrator. If any parameter drifts from the canonical contract,
 the run will emit a loud warning (and optionally hard-stop).
 
 To promote a new model version:
-  1. Train and validate against the v9d baseline (see docs/BASELINE_V9D.md).
-  2. Confirm improvement on the reader corpus (data/telemetry/v9d_corpus/).
+  1. Train and validate against the current baseline.
+  2. Confirm improvement on the reader corpus.
   3. Update THIS file with the new canonical values.
   4. Update data/model/ensemble/ensemble_meta.json to match.
-  5. Update docs/BASELINE_V9D.md with new metrics.
-  6. Get explicit approval before merging.
+  5. Get explicit approval before merging.
 
 DO NOT change individual values in config.yaml, ensemble_meta.json, or
 the engine code without updating this contract first.
@@ -31,30 +30,30 @@ from typing import Dict, List, Optional, Tuple
 
 
 # ──────────────────────────────────────────────────────────────
-# Canonical v9d contract values
+# Canonical v17 contract values
 # ──────────────────────────────────────────────────────────────
 
 @dataclass(frozen=True)
 class ModelContract:
-    version: str = "v9d"
-    architecture: str = "dn-d11nl50-top7-trimmed33"
+    version: str = "v17"
+    architecture: str = "dn-d11nl50-top7-33feat"
 
     # Ensemble
     seeds: Tuple[int, ...] = (65536, 9999, 137, 999, 98765, 54321, 12345)
-    temperature: float = 0.98
+    temperature: float = 1.04
     n_rounds: int = 200
     feature_count: int = 33
     cat_features: Tuple[str, ...] = ("stat_cat", "tier_cat")
 
-    # OVER GBM
-    over_max_depth: int = 11
-    over_num_leaves: int = 50
+    # OVER GBM (slim: fewer leaves for enriched q_blowout)
+    over_max_depth: int = 8
+    over_num_leaves: int = 30
     over_min_child_samples: int = 200
     over_lambda_l2: float = 1.0
 
     # UNDER GBM
-    under_max_depth: int = 15
-    under_num_leaves: int = 90
+    under_max_depth: int = 11
+    under_num_leaves: int = 50
     under_min_child_samples: int = 150
     under_lambda_l2: float = 6.0
 
@@ -63,13 +62,14 @@ class ModelContract:
     p_clamp_max: float = 0.97
 
     # Baseline metrics (for regression detection)
-    baseline_lodo_brier: float = 0.196266
-    baseline_lodo_hr: float = 0.6986
-    baseline_reader_brier: float = 0.20046
-    baseline_reader_corpus_legs: int = 49956
+    baseline_lodo_brier: float = 0.200996
+    baseline_raw_brier: float = 0.215425
+    baseline_training_legs: int = 167761
+    baseline_training_dates: int = 46
 
 
-V9D = ModelContract()
+CONTRACT = ModelContract()
+V17 = CONTRACT  # backward compat alias
 
 
 # ──────────────────────────────────────────────────────────────
@@ -86,7 +86,7 @@ class ContractViolation:
         return f"  {self.field}: expected {self.expected!r}, got {self.actual!r}"
 
 
-def validate_ensemble_meta(meta_path: Path, contract: ModelContract = V9D) -> List[ContractViolation]:
+def validate_ensemble_meta(meta_path: Path, contract: ModelContract = CONTRACT) -> List[ContractViolation]:
     """Validate ensemble_meta.json against the canonical contract."""
     violations: List[ContractViolation] = []
 
@@ -128,7 +128,7 @@ def validate_ensemble_meta(meta_path: Path, contract: ModelContract = V9D) -> Li
     return violations
 
 
-def validate_config(config: dict, contract: ModelContract = V9D) -> List[ContractViolation]:
+def validate_config(config: dict, contract: ModelContract = CONTRACT) -> List[ContractViolation]:
     """Validate relevant config.yaml values against the contract."""
     violations: List[ContractViolation] = []
 
@@ -162,23 +162,23 @@ def enforce_contract(
         violations.extend(validate_config(config))
 
     if not violations:
-        print(f"[CONTRACT] v9d model contract validated — {V9D.feature_count} features, "
-              f"T={V9D.temperature}, {len(V9D.seeds)} seeds. All clear.")
+        print(f"[CONTRACT] {CONTRACT.version} model contract validated — {CONTRACT.feature_count} features, "
+              f"T={CONTRACT.temperature}, {len(CONTRACT.seeds)} seeds. All clear.")
         return True
 
     # Violations found
     print("\n" + "=" * 72, file=sys.stderr)
     print("⚠️  MODEL CONTRACT VIOLATION DETECTED", file=sys.stderr)
     print("=" * 72, file=sys.stderr)
-    print(f"Contract version: {V9D.version}", file=sys.stderr)
+    print(f"Contract version: {CONTRACT.version}", file=sys.stderr)
     print(f"Reference: src/Atlas/contracts/model_contract.py", file=sys.stderr)
-    print(f"Baseline doc: docs/BASELINE_V9D.md", file=sys.stderr)
+    print(f"Baseline doc: src/Atlas/contracts/model_contract.py", file=sys.stderr)
     print("", file=sys.stderr)
     print("Violations:", file=sys.stderr)
     for v in violations:
         print(str(v), file=sys.stderr)
     print("", file=sys.stderr)
-    print("READ docs/BASELINE_V9D.md and update the contract BEFORE", file=sys.stderr)
+    print("Update the contract to match the promoted model BEFORE", file=sys.stderr)
     print("changing model parameters.", file=sys.stderr)
     print("=" * 72, file=sys.stderr)
 

@@ -665,6 +665,34 @@ def fetch_bettingpros_props(*, game_date: str, raw_path: Optional[str | Path] = 
         print(f"⚠️ BettingPros fetch failed (non-fatal): {e}", file=sys.stderr)
 
 
+def fetch_oddsapi_props(*, game_date: str, raw_path: Optional[str | Path] = None) -> None:
+    """Fetch OddsAPI NBA player props → merge into external_priors_today.csv (non-fatal)."""
+    script = TOOLS_DIR / "fetch_oddsapi_props.py"
+    if not script.exists():
+        logger.warning("fetch_oddsapi_props.py not found; skipping OddsAPI fetch.")
+        return
+
+    if _strict_replay_enabled():
+        _banner("REPLAY ODDSAPI (skipped, using pinned priors)")
+        return
+
+    api_key = (os.environ.get("ODDSAPI_KEY") or "").strip()
+    if not api_key:
+        logger.info("ODDSAPI_KEY not set; skipping OddsAPI fetch.")
+        return
+
+    extra_env = {
+        "ODDSAPI_KEY": api_key,
+        "ODDSAPI_GAME_DATE": game_date,
+    }
+
+    try:
+        _run([_py(), str(script)], "FETCH ODDSAPI (player props)", extra_env=extra_env)
+    except Exception as e:
+        logger.warning("OddsAPI fetch failed (non-fatal): %s", e)
+        print(f"⚠️ OddsAPI fetch failed (non-fatal): {e}", file=sys.stderr)
+
+
 def _resolve_role_metrics_source() -> tuple[str, str, str]:
     source_url = (os.environ.get("ATLAS_ROLE_METRICS_URL") or "").strip()
     html_path = (os.environ.get("ATLAS_ROLE_METRICS_HTML_PATH") or "").strip()
@@ -1029,6 +1057,11 @@ def run_today(
     # 2c) Fetch BettingPros player props → merge into external_priors_today.csv
     with StageTimer(ctx, "fetch_bettingpros_props"):
         fetch_bettingpros_props(game_date=game_date, raw_path=raw_path)
+
+    # 2c-oddsapi) Fetch OddsAPI player props → merge into external_priors_today.csv
+    with StageTimer(ctx, "fetch_oddsapi_props"):
+        fetch_oddsapi_props(game_date=game_date, raw_path=raw_path)
+
     bp_priors_path = DATA_DIR / "input" / "external_priors_today.csv"
     _artifact_fingerprint(ctx, "external_priors_today.csv", bp_priors_path)
 

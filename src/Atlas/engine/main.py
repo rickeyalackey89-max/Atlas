@@ -992,6 +992,22 @@ def main() -> None:
     if "p_cal" not in scored.columns:
         scored["p_cal"] = scored["p_for_cal"]
 
+    # Temperature scaling (applied after calibration or identity passthrough)
+    temp_scale = float(telemetry_cfg.get("temperature_scaling", 1.0))
+    if temp_scale != 1.0:
+        import numpy as _np
+        _p = scored["p_cal"].values.astype(float)
+        _p = _np.clip(_p, 1e-6, 1 - 1e-6)
+        _logit = _np.log(_p / (1 - _p))
+        scored["p_cal"] = 1.0 / (1.0 + _np.exp(-_logit / temp_scale))
+
+    # GBM ENSEMBLE CALIBRATION (posthoc calibrator)
+    try:
+        from Atlas.engine.gbm_ensemble import apply_gbm_ensemble
+        scored = apply_gbm_ensemble(scored, logs=logs, cfg=cfg, repo_root=PROJECT_ROOT)
+    except Exception as _gbm_err:
+        print(f"[GBM_ENSEMBLE] Skipped: {_gbm_err!r}")
+
     # PREP FOR OPTIMIZER (staged)
     from Atlas.stages.prep_for_optimizer.prep_for_optimizer import run_prep_for_optimizer
 
@@ -1141,6 +1157,8 @@ def main() -> None:
         iael_status_path=IAEL_STATUS_PATH,
 
         write_csv_clean=write_csv_clean,
+        cfg=cfg,
+        ensemble_dir=cfg.get("posthoc_calibrator", {}).get("ensemble_dir"),
     )
 
     # Build dashboard payload from slip CSVs
