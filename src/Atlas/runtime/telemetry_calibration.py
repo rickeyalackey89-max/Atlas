@@ -87,6 +87,7 @@ class TelemetryCalibration:
     mode: str = "telemetry"
     k_shrink: float = 1.0
     standard_under_penalty: float = 0.90
+    demon_tier_penalty: float = 1.0
     mult: Dict[str, float] = None  # key: "STAT|DIRECTION"
     # Optional per-role-context multiplier maps. Keys same as `mult` ("STAT|DIRECTION").
     # `mult_rolectx_on` is applied when `role_ctx_outs_used` > 0, `mult_rolectx_off` when == 0.
@@ -321,6 +322,7 @@ class TelemetryCalibration:
                 mode="telemetry",
                 k_shrink=float(base.get("k_shrink", d.get("k_shrink", 1.0))),
                 standard_under_penalty=float(base.get("standard_under_penalty", d.get("standard_under_penalty", 0.90))),
+                demon_tier_penalty=float(base.get("demon_tier_penalty", d.get("demon_tier_penalty", 1.0))),
                 mult=mult,
                 mult_rolectx_on=mult_rolectx_on,
                 mult_rolectx_off=mult_rolectx_off,
@@ -370,6 +372,7 @@ class TelemetryCalibration:
             mode="telemetry",
             k_shrink=float(d.get("k_shrink", 1.0)),
             standard_under_penalty=float(d.get("standard_under_penalty", 0.90)),
+            demon_tier_penalty=float(d.get("demon_tier_penalty", 1.0)),
             mult={str(k): float(v) for k, v in mult.items()},
             mult_rolectx_on={str(k): float(v) for k, v in mult_rolectx_on.items()},
             mult_rolectx_off={str(k): float(v) for k, v in mult_rolectx_off.items()},
@@ -401,6 +404,7 @@ def seed_telemetry_columns(scored: pd.DataFrame, *, include_bucket_mult: bool = 
     out["telemetry_cal_key"] = (stat + "|" + direction).astype(str)
     out["telemetry_k_shrink"] = 1.0
     out["telemetry_under_penalty"] = 1.0
+    out["telemetry_demon_penalty"] = 1.0
     out["telemetry_mult"] = 1.0
     if include_bucket_mult:
         out["telemetry_bucket_mult"] = 1.0
@@ -553,6 +557,7 @@ def apply_calibration(
       - telemetry_mult
       - telemetry_bucket_mult
       - telemetry_under_penalty
+      - telemetry_demon_penalty
     """
     out = scored.copy()
 
@@ -582,6 +587,7 @@ def apply_calibration(
         out["p_adj"] = calibrated
         out["telemetry_k_shrink"] = 1.0
         out["telemetry_under_penalty"] = 1.0
+        out["telemetry_demon_penalty"] = 1.0
         out["telemetry_mult"] = 1.0
         out["telemetry_bucket_mult"] = 1.0
         return out
@@ -595,6 +601,13 @@ def apply_calibration(
         m_under_std = (out["tier"] == "STANDARD") & (out["direction"] == "UNDER")
         if m_under_std.any() and under_pen != 1.0:
             out.loc[m_under_std, "p_adj"] = (out.loc[m_under_std, "p_adj"] * under_pen).clip(0.0, 1.0)
+
+    # Apply DEMON tier penalty (both OVER and UNDER)
+    demon_pen = float(calib.demon_tier_penalty)
+    if apply_under_penalty:  # using same gate as standard_under_penalty for consistency
+        m_demon = (out["tier"] == "DEMON")
+        if m_demon.any() and demon_pen != 1.0:
+            out.loc[m_demon, "p_adj"] = (out.loc[m_demon, "p_adj"] * demon_pen).clip(0.0, 1.0)
 
     # Build composite multiplier per-row: base * role-specific (on/off) if present
     keys = (out["stat"] + "|" + out["direction"]).astype(str)
@@ -662,6 +675,7 @@ def apply_calibration(
 
     out["telemetry_k_shrink"] = float(k)
     out["telemetry_under_penalty"] = float(under_pen)
+    out["telemetry_demon_penalty"] = float(demon_pen)
     out["telemetry_mult"] = pd.to_numeric(mult, errors="coerce").fillna(1.0)
     out["telemetry_bucket_mult"] = pd.to_numeric(bucket_mult, errors="coerce").fillna(1.0)
     return out
@@ -772,6 +786,7 @@ def apply_calibration_to_column(
 
     out["telemetry_k_shrink"] = pd.to_numeric(work.get("telemetry_k_shrink", 1.0), errors="coerce").fillna(1.0).where(allowed_mask, 1.0)
     out["telemetry_under_penalty"] = pd.to_numeric(work.get("telemetry_under_penalty", 1.0), errors="coerce").fillna(1.0).where(allowed_mask, 1.0)
+    out["telemetry_demon_penalty"] = pd.to_numeric(work.get("telemetry_demon_penalty", 1.0), errors="coerce").fillna(1.0).where(allowed_mask, 1.0)
     out["telemetry_mult"] = pd.to_numeric(work.get("telemetry_mult", 1.0), errors="coerce").fillna(1.0).where(allowed_mask, 1.0)
     out["telemetry_bucket_mult"] = pd.to_numeric(work.get("telemetry_bucket_mult", 1.0), errors="coerce").fillna(1.0).where(allowed_mask, 1.0)
 
@@ -782,15 +797,20 @@ def apply_calibration_to_column(
 
     k = float(calib.k_shrink)
     under_pen = float(calib.standard_under_penalty)
+    demon_pen = float(calib.demon_tier_penalty)
     shrink_applied = (k != 1.0)
     if apply_under_penalty and (under_pen != 1.0):
         under_mask = (tier == "STANDARD") & (direction == "UNDER")
     else:
         under_mask = pd.Series(False, index=out.index)
+    if apply_under_penalty and (demon_pen != 1.0):
+        demon_mask = (tier == "DEMON")
+    else:
+        demon_mask = pd.Series(False, index=out.index)
     mult_applied = pd.to_numeric(out["telemetry_mult"], errors="coerce").fillna(1.0).ne(1.0)
     bucket_applied = pd.to_numeric(out["telemetry_bucket_mult"], errors="coerce").fillna(1.0).ne(1.0)
     if shrink_applied:
         out["telemetry_cal_applied"] = allowed_mask
     else:
-        out["telemetry_cal_applied"] = allowed_mask & (under_mask | mult_applied | bucket_applied)
+        out["telemetry_cal_applied"] = allowed_mask & (under_mask | demon_mask | mult_applied | bucket_applied)
     return out

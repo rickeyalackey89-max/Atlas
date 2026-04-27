@@ -104,9 +104,9 @@ pp_kernel:
         c: -0.502224
 telemetry:
   schema_version: 2
-  active_calibration: isotonic_hybrid_protect_role_ctx_on
+  active_calibration: demon_fix
   apply_active_calibration: true
-  active_calibration_path: data/model/telemetry_calibration.isotonic_hybrid_protect_role_ctx_on.json
+  active_calibration_path: data/model/telemetry_calibration.demon_fix.json
   calibration_policy:
     allow_family_split: true
     family_order:
@@ -266,41 +266,49 @@ slip_build:
     min_std_w: 0.0
     min_std_ref: 6.0
   by_legs:
-    # 3-leg EV: slip builder trainer 43-date (89 -> 99 slips, +11%)
+    # 3-leg EV: trainer v5 46-date (weighted 3547, 185 wins, 52.4% leg rate)
     "3":
       max_direction_per_slip:
         under: 1
-      max_same_stat: 3
-      min_leg_prob: 0.50
-      max_leg_prob: 0.65
-      beam_window_growth: 1.5
-      stat_family_mode: fine
-      phase1_frac: 0.05
+      min_edge: 0.02
+      max_same_stat: 2
+      min_leg_prob: 0.52
+      stat_family_mode: coarse
+      beam_window_growth: 2.0
+      beam_width: 500
+      phase1_frac: 0.3
+      target_pool_mult: 500
       penalty:
-        team_w: 0.15
-        family_w: 0.1
+        team_w: 0.02
+        family_w: 0.0
         frag_w: 0.0
-    # 4-leg EV: trainer v5 44-date (1167 -> 1843, +58% weighted, 143 wins)
+    # 4-leg EV: trainer v5 46-date (weighted 3301, 112 wins, 53.1% leg rate)
     "4":
-      exclude_stat_directions: [REB_over, FG3M_over, AST_over, RA_over, PR_over, PA_over, PRA_over]
-      min_edge: 0.04
+      max_direction_per_slip:
+        under: 1
+      min_edge: 0.02
       max_same_stat: 3
-      beam_width: 400
-      phase1_frac: 0.1
+      stat_family_mode: fine
+      beam_window_growth: 1.5
+      beam_width: 500
+      phase1_frac: 0.2
       target_pool_mult: 600
       penalty:
-        team_w: 0.02
-        family_w: 0.0
+        team_w: 0.0
+        family_w: 0.02
         frag_w: 0.0
-    # 5-leg EV: trainer v5 44-date (1031 -> 1857, +80% weighted, 133 wins)
+    # 5-leg EV: trainer v5 46-date (weighted 3125, 58 wins, 49.4% leg rate)
     "5":
-      exclude_stat_directions: [REB_over, FG3M_over, AST_over, RA_over, PR_over, PA_over, PRA_over]
-      min_edge: 0.03
-      max_same_stat: 3
+      max_direction_per_slip:
+        under: 2
+      min_edge: 0.02
+      max_same_stat: 2
+      stat_family_mode: coarse
+      beam_window_growth: 2.0
       penalty:
-        team_w: 0.02
-        family_w: 0.0
-        frag_w: 0.0
+        team_w: 0.1
+        family_w: 0.05
+        frag_w: 0.08
   by_sort_mode:
     hit:
       prefer_calibrated_prob: false
