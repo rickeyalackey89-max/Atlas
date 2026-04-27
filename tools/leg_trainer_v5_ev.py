@@ -565,6 +565,7 @@ def _print_combo(combo: dict[str, Any]) -> None:
 def train(base_cfg: dict, data: list[tuple[str, pd.DataFrame, dict]], cats: list | None = None, n_workers: int = 1) -> dict:
     results: dict[str, dict[str, Any]] = {}
     total_start = time.time()
+    structural_winner: dict[str, Any] | None = None  # warm-start for 4/5-leg
 
     for cat_name, n_legs, sort_mode in (cats or CATEGORIES):
         cat_start = time.time()
@@ -580,13 +581,23 @@ def train(base_cfg: dict, data: list[tuple[str, pd.DataFrame, dict]], cats: list
             print(f"  Pool: {n_workers} workers")
 
         try:
-            # S1: structural (EV-tuned grid with frag_w)
-            s1_grid = build_structural_grid()
-            print(f"  S1: structural ({len(s1_grid)} combos, {len(SEEDS)} seeds)")
-            s1_combo, s1_result = _run_grid(s1_grid, base_cfg, sorted_data, n_legs, sort_mode, "S1", pool=pool)
-            _print_combo(s1_combo)
+            # S1: structural — run fully for 3-leg, warm-start for 4/5-leg
+            if structural_winner is not None and n_legs > 3:
+                s1_grid_size = len(build_structural_grid())
+                print(f"  S1: WARM-START from 3-leg winner (skipped {s1_grid_size} combos)")
+                s1_combo = copy.deepcopy(structural_winner)
+                # Score the warm-start config on this leg count to get a baseline
+                s1_result_raw = score_config(s1_combo, base_cfg, sorted_data, n_legs, sort_mode)
+                s1_result = s1_result_raw or {"weighted": 0, "slip_wins": 0, "legs_hit": 0, "legs_matched": 0, "leg_rate": 0}
+                _print_combo(s1_combo)
+            else:
+                # S1: structural (EV-tuned grid with frag_w)
+                s1_grid = build_structural_grid()
+                print(f"  S1: structural ({len(s1_grid)} combos, {len(SEEDS)} seeds)")
+                s1_combo, s1_result = _run_grid(s1_grid, base_cfg, sorted_data, n_legs, sort_mode, "S1", pool=pool)
+                _print_combo(s1_combo)
 
-            # S1b: refinement
+            # S1b: refinement (always run)
             s1b_grid = build_refinement_grid(s1_combo)
             print(f"  S1b: refinement ({len(s1b_grid)} combos)")
             s1b_combo, s1b_result = _run_grid(s1b_grid, base_cfg, sorted_data, n_legs, sort_mode, "S1b", pool=pool)
@@ -623,6 +634,11 @@ def train(base_cfg: dict, data: list[tuple[str, pd.DataFrame, dict]], cats: list
         cat_elapsed = time.time() - cat_start
         print(f"  {cat_name} done in {cat_elapsed:.0f}s ({cat_elapsed / 60:.1f} min)")
         results[cat_name] = {"overrides": best[0], "result": best[1]}
+
+        # Save 3-leg structural winner for warm-starting 4/5-leg
+        if n_legs == 3 and structural_winner is None:
+            structural_winner = copy.deepcopy(best[0])
+            print(f"  -> Saved 3-leg structural winner for warm-start")
 
     total_elapsed = time.time() - total_start
     print(f"\n  Total: {total_elapsed:.0f}s ({total_elapsed / 3600:.1f} hrs)")

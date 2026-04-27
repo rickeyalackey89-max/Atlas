@@ -1,871 +1,871 @@
 team,out_player,beneficiary_player,stat,games,weight,team_u,stat_u,out_canon,ben_canon
-CHI,Anfernee Simons,Ayo Dosunmu,AST,6,0.008886229207603707,CHI,AST,anfernee simons,ayo dosunmu
-CHI,Anfernee Simons,Ayo Dosunmu,PTS,6,0.00960457932484156,CHI,PTS,anfernee simons,ayo dosunmu
-CHI,Anfernee Simons,Ayo Dosunmu,REB,6,0.004620934704167208,CHI,REB,anfernee simons,ayo dosunmu
-CHI,Anfernee Simons,Coby White,AST,6,0.010544495178385493,CHI,AST,anfernee simons,coby white
-CHI,Anfernee Simons,Coby White,PTS,6,0.011366161018924811,CHI,PTS,anfernee simons,coby white
-CHI,Anfernee Simons,Coby White,REB,6,0.00539681450182551,CHI,REB,anfernee simons,coby white
-CHI,Anfernee Simons,Collin Sexton,AST,6,0.007514998493155203,CHI,AST,anfernee simons,collin sexton
-CHI,Anfernee Simons,Collin Sexton,PTS,6,0.009179487125908454,CHI,PTS,anfernee simons,collin sexton
-CHI,Anfernee Simons,Collin Sexton,REB,6,0.004034673480886363,CHI,REB,anfernee simons,collin sexton
-CHI,Anfernee Simons,Dalen Terry,AST,6,0.002795117824629443,CHI,AST,anfernee simons,dalen terry
-CHI,Anfernee Simons,Dalen Terry,PTS,6,0.0027845812356353983,CHI,PTS,anfernee simons,dalen terry
-CHI,Anfernee Simons,Dalen Terry,REB,6,0.0016533889715441886,CHI,REB,anfernee simons,dalen terry
-CHI,Anfernee Simons,Emanuel Miller,AST,5,0.001290975114836087,CHI,AST,anfernee simons,emanuel miller
-CHI,Anfernee Simons,Emanuel Miller,PTS,5,0.001345856707889049,CHI,PTS,anfernee simons,emanuel miller
-CHI,Anfernee Simons,Emanuel Miller,REB,5,0.0006472462492834247,CHI,REB,anfernee simons,emanuel miller
-CHI,Anfernee Simons,Guerschon Yabusele,AST,6,0.006943523219307734,CHI,AST,anfernee simons,guerschon yabusele
-CHI,Anfernee Simons,Guerschon Yabusele,PTS,6,0.007942904746637981,CHI,PTS,anfernee simons,guerschon yabusele
-CHI,Anfernee Simons,Guerschon Yabusele,REB,6,0.004693539465721133,CHI,REB,anfernee simons,guerschon yabusele
-CHI,Anfernee Simons,Isaac Okoro,AST,6,0.007912260754211121,CHI,AST,anfernee simons,isaac okoro
-CHI,Anfernee Simons,Isaac Okoro,PTS,6,0.00912729131862627,CHI,PTS,anfernee simons,isaac okoro
-CHI,Anfernee Simons,Isaac Okoro,REB,6,0.004789614412282959,CHI,REB,anfernee simons,isaac okoro
-CHI,Anfernee Simons,Jaden Ivey,AST,4,0.010599842400475233,CHI,AST,anfernee simons,jaden ivey
-CHI,Anfernee Simons,Jaden Ivey,PTS,4,0.010229570868203988,CHI,PTS,anfernee simons,jaden ivey
-CHI,Anfernee Simons,Jaden Ivey,REB,4,0.005878307023768875,CHI,REB,anfernee simons,jaden ivey
-CHI,Anfernee Simons,Jevon Carter,AST,6,0.0022442977565854155,CHI,AST,anfernee simons,jevon carter
-CHI,Anfernee Simons,Jevon Carter,PTS,6,0.0026802430746121543,CHI,PTS,anfernee simons,jevon carter
-CHI,Anfernee Simons,Jevon Carter,REB,6,0.0013005999681472728,CHI,REB,anfernee simons,jevon carter
-CHI,Anfernee Simons,Josh Giddey,AST,6,0.015227776810809102,CHI,AST,anfernee simons,josh giddey
-CHI,Anfernee Simons,Josh Giddey,PTS,6,0.01242556093101685,CHI,PTS,anfernee simons,josh giddey
-CHI,Anfernee Simons,Josh Giddey,REB,6,0.00725896484179979,CHI,REB,anfernee simons,josh giddey
-CHI,Anfernee Simons,Julian Phillips,AST,6,0.0018816138449207986,CHI,AST,anfernee simons,julian phillips
-CHI,Anfernee Simons,Julian Phillips,PTS,6,0.0023174400143937328,CHI,PTS,anfernee simons,julian phillips
-CHI,Anfernee Simons,Julian Phillips,REB,6,0.0012815286781224274,CHI,REB,anfernee simons,julian phillips
-CHI,Anfernee Simons,Kevin Huerter,AST,6,0.006575566214375157,CHI,AST,anfernee simons,kevin huerter
-CHI,Anfernee Simons,Kevin Huerter,PTS,6,0.007172999474622529,CHI,PTS,anfernee simons,kevin huerter
-CHI,Anfernee Simons,Kevin Huerter,REB,6,0.003907128932741507,CHI,REB,anfernee simons,kevin huerter
-CHI,Anfernee Simons,Lachlan Olbrich,AST,6,0.0012756461684319236,CHI,AST,anfernee simons,lachlan olbrich
-CHI,Anfernee Simons,Lachlan Olbrich,PTS,6,0.0012630964637096636,CHI,PTS,anfernee simons,lachlan olbrich
-CHI,Anfernee Simons,Lachlan Olbrich,REB,6,0.000890000743468394,CHI,REB,anfernee simons,lachlan olbrich
-CHI,Anfernee Simons,Leonard Miller,AST,6,0.00494312557889813,CHI,AST,anfernee simons,leonard miller
-CHI,Anfernee Simons,Leonard Miller,PTS,6,0.006124967444833201,CHI,PTS,anfernee simons,leonard miller
-CHI,Anfernee Simons,Leonard Miller,REB,6,0.003587739231762162,CHI,REB,anfernee simons,leonard miller
-CHI,Anfernee Simons,Matas Buzelis,AST,6,0.009197777914904627,CHI,AST,anfernee simons,matas buzelis
-CHI,Anfernee Simons,Matas Buzelis,PTS,6,0.011313056207034043,CHI,PTS,anfernee simons,matas buzelis
-CHI,Anfernee Simons,Matas Buzelis,REB,6,0.006075895413791437,CHI,REB,anfernee simons,matas buzelis
-CHI,Anfernee Simons,Nick Richards,AST,6,0.005267937279114741,CHI,AST,anfernee simons,nick richards
-CHI,Anfernee Simons,Nick Richards,PTS,6,0.006883808726217786,CHI,PTS,anfernee simons,nick richards
-CHI,Anfernee Simons,Nick Richards,REB,6,0.004615655962089867,CHI,REB,anfernee simons,nick richards
-CHI,Anfernee Simons,Nikola Vucevic,AST,6,0.010771325553089198,CHI,AST,anfernee simons,nikola vucevic
-CHI,Anfernee Simons,Nikola Vucevic,PTS,6,0.01197769175902524,CHI,PTS,anfernee simons,nikola vucevic
-CHI,Anfernee Simons,Nikola Vucevic,REB,6,0.007086319811763448,CHI,REB,anfernee simons,nikola vucevic
-CHI,Anfernee Simons,Patrick Williams,AST,6,0.004705904769598824,CHI,AST,anfernee simons,patrick williams
-CHI,Anfernee Simons,Patrick Williams,PTS,6,0.005244549376838702,CHI,PTS,anfernee simons,patrick williams
-CHI,Anfernee Simons,Patrick Williams,REB,6,0.002957567701840517,CHI,REB,anfernee simons,patrick williams
-CHI,Anfernee Simons,Rob Dillingham,AST,6,0.00609122549307756,CHI,AST,anfernee simons,rob dillingham
-CHI,Anfernee Simons,Rob Dillingham,PTS,6,0.005892489817379067,CHI,PTS,anfernee simons,rob dillingham
-CHI,Anfernee Simons,Rob Dillingham,REB,6,0.003097065078578046,CHI,REB,anfernee simons,rob dillingham
-CHI,Anfernee Simons,Tre Jones,AST,6,0.009914921592326143,CHI,AST,anfernee simons,tre jones
-CHI,Anfernee Simons,Tre Jones,PTS,6,0.009264302421894617,CHI,PTS,anfernee simons,tre jones
-CHI,Anfernee Simons,Tre Jones,REB,6,0.004531350994554907,CHI,REB,anfernee simons,tre jones
-CHI,Anfernee Simons,Yuki Kawamura,AST,6,0.003301653862550145,CHI,AST,anfernee simons,yuki kawamura
-CHI,Anfernee Simons,Yuki Kawamura,PTS,6,0.002344912460221965,CHI,PTS,anfernee simons,yuki kawamura
-CHI,Anfernee Simons,Yuki Kawamura,REB,6,0.001411598862640193,CHI,REB,anfernee simons,yuki kawamura
-CHI,Jalen Smith,Ayo Dosunmu,AST,37,0.0026820650406425397,CHI,AST,jalen smith,ayo dosunmu
-CHI,Jalen Smith,Ayo Dosunmu,PTS,37,0.00597546217201889,CHI,PTS,jalen smith,ayo dosunmu
-CHI,Jalen Smith,Ayo Dosunmu,REB,37,0.009075329877143844,CHI,REB,jalen smith,ayo dosunmu
-CHI,Jalen Smith,Coby White,AST,29,0.003182567231663599,CHI,AST,jalen smith,coby white
-CHI,Jalen Smith,Coby White,PTS,29,0.007071425297513619,CHI,PTS,jalen smith,coby white
-CHI,Jalen Smith,Coby White,REB,29,0.010599126589183668,CHI,REB,jalen smith,coby white
-CHI,Jalen Smith,Collin Sexton,AST,19,0.002268196584635272,CHI,AST,jalen smith,collin sexton
-CHI,Jalen Smith,Collin Sexton,PTS,19,0.0057109922490337925,CHI,PTS,jalen smith,collin sexton
-CHI,Jalen Smith,Collin Sexton,REB,19,0.007923936417579602,CHI,REB,jalen smith,collin sexton
-CHI,Jalen Smith,Dalen Terry,AST,28,0.000843629803685543,CHI,AST,jalen smith,dalen terry
-CHI,Jalen Smith,Dalen Terry,PTS,28,0.0017324194299084958,CHI,PTS,jalen smith,dalen terry
-CHI,Jalen Smith,Dalen Terry,REB,28,0.0032471894308446717,CHI,REB,jalen smith,dalen terry
-CHI,Jalen Smith,Emanuel Miller,AST,5,0.0003896455001271638,CHI,AST,jalen smith,emanuel miller
-CHI,Jalen Smith,Emanuel Miller,PTS,5,0.0008373209877239005,CHI,PTS,jalen smith,emanuel miller
-CHI,Jalen Smith,Emanuel Miller,REB,5,0.0012711655974480542,CHI,REB,jalen smith,emanuel miller
-CHI,Jalen Smith,Guerschon Yabusele,AST,21,0.0020957124164049054,CHI,AST,jalen smith,guerschon yabusele
-CHI,Jalen Smith,Guerschon Yabusele,PTS,21,0.004941655979322916,CHI,PTS,jalen smith,guerschon yabusele
-CHI,Jalen Smith,Guerschon Yabusele,REB,21,0.00921792270823471,CHI,REB,jalen smith,guerschon yabusele
-CHI,Jalen Smith,Isaac Okoro,AST,43,0.0023880993237445657,CHI,AST,jalen smith,isaac okoro
-CHI,Jalen Smith,Isaac Okoro,PTS,43,0.005678518773475526,CHI,PTS,jalen smith,isaac okoro
-CHI,Jalen Smith,Isaac Okoro,REB,43,0.009406610038568818,CHI,REB,jalen smith,isaac okoro
-CHI,Jalen Smith,Jaden Ivey,AST,4,0.0031992722756136864,CHI,AST,jalen smith,jaden ivey
-CHI,Jalen Smith,Jaden Ivey,PTS,4,0.006364298913211144,CHI,PTS,jalen smith,jaden ivey
-CHI,Jalen Smith,Jaden Ivey,REB,4,0.011544758533749627,CHI,REB,jalen smith,jaden ivey
-CHI,Jalen Smith,Jevon Carter,AST,21,0.0006773798439252078,CHI,AST,jalen smith,jevon carter
-CHI,Jalen Smith,Jevon Carter,PTS,21,0.001667505734763113,CHI,PTS,jalen smith,jevon carter
-CHI,Jalen Smith,Jevon Carter,REB,21,0.0025543260194728283,CHI,REB,jalen smith,jevon carter
-CHI,Jalen Smith,Josh Giddey,AST,43,0.004596087595403338,CHI,AST,jalen smith,josh giddey
-CHI,Jalen Smith,Josh Giddey,PTS,43,0.007730527990681345,CHI,PTS,jalen smith,josh giddey
-CHI,Jalen Smith,Josh Giddey,REB,43,0.01425631494998476,CHI,REB,jalen smith,josh giddey
-CHI,Jalen Smith,Julian Phillips,AST,26,0.0005679136330551565,CHI,AST,jalen smith,julian phillips
-CHI,Jalen Smith,Julian Phillips,PTS,26,0.0014417888252655042,CHI,PTS,jalen smith,julian phillips
-CHI,Jalen Smith,Julian Phillips,REB,26,0.0025168707730262446,CHI,REB,jalen smith,julian phillips
-CHI,Jalen Smith,Kevin Huerter,AST,34,0.0019846546666740356,CHI,AST,jalen smith,kevin huerter
-CHI,Jalen Smith,Kevin Huerter,PTS,34,0.004462661567035926,CHI,PTS,jalen smith,kevin huerter
-CHI,Jalen Smith,Kevin Huerter,REB,34,0.00767344405563344,CHI,REB,jalen smith,kevin huerter
-CHI,Jalen Smith,Lachlan Olbrich,AST,28,0.000385018877259355,CHI,AST,jalen smith,lachlan olbrich
-CHI,Jalen Smith,Lachlan Olbrich,PTS,28,0.0007858319332098839,CHI,PTS,jalen smith,lachlan olbrich
-CHI,Jalen Smith,Lachlan Olbrich,REB,28,0.0017479256589786867,CHI,REB,jalen smith,lachlan olbrich
-CHI,Jalen Smith,Leonard Miller,AST,20,0.0014919471461893265,CHI,AST,jalen smith,leonard miller
-CHI,Jalen Smith,Leonard Miller,PTS,20,0.0038106313700576096,CHI,PTS,jalen smith,leonard miller
-CHI,Jalen Smith,Leonard Miller,REB,20,0.007046175530688492,CHI,REB,jalen smith,leonard miller
-CHI,Jalen Smith,Matas Buzelis,AST,43,0.0027760974898161637,CHI,AST,jalen smith,matas buzelis
-CHI,Jalen Smith,Matas Buzelis,PTS,43,0.007038386287279748,CHI,PTS,jalen smith,matas buzelis
-CHI,Jalen Smith,Matas Buzelis,REB,43,0.011932814183558182,CHI,REB,jalen smith,matas buzelis
-CHI,Jalen Smith,Nick Richards,AST,20,0.0015899826667222883,CHI,AST,jalen smith,nick richards
-CHI,Jalen Smith,Nick Richards,PTS,20,0.004282742351509131,CHI,PTS,jalen smith,nick richards
-CHI,Jalen Smith,Nick Richards,REB,20,0.009064962640046763,CHI,REB,jalen smith,nick richards
-CHI,Jalen Smith,Nikola Vucevic,AST,38,0.003251029771165516,CHI,AST,jalen smith,nikola vucevic
-CHI,Jalen Smith,Nikola Vucevic,PTS,38,0.007451887437593567,CHI,PTS,jalen smith,nikola vucevic
-CHI,Jalen Smith,Nikola Vucevic,REB,38,0.013917247055816888,CHI,REB,jalen smith,nikola vucevic
-CHI,Jalen Smith,Patrick Williams,AST,43,0.0014203485384255085,CHI,AST,jalen smith,patrick williams
-CHI,Jalen Smith,Patrick Williams,PTS,43,0.0032628817307521043,CHI,PTS,jalen smith,patrick williams
-CHI,Jalen Smith,Patrick Williams,REB,43,0.005808543995218865,CHI,REB,jalen smith,patrick williams
-CHI,Jalen Smith,Rob Dillingham,AST,23,0.001838469677968103,CHI,AST,jalen smith,rob dillingham
-CHI,Jalen Smith,Rob Dillingham,PTS,23,0.003665996064157235,CHI,PTS,jalen smith,rob dillingham
-CHI,Jalen Smith,Rob Dillingham,REB,23,0.006082511231706239,CHI,REB,jalen smith,rob dillingham
-CHI,Jalen Smith,Tre Jones,AST,43,0.0029925476782362704,CHI,AST,jalen smith,tre jones
-CHI,Jalen Smith,Tre Jones,PTS,43,0.005763759848283358,CHI,PTS,jalen smith,tre jones
-CHI,Jalen Smith,Tre Jones,REB,43,0.008899391075061937,CHI,REB,jalen smith,tre jones
-CHI,Jalen Smith,Yuki Kawamura,AST,11,0.000996513841154463,CHI,AST,jalen smith,yuki kawamura
-CHI,Jalen Smith,Yuki Kawamura,PTS,11,0.0014588807306230712,CHI,PTS,jalen smith,yuki kawamura
-CHI,Jalen Smith,Yuki Kawamura,REB,11,0.002772323383212484,CHI,REB,jalen smith,yuki kawamura
-CHI,Zach Collins,Ayo Dosunmu,AST,10,0.0035788645561809188,CHI,AST,zach collins,ayo dosunmu
-CHI,Zach Collins,Ayo Dosunmu,PTS,10,0.00606833907563954,CHI,PTS,zach collins,ayo dosunmu
-CHI,Zach Collins,Ayo Dosunmu,REB,10,0.008185510208628738,CHI,REB,zach collins,ayo dosunmu
-CHI,Zach Collins,Coby White,AST,10,0.004246719184831923,CHI,AST,zach collins,coby white
-CHI,Zach Collins,Coby White,PTS,10,0.00718133681011481,CHI,PTS,zach collins,coby white
-CHI,Zach Collins,Coby White,REB,10,0.009559901411056561,CHI,REB,zach collins,coby white
-CHI,Zach Collins,Collin Sexton,AST,10,0.0030266113014384886,CHI,AST,zach collins,collin sexton
-CHI,Zach Collins,Collin Sexton,PTS,10,0.0057997584835814,CHI,PTS,zach collins,collin sexton
-CHI,Zach Collins,Collin Sexton,REB,10,0.0071470087938044005,CHI,REB,zach collins,collin sexton
-CHI,Zach Collins,Dalen Terry,AST,10,0.0011257134921026154,CHI,AST,zach collins,dalen terry
-CHI,Zach Collins,Dalen Terry,PTS,10,0.0017593465106580989,CHI,PTS,zach collins,dalen terry
-CHI,Zach Collins,Dalen Terry,REB,10,0.0029288083844171554,CHI,REB,zach collins,dalen terry
-CHI,Zach Collins,Emanuel Miller,AST,5,0.0005199308923345193,CHI,AST,zach collins,emanuel miller
-CHI,Zach Collins,Emanuel Miller,PTS,5,0.0008503355091847744,CHI,PTS,zach collins,emanuel miller
-CHI,Zach Collins,Emanuel Miller,REB,5,0.0011465301113708238,CHI,REB,zach collins,emanuel miller
-CHI,Zach Collins,Guerschon Yabusele,AST,10,0.002796453767289309,CHI,AST,zach collins,guerschon yabusele
-CHI,Zach Collins,Guerschon Yabusele,PTS,10,0.005018464382238955,CHI,PTS,zach collins,guerschon yabusele
-CHI,Zach Collins,Guerschon Yabusele,REB,10,0.008314122070717755,CHI,REB,zach collins,guerschon yabusele
-CHI,Zach Collins,Isaac Okoro,AST,10,0.00318660580443699,CHI,AST,zach collins,isaac okoro
-CHI,Zach Collins,Isaac Okoro,PTS,10,0.005766780271188923,CHI,PTS,zach collins,isaac okoro
-CHI,Zach Collins,Isaac Okoro,REB,10,0.008484308949828183,CHI,REB,zach collins,isaac okoro
-CHI,Zach Collins,Jaden Ivey,AST,4,0.004269009878307458,CHI,AST,zach collins,jaden ivey
-CHI,Zach Collins,Jaden Ivey,PTS,4,0.006463219525501725,CHI,PTS,zach collins,jaden ivey
-CHI,Zach Collins,Jaden Ivey,REB,4,0.010412815855009111,CHI,REB,zach collins,jaden ivey
-CHI,Zach Collins,Jevon Carter,AST,10,0.0009038746927309838,CHI,AST,zach collins,jevon carter
-CHI,Zach Collins,Jevon Carter,PTS,10,0.0016934238587434961,CHI,PTS,zach collins,jevon carter
-CHI,Zach Collins,Jevon Carter,REB,10,0.002303878976478713,CHI,REB,zach collins,jevon carter
-CHI,Zach Collins,Josh Giddey,AST,10,0.006132876997028819,CHI,AST,zach collins,josh giddey
-CHI,Zach Collins,Josh Giddey,PTS,10,0.007850683968990326,CHI,PTS,zach collins,josh giddey
-CHI,Zach Collins,Josh Giddey,REB,10,0.012858509072427532,CHI,REB,zach collins,josh giddey
-CHI,Zach Collins,Julian Phillips,AST,10,0.0007578063699104461,CHI,AST,zach collins,julian phillips
-CHI,Zach Collins,Julian Phillips,PTS,10,0.0014641986201751874,CHI,PTS,zach collins,julian phillips
-CHI,Zach Collins,Julian Phillips,REB,10,0.002270096149153906,CHI,REB,zach collins,julian phillips
-CHI,Zach Collins,Kevin Huerter,AST,10,0.002648261744285347,CHI,AST,zach collins,kevin huerter
-CHI,Zach Collins,Kevin Huerter,PTS,10,0.0045320249361480314,CHI,PTS,zach collins,kevin huerter
-CHI,Zach Collins,Kevin Huerter,REB,10,0.006921076754567153,CHI,REB,zach collins,kevin huerter
-CHI,Zach Collins,Lachlan Olbrich,AST,10,0.0005137572700153341,CHI,AST,zach collins,lachlan olbrich
-CHI,Zach Collins,Lachlan Olbrich,PTS,10,0.000798046157753808,CHI,PTS,zach collins,lachlan olbrich
-CHI,Zach Collins,Lachlan Olbrich,REB,10,0.0015765447117826435,CHI,REB,zach collins,lachlan olbrich
-CHI,Zach Collins,Leonard Miller,AST,10,0.001990808082682842,CHI,AST,zach collins,leonard miller
-CHI,Zach Collins,Leonard Miller,PTS,10,0.0038698602016194517,CHI,PTS,zach collins,leonard miller
-CHI,Zach Collins,Leonard Miller,REB,10,0.006355310773165243,CHI,REB,zach collins,leonard miller
-CHI,Zach Collins,Matas Buzelis,AST,10,0.0037043385452075776,CHI,AST,zach collins,matas buzelis
-CHI,Zach Collins,Matas Buzelis,PTS,10,0.0071477842729133385,CHI,PTS,zach collins,matas buzelis
-CHI,Zach Collins,Matas Buzelis,REB,10,0.010762823350717208,CHI,REB,zach collins,matas buzelis
-CHI,Zach Collins,Nick Richards,AST,10,0.0021216236462003133,CHI,AST,zach collins,nick richards
-CHI,Zach Collins,Nick Richards,PTS,10,0.004349309227369512,CHI,PTS,zach collins,nick richards
-CHI,Zach Collins,Nick Richards,REB,10,0.008176159460364794,CHI,REB,zach collins,nick richards
-CHI,Zach Collins,Nikola Vucevic,AST,10,0.004338073478011497,CHI,AST,zach collins,nikola vucevic
-CHI,Zach Collins,Nikola Vucevic,PTS,10,0.007567712492026046,CHI,PTS,zach collins,nikola vucevic
-CHI,Zach Collins,Nikola Vucevic,REB,10,0.012552686171585182,CHI,REB,zach collins,nikola vucevic
-CHI,Zach Collins,Patrick Williams,AST,10,0.0018952691171041248,CHI,AST,zach collins,patrick williams
-CHI,Zach Collins,Patrick Williams,PTS,10,0.003313596862621185,CHI,PTS,zach collins,patrick williams
-CHI,Zach Collins,Patrick Williams,REB,10,0.0052390267696910044,CHI,REB,zach collins,patrick williams
-CHI,Zach Collins,Rob Dillingham,AST,10,0.0024531970210972644,CHI,AST,zach collins,rob dillingham
-CHI,Zach Collins,Rob Dillingham,PTS,10,0.00372297682201707,CHI,PTS,zach collins,rob dillingham
-CHI,Zach Collins,Rob Dillingham,REB,10,0.005486132014509165,CHI,REB,zach collins,rob dillingham
-CHI,Zach Collins,Tre Jones,AST,10,0.003993162975553913,CHI,AST,zach collins,tre jones
-CHI,Zach Collins,Tre Jones,PTS,10,0.0058533462522318775,CHI,PTS,zach collins,tre jones
-CHI,Zach Collins,Tre Jones,REB,10,0.008026821887649643,CHI,REB,zach collins,tre jones
-CHI,Zach Collins,Yuki Kawamura,AST,10,0.0013297172185641757,CHI,AST,zach collins,yuki kawamura
-CHI,Zach Collins,Yuki Kawamura,PTS,10,0.0014815561858617617,CHI,PTS,zach collins,yuki kawamura
-CHI,Zach Collins,Yuki Kawamura,REB,10,0.002500502093269118,CHI,REB,zach collins,yuki kawamura
-MEM,Ja Morant,Cam Spencer,AST,10,0.013463816489520502,MEM,AST,ja morant,cam spencer
-MEM,Ja Morant,Cam Spencer,PTS,10,0.00635573227632286,MEM,PTS,ja morant,cam spencer
-MEM,Ja Morant,Cam Spencer,REB,10,0.002273073901694732,MEM,REB,ja morant,cam spencer
-MEM,Ja Morant,Cedric Coward,AST,10,0.011188285944172038,MEM,AST,ja morant,cedric coward
-MEM,Ja Morant,Cedric Coward,PTS,10,0.0068067750620693325,MEM,PTS,ja morant,cedric coward
-MEM,Ja Morant,Cedric Coward,REB,10,0.002778305045441118,MEM,REB,ja morant,cedric coward
-MEM,Ja Morant,Christian Koloko,AST,10,0.005655010541144753,MEM,AST,ja morant,christian koloko
-MEM,Ja Morant,Christian Koloko,PTS,10,0.003203612041850819,MEM,PTS,ja morant,christian koloko
-MEM,Ja Morant,Christian Koloko,REB,10,0.001533466791208704,MEM,REB,ja morant,christian koloko
-MEM,Ja Morant,DeJon Jarreau,AST,10,0.00951819977406795,MEM,AST,ja morant,dejon jarreau
-MEM,Ja Morant,DeJon Jarreau,PTS,10,0.004766986067922714,MEM,PTS,ja morant,dejon jarreau
-MEM,Ja Morant,DeJon Jarreau,REB,10,0.0021662092391967424,MEM,REB,ja morant,dejon jarreau
-MEM,Ja Morant,GG Jackson,AST,10,0.008659715942234055,MEM,AST,ja morant,gg jackson
-MEM,Ja Morant,GG Jackson,PTS,10,0.005908553642608272,MEM,PTS,ja morant,gg jackson
-MEM,Ja Morant,GG Jackson,REB,10,0.002315533998561538,MEM,REB,ja morant,gg jackson
-MEM,Ja Morant,Jahmai Mashack,AST,10,0.0073534998074866595,MEM,AST,ja morant,jahmai mashack
-MEM,Ja Morant,Jahmai Mashack,PTS,10,0.004303798124856265,MEM,PTS,ja morant,jahmai mashack
-MEM,Ja Morant,Jahmai Mashack,REB,10,0.0017198921956321305,MEM,REB,ja morant,jahmai mashack
-MEM,Ja Morant,Jaren Jackson Jr.,AST,10,0.013935183331265092,MEM,AST,ja morant,jaren jackson
-MEM,Ja Morant,Jaren Jackson Jr.,PTS,10,0.009860909295686742,MEM,PTS,ja morant,jaren jackson
-MEM,Ja Morant,Jaren Jackson Jr.,REB,10,0.0035350621344060994,MEM,REB,ja morant,jaren jackson
-MEM,Ja Morant,Javon Small,AST,10,0.010071929933415557,MEM,AST,ja morant,javon small
-MEM,Ja Morant,Javon Small,PTS,10,0.005212419497052846,MEM,PTS,ja morant,javon small
-MEM,Ja Morant,Javon Small,REB,10,0.0020438326705826447,MEM,REB,ja morant,javon small
-MEM,Ja Morant,Jock Landale,AST,10,0.008810819711170998,MEM,AST,ja morant,jock landale
-MEM,Ja Morant,Jock Landale,PTS,10,0.00572820901735834,MEM,PTS,ja morant,jock landale
-MEM,Ja Morant,Jock Landale,REB,10,0.0025070341019942243,MEM,REB,ja morant,jock landale
-MEM,Ja Morant,John Konchar,AST,10,0.004964857531225316,MEM,AST,ja morant,john konchar
-MEM,Ja Morant,John Konchar,PTS,10,0.0026777798183472345,MEM,PTS,ja morant,john konchar
-MEM,Ja Morant,John Konchar,REB,10,0.0012387813165403178,MEM,REB,ja morant,john konchar
-MEM,Ja Morant,Kyle Anderson,AST,4,0.007765686543240838,MEM,AST,ja morant,kyle anderson
-MEM,Ja Morant,Kyle Anderson,PTS,4,0.005168203712441387,MEM,PTS,ja morant,kyle anderson
-MEM,Ja Morant,Kyle Anderson,REB,4,0.002122462784800597,MEM,REB,ja morant,kyle anderson
-MEM,Ja Morant,Olivier-Maxence Prosper,AST,10,0.007174676897128525,MEM,AST,ja morant,olivier maxence prosper
-MEM,Ja Morant,Olivier-Maxence Prosper,PTS,10,0.004930111062012692,MEM,PTS,ja morant,olivier maxence prosper
-MEM,Ja Morant,Olivier-Maxence Prosper,REB,10,0.0019428898036799867,MEM,REB,ja morant,olivier maxence prosper
-MEM,Ja Morant,Rayan Rupert,AST,10,0.011620757214083394,MEM,AST,ja morant,rayan rupert
-MEM,Ja Morant,Rayan Rupert,PTS,10,0.007515156032259986,MEM,PTS,ja morant,rayan rupert
-MEM,Ja Morant,Rayan Rupert,REB,10,0.0032800156709065624,MEM,REB,ja morant,rayan rupert
-MEM,Ja Morant,Scotty Pippen Jr.,AST,10,0.010010023549881645,MEM,AST,ja morant,scotty pippen
-MEM,Ja Morant,Scotty Pippen Jr.,PTS,10,0.005084365002064197,MEM,PTS,ja morant,scotty pippen
-MEM,Ja Morant,Scotty Pippen Jr.,REB,10,0.0017966026594360579,MEM,REB,ja morant,scotty pippen
-MEM,Ja Morant,Taj Gibson,AST,7,0.0024245171335684668,MEM,AST,ja morant,taj gibson
-MEM,Ja Morant,Taj Gibson,PTS,7,0.001584999951829937,MEM,PTS,ja morant,taj gibson
-MEM,Ja Morant,Taj Gibson,REB,7,0.0006878315678129865,MEM,REB,ja morant,taj gibson
-MEM,Ja Morant,Tyler Burton,AST,10,0.009964743740345635,MEM,AST,ja morant,tyler burton
-MEM,Ja Morant,Tyler Burton,PTS,10,0.006680683550980794,MEM,PTS,ja morant,tyler burton
-MEM,Ja Morant,Tyler Burton,REB,10,0.0027254101052412378,MEM,REB,ja morant,tyler burton
-MEM,Ja Morant,Vince Williams Jr.,AST,10,0.011069630334516705,MEM,AST,ja morant,vince williams
-MEM,Ja Morant,Vince Williams Jr.,PTS,10,0.005295294316610984,MEM,PTS,ja morant,vince williams
-MEM,Ja Morant,Vince Williams Jr.,REB,10,0.0021250397399958476,MEM,REB,ja morant,vince williams
-MEM,Ja Morant,Walter Clayton Jr.,AST,10,0.013583609464059778,MEM,AST,ja morant,walter clayton
-MEM,Ja Morant,Walter Clayton Jr.,PTS,10,0.006100444115078059,MEM,PTS,ja morant,walter clayton
-MEM,Ja Morant,Walter Clayton Jr.,REB,10,0.0022707701011233775,MEM,REB,ja morant,walter clayton
-MEM,Jaylen Wells,Cam Spencer,AST,58,0.005688211849017319,MEM,AST,jaylen wells,cam spencer
-MEM,Jaylen Wells,Cam Spencer,PTS,58,0.009390855144602204,MEM,PTS,jaylen wells,cam spencer
-MEM,Jaylen Wells,Cam Spencer,REB,58,0.005152513947726029,MEM,REB,jaylen wells,cam spencer
-MEM,Jaylen Wells,Cedric Coward,AST,47,0.004726842550726108,MEM,AST,jaylen wells,cedric coward
-MEM,Jaylen Wells,Cedric Coward,PTS,47,0.010057289361905886,MEM,PTS,jaylen wells,cedric coward
-MEM,Jaylen Wells,Cedric Coward,REB,47,0.006297751906350232,MEM,REB,jaylen wells,cedric coward
-MEM,Jaylen Wells,Christian Koloko,AST,11,0.002389136690290928,MEM,AST,jaylen wells,christian koloko
-MEM,Jaylen Wells,Christian Koloko,PTS,11,0.004733468201075637,MEM,PTS,jaylen wells,christian koloko
-MEM,Jaylen Wells,Christian Koloko,REB,11,0.0034760018247478154,MEM,REB,jaylen wells,christian koloko
-MEM,Jaylen Wells,DeJon Jarreau,AST,10,0.004021262231129494,MEM,AST,jaylen wells,dejon jarreau
-MEM,Jaylen Wells,DeJon Jarreau,PTS,10,0.007043417452772048,MEM,PTS,jaylen wells,dejon jarreau
-MEM,Jaylen Wells,DeJon Jarreau,REB,10,0.004910277360684402,MEM,REB,jaylen wells,dejon jarreau
-MEM,Jaylen Wells,GG Jackson,AST,47,0.0036585687921459643,MEM,AST,jaylen wells,gg jackson
-MEM,Jaylen Wells,GG Jackson,PTS,47,0.00873013037042962,MEM,PTS,jaylen wells,gg jackson
-MEM,Jaylen Wells,GG Jackson,REB,47,0.0052487608146514295,MEM,REB,jaylen wells,gg jackson
-MEM,Jaylen Wells,Jahmai Mashack,AST,25,0.0031067167893478816,MEM,AST,jaylen wells,jahmai mashack
-MEM,Jaylen Wells,Jahmai Mashack,PTS,25,0.006359038267344838,MEM,PTS,jaylen wells,jahmai mashack
-MEM,Jaylen Wells,Jahmai Mashack,REB,25,0.003898583552418881,MEM,REB,jaylen wells,jahmai mashack
-MEM,Jaylen Wells,Jaren Jackson Jr.,AST,34,0.005887355565550621,MEM,AST,jaylen wells,jaren jackson
-MEM,Jaylen Wells,Jaren Jackson Jr.,PTS,34,0.01456989796987344,MEM,PTS,jaylen wells,jaren jackson
-MEM,Jaylen Wells,Jaren Jackson Jr.,REB,34,0.008013138921715414,MEM,REB,jaylen wells,jaren jackson
-MEM,Jaylen Wells,Javon Small,AST,30,0.004255202916225053,MEM,AST,jaylen wells,javon small
-MEM,Jaylen Wells,Javon Small,PTS,30,0.0077015636155844,MEM,PTS,jaylen wells,javon small
-MEM,Jaylen Wells,Javon Small,REB,30,0.004632878998849851,MEM,REB,jaylen wells,javon small
-MEM,Jaylen Wells,Jock Landale,AST,34,0.003722407321850175,MEM,AST,jaylen wells,jock landale
-MEM,Jaylen Wells,Jock Landale,PTS,34,0.008463663789050974,MEM,PTS,jaylen wells,jock landale
-MEM,Jaylen Wells,Jock Landale,REB,34,0.005682845669170341,MEM,REB,jaylen wells,jock landale
-MEM,Jaylen Wells,John Konchar,AST,21,0.002097559890227269,MEM,AST,jaylen wells,john konchar
-MEM,Jaylen Wells,John Konchar,PTS,21,0.003956529521691369,MEM,PTS,jaylen wells,john konchar
-MEM,Jaylen Wells,John Konchar,REB,21,0.0028080204549872124,MEM,REB,jaylen wells,john konchar
-MEM,Jaylen Wells,Kyle Anderson,AST,4,0.003280858012688945,MEM,AST,jaylen wells,kyle anderson
-MEM,Jaylen Wells,Kyle Anderson,PTS,4,0.007636232980129853,MEM,PTS,jaylen wells,kyle anderson
-MEM,Jaylen Wells,Kyle Anderson,REB,4,0.0048111146294279985,MEM,REB,jaylen wells,kyle anderson
-MEM,Jaylen Wells,Olivier-Maxence Prosper,AST,42,0.0030311674383621022,MEM,AST,jaylen wells,olivier maxence prosper
-MEM,Jaylen Wells,Olivier-Maxence Prosper,PTS,42,0.0072844413227783145,MEM,PTS,jaylen wells,olivier maxence prosper
-MEM,Jaylen Wells,Olivier-Maxence Prosper,REB,42,0.004404065703667665,MEM,REB,jaylen wells,olivier maxence prosper
-MEM,Jaylen Wells,Rayan Rupert,AST,12,0.004909553612168758,MEM,AST,jaylen wells,rayan rupert
-MEM,Jaylen Wells,Rayan Rupert,PTS,12,0.011103951302503221,MEM,PTS,jaylen wells,rayan rupert
-MEM,Jaylen Wells,Rayan Rupert,REB,12,0.0074350096934840786,MEM,REB,jaylen wells,rayan rupert
-MEM,Jaylen Wells,Scotty Pippen Jr.,AST,10,0.004229048621518089,MEM,AST,jaylen wells,scotty pippen
-MEM,Jaylen Wells,Scotty Pippen Jr.,PTS,10,0.007512357846560201,MEM,PTS,jaylen wells,scotty pippen
-MEM,Jaylen Wells,Scotty Pippen Jr.,REB,10,0.004072467795421971,MEM,REB,jaylen wells,scotty pippen
-MEM,Jaylen Wells,Taj Gibson,AST,7,0.001024313358552083,MEM,AST,jaylen wells,taj gibson
-MEM,Jaylen Wells,Taj Gibson,PTS,7,0.002341902444079648,MEM,PTS,jaylen wells,taj gibson
-MEM,Jaylen Wells,Taj Gibson,REB,7,0.001559149372222493,MEM,REB,jaylen wells,taj gibson
-MEM,Jaylen Wells,Tyler Burton,AST,11,0.004209918744835318,MEM,AST,jaylen wells,tyler burton
-MEM,Jaylen Wells,Tyler Burton,PTS,11,0.009870983982113907,MEM,PTS,jaylen wells,tyler burton
-MEM,Jaylen Wells,Tyler Burton,REB,11,0.00617785174958858,MEM,REB,jaylen wells,tyler burton
-MEM,Jaylen Wells,Vince Williams Jr.,AST,28,0.0046767127643227374,MEM,AST,jaylen wells,vince williams
-MEM,Jaylen Wells,Vince Williams Jr.,PTS,28,0.007824014560930983,MEM,PTS,jaylen wells,vince williams
-MEM,Jaylen Wells,Vince Williams Jr.,REB,28,0.00481695596946375,MEM,REB,jaylen wells,vince williams
-MEM,Jaylen Wells,Walter Clayton Jr.,AST,20,0.00573882215091305,MEM,AST,jaylen wells,walter clayton
-MEM,Jaylen Wells,Walter Clayton Jr.,PTS,20,0.009013656414675714,MEM,PTS,jaylen wells,walter clayton
-MEM,Jaylen Wells,Walter Clayton Jr.,REB,20,0.005147291783779738,MEM,REB,jaylen wells,walter clayton
-MEM,Kentavious Caldwell-Pope,Cam Spencer,AST,40,0.007949288254058197,MEM,AST,kentavious caldwell pope,cam spencer
-MEM,Kentavious Caldwell-Pope,Cam Spencer,PTS,40,0.005307166179896198,MEM,PTS,kentavious caldwell pope,cam spencer
-MEM,Kentavious Caldwell-Pope,Cam Spencer,REB,40,0.0035404128357248528,MEM,REB,kentavious caldwell pope,cam spencer
-MEM,Kentavious Caldwell-Pope,Cedric Coward,AST,40,0.006605772598599839,MEM,AST,kentavious caldwell pope,cedric coward
-MEM,Kentavious Caldwell-Pope,Cedric Coward,PTS,40,0.005683796112393098,MEM,PTS,kentavious caldwell pope,cedric coward
-MEM,Kentavious Caldwell-Pope,Cedric Coward,REB,40,0.004327332620864278,MEM,REB,kentavious caldwell pope,cedric coward
-MEM,Kentavious Caldwell-Pope,Christian Koloko,AST,11,0.00333882364679335,MEM,AST,kentavious caldwell pope,christian koloko
-MEM,Kentavious Caldwell-Pope,Christian Koloko,PTS,11,0.0026750814450377572,MEM,PTS,kentavious caldwell pope,christian koloko
-MEM,Kentavious Caldwell-Pope,Christian Koloko,REB,11,0.0023884421473078063,MEM,REB,kentavious caldwell pope,christian koloko
-MEM,Kentavious Caldwell-Pope,DeJon Jarreau,AST,10,0.005619722589257631,MEM,AST,kentavious caldwell pope,dejon jarreau
-MEM,Kentavious Caldwell-Pope,DeJon Jarreau,PTS,10,0.003980530667404505,MEM,PTS,kentavious caldwell pope,dejon jarreau
-MEM,Kentavious Caldwell-Pope,DeJon Jarreau,REB,10,0.00337396641156275,MEM,REB,kentavious caldwell pope,dejon jarreau
-MEM,Kentavious Caldwell-Pope,GG Jackson,AST,40,0.0051128577306933645,MEM,AST,kentavious caldwell pope,gg jackson
-MEM,Kentavious Caldwell-Pope,GG Jackson,PTS,40,0.004933762893218537,MEM,PTS,kentavious caldwell pope,gg jackson
-MEM,Kentavious Caldwell-Pope,GG Jackson,REB,40,0.0036065463089222185,MEM,REB,kentavious caldwell pope,gg jackson
-MEM,Kentavious Caldwell-Pope,Jahmai Mashack,AST,25,0.00434164337365792,MEM,AST,kentavious caldwell pope,jahmai mashack
-MEM,Kentavious Caldwell-Pope,Jahmai Mashack,PTS,25,0.0035937592806461957,MEM,PTS,kentavious caldwell pope,jahmai mashack
-MEM,Kentavious Caldwell-Pope,Jahmai Mashack,REB,25,0.002678807935342152,MEM,REB,kentavious caldwell pope,jahmai mashack
-MEM,Kentavious Caldwell-Pope,Jaren Jackson Jr.,AST,34,0.00822759202486117,MEM,AST,kentavious caldwell pope,jaren jackson
-MEM,Kentavious Caldwell-Pope,Jaren Jackson Jr.,PTS,34,0.008234060536509966,MEM,PTS,kentavious caldwell pope,jaren jackson
-MEM,Kentavious Caldwell-Pope,Jaren Jackson Jr.,REB,34,0.0055060151570105265,MEM,REB,kentavious caldwell pope,jaren jackson
-MEM,Kentavious Caldwell-Pope,Javon Small,AST,30,0.005946655198228186,MEM,AST,kentavious caldwell pope,javon small
-MEM,Kentavious Caldwell-Pope,Javon Small,PTS,30,0.004352476672632139,MEM,PTS,kentavious caldwell pope,javon small
-MEM,Kentavious Caldwell-Pope,Javon Small,REB,30,0.003183359509609283,MEM,REB,kentavious caldwell pope,javon small
-MEM,Kentavious Caldwell-Pope,Jock Landale,AST,34,0.005202072212819535,MEM,AST,kentavious caldwell pope,jock landale
-MEM,Kentavious Caldwell-Pope,Jock Landale,PTS,34,0.004783171450055006,MEM,PTS,kentavious caldwell pope,jock landale
-MEM,Kentavious Caldwell-Pope,Jock Landale,REB,34,0.0039048161644382367,MEM,REB,kentavious caldwell pope,jock landale
-MEM,Kentavious Caldwell-Pope,John Konchar,AST,21,0.0029313444435878047,MEM,AST,kentavious caldwell pope,john konchar
-MEM,Kentavious Caldwell-Pope,John Konchar,PTS,21,0.0022360008054592125,MEM,PTS,kentavious caldwell pope,john konchar
-MEM,Kentavious Caldwell-Pope,John Konchar,REB,21,0.0019294565260133255,MEM,REB,kentavious caldwell pope,john konchar
-MEM,Kentavious Caldwell-Pope,Kyle Anderson,AST,4,0.004585006106621459,MEM,AST,kentavious caldwell pope,kyle anderson
-MEM,Kentavious Caldwell-Pope,Kyle Anderson,PTS,4,0.004315555589977085,MEM,PTS,kentavious caldwell pope,kyle anderson
-MEM,Kentavious Caldwell-Pope,Kyle Anderson,REB,4,0.0033058293797900086,MEM,REB,kentavious caldwell pope,kyle anderson
-MEM,Kentavious Caldwell-Pope,Olivier-Maxence Prosper,AST,40,0.0042360629936837235,MEM,AST,kentavious caldwell pope,olivier maxence prosper
-MEM,Kentavious Caldwell-Pope,Olivier-Maxence Prosper,PTS,40,0.004116743367073311,MEM,PTS,kentavious caldwell pope,olivier maxence prosper
-MEM,Kentavious Caldwell-Pope,Olivier-Maxence Prosper,REB,40,0.0030261365432153672,MEM,REB,kentavious caldwell pope,olivier maxence prosper
-MEM,Kentavious Caldwell-Pope,Rayan Rupert,AST,12,0.006861111698683371,MEM,AST,kentavious caldwell pope,rayan rupert
-MEM,Kentavious Caldwell-Pope,Rayan Rupert,PTS,12,0.006275308681524309,MEM,PTS,kentavious caldwell pope,rayan rupert
-MEM,Kentavious Caldwell-Pope,Rayan Rupert,REB,12,0.0051087690435397915,MEM,REB,kentavious caldwell pope,rayan rupert
-MEM,Kentavious Caldwell-Pope,Scotty Pippen Jr.,AST,10,0.005910104515302554,MEM,AST,kentavious caldwell pope,scotty pippen
-MEM,Kentavious Caldwell-Pope,Scotty Pippen Jr.,PTS,10,0.004245548555549677,MEM,PTS,kentavious caldwell pope,scotty pippen
-MEM,Kentavious Caldwell-Pope,Scotty Pippen Jr.,REB,10,0.0027982878653538177,MEM,REB,kentavious caldwell pope,scotty pippen
-MEM,Kentavious Caldwell-Pope,Taj Gibson,AST,7,0.0014314801146197928,MEM,AST,kentavious caldwell pope,taj gibson
-MEM,Kentavious Caldwell-Pope,Taj Gibson,PTS,7,0.0013235073117893613,MEM,PTS,kentavious caldwell pope,taj gibson
-MEM,Kentavious Caldwell-Pope,Taj Gibson,REB,7,0.0010713279976010603,MEM,REB,kentavious caldwell pope,taj gibson
-MEM,Kentavious Caldwell-Pope,Tyler Burton,AST,11,0.005883370471625507,MEM,AST,kentavious caldwell pope,tyler burton
-MEM,Kentavious Caldwell-Pope,Tyler Burton,PTS,11,0.005578507126934406,MEM,PTS,kentavious caldwell pope,tyler burton
-MEM,Kentavious Caldwell-Pope,Tyler Burton,REB,11,0.004244946419039105,MEM,REB,kentavious caldwell pope,tyler burton
-MEM,Kentavious Caldwell-Pope,Vince Williams Jr.,AST,28,0.006535716114627007,MEM,AST,kentavious caldwell pope,vince williams
-MEM,Kentavious Caldwell-Pope,Vince Williams Jr.,PTS,28,0.004421678838551314,MEM,PTS,kentavious caldwell pope,vince williams
-MEM,Kentavious Caldwell-Pope,Vince Williams Jr.,REB,28,0.003309843101140445,MEM,REB,kentavious caldwell pope,vince williams
-MEM,Kentavious Caldwell-Pope,Walter Clayton Jr.,AST,20,0.008020016259461788,MEM,AST,kentavious caldwell pope,walter clayton
-MEM,Kentavious Caldwell-Pope,Walter Clayton Jr.,PTS,20,0.00509399535447714,MEM,PTS,kentavious caldwell pope,walter clayton
-MEM,Kentavious Caldwell-Pope,Walter Clayton Jr.,REB,20,0.0035368245647462047,MEM,REB,kentavious caldwell pope,walter clayton
-MEM,Santi Aldama,Cam Spencer,AST,32,0.006892162786090723,MEM,AST,santi aldama,cam spencer
-MEM,Santi Aldama,Cam Spencer,PTS,32,0.006707512024031801,MEM,PTS,santi aldama,cam spencer
-MEM,Santi Aldama,Cam Spencer,REB,32,0.006642243913150884,MEM,REB,santi aldama,cam spencer
-MEM,Santi Aldama,Cedric Coward,AST,32,0.0057273127634043285,MEM,AST,santi aldama,cedric coward
-MEM,Santi Aldama,Cedric Coward,PTS,32,0.007183519315908735,MEM,PTS,santi aldama,cedric coward
-MEM,Santi Aldama,Cedric Coward,REB,32,0.00811860087927577,MEM,REB,santi aldama,cedric coward
-MEM,Santi Aldama,Christian Koloko,AST,11,0.0028948146490978123,MEM,AST,santi aldama,christian koloko
-MEM,Santi Aldama,Christian Koloko,PTS,11,0.003380926910829476,MEM,PTS,santi aldama,christian koloko
-MEM,Santi Aldama,Christian Koloko,REB,11,0.004481007173735498,MEM,REB,santi aldama,christian koloko
-MEM,Santi Aldama,DeJon Jarreau,AST,10,0.004872391295920326,MEM,AST,santi aldama,dejon jarreau
-MEM,Santi Aldama,DeJon Jarreau,PTS,10,0.005030831221148093,MEM,PTS,santi aldama,dejon jarreau
-MEM,Santi Aldama,DeJon Jarreau,REB,10,0.006329970232352836,MEM,REB,santi aldama,dejon jarreau
-MEM,Santi Aldama,GG Jackson,AST,32,0.004432931182747256,MEM,AST,santi aldama,gg jackson
-MEM,Santi Aldama,GG Jackson,PTS,32,0.006235582758901385,MEM,PTS,santi aldama,gg jackson
-MEM,Santi Aldama,GG Jackson,REB,32,0.006766318330509275,MEM,REB,santi aldama,gg jackson
-MEM,Santi Aldama,Jahmai Mashack,AST,25,0.0037642757356454296,MEM,AST,santi aldama,jahmai mashack
-MEM,Santi Aldama,Jahmai Mashack,PTS,25,0.004542006556667065,MEM,PTS,santi aldama,jahmai mashack
-MEM,Santi Aldama,Jahmai Mashack,REB,25,0.005025768611920579,MEM,REB,santi aldama,jahmai mashack
-MEM,Santi Aldama,Jaren Jackson Jr.,AST,32,0.007133456702106128,MEM,AST,santi aldama,jaren jackson
-MEM,Santi Aldama,Jaren Jackson Jr.,PTS,32,0.010406695057799486,MEM,PTS,santi aldama,jaren jackson
-MEM,Santi Aldama,Jaren Jackson Jr.,REB,32,0.010329952285036833,MEM,REB,santi aldama,jaren jackson
-MEM,Santi Aldama,Javon Small,AST,30,0.0051558472090904245,MEM,AST,santi aldama,javon small
-MEM,Santi Aldama,Javon Small,PTS,30,0.005500918687375456,MEM,PTS,santi aldama,javon small
-MEM,Santi Aldama,Javon Small,REB,30,0.005972368564680156,MEM,REB,santi aldama,javon small
-MEM,Santi Aldama,Jock Landale,AST,32,0.004510281596273453,MEM,AST,santi aldama,jock landale
-MEM,Santi Aldama,Jock Landale,PTS,32,0.006045256343353675,MEM,PTS,santi aldama,jock landale
-MEM,Santi Aldama,Jock Landale,REB,32,0.0073259087580115085,MEM,REB,santi aldama,jock landale
-MEM,Santi Aldama,John Konchar,AST,21,0.0025415235228129613,MEM,AST,santi aldama,john konchar
-MEM,Santi Aldama,John Konchar,PTS,21,0.002825990703885553,MEM,PTS,santi aldama,john konchar
-MEM,Santi Aldama,John Konchar,REB,21,0.0036198944756614436,MEM,REB,santi aldama,john konchar
-MEM,Santi Aldama,Kyle Anderson,AST,4,0.003975275201012202,MEM,AST,santi aldama,kyle anderson
-MEM,Santi Aldama,Kyle Anderson,PTS,4,0.005454255628889148,MEM,PTS,santi aldama,kyle anderson
-MEM,Santi Aldama,Kyle Anderson,REB,4,0.006202136896085992,MEM,REB,santi aldama,kyle anderson
-MEM,Santi Aldama,Olivier-Maxence Prosper,AST,32,0.003672735821310585,MEM,AST,santi aldama,olivier maxence prosper
-MEM,Santi Aldama,Olivier-Maxence Prosper,PTS,32,0.005202984926135755,MEM,PTS,santi aldama,olivier maxence prosper
-MEM,Santi Aldama,Olivier-Maxence Prosper,REB,32,0.005677399209411817,MEM,REB,santi aldama,olivier maxence prosper
-MEM,Santi Aldama,Rayan Rupert,AST,12,0.005948695934725508,MEM,AST,santi aldama,rayan rupert
-MEM,Santi Aldama,Rayan Rupert,PTS,12,0.00793110805447941,MEM,PTS,santi aldama,rayan rupert
-MEM,Santi Aldama,Rayan Rupert,REB,12,0.009584670392315524,MEM,REB,santi aldama,rayan rupert
-MEM,Santi Aldama,Scotty Pippen Jr.,AST,10,0.00512415716985482,MEM,AST,santi aldama,scotty pippen
-MEM,Santi Aldama,Scotty Pippen Jr.,PTS,10,0.005365776578248635,MEM,PTS,santi aldama,scotty pippen
-MEM,Santi Aldama,Scotty Pippen Jr.,REB,10,0.0052499274529053475,MEM,REB,santi aldama,scotty pippen
-MEM,Santi Aldama,Taj Gibson,AST,7,0.0012411166458801796,MEM,AST,santi aldama,taj gibson
-MEM,Santi Aldama,Taj Gibson,PTS,7,0.0016727271969265486,MEM,PTS,santi aldama,taj gibson
-MEM,Santi Aldama,Taj Gibson,REB,7,0.00200994126991319,MEM,REB,santi aldama,taj gibson
-MEM,Santi Aldama,Tyler Burton,AST,11,0.005100978317225013,MEM,AST,santi aldama,tyler burton
-MEM,Santi Aldama,Tyler Burton,PTS,11,0.007050448838741936,MEM,PTS,santi aldama,tyler burton
-MEM,Santi Aldama,Tyler Burton,REB,11,0.007964034371641686,MEM,REB,santi aldama,tyler burton
-MEM,Santi Aldama,Vince Williams Jr.,AST,28,0.005666572647266834,MEM,AST,santi aldama,vince williams
-MEM,Santi Aldama,Vince Williams Jr.,PTS,28,0.005588380497361776,MEM,PTS,santi aldama,vince williams
-MEM,Santi Aldama,Vince Williams Jr.,REB,28,0.006209667124182559,MEM,REB,santi aldama,vince williams
-MEM,Santi Aldama,Walter Clayton Jr.,AST,20,0.006953485122279525,MEM,AST,santi aldama,walter clayton
-MEM,Santi Aldama,Walter Clayton Jr.,PTS,20,0.006438094066085158,MEM,PTS,santi aldama,walter clayton
-MEM,Santi Aldama,Walter Clayton Jr.,REB,20,0.00663551188155667,MEM,REB,santi aldama,walter clayton
-MEM,Taylor Hendricks,Cam Spencer,AST,23,0.00449972475054165,MEM,AST,taylor hendricks,cam spencer
-MEM,Taylor Hendricks,Cam Spencer,PTS,23,0.006766327656912495,MEM,PTS,taylor hendricks,cam spencer
-MEM,Taylor Hendricks,Cam Spencer,REB,23,0.008293417536403183,MEM,REB,taylor hendricks,cam spencer
-MEM,Taylor Hendricks,Cedric Coward,AST,23,0.0037392226207415514,MEM,AST,taylor hendricks,cedric coward
-MEM,Taylor Hendricks,Cedric Coward,PTS,23,0.007246508876473384,MEM,PTS,taylor hendricks,cedric coward
-MEM,Taylor Hendricks,Cedric Coward,REB,23,0.010136777237273143,MEM,REB,taylor hendricks,cedric coward
-MEM,Taylor Hendricks,Christian Koloko,AST,11,0.0018899537821514979,MEM,AST,taylor hendricks,christian koloko
-MEM,Taylor Hendricks,Christian Koloko,PTS,11,0.0034105729785922105,MEM,PTS,taylor hendricks,christian koloko
-MEM,Taylor Hendricks,Christian Koloko,REB,11,0.005594926046276051,MEM,REB,taylor hendricks,christian koloko
-MEM,Taylor Hendricks,DeJon Jarreau,AST,10,0.0031810652750139203,MEM,AST,taylor hendricks,dejon jarreau
-MEM,Taylor Hendricks,DeJon Jarreau,PTS,10,0.0050749446750081315,MEM,PTS,taylor hendricks,dejon jarreau
-MEM,Taylor Hendricks,DeJon Jarreau,REB,10,0.007903516765767499,MEM,REB,taylor hendricks,dejon jarreau
-MEM,Taylor Hendricks,GG Jackson,AST,23,0.0028941525003894656,MEM,AST,taylor hendricks,gg jackson
-MEM,Taylor Hendricks,GG Jackson,PTS,23,0.006290260222770363,MEM,PTS,taylor hendricks,gg jackson
-MEM,Taylor Hendricks,GG Jackson,REB,23,0.008448335206123469,MEM,REB,taylor hendricks,gg jackson
-MEM,Taylor Hendricks,Jahmai Mashack,AST,23,0.0024576036900536657,MEM,AST,taylor hendricks,jahmai mashack
-MEM,Taylor Hendricks,Jahmai Mashack,PTS,23,0.0045818336921565755,MEM,PTS,taylor hendricks,jahmai mashack
-MEM,Taylor Hendricks,Jahmai Mashack,REB,23,0.0062751079431882335,MEM,REB,taylor hendricks,jahmai mashack
-MEM,Taylor Hendricks,Jaren Jackson Jr.,AST,23,0.0046572596550045605,MEM,AST,taylor hendricks,jaren jackson
-MEM,Taylor Hendricks,Jaren Jackson Jr.,PTS,23,0.010497947425865009,MEM,PTS,taylor hendricks,jaren jackson
-MEM,Taylor Hendricks,Jaren Jackson Jr.,REB,23,0.01289784123424233,MEM,REB,taylor hendricks,jaren jackson
-MEM,Taylor Hendricks,Javon Small,AST,23,0.003366126717664832,MEM,AST,taylor hendricks,javon small
-MEM,Taylor Hendricks,Javon Small,PTS,23,0.0055491541602100975,MEM,PTS,taylor hendricks,javon small
-MEM,Taylor Hendricks,Javon Small,REB,23,0.007457020072706922,MEM,REB,taylor hendricks,javon small
-MEM,Taylor Hendricks,Jock Landale,AST,23,0.0029446526961931525,MEM,AST,taylor hendricks,jock landale
-MEM,Taylor Hendricks,Jock Landale,PTS,23,0.006098264906959149,MEM,PTS,taylor hendricks,jock landale
-MEM,Taylor Hendricks,Jock Landale,REB,23,0.009147032382157895,MEM,REB,taylor hendricks,jock landale
-MEM,Taylor Hendricks,John Konchar,AST,21,0.0016592986344961165,MEM,AST,taylor hendricks,john konchar
-MEM,Taylor Hendricks,John Konchar,PTS,21,0.0028507707461975875,MEM,PTS,taylor hendricks,john konchar
-MEM,Taylor Hendricks,John Konchar,REB,21,0.004519752167628305,MEM,REB,taylor hendricks,john konchar
-MEM,Taylor Hendricks,Kyle Anderson,AST,4,0.002595360087592333,MEM,AST,taylor hendricks,kyle anderson
-MEM,Taylor Hendricks,Kyle Anderson,PTS,4,0.00550208193103469,MEM,PTS,taylor hendricks,kyle anderson
-MEM,Taylor Hendricks,Kyle Anderson,REB,4,0.007743905759819143,MEM,REB,taylor hendricks,kyle anderson
-MEM,Taylor Hendricks,Olivier-Maxence Prosper,AST,23,0.0023978395157329083,MEM,AST,taylor hendricks,olivier maxence prosper
-MEM,Taylor Hendricks,Olivier-Maxence Prosper,PTS,23,0.0052486079306421915,MEM,PTS,taylor hendricks,olivier maxence prosper
-MEM,Taylor Hendricks,Olivier-Maxence Prosper,REB,23,0.007088725253114317,MEM,REB,taylor hendricks,olivier maxence prosper
-MEM,Taylor Hendricks,Rayan Rupert,AST,12,0.0038837582862887585,MEM,AST,taylor hendricks,rayan rupert
-MEM,Taylor Hendricks,Rayan Rupert,PTS,12,0.008000652937589284,MEM,PTS,taylor hendricks,rayan rupert
-MEM,Taylor Hendricks,Rayan Rupert,REB,12,0.011967292160845444,MEM,REB,taylor hendricks,rayan rupert
-MEM,Taylor Hendricks,Scotty Pippen Jr.,AST,10,0.003345437065037668,MEM,AST,taylor hendricks,scotty pippen
-MEM,Taylor Hendricks,Scotty Pippen Jr.,PTS,10,0.0054128270411051135,MEM,PTS,taylor hendricks,scotty pippen
-MEM,Taylor Hendricks,Scotty Pippen Jr.,REB,10,0.006554989695058593,MEM,REB,taylor hendricks,scotty pippen
-MEM,Taylor Hendricks,Taj Gibson,AST,7,0.000810294745365982,MEM,AST,taylor hendricks,taj gibson
-MEM,Taylor Hendricks,Taj Gibson,PTS,7,0.0016873947082737511,MEM,PTS,taylor hendricks,taj gibson
-MEM,Taylor Hendricks,Taj Gibson,REB,7,0.002509585976214342,MEM,REB,taylor hendricks,taj gibson
-MEM,Taylor Hendricks,Tyler Burton,AST,11,0.00333030415827029,MEM,AST,taylor hendricks,tyler burton
-MEM,Taylor Hendricks,Tyler Burton,PTS,11,0.007112271554684576,MEM,PTS,taylor hendricks,tyler burton
-MEM,Taylor Hendricks,Tyler Burton,REB,11,0.009943787548590509,MEM,REB,taylor hendricks,tyler burton
-MEM,Taylor Hendricks,Vince Williams Jr.,AST,23,0.0036995668824171112,MEM,AST,taylor hendricks,vince williams
-MEM,Taylor Hendricks,Vince Williams Jr.,PTS,23,0.005637382889687402,MEM,PTS,taylor hendricks,vince williams
-MEM,Taylor Hendricks,Vince Williams Jr.,REB,23,0.0077533079026139195,MEM,REB,taylor hendricks,vince williams
-MEM,Taylor Hendricks,Walter Clayton Jr.,AST,20,0.004539760606117588,MEM,AST,taylor hendricks,walter clayton
-MEM,Taylor Hendricks,Walter Clayton Jr.,PTS,20,0.006494547274918116,MEM,PTS,taylor hendricks,walter clayton
-MEM,Taylor Hendricks,Walter Clayton Jr.,REB,20,0.008285012011160645,MEM,REB,taylor hendricks,walter clayton
-MEM,Ty Jerome,Cam Spencer,AST,15,0.009239065555589647,MEM,AST,ty jerome,cam spencer
-MEM,Ty Jerome,Cam Spencer,PTS,15,0.0057912982397147665,MEM,PTS,ty jerome,cam spencer
-MEM,Ty Jerome,Cam Spencer,REB,15,0.0021991626627220337,MEM,REB,ty jerome,cam spencer
-MEM,Ty Jerome,Cedric Coward,AST,15,0.0076775635922655865,MEM,AST,ty jerome,cedric coward
-MEM,Ty Jerome,Cedric Coward,PTS,15,0.006202285231860516,MEM,PTS,ty jerome,cedric coward
-MEM,Ty Jerome,Cedric Coward,REB,15,0.0026879657177142227,MEM,REB,ty jerome,cedric coward
-MEM,Ty Jerome,Christian Koloko,AST,11,0.003880550002137438,MEM,AST,ty jerome,christian koloko
-MEM,Ty Jerome,Christian Koloko,PTS,11,0.0029191086049700082,MEM,PTS,ty jerome,christian koloko
-MEM,Ty Jerome,Christian Koloko,REB,11,0.0014836046066236711,MEM,REB,ty jerome,christian koloko
-MEM,Ty Jerome,DeJon Jarreau,AST,10,0.006531526313676324,MEM,AST,ty jerome,dejon jarreau
-MEM,Ty Jerome,DeJon Jarreau,PTS,10,0.004343643945914887,MEM,PTS,ty jerome,dejon jarreau
-MEM,Ty Jerome,DeJon Jarreau,REB,10,0.0020957728100847073,MEM,REB,ty jerome,dejon jarreau
-MEM,Ty Jerome,GG Jackson,AST,15,0.005942422294997767,MEM,AST,ty jerome,gg jackson
-MEM,Ty Jerome,GG Jackson,PTS,15,0.005383832235535047,MEM,PTS,ty jerome,gg jackson
-MEM,Ty Jerome,GG Jackson,REB,15,0.002240242127677142,MEM,REB,ty jerome,gg jackson
-MEM,Ty Jerome,Jahmai Mashack,AST,15,0.00504607789606056,MEM,AST,ty jerome,jahmai mashack
-MEM,Ty Jerome,Jahmai Mashack,PTS,15,0.003921590372429602,MEM,PTS,ty jerome,jahmai mashack
-MEM,Ty Jerome,Jahmai Mashack,REB,15,0.0016639682052225493,MEM,REB,ty jerome,jahmai mashack
-MEM,Ty Jerome,Jaren Jackson Jr.,AST,15,0.009562524298138551,MEM,AST,ty jerome,jaren jackson
-MEM,Ty Jerome,Jaren Jackson Jr.,PTS,15,0.008985190716550668,MEM,PTS,ty jerome,jaren jackson
-MEM,Ty Jerome,Jaren Jackson Jr.,REB,15,0.0034201161038328637,MEM,REB,ty jerome,jaren jackson
-MEM,Ty Jerome,Javon Small,AST,15,0.0069115039556994174,MEM,AST,ty jerome,javon small
-MEM,Ty Jerome,Javon Small,PTS,15,0.004749519732036562,MEM,PTS,ty jerome,javon small
-MEM,Ty Jerome,Javon Small,REB,15,0.0019773754362520696,MEM,REB,ty jerome,javon small
-MEM,Ty Jerome,Jock Landale,AST,15,0.006046111886132027,MEM,AST,ty jerome,jock landale
-MEM,Ty Jerome,Jock Landale,PTS,15,0.005219503490184526,MEM,PTS,ty jerome,jock landale
-MEM,Ty Jerome,Jock Landale,REB,15,0.002425515416443769,MEM,REB,ty jerome,jock landale
-MEM,Ty Jerome,John Konchar,AST,15,0.003406957027441429,MEM,AST,ty jerome,john konchar
-MEM,Ty Jerome,John Konchar,PTS,15,0.0024399740067890642,MEM,PTS,ty jerome,john konchar
-MEM,Ty Jerome,John Konchar,REB,15,0.0011985011206991436,MEM,REB,ty jerome,john konchar
-MEM,Ty Jerome,Kyle Anderson,AST,4,0.005328926394162229,MEM,AST,ty jerome,kyle anderson
-MEM,Ty Jerome,Kyle Anderson,PTS,4,0.004709230622229045,MEM,PTS,ty jerome,kyle anderson
-MEM,Ty Jerome,Kyle Anderson,REB,4,0.002053448814783566,MEM,REB,ty jerome,kyle anderson
-MEM,Ty Jerome,Olivier-Maxence Prosper,AST,15,0.004923367029277276,MEM,AST,ty jerome,olivier maxence prosper
-MEM,Ty Jerome,Olivier-Maxence Prosper,PTS,15,0.00449228228529965,MEM,PTS,ty jerome,olivier maxence prosper
-MEM,Ty Jerome,Olivier-Maxence Prosper,REB,15,0.0018797148261879015,MEM,REB,ty jerome,olivier maxence prosper
-MEM,Ty Jerome,Rayan Rupert,AST,12,0.007974331631010774,MEM,AST,ty jerome,rayan rupert
-MEM,Ty Jerome,Rayan Rupert,PTS,12,0.0068477569552362,MEM,PTS,ty jerome,rayan rupert
-MEM,Ty Jerome,Rayan Rupert,REB,12,0.0031733627275483097,MEM,REB,ty jerome,rayan rupert
-MEM,Ty Jerome,Scotty Pippen Jr.,AST,10,0.006869022900181135,MEM,AST,ty jerome,scotty pippen
-MEM,Ty Jerome,Scotty Pippen Jr.,PTS,10,0.00463283738306821,MEM,PTS,ty jerome,scotty pippen
-MEM,Ty Jerome,Scotty Pippen Jr.,REB,10,0.0017381843526658464,MEM,REB,ty jerome,scotty pippen
-MEM,Ty Jerome,Taj Gibson,AST,7,0.001663738714436914,MEM,AST,ty jerome,taj gibson
-MEM,Ty Jerome,Taj Gibson,PTS,7,0.0014442407313436086,MEM,PTS,ty jerome,taj gibson
-MEM,Ty Jerome,Taj Gibson,REB,7,0.0006654660462416518,MEM,REB,ty jerome,taj gibson
-MEM,Ty Jerome,Tyler Burton,AST,11,0.006837951240152686,MEM,AST,ty jerome,tyler burton
-MEM,Ty Jerome,Tyler Burton,PTS,11,0.006087391539920347,MEM,PTS,ty jerome,tyler burton
-MEM,Ty Jerome,Tyler Burton,REB,11,0.00263679070864489,MEM,REB,ty jerome,tyler burton
-MEM,Ty Jerome,Vince Williams Jr.,AST,15,0.007596140397215553,MEM,AST,ty jerome,vince williams
-MEM,Ty Jerome,Vince Williams Jr.,PTS,15,0.0048250346807092274,MEM,PTS,ty jerome,vince williams
-MEM,Ty Jerome,Vince Williams Jr.,REB,15,0.0020559419777399827,MEM,REB,ty jerome,vince williams
-MEM,Ty Jerome,Walter Clayton Jr.,AST,15,0.009321269226868803,MEM,AST,ty jerome,walter clayton
-MEM,Ty Jerome,Walter Clayton Jr.,PTS,15,0.00555868147510611,MEM,PTS,ty jerome,walter clayton
-MEM,Ty Jerome,Walter Clayton Jr.,REB,15,0.0021969337724976096,MEM,REB,ty jerome,walter clayton
-MEM,Zach Edey,Cam Spencer,AST,11,0.002643614151716277,MEM,AST,zach edey,cam spencer
-MEM,Zach Edey,Cam Spencer,PTS,11,0.006279385578137028,MEM,PTS,zach edey,cam spencer
-MEM,Zach Edey,Cam Spencer,REB,11,0.010040162816337494,MEM,REB,zach edey,cam spencer
-MEM,Zach Edey,Cedric Coward,AST,11,0.0021968147797084892,MEM,AST,zach edey,cedric coward
-MEM,Zach Edey,Cedric Coward,PTS,11,0.006725010321408589,MEM,PTS,zach edey,cedric coward
-MEM,Zach Edey,Cedric Coward,REB,11,0.012271767754177904,MEM,REB,zach edey,cedric coward
-MEM,Zach Edey,Christian Koloko,AST,11,0.0011103587089374692,MEM,AST,zach edey,christian koloko
-MEM,Zach Edey,Christian Koloko,PTS,11,0.0031651294263110113,MEM,PTS,zach edey,christian koloko
-MEM,Zach Edey,Christian Koloko,REB,11,0.006773319708480679,MEM,REB,zach edey,christian koloko
-MEM,Zach Edey,DeJon Jarreau,AST,10,0.001868894131257194,MEM,AST,zach edey,dejon jarreau
-MEM,Zach Edey,DeJon Jarreau,PTS,10,0.004709723799664567,MEM,PTS,zach edey,dejon jarreau
-MEM,Zach Edey,DeJon Jarreau,REB,10,0.009568141818695128,MEM,REB,zach edey,dejon jarreau
-MEM,Zach Edey,GG Jackson,AST,11,0.0017003312272231,MEM,AST,zach edey,gg jackson
-MEM,Zach Edey,GG Jackson,PTS,11,0.005837578569704792,MEM,PTS,zach edey,gg jackson
-MEM,Zach Edey,GG Jackson,REB,11,0.010227708978132917,MEM,REB,zach edey,gg jackson
-MEM,Zach Edey,Jahmai Mashack,AST,11,0.0014438562922218631,MEM,AST,zach edey,jahmai mashack
-MEM,Zach Edey,Jahmai Mashack,PTS,11,0.004252099789840611,MEM,PTS,zach edey,jahmai mashack
-MEM,Zach Edey,Jahmai Mashack,REB,11,0.007596760341940618,MEM,REB,zach edey,jahmai mashack
-MEM,Zach Edey,Jaren Jackson Jr.,AST,11,0.002736166813471264,MEM,AST,zach edey,jaren jackson
-MEM,Zach Edey,Jaren Jackson Jr.,PTS,11,0.009742457505538146,MEM,PTS,zach edey,jaren jackson
-MEM,Zach Edey,Jaren Jackson Jr.,REB,11,0.015614362282213797,MEM,REB,zach edey,jaren jackson
-MEM,Zach Edey,Javon Small,AST,11,0.001977618792397876,MEM,AST,zach edey,javon small
-MEM,Zach Edey,Javon Small,PTS,11,0.005149806567360711,MEM,PTS,zach edey,javon small
-MEM,Zach Edey,Javon Small,REB,11,0.009027604763180054,MEM,REB,zach edey,javon small
-MEM,Zach Edey,Jock Landale,AST,11,0.0017300003824919858,MEM,AST,zach edey,jock landale
-MEM,Zach Edey,Jock Landale,PTS,11,0.005659400290687645,MEM,PTS,zach edey,jock landale
-MEM,Zach Edey,Jock Landale,REB,11,0.011073564546830504,MEM,REB,zach edey,jock landale
-MEM,Zach Edey,John Konchar,AST,11,0.0009748474840709762,MEM,AST,zach edey,john konchar
-MEM,Zach Edey,John Konchar,PTS,11,0.00264561363533146,MEM,PTS,zach edey,john konchar
-MEM,Zach Edey,John Konchar,REB,11,0.005471694564188454,MEM,REB,zach edey,john konchar
-MEM,Zach Edey,Kyle Anderson,AST,4,0.0015247889674880192,MEM,AST,zach edey,kyle anderson
-MEM,Zach Edey,Kyle Anderson,PTS,4,0.005106121914177703,MEM,PTS,zach edey,kyle anderson
-MEM,Zach Edey,Kyle Anderson,REB,4,0.00937491381830002,MEM,REB,zach edey,kyle anderson
-MEM,Zach Edey,Olivier-Maxence Prosper,AST,11,0.0014087444963323534,MEM,AST,zach edey,olivier maxence prosper
-MEM,Zach Edey,Olivier-Maxence Prosper,PTS,11,0.004870889294180162,MEM,PTS,zach edey,olivier maxence prosper
-MEM,Zach Edey,Olivier-Maxence Prosper,REB,11,0.008581740324678976,MEM,REB,zach edey,olivier maxence prosper
-MEM,Zach Edey,Rayan Rupert,AST,11,0.0022817303138914042,MEM,AST,zach edey,rayan rupert
-MEM,Zach Edey,Rayan Rupert,PTS,11,0.007424882036366261,MEM,PTS,zach edey,rayan rupert
-MEM,Zach Edey,Rayan Rupert,REB,11,0.01448782256990737,MEM,REB,zach edey,rayan rupert
-MEM,Zach Edey,Scotty Pippen Jr.,AST,10,0.0019654635025720527,MEM,AST,zach edey,scotty pippen
-MEM,Zach Edey,Scotty Pippen Jr.,PTS,10,0.00502329029605034,MEM,PTS,zach edey,scotty pippen
-MEM,Zach Edey,Scotty Pippen Jr.,REB,10,0.007935590305072907,MEM,REB,zach edey,scotty pippen
-MEM,Zach Edey,Taj Gibson,AST,7,0.00047605281982036646,MEM,AST,zach edey,taj gibson
-MEM,Zach Edey,Taj Gibson,PTS,7,0.0015659605229040655,MEM,PTS,zach edey,taj gibson
-MEM,Zach Edey,Taj Gibson,REB,7,0.003038150640817361,MEM,REB,zach edey,taj gibson
-MEM,Zach Edey,Tyler Burton,AST,11,0.0019565728328745278,MEM,AST,zach edey,tyler burton
-MEM,Zach Edey,Tyler Burton,PTS,11,0.00660043345412856,MEM,PTS,zach edey,tyler burton
-MEM,Zach Edey,Tyler Burton,REB,11,0.012038130910531384,MEM,REB,zach edey,tyler burton
-MEM,Zach Edey,Vince Williams Jr.,AST,11,0.002173516805533818,MEM,AST,zach edey,vince williams
-MEM,Zach Edey,Vince Williams Jr.,PTS,11,0.005231685873174574,MEM,PTS,zach edey,vince williams
-MEM,Zach Edey,Vince Williams Jr.,REB,11,0.009386296224174036,MEM,REB,zach edey,vince williams
-MEM,Zach Edey,Walter Clayton Jr.,AST,11,0.0026671354469608097,MEM,AST,zach edey,walter clayton
-MEM,Zach Edey,Walter Clayton Jr.,PTS,11,0.006027164004241978,MEM,PTS,zach edey,walter clayton
-MEM,Zach Edey,Walter Clayton Jr.,REB,11,0.010029986933883552,MEM,REB,zach edey,walter clayton
-MIA,Norman Powell,Andrew Wiggins,AST,47,0.015283431990924785,MIA,AST,norman powell,andrew wiggins
-MIA,Norman Powell,Andrew Wiggins,PTS,47,0.03166360636452909,MIA,PTS,norman powell,andrew wiggins
-MIA,Norman Powell,Andrew Wiggins,REB,47,0.012267845028610141,MIA,REB,norman powell,andrew wiggins
-MIA,Norman Powell,Bam Adebayo,AST,47,0.017277537450739653,MIA,AST,norman powell,bam adebayo
-MIA,Norman Powell,Bam Adebayo,PTS,47,0.037440310363975694,MIA,PTS,norman powell,bam adebayo
-MIA,Norman Powell,Bam Adebayo,REB,47,0.016349565081066088,MIA,REB,norman powell,bam adebayo
-MIA,Norman Powell,Davion Mitchell,AST,47,0.01750548457422321,MIA,AST,norman powell,davion mitchell
-MIA,Norman Powell,Davion Mitchell,PTS,47,0.025664153372409383,MIA,PTS,norman powell,davion mitchell
-MIA,Norman Powell,Davion Mitchell,REB,47,0.009889169630974066,MIA,REB,norman powell,davion mitchell
-MIA,Norman Powell,Dru Smith,AST,47,0.00693720497261429,MIA,AST,norman powell,dru smith
-MIA,Norman Powell,Dru Smith,PTS,47,0.011750055313234262,MIA,PTS,norman powell,dru smith
-MIA,Norman Powell,Dru Smith,REB,47,0.0048783921618919595,MIA,REB,norman powell,dru smith
-MIA,Norman Powell,Jahmir Young,AST,8,0.0013115418727471142,MIA,AST,norman powell,jahmir young
-MIA,Norman Powell,Jahmir Young,PTS,8,0.0026485303498958723,MIA,PTS,norman powell,jahmir young
-MIA,Norman Powell,Jahmir Young,REB,8,0.0009334349561722414,MIA,REB,norman powell,jahmir young
-MIA,Norman Powell,Jaime Jaquez Jr.,AST,47,0.01580222322322785,MIA,AST,norman powell,jaime jaquez
-MIA,Norman Powell,Jaime Jaquez Jr.,PTS,47,0.028186811979238637,MIA,PTS,norman powell,jaime jaquez
-MIA,Norman Powell,Jaime Jaquez Jr.,REB,47,0.010684991851527251,MIA,REB,norman powell,jaime jaquez
-MIA,Norman Powell,Kasparas Jakucionis,AST,47,0.0074231074012067345,MIA,AST,norman powell,kasparas jakucionis
-MIA,Norman Powell,Kasparas Jakucionis,PTS,47,0.012922463415186667,MIA,PTS,norman powell,kasparas jakucionis
-MIA,Norman Powell,Kasparas Jakucionis,REB,47,0.005271195131701471,MIA,REB,norman powell,kasparas jakucionis
-MIA,Norman Powell,Kel'el Ware,AST,47,0.008228652398494195,MIA,AST,norman powell,kel el ware
-MIA,Norman Powell,Kel'el Ware,PTS,47,0.019535234311014466,MIA,PTS,norman powell,kel el ware
-MIA,Norman Powell,Kel'el Ware,REB,47,0.009920413095300621,MIA,REB,norman powell,kel el ware
-MIA,Norman Powell,Keshad Johnson,AST,24,0.0019161142402061805,MIA,AST,norman powell,keshad johnson
-MIA,Norman Powell,Keshad Johnson,PTS,24,0.004653404551162715,MIA,PTS,norman powell,keshad johnson
-MIA,Norman Powell,Keshad Johnson,REB,24,0.001954880056808876,MIA,REB,norman powell,keshad johnson
-MIA,Norman Powell,Myron Gardner,AST,39,0.0031345097296636214,MIA,AST,norman powell,myron gardner
-MIA,Norman Powell,Myron Gardner,PTS,39,0.006122610109716819,MIA,PTS,norman powell,myron gardner
-MIA,Norman Powell,Myron Gardner,REB,39,0.002840117680734683,MIA,REB,norman powell,myron gardner
-MIA,Norman Powell,Nikola Jovic,AST,34,0.006285238327938685,MIA,AST,norman powell,nikola jovic
-MIA,Norman Powell,Nikola Jovic,PTS,34,0.011659994974002077,MIA,PTS,norman powell,nikola jovic
-MIA,Norman Powell,Nikola Jovic,REB,34,0.004865799351038768,MIA,REB,norman powell,nikola jovic
-MIA,Norman Powell,Pelle Larsson,AST,47,0.014040019025392566,MIA,AST,norman powell,pelle larsson
-MIA,Norman Powell,Pelle Larsson,PTS,47,0.025842679989446986,MIA,PTS,norman powell,pelle larsson
-MIA,Norman Powell,Pelle Larsson,REB,47,0.009969082620952998,MIA,REB,norman powell,pelle larsson
-MIA,Norman Powell,Simone Fontecchio,AST,47,0.006053367711637469,MIA,AST,norman powell,simone fontecchio
-MIA,Norman Powell,Simone Fontecchio,PTS,47,0.012313308936982422,MIA,PTS,norman powell,simone fontecchio
-MIA,Norman Powell,Simone Fontecchio,REB,47,0.004962419200541329,MIA,REB,norman powell,simone fontecchio
-MIA,Norman Powell,Trevor Keels,AST,3,0.00024061883050386848,MIA,AST,norman powell,trevor keels
-MIA,Norman Powell,Trevor Keels,PTS,3,0.00046834171945105043,MIA,PTS,norman powell,trevor keels
-MIA,Norman Powell,Trevor Keels,REB,3,0.0003230109506482121,MIA,REB,norman powell,trevor keels
-MIA,Norman Powell,Tyler Herro,AST,29,0.01735044538299346,MIA,AST,norman powell,tyler herro
-MIA,Norman Powell,Tyler Herro,PTS,29,0.036635217485501415,MIA,PTS,norman powell,tyler herro
-MIA,Norman Powell,Tyler Herro,REB,29,0.012772898792045989,MIA,REB,norman powell,tyler herro
-MIA,Norman Powell,Vladislav Goldin,AST,5,0.0006677422919073413,MIA,AST,norman powell,vladisla v goldin
-MIA,Norman Powell,Vladislav Goldin,PTS,5,0.0011314344020488386,MIA,PTS,norman powell,vladisla v goldin
-MIA,Norman Powell,Vladislav Goldin,REB,5,0.0005671545274913273,MIA,REB,norman powell,vladisla v goldin
-UTA,Blake Hinson,Ace Bailey,AST,11,0.0034371775972530856,UTA,AST,blake hinson,ace bailey
-UTA,Blake Hinson,Ace Bailey,PTS,11,0.012260384082734017,UTA,PTS,blake hinson,ace bailey
-UTA,Blake Hinson,Ace Bailey,REB,11,0.005630867735682946,UTA,REB,blake hinson,ace bailey
-UTA,Blake Hinson,Andersson Garcia,AST,5,0.004682999675692873,UTA,AST,blake hinson,andersson garcia
-UTA,Blake Hinson,Andersson Garcia,PTS,5,0.013028869511009884,UTA,PTS,blake hinson,andersson garcia
-UTA,Blake Hinson,Andersson Garcia,REB,5,0.00844522202117942,UTA,REB,blake hinson,andersson garcia
-UTA,Blake Hinson,Bez Mbeng,AST,10,0.004242347501080668,UTA,AST,blake hinson,bez mbeng
-UTA,Blake Hinson,Bez Mbeng,PTS,10,0.011225136792562831,UTA,PTS,blake hinson,bez mbeng
-UTA,Blake Hinson,Bez Mbeng,REB,10,0.0060535674397561206,UTA,REB,blake hinson,bez mbeng
-UTA,Blake Hinson,Brice Sensabaugh,AST,11,0.0027699622950965136,UTA,AST,blake hinson,brice sensabaugh
-UTA,Blake Hinson,Brice Sensabaugh,PTS,11,0.010194197012859828,UTA,PTS,blake hinson,brice sensabaugh
-UTA,Blake Hinson,Brice Sensabaugh,REB,11,0.004326398155485734,UTA,REB,blake hinson,brice sensabaugh
-UTA,Blake Hinson,Cody Williams,AST,11,0.0027306178728426266,UTA,AST,blake hinson,cody williams
-UTA,Blake Hinson,Cody Williams,PTS,11,0.00879120688351003,UTA,PTS,blake hinson,cody williams
-UTA,Blake Hinson,Cody Williams,REB,11,0.004219103033534458,UTA,REB,blake hinson,cody williams
-UTA,Blake Hinson,Elijah Harkless,AST,11,0.0029611246780819633,UTA,AST,blake hinson,elijah harkless
-UTA,Blake Hinson,Elijah Harkless,PTS,11,0.008011734082311364,UTA,PTS,blake hinson,elijah harkless
-UTA,Blake Hinson,Elijah Harkless,REB,11,0.003739367033520773,UTA,REB,blake hinson,elijah harkless
-UTA,Blake Hinson,Jaren Jackson Jr.,AST,3,0.0028702165529061645,UTA,AST,blake hinson,jaren jackson
-UTA,Blake Hinson,Jaren Jackson Jr.,PTS,3,0.011281672985975702,UTA,PTS,blake hinson,jaren jackson
-UTA,Blake Hinson,Jaren Jackson Jr.,REB,3,0.004249557976722035,UTA,REB,blake hinson,jaren jackson
-UTA,Blake Hinson,John Konchar,AST,11,0.0028912791005008503,UTA,AST,blake hinson,john konchar
-UTA,Blake Hinson,John Konchar,PTS,11,0.008216694333452373,UTA,PTS,blake hinson,john konchar
-UTA,Blake Hinson,John Konchar,REB,11,0.004778884969186903,UTA,REB,blake hinson,john konchar
-UTA,Blake Hinson,Kennedy Chandler,AST,6,0.0054709311562939,UTA,AST,blake hinson,kennedy chandler
-UTA,Blake Hinson,Kennedy Chandler,PTS,6,0.014159706226142477,UTA,PTS,blake hinson,kennedy chandler
-UTA,Blake Hinson,Kennedy Chandler,REB,6,0.0063419066838977375,UTA,REB,blake hinson,kennedy chandler
-UTA,Blake Hinson,Kevin Love,AST,11,0.0017182077181758086,UTA,AST,blake hinson,kevin love
-UTA,Blake Hinson,Kevin Love,PTS,11,0.0053360069770623,UTA,PTS,blake hinson,kevin love
-UTA,Blake Hinson,Kevin Love,REB,11,0.003357099781217404,UTA,REB,blake hinson,kevin love
-UTA,Blake Hinson,Kyle Anderson,AST,11,0.002477357924819506,UTA,AST,blake hinson,kyle anderson
-UTA,Blake Hinson,Kyle Anderson,PTS,11,0.00694203054928105,UTA,PTS,blake hinson,kyle anderson
-UTA,Blake Hinson,Kyle Anderson,REB,11,0.0036604452783319083,UTA,REB,blake hinson,kyle anderson
-UTA,Blake Hinson,Kyle Filipowski,AST,11,0.0028049558475740995,UTA,AST,blake hinson,kyle filipowski
-UTA,Blake Hinson,Kyle Filipowski,PTS,11,0.009012018776518065,UTA,PTS,blake hinson,kyle filipowski
-UTA,Blake Hinson,Kyle Filipowski,REB,11,0.005227969305014421,UTA,REB,blake hinson,kyle filipowski
-UTA,Blake Hinson,Oscar Tshiebwe,AST,11,0.0012990901874577827,UTA,AST,blake hinson,oscar tshiebwe
-UTA,Blake Hinson,Oscar Tshiebwe,PTS,11,0.004273873696360318,UTA,PTS,blake hinson,oscar tshiebwe
-UTA,Blake Hinson,Oscar Tshiebwe,REB,11,0.0027689951192027312,UTA,REB,blake hinson,oscar tshiebwe
-UTA,Blake Hinson,Svi Mykhailiuk,AST,11,0.0024131350216603695,UTA,AST,blake hinson,svi mykhailiuk
-UTA,Blake Hinson,Svi Mykhailiuk,PTS,11,0.007776772457433329,UTA,PTS,blake hinson,svi mykhailiuk
-UTA,Blake Hinson,Svi Mykhailiuk,REB,11,0.0035573231102366976,UTA,REB,blake hinson,svi mykhailiuk
-UTA,Blake Hinson,Taylor Hendricks,AST,11,0.0012256079028677058,UTA,AST,blake hinson,taylor hendricks
-UTA,Blake Hinson,Taylor Hendricks,PTS,11,0.004117427681273301,UTA,PTS,blake hinson,taylor hendricks
-UTA,Blake Hinson,Taylor Hendricks,REB,11,0.0021780062916882063,UTA,REB,blake hinson,taylor hendricks
-UTA,Blake Hinson,Vince Williams Jr.,AST,6,0.0015319653821723631,UTA,AST,blake hinson,vince williams
-UTA,Blake Hinson,Vince Williams Jr.,PTS,6,0.003839046800363516,UTA,PTS,blake hinson,vince williams
-UTA,Blake Hinson,Vince Williams Jr.,REB,6,0.0021179110617234845,UTA,REB,blake hinson,vince williams
-UTA,Blake Hinson,Walter Clayton Jr.,AST,11,0.002207190390188549,UTA,AST,blake hinson,walter clayton
-UTA,Blake Hinson,Walter Clayton Jr.,PTS,11,0.005924446750638725,UTA,PTS,blake hinson,walter clayton
-UTA,Blake Hinson,Walter Clayton Jr.,REB,11,0.002689739405019092,UTA,REB,blake hinson,walter clayton
-UTA,Isaiah Collier,Ace Bailey,AST,57,0.01466340673714004,UTA,AST,isaiah collier,ace bailey
-UTA,Isaiah Collier,Ace Bailey,PTS,57,0.007044382788102485,UTA,PTS,isaiah collier,ace bailey
-UTA,Isaiah Collier,Ace Bailey,REB,57,0.003776682740042848,UTA,REB,isaiah collier,ace bailey
-UTA,Isaiah Collier,Andersson Garcia,AST,5,0.0199782312818104,UTA,AST,isaiah collier,andersson garcia
-UTA,Isaiah Collier,Andersson Garcia,PTS,5,0.007485927317810799,UTA,PTS,isaiah collier,andersson garcia
-UTA,Isaiah Collier,Andersson Garcia,REB,5,0.00566430002272992,UTA,REB,isaiah collier,andersson garcia
-UTA,Isaiah Collier,Bez Mbeng,AST,10,0.01809835691305277,UTA,AST,isaiah collier,bez mbeng
-UTA,Isaiah Collier,Bez Mbeng,PTS,10,0.006449566333487354,UTA,PTS,isaiah collier,bez mbeng
-UTA,Isaiah Collier,Bez Mbeng,REB,10,0.004060191916875032,UTA,REB,isaiah collier,bez mbeng
-UTA,Isaiah Collier,Brice Sensabaugh,AST,57,0.011816987231617697,UTA,AST,isaiah collier,brice sensabaugh
-UTA,Isaiah Collier,Brice Sensabaugh,PTS,57,0.005857224821940635,UTA,PTS,isaiah collier,brice sensabaugh
-UTA,Isaiah Collier,Brice Sensabaugh,REB,57,0.0029017611507428593,UTA,REB,isaiah collier,brice sensabaugh
-UTA,Isaiah Collier,Cody Williams,AST,56,0.011649139266238314,UTA,AST,isaiah collier,cody williams
-UTA,Isaiah Collier,Cody Williams,PTS,56,0.005051116346677804,UTA,PTS,isaiah collier,cody williams
-UTA,Isaiah Collier,Cody Williams,REB,56,0.0028297971739304952,UTA,REB,isaiah collier,cody williams
-UTA,Isaiah Collier,Elijah Harkless,AST,21,0.012632508599148065,UTA,AST,isaiah collier,elijah harkless
-UTA,Isaiah Collier,Elijah Harkless,PTS,21,0.004603258861340895,UTA,PTS,isaiah collier,elijah harkless
-UTA,Isaiah Collier,Elijah Harkless,REB,21,0.002508033148192971,UTA,REB,isaiah collier,elijah harkless
-UTA,Isaiah Collier,Jaren Jackson Jr.,AST,3,0.012244683769779663,UTA,AST,isaiah collier,jaren jackson
-UTA,Isaiah Collier,Jaren Jackson Jr.,PTS,3,0.0064820500293565,UTA,PTS,isaiah collier,jaren jackson
-UTA,Isaiah Collier,Jaren Jackson Jr.,REB,3,0.0028502236274869567,UTA,REB,isaiah collier,jaren jackson
-UTA,Isaiah Collier,John Konchar,AST,20,0.012334539092515407,UTA,AST,isaiah collier,john konchar
-UTA,Isaiah Collier,John Konchar,PTS,20,0.004721021767921953,UTA,PTS,isaiah collier,john konchar
-UTA,Isaiah Collier,John Konchar,REB,20,0.0032052488580766427,UTA,REB,isaiah collier,john konchar
-UTA,Isaiah Collier,Kennedy Chandler,AST,6,0.023339640302479953,UTA,AST,isaiah collier,kennedy chandler
-UTA,Isaiah Collier,Kennedy Chandler,PTS,6,0.008135666073014462,UTA,PTS,isaiah collier,kennedy chandler
-UTA,Isaiah Collier,Kennedy Chandler,REB,6,0.004253584107518375,UTA,REB,isaiah collier,kennedy chandler
-UTA,Isaiah Collier,Kevin Love,AST,32,0.007330077634231139,UTA,AST,isaiah collier,kevin love
-UTA,Isaiah Collier,Kevin Love,PTS,32,0.0030658807630136063,UTA,PTS,isaiah collier,kevin love
-UTA,Isaiah Collier,Kevin Love,REB,32,0.0022516424457957257,UTA,REB,isaiah collier,kevin love
-UTA,Isaiah Collier,Kyle Anderson,AST,17,0.01056870233127812,UTA,AST,isaiah collier,kyle anderson
-UTA,Isaiah Collier,Kyle Anderson,PTS,17,0.003988645069015819,UTA,PTS,isaiah collier,kyle anderson
-UTA,Isaiah Collier,Kyle Anderson,REB,17,0.0024550994895408875,UTA,REB,isaiah collier,kyle anderson
-UTA,Isaiah Collier,Kyle Filipowski,AST,57,0.011966273871204308,UTA,AST,isaiah collier,kyle filipowski
-UTA,Isaiah Collier,Kyle Filipowski,PTS,57,0.005177987045672028,UTA,PTS,isaiah collier,kyle filipowski
-UTA,Isaiah Collier,Kyle Filipowski,REB,57,0.0035064544873965233,UTA,REB,isaiah collier,kyle filipowski
-UTA,Isaiah Collier,Oscar Tshiebwe,AST,21,0.005542072606939068,UTA,AST,isaiah collier,oscar tshiebwe
-UTA,Isaiah Collier,Oscar Tshiebwe,PTS,21,0.002455616569758463,UTA,PTS,isaiah collier,oscar tshiebwe
-UTA,Isaiah Collier,Oscar Tshiebwe,REB,21,0.0018571944085430518,UTA,REB,isaiah collier,oscar tshiebwe
-UTA,Isaiah Collier,Svi Mykhailiuk,AST,39,0.010294719819692167,UTA,AST,isaiah collier,svi mykhailiuk
-UTA,Isaiah Collier,Svi Mykhailiuk,PTS,39,0.004468258227185695,UTA,PTS,isaiah collier,svi mykhailiuk
-UTA,Isaiah Collier,Svi Mykhailiuk,REB,39,0.002385934357159432,UTA,REB,isaiah collier,svi mykhailiuk
-UTA,Isaiah Collier,Taylor Hendricks,AST,24,0.005228588477466186,UTA,AST,isaiah collier,taylor hendricks
-UTA,Isaiah Collier,Taylor Hendricks,PTS,24,0.002365728226252307,UTA,PTS,isaiah collier,taylor hendricks
-UTA,Isaiah Collier,Taylor Hendricks,REB,24,0.0014608119308854484,UTA,REB,isaiah collier,taylor hendricks
-UTA,Isaiah Collier,Vince Williams Jr.,AST,6,0.006535545769867734,UTA,AST,isaiah collier,vince williams
-UTA,Isaiah Collier,Vince Williams Jr.,PTS,6,0.002205780424227136,UTA,PTS,isaiah collier,vince williams
-UTA,Isaiah Collier,Vince Williams Jr.,REB,6,0.001420505422471405,UTA,REB,isaiah collier,vince williams
-UTA,Isaiah Collier,Walter Clayton Jr.,AST,35,0.009416135629275265,UTA,AST,isaiah collier,walter clayton
-UTA,Isaiah Collier,Walter Clayton Jr.,PTS,35,0.0034039774315065825,UTA,PTS,isaiah collier,walter clayton
-UTA,Isaiah Collier,Walter Clayton Jr.,REB,35,0.0018040367600494994,UTA,REB,isaiah collier,walter clayton
-UTA,Jusuf Nurkic,Ace Bailey,AST,31,0.007985123567227161,UTA,AST,jusuf nurkic,ace bailey
-UTA,Jusuf Nurkic,Ace Bailey,PTS,31,0.005785352519503187,UTA,PTS,jusuf nurkic,ace bailey
-UTA,Jusuf Nurkic,Ace Bailey,REB,31,0.011827032181777965,UTA,REB,jusuf nurkic,ace bailey
-UTA,Jusuf Nurkic,Andersson Garcia,AST,5,0.010879371233414595,UTA,AST,jusuf nurkic,andersson garcia
-UTA,Jusuf Nurkic,Andersson Garcia,PTS,5,0.006147980564324263,UTA,PTS,jusuf nurkic,andersson garcia
-UTA,Jusuf Nurkic,Andersson Garcia,REB,5,0.017738280726040646,UTA,REB,jusuf nurkic,andersson garcia
-UTA,Jusuf Nurkic,Bez Mbeng,AST,10,0.009855664437682581,UTA,AST,jusuf nurkic,bez mbeng
-UTA,Jusuf Nurkic,Bez Mbeng,PTS,10,0.005296846574005505,UTA,PTS,jusuf nurkic,bez mbeng
-UTA,Jusuf Nurkic,Bez Mbeng,REB,10,0.012714867456547584,UTA,REB,jusuf nurkic,bez mbeng
-UTA,Jusuf Nurkic,Brice Sensabaugh,AST,31,0.006435073712973809,UTA,AST,jusuf nurkic,brice sensabaugh
-UTA,Jusuf Nurkic,Brice Sensabaugh,PTS,31,0.004810373229311493,UTA,PTS,jusuf nurkic,brice sensabaugh
-UTA,Jusuf Nurkic,Brice Sensabaugh,REB,31,0.009087134100461797,UTA,REB,jusuf nurkic,brice sensabaugh
-UTA,Jusuf Nurkic,Cody Williams,AST,31,0.006343670209811933,UTA,AST,jusuf nurkic,cody williams
-UTA,Jusuf Nurkic,Cody Williams,PTS,31,0.004148339118071649,UTA,PTS,jusuf nurkic,cody williams
-UTA,Jusuf Nurkic,Cody Williams,REB,31,0.008861772234434654,UTA,REB,jusuf nurkic,cody williams
-UTA,Jusuf Nurkic,Elijah Harkless,AST,21,0.006879175074150003,UTA,AST,jusuf nurkic,elijah harkless
-UTA,Jusuf Nurkic,Elijah Harkless,PTS,21,0.003780526421188069,UTA,PTS,jusuf nurkic,elijah harkless
-UTA,Jusuf Nurkic,Elijah Harkless,REB,21,0.007854138353254327,UTA,REB,jusuf nurkic,elijah harkless
-UTA,Jusuf Nurkic,Jaren Jackson Jr.,AST,3,0.006667980687984494,UTA,AST,jusuf nurkic,jaren jackson
-UTA,Jusuf Nurkic,Jaren Jackson Jr.,PTS,3,0.005323524515479205,UTA,PTS,jusuf nurkic,jaren jackson
-UTA,Jusuf Nurkic,Jaren Jackson Jr.,REB,3,0.008925739567727025,UTA,REB,jusuf nurkic,jaren jackson
-UTA,Jusuf Nurkic,John Konchar,AST,20,0.006716912417703254,UTA,AST,jusuf nurkic,john konchar
-UTA,Jusuf Nurkic,John Konchar,PTS,20,0.003877241768548722,UTA,PTS,jusuf nurkic,john konchar
-UTA,Jusuf Nurkic,John Konchar,REB,20,0.010037533995945192,UTA,REB,jusuf nurkic,john konchar
-UTA,Jusuf Nurkic,Kennedy Chandler,AST,6,0.01270986443811128,UTA,AST,jusuf nurkic,kennedy chandler
-UTA,Jusuf Nurkic,Kennedy Chandler,PTS,6,0.006681592643268216,UTA,PTS,jusuf nurkic,kennedy chandler
-UTA,Jusuf Nurkic,Kennedy Chandler,REB,6,0.013320493033245458,UTA,REB,jusuf nurkic,kennedy chandler
-UTA,Jusuf Nurkic,Kevin Love,AST,31,0.003991676471638255,UTA,AST,jusuf nurkic,kevin love
-UTA,Jusuf Nurkic,Kevin Love,PTS,31,0.0025179212331780327,UTA,PTS,jusuf nurkic,kevin love
-UTA,Jusuf Nurkic,Kevin Love,REB,31,0.0070512270956551585,UTA,REB,jusuf nurkic,kevin love
-UTA,Jusuf Nurkic,Kyle Anderson,AST,17,0.005755306087687336,UTA,AST,jusuf nurkic,kyle anderson
-UTA,Jusuf Nurkic,Kyle Anderson,PTS,17,0.0032757614816741718,UTA,PTS,jusuf nurkic,kyle anderson
-UTA,Jusuf Nurkic,Kyle Anderson,REB,17,0.007688371693074039,UTA,REB,jusuf nurkic,kyle anderson
-UTA,Jusuf Nurkic,Kyle Filipowski,AST,31,0.006516369436771463,UTA,AST,jusuf nurkic,kyle filipowski
-UTA,Jusuf Nurkic,Kyle Filipowski,PTS,31,0.004252534437967812,UTA,PTS,jusuf nurkic,kyle filipowski
-UTA,Jusuf Nurkic,Kyle Filipowski,REB,31,0.01098078735252936,UTA,REB,jusuf nurkic,kyle filipowski
-UTA,Jusuf Nurkic,Oscar Tshiebwe,AST,21,0.0030179981622459294,UTA,AST,jusuf nurkic,oscar tshiebwe
-UTA,Jusuf Nurkic,Oscar Tshiebwe,PTS,21,0.00201672849646671,UTA,PTS,jusuf nurkic,oscar tshiebwe
-UTA,Jusuf Nurkic,Oscar Tshiebwe,REB,21,0.0058159764930129036,UTA,REB,jusuf nurkic,oscar tshiebwe
-UTA,Jusuf Nurkic,Svi Mykhailiuk,AST,31,0.005606105820007944,UTA,AST,jusuf nurkic,svi mykhailiuk
-UTA,Jusuf Nurkic,Svi Mykhailiuk,PTS,31,0.0036696542152847463,UTA,PTS,jusuf nurkic,svi mykhailiuk
-UTA,Jusuf Nurkic,Svi Mykhailiuk,REB,31,0.007471774667896561,UTA,REB,jusuf nurkic,svi mykhailiuk
-UTA,Jusuf Nurkic,Taylor Hendricks,AST,24,0.002847286842899834,UTA,AST,jusuf nurkic,taylor hendricks
-UTA,Jusuf Nurkic,Taylor Hendricks,PTS,24,0.0019429057400634643,UTA,PTS,jusuf nurkic,taylor hendricks
-UTA,Jusuf Nurkic,Taylor Hendricks,REB,24,0.0045746680108775545,UTA,REB,jusuf nurkic,taylor hendricks
-UTA,Jusuf Nurkic,Vince Williams Jr.,AST,6,0.0035590051812094273,UTA,AST,jusuf nurkic,vince williams
-UTA,Jusuf Nurkic,Vince Williams Jr.,PTS,6,0.001811545130160467,UTA,PTS,jusuf nurkic,vince williams
-UTA,Jusuf Nurkic,Vince Williams Jr.,REB,6,0.0044484444424814995,UTA,REB,jusuf nurkic,vince williams
-UTA,Jusuf Nurkic,Walter Clayton Jr.,AST,31,0.005127662887171483,UTA,AST,jusuf nurkic,walter clayton
-UTA,Jusuf Nurkic,Walter Clayton Jr.,PTS,31,0.002795590472874241,UTA,PTS,jusuf nurkic,walter clayton
-UTA,Jusuf Nurkic,Walter Clayton Jr.,REB,31,0.005649508387875285,UTA,REB,jusuf nurkic,walter clayton
-UTA,Keyonte George,Ace Bailey,AST,44,0.009834745589094472,UTA,AST,keyonte george,ace bailey
-UTA,Keyonte George,Ace Bailey,PTS,44,0.011861130775984366,UTA,PTS,keyonte george,ace bailey
-UTA,Keyonte George,Ace Bailey,REB,44,0.0045326982018152545,UTA,REB,keyonte george,ace bailey
-UTA,Keyonte George,Andersson Garcia,AST,5,0.01339939793656817,UTA,AST,keyonte george,andersson garcia
-UTA,Keyonte George,Andersson Garcia,PTS,5,0.012604590858695395,UTA,PTS,keyonte george,andersson garcia
-UTA,Keyonte George,Andersson Garcia,REB,5,0.006798178267756409,UTA,REB,keyonte george,andersson garcia
-UTA,Keyonte George,Bez Mbeng,AST,10,0.0121385663653233,UTA,AST,keyonte george,bez mbeng
-UTA,Keyonte George,Bez Mbeng,PTS,10,0.010859595798666948,UTA,PTS,keyonte george,bez mbeng
-UTA,Keyonte George,Bez Mbeng,REB,10,0.004872960178920269,UTA,REB,keyonte george,bez mbeng
-UTA,Keyonte George,Brice Sensabaugh,AST,44,0.007925652280938153,UTA,AST,keyonte george,brice sensabaugh
-UTA,Keyonte George,Brice Sensabaugh,PTS,44,0.009862228059882778,UTA,PTS,keyonte george,brice sensabaugh
-UTA,Keyonte George,Brice Sensabaugh,REB,44,0.0034826350147484984,UTA,REB,keyonte george,brice sensabaugh
-UTA,Keyonte George,Cody Williams,AST,44,0.007813076665547748,UTA,AST,keyonte george,cody williams
-UTA,Keyonte George,Cody Williams,PTS,44,0.008504925605951638,UTA,PTS,keyonte george,cody williams
-UTA,Keyonte George,Cody Williams,REB,44,0.0033962653060000273,UTA,REB,keyonte george,cody williams
-UTA,Keyonte George,Elijah Harkless,AST,21,0.008472622389311204,UTA,AST,keyonte george,elijah harkless
-UTA,Keyonte George,Elijah Harkless,PTS,21,0.007750835948649601,UTA,PTS,keyonte george,elijah harkless
-UTA,Keyonte George,Elijah Harkless,REB,21,0.0030100906333419887,UTA,REB,keyonte george,elijah harkless
-UTA,Keyonte George,Jaren Jackson Jr.,AST,3,0.008212508310888243,UTA,AST,keyonte george,jaren jackson
-UTA,Keyonte George,Jaren Jackson Jr.,PTS,3,0.01091429091907437,UTA,PTS,keyonte george,jaren jackson
-UTA,Keyonte George,Jaren Jackson Jr.,REB,3,0.003420780722220503,UTA,REB,keyonte george,jaren jackson
-UTA,Keyonte George,John Konchar,AST,20,0.00827277426782264,UTA,AST,keyonte george,john konchar
-UTA,Keyonte George,John Konchar,PTS,20,0.007949121771202721,UTA,PTS,keyonte george,john konchar
-UTA,Keyonte George,John Konchar,REB,20,0.0038468748198874562,UTA,REB,keyonte george,john konchar
-UTA,Keyonte George,Kennedy Chandler,AST,6,0.01565389466654294,UTA,AST,keyonte george,kennedy chandler
-UTA,Keyonte George,Kennedy Chandler,PTS,6,0.013698602438916725,UTA,PTS,keyonte george,kennedy chandler
-UTA,Keyonte George,Kennedy Chandler,REB,6,0.005105065572757044,UTA,REB,keyonte george,kennedy chandler
-UTA,Keyonte George,Kevin Love,AST,32,0.004916282414671334,UTA,AST,keyonte george,kevin love
-UTA,Keyonte George,Kevin Love,PTS,32,0.005162242565111165,UTA,PTS,keyonte george,kevin love
-UTA,Keyonte George,Kevin Love,REB,32,0.002702375700499904,UTA,REB,keyonte george,kevin love
-UTA,Keyonte George,Kyle Anderson,AST,17,0.007088427709757616,UTA,AST,keyonte george,kyle anderson
-UTA,Keyonte George,Kyle Anderson,PTS,17,0.006715966778875948,UTA,PTS,keyonte george,kyle anderson
-UTA,Keyonte George,Kyle Anderson,REB,17,0.0029465607273628912,UTA,REB,keyonte george,kyle anderson
-UTA,Keyonte George,Kyle Filipowski,AST,44,0.008025778816776954,UTA,AST,keyonte george,kyle filipowski
-UTA,Keyonte George,Kyle Filipowski,PTS,44,0.00871854686954234,UTA,PTS,keyonte george,kyle filipowski
-UTA,Keyonte George,Kyle Filipowski,REB,44,0.00420837572117295,UTA,REB,keyonte george,kyle filipowski
-UTA,Keyonte George,Oscar Tshiebwe,AST,21,0.003717067602543089,UTA,AST,keyonte george,oscar tshiebwe
-UTA,Keyonte George,Oscar Tshiebwe,PTS,21,0.004134697126165814,UTA,PTS,keyonte george,oscar tshiebwe
-UTA,Keyonte George,Oscar Tshiebwe,REB,21,0.0022289671480133196,UTA,REB,keyonte george,oscar tshiebwe
-UTA,Keyonte George,Svi Mykhailiuk,AST,39,0.006904667663704734,UTA,AST,keyonte george,svi mykhailiuk
-UTA,Keyonte George,Svi Mykhailiuk,PTS,39,0.00752352573216618,UTA,PTS,keyonte george,svi mykhailiuk
-UTA,Keyonte George,Svi Mykhailiuk,REB,39,0.002863550135064587,UTA,REB,keyonte george,svi mykhailiuk
-UTA,Keyonte George,Taylor Hendricks,AST,24,0.003506813824901109,UTA,AST,keyonte george,taylor hendricks
-UTA,Keyonte George,Taylor Hendricks,PTS,24,0.003983345697710815,UTA,PTS,keyonte george,taylor hendricks
-UTA,Keyonte George,Taylor Hendricks,REB,24,0.0017532369192969648,UTA,REB,keyonte george,taylor hendricks
-UTA,Keyonte George,Vince Williams Jr.,AST,6,0.004383389964197915,UTA,AST,keyonte george,vince williams
-UTA,Keyonte George,Vince Williams Jr.,PTS,6,0.0037140301516624093,UTA,PTS,keyonte george,vince williams
-UTA,Keyonte George,Vince Williams Jr.,REB,6,0.0017048618635177987,UTA,REB,keyonte george,vince williams
-UTA,Keyonte George,Walter Clayton Jr.,AST,35,0.006315401325653469,UTA,AST,keyonte george,walter clayton
-UTA,Keyonte George,Walter Clayton Jr.,PTS,35,0.005731520090275302,UTA,PTS,keyonte george,walter clayton
-UTA,Keyonte George,Walter Clayton Jr.,REB,35,0.0021651684139590214,UTA,REB,keyonte george,walter clayton
-UTA,Lauri Markkanen,Ace Bailey,AST,32,0.0038051859691077654,UTA,AST,lauri markkanen,ace bailey
-UTA,Lauri Markkanen,Ace Bailey,PTS,32,0.014046984356017162,UTA,PTS,lauri markkanen,ace bailey
-UTA,Lauri Markkanen,Ace Bailey,REB,32,0.0088627378309921,UTA,REB,lauri markkanen,ace bailey
-UTA,Lauri Markkanen,Andersson Garcia,AST,5,0.005184394508309325,UTA,AST,lauri markkanen,andersson garcia
-UTA,Lauri Markkanen,Andersson Garcia,PTS,5,0.014927454553033292,UTA,PTS,lauri markkanen,andersson garcia
-UTA,Lauri Markkanen,Andersson Garcia,REB,5,0.013292407531422227,UTA,REB,lauri markkanen,andersson garcia
-UTA,Lauri Markkanen,Bez Mbeng,AST,10,0.004696563017311822,UTA,AST,lauri markkanen,bez mbeng
-UTA,Lauri Markkanen,Bez Mbeng,PTS,10,0.012860879386424646,UTA,PTS,lauri markkanen,bez mbeng
-UTA,Lauri Markkanen,Bez Mbeng,REB,10,0.009528048549391368,UTA,REB,lauri markkanen,bez mbeng
-UTA,Lauri Markkanen,Brice Sensabaugh,AST,32,0.003066533911044429,UTA,AST,lauri markkanen,brice sensabaugh
-UTA,Lauri Markkanen,Brice Sensabaugh,PTS,32,0.011679709623735244,UTA,PTS,lauri markkanen,brice sensabaugh
-UTA,Lauri Markkanen,Brice Sensabaugh,REB,32,0.006809560160962882,UTA,REB,lauri markkanen,brice sensabaugh
-UTA,Lauri Markkanen,Cody Williams,AST,32,0.0030229769986396733,UTA,AST,lauri markkanen,cody williams
-UTA,Lauri Markkanen,Cody Williams,PTS,32,0.010072273815392415,UTA,PTS,lauri markkanen,cody williams
-UTA,Lauri Markkanen,Cody Williams,REB,32,0.006640682364318426,UTA,REB,lauri markkanen,cody williams
-UTA,Lauri Markkanen,Elijah Harkless,AST,21,0.0032781634812297945,UTA,AST,lauri markkanen,elijah harkless
-UTA,Lauri Markkanen,Elijah Harkless,PTS,21,0.009179215150142434,UTA,PTS,lauri markkanen,elijah harkless
-UTA,Lauri Markkanen,Elijah Harkless,REB,21,0.005885599028003045,UTA,REB,lauri markkanen,elijah harkless
-UTA,Lauri Markkanen,Jaren Jackson Jr.,AST,3,0.0031775220937515056,UTA,AST,lauri markkanen,jaren jackson
-UTA,Lauri Markkanen,Jaren Jackson Jr.,PTS,3,0.012925654112816598,UTA,PTS,lauri markkanen,jaren jackson
-UTA,Lauri Markkanen,Jaren Jackson Jr.,REB,3,0.006688617103651549,UTA,REB,lauri markkanen,jaren jackson
-UTA,Lauri Markkanen,John Konchar,AST,20,0.0032008397456077886,UTA,AST,lauri markkanen,john konchar
-UTA,Lauri Markkanen,John Konchar,PTS,20,0.009414042495024528,UTA,PTS,lauri markkanen,john konchar
-UTA,Lauri Markkanen,John Konchar,REB,20,0.007521754478084066,UTA,REB,lauri markkanen,john konchar
-UTA,Lauri Markkanen,Kennedy Chandler,AST,6,0.006056687466635787,UTA,AST,lauri markkanen,kennedy chandler
-UTA,Lauri Markkanen,Kennedy Chandler,PTS,6,0.016223078371951624,UTA,PTS,lauri markkanen,kennedy chandler
-UTA,Lauri Markkanen,Kennedy Chandler,REB,6,0.009981881821130193,UTA,REB,lauri markkanen,kennedy chandler
-UTA,Lauri Markkanen,Kevin Love,AST,32,0.0019021711029538764,UTA,AST,lauri markkanen,kevin love
-UTA,Lauri Markkanen,Kevin Love,PTS,32,0.006113577358147325,UTA,PTS,lauri markkanen,kevin love
-UTA,Lauri Markkanen,Kevin Love,REB,32,0.005283927208033088,UTA,REB,lauri markkanen,kevin love
-UTA,Lauri Markkanen,Kyle Anderson,AST,17,0.00274260126201067,UTA,AST,lauri markkanen,kyle anderson
-UTA,Lauri Markkanen,Kyle Anderson,PTS,17,0.007953632925910652,UTA,PTS,lauri markkanen,kyle anderson
-UTA,Lauri Markkanen,Kyle Anderson,REB,17,0.005761379661071705,UTA,REB,lauri markkanen,kyle anderson
-UTA,Lauri Markkanen,Kyle Filipowski,AST,32,0.0031052741189997474,UTA,AST,lauri markkanen,kyle filipowski
-UTA,Lauri Markkanen,Kyle Filipowski,PTS,32,0.01032526272550939,UTA,PTS,lauri markkanen,kyle filipowski
-UTA,Lauri Markkanen,Kyle Filipowski,REB,32,0.008228593444878191,UTA,REB,lauri markkanen,kyle filipowski
-UTA,Lauri Markkanen,Oscar Tshiebwe,AST,21,0.0014381799060573677,UTA,AST,lauri markkanen,oscar tshiebwe
-UTA,Lauri Markkanen,Oscar Tshiebwe,PTS,21,0.0048966685339745936,UTA,PTS,lauri markkanen,oscar tshiebwe
-UTA,Lauri Markkanen,Oscar Tshiebwe,REB,21,0.004358276370314007,UTA,REB,lauri markkanen,oscar tshiebwe
-UTA,Lauri Markkanen,Svi Mykhailiuk,AST,32,0.002671502203820655,UTA,AST,lauri markkanen,svi mykhailiuk
-UTA,Lauri Markkanen,Svi Mykhailiuk,PTS,32,0.008910014589486741,UTA,PTS,lauri markkanen,svi mykhailiuk
-UTA,Lauri Markkanen,Svi Mykhailiuk,REB,32,0.005599069910018655,UTA,REB,lauri markkanen,svi mykhailiuk
-UTA,Lauri Markkanen,Taylor Hendricks,AST,24,0.0013568300920344888,UTA,AST,lauri markkanen,taylor hendricks
-UTA,Lauri Markkanen,Taylor Hendricks,PTS,24,0.004717424987307621,UTA,PTS,lauri markkanen,taylor hendricks
-UTA,Lauri Markkanen,Taylor Hendricks,REB,24,0.0034280859831176064,UTA,REB,lauri markkanen,taylor hendricks
-UTA,Lauri Markkanen,Vince Williams Jr.,AST,6,0.0016959883545324592,UTA,AST,lauri markkanen,vince williams
-UTA,Lauri Markkanen,Vince Williams Jr.,PTS,6,0.0043984780560560165,UTA,PTS,lauri markkanen,vince williams
-UTA,Lauri Markkanen,Vince Williams Jr.,REB,6,0.0033334987377636872,UTA,REB,lauri markkanen,vince williams
-UTA,Lauri Markkanen,Walter Clayton Jr.,AST,32,0.002443507693814561,UTA,AST,lauri markkanen,walter clayton
-UTA,Lauri Markkanen,Walter Clayton Jr.,PTS,32,0.0067877653964753286,UTA,PTS,lauri markkanen,walter clayton
-UTA,Lauri Markkanen,Walter Clayton Jr.,REB,32,0.004233531366632539,UTA,REB,lauri markkanen,walter clayton
+CHA,Antonio Reeves,Brandon Miller,AST,5,0.0021503851374476894,CHA,AST,antonio reeves,brandon miller
+CHA,Antonio Reeves,Brandon Miller,PTS,5,0.0034339013310059454,CHA,PTS,antonio reeves,brandon miller
+CHA,Antonio Reeves,Brandon Miller,REB,5,0.004167903111283961,CHA,REB,antonio reeves,brandon miller
+CHA,Antonio Reeves,Coby White,AST,5,0.0011934073178549256,CHA,AST,antonio reeves,coby white
+CHA,Antonio Reeves,Coby White,PTS,5,0.0018309678784077582,CHA,PTS,antonio reeves,coby white
+CHA,Antonio Reeves,Coby White,REB,5,0.0020770188465438696,CHA,REB,antonio reeves,coby white
+CHA,Antonio Reeves,Collin Sexton,AST,5,0.0011449822206638263,CHA,AST,antonio reeves,collin sexton
+CHA,Antonio Reeves,Collin Sexton,PTS,5,0.0016733605584112656,CHA,PTS,antonio reeves,collin sexton
+CHA,Antonio Reeves,Collin Sexton,REB,5,0.0018076160538600034,CHA,REB,antonio reeves,collin sexton
+CHA,Antonio Reeves,Grant Williams,AST,5,0.0010017543335265628,CHA,AST,antonio reeves,grant williams
+CHA,Antonio Reeves,Grant Williams,PTS,5,0.0014676979377565556,CHA,PTS,antonio reeves,grant williams
+CHA,Antonio Reeves,Grant Williams,REB,5,0.0021173904518527933,CHA,REB,antonio reeves,grant williams
+CHA,Antonio Reeves,Josh Green,AST,5,0.0006563965237002865,CHA,AST,antonio reeves,josh green
+CHA,Antonio Reeves,Josh Green,PTS,5,0.0009855731519398377,CHA,PTS,antonio reeves,josh green
+CHA,Antonio Reeves,Josh Green,REB,5,0.0013516032592603424,CHA,REB,antonio reeves,josh green
+CHA,Antonio Reeves,KJ Simpson,AST,4,0.0012111383686830518,CHA,AST,antonio reeves,kj simpson
+CHA,Antonio Reeves,KJ Simpson,PTS,4,0.0017426505212473251,CHA,PTS,antonio reeves,kj simpson
+CHA,Antonio Reeves,KJ Simpson,REB,4,0.0022933826543637794,CHA,REB,antonio reeves,kj simpson
+CHA,Antonio Reeves,Kon Knueppel,AST,5,0.0023089236963583985,CHA,AST,antonio reeves,kon knueppel
+CHA,Antonio Reeves,Kon Knueppel,PTS,5,0.003567657760596444,CHA,PTS,antonio reeves,kon knueppel
+CHA,Antonio Reeves,Kon Knueppel,REB,5,0.004487377276205387,CHA,REB,antonio reeves,kon knueppel
+CHA,Antonio Reeves,LaMelo Ball,AST,5,0.0025836892860527563,CHA,AST,antonio reeves,lamelo ball
+CHA,Antonio Reeves,LaMelo Ball,PTS,5,0.0033036445279199236,CHA,PTS,antonio reeves,lamelo ball
+CHA,Antonio Reeves,LaMelo Ball,REB,5,0.003847940403543335,CHA,REB,antonio reeves,lamelo ball
+CHA,Antonio Reeves,Liam McNeeley,AST,5,0.0003448526771537125,CHA,AST,antonio reeves,liam mcneeley
+CHA,Antonio Reeves,Liam McNeeley,PTS,5,0.0005384813772105075,CHA,PTS,antonio reeves,liam mcneeley
+CHA,Antonio Reeves,Liam McNeeley,REB,5,0.0007926728807508407,CHA,REB,antonio reeves,liam mcneeley
+CHA,Antonio Reeves,Mason Plumlee,AST,5,0.0004644163405787493,CHA,AST,antonio reeves,mason plumlee
+CHA,Antonio Reeves,Mason Plumlee,PTS,5,0.0005669734850796491,CHA,PTS,antonio reeves,mason plumlee
+CHA,Antonio Reeves,Mason Plumlee,REB,5,0.0010101703033325153,CHA,REB,antonio reeves,mason plumlee
+CHA,Antonio Reeves,Miles Bridges,AST,5,0.001993595863741033,CHA,AST,antonio reeves,miles bridges
+CHA,Antonio Reeves,Miles Bridges,PTS,5,0.0030288360193344264,CHA,PTS,antonio reeves,miles bridges
+CHA,Antonio Reeves,Miles Bridges,REB,5,0.004007474864521554,CHA,REB,antonio reeves,miles bridges
+CHA,Antonio Reeves,Moussa Diabate,AST,5,0.0017103221350986575,CHA,AST,antonio reeves,moussa diabate
+CHA,Antonio Reeves,Moussa Diabate,PTS,5,0.0023731750905242395,CHA,PTS,antonio reeves,moussa diabate
+CHA,Antonio Reeves,Moussa Diabate,REB,5,0.004189398238789323,CHA,REB,antonio reeves,moussa diabate
+CHA,Antonio Reeves,Pat Connaughton,AST,5,0.00019444115519089044,CHA,AST,antonio reeves,pat connaughton
+CHA,Antonio Reeves,Pat Connaughton,PTS,5,0.000290121201246247,CHA,PTS,antonio reeves,pat connaughton
+CHA,Antonio Reeves,Pat Connaughton,REB,5,0.0004452731908818865,CHA,REB,antonio reeves,pat connaughton
+CHA,Antonio Reeves,Ryan Kalkbrenner,AST,5,0.0009206566445885171,CHA,AST,antonio reeves,ryan kalkbrenner
+CHA,Antonio Reeves,Ryan Kalkbrenner,PTS,5,0.0014464167279655189,CHA,PTS,antonio reeves,ryan kalkbrenner
+CHA,Antonio Reeves,Ryan Kalkbrenner,REB,5,0.002242475783606635,CHA,REB,antonio reeves,ryan kalkbrenner
+CHA,Antonio Reeves,Sion James,AST,5,0.0011587529607664478,CHA,AST,antonio reeves,sion james
+CHA,Antonio Reeves,Sion James,PTS,5,0.0015131648059273845,CHA,PTS,antonio reeves,sion james
+CHA,Antonio Reeves,Sion James,REB,5,0.0022743599862821546,CHA,REB,antonio reeves,sion james
+CHA,Antonio Reeves,Tre Mann,AST,5,0.0003498495713422669,CHA,AST,antonio reeves,tre mann
+CHA,Antonio Reeves,Tre Mann,PTS,5,0.00047317421015639883,CHA,PTS,antonio reeves,tre mann
+CHA,Antonio Reeves,Tre Mann,REB,5,0.0006266614387212138,CHA,REB,antonio reeves,tre mann
+CHA,Antonio Reeves,Xavier Tillman,AST,5,0.00017621440173175269,CHA,AST,antonio reeves,xavier tillman
+CHA,Antonio Reeves,Xavier Tillman,PTS,5,0.00023281511933507815,CHA,PTS,antonio reeves,xavier tillman
+CHA,Antonio Reeves,Xavier Tillman,REB,5,0.0003998784535076351,CHA,REB,antonio reeves,xavier tillman
+CHA,PJ Hall,Brandon Miller,AST,12,0.0046088918808917445,CHA,AST,pj hall,brandon miller
+CHA,PJ Hall,Brandon Miller,PTS,12,0.011359779176781942,CHA,PTS,pj hall,brandon miller
+CHA,PJ Hall,Brandon Miller,REB,12,0.023307527463879773,CHA,REB,pj hall,brandon miller
+CHA,PJ Hall,Coby White,AST,12,0.0025578140408776704,CHA,AST,pj hall,coby white
+CHA,PJ Hall,Coby White,PTS,12,0.006057072924806485,CHA,PTS,pj hall,coby white
+CHA,PJ Hall,Coby White,REB,12,0.011614995002583908,CHA,REB,pj hall,coby white
+CHA,PJ Hall,Collin Sexton,AST,12,0.0024540251737632185,CHA,AST,pj hall,collin sexton
+CHA,PJ Hall,Collin Sexton,PTS,12,0.00553568801032495,CHA,PTS,pj hall,collin sexton
+CHA,PJ Hall,Collin Sexton,REB,12,0.010108454945948383,CHA,REB,pj hall,collin sexton
+CHA,PJ Hall,Grant Williams,AST,12,0.0021470467471322954,CHA,AST,pj hall,grant williams
+CHA,PJ Hall,Grant Williams,PTS,12,0.0048553300936717714,CHA,PTS,pj hall,grant williams
+CHA,PJ Hall,Grant Williams,REB,12,0.011840758959752477,CHA,REB,pj hall,grant williams
+CHA,PJ Hall,Josh Green,AST,12,0.0014068459440333204,CHA,AST,pj hall,josh green
+CHA,PJ Hall,Josh Green,PTS,12,0.003260400427790314,CHA,PTS,pj hall,josh green
+CHA,PJ Hall,Josh Green,REB,12,0.0075583643007899005,CHA,REB,pj hall,josh green
+CHA,PJ Hall,KJ Simpson,AST,4,0.002595816766425906,CHA,AST,pj hall,kj simpson
+CHA,PJ Hall,KJ Simpson,PTS,4,0.005764907956127667,CHA,PTS,pj hall,kj simpson
+CHA,PJ Hall,KJ Simpson,REB,4,0.012824933251699935,CHA,REB,pj hall,kj simpson
+CHA,PJ Hall,Kon Knueppel,AST,12,0.004948685466816125,CHA,AST,pj hall,kon knueppel
+CHA,PJ Hall,Kon Knueppel,PTS,12,0.011802262334321512,CHA,PTS,pj hall,kon knueppel
+CHA,PJ Hall,Kon Knueppel,REB,12,0.025094074001573246,CHA,REB,pj hall,kon knueppel
+CHA,PJ Hall,LaMelo Ball,AST,12,0.005537586902860191,CHA,AST,pj hall,lamelo ball
+CHA,PJ Hall,LaMelo Ball,PTS,12,0.010928873225591636,CHA,PTS,pj hall,lamelo ball
+CHA,PJ Hall,LaMelo Ball,REB,12,0.02151824892285711,CHA,REB,pj hall,lamelo ball
+CHA,PJ Hall,Liam McNeeley,AST,12,0.0007391181589563935,CHA,AST,pj hall,liam mcneeley
+CHA,PJ Hall,Liam McNeeley,PTS,12,0.001781364385950143,CHA,PTS,pj hall,liam mcneeley
+CHA,PJ Hall,Liam McNeeley,REB,12,0.004432743383106486,CHA,REB,pj hall,liam mcneeley
+CHA,PJ Hall,Mason Plumlee,AST,5,0.0009953773694638555,CHA,AST,pj hall,mason plumlee
+CHA,PJ Hall,Mason Plumlee,PTS,5,0.0018756198762730654,CHA,PTS,pj hall,mason plumlee
+CHA,PJ Hall,Mason Plumlee,REB,5,0.005649020972770463,CHA,REB,pj hall,mason plumlee
+CHA,PJ Hall,Miles Bridges,AST,12,0.004272847514692668,CHA,AST,pj hall,miles bridges
+CHA,PJ Hall,Miles Bridges,PTS,12,0.010019771981113675,CHA,PTS,pj hall,miles bridges
+CHA,PJ Hall,Miles Bridges,REB,12,0.022410389102559998,CHA,REB,pj hall,miles bridges
+CHA,PJ Hall,Moussa Diabate,AST,12,0.0036657106975365667,CHA,AST,pj hall,moussa diabate
+CHA,PJ Hall,Moussa Diabate,PTS,12,0.007850762843059739,CHA,PTS,pj hall,moussa diabate
+CHA,PJ Hall,Moussa Diabate,REB,12,0.023427731379684447,CHA,REB,pj hall,moussa diabate
+CHA,PJ Hall,Pat Connaughton,AST,12,0.0004167431432930031,CHA,AST,pj hall,pat connaughton
+CHA,PJ Hall,Pat Connaughton,PTS,12,0.0009597575652223578,CHA,PTS,pj hall,pat connaughton
+CHA,PJ Hall,Pat Connaughton,REB,12,0.0024900332009425825,CHA,REB,pj hall,pat connaughton
+CHA,PJ Hall,Ryan Kalkbrenner,AST,12,0.0019732311484301603,CHA,AST,pj hall,ryan kalkbrenner
+CHA,PJ Hall,Ryan Kalkbrenner,PTS,12,0.004784929164659019,CHA,PTS,pj hall,ryan kalkbrenner
+CHA,PJ Hall,Ryan Kalkbrenner,REB,12,0.01254025453998516,CHA,REB,pj hall,ryan kalkbrenner
+CHA,PJ Hall,Sion James,AST,12,0.0024835398179762886,CHA,AST,pj hall,sion james
+CHA,PJ Hall,Sion James,PTS,12,0.005005740234352537,CHA,PTS,pj hall,sion james
+CHA,PJ Hall,Sion James,REB,12,0.012718555692790665,CHA,REB,pj hall,sion james
+CHA,PJ Hall,Tre Mann,AST,12,0.0007498279358490288,CHA,AST,pj hall,tre mann
+CHA,PJ Hall,Tre Mann,PTS,12,0.001565320031472854,CHA,PTS,pj hall,tre mann
+CHA,PJ Hall,Tre Mann,REB,12,0.0035043829723406432,CHA,REB,pj hall,tre mann
+CHA,PJ Hall,Xavier Tillman,AST,12,0.00037767798488489487,CHA,AST,pj hall,xavier tillman
+CHA,PJ Hall,Xavier Tillman,PTS,12,0.0007701818106369011,CHA,PTS,pj hall,xavier tillman
+CHA,PJ Hall,Xavier Tillman,REB,12,0.002236179150160669,CHA,REB,pj hall,xavier tillman
+CHA,Tidjane Salaun,Brandon Miller,AST,28,0.006899869172520295,CHA,AST,tidjane salaun,brandon miller
+CHA,Tidjane Salaun,Brandon Miller,PTS,28,0.012502423108031907,CHA,PTS,tidjane salaun,brandon miller
+CHA,Tidjane Salaun,Brandon Miller,REB,28,0.020001321633923725,CHA,REB,tidjane salaun,brandon miller
+CHA,Tidjane Salaun,Coby White,AST,23,0.003829246314686101,CHA,AST,tidjane salaun,coby white
+CHA,Tidjane Salaun,Coby White,PTS,23,0.006666334558414159,CHA,PTS,tidjane salaun,coby white
+CHA,Tidjane Salaun,Coby White,REB,23,0.009967391486854276,CHA,REB,tidjane salaun,coby white
+CHA,Tidjane Salaun,Collin Sexton,AST,21,0.003673866318114072,CHA,AST,tidjane salaun,collin sexton
+CHA,Tidjane Salaun,Collin Sexton,PTS,21,0.006092505199449471,CHA,PTS,tidjane salaun,collin sexton
+CHA,Tidjane Salaun,Collin Sexton,REB,21,0.00867455627411649,CHA,REB,tidjane salaun,collin sexton
+CHA,Tidjane Salaun,Grant Williams,AST,28,0.003214295766823624,CHA,AST,tidjane salaun,grant williams
+CHA,Tidjane Salaun,Grant Williams,PTS,28,0.005343712251406727,CHA,PTS,tidjane salaun,grant williams
+CHA,Tidjane Salaun,Grant Williams,REB,28,0.010161130506476749,CHA,REB,tidjane salaun,grant williams
+CHA,Tidjane Salaun,Josh Green,AST,28,0.002106157664484541,CHA,AST,tidjane salaun,josh green
+CHA,Tidjane Salaun,Josh Green,PTS,28,0.0035883537008498667,CHA,PTS,tidjane salaun,josh green
+CHA,Tidjane Salaun,Josh Green,REB,28,0.006486199604001274,CHA,REB,tidjane salaun,josh green
+CHA,Tidjane Salaun,KJ Simpson,AST,4,0.0038861393469503533,CHA,AST,tidjane salaun,kj simpson
+CHA,Tidjane Salaun,KJ Simpson,PTS,4,0.006344781648016631,CHA,PTS,tidjane salaun,kj simpson
+CHA,Tidjane Salaun,KJ Simpson,REB,4,0.011005698279166762,CHA,REB,tidjane salaun,kj simpson
+CHA,Tidjane Salaun,Kon Knueppel,AST,28,0.007408566566412325,CHA,AST,tidjane salaun,kon knueppel
+CHA,Tidjane Salaun,Kon Knueppel,PTS,28,0.01298941423414857,CHA,PTS,tidjane salaun,kon knueppel
+CHA,Tidjane Salaun,Kon Knueppel,REB,28,0.021534444011222505,CHA,REB,tidjane salaun,kon knueppel
+CHA,Tidjane Salaun,LaMelo Ball,AST,28,0.008290197763069338,CHA,AST,tidjane salaun,lamelo ball
+CHA,Tidjane Salaun,LaMelo Ball,PTS,28,0.012028173702501092,CHA,PTS,tidjane salaun,lamelo ball
+CHA,Tidjane Salaun,LaMelo Ball,REB,28,0.018465854791843053,CHA,REB,tidjane salaun,lamelo ball
+CHA,Tidjane Salaun,Liam McNeeley,AST,15,0.0011065172999559375,CHA,AST,tidjane salaun,liam mcneeley
+CHA,Tidjane Salaun,Liam McNeeley,PTS,15,0.0019605461440877488,CHA,PTS,tidjane salaun,liam mcneeley
+CHA,Tidjane Salaun,Liam McNeeley,REB,15,0.00380395244684618,CHA,REB,tidjane salaun,liam mcneeley
+CHA,Tidjane Salaun,Mason Plumlee,AST,5,0.001490157244751674,CHA,AST,tidjane salaun,mason plumlee
+CHA,Tidjane Salaun,Mason Plumlee,PTS,5,0.0020642824933541797,CHA,PTS,tidjane salaun,mason plumlee
+CHA,Tidjane Salaun,Mason Plumlee,REB,5,0.004847699335258222,CHA,REB,tidjane salaun,mason plumlee
+CHA,Tidjane Salaun,Miles Bridges,AST,28,0.006396784651803028,CHA,AST,tidjane salaun,miles bridges
+CHA,Tidjane Salaun,Miles Bridges,PTS,28,0.011027628865350338,CHA,PTS,tidjane salaun,miles bridges
+CHA,Tidjane Salaun,Miles Bridges,REB,28,0.01923144362165081,CHA,REB,tidjane salaun,miles bridges
+CHA,Tidjane Salaun,Moussa Diabate,AST,28,0.005487853673064829,CHA,AST,tidjane salaun,moussa diabate
+CHA,Tidjane Salaun,Moussa Diabate,PTS,28,0.008640446020760926,CHA,PTS,tidjane salaun,moussa diabate
+CHA,Tidjane Salaun,Moussa Diabate,REB,28,0.020104474453775265,CHA,REB,tidjane salaun,moussa diabate
+CHA,Tidjane Salaun,Pat Connaughton,AST,28,0.0006238968588497771,CHA,AST,tidjane salaun,pat connaughton
+CHA,Tidjane Salaun,Pat Connaughton,PTS,28,0.0010562965155229073,CHA,PTS,tidjane salaun,pat connaughton
+CHA,Tidjane Salaun,Pat Connaughton,REB,28,0.002136818459546324,CHA,REB,tidjane salaun,pat connaughton
+CHA,Tidjane Salaun,Ryan Kalkbrenner,AST,28,0.002954080313265192,CHA,AST,tidjane salaun,ryan kalkbrenner
+CHA,Tidjane Salaun,Ryan Kalkbrenner,PTS,28,0.0052662299176378675,CHA,PTS,tidjane salaun,ryan kalkbrenner
+CHA,Tidjane Salaun,Ryan Kalkbrenner,REB,28,0.010761401646494664,CHA,REB,tidjane salaun,ryan kalkbrenner
+CHA,Tidjane Salaun,Sion James,AST,28,0.0037180520332504977,CHA,AST,tidjane salaun,sion james
+CHA,Tidjane Salaun,Sion James,PTS,28,0.005509251668085973,CHA,PTS,tidjane salaun,sion james
+CHA,Tidjane Salaun,Sion James,REB,28,0.010914410527873824,CHA,REB,tidjane salaun,sion james
+CHA,Tidjane Salaun,Tre Mann,AST,28,0.001122550667918513,CHA,AST,tidjane salaun,tre mann
+CHA,Tidjane Salaun,Tre Mann,PTS,28,0.001722770577525911,CHA,PTS,tidjane salaun,tre mann
+CHA,Tidjane Salaun,Tre Mann,REB,28,0.003007281277126221,CHA,REB,tidjane salaun,tre mann
+CHA,Tidjane Salaun,Xavier Tillman,AST,15,0.0005654132820626437,CHA,AST,tidjane salaun,xavier tillman
+CHA,Tidjane Salaun,Xavier Tillman,PTS,15,0.0008476519408382056,CHA,PTS,tidjane salaun,xavier tillman
+CHA,Tidjane Salaun,Xavier Tillman,REB,15,0.0019189739659323166,CHA,REB,tidjane salaun,xavier tillman
+DEN,Curtis Jones,Aaron Gordon,AST,8,0.007484482551674731,DEN,AST,curtis jones,aaron gordon
+DEN,Curtis Jones,Aaron Gordon,PTS,8,0.0049231090825504874,DEN,PTS,curtis jones,aaron gordon
+DEN,Curtis Jones,Aaron Gordon,REB,8,0.004105647141380486,DEN,REB,curtis jones,aaron gordon
+DEN,Curtis Jones,Bruce Brown,AST,8,0.005234861531240807,DEN,AST,curtis jones,bruce brown
+DEN,Curtis Jones,Bruce Brown,PTS,8,0.0033075956623758265,DEN,PTS,curtis jones,bruce brown
+DEN,Curtis Jones,Bruce Brown,REB,8,0.0028484243993116697,DEN,REB,curtis jones,bruce brown
+DEN,Curtis Jones,Cameron Johnson,AST,8,0.007262401514230442,DEN,AST,curtis jones,cameron johnson
+DEN,Curtis Jones,Cameron Johnson,PTS,8,0.004927466855971135,DEN,PTS,curtis jones,cameron johnson
+DEN,Curtis Jones,Cameron Johnson,REB,8,0.003867709277756099,DEN,REB,curtis jones,cameron johnson
+DEN,Curtis Jones,Christian Braun,AST,8,0.007956816643114449,DEN,AST,curtis jones,christian braun
+DEN,Curtis Jones,Christian Braun,PTS,8,0.00530056248547773,DEN,PTS,curtis jones,christian braun
+DEN,Curtis Jones,Christian Braun,REB,8,0.00439422854558206,DEN,REB,curtis jones,christian braun
+DEN,Curtis Jones,DaRon Holmes II,AST,8,0.0012894817751714824,DEN,AST,curtis jones,daron holmes
+DEN,Curtis Jones,DaRon Holmes II,PTS,8,0.0008882195059014155,DEN,PTS,curtis jones,daron holmes
+DEN,Curtis Jones,DaRon Holmes II,REB,8,0.0007302913641721061,DEN,REB,curtis jones,daron holmes
+DEN,Curtis Jones,David Roddy,AST,5,0.002257306544914139,DEN,AST,curtis jones,david roddy
+DEN,Curtis Jones,David Roddy,PTS,5,0.0017402453098236,DEN,PTS,curtis jones,david roddy
+DEN,Curtis Jones,David Roddy,REB,5,0.0014897678016251713,DEN,REB,curtis jones,david roddy
+DEN,Curtis Jones,Hunter Tyson,AST,8,0.001688529703218423,DEN,AST,curtis jones,hunter tyson
+DEN,Curtis Jones,Hunter Tyson,PTS,8,0.001002158431566143,DEN,PTS,curtis jones,hunter tyson
+DEN,Curtis Jones,Hunter Tyson,REB,8,0.0008896900487522951,DEN,REB,curtis jones,hunter tyson
+DEN,Curtis Jones,Jalen Pickett,AST,8,0.003951875345820842,DEN,AST,curtis jones,jalen pickett
+DEN,Curtis Jones,Jalen Pickett,PTS,8,0.0021784251484645153,DEN,PTS,curtis jones,jalen pickett
+DEN,Curtis Jones,Jalen Pickett,REB,8,0.0018524472728047832,DEN,REB,curtis jones,jalen pickett
+DEN,Curtis Jones,Jamal Murray,AST,8,0.01372101579656164,DEN,AST,curtis jones,jamal murray
+DEN,Curtis Jones,Jamal Murray,PTS,8,0.008401010164738678,DEN,PTS,curtis jones,jamal murray
+DEN,Curtis Jones,Jamal Murray,REB,8,0.0056304692369734885,DEN,REB,curtis jones,jamal murray
+DEN,Curtis Jones,Jonas Valanciunas,AST,8,0.0022469237929040107,DEN,AST,curtis jones,jonas valanciunas
+DEN,Curtis Jones,Jonas Valanciunas,PTS,8,0.001656264113374926,DEN,PTS,curtis jones,jonas valanciunas
+DEN,Curtis Jones,Jonas Valanciunas,REB,8,0.0015797210940622956,DEN,REB,curtis jones,jonas valanciunas
+DEN,Curtis Jones,Julian Strawther,AST,8,0.0028195570004129465,DEN,AST,curtis jones,julian strawther
+DEN,Curtis Jones,Julian Strawther,PTS,8,0.002015795593214044,DEN,PTS,curtis jones,julian strawther
+DEN,Curtis Jones,Julian Strawther,REB,8,0.0015183342416657268,DEN,REB,curtis jones,julian strawther
+DEN,Curtis Jones,Nikola Jokic,AST,8,0.016625892831974864,DEN,AST,curtis jones,nikola jokic
+DEN,Curtis Jones,Nikola Jokic,PTS,8,0.008959653964945809,DEN,PTS,curtis jones,nikola jokic
+DEN,Curtis Jones,Nikola Jokic,REB,8,0.008168140123222627,DEN,REB,curtis jones,nikola jokic
+DEN,Curtis Jones,Spencer Jones,AST,8,0.004472115051917068,DEN,AST,curtis jones,spencer jones
+DEN,Curtis Jones,Spencer Jones,PTS,8,0.003077211975481504,DEN,PTS,curtis jones,spencer jones
+DEN,Curtis Jones,Spencer Jones,REB,8,0.002781352035779463,DEN,REB,curtis jones,spencer jones
+DEN,Curtis Jones,Tim Hardaway Jr.,AST,8,0.005596533540713559,DEN,AST,curtis jones,tim hardaway
+DEN,Curtis Jones,Tim Hardaway Jr.,PTS,8,0.0043165463006724835,DEN,PTS,curtis jones,tim hardaway
+DEN,Curtis Jones,Tim Hardaway Jr.,REB,8,0.0031111653480504695,DEN,REB,curtis jones,tim hardaway
+DEN,Curtis Jones,Tyus Jones,AST,8,0.0013047279971376694,DEN,AST,curtis jones,tyus jones
+DEN,Curtis Jones,Tyus Jones,PTS,8,0.0007235697739557267,DEN,PTS,curtis jones,tyus jones
+DEN,Curtis Jones,Tyus Jones,REB,8,0.0006316312650040043,DEN,REB,curtis jones,tyus jones
+DEN,Curtis Jones,Zeke Nnaji,AST,8,0.0019973425411280842,DEN,AST,curtis jones,zeke nnaji
+DEN,Curtis Jones,Zeke Nnaji,PTS,8,0.0013836060796074982,DEN,PTS,curtis jones,zeke nnaji
+DEN,Curtis Jones,Zeke Nnaji,REB,8,0.001332658789975718,DEN,REB,curtis jones,zeke nnaji
+DEN,KJ Simpson,Aaron Gordon,AST,6,0.00344204763088476,DEN,AST,kj simpson,aaron gordon
+DEN,KJ Simpson,Aaron Gordon,PTS,6,0.0008012509330096079,DEN,PTS,kj simpson,aaron gordon
+DEN,KJ Simpson,Aaron Gordon,REB,6,0.0022642596506302366,DEN,REB,kj simpson,aaron gordon
+DEN,KJ Simpson,Bruce Brown,AST,6,0.002407466729625193,DEN,AST,kj simpson,bruce brown
+DEN,KJ Simpson,Bruce Brown,PTS,6,0.0005383212246688999,DEN,PTS,kj simpson,bruce brown
+DEN,KJ Simpson,Bruce Brown,REB,6,0.0015709027622533274,DEN,REB,kj simpson,bruce brown
+DEN,KJ Simpson,Cameron Johnson,AST,6,0.003339914517002558,DEN,AST,kj simpson,cameron johnson
+DEN,KJ Simpson,Cameron Johnson,PTS,6,0.0008019601738492054,DEN,PTS,kj simpson,cameron johnson
+DEN,KJ Simpson,Cameron Johnson,REB,6,0.002133037193996833,DEN,REB,kj simpson,cameron johnson
+DEN,KJ Simpson,Christian Braun,AST,6,0.0036592699210299074,DEN,AST,kj simpson,christian braun
+DEN,KJ Simpson,Christian Braun,PTS,6,0.0008626826190015063,DEN,PTS,kj simpson,christian braun
+DEN,KJ Simpson,Christian Braun,REB,6,0.0024234119613268964,DEN,REB,kj simpson,christian braun
+DEN,KJ Simpson,DaRon Holmes II,AST,6,0.000593021315589135,DEN,AST,kj simpson,daron holmes
+DEN,KJ Simpson,DaRon Holmes II,PTS,6,0.0001445604182006348,DEN,PTS,kj simpson,daron holmes
+DEN,KJ Simpson,DaRon Holmes II,REB,6,0.0004027548428193989,DEN,REB,kj simpson,daron holmes
+DEN,KJ Simpson,David Roddy,AST,5,0.0010381154063033805,DEN,AST,kj simpson,david roddy
+DEN,KJ Simpson,David Roddy,PTS,5,0.0002832302016431004,DEN,PTS,kj simpson,david roddy
+DEN,KJ Simpson,David Roddy,REB,5,0.0008216052198031251,DEN,REB,kj simpson,david roddy
+DEN,KJ Simpson,Hunter Tyson,AST,6,0.0007765399444135284,DEN,AST,kj simpson,hunter tyson
+DEN,KJ Simpson,Hunter Tyson,PTS,6,0.00016310432388384576,DEN,PTS,kj simpson,hunter tyson
+DEN,KJ Simpson,Hunter Tyson,REB,6,0.0004906630330339877,DEN,REB,kj simpson,hunter tyson
+DEN,KJ Simpson,Jalen Pickett,AST,6,0.0018174326785745274,DEN,AST,kj simpson,jalen pickett
+DEN,KJ Simpson,Jalen Pickett,PTS,6,0.00035454529920643627,DEN,PTS,kj simpson,jalen pickett
+DEN,KJ Simpson,Jalen Pickett,REB,6,0.0010216225287498911,DEN,REB,kj simpson,jalen pickett
+DEN,KJ Simpson,Jamal Murray,AST,6,0.006310174362731263,DEN,AST,kj simpson,jamal murray
+DEN,KJ Simpson,Jamal Murray,PTS,6,0.0013672898812213217,DEN,PTS,kj simpson,jamal murray
+DEN,KJ Simpson,Jamal Murray,REB,6,0.0031051972730192314,DEN,REB,kj simpson,jamal murray
+DEN,KJ Simpson,Jonas Valanciunas,AST,6,0.0010333404700653998,DEN,AST,kj simpson,jonas valanciunas
+DEN,KJ Simpson,Jonas Valanciunas,PTS,6,0.0002695620072396356,DEN,PTS,kj simpson,jonas valanciunas
+DEN,KJ Simpson,Jonas Valanciunas,REB,6,0.0008712143565586616,DEN,REB,kj simpson,jonas valanciunas
+DEN,KJ Simpson,Julian Strawther,AST,6,0.0012966894406406648,DEN,AST,kj simpson,julian strawther
+DEN,KJ Simpson,Julian Strawther,PTS,6,0.0003280768458989036,DEN,PTS,kj simpson,julian strawther
+DEN,KJ Simpson,Julian Strawther,REB,6,0.0008373595784507678,DEN,REB,kj simpson,julian strawther
+DEN,KJ Simpson,Nikola Jokic,AST,6,0.007646101736296764,DEN,AST,kj simpson,nikola jokic
+DEN,KJ Simpson,Nikola Jokic,PTS,6,0.0014582108538486644,DEN,PTS,kj simpson,nikola jokic
+DEN,KJ Simpson,Nikola Jokic,REB,6,0.004504719832179291,DEN,REB,kj simpson,nikola jokic
+DEN,KJ Simpson,Spencer Jones,AST,6,0.0020566863391311965,DEN,AST,kj simpson,spencer jones
+DEN,KJ Simpson,Spencer Jones,PTS,6,0.000500825580965097,DEN,PTS,kj simpson,spencer jones
+DEN,KJ Simpson,Spencer Jones,REB,6,0.0015339124313289527,DEN,REB,kj simpson,spencer jones
+DEN,KJ Simpson,Tim Hardaway Jr.,AST,6,0.0025737965025611266,DEN,AST,kj simpson,tim hardaway
+DEN,KJ Simpson,Tim Hardaway Jr.,PTS,6,0.0007025310007961885,DEN,PTS,kj simpson,tim hardaway
+DEN,KJ Simpson,Tim Hardaway Jr.,REB,6,0.0017158040916446149,DEN,REB,kj simpson,tim hardaway
+DEN,KJ Simpson,Tyus Jones,AST,6,0.000600032918841108,DEN,AST,kj simpson,tyus jones
+DEN,KJ Simpson,Tyus Jones,PTS,6,0.00011776317500956602,DEN,PTS,kj simpson,tyus jones
+DEN,KJ Simpson,Tyus Jones,REB,6,0.00034834391222042955,DEN,REB,kj simpson,tyus jones
+DEN,KJ Simpson,Zeke Nnaji,AST,6,0.0009185602497285436,DEN,AST,kj simpson,zeke nnaji
+DEN,KJ Simpson,Zeke Nnaji,PTS,6,0.00022518608538101687,DEN,PTS,kj simpson,zeke nnaji
+DEN,KJ Simpson,Zeke Nnaji,REB,6,0.00073495978156202,DEN,REB,kj simpson,zeke nnaji
+DEN,Peyton Watson,Aaron Gordon,AST,26,0.007801844927686607,DEN,AST,peyton watson,aaron gordon
+DEN,Peyton Watson,Aaron Gordon,PTS,26,0.014365403185064149,DEN,PTS,peyton watson,aaron gordon
+DEN,Peyton Watson,Aaron Gordon,REB,26,0.011434041804777176,DEN,REB,peyton watson,aaron gordon
+DEN,Peyton Watson,Bruce Brown,AST,32,0.005456833869632591,DEN,AST,peyton watson,bruce brown
+DEN,Peyton Watson,Bruce Brown,PTS,32,0.009651410209781957,DEN,PTS,peyton watson,bruce brown
+DEN,Peyton Watson,Bruce Brown,REB,32,0.007932733266630878,DEN,REB,peyton watson,bruce brown
+DEN,Peyton Watson,Cameron Johnson,AST,32,0.007570347051439649,DEN,AST,peyton watson,cameron johnson
+DEN,Peyton Watson,Cameron Johnson,PTS,32,0.01437811896509808,DEN,PTS,peyton watson,cameron johnson
+DEN,Peyton Watson,Cameron Johnson,REB,32,0.01077139560408448,DEN,REB,peyton watson,cameron johnson
+DEN,Peyton Watson,Christian Braun,AST,32,0.00829420726670333,DEN,AST,peyton watson,christian braun
+DEN,Peyton Watson,Christian Braun,PTS,32,0.015466794648406501,DEN,PTS,peyton watson,christian braun
+DEN,Peyton Watson,Christian Braun,REB,32,0.012237727978015294,DEN,REB,peyton watson,christian braun
+DEN,Peyton Watson,DaRon Holmes II,AST,23,0.0013441593025979926,DEN,AST,peyton watson,daron holmes
+DEN,Peyton Watson,DaRon Holmes II,PTS,23,0.0025917831811482,DEN,PTS,peyton watson,daron holmes
+DEN,Peyton Watson,DaRon Holmes II,REB,23,0.0020338284562866605,DEN,REB,peyton watson,daron holmes
+DEN,Peyton Watson,David Roddy,AST,5,0.0023530224696337193,DEN,AST,peyton watson,david roddy
+DEN,Peyton Watson,David Roddy,PTS,5,0.0050779548243488504,DEN,PTS,peyton watson,david roddy
+DEN,Peyton Watson,David Roddy,REB,5,0.004148936023144369,DEN,REB,peyton watson,david roddy
+DEN,Peyton Watson,Hunter Tyson,AST,13,0.0017601279459666965,DEN,AST,peyton watson,hunter tyson
+DEN,Peyton Watson,Hunter Tyson,PTS,13,0.002924251663605409,DEN,PTS,peyton watson,hunter tyson
+DEN,Peyton Watson,Hunter Tyson,REB,13,0.0024777465915659506,DEN,REB,peyton watson,hunter tyson
+DEN,Peyton Watson,Jalen Pickett,AST,32,0.004119445587423158,DEN,AST,peyton watson,jalen pickett
+DEN,Peyton Watson,Jalen Pickett,PTS,32,0.006356543200940757,DEN,PTS,peyton watson,jalen pickett
+DEN,Peyton Watson,Jalen Pickett,REB,32,0.005158981965331161,DEN,REB,peyton watson,jalen pickett
+DEN,Peyton Watson,Jamal Murray,AST,32,0.014302824110553754,DEN,AST,peyton watson,jamal murray
+DEN,Peyton Watson,Jamal Murray,PTS,32,0.0245137566839716,DEN,PTS,peyton watson,jamal murray
+DEN,Peyton Watson,Jamal Murray,REB,32,0.01568060245294725,DEN,REB,peyton watson,jamal murray
+DEN,Peyton Watson,Jonas Valanciunas,AST,32,0.0023421994607555007,DEN,AST,peyton watson,jonas valanciunas
+DEN,Peyton Watson,Jonas Valanciunas,PTS,32,0.004832901601533751,DEN,PTS,peyton watson,jonas valanciunas
+DEN,Peyton Watson,Jonas Valanciunas,REB,32,0.004399451878692927,DEN,REB,peyton watson,jonas valanciunas
+DEN,Peyton Watson,Julian Strawther,AST,32,0.0029391138706139123,DEN,AST,peyton watson,julian strawther
+DEN,Peyton Watson,Julian Strawther,PTS,32,0.005881997727377868,DEN,PTS,peyton watson,julian strawther
+DEN,Peyton Watson,Julian Strawther,REB,32,0.004228492268089361,DEN,REB,peyton watson,julian strawther
+DEN,Peyton Watson,Nikola Jokic,AST,32,0.017330875817243994,DEN,AST,peyton watson,nikola jokic
+DEN,Peyton Watson,Nikola Jokic,PTS,32,0.02614385329411096,DEN,PTS,peyton watson,nikola jokic
+DEN,Peyton Watson,Nikola Jokic,REB,32,0.022747901224848606,DEN,REB,peyton watson,nikola jokic
+DEN,Peyton Watson,Spencer Jones,AST,32,0.004661744869192451,DEN,AST,peyton watson,spencer jones
+DEN,Peyton Watson,Spencer Jones,PTS,32,0.00897916133330897,DEN,PTS,peyton watson,spencer jones
+DEN,Peyton Watson,Spencer Jones,REB,32,0.007745939764373255,DEN,REB,peyton watson,spencer jones
+DEN,Peyton Watson,Tim Hardaway Jr.,AST,32,0.00583384175402666,DEN,AST,peyton watson,tim hardaway
+DEN,Peyton Watson,Tim Hardaway Jr.,PTS,32,0.012595481216522781,DEN,PTS,peyton watson,tim hardaway
+DEN,Peyton Watson,Tim Hardaway Jr.,REB,32,0.00866445493881923,DEN,REB,peyton watson,tim hardaway
+DEN,Peyton Watson,Tyus Jones,AST,11,0.0013600520057597716,DEN,AST,peyton watson,tyus jones
+DEN,Peyton Watson,Tyus Jones,PTS,11,0.0021113429260061793,DEN,PTS,peyton watson,tyus jones
+DEN,Peyton Watson,Tyus Jones,REB,11,0.0017590645373464105,DEN,REB,peyton watson,tyus jones
+DEN,Peyton Watson,Zeke Nnaji,AST,32,0.002082035286442878,DEN,AST,peyton watson,zeke nnaji
+DEN,Peyton Watson,Zeke Nnaji,PTS,32,0.00403729814830156,DEN,PTS,peyton watson,zeke nnaji
+DEN,Peyton Watson,Zeke Nnaji,REB,32,0.0037113945235348698,DEN,REB,peyton watson,zeke nnaji
+MIL,Alex Antetokounmpo,AJ Green,AST,6,0.0006629384214958978,MIL,AST,alex antetokounmpo,aj green
+MIL,Alex Antetokounmpo,AJ Green,PTS,6,0.003538273829492765,MIL,PTS,alex antetokounmpo,aj green
+MIL,Alex Antetokounmpo,AJ Green,REB,6,0.003391717151831818,MIL,REB,alex antetokounmpo,aj green
+MIL,Alex Antetokounmpo,Amir Coffey,AST,6,0.00012212813876733212,MIL,AST,alex antetokounmpo,amir coffey
+MIL,Alex Antetokounmpo,Amir Coffey,PTS,6,0.0007373311177247553,MIL,PTS,alex antetokounmpo,amir coffey
+MIL,Alex Antetokounmpo,Amir Coffey,REB,6,0.0007076528513923572,MIL,REB,alex antetokounmpo,amir coffey
+MIL,Alex Antetokounmpo,Andre Jackson Jr.,AST,6,0.0001331685083565374,MIL,AST,alex antetokounmpo,andre jackson
+MIL,Alex Antetokounmpo,Andre Jackson Jr.,PTS,6,0.0006699434772685963,MIL,PTS,alex antetokounmpo,andre jackson
+MIL,Alex Antetokounmpo,Andre Jackson Jr.,REB,6,0.000765329582811284,MIL,REB,alex antetokounmpo,andre jackson
+MIL,Alex Antetokounmpo,Bobby Portis,AST,6,0.0005444009816202619,MIL,AST,alex antetokounmpo,bobby portis
+MIL,Alex Antetokounmpo,Bobby Portis,PTS,6,0.0033134526876129966,MIL,PTS,alex antetokounmpo,bobby portis
+MIL,Alex Antetokounmpo,Bobby Portis,REB,6,0.0035491116526360313,MIL,REB,alex antetokounmpo,bobby portis
+MIL,Alex Antetokounmpo,Cam Thomas,AST,6,0.00033079743794283014,MIL,AST,alex antetokounmpo,cam thomas
+MIL,Alex Antetokounmpo,Cam Thomas,PTS,6,0.0017975329201487707,MIL,PTS,alex antetokounmpo,cam thomas
+MIL,Alex Antetokounmpo,Cam Thomas,REB,6,0.0014668427161741238,MIL,REB,alex antetokounmpo,cam thomas
+MIL,Alex Antetokounmpo,Cole Anthony,AST,6,0.00027772868273452515,MIL,AST,alex antetokounmpo,cole anthony
+MIL,Alex Antetokounmpo,Cole Anthony,PTS,6,0.0012452899346255969,MIL,PTS,alex antetokounmpo,cole anthony
+MIL,Alex Antetokounmpo,Cole Anthony,REB,6,0.001247631365363539,MIL,REB,alex antetokounmpo,cole anthony
+MIL,Alex Antetokounmpo,Gary Harris,AST,6,0.00023047319328395923,MIL,AST,alex antetokounmpo,gary harris
+MIL,Alex Antetokounmpo,Gary Harris,PTS,6,0.0011185215179942269,MIL,PTS,alex antetokounmpo,gary harris
+MIL,Alex Antetokounmpo,Gary Harris,REB,6,0.001143388703903218,MIL,REB,alex antetokounmpo,gary harris
+MIL,Alex Antetokounmpo,Gary Trent Jr.,AST,6,0.00028623637028761756,MIL,AST,alex antetokounmpo,gary trent
+MIL,Alex Antetokounmpo,Gary Trent Jr.,PTS,6,0.0016759762537275043,MIL,PTS,alex antetokounmpo,gary trent
+MIL,Alex Antetokounmpo,Gary Trent Jr.,REB,6,0.0014197512439685332,MIL,REB,alex antetokounmpo,gary trent
+MIL,Alex Antetokounmpo,Giannis Antetokounmpo,AST,6,0.0009606856592775321,MIL,AST,alex antetokounmpo,giannis antetokounmpo
+MIL,Alex Antetokounmpo,Giannis Antetokounmpo,PTS,6,0.005512643883709717,MIL,PTS,alex antetokounmpo,giannis antetokounmpo
+MIL,Alex Antetokounmpo,Giannis Antetokounmpo,REB,6,0.00548150483747186,MIL,REB,alex antetokounmpo,giannis antetokounmpo
+MIL,Alex Antetokounmpo,Jericho Sims,AST,6,0.0004502421508499497,MIL,AST,alex antetokounmpo,jericho sims
+MIL,Alex Antetokounmpo,Jericho Sims,PTS,6,0.002173506727392927,MIL,PTS,alex antetokounmpo,jericho sims
+MIL,Alex Antetokounmpo,Jericho Sims,REB,6,0.002852215719791963,MIL,REB,alex antetokounmpo,jericho sims
+MIL,Alex Antetokounmpo,Kevin Porter Jr.,AST,6,0.001214983079828672,MIL,AST,alex antetokounmpo,kevin porter
+MIL,Alex Antetokounmpo,Kevin Porter Jr.,PTS,6,0.004879031468957095,MIL,PTS,alex antetokounmpo,kevin porter
+MIL,Alex Antetokounmpo,Kevin Porter Jr.,REB,6,0.004798837072274923,MIL,REB,alex antetokounmpo,kevin porter
+MIL,Alex Antetokounmpo,Kyle Kuzma,AST,6,0.000626444496088871,MIL,AST,alex antetokounmpo,kyle kuzma
+MIL,Alex Antetokounmpo,Kyle Kuzma,PTS,6,0.0032895558110744337,MIL,PTS,alex antetokounmpo,kyle kuzma
+MIL,Alex Antetokounmpo,Kyle Kuzma,REB,6,0.0032681746216308323,MIL,REB,alex antetokounmpo,kyle kuzma
+MIL,Alex Antetokounmpo,Myles Turner,AST,6,0.0005367929087059547,MIL,AST,alex antetokounmpo,myles turner
+MIL,Alex Antetokounmpo,Myles Turner,PTS,6,0.003132851325433848,MIL,PTS,alex antetokounmpo,myles turner
+MIL,Alex Antetokounmpo,Myles Turner,REB,6,0.0032893532897614974,MIL,REB,alex antetokounmpo,myles turner
+MIL,Alex Antetokounmpo,Ousmane Dieng,AST,6,0.0006857328714956966,MIL,AST,alex antetokounmpo,ousmane dieng
+MIL,Alex Antetokounmpo,Ousmane Dieng,PTS,6,0.0032434646459254405,MIL,PTS,alex antetokounmpo,ousmane dieng
+MIL,Alex Antetokounmpo,Ousmane Dieng,REB,6,0.0033585074542043293,MIL,REB,alex antetokounmpo,ousmane dieng
+MIL,Alex Antetokounmpo,Pete Nance,AST,6,0.00029778100975239415,MIL,AST,alex antetokounmpo,pete nance
+MIL,Alex Antetokounmpo,Pete Nance,PTS,6,0.001580496480923067,MIL,PTS,alex antetokounmpo,pete nance
+MIL,Alex Antetokounmpo,Pete Nance,REB,6,0.0017247389284966047,MIL,REB,alex antetokounmpo,pete nance
+MIL,Alex Antetokounmpo,Ryan Rollins,AST,6,0.000976136388467258,MIL,AST,alex antetokounmpo,ryan rollins
+MIL,Alex Antetokounmpo,Ryan Rollins,PTS,6,0.0045635728802319135,MIL,PTS,alex antetokounmpo,ryan rollins
+MIL,Alex Antetokounmpo,Ryan Rollins,REB,6,0.004274630644514397,MIL,REB,alex antetokounmpo,ryan rollins
+MIL,Alex Antetokounmpo,Taurean Prince,AST,6,0.0005401705812788312,MIL,AST,alex antetokounmpo,taurean prince
+MIL,Alex Antetokounmpo,Taurean Prince,PTS,6,0.0028738382419892083,MIL,PTS,alex antetokounmpo,taurean prince
+MIL,Alex Antetokounmpo,Taurean Prince,REB,6,0.0029250646785363,MIL,REB,alex antetokounmpo,taurean prince
+MIL,Alex Antetokounmpo,Thanasis Antetokounmpo,AST,6,6.984358112526904e-05,MIL,AST,alex antetokounmpo,thanasis antetokounmpo
+MIL,Alex Antetokounmpo,Thanasis Antetokounmpo,PTS,6,0.00030297858214764197,MIL,PTS,alex antetokounmpo,thanasis antetokounmpo
+MIL,Alex Antetokounmpo,Thanasis Antetokounmpo,REB,6,0.00037369460931492094,MIL,REB,alex antetokounmpo,thanasis antetokounmpo
+MIL,Cormac Ryan,AJ Green,AST,11,0.0080171815703307,MIL,AST,cormac ryan,aj green
+MIL,Cormac Ryan,AJ Green,PTS,11,0.015947287526159728,MIL,PTS,cormac ryan,aj green
+MIL,Cormac Ryan,AJ Green,REB,11,0.006940663455700914,MIL,REB,cormac ryan,aj green
+MIL,Cormac Ryan,Amir Coffey,AST,11,0.0014769448135693911,MIL,AST,cormac ryan,amir coffey
+MIL,Cormac Ryan,Amir Coffey,PTS,11,0.003323211233209457,MIL,PTS,cormac ryan,amir coffey
+MIL,Cormac Ryan,Amir Coffey,REB,11,0.0014481102241467303,MIL,REB,cormac ryan,amir coffey
+MIL,Cormac Ryan,Andre Jackson Jr.,AST,11,0.0016104604535295706,MIL,AST,cormac ryan,andre jackson
+MIL,Cormac Ryan,Andre Jackson Jr.,PTS,11,0.003019489664486807,MIL,PTS,cormac ryan,andre jackson
+MIL,Cormac Ryan,Andre Jackson Jr.,REB,11,0.0015661373956599612,MIL,REB,cormac ryan,andre jackson
+MIL,Cormac Ryan,Bobby Portis,AST,11,0.006583660525916453,MIL,AST,cormac ryan,bobby portis
+MIL,Cormac Ryan,Bobby Portis,PTS,11,0.014934000379859298,MIL,PTS,cormac ryan,bobby portis
+MIL,Cormac Ryan,Bobby Portis,REB,11,0.00726274876262873,MIL,REB,cormac ryan,bobby portis
+MIL,Cormac Ryan,Cam Thomas,AST,11,0.004000466765832612,MIL,AST,cormac ryan,cam thomas
+MIL,Cormac Ryan,Cam Thomas,PTS,11,0.008101626865736218,MIL,PTS,cormac ryan,cam thomas
+MIL,Cormac Ryan,Cam Thomas,REB,11,0.0030016835660698505,MIL,REB,cormac ryan,cam thomas
+MIL,Cormac Ryan,Cole Anthony,AST,11,0.0033586849163866647,MIL,AST,cormac ryan,cole anthony
+MIL,Cormac Ryan,Cole Anthony,PTS,11,0.005612622877114618,MIL,PTS,cormac ryan,cole anthony
+MIL,Cormac Ryan,Cole Anthony,REB,11,0.002553098927806565,MIL,REB,cormac ryan,cole anthony
+MIL,Cormac Ryan,Gary Harris,AST,11,0.0027872052331528,MIL,AST,cormac ryan,gary harris
+MIL,Cormac Ryan,Gary Harris,PTS,11,0.005041267327296622,MIL,PTS,cormac ryan,gary harris
+MIL,Cormac Ryan,Gary Harris,REB,11,0.0023397812487271365,MIL,REB,cormac ryan,gary harris
+MIL,Cormac Ryan,Gary Trent Jr.,AST,11,0.0034615718115267534,MIL,AST,cormac ryan,gary trent
+MIL,Cormac Ryan,Gary Trent Jr.,PTS,11,0.007553761097410619,MIL,PTS,cormac ryan,gary trent
+MIL,Cormac Ryan,Gary Trent Jr.,REB,11,0.0029053176117225157,MIL,REB,cormac ryan,gary trent
+MIL,Cormac Ryan,Giannis Antetokounmpo,AST,11,0.011617958942644398,MIL,AST,cormac ryan,giannis antetokounmpo
+MIL,Cormac Ryan,Giannis Antetokounmpo,PTS,11,0.024845933717755078,MIL,PTS,cormac ryan,giannis antetokounmpo
+MIL,Cormac Ryan,Giannis Antetokounmpo,REB,11,0.011217114695764358,MIL,REB,cormac ryan,giannis antetokounmpo
+MIL,Cormac Ryan,Jericho Sims,AST,11,0.00544495982875026,MIL,AST,cormac ryan,jericho sims
+MIL,Cormac Ryan,Jericho Sims,PTS,11,0.0097961713513695,MIL,PTS,cormac ryan,jericho sims
+MIL,Cormac Ryan,Jericho Sims,REB,11,0.0058366510318951775,MIL,REB,cormac ryan,jericho sims
+MIL,Cormac Ryan,Kevin Porter Jr.,AST,11,0.014693280159997994,MIL,AST,cormac ryan,kevin porter
+MIL,Cormac Ryan,Kevin Porter Jr.,PTS,11,0.021990191102816498,MIL,PTS,cormac ryan,kevin porter
+MIL,Cormac Ryan,Kevin Porter Jr.,REB,11,0.009820132872640228,MIL,REB,cormac ryan,kevin porter
+MIL,Cormac Ryan,Kyle Kuzma,AST,11,0.007575845819203098,MIL,AST,cormac ryan,kyle kuzma
+MIL,Cormac Ryan,Kyle Kuzma,PTS,11,0.014826295216408951,MIL,PTS,cormac ryan,kyle kuzma
+MIL,Cormac Ryan,Kyle Kuzma,REB,11,0.006687851358994175,MIL,REB,cormac ryan,kyle kuzma
+MIL,Cormac Ryan,Myles Turner,AST,11,0.0064916530332496634,MIL,AST,cormac ryan,myles turner
+MIL,Cormac Ryan,Myles Turner,PTS,11,0.014120015372175517,MIL,PTS,cormac ryan,myles turner
+MIL,Cormac Ryan,Myles Turner,REB,11,0.0067311904705281474,MIL,REB,cormac ryan,myles turner
+MIL,Cormac Ryan,Ousmane Dieng,AST,11,0.008292844042920307,MIL,AST,cormac ryan,ousmane dieng
+MIL,Cormac Ryan,Ousmane Dieng,PTS,11,0.014618558591583597,MIL,PTS,cormac ryan,ousmane dieng
+MIL,Cormac Ryan,Ousmane Dieng,REB,11,0.006872704565150886,MIL,REB,cormac ryan,ousmane dieng
+MIL,Cormac Ryan,Pete Nance,AST,11,0.0036011857903700236,MIL,AST,cormac ryan,pete nance
+MIL,Cormac Ryan,Pete Nance,PTS,11,0.007123426006566886,MIL,PTS,cormac ryan,pete nance
+MIL,Cormac Ryan,Pete Nance,REB,11,0.003529431233726509,MIL,REB,cormac ryan,pete nance
+MIL,Cormac Ryan,Ryan Rollins,AST,11,0.011804810839127529,MIL,AST,cormac ryan,ryan rollins
+MIL,Cormac Ryan,Ryan Rollins,PTS,11,0.02056839362206068,MIL,PTS,cormac ryan,ryan rollins
+MIL,Cormac Ryan,Ryan Rollins,REB,11,0.00874741948484019,MIL,REB,cormac ryan,ryan rollins
+MIL,Cormac Ryan,Taurean Prince,AST,11,0.006532500589257618,MIL,AST,cormac ryan,taurean prince
+MIL,Cormac Ryan,Taurean Prince,PTS,11,0.012952622368191702,MIL,PTS,cormac ryan,taurean prince
+MIL,Cormac Ryan,Taurean Prince,REB,11,0.005985725993959631,MIL,REB,cormac ryan,taurean prince
+MIL,Cormac Ryan,Thanasis Antetokounmpo,AST,11,0.0008446465814123416,MIL,AST,cormac ryan,thanasis antetokounmpo
+MIL,Cormac Ryan,Thanasis Antetokounmpo,PTS,11,0.001365549077491638,MIL,PTS,cormac ryan,thanasis antetokounmpo
+MIL,Cormac Ryan,Thanasis Antetokounmpo,REB,11,0.0007647125047156977,MIL,REB,cormac ryan,thanasis antetokounmpo
+MIN,Anthony Edwards,Ayo Dosunmu,AST,27,0.011105686476792734,MIN,AST,anthony edwards,ayo dosunmu
+MIN,Anthony Edwards,Ayo Dosunmu,PTS,27,0.019814513189289232,MIN,PTS,anthony edwards,ayo dosunmu
+MIN,Anthony Edwards,Ayo Dosunmu,REB,27,0.008416452437454078,MIN,REB,anthony edwards,ayo dosunmu
+MIN,Anthony Edwards,Bones Hyland,AST,45,0.0061232326419225136,MIN,AST,anthony edwards,bones hyland
+MIN,Anthony Edwards,Bones Hyland,PTS,45,0.009849050374292064,MIN,PTS,anthony edwards,bones hyland
+MIN,Anthony Edwards,Bones Hyland,REB,45,0.003980198182070176,MIN,REB,anthony edwards,bones hyland
+MIN,Anthony Edwards,Donte DiVincenzo,AST,45,0.011743845407660769,MIN,AST,anthony edwards,donte divincenzo
+MIN,Anthony Edwards,Donte DiVincenzo,PTS,45,0.01905942087417553,MIN,PTS,anthony edwards,donte divincenzo
+MIN,Anthony Edwards,Donte DiVincenzo,REB,45,0.008761183188312326,MIN,REB,anthony edwards,donte divincenzo
+MIN,Anthony Edwards,Jaden McDaniels,AST,45,0.011863394531165155,MIN,AST,anthony edwards,jaden mcdaniels
+MIN,Anthony Edwards,Jaden McDaniels,PTS,45,0.02165580857044568,MIN,PTS,anthony edwards,jaden mcdaniels
+MIN,Anthony Edwards,Jaden McDaniels,REB,45,0.009596499269021211,MIN,REB,anthony edwards,jaden mcdaniels
+MIN,Anthony Edwards,Jaylen Clark,AST,45,0.002756019546287376,MIN,AST,anthony edwards,jaylen clark
+MIN,Anthony Edwards,Jaylen Clark,PTS,45,0.004998032557334525,MIN,PTS,anthony edwards,jaylen clark
+MIN,Anthony Edwards,Jaylen Clark,REB,45,0.0023800798510488852,MIN,REB,anthony edwards,jaylen clark
+MIN,Anthony Edwards,Joe Ingles,AST,18,0.0019379824162301742,MIN,AST,anthony edwards,joe ingles
+MIN,Anthony Edwards,Joe Ingles,PTS,18,0.0024939850061851195,MIN,PTS,anthony edwards,joe ingles
+MIN,Anthony Edwards,Joe Ingles,REB,18,0.001236954083219969,MIN,REB,anthony edwards,joe ingles
+MIN,Anthony Edwards,Johnny Juzang,AST,12,0.0009955948823067448,MIN,AST,anthony edwards,johnny juzang
+MIN,Anthony Edwards,Johnny Juzang,PTS,12,0.0020123006879335893,MIN,PTS,anthony edwards,johnny juzang
+MIN,Anthony Edwards,Johnny Juzang,REB,12,0.0009506603087876421,MIN,REB,anthony edwards,johnny juzang
+MIN,Anthony Edwards,Julius Randle,AST,45,0.014578380724346475,MIN,AST,anthony edwards,julius randle
+MIN,Anthony Edwards,Julius Randle,PTS,45,0.02579418239154845,MIN,PTS,anthony edwards,julius randle
+MIN,Anthony Edwards,Julius Randle,REB,45,0.011502472332876906,MIN,REB,anthony edwards,julius randle
+MIN,Anthony Edwards,Kyle Anderson,AST,22,0.005666311722485765,MIN,AST,anthony edwards,kyle anderson
+MIN,Anthony Edwards,Kyle Anderson,PTS,22,0.007663851769673305,MIN,PTS,anthony edwards,kyle anderson
+MIN,Anthony Edwards,Kyle Anderson,REB,22,0.004261259663360754,MIN,REB,anthony edwards,kyle anderson
+MIN,Anthony Edwards,Leonard Miller,AST,10,0.0009357625700317899,MIN,AST,anthony edwards,leonard miller
+MIN,Anthony Edwards,Leonard Miller,PTS,10,0.002092837266124499,MIN,PTS,anthony edwards,leonard miller
+MIN,Anthony Edwards,Leonard Miller,REB,10,0.0010316167386078964,MIN,REB,anthony edwards,leonard miller
+MIN,Anthony Edwards,Mike Conley,AST,34,0.005541261274126924,MIN,AST,anthony edwards,mike conley
+MIN,Anthony Edwards,Mike Conley,PTS,34,0.007611654312418639,MIN,PTS,anthony edwards,mike conley
+MIN,Anthony Edwards,Mike Conley,REB,34,0.0035945899235053833,MIN,REB,anthony edwards,mike conley
+MIN,Anthony Edwards,Naz Reid,AST,45,0.008620244153508353,MIN,AST,anthony edwards,naz reid
+MIN,Anthony Edwards,Naz Reid,PTS,45,0.016630593000834425,MIN,PTS,anthony edwards,naz reid
+MIN,Anthony Edwards,Naz Reid,REB,45,0.008252228856105865,MIN,REB,anthony edwards,naz reid
+MIN,Anthony Edwards,Rob Dillingham,AST,14,0.002026869918650538,MIN,AST,anthony edwards,rob dillingham
+MIN,Anthony Edwards,Rob Dillingham,PTS,14,0.0030654112892447415,MIN,PTS,anthony edwards,rob dillingham
+MIN,Anthony Edwards,Rob Dillingham,REB,14,0.001417379298687753,MIN,REB,anthony edwards,rob dillingham
+MIN,Anthony Edwards,Rocco Zikarsky,AST,5,0.0013740195251726517,MIN,AST,anthony edwards,rocco zikarsky
+MIN,Anthony Edwards,Rocco Zikarsky,PTS,5,0.002714387595131178,MIN,PTS,anthony edwards,rocco zikarsky
+MIN,Anthony Edwards,Rocco Zikarsky,REB,5,0.0017767803319076565,MIN,REB,anthony edwards,rocco zikarsky
+MIN,Anthony Edwards,Rudy Gobert,AST,45,0.010520292137828088,MIN,AST,anthony edwards,rudy gobert
+MIN,Anthony Edwards,Rudy Gobert,PTS,45,0.020006908414482244,MIN,PTS,anthony edwards,rudy gobert
+MIN,Anthony Edwards,Rudy Gobert,REB,45,0.01274286912541825,MIN,REB,anthony edwards,rudy gobert
+MIN,Anthony Edwards,Terrence Shannon Jr.,AST,30,0.0027477997198293897,MIN,AST,anthony edwards,terrence shannon
+MIN,Anthony Edwards,Terrence Shannon Jr.,PTS,30,0.005227039134366531,MIN,PTS,anthony edwards,terrence shannon
+MIN,Anthony Edwards,Terrence Shannon Jr.,REB,30,0.0020985859364281443,MIN,REB,anthony edwards,terrence shannon
+MIN,Enrique Freeman,Ayo Dosunmu,AST,4,0.0032098699362358737,MIN,AST,enrique freeman,ayo dosunmu
+MIN,Enrique Freeman,Ayo Dosunmu,PTS,4,0.0052096053137462486,MIN,PTS,enrique freeman,ayo dosunmu
+MIN,Enrique Freeman,Ayo Dosunmu,REB,4,0.010335093650212589,MIN,REB,enrique freeman,ayo dosunmu
+MIN,Enrique Freeman,Bones Hyland,AST,4,0.0017697942770991534,MIN,AST,enrique freeman,bones hyland
+MIN,Enrique Freeman,Bones Hyland,PTS,4,0.002589499155245557,MIN,PTS,enrique freeman,bones hyland
+MIN,Enrique Freeman,Bones Hyland,REB,4,0.00488753679341702,MIN,REB,enrique freeman,bones hyland
+MIN,Enrique Freeman,Donte DiVincenzo,AST,4,0.003394316631270371,MIN,AST,enrique freeman,donte divincenzo
+MIN,Enrique Freeman,Donte DiVincenzo,PTS,4,0.00501107745189034,MIN,PTS,enrique freeman,donte divincenzo
+MIN,Enrique Freeman,Donte DiVincenzo,REB,4,0.010758410317264986,MIN,REB,enrique freeman,donte divincenzo
+MIN,Enrique Freeman,Jaden McDaniels,AST,4,0.0034288698431084656,MIN,AST,enrique freeman,jaden mcdaniels
+MIN,Enrique Freeman,Jaden McDaniels,PTS,4,0.005693716233364211,MIN,PTS,enrique freeman,jaden mcdaniels
+MIN,Enrique Freeman,Jaden McDaniels,REB,4,0.01178414770315418,MIN,REB,enrique freeman,jaden mcdaniels
+MIN,Enrique Freeman,Jaylen Clark,AST,4,0.0007965706850983511,MIN,AST,enrique freeman,jaylen clark
+MIN,Enrique Freeman,Jaylen Clark,PTS,4,0.0013140760371060471,MIN,PTS,enrique freeman,jaylen clark
+MIN,Enrique Freeman,Jaylen Clark,REB,4,0.002922650408634056,MIN,REB,enrique freeman,jaylen clark
+MIN,Enrique Freeman,Joe Ingles,AST,4,0.0005601339014756243,MIN,AST,enrique freeman,joe ingles
+MIN,Enrique Freeman,Joe Ingles,PTS,4,0.0006557152031193319,MIN,PTS,enrique freeman,joe ingles
+MIN,Enrique Freeman,Joe Ingles,REB,4,0.0015189340623135896,MIN,REB,enrique freeman,joe ingles
+MIN,Enrique Freeman,Johnny Juzang,AST,4,0.00028775619481647964,MIN,AST,enrique freeman,johnny juzang
+MIN,Enrique Freeman,Johnny Juzang,PTS,4,0.0005290714062246466,MIN,PTS,enrique freeman,johnny juzang
+MIN,Enrique Freeman,Johnny Juzang,REB,4,0.0011673758503211297,MIN,REB,enrique freeman,johnny juzang
+MIN,Enrique Freeman,Julius Randle,AST,4,0.004213580682640916,MIN,AST,enrique freeman,julius randle
+MIN,Enrique Freeman,Julius Randle,PTS,4,0.006781771944989732,MIN,PTS,enrique freeman,julius randle
+MIN,Enrique Freeman,Julius Randle,REB,4,0.014124612436498513,MIN,REB,enrique freeman,julius randle
+MIN,Enrique Freeman,Kyle Anderson,AST,4,0.0016377306963739,MIN,AST,enrique freeman,kyle anderson
+MIN,Enrique Freeman,Kyle Anderson,PTS,4,0.002014969659947816,MIN,PTS,enrique freeman,kyle anderson
+MIN,Enrique Freeman,Kyle Anderson,REB,4,0.005232669942115034,MIN,REB,enrique freeman,kyle anderson
+MIN,Enrique Freeman,Leonard Miller,AST,4,0.0002704628972982952,MIN,AST,enrique freeman,leonard miller
+MIN,Enrique Freeman,Leonard Miller,PTS,4,0.0005502459756771577,MIN,PTS,enrique freeman,leonard miller
+MIN,Enrique Freeman,Leonard Miller,REB,4,0.0012667873648513875,MIN,REB,enrique freeman,leonard miller
+MIN,Enrique Freeman,Mike Conley,AST,4,0.00160158743989546,MIN,AST,enrique freeman,mike conley
+MIN,Enrique Freeman,Mike Conley,PTS,4,0.002001245974279629,MIN,PTS,enrique freeman,mike conley
+MIN,Enrique Freeman,Mike Conley,REB,4,0.004414024052249787,MIN,REB,enrique freeman,mike conley
+MIN,Enrique Freeman,Naz Reid,AST,4,0.00249150402446355,MIN,AST,enrique freeman,naz reid
+MIN,Enrique Freeman,Naz Reid,PTS,4,0.004372493275016767,MIN,PTS,enrique freeman,naz reid
+MIN,Enrique Freeman,Naz Reid,REB,4,0.010133433139989293,MIN,REB,enrique freeman,naz reid
+MIN,Enrique Freeman,Rob Dillingham,AST,4,0.0005858250032659045,MIN,AST,enrique freeman,rob dillingham
+MIN,Enrique Freeman,Rob Dillingham,PTS,4,0.0008059538374073974,MIN,PTS,enrique freeman,rob dillingham
+MIN,Enrique Freeman,Rob Dillingham,REB,4,0.0017404895825968356,MIN,REB,enrique freeman,rob dillingham
+MIN,Enrique Freeman,Rocco Zikarsky,AST,4,0.0003971320435588681,MIN,AST,enrique freeman,rocco zikarsky
+MIN,Enrique Freeman,Rocco Zikarsky,PTS,4,0.0007136631571047714,MIN,PTS,enrique freeman,rocco zikarsky
+MIN,Enrique Freeman,Rocco Zikarsky,REB,4,0.0021818208161437885,MIN,REB,enrique freeman,rocco zikarsky
+MIN,Enrique Freeman,Rudy Gobert,AST,4,0.003040673759717486,MIN,AST,enrique freeman,rudy gobert
+MIN,Enrique Freeman,Rudy Gobert,PTS,4,0.005260189609102378,MIN,PTS,enrique freeman,rudy gobert
+MIN,Enrique Freeman,Rudy Gobert,REB,4,0.01564777401907807,MIN,REB,enrique freeman,rudy gobert
+MIN,Enrique Freeman,Terrence Shannon Jr.,AST,4,0.0007941949135615171,MIN,AST,enrique freeman,terrence shannon
+MIN,Enrique Freeman,Terrence Shannon Jr.,PTS,4,0.001374286140134653,MIN,PTS,enrique freeman,terrence shannon
+MIN,Enrique Freeman,Terrence Shannon Jr.,REB,4,0.0025769862477313258,MIN,REB,enrique freeman,terrence shannon
+MIN,Joan Beringer,Ayo Dosunmu,AST,27,0.0026772522648317487,MIN,AST,joan beringer,ayo dosunmu
+MIN,Joan Beringer,Ayo Dosunmu,PTS,27,0.006487141806325024,MIN,PTS,joan beringer,ayo dosunmu
+MIN,Joan Beringer,Ayo Dosunmu,REB,27,0.009690568672541524,MIN,REB,joan beringer,ayo dosunmu
+MIN,Joan Beringer,Bones Hyland,AST,31,0.0014761301332372105,MIN,AST,joan beringer,bones hyland
+MIN,Joan Beringer,Bones Hyland,PTS,31,0.003224514567948518,MIN,PTS,joan beringer,bones hyland
+MIN,Joan Beringer,Bones Hyland,REB,31,0.0045827365033317136,MIN,REB,joan beringer,bones hyland
+MIN,Joan Beringer,Donte DiVincenzo,AST,31,0.002831093492617108,MIN,AST,joan beringer,donte divincenzo
+MIN,Joan Beringer,Donte DiVincenzo,PTS,31,0.006239929529232259,MIN,PTS,joan beringer,donte divincenzo
+MIN,Joan Beringer,Donte DiVincenzo,REB,31,0.01008748614335886,MIN,REB,joan beringer,donte divincenzo
+MIN,Joan Beringer,Jaden McDaniels,AST,31,0.002859913247463384,MIN,AST,joan beringer,jaden mcdaniels
+MIN,Joan Beringer,Jaden McDaniels,PTS,31,0.007089969851141685,MIN,PTS,joan beringer,jaden mcdaniels
+MIN,Joan Beringer,Jaden McDaniels,REB,31,0.0110492557135599,MIN,REB,joan beringer,jaden mcdaniels
+MIN,Joan Beringer,Jaylen Clark,AST,31,0.000664394730360634,MIN,AST,joan beringer,jaylen clark
+MIN,Joan Beringer,Jaylen Clark,PTS,31,0.0016363231154013238,MIN,PTS,joan beringer,jaylen clark
+MIN,Joan Beringer,Jaylen Clark,REB,31,0.002740385859020958,MIN,REB,joan beringer,jaylen clark
+MIN,Joan Beringer,Joe Ingles,AST,18,0.0004671901934111454,MIN,AST,joan beringer,joe ingles
+MIN,Joan Beringer,Joe Ingles,PTS,18,0.0008165143520516446,MIN,PTS,joan beringer,joe ingles
+MIN,Joan Beringer,Joe Ingles,REB,18,0.0014242091400506602,MIN,REB,joan beringer,joe ingles
+MIN,Joan Beringer,Johnny Juzang,AST,12,0.00024000845504513127,MIN,AST,joan beringer,johnny juzang
+MIN,Joan Beringer,Johnny Juzang,PTS,12,0.0006588140619395585,MIN,PTS,joan beringer,johnny juzang
+MIN,Joan Beringer,Johnny Juzang,REB,12,0.0010945750688936206,MIN,REB,joan beringer,johnny juzang
+MIN,Joan Beringer,Julius Randle,AST,31,0.0035144160510380065,MIN,AST,joan beringer,julius randle
+MIN,Joan Beringer,Julius Randle,PTS,31,0.008444846328227612,MIN,PTS,joan beringer,julius randle
+MIN,Joan Beringer,Julius Randle,REB,31,0.013243762603554874,MIN,REB,joan beringer,julius randle
+MIN,Joan Beringer,Kyle Anderson,AST,22,0.0013659800250951047,MIN,AST,joan beringer,kyle anderson
+MIN,Joan Beringer,Kyle Anderson,PTS,22,0.002509094860801327,MIN,PTS,joan beringer,kyle anderson
+MIN,Joan Beringer,Kyle Anderson,REB,22,0.004906346195882472,MIN,REB,joan beringer,kyle anderson
+MIN,Joan Beringer,Leonard Miller,AST,10,0.00022558465568045622,MIN,AST,joan beringer,leonard miller
+MIN,Joan Beringer,Leonard Miller,PTS,10,0.0006851812100157992,MIN,PTS,joan beringer,leonard miller
+MIN,Joan Beringer,Leonard Miller,REB,10,0.0011877870068790115,MIN,REB,joan beringer,leonard miller
+MIN,Joan Beringer,Mike Conley,AST,31,0.0013358340636737609,MIN,AST,joan beringer,mike conley
+MIN,Joan Beringer,Mike Conley,PTS,31,0.002492005755260059,MIN,PTS,joan beringer,mike conley
+MIN,Joan Beringer,Mike Conley,REB,31,0.004138753324184607,MIN,REB,joan beringer,mike conley
+MIN,Joan Beringer,Naz Reid,AST,31,0.0020780856934516896,MIN,AST,joan beringer,naz reid
+MIN,Joan Beringer,Naz Reid,PTS,31,0.00544474719560644,MIN,PTS,joan beringer,naz reid
+MIN,Joan Beringer,Naz Reid,REB,31,0.009501484268568233,MIN,REB,joan beringer,naz reid
+MIN,Joan Beringer,Rob Dillingham,AST,14,0.0004886183390433354,MIN,AST,joan beringer,rob dillingham
+MIN,Joan Beringer,Rob Dillingham,PTS,14,0.00100359557351071,MIN,PTS,joan beringer,rob dillingham
+MIN,Joan Beringer,Rob Dillingham,REB,14,0.0016319478463217253,MIN,REB,joan beringer,rob dillingham
+MIN,Joan Beringer,Rocco Zikarsky,AST,5,0.00033123543451173365,MIN,AST,joan beringer,rocco zikarsky
+MIN,Joan Beringer,Rocco Zikarsky,PTS,5,0.0008886727157376683,MIN,PTS,joan beringer,rocco zikarsky
+MIN,Joan Beringer,Rocco Zikarsky,REB,5,0.0020457564455245237,MIN,REB,joan beringer,rocco zikarsky
+MIN,Joan Beringer,Rudy Gobert,AST,31,0.0025361310182444425,MIN,AST,joan beringer,rudy gobert
+MIN,Joan Beringer,Rudy Gobert,PTS,31,0.006550130742604396,MIN,PTS,joan beringer,rudy gobert
+MIN,Joan Beringer,Rudy Gobert,REB,31,0.01467193562403453,MIN,REB,joan beringer,rudy gobert
+MIN,Joan Beringer,Terrence Shannon Jr.,AST,30,0.0006624131735206174,MIN,AST,joan beringer,terrence shannon
+MIN,Joan Beringer,Terrence Shannon Jr.,PTS,30,0.001711298368418933,MIN,PTS,joan beringer,terrence shannon
+MIN,Joan Beringer,Terrence Shannon Jr.,REB,30,0.00241627826965282,MIN,REB,joan beringer,terrence shannon
+MIN,Julian Phillips,Ayo Dosunmu,AST,13,0.0016670847570923741,MIN,AST,julian phillips,ayo dosunmu
+MIN,Julian Phillips,Ayo Dosunmu,PTS,13,0.004421740164664157,MIN,PTS,julian phillips,ayo dosunmu
+MIN,Julian Phillips,Ayo Dosunmu,REB,13,0.00161682495615244,MIN,REB,julian phillips,ayo dosunmu
+MIN,Julian Phillips,Bones Hyland,AST,13,0.0009191640537314623,MIN,AST,julian phillips,bones hyland
+MIN,Julian Phillips,Bones Hyland,PTS,13,0.0021978809778354165,MIN,PTS,julian phillips,bones hyland
+MIN,Julian Phillips,Bones Hyland,REB,13,0.0007646076299993047,MIN,REB,julian phillips,bones hyland
+MIN,Julian Phillips,Donte DiVincenzo,AST,13,0.001762879378026037,MIN,AST,julian phillips,donte divincenzo
+MIN,Julian Phillips,Donte DiVincenzo,PTS,13,0.0042532363015678745,MIN,PTS,julian phillips,donte divincenzo
+MIN,Julian Phillips,Donte DiVincenzo,REB,13,0.001683048734553472,MIN,REB,julian phillips,donte divincenzo
+MIN,Julian Phillips,Jaden McDaniels,AST,13,0.0017808250063250518,MIN,AST,julian phillips,jaden mcdaniels
+MIN,Julian Phillips,Jaden McDaniels,PTS,13,0.004832637453136078,MIN,PTS,julian phillips,jaden mcdaniels
+MIN,Julian Phillips,Jaden McDaniels,REB,13,0.001843515379568353,MIN,REB,julian phillips,jaden mcdaniels
+MIN,Julian Phillips,Jaylen Clark,AST,13,0.00041370861544357223,MIN,AST,julian phillips,jaylen clark
+MIN,Julian Phillips,Jaylen Clark,PTS,13,0.0011153441465829893,MIN,PTS,julian phillips,jaylen clark
+MIN,Julian Phillips,Jaylen Clark,REB,13,0.00045722025157376956,MIN,REB,julian phillips,jaylen clark
+MIN,Julian Phillips,Joe Ingles,AST,13,0.00029091231346766827,MIN,AST,julian phillips,joe ingles
+MIN,Julian Phillips,Joe Ingles,PTS,13,0.0005565493114350142,MIN,PTS,julian phillips,joe ingles
+MIN,Julian Phillips,Joe Ingles,REB,13,0.00023762247172749146,MIN,REB,julian phillips,joe ingles
+MIN,Julian Phillips,Johnny Juzang,AST,12,0.0001494496586051721,MIN,AST,julian phillips,johnny juzang
+MIN,Julian Phillips,Johnny Juzang,PTS,12,0.0004490582579655313,MIN,PTS,julian phillips,johnny juzang
+MIN,Julian Phillips,Johnny Juzang,REB,12,0.0001826246062095484,MIN,REB,julian phillips,johnny juzang
+MIN,Julian Phillips,Julius Randle,AST,13,0.002188374067594423,MIN,AST,julian phillips,julius randle
+MIN,Julian Phillips,Julius Randle,PTS,13,0.005756143045544791,MIN,PTS,julian phillips,julius randle
+MIN,Julian Phillips,Julius Randle,REB,13,0.0022096583404294717,MIN,REB,julian phillips,julius randle
+MIN,Julian Phillips,Kyle Anderson,AST,13,0.0008505752364997319,MIN,AST,julian phillips,kyle anderson
+MIN,Julian Phillips,Kyle Anderson,PTS,13,0.0017102394019104599,MIN,PTS,julian phillips,kyle anderson
+MIN,Julian Phillips,Kyle Anderson,REB,13,0.0008186003568091814,MIN,REB,julian phillips,kyle anderson
+MIN,Julian Phillips,Leonard Miller,AST,10,0.00014046817547185982,MIN,AST,julian phillips,leonard miller
+MIN,Julian Phillips,Leonard Miller,PTS,10,0.0004670305300627261,MIN,PTS,julian phillips,leonard miller
+MIN,Julian Phillips,Leonard Miller,REB,10,0.00019817657149030088,MIN,REB,julian phillips,leonard miller
+MIN,Julian Phillips,Mike Conley,AST,13,0.0008318037992939162,MIN,AST,julian phillips,mike conley
+MIN,Julian Phillips,Mike Conley,PTS,13,0.0016985911927906384,MIN,PTS,julian phillips,mike conley
+MIN,Julian Phillips,Mike Conley,REB,13,0.0006905311636520854,MIN,REB,julian phillips,mike conley
+MIN,Julian Phillips,Naz Reid,AST,13,0.0012939927361319324,MIN,AST,julian phillips,naz reid
+MIN,Julian Phillips,Naz Reid,PTS,13,0.0037112272368983704,MIN,PTS,julian phillips,naz reid
+MIN,Julian Phillips,Naz Reid,REB,13,0.0015852771292401264,MIN,REB,julian phillips,naz reid
+MIN,Julian Phillips,Rob Dillingham,AST,13,0.00030425529777491076,MIN,AST,julian phillips,rob dillingham
+MIN,Julian Phillips,Rob Dillingham,PTS,13,0.0006840668801389122,MIN,PTS,julian phillips,rob dillingham
+MIN,Julian Phillips,Rob Dillingham,REB,13,0.0002722826796066839,MIN,REB,julian phillips,rob dillingham
+MIN,Julian Phillips,Rocco Zikarsky,AST,5,0.00020625532794836695,MIN,AST,julian phillips,rocco zikarsky
+MIN,Julian Phillips,Rocco Zikarsky,PTS,5,0.0006057336123879921,MIN,PTS,julian phillips,rocco zikarsky
+MIN,Julian Phillips,Rocco Zikarsky,REB,5,0.00034132466185457353,MIN,REB,julian phillips,rocco zikarsky
+MIN,Julian Phillips,Rudy Gobert,AST,13,0.0015792106773211286,MIN,AST,julian phillips,rudy gobert
+MIN,Julian Phillips,Rudy Gobert,PTS,13,0.004464674436457693,MIN,PTS,julian phillips,rudy gobert
+MIN,Julian Phillips,Rudy Gobert,REB,13,0.002447942166615857,MIN,REB,julian phillips,rudy gobert
+MIN,Julian Phillips,Terrence Shannon Jr.,AST,13,0.0004124747297740381,MIN,AST,julian phillips,terrence shannon
+MIN,Julian Phillips,Terrence Shannon Jr.,PTS,13,0.0011664484845983205,MIN,PTS,julian phillips,terrence shannon
+MIN,Julian Phillips,Terrence Shannon Jr.,REB,13,0.00040314445306530313,MIN,REB,julian phillips,terrence shannon
+MIN,Zyon Pullin,Ayo Dosunmu,AST,5,0.004170156066692534,MIN,AST,zyon pullin,ayo dosunmu
+MIN,Zyon Pullin,Ayo Dosunmu,PTS,5,0.0026747202547027465,MIN,PTS,zyon pullin,ayo dosunmu
+MIN,Zyon Pullin,Ayo Dosunmu,REB,5,0.0008819927090764872,MIN,REB,zyon pullin,ayo dosunmu
+MIN,Zyon Pullin,Bones Hyland,AST,5,0.002299257754380372,MIN,AST,zyon pullin,bones hyland
+MIN,Zyon Pullin,Bones Hyland,PTS,5,0.00132950298975534,MIN,PTS,zyon pullin,bones hyland
+MIN,Zyon Pullin,Bones Hyland,REB,5,0.00041710041176532675,MIN,REB,zyon pullin,bones hyland
+MIN,Zyon Pullin,Donte DiVincenzo,AST,5,0.004409783067025602,MIN,AST,zyon pullin,donte divincenzo
+MIN,Zyon Pullin,Donte DiVincenzo,PTS,5,0.00257279190096975,MIN,PTS,zyon pullin,donte divincenzo
+MIN,Zyon Pullin,Donte DiVincenzo,REB,5,0.0009181183821092704,MIN,REB,zyon pullin,donte divincenzo
+MIN,Zyon Pullin,Jaden McDaniels,AST,5,0.004454673448515425,MIN,AST,zyon pullin,jaden mcdaniels
+MIN,Zyon Pullin,Jaden McDaniels,PTS,5,0.0029232729192987133,MIN,PTS,zyon pullin,jaden mcdaniels
+MIN,Zyon Pullin,Jaden McDaniels,REB,5,0.0010056543954634247,MIN,REB,zyon pullin,jaden mcdaniels
+MIN,Zyon Pullin,Jaylen Clark,AST,5,0.001034878091947778,MIN,AST,zyon pullin,jaylen clark
+MIN,Zyon Pullin,Jaylen Clark,PTS,5,0.0006746741031211758,MIN,PTS,zyon pullin,jaylen clark
+MIN,Zyon Pullin,Jaylen Clark,REB,5,0.00024941780295736655,MIN,REB,zyon pullin,jaylen clark
+MIN,Zyon Pullin,Joe Ingles,AST,5,0.000727707300856531,MIN,AST,zyon pullin,joe ingles
+MIN,Zyon Pullin,Joe Ingles,PTS,5,0.0003366578904685964,MIN,PTS,zyon pullin,joe ingles
+MIN,Zyon Pullin,Joe Ingles,REB,5,0.00012962521810346248,MIN,REB,zyon pullin,joe ingles
+MIN,Zyon Pullin,Johnny Juzang,AST,5,0.00037384326012582757,MIN,AST,zyon pullin,johnny juzang
+MIN,Zyon Pullin,Johnny Juzang,PTS,5,0.00027163631814470596,MIN,PTS,zyon pullin,johnny juzang
+MIN,Zyon Pullin,Johnny Juzang,REB,5,9.962338258192971e-05,MIN,REB,zyon pullin,johnny juzang
+MIN,Zyon Pullin,Julius Randle,AST,5,0.005474143624279945,MIN,AST,zyon pullin,julius randle
+MIN,Zyon Pullin,Julius Randle,PTS,5,0.0034819034632385232,MIN,PTS,zyon pullin,julius randle
+MIN,Zyon Pullin,Julius Randle,REB,5,0.0012053887085257823,MIN,REB,zyon pullin,julius randle
+MIN,Zyon Pullin,Kyle Anderson,AST,5,0.0021276851507264134,MIN,AST,zyon pullin,kyle anderson
+MIN,Zyon Pullin,Kyle Anderson,PTS,5,0.001034527538555187,MIN,PTS,zyon pullin,kyle anderson
+MIN,Zyon Pullin,Kyle Anderson,REB,5,0.0004465539349857959,MIN,REB,zyon pullin,kyle anderson
+MIN,Zyon Pullin,Leonard Miller,AST,5,0.0003513763842114895,MIN,AST,zyon pullin,leonard miller
+MIN,Zyon Pullin,Leonard Miller,PTS,5,0.0002825077846740033,MIN,PTS,zyon pullin,leonard miller
+MIN,Zyon Pullin,Leonard Miller,REB,5,0.00010810712099605961,MIN,REB,zyon pullin,leonard miller
+MIN,Zyon Pullin,Mike Conley,AST,5,0.002080729036220933,MIN,AST,zyon pullin,mike conley
+MIN,Zyon Pullin,Mike Conley,PTS,5,0.0010274815114926345,MIN,PTS,zyon pullin,mike conley
+MIN,Zyon Pullin,Mike Conley,REB,5,0.00037669102608397587,MIN,REB,zyon pullin,mike conley
+MIN,Zyon Pullin,Naz Reid,AST,5,0.00323687901042793,MIN,AST,zyon pullin,naz reid
+MIN,Zyon Pullin,Naz Reid,PTS,5,0.0022449294374334914,MIN,PTS,zyon pullin,naz reid
+MIN,Zyon Pullin,Naz Reid,REB,5,0.0008647830827542398,MIN,REB,zyon pullin,naz reid
+MIN,Zyon Pullin,Rob Dillingham,AST,5,0.0007610843242621545,MIN,AST,zyon pullin,rob dillingham
+MIN,Zyon Pullin,Rob Dillingham,PTS,5,0.0004137935454689554,MIN,PTS,zyon pullin,rob dillingham
+MIN,Zyon Pullin,Rob Dillingham,REB,5,0.00014853267653190653,MIN,REB,zyon pullin,rob dillingham
+MIN,Zyon Pullin,Rocco Zikarsky,AST,5,0.0005159407183541784,MIN,AST,zyon pullin,rocco zikarsky
+MIN,Zyon Pullin,Rocco Zikarsky,PTS,5,0.0003664095812223016,MIN,PTS,zyon pullin,rocco zikarsky
+MIN,Zyon Pullin,Rocco Zikarsky,REB,5,0.00018619570537810746,MIN,REB,zyon pullin,rocco zikarsky
+MIN,Zyon Pullin,Rudy Gobert,AST,5,0.003950342031860724,MIN,AST,zyon pullin,rudy gobert
+MIN,Zyon Pullin,Rudy Gobert,PTS,5,0.002700691289207395,MIN,PTS,zyon pullin,rudy gobert
+MIN,Zyon Pullin,Rudy Gobert,REB,5,0.0013353747014976931,MIN,REB,zyon pullin,rudy gobert
+MIN,Zyon Pullin,Terrence Shannon Jr.,AST,5,0.0010317915687290144,MIN,AST,zyon pullin,terrence shannon
+MIN,Zyon Pullin,Terrence Shannon Jr.,PTS,5,0.0007055872284751084,MIN,PTS,zyon pullin,terrence shannon
+MIN,Zyon Pullin,Terrence Shannon Jr.,REB,5,0.00021991896337026916,MIN,REB,zyon pullin,terrence shannon
+SAC,Devin Carter,DaQuan Jeffries,AST,3,0.004790724872780219,SAC,AST,devin carter,daquan jeffries
+SAC,Devin Carter,DaQuan Jeffries,PTS,3,0.005042404604027738,SAC,PTS,devin carter,daquan jeffries
+SAC,Devin Carter,DaQuan Jeffries,REB,3,0.0037025103310877215,SAC,REB,devin carter,daquan jeffries
+SAC,Devin Carter,Daeqwon Plowden,AST,30,0.008150804040697398,SAC,AST,devin carter,daeqwon plowden
+SAC,Devin Carter,Daeqwon Plowden,PTS,30,0.007303176891609624,SAC,PTS,devin carter,daeqwon plowden
+SAC,Devin Carter,Daeqwon Plowden,REB,30,0.005995471442093429,SAC,REB,devin carter,daeqwon plowden
+SAC,Devin Carter,DeMar DeRozan,AST,30,0.012448847299430861,SAC,AST,devin carter,demar derozan
+SAC,Devin Carter,DeMar DeRozan,PTS,30,0.010002043152430404,SAC,PTS,devin carter,demar derozan
+SAC,Devin Carter,DeMar DeRozan,REB,30,0.007219232074462771,SAC,REB,devin carter,demar derozan
+SAC,Devin Carter,Dennis Schroder,AST,22,0.009771070428746354,SAC,AST,devin carter,dennis schroder
+SAC,Devin Carter,Dennis Schroder,PTS,22,0.0067281424441054324,SAC,PTS,devin carter,dennis schroder
+SAC,Devin Carter,Dennis Schroder,REB,22,0.005061608629106373,SAC,REB,devin carter,dennis schroder
+SAC,Devin Carter,Doug McDermott,AST,28,0.003593695504751841,SAC,AST,devin carter,doug mcdermott
+SAC,Devin Carter,Doug McDermott,PTS,28,0.003177938372051298,SAC,PTS,devin carter,doug mcdermott
+SAC,Devin Carter,Doug McDermott,REB,28,0.0025355474964490715,SAC,REB,devin carter,doug mcdermott
+SAC,Devin Carter,Dylan Cardwell,AST,30,0.006093065602036234,SAC,AST,devin carter,dylan cardwell
+SAC,Devin Carter,Dylan Cardwell,PTS,30,0.004818115181263657,SAC,PTS,devin carter,dylan cardwell
+SAC,Devin Carter,Dylan Cardwell,REB,30,0.005939794954283941,SAC,REB,devin carter,dylan cardwell
+SAC,Devin Carter,Isaiah Stevens,AST,3,0.005147521371544221,SAC,AST,devin carter,isaiah stevens
+SAC,Devin Carter,Isaiah Stevens,PTS,3,0.0026992612439728373,SAC,PTS,devin carter,isaiah stevens
+SAC,Devin Carter,Isaiah Stevens,REB,3,0.0022710127113696396,SAC,REB,devin carter,isaiah stevens
+SAC,Devin Carter,Keon Ellis,AST,21,0.004718261747646573,SAC,AST,devin carter,keon ellis
+SAC,Devin Carter,Keon Ellis,PTS,21,0.004107266891647606,SAC,PTS,devin carter,keon ellis
+SAC,Devin Carter,Keon Ellis,REB,21,0.0033239504414493103,SAC,REB,devin carter,keon ellis
+SAC,Devin Carter,Killian Hayes,AST,23,0.00603747242684724,SAC,AST,devin carter,killian hayes
+SAC,Devin Carter,Killian Hayes,PTS,23,0.0037009122017218374,SAC,PTS,devin carter,killian hayes
+SAC,Devin Carter,Killian Hayes,REB,23,0.003269264439115878,SAC,REB,devin carter,killian hayes
+SAC,Devin Carter,Malik Monk,AST,30,0.007125166113292384,SAC,AST,devin carter,malik monk
+SAC,Devin Carter,Malik Monk,PTS,30,0.005453970688404994,SAC,PTS,devin carter,malik monk
+SAC,Devin Carter,Malik Monk,REB,30,0.003996750202188462,SAC,REB,devin carter,malik monk
+SAC,Devin Carter,Maxime Raynaud,AST,30,0.009357382924147648,SAC,AST,devin carter,maxime raynaud
+SAC,Devin Carter,Maxime Raynaud,PTS,30,0.008658415215583495,SAC,PTS,devin carter,maxime raynaud
+SAC,Devin Carter,Maxime Raynaud,REB,30,0.008624463322963426,SAC,REB,devin carter,maxime raynaud
+SAC,Devin Carter,Nique Clifford,AST,30,0.009802456525592564,SAC,AST,devin carter,nique clifford
+SAC,Devin Carter,Nique Clifford,PTS,30,0.007672241349436822,SAC,PTS,devin carter,nique clifford
+SAC,Devin Carter,Nique Clifford,REB,30,0.006755125372418765,SAC,REB,devin carter,nique clifford
+SAC,Devin Carter,Patrick Baldwin Jr.,AST,6,0.003442007079899697,SAC,AST,devin carter,patrick baldwin
+SAC,Devin Carter,Patrick Baldwin Jr.,PTS,6,0.0028320898332939615,SAC,PTS,devin carter,patrick baldwin
+SAC,Devin Carter,Patrick Baldwin Jr.,REB,6,0.0029261325112489443,SAC,REB,devin carter,patrick baldwin
+SAC,Devin Carter,Precious Achiuwa,AST,30,0.007499334775571264,SAC,AST,devin carter,precious achiuwa
+SAC,Devin Carter,Precious Achiuwa,PTS,30,0.0066264551750386215,SAC,PTS,devin carter,precious achiuwa
+SAC,Devin Carter,Precious Achiuwa,REB,30,0.0067125158250992715,SAC,REB,devin carter,precious achiuwa
+SAC,Devin Carter,Russell Westbrook,AST,30,0.013604541752589131,SAC,AST,devin carter,russell westbrook
+SAC,Devin Carter,Russell Westbrook,PTS,30,0.009074121527933346,SAC,PTS,devin carter,russell westbrook
+SAC,Devin Carter,Russell Westbrook,REB,30,0.007375567351791623,SAC,REB,devin carter,russell westbrook
+SAC,Domantas Sabonis,DaQuan Jeffries,AST,3,0.0049861100219612325,SAC,AST,domantas sabonis,daquan jeffries
+SAC,Domantas Sabonis,DaQuan Jeffries,PTS,3,0.004535207086451952,SAC,PTS,domantas sabonis,daquan jeffries
+SAC,Domantas Sabonis,DaQuan Jeffries,REB,3,0.007399727656767438,SAC,REB,domantas sabonis,daquan jeffries
+SAC,Domantas Sabonis,Daeqwon Plowden,AST,8,0.008483226817151404,SAC,AST,domantas sabonis,daeqwon plowden
+SAC,Domantas Sabonis,Daeqwon Plowden,PTS,8,0.006568576342720218,SAC,PTS,domantas sabonis,daeqwon plowden
+SAC,Domantas Sabonis,Daeqwon Plowden,REB,8,0.011982371925586125,SAC,REB,domantas sabonis,daeqwon plowden
+SAC,Domantas Sabonis,DeMar DeRozan,AST,8,0.012956561674879727,SAC,AST,domantas sabonis,demar derozan
+SAC,Domantas Sabonis,DeMar DeRozan,PTS,8,0.008995973259993292,SAC,PTS,domantas sabonis,demar derozan
+SAC,Domantas Sabonis,DeMar DeRozan,REB,8,0.01442814373628795,SAC,REB,domantas sabonis,demar derozan
+SAC,Domantas Sabonis,Dennis Schroder,AST,8,0.01016957422599549,SAC,AST,domantas sabonis,dennis schroder
+SAC,Domantas Sabonis,Dennis Schroder,PTS,8,0.0060513825619609605,SAC,PTS,domantas sabonis,dennis schroder
+SAC,Domantas Sabonis,Dennis Schroder,REB,8,0.010115981323819231,SAC,REB,domantas sabonis,dennis schroder
+SAC,Domantas Sabonis,Doug McDermott,AST,8,0.0037402609517255456,SAC,AST,domantas sabonis,doug mcdermott
+SAC,Domantas Sabonis,Doug McDermott,PTS,8,0.002858280871337104,SAC,PTS,domantas sabonis,doug mcdermott
+SAC,Domantas Sabonis,Doug McDermott,REB,8,0.00506747024498096,SAC,REB,domantas sabonis,doug mcdermott
+SAC,Domantas Sabonis,Dylan Cardwell,AST,8,0.006341565476948205,SAC,AST,domantas sabonis,dylan cardwell
+SAC,Domantas Sabonis,Dylan Cardwell,PTS,8,0.004333478137782627,SAC,PTS,domantas sabonis,dylan cardwell
+SAC,Domantas Sabonis,Dylan Cardwell,REB,8,0.011871098543519826,SAC,REB,domantas sabonis,dylan cardwell
+SAC,Domantas Sabonis,Isaiah Stevens,AST,3,0.005357458125960251,SAC,AST,domantas sabonis,isaiah stevens
+SAC,Domantas Sabonis,Isaiah Stevens,PTS,3,0.0024277521704768345,SAC,PTS,domantas sabonis,isaiah stevens
+SAC,Domantas Sabonis,Isaiah Stevens,REB,3,0.004538778846365947,SAC,REB,domantas sabonis,isaiah stevens
+SAC,Domantas Sabonis,Keon Ellis,AST,8,0.004910691557314185,SAC,AST,domantas sabonis,keon ellis
+SAC,Domantas Sabonis,Keon Ellis,PTS,8,0.0036941315455072186,SAC,PTS,domantas sabonis,keon ellis
+SAC,Domantas Sabonis,Keon Ellis,REB,8,0.006643149056140756,SAC,REB,domantas sabonis,keon ellis
+SAC,Domantas Sabonis,Killian Hayes,AST,8,0.006283704987080077,SAC,AST,domantas sabonis,killian hayes
+SAC,Domantas Sabonis,Killian Hayes,PTS,8,0.0033286506263655326,SAC,PTS,domantas sabonis,killian hayes
+SAC,Domantas Sabonis,Killian Hayes,REB,8,0.006533855229056183,SAC,REB,domantas sabonis,killian hayes
+SAC,Domantas Sabonis,Malik Monk,AST,8,0.007415759224137679,SAC,AST,domantas sabonis,malik monk
+SAC,Domantas Sabonis,Malik Monk,PTS,8,0.004905375204440753,SAC,PTS,domantas sabonis,malik monk
+SAC,Domantas Sabonis,Malik Monk,REB,8,0.007987786761863356,SAC,REB,domantas sabonis,malik monk
+SAC,Domantas Sabonis,Maxime Raynaud,AST,8,0.009739014870696363,SAC,AST,domantas sabonis,maxime raynaud
+SAC,Domantas Sabonis,Maxime Raynaud,PTS,8,0.007787496071178359,SAC,PTS,domantas sabonis,maxime raynaud
+SAC,Domantas Sabonis,Maxime Raynaud,REB,8,0.01723659735392561,SAC,REB,domantas sabonis,maxime raynaud
+SAC,Domantas Sabonis,Nique Clifford,AST,8,0.010202240374895899,SAC,AST,domantas sabonis,nique clifford
+SAC,Domantas Sabonis,Nique Clifford,PTS,8,0.006900517921378638,SAC,PTS,domantas sabonis,nique clifford
+SAC,Domantas Sabonis,Nique Clifford,REB,8,0.013500593806184921,SAC,REB,domantas sabonis,nique clifford
+SAC,Domantas Sabonis,Patrick Baldwin Jr.,AST,6,0.003582386058999372,SAC,AST,domantas sabonis,patrick baldwin
+SAC,Domantas Sabonis,Patrick Baldwin Jr.,PTS,6,0.002547220005146705,SAC,PTS,domantas sabonis,patrick baldwin
+SAC,Domantas Sabonis,Patrick Baldwin Jr.,REB,6,0.0058480819051473345,SAC,REB,domantas sabonis,patrick baldwin
+SAC,Domantas Sabonis,Precious Achiuwa,AST,8,0.007805187998787778,SAC,AST,domantas sabonis,precious achiuwa
+SAC,Domantas Sabonis,Precious Achiuwa,PTS,8,0.005959923653069482,SAC,PTS,domantas sabonis,precious achiuwa
+SAC,Domantas Sabonis,Precious Achiuwa,REB,8,0.01341543562496527,SAC,REB,domantas sabonis,precious achiuwa
+SAC,Domantas Sabonis,Russell Westbrook,AST,8,0.014159390025127554,SAC,AST,domantas sabonis,russell westbrook
+SAC,Domantas Sabonis,Russell Westbrook,PTS,8,0.008161387966355892,SAC,PTS,domantas sabonis,russell westbrook
+SAC,Domantas Sabonis,Russell Westbrook,REB,8,0.014740590798397527,SAC,REB,domantas sabonis,russell westbrook
+SAC,Drew Eubanks,DaQuan Jeffries,AST,3,0.0012228837564557508,SAC,AST,drew eubanks,daquan jeffries
+SAC,Drew Eubanks,DaQuan Jeffries,PTS,3,0.003078233952575856,SAC,PTS,drew eubanks,daquan jeffries
+SAC,Drew Eubanks,DaQuan Jeffries,REB,3,0.004396583095170379,SAC,REB,drew eubanks,daquan jeffries
+SAC,Drew Eubanks,Daeqwon Plowden,AST,19,0.0020805798972209143,SAC,AST,drew eubanks,daeqwon plowden
+SAC,Drew Eubanks,Daeqwon Plowden,PTS,19,0.004458366361847087,SAC,PTS,drew eubanks,daeqwon plowden
+SAC,Drew Eubanks,Daeqwon Plowden,REB,19,0.0071193828059193665,SAC,REB,drew eubanks,daeqwon plowden
+SAC,Drew Eubanks,DeMar DeRozan,AST,19,0.0031777014028854748,SAC,AST,drew eubanks,demar derozan
+SAC,Drew Eubanks,DeMar DeRozan,PTS,19,0.006105941756904431,SAC,PTS,drew eubanks,demar derozan
+SAC,Drew Eubanks,DeMar DeRozan,REB,19,0.008572549665072848,SAC,REB,drew eubanks,demar derozan
+SAC,Drew Eubanks,Dennis Schroder,AST,19,0.002494170220124686,SAC,AST,drew eubanks,dennis schroder
+SAC,Drew Eubanks,Dennis Schroder,PTS,19,0.004107325400399012,SAC,PTS,drew eubanks,dennis schroder
+SAC,Drew Eubanks,Dennis Schroder,REB,19,0.0060104580252609025,SAC,REB,drew eubanks,dennis schroder
+SAC,Drew Eubanks,Doug McDermott,AST,19,0.0009173292090678337,SAC,AST,drew eubanks,doug mcdermott
+SAC,Drew Eubanks,Doug McDermott,PTS,19,0.0019400342821018369,SAC,PTS,drew eubanks,doug mcdermott
+SAC,Drew Eubanks,Doug McDermott,REB,19,0.0030108613516318227,SAC,REB,drew eubanks,doug mcdermott
+SAC,Drew Eubanks,Dylan Cardwell,AST,19,0.0015553201550113772,SAC,AST,drew eubanks,dylan cardwell
+SAC,Drew Eubanks,Dylan Cardwell,PTS,19,0.002941312112586152,SAC,PTS,drew eubanks,dylan cardwell
+SAC,Drew Eubanks,Dylan Cardwell,REB,19,0.007053269201037205,SAC,REB,drew eubanks,dylan cardwell
+SAC,Drew Eubanks,Isaiah Stevens,AST,3,0.001313959878396682,SAC,AST,drew eubanks,isaiah stevens
+SAC,Drew Eubanks,Isaiah Stevens,PTS,3,0.0016478165202039432,SAC,PTS,drew eubanks,isaiah stevens
+SAC,Drew Eubanks,Isaiah Stevens,REB,3,0.0026967368630654185,SAC,REB,drew eubanks,isaiah stevens
+SAC,Drew Eubanks,Keon Ellis,AST,19,0.0012043867688346413,SAC,AST,drew eubanks,keon ellis
+SAC,Drew Eubanks,Keon Ellis,PTS,19,0.0025073609499843322,SAC,PTS,drew eubanks,keon ellis
+SAC,Drew Eubanks,Keon Ellis,REB,19,0.0039470583504805125,SAC,REB,drew eubanks,keon ellis
+SAC,Drew Eubanks,Killian Hayes,AST,19,0.001541129402523233,SAC,AST,drew eubanks,killian hayes
+SAC,Drew Eubanks,Killian Hayes,PTS,19,0.0022592938269456963,SAC,PTS,drew eubanks,killian hayes
+SAC,Drew Eubanks,Killian Hayes,REB,19,0.0038821209075292095,SAC,REB,drew eubanks,killian hayes
+SAC,Drew Eubanks,Malik Monk,AST,19,0.0018187748479360326,SAC,AST,drew eubanks,malik monk
+SAC,Drew Eubanks,Malik Monk,PTS,19,0.0033294824727058765,SAC,PTS,drew eubanks,malik monk
+SAC,Drew Eubanks,Malik Monk,REB,19,0.004745981186607055,SAC,REB,drew eubanks,malik monk
+SAC,Drew Eubanks,Maxime Raynaud,AST,19,0.0023885720605441117,SAC,AST,drew eubanks,maxime raynaud
+SAC,Drew Eubanks,Maxime Raynaud,PTS,19,0.005285697952682954,SAC,PTS,drew eubanks,maxime raynaud
+SAC,Drew Eubanks,Maxime Raynaud,REB,19,0.01024120563075333,SAC,REB,drew eubanks,maxime raynaud
+SAC,Drew Eubanks,Nique Clifford,AST,19,0.0025021818569919687,SAC,AST,drew eubanks,nique clifford
+SAC,Drew Eubanks,Nique Clifford,PTS,19,0.0046836689375002235,SAC,PTS,drew eubanks,nique clifford
+SAC,Drew Eubanks,Nique Clifford,REB,19,0.0080214414984246,SAC,REB,drew eubanks,nique clifford
+SAC,Drew Eubanks,Patrick Baldwin Jr.,AST,6,0.0008786091164471956,SAC,AST,drew eubanks,patrick baldwin
+SAC,Drew Eubanks,Patrick Baldwin Jr.,PTS,6,0.0017289043157359479,SAC,PTS,drew eubanks,patrick baldwin
+SAC,Drew Eubanks,Patrick Baldwin Jr.,REB,6,0.0034746654520221394,SAC,REB,drew eubanks,patrick baldwin
+SAC,Drew Eubanks,Precious Achiuwa,AST,19,0.0019142854003944708,SAC,AST,drew eubanks,precious achiuwa
+SAC,Drew Eubanks,Precious Achiuwa,PTS,19,0.004045248429436359,SAC,PTS,drew eubanks,precious achiuwa
+SAC,Drew Eubanks,Precious Achiuwa,REB,19,0.00797084436332283,SAC,REB,drew eubanks,precious achiuwa
+SAC,Drew Eubanks,Russell Westbrook,AST,19,0.003472704771211464,SAC,AST,drew eubanks,russell westbrook
+SAC,Drew Eubanks,Russell Westbrook,PTS,19,0.005539473955495832,SAC,PTS,drew eubanks,russell westbrook
+SAC,Drew Eubanks,Russell Westbrook,REB,19,0.008758191560981043,SAC,REB,drew eubanks,russell westbrook
+SAC,Keegan Murray,DaQuan Jeffries,AST,3,0.00326956564850087,SAC,AST,keegan murray,daquan jeffries
+SAC,Keegan Murray,DaQuan Jeffries,PTS,3,0.007748472691086738,SAC,PTS,keegan murray,daquan jeffries
+SAC,Keegan Murray,DaQuan Jeffries,REB,3,0.006616514342009943,SAC,REB,keegan murray,daquan jeffries
+SAC,Keegan Murray,Daeqwon Plowden,AST,15,0.0055627466838146025,SAC,AST,keegan murray,daeqwon plowden
+SAC,Keegan Murray,Daeqwon Plowden,PTS,15,0.011222516070529437,SAC,PTS,keegan murray,daeqwon plowden
+SAC,Keegan Murray,Daeqwon Plowden,REB,15,0.010714115353209087,SAC,REB,keegan murray,daeqwon plowden
+SAC,Keegan Murray,DeMar DeRozan,AST,15,0.008496067834100236,SAC,AST,keegan murray,demar derozan
+SAC,Keegan Murray,DeMar DeRozan,PTS,15,0.015369761910770255,SAC,PTS,keegan murray,demar derozan
+SAC,Keegan Murray,DeMar DeRozan,REB,15,0.012901018035768291,SAC,REB,keegan murray,demar derozan
+SAC,Keegan Murray,Dennis Schroder,AST,15,0.0066685432938192795,SAC,AST,keegan murray,dennis schroder
+SAC,Keegan Murray,Dennis Schroder,PTS,15,0.010338882355503606,SAC,PTS,keegan murray,dennis schroder
+SAC,Keegan Murray,Dennis Schroder,REB,15,0.009045270125764882,SAC,REB,keegan murray,dennis schroder
+SAC,Keegan Murray,Doug McDermott,AST,15,0.002452619109953145,SAC,AST,keegan murray,doug mcdermott
+SAC,Keegan Murray,Doug McDermott,PTS,15,0.004883417857846434,SAC,PTS,keegan murray,doug mcdermott
+SAC,Keegan Murray,Doug McDermott,REB,15,0.004531111293394853,SAC,REB,keegan murray,doug mcdermott
+SAC,Keegan Murray,Dylan Cardwell,AST,15,0.004158384903226289,SAC,AST,keegan murray,dylan cardwell
+SAC,Keegan Murray,Dylan Cardwell,PTS,15,0.007403815607083821,SAC,PTS,keegan murray,dylan cardwell
+SAC,Keegan Murray,Dylan Cardwell,REB,15,0.010614619538974317,SAC,REB,keegan murray,dylan cardwell
+SAC,Keegan Murray,Isaiah Stevens,AST,3,0.0035130715076021396,SAC,AST,keegan murray,isaiah stevens
+SAC,Keegan Murray,Isaiah Stevens,PTS,3,0.004147852795931109,SAC,PTS,keegan murray,isaiah stevens
+SAC,Keegan Murray,Isaiah Stevens,REB,3,0.004058378460013568,SAC,REB,keegan murray,isaiah stevens
+SAC,Keegan Murray,Keon Ellis,AST,15,0.00322011113983849,SAC,AST,keegan murray,keon ellis
+SAC,Keegan Murray,Keon Ellis,PTS,15,0.0063114818909048255,SAC,PTS,keegan murray,keon ellis
+SAC,Keegan Murray,Keon Ellis,REB,15,0.005940014693090286,SAC,REB,keegan murray,keon ellis
+SAC,Keegan Murray,Killian Hayes,AST,15,0.004120443768906141,SAC,AST,keegan murray,killian hayes
+SAC,Keegan Murray,Killian Hayes,PTS,15,0.005687051987903827,SAC,PTS,keegan murray,killian hayes
+SAC,Keegan Murray,Killian Hayes,REB,15,0.00584228891074519,SAC,REB,keegan murray,killian hayes
+SAC,Keegan Murray,Malik Monk,AST,15,0.004862771080060724,SAC,AST,keegan murray,malik monk
+SAC,Keegan Murray,Malik Monk,PTS,15,0.008380910747094258,SAC,PTS,keegan murray,malik monk
+SAC,Keegan Murray,Malik Monk,REB,15,0.007142331194101552,SAC,REB,keegan murray,malik monk
+SAC,Keegan Murray,Maxime Raynaud,AST,15,0.0063862105591771775,SAC,AST,keegan murray,maxime raynaud
+SAC,Keegan Murray,Maxime Raynaud,PTS,15,0.013305059612322525,SAC,PTS,keegan murray,maxime raynaud
+SAC,Keegan Murray,Maxime Raynaud,REB,15,0.015412215001642424,SAC,REB,keegan murray,maxime raynaud
+SAC,Keegan Murray,Nique Clifford,AST,15,0.006689963623062551,SAC,AST,keegan murray,nique clifford
+SAC,Keegan Murray,Nique Clifford,PTS,15,0.011789643482407597,SAC,PTS,keegan murray,nique clifford
+SAC,Keegan Murray,Nique Clifford,REB,15,0.012071643266840916,SAC,REB,keegan murray,nique clifford
+SAC,Keegan Murray,Patrick Baldwin Jr.,AST,6,0.0023490950553805945,SAC,AST,keegan murray,patrick baldwin
+SAC,Keegan Murray,Patrick Baldwin Jr.,PTS,6,0.004351965471881031,SAC,PTS,keegan murray,patrick baldwin
+SAC,Keegan Murray,Patrick Baldwin Jr.,REB,6,0.00522910025793565,SAC,REB,keegan murray,patrick baldwin
+SAC,Keegan Murray,Precious Achiuwa,AST,15,0.005118133063355453,SAC,AST,keegan murray,precious achiuwa
+SAC,Keegan Murray,Precious Achiuwa,PTS,15,0.010182623370104855,SAC,PTS,keegan murray,precious achiuwa
+SAC,Keegan Murray,Precious Achiuwa,REB,15,0.011995498528343142,SAC,REB,keegan murray,precious achiuwa
+SAC,Keegan Murray,Russell Westbrook,AST,15,0.009284804191238696,SAC,AST,keegan murray,russell westbrook
+SAC,Keegan Murray,Russell Westbrook,PTS,15,0.013943859800269019,SAC,PTS,keegan murray,russell westbrook
+SAC,Keegan Murray,Russell Westbrook,REB,15,0.013180394597103792,SAC,REB,keegan murray,russell westbrook
+SAC,Zach LaVine,DaQuan Jeffries,AST,3,0.004643237999602691,SAC,AST,zach lavine,daquan jeffries
+SAC,Zach LaVine,DaQuan Jeffries,PTS,3,0.01002540369589637,SAC,PTS,zach lavine,daquan jeffries
+SAC,Zach LaVine,DaQuan Jeffries,REB,3,0.003116164921091102,SAC,REB,zach lavine,daquan jeffries
+SAC,Zach LaVine,Daeqwon Plowden,AST,18,0.007899874038710543,SAC,AST,zach lavine,daeqwon plowden
+SAC,Zach LaVine,Daeqwon Plowden,PTS,18,0.014520313689711468,SAC,PTS,zach lavine,daeqwon plowden
+SAC,Zach LaVine,Daeqwon Plowden,REB,18,0.005046002879826234,SAC,REB,zach lavine,daeqwon plowden
+SAC,Zach LaVine,DeMar DeRozan,AST,18,0.012065598081073629,SAC,AST,zach lavine,demar derozan
+SAC,Zach LaVine,DeMar DeRozan,PTS,18,0.019886250362930843,SAC,PTS,zach lavine,demar derozan
+SAC,Zach LaVine,DeMar DeRozan,REB,18,0.006075963531760809,SAC,REB,zach lavine,demar derozan
+SAC,Zach LaVine,Dennis Schroder,AST,18,0.009470259035188519,SAC,AST,zach lavine,dennis schroder
+SAC,Zach LaVine,Dennis Schroder,PTS,18,0.013377019383127789,SAC,PTS,zach lavine,dennis schroder
+SAC,Zach LaVine,Dennis Schroder,REB,18,0.004260030585702533,SAC,REB,zach lavine,dennis schroder
+SAC,Zach LaVine,Doug McDermott,AST,18,0.003483060282061544,SAC,AST,zach lavine,doug mcdermott
+SAC,Zach LaVine,Doug McDermott,PTS,18,0.0063184368574955236,SAC,PTS,zach lavine,doug mcdermott
+SAC,Zach LaVine,Doug McDermott,REB,18,0.002134007324126428,SAC,REB,zach lavine,doug mcdermott
+SAC,Zach LaVine,Dylan Cardwell,AST,18,0.005905484971218594,SAC,AST,zach lavine,dylan cardwell
+SAC,Zach LaVine,Dylan Cardwell,PTS,18,0.009579467246026131,SAC,PTS,zach lavine,dylan cardwell
+SAC,Zach LaVine,Dylan Cardwell,REB,18,0.004999143559330966,SAC,REB,zach lavine,dylan cardwell
+SAC,Zach LaVine,Isaiah Stevens,AST,3,0.004989050189862071,SAC,AST,zach lavine,isaiah stevens
+SAC,Zach LaVine,Isaiah Stevens,PTS,3,0.005366721986153069,SAC,PTS,zach lavine,isaiah stevens
+SAC,Zach LaVine,Isaiah Stevens,REB,3,0.00191136540176595,SAC,REB,zach lavine,isaiah stevens
+SAC,Zach LaVine,Keon Ellis,AST,18,0.004573005718449955,SAC,AST,zach lavine,keon ellis
+SAC,Zach LaVine,Keon Ellis,PTS,18,0.008166145303505713,SAC,PTS,zach lavine,keon ellis
+SAC,Zach LaVine,Keon Ellis,REB,18,0.0027975553985953804,SAC,REB,zach lavine,keon ellis
+SAC,Zach LaVine,Killian Hayes,AST,18,0.005851603283079341,SAC,AST,zach lavine,killian hayes
+SAC,Zach LaVine,Killian Hayes,PTS,18,0.007358223264292019,SAC,PTS,zach lavine,killian hayes
+SAC,Zach LaVine,Killian Hayes,REB,18,0.002751529706049619,SAC,REB,zach lavine,killian hayes
+SAC,Zach LaVine,Malik Monk,AST,18,0.00690581131859508,SAC,AST,zach lavine,malik monk
+SAC,Zach LaVine,Malik Monk,PTS,18,0.010843687127599871,SAC,PTS,zach lavine,malik monk
+SAC,Zach LaVine,Malik Monk,REB,18,0.00336380770469439,SAC,REB,zach lavine,malik monk
+SAC,Zach LaVine,Maxime Raynaud,AST,18,0.009069307281054746,SAC,AST,zach lavine,maxime raynaud
+SAC,Zach LaVine,Maxime Raynaud,PTS,18,0.017214824021376498,SAC,PTS,zach lavine,maxime raynaud
+SAC,Zach LaVine,Maxime Raynaud,REB,18,0.007258656335027708,SAC,REB,zach lavine,maxime raynaud
+SAC,Zach LaVine,Nique Clifford,AST,18,0.009500678882164819,SAC,AST,zach lavine,nique clifford
+SAC,Zach LaVine,Nique Clifford,PTS,18,0.01525409458793001,SAC,PTS,zach lavine,nique clifford
+SAC,Zach LaVine,Nique Clifford,REB,18,0.005685354756841351,SAC,REB,zach lavine,nique clifford
+SAC,Zach LaVine,Patrick Baldwin Jr.,AST,6,0.0033360417249377224,SAC,AST,zach lavine,patrick baldwin
+SAC,Zach LaVine,Patrick Baldwin Jr.,PTS,6,0.005630814286330053,SAC,PTS,zach lavine,patrick baldwin
+SAC,Zach LaVine,Patrick Baldwin Jr.,REB,6,0.0024627376214070964,SAC,REB,zach lavine,patrick baldwin
+SAC,Zach LaVine,Precious Achiuwa,AST,18,0.00726846085433132,SAC,AST,zach lavine,precious achiuwa
+SAC,Zach LaVine,Precious Achiuwa,PTS,18,0.013174842841738447,SAC,PTS,zach lavine,precious achiuwa
+SAC,Zach LaVine,Precious Achiuwa,REB,18,0.005649493040117507,SAC,REB,zach lavine,precious achiuwa
+SAC,Zach LaVine,Russell Westbrook,AST,18,0.0131857134171314,SAC,AST,zach lavine,russell westbrook
+SAC,Zach LaVine,Russell Westbrook,PTS,18,0.01804133913222473,SAC,PTS,zach lavine,russell westbrook
+SAC,Zach LaVine,Russell Westbrook,REB,18,0.00620754088430748,SAC,REB,zach lavine,russell westbrook

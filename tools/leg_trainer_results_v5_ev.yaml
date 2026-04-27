@@ -1,0 +1,96 @@
+3-leg EV:
+  overrides:
+    max_direction_per_slip:
+      under: 1
+    min_edge: 0.02
+    max_same_stat: 2
+    penalty:
+      team_w: 0.02
+      family_w: 0.0
+      frag_w: 0.0
+    stat_family_mode: coarse
+    beam_window_growth: 2.0
+    min_leg_prob: 0.52
+    beam_width: 500
+    phase1_frac: 0.3
+    target_pool_mult: 500
+  weighted: 3547
+  slip_wins: 185
+  dates: 46
+  legs_hit: 1697
+  legs_matched: 3240
+  leg_rate: 0.5238
+4-leg EV:
+  overrides:
+    max_direction_per_slip:
+      under: 1
+    min_edge: 0.02
+    max_same_stat: 3
+    penalty:
+      team_w: 0.0
+      family_w: 0.02
+      frag_w: 0.0
+    stat_family_mode: fine
+    beam_window_growth: 1.5
+    min_leg_prob: 0.52
+    beam_width: 500
+    phase1_frac: 0.2
+    target_pool_mult: 600
+  weighted: 3301
+  slip_wins: 112
+  dates: 46
+  legs_hit: 2181
+  legs_matched: 4107
+  leg_rate: 0.531
+5-leg EV:
+  overrides:
+    max_direction_per_slip:
+      under: 2
+    min_edge: 0.02
+    max_same_stat: 2
+    penalty:
+      team_w: 0.1
+      family_w: 0.05
+      frag_w: 0.08
+    stat_family_mode: coarse
+    beam_window_growth: 2.0
+  weighted: 3125
+  slip_wins: 58
+  dates: 46
+  legs_hit: 2545
+  legs_matched: 5148
+  leg_rate: 0.4944
+_manifest:
+  manifest_version: 1
+  source: leg_trainer_v5_ev
+  generated_utc: '2026-04-20T05:13:04Z'
+  config_fingerprint: 76979608da10cdb3
+  ensemble_version: v17
+  ensemble_lodo_brier: 0.200996
+  ensemble_features: 33
+  kernel_params:
+    spread_sd: 12.0
+    threshold_margin: 15.5
+    star_minute_drop: 8.0
+    role_minute_drop: 0.5
+    post_sim_exponent: 0.3
+    rate_min_correlation: 0.35
+    thin_window_games: 15
+    thin_window_max_mult: 1.6
+    opp_defense_strength: 1.0
+    rate_std_multiplier_by_stat:
+      PRA: 1.3
+      PR: 1.3
+      PA: 1.3
+      PTS: 1.3
+      RA: 1.1
+      AST: 1.2
+      REB: 1.0
+      FG3M: 1.0
+  role_ctx:
+    projection_clamp_lo: 0.9
+    projection_clamp_hi: 1.11
+    variance_k: 0.65
+    under_relief_factor: null
+    under_relief_q_min: null
+    under_relief_haircut_min: null

@@ -553,6 +553,7 @@ def apply_extra_features(cv, extra_feats):
         "sb_line_diff":       lambda: (enrich_cv_with_sportsbook(cv), cv["sb_line_diff"])[1],
         "z_line_abs":         lambda: np.abs(pd.to_numeric(cv["z_line"], errors="coerce").fillna(0.0).values),
         "bp_has_x_under":     lambda: cv["bp_has"].values * cv["is_under"].values,
+        "form_z_line":        lambda: pd.to_numeric(cv.get("form_z_line", 0.0), errors="coerce").fillna(0.0).clip(-5, 5),
     }
 
     if not extra_feats:
@@ -1496,6 +1497,7 @@ EXTRA_FEAT_MAP = {
     "sb_line_diff": lambda: (_enrich_cv_with_sportsbook(), cv["sb_line_diff"])[1],
     "z_line_abs": lambda: np.abs(pd.to_numeric(cv["z_line"], errors="coerce").fillna(0.0).values),
     "bp_has_x_under": lambda: cv["bp_has"].values * cv["is_under"].values,
+    "form_z_line": lambda: pd.to_numeric(cv.get("form_z_line", 0.0), errors="coerce").fillna(0.0).clip(-5, 5),
 }
 
 if args.extra_feats:

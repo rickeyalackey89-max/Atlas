@@ -461,19 +461,28 @@ def _print_combo(combo: dict[str, Any]) -> None:
 def train(base_cfg: dict, data: list[tuple[str, pd.DataFrame, dict]]) -> dict:
     results: dict[str, dict[str, Any]] = {}
     total_start = time.time()
+    structural_winner: dict[str, Any] | None = None  # warm-start for 4/5-leg
 
     for cat_name, n_legs, sort_mode in CATEGORIES:
         cat_start = time.time()
         print(f"\n  === {cat_name} ===")
         sorted_data = sort_dates_by_difficulty(data, base_cfg, n_legs)
 
-        # S1: structural + filters
-        s1_grid = build_s1_grid()
-        print(f"  S1: structural+filters ({len(s1_grid)} combos, {len(SEEDS)} seeds, TOP_K={TOP_K})")
-        s1_combo, s1_result = _run_grid(s1_grid, base_cfg, sorted_data, n_legs, sort_mode, "S1")
-        _print_combo(s1_combo)
+        # S1: structural — run fully for 3-leg, warm-start for 4/5-leg
+        if structural_winner is not None and n_legs > 3:
+            s1_grid_size = len(build_s1_grid())
+            print(f"  S1: WARM-START from 3-leg winner (skipped {s1_grid_size} combos)")
+            s1_combo = copy.deepcopy(structural_winner)
+            s1_result_raw = score_config(s1_combo, base_cfg, sorted_data, n_legs, sort_mode)
+            s1_result = s1_result_raw or {"weighted": 0, "slip_wins": 0, "legs_hit": 0, "legs_matched": 0, "leg_rate": 0}
+            _print_combo(s1_combo)
+        else:
+            s1_grid = build_s1_grid()
+            print(f"  S1: structural+filters ({len(s1_grid)} combos, {len(SEEDS)} seeds, TOP_K={TOP_K})")
+            s1_combo, s1_result = _run_grid(s1_grid, base_cfg, sorted_data, n_legs, sort_mode, "S1")
+            _print_combo(s1_combo)
 
-        # S2: beam/pool/per_tier exploration
+        # S2: beam/pool/per_tier exploration (always run)
         s2_grid = build_s2_grid(n_legs, s1_combo)
         print(f"  S2: exploration ({len(s2_grid)} combos)")
         s2_combo, s2_result = _run_grid(s2_grid, base_cfg, sorted_data, n_legs, sort_mode, "S2")
@@ -492,6 +501,11 @@ def train(base_cfg: dict, data: list[tuple[str, pd.DataFrame, dict]]) -> dict:
             "overrides": best[0],
             **best[1],
         }
+
+        # Save 3-leg structural winner for warm-starting 4/5-leg
+        if n_legs == 3 and structural_winner is None:
+            structural_winner = copy.deepcopy(best[0])
+            print(f"  -> Saved 3-leg structural winner for warm-start")
 
     total_elapsed = time.time() - total_start
     print(f"\n  Total elapsed: {total_elapsed:.0f}s ({total_elapsed / 3600:.1f}h)")
