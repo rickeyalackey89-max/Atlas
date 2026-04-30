@@ -48,6 +48,10 @@ data/output/runs/*/debug/
 data/bundles/
 archives/bundles/
 
+# Large binary caches — exceed GitHub 100 MB limit, rebuild with build_v16_cache.py
+data/model/_v16_resim_cache.pkl
+data/model/_*_resim_cache.pkl
+
 # ============================================================
 # EVERYTHING BELOW IS INTENTIONALLY TRACKED
 # These are costly/irreplaceable assets. DO NOT gitignore them.

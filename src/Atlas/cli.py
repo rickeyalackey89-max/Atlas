@@ -272,7 +272,7 @@ def _archive_run_to_telemetry(repo_root: Path, run_id: str) -> None:
 def _publish_to_cloudflare_dashboard(repo_root: Path) -> None:
     """Copy payload to AtlasDashboard repo and git push to trigger Cloudflare deploy."""
     try:
-        dashboard_repo = Path("C:/Users/rick/projects/AtlasDashboard")
+        dashboard_repo = Path("C:/Users/13142/Atlas/atlas-dashboard")
         if not dashboard_repo.exists():
             print("[DASH] AtlasDashboard repo not found, skipping publish", file=sys.stderr)
             return

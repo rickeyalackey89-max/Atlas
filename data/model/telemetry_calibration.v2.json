@@ -1,0 +1,77 @@
+{
+  "version": 2,
+  "generated_at": "2026-03-25T01:35:00Z",
+  "policy": {
+    "apply_only_p_cal_src_prefixes": [
+      "p_adj"
+    ],
+    "exclude_p_cal_src_prefixes": [],
+    "cap": {
+      "min": 0.01,
+      "max": 0.99
+    }
+  },
+  "base": {
+    "k_shrink": 0.34,
+    "standard_under_penalty": 1.02
+  },
+  "families": [
+    {
+      "name": "role_off",
+      "role_ctx": "off",
+      "mult": {
+        "AST|OVER": 0.843032,
+        "AST|UNDER": 1.2064,
+        "FG3M|OVER": 0.834,
+        "FG3M|UNDER": 1.16,
+        "PA|OVER": 0.8736,
+        "PA|UNDER": 1.2064,
+        "PRA|OVER": 0.8736,
+        "PRA|UNDER": 1.2064,
+        "PR|OVER": 0.8736,
+        "PR|UNDER": 1.2064,
+        "PTS|OVER": 0.866171,
+        "PTS|UNDER": 1.187009,
+        "RA|OVER": 0.862108,
+        "RA|UNDER": 1.2064,
+        "REB|OVER": 0.851785,
+        "REB|UNDER": 1.2064
+      }
+    },
+    {
+      "name": "role_on",
+      "role_ctx": "on",
+      "mult": {
+        "AST|OVER": 0.843032,
+        "AST|UNDER": 1.2064,
+        "FG3M|OVER": 0.8757,
+        "FG3M|UNDER": 1.16,
+        "PA|OVER": 0.8736,
+        "PA|UNDER": 1.2064,
+        "PRA|OVER": 0.8736,
+        "PRA|UNDER": 1.2064,
+        "PR|OVER": 0.8736,
+        "PR|UNDER": 1.2064,
+        "PTS|OVER": 0.866171,
+        "PTS|UNDER": 1.187009,
+        "RA|OVER": 0.862108,
+        "RA|UNDER": 1.2064,
+        "REB|OVER": 0.851785,
+        "REB|UNDER": 1.2064
+      }
+    },
+    {
+      "name": "p_adj_under_relief_cool",
+      "p_cal_src_prefixes": ["p_adj_under_relief"],
+      "scale": 0.9
+    }
+  ],
+  "notes": {
+    "purpose": "Family-based schema draft that separates policy from calibration payloads.",
+    "runtime_compatibility": "Compatible with the v2 loader in src/Atlas/runtime/telemetry_calibration.py.",
+    "audit_only_extensions": [
+      "source-scoped scaling is now encoded for p_adj_under_relief cooling.",
+      "soft90 under-relief cooling is promoted into the live runtime payload."
+    ]
+  }
+}

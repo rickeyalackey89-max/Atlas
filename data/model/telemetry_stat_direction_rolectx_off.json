@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "generated_at": "2026-03-18T17:14:55+00:00",
+  "k_shrink": 1.0,
+  "standard_under_penalty": 1.0,
+  "mult_rolectx_off": {
+    "AST|OVER": 0.99274,
+    "AST|UNDER": 1.04,
+    "FG3M|OVER": 0.989291,
+    "PA|OVER": 1.033576,
+    "PA|UNDER": 1.04,
+    "PR|OVER": 1.04,
+    "PR|UNDER": 1.04,
+    "PRA|OVER": 1.04,
+    "PRA|UNDER": 1.04,
+    "PTS|OVER": 1.021518,
+    "PTS|UNDER": 1.04,
+    "RA|OVER": 1.026518,
+    "RA|UNDER": 1.04,
+    "REB|OVER": 1.010335,
+    "REB|UNDER": 1.04
+  },
+  "apply_only_p_cal_src_prefixes": ["p_adj"],
+  "cap": { "min": 0.01, "max": 0.99 }
+}
