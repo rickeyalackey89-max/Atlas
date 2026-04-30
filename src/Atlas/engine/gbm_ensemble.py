@@ -48,6 +48,8 @@ _ALL_FEATURE_NAMES = [
     "sb_over_prob", "sb_line_diff",
     # v16 discovery features
     "opp_defense_rel", "z_line_abs", "fragility_feat", "bp_has_x_under",
+    # v17
+    "form_z_line",
 ]
 
 # ---------------------------------------------------------------------------
@@ -351,6 +353,9 @@ def compute_features(scored: pd.DataFrame, logs: pd.DataFrame) -> tuple[np.ndarr
     fragility_feat: np.ndarray = np.clip(_col("fragility", 0.0), 0.0, 0.3)
     bp_has_x_under: np.ndarray = bp_has * um_f
 
+    # --- v17: form_z_line as its own feature (also used as z_line source above) ---
+    form_z_line_feat: np.ndarray = np.clip(_col("form_z_line", 0.0), -5.0, 5.0)
+
     # --- Assemble feature matrix (35 features in v13 order) ---
     X = np.column_stack([
         z_line,             # 0
@@ -393,6 +398,7 @@ def compute_features(scored: pd.DataFrame, logs: pd.DataFrame) -> tuple[np.ndarr
         z_line_abs,         # 36
         fragility_feat,     # 37
         bp_has_x_under,     # 38
+        form_z_line_feat,   # 39
     ])
 
     return np.nan_to_num(X, nan=0.0), um

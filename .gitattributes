@@ -1,0 +1,2 @@
+# Treat LightGBM model files as binary to prevent line-ending conversion
+data/model/**/*.txt binary

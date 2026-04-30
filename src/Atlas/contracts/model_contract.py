@@ -36,13 +36,13 @@ from typing import Dict, List, Optional, Tuple
 @dataclass(frozen=True)
 class ModelContract:
     version: str = "v17"
-    architecture: str = "dn-d11nl50-top7-33feat"
+    architecture: str = "dn-d11nl50-top7-34feat"
 
     # Ensemble
     seeds: Tuple[int, ...] = (65536, 9999, 137, 999, 98765, 54321, 12345)
     temperature: float = 1.04
     n_rounds: int = 200
-    feature_count: int = 33
+    feature_count: int = 34
     cat_features: Tuple[str, ...] = ("stat_cat", "tier_cat")
 
     # OVER GBM (slim: fewer leaves for enriched q_blowout)

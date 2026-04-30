@@ -17,8 +17,6 @@ Thumbs.db
 # =========================
 # Runtime / Generated Data
 # =========================
-data/output/
-data/raw/
 data/board/snapshots/
 data/output.zip
 
@@ -37,19 +35,26 @@ data/output.zip
 .vscode/
 
 daily to-dos/
-data/gamelogs/
 data/board/prizepicks_raw.json
 data/board/*.orig_backup
 
 # =========================
-# Binary / Large Data
+# Exclude only true ephemeral outputs
 # =========================
-data/model/ensemble/
-data/model/*.json
-data/model/*.txt
-data/model/*.csv
+data/output/debug/
+data/output/runs/*/debug/
+
+# Large intermediate zips — not needed in git
 data/bundles/
-data/telemetry/
-data/archives/
-data/input/
 archives/bundles/
+
+# ============================================================
+# EVERYTHING BELOW IS INTENTIONALLY TRACKED
+# These are costly/irreplaceable assets. DO NOT gitignore them.
+# ============================================================
+# data/raw/             -> PrizePicks raw JSON snapshots (needed for replay/resim)
+# data/gamelogs/        -> ESPN box scores, season-long (needed for GBM features)
+# data/model/           -> ALL model artifacts: ensemble, pkl, json, txt, csv
+# data/telemetry/       -> corpus, live run history, eval legs
+# data/archives/        -> OddsAPI cache (paid per pull), IAEL snapshots
+# data/input/           -> rotowire, external priors, roster map
