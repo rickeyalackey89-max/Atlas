@@ -148,7 +148,7 @@ def run_publish_stage(
     if demonhunter is not None and len(demonhunter) > 0:
         w(demonhunter, run_dir / "demonhunter.csv")
 
-    dashboard_dir = run_dir / "dashboard"
+    dashboard_dir = OUT_DIR / "runs_manifest" / ts
     dashboard_dir.mkdir(parents=True, exist_ok=True)
 
     snapshot_artifacts: dict[str, dict[str, str]] = {}

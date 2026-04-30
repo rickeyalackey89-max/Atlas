@@ -117,7 +117,7 @@ def _prepare_iael_run_snapshot(ctx: RunContext, run_root: Path) -> dict[str, Pat
     This keeps the run reproducible even if the live IAEL dashboard changes
     while the rest of the pipeline is executing.
     """
-    snapshot_dir = run_root / "dashboard"
+    snapshot_dir = run_root.parent.parent / "runs_manifest" / run_root.name
     snapshot_dir.mkdir(parents=True, exist_ok=True)
 
     strict_replay = _strict_replay_enabled()
