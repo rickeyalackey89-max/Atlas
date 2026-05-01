@@ -10,8 +10,8 @@ REM with warm caches: gamelogs, defense stats, role metrics,
 REM crafted player stats, rotowire lines.
 REM ================================================================
 
-set ATLAS_ROOT=C:\Users\rick\projects\Atlas
-set PY=%ATLAS_ROOT%\.venv\Scripts\python.exe
+set ATLAS_ROOT=C:\Users\13142\Atlas\Atlas
+set PY=C:\Users\13142\AppData\Local\Programs\Python\Python311\python.exe
 set LOG=%ATLAS_ROOT%\data\telemetry\iael_runs.log
 
 cd /d %ATLAS_ROOT%

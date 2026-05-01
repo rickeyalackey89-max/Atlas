@@ -34,21 +34,21 @@ The leg trainers use scored_legs that include GBM-calibrated probabilities (`p_c
 ### GBM CLI
 
 ```powershell
-# Baseline LODO on v13 cache
-python tools/gbm_v12_train.py --cache v13
+# Baseline LODO on v17 cache
+python tools/gbm_v12_train.py --cache v17
 
 # Test candidate features
-python tools/gbm_v12_train.py --cache v13 --extra-feats role_ctx_outs_n opp_defense_rel
+python tools/gbm_v12_train.py --cache v17 --extra-feats role_ctx_outs_n opp_defense_rel
 
 # Train + deploy to production
-python tools/gbm_v12_train.py --cache v13 --promote
+python tools/gbm_v12_train.py --cache v17 --promote
 ```
 
 ### GBM Arguments
 
 | Arg             | Default | Description                                  |
 | --------------- | ------- | -------------------------------------------- |
-| `--cache`       | `v12`   | Cache version: `v9`, `v12`, or `v13`         |
+| `--cache`       | `v17`   | Cache version: `v9`, `v12`, `v13`, or `v17`  |
 | `--promote`     | off     | Save trained models to `data/model/ensemble/`|
 | `--extra-feats` | none    | Candidate features to test (space-separated) |
 
@@ -96,7 +96,7 @@ Features like `min_cv`, `is_combo`, `z_line`, `bp_score_gated`, etc. are **compu
 
 ### GBM Interpreting Results
 
-- **Good:** LODO Brier ≤ 0.199 (v14 baseline: 0.198097)
+- **Good:** LODO Brier ≤ 0.200748 (v17 golden baseline: 0.200748)
 - Per-date breakdown should be consistent (no single-date blowups)
 - Feature importance shows which features drive predictions
 

@@ -1,0 +1,141 @@
+{
+  "report_date": "2026-04-30",
+  "report_label": "07:00PM",
+  "source_url": "https://ak-static.cms.nba.com/referee/injury/Injury-Report_2026-04-30_07_00PM.pdf",
+  "pulled_at_local": "2026-04-30T18:17:06-05:00",
+  "pdf_sha1": "771805194e9be063b6d32da0b3c0966ca3d5f428",
+  "rows": [
+    {
+      "report_date": "2026-04-30",
+      "report_label": "07:00PM",
+      "team": "ATL",
+      "player": "Landale, Jock",
+      "status": "OUT",
+      "reason": "Sprain Injury/Illness - N/a; Post",
+      "game_date": "04/30/2026",
+      "hard_invalid": true,
+      "tag_probable": false,
+      "out_frac": 0.12
+    },
+    {
+      "report_date": "2026-04-30",
+      "report_label": "07:00PM",
+      "team": "MIN",
+      "player": "Anderson, Kyle",
+      "status": "QUESTIONABLE",
+      "reason": "Injury/Illness - N/a; Illness Injury/Illness - Right Achilles Tendon;",
+      "game_date": "04/30/2026",
+      "hard_invalid": false,
+      "tag_probable": false,
+      "out_frac": 0.0
+    },
+    {
+      "report_date": "2026-04-30",
+      "report_label": "07:00PM",
+      "team": "MIN",
+      "player": "DiVincenzo, Donte",
+      "status": "OUT",
+      "reason": "Repair",
+      "game_date": "04/30/2026",
+      "hard_invalid": true,
+      "tag_probable": false,
+      "out_frac": 0.12
+    },
+    {
+      "report_date": "2026-04-30",
+      "report_label": "07:00PM",
+      "team": "MIN",
+      "player": "Dosunmu, Ayo",
+      "status": "QUESTIONABLE",
+      "reason": "Injury/Illness - Right Calf; Soreness",
+      "game_date": "04/30/2026",
+      "hard_invalid": false,
+      "tag_probable": false,
+      "out_frac": 0.0
+    },
+    {
+      "report_date": "2026-04-30",
+      "report_label": "07:00PM",
+      "team": "MIN",
+      "player": "Edwards, Anthony",
+      "status": "OUT",
+      "reason": "Injury/Illness - Left Knee; Bone Bruise",
+      "game_date": "04/30/2026",
+      "hard_invalid": true,
+      "tag_probable": false,
+      "out_frac": 0.12
+    },
+    {
+      "report_date": "2026-04-30",
+      "report_label": "07:00PM",
+      "team": "MIN",
+      "player": "Hyland, Bones",
+      "status": "AVAILABLE",
+      "reason": "Injury/Illness - Left Knee; Soreness",
+      "game_date": "04/30/2026",
+      "hard_invalid": false,
+      "tag_probable": false,
+      "out_frac": 0.0
+    },
+    {
+      "report_date": "2026-04-30",
+      "report_label": "07:00PM",
+      "team": "ORL",
+      "player": "Isaac, Jonathan",
+      "status": "DOUBTFUL",
+      "reason": "Injury/Illness - Left Knee; Sprain",
+      "game_date": "05/01/2026",
+      "hard_invalid": true,
+      "tag_probable": false,
+      "out_frac": 0.08
+    },
+    {
+      "report_date": "2026-04-30",
+      "report_label": "07:00PM",
+      "team": "ORL",
+      "player": "Wagner, Franz",
+      "status": "OUT",
+      "reason": "Injury/Illness - Right Calf; Strain Injury/Illness - Right Heel;",
+      "game_date": "05/01/2026",
+      "hard_invalid": true,
+      "tag_probable": false,
+      "out_frac": 0.12
+    },
+    {
+      "report_date": "2026-04-30",
+      "report_label": "07:00PM",
+      "team": "HOU",
+      "player": "Adams, Steven",
+      "status": "OUT",
+      "reason": "Injury/Illness - Left Ankle; Surgery",
+      "game_date": "05/01/2026",
+      "hard_invalid": true,
+      "tag_probable": false,
+      "out_frac": 0.12
+    },
+    {
+      "report_date": "2026-04-30",
+      "report_label": "07:00PM",
+      "team": "HOU",
+      "player": "Durant, Kevin",
+      "status": "DOUBTFUL",
+      "reason": "Injury/Illness - Left Ankle; Sprain",
+      "game_date": "05/01/2026",
+      "hard_invalid": true,
+      "tag_probable": false,
+      "out_frac": 0.08
+    },
+    {
+      "report_date": "2026-04-30",
+      "report_label": "07:00PM",
+      "team": "HOU",
+      "player": "VanVleet, Fred",
+      "status": "OUT",
+      "reason": "Injury/Illness - Right Knee; ACL Repair",
+      "game_date": "05/01/2026",
+      "hard_invalid": true,
+      "tag_probable": false,
+      "out_frac": 0.12
+    }
+  ]
+}

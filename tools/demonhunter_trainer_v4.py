@@ -36,7 +36,7 @@ from Atlas.core.fingerprint import build_manifest, config_fingerprint
 from Atlas.core.slip_builders import build_slips_by_tier_buckets
 
 # ── data paths ──────────────────────────────────────────────────────
-BASE = Path(r"C:\Users\rick\projects\Atlas\data\telemetry\v17_corpus")
+BASE = Path(r"C:\Users\13142\Atlas\Atlas\data\telemetry\v17_corpus")
 
 def _load_run_dates() -> list[str]:
     """Load dates from corpus_manifest.json if available, else hardcoded fallback."""

@@ -1,8 +1,8 @@
 {
   "version": "v17",
-  "config_fingerprint": "242d486177179b19",
-  "architecture": "dn-d11nl50-top7-34feat",
-  "description": "v17 GBM ensemble -- 34 features, 46 dates, 167761 legs",
+  "config_fingerprint": "27d07203630872c6",
+  "architecture": "dn-d11nl50-top7-33feat",
+  "description": "v17 GBM ensemble -- 33 features, 44 dates, 165792 legs",
   "ensemble_seeds": [
     65536,
     9999,
@@ -13,13 +13,13 @@
     12345
   ],
   "temperature": 1.04,
-  "lodo_brier_ensemble": 0.201094,
-  "previous_production_brier": 0.200996,
-  "raw_brier": 0.215425,
-  "training_legs": 167761,
-  "training_dates": 46,
+  "lodo_brier_ensemble": 0.200748,
+  "previous_production_brier": 0.201094,
+  "raw_brier": 0.25,
+  "training_legs": 165792,
+  "training_dates": 44,
   "training_cache": "v17",
-  "date_range": "2026-02-08 to 2026-04-15",
+  "date_range": "2026-02-09 to 2026-04-12",
   "features": [
     "z_line",
     "min_cv",
@@ -53,8 +53,7 @@
     "q_blowout",
     "rate_cv",
     "abs_logit_p",
-    "q_x_under",
-    "form_z_line"
+    "q_x_under"
   ],
   "cat_features": [
     "stat_cat",
@@ -86,7 +85,7 @@
   },
   "n_rounds": 200,
   "player_te_smooth_k": 20,
-  "global_hit_rate": 0.42641,
+  "global_hit_rate": 0.427276,
   "blowout_config": {
     "spread_sd": 12.0,
     "star_minute_drop": 8.0,
@@ -97,19 +96,19 @@
     "team_blowout_weight": 0.15
   },
   "per_fold_summary": {
-    "n_help": 45,
-    "n_hurt": 1,
-    "worst_fold": "2026-04-07",
-    "worst_delta_mB": 2.6,
-    "best_fold": "2026-02-08",
-    "best_delta_mB": -35.6
+    "n_help": 44,
+    "n_hurt": 0,
+    "worst_fold": "2026-03-19",
+    "worst_delta_mB": -1.8,
+    "best_fold": "2026-04-12",
+    "best_delta_mB": -48.8
   },
-  "validated": "2026-04-18",
+  "validated": "2026-04-30",
   "_training_manifest": {
     "manifest_version": 1,
     "source": "gbm_v12_train",
-    "generated_utc": "2026-04-18T20:41:45Z",
-    "config_fingerprint": "242d486177179b19",
+    "generated_utc": "2026-04-30T20:49:00Z",
+    "config_fingerprint": "27d07203630872c6",
     "ensemble_version": "v17",
     "ensemble_lodo_brier": 0.201094,
     "ensemble_features": 34,

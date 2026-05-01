@@ -10,8 +10,8 @@ REM eval_legs.csv for every live run from the previous day.
 REM This is the truth-backfill step that makes Brier scoring work.
 REM ================================================================
 
-set ATLAS_ROOT=C:\Users\rick\projects\Atlas
-set PY=%ATLAS_ROOT%\.venv\Scripts\python.exe
+set ATLAS_ROOT=C:\Users\13142\Atlas\Atlas
+set PY=C:\Users\13142\AppData\Local\Programs\Python\Python311\python.exe
 set LOG=%ATLAS_ROOT%\data\telemetry\iael_runs.log
 set GAMELOGS=%ATLAS_ROOT%\data\gamelogs\nba_gamelogs.csv
 

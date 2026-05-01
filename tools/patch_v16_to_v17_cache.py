@@ -36,6 +36,7 @@ FEATS = [
     "logit_p_x_demon", "player_te", "player_stat_te", "player_dir_te",
     "player_n_norm", "line_dist", "tail_risk", "line_tightness",
     "margin_x_under", "q_blowout", "rate_cv", "abs_logit_p", "q_x_under",
+    "sb_over_prob",
 ]
 
 STAT_COLUMN_MAP = {
@@ -288,6 +289,9 @@ def engineer_gbm_features(cv, ou_cache, player_history, b2b_set):
     # Blowout features (already computed in cache)
     cv["q_blowout"] = pd.to_numeric(cv.get("q_blowout", 0.0), errors="coerce").fillna(0.0)
     cv["q_x_under"] = cv["q_blowout"] * cv["is_under"]
+    
+    # Sportsbook feature (34th feature)
+    cv["sb_over_prob"] = 0.5  # default when no sportsbook data available
     
     print("Computing window features from gamelogs...")
     return compute_window_features(cv, player_history, _players, _gd_strs)

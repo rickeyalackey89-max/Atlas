@@ -32,8 +32,8 @@
   </Settings>
   <Actions Context="Author">
     <Exec>
-      <Command>C:\Users\rick\projects\Atlas\scripts\run_iael_6am_eval.cmd</Command>
-      <WorkingDirectory>C:\Users\rick\projects\Atlas</WorkingDirectory>
+      <Command>C:\Users\13142\Atlas\Atlas\scripts\run_iael_6am_eval.cmd</Command>
+      <WorkingDirectory>C:\Users\13142\Atlas\Atlas</WorkingDirectory>
     </Exec>
   </Actions>
 </Task>

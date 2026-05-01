@@ -17,7 +17,8 @@ Usage:
 """
 import sys, pathlib, warnings, time, json, math, argparse, pickle
 
-sys.path.insert(0, str(pathlib.Path(r"c:/Users/rick/projects/Atlas/src")))
+ROOT = pathlib.Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "src"))
 sys.stdout.reconfigure(line_buffering=True)  # type: ignore[attr-defined]
 warnings.filterwarnings("ignore")
 
@@ -29,7 +30,7 @@ import lightgbm as lgb
 from Atlas.core.fingerprint import build_manifest, config_fingerprint
 from Atlas.core.minutes import minutes_sensitivity
 
-ROOT = pathlib.Path(r"c:/Users/rick/projects/Atlas")
+# ROOT already defined above
 
 # ===================================================================
 # CLI
@@ -49,7 +50,7 @@ if args.force_promote:
     args.promote = True
 
 # ===================================================================
-# Architecture (exact v9d contract -- 33 features, 7 seeds)
+# Architecture (exact v9d contract -- 34 features, 7 seeds)
 # ===================================================================
 SEEDS = [65536, 9999, 137, 999, 98765, 54321, 12345]
 PARAMS_OVER = {
@@ -78,6 +79,7 @@ FEATS = [
     "logit_p_x_demon", "player_te", "player_stat_te", "player_dir_te",
     "player_n_norm", "line_dist", "tail_risk", "line_tightness",
     "margin_x_under", "q_blowout", "rate_cv", "abs_logit_p", "q_x_under",
+    "sb_over_prob",
 ]
 CAT_FEATURES = ["stat_cat", "tier_cat"]
 CAT_IDX = [FEATS.index(f) for f in CAT_FEATURES]
@@ -103,6 +105,7 @@ CACHE_PATHS = {
     "v15": ROOT / "data" / "model" / "_v15_resim_cache.pkl",
     "v16": ROOT / "data" / "model" / "_v16_resim_cache.pkl",
     "v17": ROOT / "data" / "model" / "_v17_resim_cache.pkl",
+    "v17_34feat": ROOT / "data" / "model" / "_v17_34feat_resim_cache.pkl",
 }
 TEAM_NORM = {"GS": "GSW", "NO": "NOP", "NY": "NYK", "SA": "SAS",
              "UTAH": "UTA", "WSH": "WAS", "PHO": "PHX", "BRO": "BKN"}
@@ -957,7 +960,8 @@ Usage:
 """
 import sys, pathlib, warnings, time, json, math, argparse, pickle
 
-sys.path.insert(0, str(pathlib.Path(r"c:/Users/rick/projects/Atlas/src")))
+ROOT = pathlib.Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "src"))
 sys.stdout.reconfigure(line_buffering=True)  # type: ignore[attr-defined]
 warnings.filterwarnings("ignore")
 
@@ -969,7 +973,7 @@ import lightgbm as lgb
 from Atlas.core.fingerprint import build_manifest, config_fingerprint
 from Atlas.core.minutes import minutes_sensitivity
 
-ROOT = pathlib.Path(r"c:/Users/rick/projects/Atlas")
+# ROOT already defined above
 
 # ===================================================================
 # CLI
@@ -1015,6 +1019,7 @@ FEATS = [
     "logit_p_x_demon", "player_te", "player_stat_te", "player_dir_te",
     "player_n_norm", "line_dist", "tail_risk", "line_tightness",
     "margin_x_under", "q_blowout", "rate_cv", "abs_logit_p", "q_x_under",
+    "sb_over_prob",
 ]
 CAT_FEATURES = ["stat_cat", "tier_cat"]
 CAT_IDX = [FEATS.index(f) for f in CAT_FEATURES]
