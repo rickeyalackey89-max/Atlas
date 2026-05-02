@@ -1,0 +1,251 @@
+{
+  "date": "2026-04-12",
+  "cache_legs_count": 4155,
+  "synthetic_slips": {
+    "slip_1": {
+      "strategy": "safe_3leg_high_prob",
+      "n_legs": 3,
+      "model_hit_prob": 0.48987243962585636,
+      "leg_descriptors": [
+        {
+          "player": "Aaron Wiggins",
+          "stat": "AST",
+          "line": 1.5,
+          "direction": "OVER"
+        },
+        {
+          "player": "Nikola Topi\u0107",
+          "stat": "FG3M",
+          "line": 0.5,
+          "direction": "OVER"
+        },
+        {
+          "player": "Wendell Carter",
+          "stat": "PTS",
+          "line": 10.5,
+          "direction": "OVER"
+        }
+      ],
+      "tier_mix": "2G+1S",
+      "has_demon": false,
+      "legs_desc": "Aaron Wiggins OVER AST 1.5 (GOBLIN) | Nikola Topi\u0107 OVER FG3M 0.5 (GOBLIN) | Wendell Carter OVER PTS 10.5 (STANDARD)"
+    },
+    "slip_2": {
+      "strategy": "4leg_with_demon",
+      "n_legs": 4,
+      "model_hit_prob": 0.22147367227219594,
+      "leg_descriptors": [
+        {
+          "player": "Aaron Wiggins",
+          "stat": "AST",
+          "line": 1.5,
+          "direction": "OVER"
+        },
+        {
+          "player": "Wendell Carter",
+          "stat": "PTS",
+          "line": 10.5,
+          "direction": "OVER"
+        },
+        {
+          "player": "Wendell Carter",
+          "stat": "PTS",
+          "line": 10.5,
+          "direction": "OVER"
+        },
+        {
+          "player": "Cade Cunningham",
+          "stat": "REB",
+          "line": 4.5,
+          "direction": "OVER"
+        }
+      ],
+      "tier_mix": "1G+2S+1D",
+      "has_demon": true,
+      "legs_desc": "Aaron Wiggins OVER AST 1.5 (GOBLIN) | Wendell Carter OVER PTS 10.5 (STANDARD) | Wendell Carter OVER PTS 10.5 (STANDARD) | Cade Cunningham OVER REB 4.5 (DEMON)"
+    },
+    "slip_3": {
+      "strategy": "5leg_jackpot_demon",
+      "n_legs": 5,
+      "model_hit_prob": 0.18315542450583522,
+      "leg_descriptors": [
+        {
+          "player": "Nikola Topi\u0107",
+          "stat": "AST",
+          "line": 10.5,
+          "direction": "OVER"
+        },
+        {
+          "player": "Nikola Topi\u0107",
+          "stat": "REB",
+          "line": 3.5,
+          "direction": "OVER"
+        },
+        {
+          "player": "Wendell Carter",
+          "stat": "PTS",
+          "line": 10.5,
+          "direction": "OVER"
+        },
+        {
+          "player": "Wendell Carter",
+          "stat": "PTS",
+          "line": 10.5,
+          "direction": "OVER"
+        },
+        {
+          "player": "Cade Cunningham",
+          "stat": "REB",
+          "line": 4.5,
+          "direction": "OVER"
+        }
+      ],
+      "tier_mix": "2G+2S+1D",
+      "has_demon": true,
+      "legs_desc": "Nikola Topi\u0107 OVER AST 10.5 (GOBLIN) | Nikola Topi\u0107 OVER REB 3.5 (GOBLIN) | Wendell Carter OVER PTS 10.5 (STANDARD) | Wendell Carter OVER PTS 10.5 (STANDARD) | Cade Cunningham OVER REB 4.5 (DEMON)"
+    }
+  },
+  "validation_results": {
+    "slip_1": {
+      "slip_won": null,
+      "all_legs_matched": false,
+      "n_legs": 3,
+      "model_hit_prob": 0.7039807736312899,
+      "leg_results": [
+        {
+          "player": "Aaron Wiggins",
+          "stat": "AST",
+          "line": 1.5,
+          "direction": "OVER",
+          "tier": "GOBLIN",
+          "hit": true,
+          "p_cal": 0.8390515655684146,
+          "matched": true
+        },
+        {
+          "player": "Nikola Topi\u0107",
+          "stat": "FG3M",
+          "line": 0.5,
+          "direction": "OVER",
+          "tier": "GOBLIN",
+          "hit": true,
+          "p_cal": 0.8390196771212491,
+          "matched": true
+        },
+        {
+          "player": "Wendell Carter",
+          "stat": "PTS",
+          "line": 10.5,
+          "direction": "OVER",
+          "hit": null,
+          "matched": false
+        }
+      ]
+    },
+    "slip_2": {
+      "slip_won": null,
+      "all_legs_matched": false,
+      "n_legs": 4,
+      "model_hit_prob": 0.4573805477057613,
+      "leg_results": [
+        {
+          "player": "Aaron Wiggins",
+          "stat": "AST",
+          "line": 1.5,
+          "direction": "OVER",
+          "tier": "GOBLIN",
+          "hit": true,
+          "p_cal": 0.8390515655684146,
+          "matched": true
+        },
+        {
+          "player": "Wendell Carter",
+          "stat": "PTS",
+          "line": 10.5,
+          "direction": "OVER",
+          "hit": null,
+          "matched": false
+        },
+        {
+          "player": "Wendell Carter",
+          "stat": "PTS",
+          "line": 10.5,
+          "direction": "OVER",
+          "hit": null,
+          "matched": false
+        },
+        {
+          "player": "Cade Cunningham",
+          "stat": "REB",
+          "line": 4.5,
+          "direction": "OVER",
+          "tier": "DEMON",
+          "hit": true,
+          "p_cal": 0.5451161364509335,
+          "matched": true
+        }
+      ]
+    },
+    "slip_3": {
+      "slip_won": null,
+      "all_legs_matched": false,
+      "n_legs": 5,
+      "model_hit_prob": 0.3782468928081115,
+      "leg_results": [
+        {
+          "player": "Nikola Topi\u0107",
+          "stat": "AST",
+          "line": 10.5,
+          "direction": "OVER",
+          "tier": "GOBLIN",
+          "hit": true,
+          "p_cal": 0.833028834259044,
+          "matched": true
+        },
+        {
+          "player": "Nikola Topi\u0107",
+          "stat": "REB",
+          "line": 3.5,
+          "direction": "OVER",
+          "tier": "GOBLIN",
+          "hit": true,
+          "p_cal": 0.8329641242030558,
+          "matched": true
+        },
+        {
+          "player": "Wendell Carter",
+          "stat": "PTS",
+          "line": 10.5,
+          "direction": "OVER",
+          "hit": null,
+          "matched": false
+        },
+        {
+          "player": "Wendell Carter",
+          "stat": "PTS",
+          "line": 10.5,
+          "direction": "OVER",
+          "hit": null,
+          "matched": false
+        },
+        {
+          "player": "Cade Cunningham",
+          "stat": "REB",
+          "line": 4.5,
+          "direction": "OVER",
+          "tier": "DEMON",
+          "hit": true,
+          "p_cal": 0.5451161364509335,
+          "matched": true
+        }
+      ]
+    }
+  },
+  "portfolio_summary": {
+    "total_slips": 0,
+    "wins": 0,
+    "actual_win_rate": 0,
+    "model_avg_prob": 0.29816717880129584,
+    "calibration_error": 0.29816717880129584
+  }
+}

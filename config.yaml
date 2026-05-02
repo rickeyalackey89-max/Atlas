@@ -6,7 +6,7 @@ pp_kernel:
     DEFAULT:
       STANDARD:
         a: 0.3164
-        b: -0.2880
+        b: -0.288
       GOBLIN:
         a: -0.374114
         b: -0.020276
@@ -17,7 +17,7 @@ pp_kernel:
     PTS:
       STANDARD:
         a: 0.3164
-        b: -0.2880
+        b: -0.288
       GOBLIN:
         a: -0.374114
         b: -0.020276
@@ -28,7 +28,7 @@ pp_kernel:
     REB:
       STANDARD:
         a: 0.3164
-        b: -0.2880
+        b: -0.288
       GOBLIN:
         a: -0.374114
         b: -0.020276
@@ -39,7 +39,7 @@ pp_kernel:
     AST:
       STANDARD:
         a: 0.3164
-        b: -0.2880
+        b: -0.288
       GOBLIN:
         a: -0.374114
         b: -0.020276
@@ -50,7 +50,7 @@ pp_kernel:
     FG3M:
       STANDARD:
         a: 0.3164
-        b: -0.2880
+        b: -0.288
       GOBLIN:
         a: -0.374114
         b: -0.020276
@@ -61,7 +61,7 @@ pp_kernel:
     PRA:
       STANDARD:
         a: 0.3164
-        b: -0.2880
+        b: -0.288
       GOBLIN:
         a: -0.374114
         b: -0.020276
@@ -72,7 +72,7 @@ pp_kernel:
     PR:
       STANDARD:
         a: 0.3164
-        b: -0.2880
+        b: -0.288
       GOBLIN:
         a: -0.374114
         b: -0.020276
@@ -83,7 +83,7 @@ pp_kernel:
     PA:
       STANDARD:
         a: 0.3164
-        b: -0.2880
+        b: -0.288
       GOBLIN:
         a: -0.374114
         b: -0.020276
@@ -94,7 +94,7 @@ pp_kernel:
     RA:
       STANDARD:
         a: 0.3164
-        b: -0.2880
+        b: -0.288
       GOBLIN:
         a: -0.374114
         b: -0.020276
@@ -104,17 +104,16 @@ pp_kernel:
         c: -0.502224
 telemetry:
   schema_version: 2
-  active_calibration: demon_fix
+  active_calibration: demon_isotonic
   apply_active_calibration: true
-  active_calibration_path: data/model/telemetry_calibration.demon_fix.json
+  active_calibration_path: data/model/telemetry_calibration.demon_isotonic.json
   calibration_policy:
     allow_family_split: true
     family_order:
-      - role_off
-      - role_on
+    - role_off
+    - role_on
     strict_source_gating: true
   post_calibration:
-    # Disabled: enriched calibrator v3 handles combo-under via is_under/logit_p_x_under features
     combo_under_midq_blend_retain: 1.0
     combo_under_highq_blend_retain: 1.0
     combo_under_lowmidq_blend_retain: 1.0
@@ -130,57 +129,46 @@ role_ctx:
   combo_shrink: 0.5
   min_games: 3
   close_sens_mult: 0.35
-  # Weight accumulation (from share_matrix_trainer_v1 Phase 2 winner)
   weight_scale: 8.8
   weight_power: 1.2
   accumulation: additive
   max_outs_used: 5
-  # Dampening (from role_ctx_trainer_v1 winner)
   star_beneficiary_damp: 0.4
   core_beneficiary_damp: 1.0
-  # Tier gating
-  demon_tier_damp: 0.0              # DEMON legs: role_ctx off (market-efficient)
-  # Direction scaling
-  over_direction_damp: 1.0          # no dampening (OVER benefits from role_ctx)
-  # Multi-injury boost (from role_ctx_trainer_v1 winner)
+  demon_tier_damp: 0.0
+  over_direction_damp: 1.0
   multi_injury_boost: 1.3
-  under_relief_q_min: 0.10
+  under_relief_q_min: 0.1
   under_relief_haircut_min: 0.05
   under_relief_factor: 0.0
-# NOTE: top-level under_relief_* keys removed — kernel reads from role_ctx block only
 posthoc_calibrator:
   enabled: true
   coefficients_path: data/model/posthoc_calibrator_coeffs_enriched.json
   ensemble_dir: data/model/ensemble
-  mode: replace  # "replace" = GBM output becomes p_cal; "blend" = weighted average with telemetry p_cal
+  mode: replace
 blowout:
   spread_sd: 12.0
   threshold_margin: 15.5
-  star_minute_drop: 8.0          # legacy — superseded by blowout_curve
-  role_minute_drop: 0.5          # legacy — superseded by blowout_curve
+  star_minute_drop: 8.0
+  role_minute_drop: 0.5
   post_sim_exponent: 0.3
   rate_std_multiplier: 1.0
   matchup_blowout_weight: 0.25
   team_blowout_weight: 0.15
   blowout_curve:
-    # Continuous minute-delta = slope × base_min + intercept
-    # Empirical fits from gamelog analysis:
-    #   win:  slope=-0.2446, intercept=2.41  (crossover  9.9 min)
-    #   loss: slope=-0.3206, intercept=5.54  (crossover 17.3 min)
-    # Averaged single curve (conservative):
     slope: -0.28
     intercept: 4.0
-    crossover: 14.0   # post-sim curve awareness crossover
-    max_gain: 5.0      # max minutes a bench player can gain
-    max_drop: 12.0     # max minutes a star can lose
+    crossover: 14.0
+    max_gain: 5.0
+    max_drop: 12.0
   rotation_tiers:
-    starter_minute_drop: 3.5     # legacy — kept for reference
-    bench_minute_drop: 0.5       # legacy — kept for reference
+    starter_minute_drop: 3.5
+    bench_minute_drop: 0.5
   asymmetric_blowout:
     enabled: false
     favored_minute_scale: 0.55
     underdog_minute_scale: 1.35
-    favored_rate_boost: 0.10
+    favored_rate_boost: 0.1
     underdog_rate_penalty: 0.08
   rate_std_multiplier_by_stat:
     PRA: 1.3
@@ -191,7 +179,7 @@ blowout:
     AST: 1.2
     REB: 1.0
     FG3M: 1.0
-  rate_std_under_mult: 2.0     # additional inflation for UNDER legs (pushes toward 0.50)
+  rate_std_under_mult: 2.0
   rate_min_correlation: 0.35
   thin_window_games: 15
   thin_window_max_mult: 1.6
@@ -200,43 +188,43 @@ blowout:
   recent_form_blend: 0.0
   opp_defense_strength: 1.0
   adjustment_rules:
-    - name: combo_scoring_over_high_q_structural_v1
-      direction: OVER
-      families:
-        - combo_scoring
-      min_q: 0.35
-      starter_like: true
-      minute_drop_mult: 0.78
-      sensitivity_mult: 0.92
-    - name: assists_over_high_q_structural_v1
-      direction: OVER
-      families:
-        - assists
-      min_q: 0.35
-      minute_drop_mult: 0.76
-      sensitivity_mult: 0.88
-    - name: threes_over_high_q_structural_v1
-      direction: OVER
-      families:
-        - threes
-      min_q: 0.35
-      minute_drop_mult: 0.82
-      sensitivity_mult: 0.90
-    - name: rebounds_over_midq_structural_v1
-      direction: OVER
-      families:
-        - rebounds
-      min_q: 0.20
-      max_q: 0.30
-      minute_drop_mult: 0.90
-      sensitivity_mult: 0.94
+  - name: combo_scoring_over_high_q_structural_v1
+    direction: OVER
+    families:
+    - combo_scoring
+    min_q: 0.35
+    starter_like: true
+    minute_drop_mult: 0.78
+    sensitivity_mult: 0.92
+  - name: assists_over_high_q_structural_v1
+    direction: OVER
+    families:
+    - assists
+    min_q: 0.35
+    minute_drop_mult: 0.76
+    sensitivity_mult: 0.88
+  - name: threes_over_high_q_structural_v1
+    direction: OVER
+    families:
+    - threes
+    min_q: 0.35
+    minute_drop_mult: 0.82
+    sensitivity_mult: 0.9
+  - name: rebounds_over_midq_structural_v1
+    direction: OVER
+    families:
+    - rebounds
+    min_q: 0.2
+    max_q: 0.3
+    minute_drop_mult: 0.9
+    sensitivity_mult: 0.94
 slip_build:
   max_players_per_team: 2
   no_same_game_within_slip: false
   prefer_calibrated_prob: true
   max_slips_per_player: 5
   target_pool_mult: 200
-  phase1_frac: 0.10
+  phase1_frac: 0.1
   phase1_pool_frac: 0.5
   beam_width: 250
   min_leg_prob: 0.52
@@ -244,30 +232,28 @@ slip_build:
   require_healthy_data: true
   min_nba_games: 10
   max_same_stat: 2
-  # --- New knobs (all OFF by default — trainable) ---
-  stat_family_mode: coarse        # "coarse" (5 buckets) or "fine" (per-stat)
-  beam_window_growth: 2.0         # multiplier when beam stalls (1.5 = smoother)
+  stat_family_mode: coarse
+  beam_window_growth: 2.0
   correlation_adj:
     enabled: false
-    same_team_penalty: 0.02       # hit_prob discount per same-team same-dir pair
-    hedge_bonus: 0.01             # hit_prob bonus per same-team opposite-dir pair
+    same_team_penalty: 0.02
+    hedge_bonus: 0.01
   soft_exposure:
     enabled: false
-    threshold: 4                  # quadratic penalty starts above this count
-    penalty_per_extra: 0.05       # beam score discount per extra appearance^2
-    hard_cap: 6                   # absolute max (still blocked above this)
+    threshold: 4
+    penalty_per_extra: 0.05
+    hard_cap: 6
   penalty:
     team_w: 0.15
     team_power: 2.0
-    family_w: 0.10
+    family_w: 0.1
     family_power: 2.0
     frag_w: 0.0
     frag_power: 1.0
     min_std_w: 0.0
     min_std_ref: 6.0
   by_legs:
-    # 3-leg EV: trainer v5 46-date (weighted 3547, 185 wins, 52.4% leg rate)
-    "3":
+    '3':
       max_direction_per_slip:
         under: 1
       min_edge: 0.02
@@ -282,8 +268,7 @@ slip_build:
         team_w: 0.02
         family_w: 0.0
         frag_w: 0.0
-    # 4-leg EV: trainer v5 46-date (weighted 3301, 112 wins, 53.1% leg rate)
-    "4":
+    '4':
       max_direction_per_slip:
         under: 1
       min_edge: 0.02
@@ -297,8 +282,7 @@ slip_build:
         team_w: 0.0
         family_w: 0.02
         frag_w: 0.0
-    # 5-leg EV: trainer v5 46-date (weighted 3125, 58 wins, 49.4% leg rate)
-    "5":
+    '5':
       max_direction_per_slip:
         under: 2
       min_edge: 0.02
@@ -313,23 +297,24 @@ slip_build:
     hit:
       prefer_calibrated_prob: false
       by_legs:
-        # 3-leg HIT: slip builder trainer 43-date (79 -> 80 slips, +1%)
-        "3":
+        '3':
           min_leg_prob: 0.52
           max_leg_prob: 0.65
           beam_window_growth: 1.5
           stat_family_mode: fine
           min_edge: 0.01
           beam_width: 400
-          phase1_frac: 0.10
+          phase1_frac: 0.1
           target_pool_mult: 350
           penalty:
             team_w: 0.05
             family_w: 0.05
             frag_w: 0.0
-        # 4-leg HIT: trainer v5 44-date (baseline 1436 -> 1965, +37% weighted, 149 wins)
-        "4":
-          exclude_stat_directions: [REB_over, FG3M_over, AST_over]
+        '4':
+          exclude_stat_directions:
+          - REB_over
+          - FG3M_over
+          - AST_over
           max_direction_per_slip:
             under: 2
           min_edge: 0.05
@@ -344,8 +329,7 @@ slip_build:
             team_w: 0.0
             family_w: 0.0
             frag_w: 0.0
-        # 5-leg HIT: trainer v5 44-date (baseline 1583 -> 1770, +12% weighted, 117 wins)
-        "5":
+        '5':
           max_direction_per_slip:
             under: 2
           min_edge: 0.04
@@ -364,14 +348,14 @@ slip_build:
 optimizer:
   top_n_slips: 10
   top_n_slips_by_legs:
-    "3": 10
-    "4": 6
-    "5": 10
+    '3': 10
+    '4': 6
+    '5': 10
   top_n_slips_by_legs_by_sort_mode:
     hit:
-      "3": 10
-      "4": 10
-      "5": 10
+      '3': 10
+      '4': 10
+      '5': 10
   seed: 7
   external_priors:
     enabled: true
@@ -381,15 +365,15 @@ optimizer:
     p_floor: 0.02
     p_ceil: 0.98
     sources:
-      rotowire: {weight: 1.0}
-      bettingpros: {weight: 1.0}
-      oddsapi: {weight: 1.0}
-# DemonHunter v4 trainer overrides (all-DEMON slips, HIT mode)
-# v4 re-run: 3L 41w/58.2% leg, 4L 32w/53.2% leg, 5L 26w/51.4% leg — strict probability
-# min_leg_prob lowered 2026-04-16: DEMON p_for_cal max ~0.63, p_cal max ~0.53; old 0.56/0.58 filtered ALL legs
+      rotowire:
+        weight: 1.0
+      bettingpros:
+        weight: 1.0
+      oddsapi:
+        weight: 1.0
 demonhunter:
   by_legs:
-    "3":
+    '3':
       min_leg_prob: 0.35
       max_same_stat: 0
       max_players_per_team: 1
@@ -401,7 +385,7 @@ demonhunter:
         team_w: 0.05
         family_w: 0.05
         frag_w: 0.05
-    "4":
+    '4':
       min_leg_prob: 0.35
       max_same_stat: 3
       max_players_per_team: 1
@@ -411,7 +395,7 @@ demonhunter:
         team_w: 0.0
         family_w: 0.0
         frag_w: 0.0
-    "5":
+    '5':
       min_leg_prob: 0.33
       max_same_stat: 0
       max_players_per_team: 1
@@ -421,3 +405,21 @@ demonhunter:
         team_w: 0.05
         family_w: 0.05
         frag_w: 0.05
+marketed_slips:
+  enabled: true
+  calibration_path: data/model/marketed_calibration.json
+  excluded_stats:
+  - BLK
+  - STL
+  - TO
+  min_thresholds:
+    GOBLIN: 0.57
+    STANDARD: 0.3
+    DEMON: 0.28
+  direction_filters: {}
+  correlation:
+    same_team_penalty: 0.03
+    hedge_bonus: 0.015
+    blowout_penalty: 0.02
+  output_name: marketed_slips_latest.json
+  publish_to_latest: true

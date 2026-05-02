@@ -107,6 +107,7 @@ class TelemetryCalibration:
     protected_calibration: Optional["TelemetryCalibration"] = None
     protected_stat_directions: Tuple[str, ...] = ()
     protected_role_ctx: str = ""
+    protected_tier: str = ""
     scoped_families: Tuple[Dict[str, Any], ...] = ()
 
     @staticmethod
@@ -223,6 +224,12 @@ class TelemetryCalibration:
                     else meta.get("protected_role_ctx")
                     or ""
                 ).strip().lower()
+                protected_tier = str(
+                    d.get("protected_tier")
+                    if d.get("protected_tier") is not None
+                    else meta.get("protected_tier")
+                    or ""
+                ).strip().upper()
                 return TelemetryCalibration(
                     version=version,
                     generated_at=str(d.get("generated_at", "")),
@@ -239,6 +246,7 @@ class TelemetryCalibration:
                     protected_calibration=protected_calibration,
                     protected_stat_directions=protected_stat_directions,
                     protected_role_ctx=protected_role_ctx,
+                    protected_tier=protected_tier,
                 )
 
         if is_v2:
@@ -476,6 +484,14 @@ def _hybrid_protected_mask(scored: pd.DataFrame, calib: TelemetryCalibration) ->
         if "role_ctx_outs_used" in scored.columns:
             role_on = pd.to_numeric(scored["role_ctx_outs_used"], errors="coerce").fillna(0).astype(float) > 0
             mask &= ~role_on if role_ctx == "off" else role_on
+        else:
+            mask &= False
+
+    tier_filter = str(calib.protected_tier or "").strip().upper()
+    if tier_filter:
+        if "tier" in scored.columns:
+            tier = scored["tier"].astype(str).str.upper().str.strip()
+            mask &= tier == tier_filter
         else:
             mask &= False
 

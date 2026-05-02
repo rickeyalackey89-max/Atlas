@@ -1131,6 +1131,17 @@ def main() -> None:
     wind4_win = _annotate_q_slips(slips_winprob.wind4)
     wind5_win = _annotate_q_slips(slips_winprob.wind5)
 
+    # --- Marketed Slips (subscriber product) ---
+    marketed_slips = []
+    if cfg.get("marketed_slips", {}).get("enabled", False):
+        try:
+            from Atlas.core.marketed_slip_builder import build_marketed_slips
+            marketed_slips = build_marketed_slips(scored_for_optimizer, cfg)
+            print(f"Built {len(marketed_slips)} marketed slips")
+        except Exception as e:
+            print(f"Marketed slips builder failed: {e}")
+            marketed_slips = []
+
     from Atlas.stages.publish.publish_run_outputs import run_publish_stage
     from Atlas.stages.publish.build_cloudflare_payload import build_cloudflare_payload
 
@@ -1153,6 +1164,9 @@ def main() -> None:
         wind3_winprob=wind3_win,
         wind4_winprob=wind4_win,
         wind5_winprob=wind5_win,
+        
+        marketed_slips=marketed_slips,
+        
         iael_invalidations_path=IAEL_INVALIDATIONS_PATH,
         iael_status_path=IAEL_STATUS_PATH,
 

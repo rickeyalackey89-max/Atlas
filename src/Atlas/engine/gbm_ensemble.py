@@ -58,6 +58,69 @@ _ALL_FEATURE_NAMES = [
 _ensemble_cache: dict[str, Any] = {}
 
 
+# ---------------------------------------------------------------------------
+# Target-encoding enrichment
+# ---------------------------------------------------------------------------
+
+def _enrich_te_columns(scored: pd.DataFrame, ensemble_dir: Path) -> pd.DataFrame:
+    """Load player_te_lookup.json and compute player_te, player_stat_te,
+    player_dir_te for each leg in *scored*.
+
+    These columns default to 0.0 in live inference (no training-time LODO).
+    Calling this function restores the Laplace-smoothed target-encoded values
+    from the lookup, which improves GBM features AND enables the marketed slip
+    builder to rank STANDARD legs by player_dir_te.
+
+    Skipped silently if the lookup file does not exist or columns are already
+    populated (non-zero mean indicates they were set upstream).
+    """
+    lookup_path = ensemble_dir / "player_te_lookup.json"
+    if not lookup_path.exists():
+        return scored
+
+    # Skip if already populated (resim cache pre-computes these)
+    for col in ("player_te", "player_stat_te", "player_dir_te"):
+        if col in scored.columns and pd.to_numeric(scored[col], errors="coerce").abs().mean() > 1e-4:
+            return scored  # already enriched
+
+    with open(lookup_path, encoding="utf-8") as f:
+        lkp = json.load(f)
+
+    global_hr = float(lkp.get("global_hr", 0.5))
+    smooth_k = float(lkp.get("smooth_k", SMOOTH_K))
+    player_map = lkp.get("player", {})
+    player_stat_map = lkp.get("player_stat", {})
+    player_dir_map = lkp.get("player_dir", {})
+
+    def _smooth(entry: list | None) -> float:
+        if not entry or len(entry) < 2:
+            return 0.0
+        hits, total = float(entry[0]), float(entry[1])
+        return (hits + smooth_k * global_hr) / (total + smooth_k) - global_hr
+
+    n = len(scored)
+    player_te = np.zeros(n, dtype=np.float64)
+    player_stat_te = np.zeros(n, dtype=np.float64)
+    player_dir_te = np.zeros(n, dtype=np.float64)
+
+    for i in range(n):
+        row = scored.iloc[i]
+        pl = str(row.get("player", "")).strip()
+        stat = str(row.get("stat", "")).upper().strip()
+        direction = str(row.get("direction", "")).upper().strip()
+        dir_key = "U" if direction == "UNDER" else "O"
+
+        player_te[i]      = _smooth(player_map.get(pl))
+        player_stat_te[i] = _smooth(player_stat_map.get(f"{pl}|{stat}"))
+        player_dir_te[i]  = _smooth(player_dir_map.get(f"{pl}|{dir_key}"))
+
+    scored = scored.copy()
+    scored["player_te"]      = player_te
+    scored["player_stat_te"] = player_stat_te
+    scored["player_dir_te"]  = player_dir_te
+    return scored
+
+
 def _load_ensemble(ensemble_dir: Path) -> dict[str, Any]:
     """Load GBM ensemble models and metadata.  Cached after first load."""
     cache_key = str(ensemble_dir)
@@ -412,13 +475,18 @@ def predict_ensemble(
     scored: pd.DataFrame,
     logs: pd.DataFrame,
     ensemble_dir: Path,
+    X_full_precomputed=None,
+    um_precomputed=None,
 ) -> np.ndarray:
     """Run the GBM ensemble on scored legs and return calibrated probabilities.
 
     Returns array of shape (n_legs,) with calibrated probabilities.
     """
     ens = _load_ensemble(ensemble_dir)
-    X_full, um = compute_features(scored, logs)
+    if X_full_precomputed is not None and um_precomputed is not None:
+        X_full, um = X_full_precomputed, um_precomputed
+    else:
+        X_full, um = compute_features(scored, logs)
     n = len(scored)
     temperature = ens["temperature"]
 
@@ -493,7 +561,20 @@ def apply_gbm_ensemble(
         return scored
 
     try:
-        p_gbm = predict_ensemble(scored, logs, ensemble_dir)
+        # Enrich TE columns from lookup (no-op if already populated by resim cache)
+        scored = _enrich_te_columns(scored, ensemble_dir)
+
+        X_full, um = compute_features(scored, logs)
+
+        # Write key selection signals back onto scored so downstream tools
+        # (daily graphics CSV, marketed slip builder) can rank by the correct metric
+        for _col_name in ("l20_edge", "player_dir_te"):
+            if _col_name not in scored.columns and _col_name in _ALL_FEATURE_NAMES:
+                _idx = _ALL_FEATURE_NAMES.index(_col_name)
+                scored[_col_name] = X_full[:, _idx]
+
+        p_gbm = predict_ensemble(scored, logs, ensemble_dir,
+                                   X_full_precomputed=X_full, um_precomputed=um)
         scored["p_gbm"] = p_gbm
 
         mode = str(pc_cfg.get("mode", "replace")).strip().lower()

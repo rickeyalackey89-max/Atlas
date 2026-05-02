@@ -885,52 +885,6 @@ def model_all(ctx: RunContext) -> CmdResult:
     return result
 
 
-def filter_latest_for_tags(*, scheduled: bool) -> None:
-    module = "Atlas.stages.filter.filter_recommendations_live"
-
-    tags = ["all", "early", "main", "late"]
-    _banner(f"TAGS: Updating latest folders for: {', '.join(tags)}")
-
-    bucket_min_minutes = 0 if scheduled else 30
-
-    src_dir = str(PROJECT_ROOT / "src")
-    existing_pp = os.environ.get("PYTHONPATH", "")
-    py_path = src_dir if not existing_pp else (src_dir + os.pathsep + existing_pp)
-
-    _run(
-        [
-            _py(),
-            "-m",
-            module,
-            "--tag",
-            "all",
-            "--min-minutes-to-start",
-            "0",
-            "--match-mode",
-            "any",
-        ],
-        "FILTER (live placeable/all)",
-        extra_env={"PYTHONPATH": py_path},
-    )
-
-    for tag in ["early", "main", "late"]:
-        _run(
-            [
-                _py(),
-                "-m",
-                module,
-                "--tag",
-                tag,
-                "--min-minutes-to-start",
-                str(bucket_min_minutes),
-                "--match-mode",
-                "strict",
-            ],
-            f"FILTER (live placeable/{tag})",
-            check=True,
-            extra_env={"PYTHONPATH": py_path},
-        )
-
 
 # -----------------------------
 # Public orchestration API
@@ -967,6 +921,96 @@ def _infer_game_date_from_today_csv(today_path: Path) -> Optional[str]:
 
     except Exception:
         return None
+
+
+def generate_daily_graphics_csv(ctx: RunContext) -> None:
+    """Generate daily graphics CSV for subscriber content after successful run."""
+    try:
+        _banner("GENERATE DAILY GRAPHICS CSV")
+        
+        # Get the current run output directory
+        run_output_dir = _output_root_for_run(ctx)
+        scored_legs_path = run_output_dir / "scored_legs_deduped.csv"
+        
+        if not scored_legs_path.exists():
+            print(f"[GRAPHICS] No scored legs found at {scored_legs_path}, skipping graphics generation")
+            emit_event(ctx, "graphics_generation", status="skipped", reason="no_scored_legs")
+            return
+        
+        # Create graphics output directory
+        graphics_dir = OUTPUT_DIR / "graphics"
+        graphics_dir.mkdir(exist_ok=True)
+        
+        # Generate today's CSV
+        from datetime import datetime
+        today_str = datetime.now().strftime("%Y%m%d")
+        output_path = graphics_dir / f"daily_top_picks_{today_str}.csv"
+        
+        # Run the CSV generator
+        import subprocess
+        csv_cmd = [
+            sys.executable, str(TOOLS_DIR / "generate_daily_graphics_csv.py"),
+            "--latest",
+            "--output", str(output_path)
+        ]
+        
+        csv_result = subprocess.run(
+            csv_cmd,
+            cwd=PROJECT_ROOT,
+            capture_output=True,
+            text=True,
+            timeout=120
+        )
+        
+        if csv_result.returncode != 0:
+            print(f"[GRAPHICS] ❌ CSV generation failed: {csv_result.stderr}")
+            emit_event(ctx, "graphics_generation", status="csv_failed", error=csv_result.stderr)
+            return
+            
+        print(f"[GRAPHICS] ✅ Daily picks CSV generated: {output_path}")
+        
+        # Generate visual graphics
+        try:
+            graphics_cmd = [
+                sys.executable, str(TOOLS_DIR / "generate_daily_graphics.py"),
+                "--csv", str(output_path),
+                "--output-dir", str(graphics_dir)
+            ]
+            
+            graphics_result = subprocess.run(
+                graphics_cmd,
+                cwd=PROJECT_ROOT,
+                capture_output=True,
+                text=True,
+                timeout=180
+            )
+            
+            if graphics_result.returncode == 0:
+                print(f"[GRAPHICS] ✅ Visual graphics generated successfully")
+                print(f"[GRAPHICS] Check: {graphics_dir}")
+                
+                # Copy CSV to latest surface for easy access
+                latest_graphics_path = OUTPUT_DIR / "latest" / "daily_top_picks.csv"
+                latest_graphics_path.parent.mkdir(exist_ok=True)
+                shutil.copy2(output_path, latest_graphics_path)
+                
+                emit_event(ctx, "graphics_generation", status="success", 
+                          csv_path=str(output_path), graphics_dir=str(graphics_dir))
+            else:
+                print(f"[GRAPHICS] ⚠️ Visual graphics failed: {graphics_result.stderr}")
+                print(f"[GRAPHICS] CSV still available: {output_path}")
+                emit_event(ctx, "graphics_generation", status="csv_only", 
+                          csv_path=str(output_path), graphics_error=graphics_result.stderr)
+                
+        except Exception as graphics_e:
+            print(f"[GRAPHICS] ⚠️ Visual graphics exception: {graphics_e}")
+            print(f"[GRAPHICS] CSV still available: {output_path}")
+            emit_event(ctx, "graphics_generation", status="csv_only", 
+                      csv_path=str(output_path), graphics_exception=str(graphics_e))
+            
+    except Exception as e:
+        print(f"[GRAPHICS] ❌ Graphics generation exception: {e}")
+        emit_event(ctx, "graphics_generation", status="error", exception=str(e))
 
 
 def run_today(
@@ -1106,149 +1150,9 @@ def run_today(
     _artifact_fingerprint(ctx, "scored_legs.csv", output_root / "scored_legs.csv")
     _artifact_fingerprint(ctx, "scored_legs_deduped.csv", output_root / "scored_legs_deduped.csv")
 
-# ---- Calibration post-process (additive) ----
-    try:
-        import pandas as pd
-        from Atlas.engine.calibration_map import apply_calibration_column
-
-        (ctx.audit_dir / "calibration_marker.txt").write_text(
-            "ENTERED CALIBRATION TRY BLOCK v3\n",
-            encoding="utf-8",
-        )
-
-        def _detect_sep(p: Path) -> str:
-            with p.open("r", encoding="utf-8", errors="ignore") as f:
-                head = f.readline()
-            return "\t" if "\t" in head else ","
-
-        def _append_cal_log(line: str) -> None:
-            (ctx.audit_dir / "calibration_debug.log").open("a", encoding="utf-8").write(line + "\n")
-
-        paths = [
-            pth
-            for pth in [OUTPUT_DIR / "scored_legs.csv", OUTPUT_DIR / "scored_legs_deduped.csv"]
-            if pth.exists() and pth.is_file() and pth.stat().st_size > 0
-        ]
-
-        patched: list[str] = []
-        skipped: list[tuple[str, str]] = []
-
-        _append_cal_log("[CAL] telemetry overlay enabled")
-        _append_cal_log(
-            "[CAL] discovered_paths=" + "; ".join(str(p) for p in paths)
-            if paths else "[CAL] discovered_paths=<none>"
-        )
-
-        for csv_path in paths:
-            if not csv_path.exists():
-                _append_cal_log(f"{csv_path} | MISSING")
-                skipped.append((str(csv_path), "missing"))
-                continue
-
-            sep = _detect_sep(csv_path)
-
-            try:
-                df = pd.read_csv(csv_path, sep=sep, low_memory=False)
-            except Exception as e:
-                _append_cal_log(f"{csv_path} | READ_FAIL | sep={repr(sep)} | err={e}")
-                skipped.append((str(csv_path), f"read_failed: {e}"))
-                continue
-
-            if "p_adj" not in df.columns:
-                preview_cols = list(df.columns)[:10]
-                msg = f"p_adj not found (sep={sep!r}); cols_head={preview_cols}"
-                _append_cal_log(f"{csv_path} | SKIP | {msg}")
-                skipped.append((str(csv_path), msg))
-                continue
-
-            # ---- Ensure calibration lineage columns (schema contract) ----
-            # p_for_cal: probability actually fed into calibration
-            # p_cal_src: label of source column used (prefer stable upstream role/raw surface)
-            # role_ctx_outs_used: explicit outs usage field (copy of role_ctx_outs if present)
-            if "p_for_cal" not in df.columns or "p_cal_src" not in df.columns:
-                if "data_health_flag" in df.columns:
-                    is_healthy = df["data_health_flag"].astype(str).str.lower().eq("healthy")
-                else:
-                    is_healthy = pd.Series([True] * len(df), index=df.index)
-
-                has_p_role = "p_role" in df.columns
-                has_p_raw = "p" in df.columns
-                p_adj_series = pd.to_numeric(df["p_adj"], errors="coerce")
-                p_raw_series = pd.to_numeric(df["p"], errors="coerce") if has_p_raw else p_adj_series
-                p_role_series = pd.to_numeric(df["p_role"], errors="coerce") if has_p_role else p_raw_series
-
-                df["p_for_cal"] = p_role_series
-                df["p_cal_src"] = "p_role" if has_p_role else ("p" if has_p_raw else "p_adj")
-
-                if has_p_role:
-                    df["p_for_cal"] = pd.to_numeric(df["p_for_cal"], errors="coerce").fillna(p_role_series)
-                elif has_p_raw:
-                    df["p_for_cal"] = pd.to_numeric(df["p_for_cal"], errors="coerce").fillna(p_raw_series)
-                else:
-                    df["p_for_cal"] = pd.to_numeric(df["p_for_cal"], errors="coerce").fillna(p_adj_series)
-                fallback_cal_src = "p_role" if has_p_role else ("p" if has_p_raw else "p_adj")
-                df.loc[~is_healthy, "p_cal_src"] = fallback_cal_src
-
-            if "role_ctx_outs_used" not in df.columns:
-                # role_ctx_outs_used must be an integer count, not the outs list/string itself
-                if "role_ctx_outs" in df.columns:
-                    import ast
-
-                    def _count_outs(v) -> int:
-                        if v is None:
-                            return 0
-                        # If already a list/tuple/set
-                        if isinstance(v, (list, tuple, set)):
-                            return int(len(v))
-                        # If it's a string representation like "['a','b']"
-                        if isinstance(v, str):
-                            s = v.strip()
-                            if not s:
-                                return 0
-                            try:
-                                parsed = ast.literal_eval(s)
-                                if isinstance(parsed, (list, tuple, set)):
-                                    return int(len(parsed))
-                            except Exception:
-                                return 0
-                        return 0
-
-                    df["role_ctx_outs_used"] = df["role_ctx_outs"].apply(_count_outs).astype(int)
-                else:
-                    df["role_ctx_outs_used"] = 0
-
-            # Apply calibration to produce p_cal for the current live run outputs only.
-            try:
-                df = apply_calibration_column(df, map_path=None, in_col="p_for_cal", out_col="p_cal")
-            except Exception as e:
-                _append_cal_log(f"{csv_path} | CAL_FAIL | err={e}")
-                skipped.append((str(csv_path), f"cal_failed: {e}"))
-                continue
-
-            try:
-                df.to_csv(csv_path, index=False, sep=sep)
-            except Exception as e:
-                _append_cal_log(f"{csv_path} | WRITE_FAIL | sep={repr(sep)} | err={e}")
-                skipped.append((str(csv_path), f"write_failed: {e}"))
-                continue
-
-            patched.append(str(csv_path))
-            _append_cal_log(f"{csv_path} | OK | wrote p_cal | sep={repr(sep)}")
-            print(f"[CAL] wrote p_cal into {csv_path} (sep={sep!r})")
-
-        emit_event(
-            ctx,
-            "calibration_applied",
-            map_path=None,
-            in_col="p_for_cal",
-            out_col="p_cal",
-            patched=patched,
-            skipped=skipped,
-        )
-
-    except Exception as e:
-        emit_event(ctx, "calibration_failed", error=str(e))
-        print(f"[WARN] calibration postprocess failed: {e}")
+    # 5) Generate daily graphics CSV for subscriber content
+    with StageTimer(ctx, "generate_daily_graphics"):
+        generate_daily_graphics_csv(ctx)
 
     _banner("DONE")
     print("Atlas run complete. latest/{all,early,main,late} updated.")

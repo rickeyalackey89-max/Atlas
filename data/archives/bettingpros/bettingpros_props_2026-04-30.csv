@@ -1,218 +1,106 @@
 source,league,player,stat,asof_ts,projection,confidence,over_prob,under_prob,over_rating,under_rating,opp_rank,notes
-bettingpros,NBA,Jayson Tatum,PRA,2026-04-30 23:19:08,45.2,1.0,0.6550032307203,0.3449967692797,5,1,20,side=over; rating=5; diff=3.7; line=41.5; L10=8o/2u/10g; streak=2o; opp_rank=20
-bettingpros,NBA,Quentin Grimes,PR,2026-04-30 23:19:08,12.9,0.2,None,None,None,None,1,side=over; rating=0; diff=3.4; line=9.5; L10=5o/5u/10g; streak=2o; opp_rank=1
-bettingpros,NBA,VJ Edgecombe,PRA,2026-04-30 23:19:08,24.8,0.2,None,None,None,None,1,side=over; rating=0; diff=3.3; line=21.5; L10=7o/3u/10g; streak=2u; opp_rank=1
-bettingpros,NBA,Cameron Johnson,PA,2026-04-30 23:19:08,16.6,0.2,None,None,None,None,12,side=over; rating=0; diff=3.1; line=13.5; L10=6o/4u/10g; streak=1o; opp_rank=12
-bettingpros,NBA,Jayson Tatum,PR,2026-04-30 23:19:08,38.6,0.2,None,None,None,None,19,side=over; rating=0; diff=3.1; line=35.5; L10=6o/4u/10g; streak=2o; opp_rank=19
-bettingpros,NBA,Joel Embiid,PA,2026-04-30 23:19:08,29.5,0.2,None,None,None,None,1,side=under; rating=0; diff=-3; line=32.5; L10=4o/6u/10g; streak=1o; opp_rank=1
-bettingpros,NBA,Quentin Grimes,PA,2026-04-30 23:19:08,12.5,0.2,None,None,None,None,1,side=over; rating=0; diff=3; line=9.5; L10=4o/6u/10g; streak=2o; opp_rank=1
-bettingpros,NBA,Nikola Jokic,PRA,2026-04-30 23:19:08,57.5,0.2,None,None,None,None,13,side=over; rating=0; diff=3; line=53.5; L10=3o/7u/10g; streak=1o; opp_rank=13
-bettingpros,NBA,Julius Randle,PR,2026-04-30 23:19:08,27.7,0.2,None,None,None,None,18,side=under; rating=0; diff=-2.8; line=30.5; L10=4o/6u/10g; streak=1o; opp_rank=18
-bettingpros,NBA,Ayo Dosunmu,PA,2026-04-30 23:19:08,26.2,0.2,None,None,None,None,20,side=over; rating=0; diff=2.7; line=23.5; L10=3o/7u/10g; streak=1u; opp_rank=20
-bettingpros,NBA,Julius Randle,PRA,2026-04-30 23:19:08,32.8,0.2,None,None,None,None,18,side=under; rating=0; diff=-2.7; line=35.5; L10=4o/6u/10g; streak=1o; opp_rank=18
-bettingpros,NBA,Nikola Jokic,PA,2026-04-30 23:19:08,43,0.2,None,None,None,None,12,side=over; rating=0; diff=2.5; line=39.5; L10=3o/7u/10g; streak=1o; opp_rank=12
-bettingpros,NBA,Naz Reid,PA,2026-04-30 23:19:08,17,0.2,None,None,None,None,20,side=over; rating=0; diff=2.5; line=14.5; L10=4o/6u/10g; streak=1u; opp_rank=20
-bettingpros,NBA,Julius Randle,PTS,2026-04-30 23:19:08,21.1,0.2,None,None,None,None,20,side=under; rating=0; diff=-2.4; line=23.5; L10=5o/5u/10g; streak=1o; opp_rank=20
-bettingpros,NBA,Ayo Dosunmu,PRA,2026-04-30 23:19:08,30.9,0.2,None,None,None,None,18,side=over; rating=0; diff=2.4; line=27.5; L10=4o/6u/10g; streak=1u; opp_rank=18
-bettingpros,NBA,Julius Randle,PA,2026-04-30 23:19:08,26.2,0.2,None,None,None,None,20,side=under; rating=0; diff=-2.3; line=28.5; L10=4o/6u/10g; streak=1o; opp_rank=20
-bettingpros,NBA,Nikola Jokic,PR,2026-04-30 23:19:08,45.8,0.2,None,None,None,None,13,side=over; rating=0; diff=2.3; line=43.5; L10=2o/8u/10g; streak=7u; opp_rank=13
-bettingpros,NBA,Ayo Dosunmu,PR,2026-04-30 23:19:08,25.7,0.2,None,None,None,None,18,side=over; rating=0; diff=2.2; line=23.5; L10=5o/5u/10g; streak=1u; opp_rank=18
-bettingpros,NBA,Rudy Gobert,PA,2026-04-30 23:19:08,12.6,0.2,None,None,None,None,20,side=over; rating=0; diff=2.1; line=10.5; L10=4o/6u/10g; streak=2u; opp_rank=20
-bettingpros,NBA,Christian Braun,PR,2026-04-30 23:19:08,17.6,0.2,None,None,None,None,13,side=over; rating=0; diff=2.1; line=15.5; L10=5o/5u/10g; streak=3u; opp_rank=13
-bettingpros,NBA,Joel Embiid,PRA,2026-04-30 23:19:08,37.5,0.2,None,None,None,None,1,side=under; rating=0; diff=-2; line=40.5; L10=6o/4u/10g; streak=3o; opp_rank=1
-bettingpros,NBA,Naz Reid,PRA,2026-04-30 23:19:08,23.5,0.2,None,None,None,None,18,side=over; rating=0; diff=2; line=21.5; L10=3o/7u/10g; streak=1u; opp_rank=18
-bettingpros,NBA,Joel Embiid,PTS,2026-04-30 23:19:08,25.6,0.2,None,None,None,None,1,side=under; rating=0; diff=-1.9; line=27.5; L10=5o/5u/10g; streak=1o; opp_rank=1
-bettingpros,NBA,Joel Embiid,PR,2026-04-30 23:19:08,33.6,0.2,None,None,None,None,1,side=under; rating=0; diff=-1.9; line=35.5; L10=6o/4u/10g; streak=3o; opp_rank=1
-bettingpros,NBA,Christian Braun,PA,2026-04-30 23:19:08,15.3,0.2,None,None,None,None,12,side=over; rating=0; diff=1.8; line=13.5; L10=4o/6u/10g; streak=3u; opp_rank=12
-bettingpros,NBA,Paul George,PR,2026-04-30 23:19:08,23.3,0.2,None,None,None,None,1,side=over; rating=0; diff=1.8; line=21.5; L10=3o/7u/10g; streak=1o; opp_rank=1
-bettingpros,NBA,Paul George,PA,2026-04-30 23:19:08,21.7,0.2,None,None,None,None,1,side=over; rating=0; diff=1.7; line=19.5; L10=6o/4u/10g; streak=1o; opp_rank=1
-bettingpros,NBA,Jaden McDaniels,PR,2026-04-30 23:19:08,20.8,0.2,None,None,None,None,18,side=under; rating=0; diff=-1.7; line=23.5; L10=4o/6u/10g; streak=2u; opp_rank=18
-bettingpros,NBA,Nikola Jokic,RA,2026-04-30 23:19:08,26.2,0.2,None,None,None,None,13,side=over; rating=0; diff=1.7; line=24.5; L10=4o/6u/10g; streak=1o; opp_rank=13
-bettingpros,NBA,Jaden McDaniels,PRA,2026-04-30 23:19:08,23.8,0.2,None,None,None,None,18,side=under; rating=0; diff=-1.7; line=26.5; L10=4o/6u/10g; streak=2u; opp_rank=18
-bettingpros,NBA,Christian Braun,PRA,2026-04-30 23:19:08,20.2,0.2,None,None,None,None,13,side=over; rating=0; diff=1.7; line=18.5; L10=4o/6u/10g; streak=3u; opp_rank=13
-bettingpros,NBA,Rudy Gobert,PR,2026-04-30 23:19:08,22.1,0.2,None,None,None,None,18,side=over; rating=0; diff=1.6; line=20.5; L10=5o/5u/10g; streak=2u; opp_rank=18
-bettingpros,NBA,Naz Reid,PR,2026-04-30 23:19:08,21.1,0.2,None,None,None,None,18,side=over; rating=0; diff=1.6; line=19.5; L10=5o/5u/10g; streak=2o; opp_rank=18
-bettingpros,NBA,Paul George,PTS,2026-04-30 23:19:08,18,0.2,None,None,None,None,1,side=over; rating=0; diff=1.5; line=15.5; L10=8o/2u/10g; streak=6o; opp_rank=1
-bettingpros,NBA,Ayo Dosunmu,PTS,2026-04-30 23:19:08,21,0.2,None,None,None,None,20,side=over; rating=0; diff=1.5; line=18.5; L10=5o/5u/10g; streak=1u; opp_rank=20
-bettingpros,NBA,Paul George,PRA,2026-04-30 23:19:08,27,0.2,None,None,None,None,1,side=over; rating=0; diff=1.5; line=25.5; L10=4o/6u/10g; streak=1o; opp_rank=1
-bettingpros,NBA,Rudy Gobert,PTS,2026-04-30 23:19:08,10.9,0.2,None,None,None,None,20,side=over; rating=0; diff=1.4; line=9.5; L10=4o/6u/10g; streak=2u; opp_rank=20
-bettingpros,NBA,Naz Reid,RA,2026-04-30 23:19:08,8.9,0.2,None,None,None,None,16,side=over; rating=0; diff=1.4; line=7.5; L10=7o/3u/10g; streak=4o; opp_rank=16
-bettingpros,NBA,Baylor Scheierman,PRA,2026-04-30 23:19:08,6.9,0.2,None,None,None,None,20,side=over; rating=0; diff=1.4; line=5.5; L10=9o/1u/10g; streak=1u; opp_rank=20
-bettingpros,NBA,Mike Conley,PRA,2026-04-30 23:19:08,10.1,0.2,None,None,None,None,18,side=under; rating=0; diff=-1.4; line=11.5; L10=4o/6u/10g; streak=5u; opp_rank=18
-bettingpros,NBA,Jaden McDaniels,PTS,2026-04-30 23:19:08,16.2,0.2,None,None,None,None,20,side=under; rating=0; diff=-1.3; line=18.5; L10=3o/7u/10g; streak=2u; opp_rank=20
-bettingpros,NBA,Jaden McDaniels,PA,2026-04-30 23:19:08,19.2,0.2,None,None,None,None,20,side=under; rating=0; diff=-1.3; line=21.5; L10=3o/7u/10g; streak=2u; opp_rank=20
-bettingpros,NBA,Rudy Gobert,PRA,2026-04-30 23:19:08,23.8,0.2,None,None,None,None,18,side=over; rating=0; diff=1.3; line=22.5; L10=4o/6u/10g; streak=2u; opp_rank=18
-bettingpros,NBA,Nikola Jokic,AST,2026-04-30 23:19:08,11.7,0.2,None,None,None,None,10,side=over; rating=0; diff=1.2; line=10.5; L10=5o/5u/10g; streak=1o; opp_rank=10
-bettingpros,NBA,Christian Braun,PTS,2026-04-30 23:19:08,12.7,0.2,None,None,None,None,13,side=over; rating=0; diff=1.2; line=10.5; L10=6o/4u/10g; streak=3u; opp_rank=13
-bettingpros,NBA,Jayson Tatum,PA,2026-04-30 23:19:08,32.7,0.2,None,None,None,None,18,side=over; rating=0; diff=1.2; line=30.5; L10=6o/4u/10g; streak=1u; opp_rank=18
-bettingpros,NBA,Neemias Queta,PR,2026-04-30 23:19:08,16.7,0.2,None,None,None,None,19,side=over; rating=0; diff=1.2; line=15.5; L10=7o/3u/10g; streak=2o; opp_rank=19
-bettingpros,NBA,Tyrese Maxey,PTS,2026-04-30 23:19:08,25.6,0.2,None,None,None,None,1,side=over; rating=0; diff=1.1; line=24.5; L10=5o/5u/10g; streak=1o; opp_rank=1
-bettingpros,NBA,Naz Reid,PTS,2026-04-30 23:19:08,14.6,0.2,None,None,None,None,20,side=over; rating=0; diff=1.1; line=12.5; L10=4o/6u/10g; streak=1u; opp_rank=20
-bettingpros,NBA,Derrick White,REB,2026-04-30 23:19:08,4.6,0.2,None,None,None,None,22,side=over; rating=0; diff=1.1; line=3.5; L10=3o/7u/10g; streak=1u; opp_rank=22
-bettingpros,NBA,Ayo Dosunmu,FG3M,2026-04-30 23:19:08,2.6,0.2,None,None,None,None,17,side=over; rating=0; diff=1.1; line=1.5; L10=5o/5u/10g; streak=2o; opp_rank=17
-bettingpros,NBA,Jamal Murray,PR,2026-04-30 23:19:08,30.4,0.2,None,None,None,None,13,side=under; rating=0; diff=-1.1; line=31.5; L10=5o/5u/10g; streak=1u; opp_rank=13
-bettingpros,NBA,Nikola Jokic,REB,2026-04-30 23:19:08,14.5,0.2,None,None,None,None,14,side=over; rating=0; diff=1; line=13.5; L10=6o/4u/10g; streak=1u; opp_rank=14
-bettingpros,NBA,Neemias Queta,PA,2026-04-30 23:19:08,10.5,0.2,None,None,None,None,18,side=over; rating=0; diff=1; line=9.5; L10=6o/4u/10g; streak=1u; opp_rank=18
-bettingpros,NBA,Sam Hauser,PRA,2026-04-30 23:19:08,12.5,0.2,None,None,None,None,20,side=over; rating=0; diff=1; line=11.5; L10=5o/5u/10g; streak=1o; opp_rank=20
-bettingpros,NBA,Jamal Murray,PRA,2026-04-30 23:19:08,37.5,0.2,None,None,None,None,13,side=under; rating=0; diff=-1; line=38.5; L10=4o/6u/10g; streak=1u; opp_rank=13
-bettingpros,NBA,Quentin Grimes,AST,2026-04-30 23:19:08,2.4,0.2,None,None,None,None,4,side=over; rating=0; diff=0.9; line=1.5; L10=4o/6u/10g; streak=1u; opp_rank=4
-bettingpros,NBA,Naz Reid,AST,2026-04-30 23:19:08,2.4,0.2,None,None,None,None,20,side=over; rating=0; diff=0.9; line=1.5; L10=5o/5u/10g; streak=1u; opp_rank=20
-bettingpros,NBA,Spencer Jones,PTS,2026-04-30 23:19:08,5.4,0.2,None,None,None,None,13,side=over; rating=0; diff=0.9; line=5; L10=2o/6u/10g; streak=1o; opp_rank=13
-bettingpros,NBA,Julius Randle,REB,2026-04-30 23:19:08,6.6,0.2,None,None,None,None,11,side=under; rating=0; diff=-0.9; line=7.5; L10=4o/6u/10g; streak=2o; opp_rank=11
-bettingpros,NBA,Tyrese Maxey,PR,2026-04-30 23:19:08,29.4,0.2,None,None,None,None,1,side=over; rating=0; diff=0.9; line=28.5; L10=5o/5u/10g; streak=1o; opp_rank=1
-bettingpros,NBA,Sam Hauser,AST,2026-04-30 23:19:08,1.3,0.2,None,None,None,None,19,side=over; rating=0; diff=0.8; line=0.5; L10=8o/2u/10g; streak=1u; opp_rank=19
-bettingpros,NBA,Nikola Jokic,PTS,2026-04-30 23:19:08,31.3,0.2,None,None,None,None,13,side=over; rating=0; diff=0.8; line=29.5; L10=2o/8u/10g; streak=7u; opp_rank=13
-bettingpros,NBA,Baylor Scheierman,REB,2026-04-30 23:19:08,2.3,0.2,None,None,None,None,22,side=over; rating=0; diff=0.8; line=1.5; L10=8o/2u/10g; streak=1u; opp_rank=22
-bettingpros,NBA,Naz Reid,FG3M,2026-04-30 23:19:08,2.3,0.2,None,None,None,None,17,side=over; rating=0; diff=0.8; line=1.5; L10=3o/7u/10g; streak=1o; opp_rank=17
-bettingpros,NBA,Bruce Brown Jr.,PA,2026-04-30 23:19:08,8.3,0.2,None,None,None,None,12,side=over; rating=0; diff=0.8; line=7.5; L10=8o/2u/10g; streak=1u; opp_rank=12
-bettingpros,NBA,Julius Randle,RA,2026-04-30 23:19:08,11.7,0.2,None,None,None,None,16,side=under; rating=0; diff=-0.8; line=12.5; L10=2o/8u/10g; streak=1o; opp_rank=16
-bettingpros,NBA,Ayo Dosunmu,AST,2026-04-30 23:19:08,5.2,0.2,None,None,None,None,20,side=over; rating=0; diff=0.7; line=4.5; L10=2o/8u/10g; streak=2u; opp_rank=20
-bettingpros,NBA,Neemias Queta,BLK,2026-04-30 23:19:08,1.2,0.2,None,None,None,None,20,side=over; rating=0; diff=0.7; line=1; L10=3o/3u/10g; streak=1u; opp_rank=20
-bettingpros,NBA,Bones Hyland,PTS,2026-04-30 23:19:08,11.8,0.2,None,None,None,None,20,side=under; rating=0; diff=-0.7; line=12.5; L10=5o/5u/10g; streak=1o; opp_rank=20
-bettingpros,NBA,Tyrese Maxey,REB,2026-04-30 23:19:08,3.8,0.2,None,None,None,None,6,side=under; rating=0; diff=-0.7; line=4.5; L10=2o/8u/10g; streak=1o; opp_rank=6
-bettingpros,NBA,Mike Conley,REB,2026-04-30 23:19:08,1.8,0.2,None,None,None,None,11,side=under; rating=0; diff=-0.7; line=2; L10=0o/7u/10g; streak=8u; opp_rank=11
-bettingpros,NBA,Rudy Gobert,REB,2026-04-30 23:19:08,11.2,0.2,None,None,None,None,11,side=over; rating=0; diff=0.7; line=10.5; L10=4o/6u/10g; streak=1u; opp_rank=11
-bettingpros,NBA,Nikola Vucevic,FG3M,2026-04-30 23:19:08,1.2,0.2,None,None,None,None,18,side=over; rating=0; diff=0.7; line=0.5; L10=6o/4u/10g; streak=1o; opp_rank=18
-bettingpros,NBA,Jaylen Brown,FG3M,2026-04-30 23:19:08,2.2,0.2,None,None,None,None,18,side=over; rating=0; diff=0.7; line=1.5; L10=7o/3u/10g; streak=1u; opp_rank=18
-bettingpros,NBA,VJ Edgecombe,FG3M,2026-04-30 23:19:08,2.2,0.2,None,None,None,None,22,side=over; rating=0; diff=0.7; line=1.5; L10=4o/6u/10g; streak=1o; opp_rank=22
-bettingpros,NBA,Sam Hauser,PR,2026-04-30 23:19:08,11.2,0.2,None,None,None,None,19,side=over; rating=0; diff=0.7; line=10.5; L10=4o/6u/10g; streak=1o; opp_rank=19
-bettingpros,NBA,Quentin Grimes,RA,2026-04-30 23:19:08,5.2,0.2,None,None,None,None,5,side=over; rating=0; diff=0.7; line=4.5; L10=5o/5u/10g; streak=1u; opp_rank=5
-bettingpros,NBA,Neemias Queta,RA,2026-04-30 23:19:08,9.2,0.2,None,None,None,None,22,side=over; rating=0; diff=0.7; line=8.5; L10=6o/4u/10g; streak=2o; opp_rank=22
-bettingpros,NBA,Neemias Queta,PRA,2026-04-30 23:19:08,18.2,0.2,None,None,None,None,20,side=over; rating=0; diff=0.7; line=17.5; L10=7o/3u/10g; streak=2o; opp_rank=20
-bettingpros,NBA,Joel Embiid,AST,2026-04-30 23:19:08,3.9,0.2,None,None,None,None,4,side=under; rating=0; diff=-0.6; line=4.5; L10=5o/5u/10g; streak=2o; opp_rank=4
-bettingpros,NBA,Tyrese Maxey,AST,2026-04-30 23:19:08,5.9,0.2,None,None,None,None,4,side=under; rating=0; diff=-0.6; line=6.5; L10=3o/7u/10g; streak=3u; opp_rank=4
-bettingpros,NBA,Julius Randle,AST,2026-04-30 23:19:08,5.1,0.2,None,None,None,None,20,side=over; rating=0; diff=0.6; line=4.5; L10=3o/7u/10g; streak=1o; opp_rank=20
-bettingpros,NBA,Jamal Murray,AST,2026-04-30 23:19:08,7.1,0.2,None,None,None,None,10,side=over; rating=0; diff=0.6; line=6.5; L10=6o/4u/10g; streak=1o; opp_rank=10
-bettingpros,NBA,Jayson Tatum,PTS,2026-04-30 23:19:08,26.1,0.2,None,None,None,None,17,side=over; rating=0; diff=0.6; line=24.5; L10=4o/6u/10g; streak=1u; opp_rank=17
-bettingpros,NBA,Jamal Murray,PTS,2026-04-30 23:19:08,25.9,0.2,None,None,None,None,13,side=under; rating=0; diff=-0.6; line=26.5; L10=4o/6u/10g; streak=1u; opp_rank=13
-bettingpros,NBA,Payton Pritchard,REB,2026-04-30 23:19:08,4.1,0.2,None,None,None,None,22,side=over; rating=0; diff=0.6; line=3.5; L10=4o/6u/10g; streak=1u; opp_rank=22
-bettingpros,NBA,Tim Hardaway Jr.,REB,2026-04-30 23:19:08,1.9,0.2,None,None,None,None,14,side=under; rating=0; diff=-0.6; line=2.5; L10=6o/4u/10g; streak=1u; opp_rank=14
-bettingpros,NBA,Jaden McDaniels,STL,2026-04-30 23:19:08,1.1,0.2,None,None,None,None,6,side=over; rating=0; diff=0.6; line=0.5; L10=4o/6u/10g; streak=2u; opp_rank=6
-bettingpros,NBA,Ayo Dosunmu,STL,2026-04-30 23:19:08,1.1,0.2,None,None,None,None,6,side=over; rating=0; diff=0.6; line=0.5; L10=5o/5u/10g; streak=1o; opp_rank=6
-bettingpros,NBA,Paul George,FG3M,2026-04-30 23:19:08,3.1,0.2,None,None,None,None,22,side=over; rating=0; diff=0.6; line=2.5; L10=5o/5u/10g; streak=3o; opp_rank=22
-bettingpros,NBA,Cameron Johnson,FG3M,2026-04-30 23:19:08,2.1,0.2,None,None,None,None,2,side=over; rating=0; diff=0.6; line=1.5; L10=6o/4u/10g; streak=1o; opp_rank=2
-bettingpros,NBA,Sam Hauser,PA,2026-04-30 23:19:08,9.1,0.2,None,None,None,None,18,side=over; rating=0; diff=0.6; line=8.5; L10=5o/5u/10g; streak=4u; opp_rank=18
-bettingpros,NBA,Mike Conley,PR,2026-04-30 23:19:08,6.9,0.2,None,None,None,None,18,side=under; rating=0; diff=-0.6; line=7.5; L10=4o/6u/10g; streak=5u; opp_rank=18
-bettingpros,NBA,Tim Hardaway Jr.,PR,2026-04-30 23:19:08,11.9,0.2,None,None,None,None,13,side=under; rating=0; diff=-0.6; line=12.5; L10=6o/4u/10g; streak=1u; opp_rank=13
-bettingpros,NBA,Joel Embiid,RA,2026-04-30 23:19:08,11.9,0.2,None,None,None,None,5,side=under; rating=0; diff=-0.6; line=12.5; L10=5o/5u/10g; streak=1u; opp_rank=5
-bettingpros,NBA,Tim Hardaway Jr.,RA,2026-04-30 23:19:08,2.9,0.2,None,None,None,None,13,side=under; rating=0; diff=-0.6; line=3.5; L10=6o/4u/10g; streak=1u; opp_rank=13
-bettingpros,NBA,Bones Hyland,RA,2026-04-30 23:19:08,6.1,0.2,None,None,None,None,16,side=over; rating=0; diff=0.6; line=5.5; L10=4o/6u/10g; streak=1u; opp_rank=16
-bettingpros,NBA,Tim Hardaway Jr.,PRA,2026-04-30 23:19:08,12.9,0.2,None,None,None,None,13,side=under; rating=0; diff=-0.6; line=13.5; L10=6o/4u/10g; streak=1u; opp_rank=13
-bettingpros,NBA,Bones Hyland,PRA,2026-04-30 23:19:08,17.9,0.2,None,None,None,None,18,side=under; rating=0; diff=-0.6; line=18.5; L10=3o/7u/10g; streak=6u; opp_rank=18
-bettingpros,NBA,VJ Edgecombe,AST,2026-04-30 23:19:08,4,0.2,None,None,None,None,4,side=over; rating=0; diff=0.5; line=3.5; L10=4o/6u/10g; streak=2u; opp_rank=4
-bettingpros,NBA,Tim Hardaway Jr.,AST,2026-04-30 23:19:08,1,0.2,None,None,None,None,10,side=over; rating=0; diff=0.5; line=0.5; L10=5o/5u/10g; streak=1u; opp_rank=10
-bettingpros,NBA,Jaden McDaniels,AST,2026-04-30 23:19:08,3,0.2,None,None,None,None,20,side=over; rating=0; diff=0.5; line=2.5; L10=6o/4u/10g; streak=1u; opp_rank=20
-bettingpros,NBA,Naz Reid,BLK,2026-04-30 23:19:08,1,0.2,None,None,None,None,11,side=over; rating=0; diff=0.5; line=0.5; L10=5o/5u/10g; streak=1u; opp_rank=11
-bettingpros,NBA,Jaden McDaniels,BLK,2026-04-30 23:19:08,1,0.2,None,None,None,None,11,side=over; rating=0; diff=0.5; line=0.5; L10=6o/4u/10g; streak=3o; opp_rank=11
-bettingpros,NBA,Neemias Queta,PTS,2026-04-30 23:19:08,9,0.2,None,None,None,None,17,side=over; rating=0; diff=0.5; line=7.5; L10=8o/2u/10g; streak=2o; opp_rank=17
-bettingpros,NBA,Tim Hardaway Jr.,PTS,2026-04-30 23:19:08,10,0.2,None,None,None,None,13,side=over; rating=0; diff=0.5; line=9.5; L10=6o/4u/10g; streak=1u; opp_rank=13
-bettingpros,NBA,Joel Embiid,REB,2026-04-30 23:19:08,8,0.2,None,None,None,None,6,side=under; rating=0; diff=-0.5; line=8.5; L10=5o/5u/10g; streak=1u; opp_rank=6
-bettingpros,NBA,Kelly Oubre Jr.,STL,2026-04-30 23:19:08,1,0.2,None,None,None,None,1,side=over; rating=0; diff=0.5; line=0.5; L10=6o/4u/10g; streak=2u; opp_rank=1
-bettingpros,NBA,Jaylen Brown,STL,2026-04-30 23:19:08,1,0.2,None,None,None,None,2,side=over; rating=0; diff=0.5; line=0.5; L10=9o/1u/10g; streak=9o; opp_rank=2
-bettingpros,NBA,Derrick White,STL,2026-04-30 23:19:08,1,0.2,None,None,None,None,2,side=over; rating=0; diff=0.5; line=0.5; L10=7o/3u/10g; streak=1u; opp_rank=2
-bettingpros,NBA,Julius Randle,STL,2026-04-30 23:19:08,1,0.2,None,None,None,None,6,side=over; rating=0; diff=0.5; line=0.5; L10=3o/7u/10g; streak=1o; opp_rank=6
-bettingpros,NBA,Naz Reid,STL,2026-04-30 23:19:08,1,0.2,None,None,None,None,6,side=over; rating=0; diff=0.5; line=0.5; L10=5o/5u/10g; streak=1u; opp_rank=6
-bettingpros,NBA,Jamal Murray,FG3M,2026-04-30 23:19:08,3,0.2,None,None,None,None,2,side=under; rating=0; diff=-0.5; line=3.5; L10=3o/7u/10g; streak=3u; opp_rank=2
-bettingpros,NBA,Tim Hardaway Jr.,PA,2026-04-30 23:19:08,11,0.2,None,None,None,None,12,side=over; rating=0; diff=0.5; line=10.5; L10=5o/5u/10g; streak=1u; opp_rank=12
-bettingpros,NBA,Jamal Murray,PA,2026-04-30 23:19:08,33,0.2,None,None,None,None,12,side=under; rating=0; diff=-0.5; line=33.5; L10=4o/6u/10g; streak=1u; opp_rank=12
-bettingpros,NBA,Paul George,RA,2026-04-30 23:19:08,9,0.2,None,None,None,None,5,side=over; rating=0; diff=0.5; line=8.5; L10=2o/8u/10g; streak=1o; opp_rank=5
-bettingpros,NBA,Christian Braun,RA,2026-04-30 23:19:08,7.5,0.2,None,None,None,None,13,side=over; rating=0; diff=0.5; line=6.5; L10=5o/5u/10g; streak=3u; opp_rank=13
-bettingpros,NBA,Aaron Gordon,AST,2026-04-30 23:19:08,2.9,0.2,None,None,None,None,10,side=over; rating=0; diff=0.4; line=2.5; L10=7o/3u/10g; streak=1u; opp_rank=10
-bettingpros,NBA,Joel Embiid,BLK,2026-04-30 23:19:08,1.1,0.2,None,None,None,None,5,side=under; rating=0; diff=-0.4; line=1.5; L10=3o/7u/10g; streak=2u; opp_rank=5
-bettingpros,NBA,Mike Conley,PTS,2026-04-30 23:19:08,5.1,0.2,None,None,None,None,20,side=under; rating=0; diff=-0.4; line=5.5; L10=4o/6u/10g; streak=5u; opp_rank=20
-bettingpros,NBA,Christian Braun,REB,2026-04-30 23:19:08,4.9,0.2,None,None,None,None,14,side=over; rating=0; diff=0.4; line=4.5; L10=5o/5u/10g; streak=1u; opp_rank=14
-bettingpros,NBA,VJ Edgecombe,STL,2026-04-30 23:19:08,1.1,0.2,None,None,None,None,1,side=under; rating=0; diff=-0.4; line=1.5; L10=4o/6u/10g; streak=3u; opp_rank=1
-bettingpros,NBA,Jamal Murray,STL,2026-04-30 23:19:08,0.9,0.2,None,None,None,None,14,side=over; rating=0; diff=0.4; line=0.5; L10=5o/5u/10g; streak=1o; opp_rank=14
-bettingpros,NBA,Bruce Brown Jr.,STL,2026-04-30 23:19:08,0.9,0.2,None,None,None,None,14,side=over; rating=0; diff=0.4; line=0.5; L10=7o/3u/10g; streak=1o; opp_rank=14
-bettingpros,NBA,Mike Conley,FG3M,2026-04-30 23:19:08,1.1,0.2,None,None,None,None,17,side=under; rating=0; diff=-0.4; line=1.5; L10=4o/6u/10g; streak=5u; opp_rank=17
-bettingpros,NBA,Tim Hardaway Jr.,FG3M,2026-04-30 23:19:08,1.9,0.2,None,None,None,None,2,side=over; rating=0; diff=0.4; line=1.5; L10=5o/5u/10g; streak=2u; opp_rank=2
-bettingpros,NBA,Christian Braun,FG3M,2026-04-30 23:19:08,0.9,0.2,None,None,None,None,2,side=over; rating=0; diff=0.4; line=0.5; L10=6o/4u/10g; streak=2o; opp_rank=2
-bettingpros,NBA,Rudy Gobert,RA,2026-04-30 23:19:08,12.9,0.2,None,None,None,None,16,side=over; rating=0; diff=0.4; line=12.5; L10=4o/6u/10g; streak=1u; opp_rank=16
-bettingpros,NBA,Bruce Brown Jr.,RA,2026-04-30 23:19:08,4.9,0.2,None,None,None,None,13,side=over; rating=0; diff=0.4; line=4.5; L10=7o/3u/10g; streak=2u; opp_rank=13
-bettingpros,NBA,Luka Garza,PRA,2026-04-30 23:19:08,4.1,0.2,None,None,None,None,20,side=under; rating=0; diff=-0.4; line=4.5; L10=10o/0u/10g; streak=19o; opp_rank=20
-bettingpros,NBA,Mike Conley,BLK,2026-04-30 23:19:08,0.2,0.2,None,None,None,None,11,side=under; rating=0; diff=-0.3; line=0.5; L10=1o/9u/10g; streak=7u; opp_rank=11
-bettingpros,NBA,Julius Randle,BLK,2026-04-30 23:19:08,0.2,0.2,None,None,None,None,11,side=under; rating=0; diff=-0.3; line=0.5; L10=1o/9u/10g; streak=2u; opp_rank=11
-bettingpros,NBA,Nikola Jokic,BLK,2026-04-30 23:19:08,0.8,0.2,None,None,None,None,2,side=over; rating=0; diff=0.3; line=0.5; L10=6o/4u/10g; streak=2o; opp_rank=2
-bettingpros,NBA,Bruce Brown Jr.,BLK,2026-04-30 23:19:08,0.2,0.2,None,None,None,None,2,side=under; rating=0; diff=-0.3; line=0.5; L10=1o/9u/10g; streak=7u; opp_rank=2
-bettingpros,NBA,Andre Drummond,PTS,2026-04-30 23:19:08,2.2,0.2,None,None,None,None,1,side=under; rating=0; diff=-0.3; line=2.5; L10=8o/2u/10g; streak=1o; opp_rank=1
-bettingpros,NBA,Sam Hauser,PTS,2026-04-30 23:19:08,7.8,0.2,None,None,None,None,17,side=over; rating=0; diff=0.3; line=6.5; L10=5o/5u/10g; streak=1o; opp_rank=17
-bettingpros,NBA,Andre Drummond,REB,2026-04-30 23:19:08,2.8,0.2,None,None,None,None,6,side=over; rating=0; diff=0.3; line=2.5; L10=9o/1u/10g; streak=1o; opp_rank=6
-bettingpros,NBA,Kelly Oubre Jr.,REB,2026-04-30 23:19:08,5.2,0.2,None,None,None,None,6,side=under; rating=0; diff=-0.3; line=5.5; L10=5o/5u/10g; streak=1o; opp_rank=6
-bettingpros,NBA,Quentin Grimes,REB,2026-04-30 23:19:08,2.8,0.2,None,None,None,None,6,side=over; rating=0; diff=0.3; line=2.5; L10=6o/4u/10g; streak=2u; opp_rank=6
-bettingpros,NBA,Bruce Brown Jr.,REB,2026-04-30 23:19:08,3.2,0.2,None,None,None,None,14,side=under; rating=0; diff=-0.3; line=3.5; L10=6o/4u/10g; streak=2u; opp_rank=14
-bettingpros,NBA,Spencer Jones,REB,2026-04-30 23:19:08,3.2,0.2,None,None,None,None,14,side=under; rating=0; diff=-0.3; line=3.5; L10=3o/7u/10g; streak=1u; opp_rank=14
-bettingpros,NBA,Cameron Johnson,STL,2026-04-30 23:19:08,0.8,0.2,None,None,None,None,14,side=over; rating=0; diff=0.3; line=0.5; L10=8o/2u/10g; streak=4o; opp_rank=14
-bettingpros,NBA,Bones Hyland,STL,2026-04-30 23:19:08,0.8,0.2,None,None,None,None,6,side=over; rating=0; diff=0.3; line=0.5; L10=7o/3u/10g; streak=2o; opp_rank=6
-bettingpros,NBA,Christian Braun,STL,2026-04-30 23:19:08,0.8,0.2,None,None,None,None,14,side=over; rating=0; diff=0.3; line=0.5; L10=5o/5u/10g; streak=2o; opp_rank=14
-bettingpros,NBA,Kelly Oubre Jr.,FG3M,2026-04-30 23:19:08,1.8,0.2,None,None,None,None,22,side=over; rating=0; diff=0.3; line=1.5; L10=3o/7u/10g; streak=3u; opp_rank=22
-bettingpros,NBA,Derrick White,FG3M,2026-04-30 23:19:08,2.8,0.2,None,None,None,None,18,side=over; rating=0; diff=0.3; line=2.5; L10=3o/7u/10g; streak=5u; opp_rank=18
-bettingpros,NBA,Sam Hauser,FG3M,2026-04-30 23:19:08,2.2,0.2,None,None,None,None,18,side=under; rating=0; diff=-0.3; line=2.5; L10=3o/7u/10g; streak=4u; opp_rank=18
-bettingpros,NBA,Nikola Jokic,FG3M,2026-04-30 23:19:08,1.8,0.2,None,None,None,None,2,side=over; rating=0; diff=0.3; line=1.5; L10=2o/8u/10g; streak=2u; opp_rank=2
-bettingpros,NBA,Bruce Brown Jr.,PR,2026-04-30 23:19:08,9.8,0.2,None,None,None,None,13,side=over; rating=0; diff=0.3; line=9.5; L10=7o/3u/10g; streak=2u; opp_rank=13
-bettingpros,NBA,Bones Hyland,PR,2026-04-30 23:19:08,14.2,0.2,None,None,None,None,18,side=under; rating=0; diff=-0.3; line=14.5; L10=4o/6u/10g; streak=1o; opp_rank=18
-bettingpros,NBA,Kelly Oubre Jr.,RA,2026-04-30 23:19:08,6.8,0.2,None,None,None,None,5,side=over; rating=0; diff=0.3; line=6.5; L10=5o/5u/10g; streak=1o; opp_rank=5
-bettingpros,NBA,Paul George,AST,2026-04-30 23:19:08,3.7,0.2,None,None,None,None,4,side=over; rating=0; diff=0.2; line=3.5; L10=4o/6u/10g; streak=1o; opp_rank=4
-bettingpros,NBA,Rudy Gobert,AST,2026-04-30 23:19:08,1.7,0.2,None,None,None,None,20,side=over; rating=0; diff=0.2; line=1.5; L10=6o/4u/10g; streak=3o; opp_rank=20
-bettingpros,NBA,Bruce Brown Jr.,AST,2026-04-30 23:19:08,1.7,0.2,None,None,None,None,10,side=over; rating=0; diff=0.2; line=1.5; L10=8o/2u/10g; streak=1u; opp_rank=10
-bettingpros,NBA,Cameron Johnson,AST,2026-04-30 23:19:08,2.7,0.2,None,None,None,None,10,side=over; rating=0; diff=0.2; line=2.5; L10=4o/6u/10g; streak=1o; opp_rank=10
-bettingpros,NBA,Bones Hyland,AST,2026-04-30 23:19:08,3.7,0.2,None,None,None,None,20,side=over; rating=0; diff=0.2; line=3.5; L10=3o/7u/10g; streak=1u; opp_rank=20
-bettingpros,NBA,Sam Hauser,BLK,2026-04-30 23:19:08,0.3,0.2,None,None,None,None,20,side=under; rating=0; diff=-0.2; line=0.5; L10=1o/9u/10g; streak=3u; opp_rank=20
-bettingpros,NBA,Aaron Gordon,BLK,2026-04-30 23:19:08,0.3,0.2,None,None,None,None,2,side=under; rating=0; diff=-0.2; line=0.5; L10=3o/7u/10g; streak=1o; opp_rank=2
-bettingpros,NBA,Jamal Murray,BLK,2026-04-30 23:19:08,0.3,0.2,None,None,None,None,2,side=under; rating=0; diff=-0.2; line=0.5; L10=4o/6u/10g; streak=1u; opp_rank=2
-bettingpros,NBA,Bones Hyland,BLK,2026-04-30 23:19:08,0.3,0.2,None,None,None,None,11,side=under; rating=0; diff=-0.2; line=0.5; L10=2o/8u/10g; streak=5u; opp_rank=11
-bettingpros,NBA,Christian Braun,BLK,2026-04-30 23:19:08,0.3,0.2,None,None,None,None,2,side=under; rating=0; diff=-0.2; line=0.5; L10=3o/7u/10g; streak=1u; opp_rank=2
-bettingpros,NBA,Paul George,REB,2026-04-30 23:19:08,5.3,0.2,None,None,None,None,6,side=under; rating=0; diff=-0.2; line=5.5; L10=1o/9u/10g; streak=1o; opp_rank=6
-bettingpros,NBA,Luka Garza,REB,2026-04-30 23:19:08,1.3,0.2,None,None,None,None,22,side=under; rating=0; diff=-0.2; line=1.5; L10=9o/1u/10g; streak=1u; opp_rank=22
-bettingpros,NBA,Neemias Queta,REB,2026-04-30 23:19:08,7.7,0.2,None,None,None,None,22,side=over; rating=0; diff=0.2; line=7.5; L10=5o/5u/10g; streak=2o; opp_rank=22
-bettingpros,NBA,Ayo Dosunmu,REB,2026-04-30 23:19:08,4.7,0.2,None,None,None,None,11,side=over; rating=0; diff=0.2; line=4.5; L10=3o/7u/10g; streak=6u; opp_rank=11
-bettingpros,NBA,Paul George,STL,2026-04-30 23:19:08,1.3,0.2,None,None,None,None,1,side=under; rating=0; diff=-0.2; line=1.5; L10=5o/5u/10g; streak=3o; opp_rank=1
-bettingpros,NBA,Tyrese Maxey,STL,2026-04-30 23:19:08,1.3,0.2,None,None,None,None,1,side=under; rating=0; diff=-0.2; line=1.5; L10=3o/7u/10g; streak=1o; opp_rank=1
-bettingpros,NBA,Rudy Gobert,STL,2026-04-30 23:19:08,0.7,0.2,None,None,None,None,6,side=over; rating=0; diff=0.2; line=0.5; L10=7o/3u/10g; streak=2o; opp_rank=6
-bettingpros,NBA,Nikola Jokic,STL,2026-04-30 23:19:08,1.7,0.2,None,None,None,None,14,side=over; rating=0; diff=0.2; line=1.5; L10=4o/6u/10g; streak=1u; opp_rank=14
-bettingpros,NBA,Payton Pritchard,FG3M,2026-04-30 23:19:08,2.7,0.2,None,None,None,None,18,side=over; rating=0; diff=0.2; line=2.5; L10=5o/5u/10g; streak=1u; opp_rank=18
-bettingpros,NBA,Tyrese Maxey,FG3M,2026-04-30 23:19:08,3.2,0.2,None,None,None,None,22,side=over; rating=0; diff=0.2; line=2.5; L10=6o/4u/10g; streak=4o; opp_rank=22
-bettingpros,NBA,Bones Hyland,FG3M,2026-04-30 23:19:08,2.3,0.2,None,None,None,None,17,side=under; rating=0; diff=-0.2; line=2.5; L10=6o/4u/10g; streak=1o; opp_rank=17
-bettingpros,NBA,Sam Hauser,RA,2026-04-30 23:19:08,4.7,0.2,None,None,None,None,22,side=over; rating=0; diff=0.2; line=4.5; L10=8o/2u/10g; streak=2o; opp_rank=22
-bettingpros,NBA,Tyrese Maxey,PRA,2026-04-30 23:19:08,35.3,0.2,None,None,None,None,1,side=under; rating=0; diff=-0.2; line=36.5; L10=5o/5u/10g; streak=1o; opp_rank=1
-bettingpros,NBA,Jayson Tatum,AST,2026-04-30 23:19:08,6.6,0.2,None,None,None,None,19,side=over; rating=0; diff=0.1; line=6.5; L10=8o/2u/10g; streak=1u; opp_rank=19
-bettingpros,NBA,Christian Braun,AST,2026-04-30 23:19:08,2.6,0.2,None,None,None,None,10,side=over; rating=0; diff=0.1; line=2.5; L10=4o/6u/10g; streak=1o; opp_rank=10
-bettingpros,NBA,Paul George,BLK,2026-04-30 23:19:08,0.4,0.2,None,None,None,None,5,side=under; rating=0; diff=-0.1; line=0.5; L10=2o/8u/10g; streak=1u; opp_rank=5
-bettingpros,NBA,Kelly Oubre Jr.,BLK,2026-04-30 23:19:08,0.4,0.2,None,None,None,None,5,side=under; rating=0; diff=-0.1; line=0.5; L10=4o/6u/10g; streak=1u; opp_rank=5
-bettingpros,NBA,Jaylen Brown,BLK,2026-04-30 23:19:08,0.4,0.2,None,None,None,None,20,side=under; rating=0; diff=-0.1; line=0.5; L10=4o/6u/10g; streak=1u; opp_rank=20
-bettingpros,NBA,Derrick White,BLK,2026-04-30 23:19:08,1.4,0.2,None,None,None,None,20,side=under; rating=0; diff=-0.1; line=1.5; L10=3o/7u/10g; streak=1u; opp_rank=20
-bettingpros,NBA,Tyrese Maxey,BLK,2026-04-30 23:19:08,0.6,0.2,None,None,None,None,5,side=over; rating=0; diff=0.1; line=0.5; L10=4o/6u/10g; streak=3o; opp_rank=5
-bettingpros,NBA,Rudy Gobert,BLK,2026-04-30 23:19:08,1.6,0.2,None,None,None,None,11,side=over; rating=0; diff=0.1; line=1.5; L10=4o/6u/10g; streak=1u; opp_rank=11
-bettingpros,NBA,Cameron Johnson,BLK,2026-04-30 23:19:08,0.4,0.2,None,None,None,None,2,side=under; rating=0; diff=-0.1; line=0.5; L10=3o/7u/10g; streak=1u; opp_rank=2
-bettingpros,NBA,Ayo Dosunmu,BLK,2026-04-30 23:19:08,0.4,0.2,None,None,None,None,11,side=under; rating=0; diff=-0.1; line=0.5; L10=3o/7u/10g; streak=1u; opp_rank=11
-bettingpros,NBA,Luka Garza,PTS,2026-04-30 23:19:08,2.6,0.2,None,None,None,None,17,side=over; rating=0; diff=0.1; line=2.5; L10=8o/2u/10g; streak=3o; opp_rank=17
-bettingpros,NBA,Baylor Scheierman,PTS,2026-04-30 23:19:08,3.6,0.2,None,None,None,None,17,side=over; rating=0; diff=0.1; line=3; L10=8o/0u/10g; streak=8o; opp_rank=17
-bettingpros,NBA,Bruce Brown Jr.,PTS,2026-04-30 23:19:08,6.6,0.2,None,None,None,None,13,side=over; rating=0; diff=0.1; line=6.5; L10=7o/3u/10g; streak=1o; opp_rank=13
-bettingpros,NBA,Sam Hauser,REB,2026-04-30 23:19:08,3.4,0.2,None,None,None,None,22,side=under; rating=0; diff=-0.1; line=3.5; L10=7o/3u/10g; streak=2o; opp_rank=22
-bettingpros,NBA,VJ Edgecombe,REB,2026-04-30 23:19:08,5.6,0.2,None,None,None,None,6,side=over; rating=0; diff=0.1; line=5.5; L10=8o/2u/10g; streak=1o; opp_rank=6
-bettingpros,NBA,Jamal Murray,REB,2026-04-30 23:19:08,4.6,0.2,None,None,None,None,14,side=over; rating=0; diff=0.1; line=4.5; L10=6o/4u/10g; streak=1u; opp_rank=14
-bettingpros,NBA,Naz Reid,REB,2026-04-30 23:19:08,6.6,0.2,None,None,None,None,11,side=over; rating=0; diff=0.1; line=6.5; L10=5o/5u/10g; streak=2o; opp_rank=11
-bettingpros,NBA,Jaden McDaniels,REB,2026-04-30 23:19:08,4.6,0.2,None,None,None,None,11,side=over; rating=0; diff=0.1; line=4.5; L10=6o/4u/10g; streak=1u; opp_rank=11
-bettingpros,NBA,Bones Hyland,REB,2026-04-30 23:19:08,2.4,0.2,None,None,None,None,11,side=under; rating=0; diff=-0.1; line=2.5; L10=5o/5u/10g; streak=2u; opp_rank=11
-bettingpros,NBA,Joel Embiid,STL,2026-04-30 23:19:08,0.6,0.2,None,None,None,None,1,side=over; rating=0; diff=0.1; line=0.5; L10=2o/8u/10g; streak=1u; opp_rank=1
-bettingpros,NBA,Jayson Tatum,STL,2026-04-30 23:19:08,1.4,0.2,None,None,None,None,2,side=under; rating=0; diff=-0.1; line=1.5; L10=5o/5u/10g; streak=1o; opp_rank=2
-bettingpros,NBA,Payton Pritchard,STL,2026-04-30 23:19:08,0.6,0.2,None,None,None,None,2,side=over; rating=0; diff=0.1; line=0.5; L10=4o/6u/10g; streak=1u; opp_rank=2
-bettingpros,NBA,Neemias Queta,STL,2026-04-30 23:19:08,0.6,0.2,None,None,None,None,2,side=over; rating=0; diff=0.1; line=0.5; L10=2o/8u/10g; streak=2u; opp_rank=2
-bettingpros,NBA,Sam Hauser,STL,2026-04-30 23:19:08,0.4,0.2,None,None,None,None,2,side=under; rating=0; diff=-0.1; line=0.5; L10=1o/9u/10g; streak=4u; opp_rank=2
-bettingpros,NBA,Mike Conley,STL,2026-04-30 23:19:08,0.6,0.2,None,None,None,None,6,side=over; rating=0; diff=0.1; line=0.5; L10=6o/4u/10g; streak=1u; opp_rank=6
-bettingpros,NBA,Tim Hardaway Jr.,STL,2026-04-30 23:19:08,0.4,0.2,None,None,None,None,14,side=under; rating=0; diff=-0.1; line=0.5; L10=6o/4u/10g; streak=1u; opp_rank=14
-bettingpros,NBA,Aaron Gordon,STL,2026-04-30 23:19:08,0.6,0.2,None,None,None,None,14,side=over; rating=0; diff=0.1; line=0.5; L10=2o/8u/10g; streak=6u; opp_rank=14
-bettingpros,NBA,Joel Embiid,FG3M,2026-04-30 23:19:08,1.4,0.2,None,None,None,None,22,side=under; rating=0; diff=-0.1; line=1.5; L10=6o/4u/10g; streak=2u; opp_rank=22
-bettingpros,NBA,Jayson Tatum,FG3M,2026-04-30 23:19:08,3.6,0.2,None,None,None,None,18,side=over; rating=0; diff=0.1; line=3.5; L10=5o/5u/10g; streak=3o; opp_rank=18
-bettingpros,NBA,Quentin Grimes,FG3M,2026-04-30 23:19:08,1.4,0.2,None,None,None,None,22,side=under; rating=0; diff=-0.1; line=1.5; L10=3o/7u/10g; streak=1o; opp_rank=22
-bettingpros,NBA,Aaron Gordon,FG3M,2026-04-30 23:19:08,1.4,0.2,None,None,None,None,2,side=under; rating=0; diff=-0.1; line=1.5; L10=2o/8u/10g; streak=4u; opp_rank=2
-bettingpros,NBA,Julius Randle,FG3M,2026-04-30 23:19:08,1.4,0.2,None,None,None,None,17,side=under; rating=0; diff=-0.1; line=1.5; L10=5o/5u/10g; streak=1o; opp_rank=17
-bettingpros,NBA,Bruce Brown Jr.,FG3M,2026-04-30 23:19:08,0.6,0.2,None,None,None,None,2,side=over; rating=0; diff=0.1; line=0.5; L10=4o/6u/10g; streak=3u; opp_rank=2
-bettingpros,NBA,Jaden McDaniels,FG3M,2026-04-30 23:19:08,1.6,0.2,None,None,None,None,17,side=over; rating=0; diff=0.1; line=1.5; L10=2o/8u/10g; streak=7u; opp_rank=17
-bettingpros,NBA,Tyrese Maxey,PA,2026-04-30 23:19:08,31.6,0.2,None,None,None,None,1,side=over; rating=0; diff=0.1; line=31.5; L10=4o/6u/10g; streak=2u; opp_rank=1
-bettingpros,NBA,Bones Hyland,PA,2026-04-30 23:19:08,15.6,0.2,None,None,None,None,20,side=over; rating=0; diff=0.1; line=15.5; L10=4o/6u/10g; streak=1o; opp_rank=20
-bettingpros,NBA,Spencer Jones,PR,2026-04-30 23:19:08,8.6,0.2,None,None,None,None,13,side=over; rating=0; diff=0.1; line=8.5; L10=2o/8u/10g; streak=1o; opp_rank=13
-bettingpros,NBA,VJ Edgecombe,RA,2026-04-30 23:19:08,9.6,0.2,None,None,None,None,5,side=over; rating=0; diff=0.1; line=9.5; L10=8o/2u/10g; streak=1o; opp_rank=5
-bettingpros,NBA,Jamal Murray,RA,2026-04-30 23:19:08,11.6,0.2,None,None,None,None,13,side=over; rating=0; diff=0.1; line=11.5; L10=5o/5u/10g; streak=3u; opp_rank=13
-bettingpros,NBA,Jaden McDaniels,RA,2026-04-30 23:19:08,7.6,0.2,None,None,None,None,16,side=over; rating=0; diff=0.1; line=7.5; L10=6o/4u/10g; streak=1u; opp_rank=16
-bettingpros,NBA,Andre Drummond,PRA,2026-04-30 23:19:08,5.4,0.2,None,None,None,None,1,side=under; rating=0; diff=-0.1; line=5.5; L10=9o/1u/10g; streak=1o; opp_rank=1
-bettingpros,NBA,Bruce Brown Jr.,PRA,2026-04-30 23:19:08,11.6,0.2,None,None,None,None,13,side=over; rating=0; diff=0.1; line=11.5; L10=7o/3u/10g; streak=2u; opp_rank=13
+bettingpros,NBA,Julius Randle,PR,2026-05-01 00:54:51,27.7,1.0,0.28771335639896,0.71228664360104,1,5,18,side=under; rating=5; diff=-3.8; line=32; L10=4o/6u/10g; streak=1o; opp_rank=18
+bettingpros,NBA,Nikola Jokic,PRA,2026-05-01 00:54:51,57.5,0.2,None,None,None,None,13,side=over; rating=0; diff=3; line=54.5; L10=3o/7u/10g; streak=1o; opp_rank=13
+bettingpros,NBA,Mike Conley,PR,2026-05-01 00:54:51,6.9,0.2,None,None,None,None,18,side=under; rating=0; diff=-2.6; line=9.5; L10=4o/6u/10g; streak=5u; opp_rank=18
+bettingpros,NBA,Nikola Jokic,PA,2026-05-01 00:54:51,43,0.2,None,None,None,None,12,side=over; rating=0; diff=2.5; line=40.5; L10=3o/7u/10g; streak=1o; opp_rank=12
+bettingpros,NBA,Cameron Johnson,PTS,2026-05-01 00:54:51,13.9,0.2,None,None,None,None,13,side=over; rating=0; diff=2.4; line=11.5; L10=7o/3u/10g; streak=1o; opp_rank=13
+bettingpros,NBA,Cameron Johnson,PA,2026-05-01 00:54:51,16.6,0.2,None,None,None,None,12,side=over; rating=0; diff=2.1; line=13.5; L10=6o/4u/10g; streak=1o; opp_rank=12
+bettingpros,NBA,Spencer Jones,PRA,2026-05-01 00:54:51,9.4,0.2,None,None,None,None,13,side=under; rating=0; diff=-2.1; line=11.5; L10=1o/9u/10g; streak=1o; opp_rank=13
+bettingpros,NBA,Christian Braun,PA,2026-05-01 00:54:51,15.3,0.2,None,None,None,None,12,side=over; rating=0; diff=1.8; line=13.5; L10=4o/6u/10g; streak=3u; opp_rank=12
+bettingpros,NBA,Jaden McDaniels,PR,2026-05-01 00:54:51,20.8,0.2,None,None,None,None,18,side=under; rating=0; diff=-1.7; line=23.5; L10=4o/6u/10g; streak=2u; opp_rank=18
+bettingpros,NBA,Nikola Jokic,RA,2026-05-01 00:54:51,26.2,0.2,None,None,None,None,13,side=over; rating=0; diff=1.7; line=24.5; L10=4o/6u/10g; streak=1o; opp_rank=13
+bettingpros,NBA,Christian Braun,PRA,2026-05-01 00:54:51,20.2,0.2,None,None,None,None,13,side=over; rating=0; diff=1.7; line=18.5; L10=4o/6u/10g; streak=3u; opp_rank=13
+bettingpros,NBA,Rudy Gobert,PTS,2026-05-01 00:54:51,10.9,0.2,None,None,None,None,20,side=over; rating=0; diff=1.4; line=9.5; L10=4o/6u/10g; streak=2u; opp_rank=20
+bettingpros,NBA,Spencer Jones,PA,2026-05-01 00:54:51,6.2,0.2,None,None,None,None,12,side=under; rating=0; diff=-1.3; line=7.5; L10=1o/9u/10g; streak=1o; opp_rank=12
+bettingpros,NBA,Nikola Jokic,PR,2026-05-01 00:54:51,45.8,0.2,None,None,None,None,13,side=over; rating=0; diff=1.3; line=44.5; L10=2o/8u/10g; streak=7u; opp_rank=13
+bettingpros,NBA,Nikola Jokic,AST,2026-05-01 00:54:51,11.7,0.2,None,None,None,None,10,side=over; rating=0; diff=1.2; line=10.5; L10=5o/5u/10g; streak=1o; opp_rank=10
+bettingpros,NBA,Christian Braun,PTS,2026-05-01 00:54:51,12.7,0.2,None,None,None,None,13,side=over; rating=0; diff=1.2; line=11.5; L10=6o/4u/10g; streak=3u; opp_rank=13
+bettingpros,NBA,Rudy Gobert,PA,2026-05-01 00:54:51,12.6,0.2,None,None,None,None,20,side=over; rating=0; diff=1.1; line=11.5; L10=4o/6u/10g; streak=2u; opp_rank=20
+bettingpros,NBA,Jamal Murray,PR,2026-05-01 00:54:51,30.4,0.2,None,None,None,None,13,side=under; rating=0; diff=-1.1; line=32.5; L10=5o/5u/10g; streak=1u; opp_rank=13
+bettingpros,NBA,Christian Braun,PR,2026-05-01 00:54:51,17.6,0.2,None,None,None,None,13,side=over; rating=0; diff=1.1; line=15.5; L10=5o/5u/10g; streak=3u; opp_rank=13
+bettingpros,NBA,Nikola Jokic,REB,2026-05-01 00:54:51,14.5,0.2,None,None,None,None,14,side=over; rating=0; diff=1; line=13.5; L10=6o/4u/10g; streak=1u; opp_rank=14
+bettingpros,NBA,Jamal Murray,PRA,2026-05-01 00:54:51,37.5,0.2,None,None,None,None,13,side=under; rating=0; diff=-1; line=39.5; L10=4o/6u/10g; streak=1u; opp_rank=13
+bettingpros,NBA,Bruce Brown Jr.,PRA,2026-05-01 00:54:51,11.5,0.2,None,None,None,None,13,side=under; rating=0; diff=-1; line=12.5; L10=6o/4u/10g; streak=2u; opp_rank=13
+bettingpros,NBA,Naz Reid,PRA,2026-05-01 00:54:51,23.5,0.2,None,None,None,None,18,side=over; rating=0; diff=1; line=22.5; L10=2o/8u/10g; streak=1u; opp_rank=18
+bettingpros,NBA,Naz Reid,AST,2026-05-01 00:54:51,2.4,0.2,None,None,None,None,20,side=over; rating=0; diff=0.9; line=1.5; L10=5o/5u/10g; streak=1u; opp_rank=20
+bettingpros,NBA,Julius Randle,REB,2026-05-01 00:54:51,6.6,0.2,None,None,None,None,11,side=under; rating=0; diff=-0.9; line=7.5; L10=4o/6u/10g; streak=2o; opp_rank=11
+bettingpros,NBA,Jaden McDaniels,REB,2026-05-01 00:54:51,4.6,0.2,None,None,None,None,11,side=under; rating=0; diff=-0.9; line=5.5; L10=6o/4u/10g; streak=1u; opp_rank=11
+bettingpros,NBA,Spencer Jones,PR,2026-05-01 00:54:51,8.6,0.2,None,None,None,None,13,side=under; rating=0; diff=-0.9; line=10; L10=2o/8u/10g; streak=1o; opp_rank=13
+bettingpros,NBA,Jaden McDaniels,RA,2026-05-01 00:54:51,7.6,0.2,None,None,None,None,16,side=under; rating=0; diff=-0.9; line=8.5; L10=6o/4u/10g; streak=1u; opp_rank=16
+bettingpros,NBA,Bones Hyland,AST,2026-05-01 00:54:51,3.7,0.2,None,None,None,None,20,side=under; rating=0; diff=-0.8; line=4.5; L10=3o/7u/10g; streak=1u; opp_rank=20
+bettingpros,NBA,Nikola Jokic,PTS,2026-05-01 00:54:51,31.3,0.2,None,None,None,None,13,side=over; rating=0; diff=0.8; line=30.5; L10=2o/8u/10g; streak=7u; opp_rank=13
+bettingpros,NBA,Naz Reid,FG3M,2026-05-01 00:54:51,2.3,0.2,None,None,None,None,17,side=over; rating=0; diff=0.8; line=1.5; L10=3o/7u/10g; streak=1o; opp_rank=17
+bettingpros,NBA,Terrence Shannon Jr.,FG3M,2026-05-01 00:54:51,0.7,0.2,None,None,None,None,17,side=under; rating=0; diff=-0.8; line=1.5; L10=3o/7u/10g; streak=1o; opp_rank=17
+bettingpros,NBA,Julius Randle,RA,2026-05-01 00:54:51,11.7,0.2,None,None,None,None,16,side=under; rating=0; diff=-0.8; line=12.5; L10=2o/8u/10g; streak=1o; opp_rank=16
+bettingpros,NBA,Mike Conley,REB,2026-05-01 00:54:51,1.8,0.2,None,None,None,None,11,side=under; rating=0; diff=-0.7; line=2.5; L10=0o/10u/10g; streak=11u; opp_rank=11
+bettingpros,NBA,Bones Hyland,STL,2026-05-01 00:54:51,0.8,0.2,None,None,None,None,6,side=under; rating=0; diff=-0.7; line=1.5; L10=2o/8u/10g; streak=7u; opp_rank=6
+bettingpros,NBA,Bruce Brown Jr.,PR,2026-05-01 00:54:51,9.8,0.2,None,None,None,None,13,side=under; rating=0; diff=-0.7; line=10.5; L10=6o/4u/10g; streak=2u; opp_rank=13
+bettingpros,NBA,Jamal Murray,AST,2026-05-01 00:54:51,7.1,0.2,None,None,None,None,10,side=over; rating=0; diff=0.6; line=6.5; L10=6o/4u/10g; streak=1o; opp_rank=10
+bettingpros,NBA,Jamal Murray,PTS,2026-05-01 00:54:51,25.9,0.2,None,None,None,None,13,side=under; rating=0; diff=-0.6; line=27.5; L10=4o/6u/10g; streak=1u; opp_rank=13
+bettingpros,NBA,Tim Hardaway Jr.,REB,2026-05-01 00:54:51,1.9,0.2,None,None,None,None,14,side=under; rating=0; diff=-0.6; line=2.5; L10=6o/4u/10g; streak=1u; opp_rank=14
+bettingpros,NBA,Jamal Murray,STL,2026-05-01 00:54:51,0.9,0.2,None,None,None,None,14,side=under; rating=0; diff=-0.6; line=1.5; L10=2o/8u/10g; streak=1o; opp_rank=14
+bettingpros,NBA,Jaden McDaniels,STL,2026-05-01 00:54:51,1.1,0.2,None,None,None,None,6,side=over; rating=0; diff=0.6; line=0.5; L10=4o/6u/10g; streak=2u; opp_rank=6
+bettingpros,NBA,Cameron Johnson,FG3M,2026-05-01 00:54:51,2.1,0.2,None,None,None,None,2,side=over; rating=0; diff=0.6; line=1.5; L10=6o/4u/10g; streak=1o; opp_rank=2
+bettingpros,NBA,Rudy Gobert,PR,2026-05-01 00:54:51,22.1,0.2,None,None,None,None,18,side=over; rating=0; diff=0.6; line=21.5; L10=4o/6u/10g; streak=2u; opp_rank=18
+bettingpros,NBA,Naz Reid,PR,2026-05-01 00:54:51,21.1,0.2,None,None,None,None,18,side=over; rating=0; diff=0.6; line=20.5; L10=2o/8u/10g; streak=1u; opp_rank=18
+bettingpros,NBA,Tim Hardaway Jr.,RA,2026-05-01 00:54:51,2.9,0.2,None,None,None,None,13,side=under; rating=0; diff=-0.6; line=3.5; L10=6o/4u/10g; streak=1u; opp_rank=13
+bettingpros,NBA,Tim Hardaway Jr.,PRA,2026-05-01 00:54:51,12.9,0.2,None,None,None,None,13,side=under; rating=0; diff=-0.6; line=13.5; L10=6o/4u/10g; streak=1u; opp_rank=13
+bettingpros,NBA,Tim Hardaway Jr.,AST,2026-05-01 00:54:51,1,0.2,None,None,None,None,10,side=over; rating=0; diff=0.5; line=0.5; L10=5o/5u/10g; streak=1u; opp_rank=10
+bettingpros,NBA,Jaden McDaniels,AST,2026-05-01 00:54:51,3,0.2,None,None,None,None,20,side=under; rating=0; diff=-0.5; line=3.5; L10=0o/10u/10g; streak=11u; opp_rank=20
+bettingpros,NBA,Naz Reid,BLK,2026-05-01 00:54:51,1,0.2,None,None,None,None,11,side=over; rating=0; diff=0.5; line=0.5; L10=5o/5u/10g; streak=1u; opp_rank=11
+bettingpros,NBA,Jaden McDaniels,BLK,2026-05-01 00:54:51,1,0.2,None,None,None,None,11,side=over; rating=0; diff=0.5; line=0.5; L10=6o/4u/10g; streak=3o; opp_rank=11
+bettingpros,NBA,Tim Hardaway Jr.,PTS,2026-05-01 00:54:51,10,0.2,None,None,None,None,13,side=over; rating=0; diff=0.5; line=9.5; L10=6o/4u/10g; streak=1u; opp_rank=13
+bettingpros,NBA,Julius Randle,STL,2026-05-01 00:54:51,1,0.2,None,None,None,None,6,side=over; rating=0; diff=0.5; line=0.5; L10=3o/7u/10g; streak=1o; opp_rank=6
+bettingpros,NBA,Naz Reid,STL,2026-05-01 00:54:51,1,0.2,None,None,None,None,6,side=over; rating=0; diff=0.5; line=0.5; L10=5o/5u/10g; streak=1u; opp_rank=6
+bettingpros,NBA,Jamal Murray,FG3M,2026-05-01 00:54:51,3,0.2,None,None,None,None,2,side=under; rating=0; diff=-0.5; line=3.5; L10=3o/7u/10g; streak=3u; opp_rank=2
+bettingpros,NBA,Tim Hardaway Jr.,PA,2026-05-01 00:54:51,11,0.2,None,None,None,None,12,side=over; rating=0; diff=0.5; line=10.5; L10=5o/5u/10g; streak=1u; opp_rank=12
+bettingpros,NBA,Jamal Murray,PA,2026-05-01 00:54:51,33,0.2,None,None,None,None,12,side=under; rating=0; diff=-0.5; line=34.5; L10=4o/6u/10g; streak=1u; opp_rank=12
+bettingpros,NBA,Naz Reid,PA,2026-05-01 00:54:51,17,0.2,None,None,None,None,20,side=over; rating=0; diff=0.5; line=16.5; L10=4o/6u/10g; streak=1u; opp_rank=20
+bettingpros,NBA,Spencer Jones,RA,2026-05-01 00:54:51,4,0.2,None,None,None,None,13,side=under; rating=0; diff=-0.5; line=4.5; L10=2o/8u/10g; streak=6u; opp_rank=13
+bettingpros,NBA,Julius Randle,AST,2026-05-01 00:54:51,5.1,0.2,None,None,None,None,20,side=under; rating=0; diff=-0.4; line=5.5; L10=3o/7u/10g; streak=1o; opp_rank=20
+bettingpros,NBA,Christian Braun,REB,2026-05-01 00:54:51,4.9,0.2,None,None,None,None,14,side=over; rating=0; diff=0.4; line=4.5; L10=5o/5u/10g; streak=1u; opp_rank=14
+bettingpros,NBA,Bruce Brown Jr.,STL,2026-05-01 00:54:51,0.9,0.2,None,None,None,None,14,side=over; rating=0; diff=0.4; line=0.5; L10=7o/3u/10g; streak=1o; opp_rank=14
+bettingpros,NBA,Mike Conley,FG3M,2026-05-01 00:54:51,1.1,0.2,None,None,None,None,17,side=under; rating=0; diff=-0.4; line=1.5; L10=4o/6u/10g; streak=5u; opp_rank=17
+bettingpros,NBA,Tim Hardaway Jr.,FG3M,2026-05-01 00:54:51,1.9,0.2,None,None,None,None,2,side=over; rating=0; diff=0.4; line=1.5; L10=5o/5u/10g; streak=2u; opp_rank=2
+bettingpros,NBA,Christian Braun,FG3M,2026-05-01 00:54:51,0.9,0.2,None,None,None,None,2,side=over; rating=0; diff=0.4; line=0.5; L10=6o/4u/10g; streak=2o; opp_rank=2
+bettingpros,NBA,Tim Hardaway Jr.,PR,2026-05-01 00:54:51,11.9,0.2,None,None,None,None,13,side=over; rating=0; diff=0.4; line=11.5; L10=6o/4u/10g; streak=1u; opp_rank=13
+bettingpros,NBA,Rudy Gobert,RA,2026-05-01 00:54:51,12.9,0.2,None,None,None,None,16,side=over; rating=0; diff=0.4; line=12.5; L10=4o/6u/10g; streak=1u; opp_rank=16
+bettingpros,NBA,Bruce Brown Jr.,RA,2026-05-01 00:54:51,4.9,0.2,None,None,None,None,13,side=over; rating=0; diff=0.4; line=4.5; L10=7o/3u/10g; streak=2u; opp_rank=13
+bettingpros,NBA,Naz Reid,RA,2026-05-01 00:54:51,8.9,0.2,None,None,None,None,16,side=over; rating=0; diff=0.4; line=7.5; L10=7o/3u/10g; streak=4o; opp_rank=16
+bettingpros,NBA,Mike Conley,BLK,2026-05-01 00:54:51,0.2,0.2,None,None,None,None,11,side=under; rating=0; diff=-0.3; line=0.5; L10=1o/9u/10g; streak=7u; opp_rank=11
+bettingpros,NBA,Julius Randle,BLK,2026-05-01 00:54:51,0.2,0.2,None,None,None,None,11,side=under; rating=0; diff=-0.3; line=0.5; L10=1o/9u/10g; streak=2u; opp_rank=11
+bettingpros,NBA,Nikola Jokic,BLK,2026-05-01 00:54:51,0.8,0.2,None,None,None,None,2,side=over; rating=0; diff=0.3; line=0.5; L10=6o/4u/10g; streak=2o; opp_rank=2
+bettingpros,NBA,Bruce Brown Jr.,BLK,2026-05-01 00:54:51,0.2,0.2,None,None,None,None,2,side=under; rating=0; diff=-0.3; line=0.5; L10=1o/9u/10g; streak=7u; opp_rank=2
+bettingpros,NBA,Rudy Gobert,REB,2026-05-01 00:54:51,11.2,0.2,None,None,None,None,11,side=under; rating=0; diff=-0.3; line=11.5; L10=4o/6u/10g; streak=1u; opp_rank=11
+bettingpros,NBA,Bruce Brown Jr.,REB,2026-05-01 00:54:51,3.2,0.2,None,None,None,None,14,side=under; rating=0; diff=-0.3; line=3.5; L10=6o/4u/10g; streak=2u; opp_rank=14
+bettingpros,NBA,Cameron Johnson,STL,2026-05-01 00:54:51,0.8,0.2,None,None,None,None,14,side=over; rating=0; diff=0.3; line=0.5; L10=8o/2u/10g; streak=4o; opp_rank=14
+bettingpros,NBA,Christian Braun,STL,2026-05-01 00:54:51,0.8,0.2,None,None,None,None,14,side=over; rating=0; diff=0.3; line=0.5; L10=5o/5u/10g; streak=2o; opp_rank=14
+bettingpros,NBA,Spencer Jones,STL,2026-05-01 00:54:51,0.8,0.2,None,None,None,None,14,side=over; rating=0; diff=0.3; line=0.5; L10=5o/5u/10g; streak=2o; opp_rank=14
+bettingpros,NBA,Nikola Jokic,FG3M,2026-05-01 00:54:51,1.8,0.2,None,None,None,None,2,side=over; rating=0; diff=0.3; line=1.5; L10=2o/8u/10g; streak=2u; opp_rank=2
+bettingpros,NBA,Rudy Gobert,PRA,2026-05-01 00:54:51,23.8,0.2,None,None,None,None,18,side=over; rating=0; diff=0.3; line=22.5; L10=4o/6u/10g; streak=2u; opp_rank=18
+bettingpros,NBA,Rudy Gobert,AST,2026-05-01 00:54:51,1.7,0.2,None,None,None,None,20,side=over; rating=0; diff=0.2; line=1.5; L10=6o/4u/10g; streak=3o; opp_rank=20
+bettingpros,NBA,Bruce Brown Jr.,AST,2026-05-01 00:54:51,1.7,0.2,None,None,None,None,10,side=over; rating=0; diff=0.2; line=1.5; L10=8o/2u/10g; streak=1u; opp_rank=10
+bettingpros,NBA,Cameron Johnson,AST,2026-05-01 00:54:51,2.7,0.2,None,None,None,None,10,side=over; rating=0; diff=0.2; line=2.5; L10=4o/6u/10g; streak=1o; opp_rank=10
+bettingpros,NBA,Jamal Murray,BLK,2026-05-01 00:54:51,0.3,0.2,None,None,None,None,2,side=under; rating=0; diff=-0.2; line=0.5; L10=4o/6u/10g; streak=1u; opp_rank=2
+bettingpros,NBA,Bones Hyland,BLK,2026-05-01 00:54:51,0.3,0.2,None,None,None,None,11,side=under; rating=0; diff=-0.2; line=0.5; L10=2o/8u/10g; streak=5u; opp_rank=11
+bettingpros,NBA,Christian Braun,BLK,2026-05-01 00:54:51,0.3,0.2,None,None,None,None,2,side=under; rating=0; diff=-0.2; line=0.5; L10=3o/7u/10g; streak=1u; opp_rank=2
+bettingpros,NBA,Rudy Gobert,STL,2026-05-01 00:54:51,0.7,0.2,None,None,None,None,6,side=over; rating=0; diff=0.2; line=0.5; L10=7o/3u/10g; streak=2o; opp_rank=6
+bettingpros,NBA,Nikola Jokic,STL,2026-05-01 00:54:51,1.7,0.2,None,None,None,None,14,side=over; rating=0; diff=0.2; line=1.5; L10=4o/6u/10g; streak=1u; opp_rank=14
+bettingpros,NBA,Bones Hyland,FG3M,2026-05-01 00:54:51,2.3,0.2,None,None,None,None,17,side=under; rating=0; diff=-0.2; line=2.5; L10=6o/4u/10g; streak=1o; opp_rank=17
+bettingpros,NBA,Bruce Brown Jr.,PA,2026-05-01 00:54:51,8.3,0.2,None,None,None,None,12,side=under; rating=0; diff=-0.2; line=8.5; L10=6o/4u/10g; streak=2u; opp_rank=12
+bettingpros,NBA,Christian Braun,AST,2026-05-01 00:54:51,2.6,0.2,None,None,None,None,10,side=over; rating=0; diff=0.1; line=2.5; L10=4o/6u/10g; streak=1o; opp_rank=10
+bettingpros,NBA,Rudy Gobert,BLK,2026-05-01 00:54:51,1.6,0.2,None,None,None,None,11,side=over; rating=0; diff=0.1; line=1.5; L10=4o/6u/10g; streak=1u; opp_rank=11
+bettingpros,NBA,Cameron Johnson,BLK,2026-05-01 00:54:51,0.4,0.2,None,None,None,None,2,side=under; rating=0; diff=-0.1; line=0.5; L10=3o/7u/10g; streak=1u; opp_rank=2
+bettingpros,NBA,Bruce Brown Jr.,PTS,2026-05-01 00:54:51,6.6,0.2,None,None,None,None,13,side=over; rating=0; diff=0.1; line=6.5; L10=7o/3u/10g; streak=1o; opp_rank=13
+bettingpros,NBA,Naz Reid,PTS,2026-05-01 00:54:51,14.6,0.2,None,None,None,None,20,side=over; rating=0; diff=0.1; line=14.5; L10=4o/6u/10g; streak=1u; opp_rank=20
+bettingpros,NBA,Spencer Jones,PTS,2026-05-01 00:54:51,5.4,0.2,None,None,None,None,13,side=under; rating=0; diff=-0.1; line=5.5; L10=2o/8u/10g; streak=1o; opp_rank=13
+bettingpros,NBA,Jamal Murray,REB,2026-05-01 00:54:51,4.6,0.2,None,None,None,None,14,side=over; rating=0; diff=0.1; line=4.5; L10=6o/4u/10g; streak=1u; opp_rank=14
+bettingpros,NBA,Naz Reid,REB,2026-05-01 00:54:51,6.6,0.2,None,None,None,None,11,side=over; rating=0; diff=0.1; line=6.5; L10=5o/5u/10g; streak=2o; opp_rank=11
+bettingpros,NBA,Mike Conley,STL,2026-05-01 00:54:51,0.6,0.2,None,None,None,None,6,side=over; rating=0; diff=0.1; line=0.5; L10=6o/4u/10g; streak=1u; opp_rank=6
+bettingpros,NBA,Tim Hardaway Jr.,STL,2026-05-01 00:54:51,0.4,0.2,None,None,None,None,14,side=under; rating=0; diff=-0.1; line=0.5; L10=6o/4u/10g; streak=1u; opp_rank=14
+bettingpros,NBA,Aaron Gordon,FG3M,2026-05-01 00:54:51,1.4,0.2,None,None,None,None,2,side=under; rating=0; diff=-0.1; line=1.5; L10=2o/8u/10g; streak=4u; opp_rank=2
+bettingpros,NBA,Julius Randle,FG3M,2026-05-01 00:54:51,1.4,0.2,None,None,None,None,17,side=under; rating=0; diff=-0.1; line=1.5; L10=5o/5u/10g; streak=1o; opp_rank=17
+bettingpros,NBA,Bruce Brown Jr.,FG3M,2026-05-01 00:54:51,0.6,0.2,None,None,None,None,2,side=over; rating=0; diff=0.1; line=0.5; L10=4o/6u/10g; streak=3u; opp_rank=2
+bettingpros,NBA,Jaden McDaniels,FG3M,2026-05-01 00:54:51,1.6,0.2,None,None,None,None,17,side=over; rating=0; diff=0.1; line=1.5; L10=2o/8u/10g; streak=7u; opp_rank=17
+bettingpros,NBA,Jamal Murray,RA,2026-05-01 00:54:51,11.6,0.2,None,None,None,None,13,side=over; rating=0; diff=0.1; line=11.5; L10=5o/5u/10g; streak=3u; opp_rank=13
+bettingpros,NBA,Christian Braun,RA,2026-05-01 00:54:51,7.6,0.2,None,None,None,None,13,side=over; rating=0; diff=0.1; line=7.5; L10=4o/6u/10g; streak=3u; opp_rank=13

@@ -20,7 +20,7 @@ def _iso_now() -> str:
 
 
 def _new_run_id() -> str:
-    return datetime.utcnow().strftime("%Y%m%d_%H%M%S")
+    return datetime.now().strftime("%Y%m%d_%H%M%S")
 
 
 def _json_dumps_stable(obj: Dict[str, Any]) -> str:

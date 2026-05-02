@@ -1,0 +1,71 @@
+date,feed,n_legs,payout_mult,model_hit_prob,legs_hit,won,realized_ev,tier_mix,legs_str
+20260412,system,3,6.0,0.3774,1,0,-1.0,GOBLIN:1/STANDARD:2,Kel'el Ware OVER FG3M 0.5 (GOBLIN) [id:11329286] | Aaron Wiggins OVER PR 17.5 (STANDARD) [id:11340713] | Nikola Topić OV
+20260412,system,4,10.0,0.2,3,0,-1.0,GOBLIN:2/STANDARD:2,Branden Carlson OVER PTS 19.5 (GOBLIN) [id:11342099] | Nikola Topić OVER PTS 13.5 (GOBLIN) [id:11342242] | Bam Adebayo U
+20260412,system,5,20.0,0.1315,3,0,-1.0,GOBLIN:3/STANDARD:2,Jalen Suggs OVER PTS 9.5 (GOBLIN) [id:11339214] | Cormac Ryan OVER PTS 15.5 (GOBLIN) [id:11337406] | Leaky Black OVER PT
+20260412,windfall,3,6.0,0.2589,2,0,-1.0,DEMON:1/GOBLIN:1/STANDARD:1,Cormac Ryan OVER REB 3.5 (GOBLIN) [id:11337414] | Cade Cunningham OVER PA 25.5 (STANDARD) [id:11340433] | Franz Wagner O
+20260410,system,3,6.0,0.4433,2,0,-1.0,GOBLIN:1/STANDARD:2,Nickeil Alexander-Walker OVER FG3M 2.5 (GOBLIN) [id:11291581] | James Harden UNDER RA 11.5 (STANDARD) [id:11291492] | Ni
+20260410,windfall,3,6.0,0.2722,0,0,-1.0,DEMON:1/GOBLIN:1/STANDARD:1,Grant Williams OVER AST 0.5 (GOBLIN) [id:11291265] | Nique Clifford UNDER PTS 16.5 (STANDARD) [id:11298585] | Coby White
+20260410,windfall,4,10.0,0.1658,2,0,-1.0,DEMON:1/GOBLIN:1/STANDARD:2,Moussa Diabaté OVER AST 1.5 (GOBLIN) [id:11288793] | Coby White OVER PRA 18.5 (STANDARD) [id:11289083] | Ace Bailey UNDE
+20260410,windfall,5,20.0,0.2307,3,0,-1.0,DEMON:1/GOBLIN:2/STANDARD:2,LaMelo Ball OVER FG3M 2.5 (GOBLIN) [id:11289198] | Coby White OVER PTS 9.5 (GOBLIN) [id:11290450] | Ace Bailey UNDER PRA
+20260410,demonhunter,3,6.0,0.2018,2,0,-1.0,DEMON:3,Bilal Coulibaly OVER PRA 22.5 (DEMON) [id:11301713] | Daniss Jenkins OVER REB 2.5 (DEMON) [id:11288570] | Amen Thompson 
+20260409,system,3,6.0,0.2565,1,0,-1.0,GOBLIN:1/STANDARD:2,Alperen Sengun OVER PTS 15.5 (GOBLIN) [id:11252767] | Jake LaRavia UNDER FG3M 1.5 (STANDARD) [id:11257534] | RJ Barrett 
+20260409,system,4,10.0,0.1353,3,0,-1.0,GOBLIN:2/STANDARD:2,Ja'Kobe Walter OVER REB 2.5 (GOBLIN) [id:11252151] | Luke Kennard OVER REB 2.5 (GOBLIN) [id:11262660] | Jake LaRavia OVE
+20260409,windfall,4,10.0,0.1124,1,0,-1.0,DEMON:1/GOBLIN:1/STANDARD:2,De'Anthony Melton OVER REB 2.5 (GOBLIN) [id:11258199] | Davion Mitchell UNDER PTS 8.5 (STANDARD) [id:11252399] | Amen Th
+20260409,windfall,5,20.0,0.0744,1,0,-1.0,DEMON:1/GOBLIN:2/STANDARD:2,Jakob Poeltl OVER PRA 19.5 (GOBLIN) [id:11254606] | Luke Kennard OVER REB 2.5 (GOBLIN) [id:11262660] | Bub Carrington UN
+20260409,demonhunter,3,6.0,0.131,1,0,-1.0,DEMON:3,Neemias Queta OVER REB 8.5 (DEMON) [id:11253674] | Bub Carrington OVER PRA 23.5 (DEMON) [id:11251684] | Paul George OVER
+20260409,demonhunter,5,20.0,0.0338,2,0,-1.0,DEMON:5,Jake LaRavia OVER REB 5.5 (DEMON) [id:11257844] | Quentin Grimes OVER RA 5.5 (DEMON) [id:11253106] | Kelly Oubre OVER PT
+20260408,system,3,6.0,0.3932,3,1,5.0,GOBLIN:1/STANDARD:2,Cameron Johnson OVER RA 4.5 (GOBLIN) [id:11232154] | Dyson Daniels OVER PTS 10.5 (STANDARD) [id:11224179] | Tobias Harri
+20260408,system,4,10.0,0.1894,1,0,-1.0,GOBLIN:2/STANDARD:2,Nikola Jokić OVER PR 34.5 (GOBLIN) [id:11231739] | Ausar Thompson OVER REB 3.5 (GOBLIN) [id:11227943] | Kawhi Leonard OV
+20260408,system,5,20.0,0.8464,3,0,-1.0,GOBLIN:3/STANDARD:2,Cameron Johnson OVER RA 4.5 (GOBLIN) [id:11232154] | Duncan Robinson OVER FG3M 1.5 (GOBLIN) [id:11227802] | Aaron Gordon
+20260408,windfall,3,6.0,0.3229,2,0,-1.0,DEMON:1/GOBLIN:1/STANDARD:1,Cameron Johnson OVER PTS 9.5 (GOBLIN) [id:11227311] | Tobias Harris OVER AST 2.5 (STANDARD) [id:11229361] | Ausar Thomps
+20260408,windfall,4,10.0,0.1894,2,0,-1.0,DEMON:1/GOBLIN:1/STANDARD:2,Nikola Jokić OVER FG3M 0.5 (GOBLIN) [id:11231339] | Ausar Thompson UNDER PTS 9.5 (STANDARD) [id:11227932] | Dillon Brook
+20260408,windfall,5,20.0,0.1657,3,0,-1.0,DEMON:1/GOBLIN:2/STANDARD:2,Nikola Jokić OVER PA 29.5 (GOBLIN) [id:11231735] | Jalen Duren OVER RA 9.5 (GOBLIN) [id:11229224] | Jalen Williams UNDER
+20260408,demonhunter,4,10.0,0.0978,1,0,-1.0,DEMON:4,Duncan Robinson OVER PTS 11.5 (DEMON) [id:11227966] | Aaron Gordon OVER PA 19.5 (DEMON) [id:11233161] | Cameron Johnson 
+20260408,demonhunter,5,20.0,0.0456,0,0,-1.0,DEMON:5,Jalen Duren OVER RA 13.5 (DEMON) [id:11229225] | Ausar Thompson OVER RA 8.5 (DEMON) [id:11227951] | Jordan Goodwin OVER 
+20260407,system,3,6.0,0.4091,1,0,-1.0,GOBLIN:1/STANDARD:2,Jaylin Williams OVER FG3M 0.5 (GOBLIN) [id:11196151] | Rui Hachimura OVER REB 4 (STANDARD) [id:11204943] | Clint Capela 
+20260407,windfall,5,20.0,0.1341,2,0,-1.0,DEMON:1/GOBLIN:2/STANDARD:2,Mike Conley OVER AST 2.5 (GOBLIN) [id:11199582] | Deandre Ayton OVER REB 5.5 (GOBLIN) [id:11187134] | Chet Holmgren OVER
+20260407,demonhunter,3,6.0,0.1933,1,0,-1.0,DEMON:3,Jalen Slawson OVER PTS 9.5 (DEMON) [id:11199902] | Jordan Miller OVER FG3M 0.5 (DEMON) [id:11197530] | Royce O'Neale OVE
+20260407,demonhunter,4,10.0,0.1045,2,0,-1.0,DEMON:4,Derik Queen OVER AST 3.5 (DEMON) [id:11186227] | Jalen Slawson OVER PTS 9.5 (DEMON) [id:11199902] | Jordan Miller OVER F
+20260407,demonhunter,5,20.0,0.0452,0,0,-1.0,DEMON:5,Jalen Green OVER FG3M 2.5 (DEMON) [id:11200580] | Baylor Scheierman OVER PRA 11.5 (DEMON) [id:11190357] | Jalen Slawson 
+20260406,system,3,6.0,0.369,2,0,-1.0,GOBLIN:1/STANDARD:2,Nickeil Alexander-Walker OVER FG3M 1.5 (GOBLIN) [id:11178029] | Christian Braun OVER PRA 19.5 (STANDARD) [id:11145269] |
+20260406,system,4,10.0,0.3229,2,0,-1.0,GOBLIN:2/STANDARD:2,Cameron Johnson OVER PR 11.5 (GOBLIN) [id:11168386] | Dyson Daniels OVER RA 8.5 (GOBLIN) [id:11178036] | Jamal Murray OV
+20260406,system,5,20.0,0.6168,3,0,-1.0,GOBLIN:3/STANDARD:2,Jalen Johnson OVER FG3M 0.5 (GOBLIN) [id:11144085] | Christian Braun OVER FG3M 0.5 (GOBLIN) [id:11145373] | Jamal Murray
+20260406,windfall,3,6.0,0.361,1,0,-1.0,DEMON:1/GOBLIN:1/STANDARD:1,Zaccharie Risacher OVER PTS 2.5 (GOBLIN) [id:11178044] | Christian Braun OVER PTS 12 (STANDARD) [id:11148978] | CJ McCol
+20260406,windfall,4,10.0,0.1777,1,0,-1.0,DEMON:1/GOBLIN:1/STANDARD:2,Onyeka Okongwu OVER AST 1.5 (GOBLIN) [id:11144023] | Landry Shamet OVER PA 8.5 (STANDARD) [id:11174390] | Aaron Gordon U
+20260406,windfall,5,20.0,0.2636,3,0,-1.0,DEMON:1/GOBLIN:2/STANDARD:2,Zaccharie Risacher OVER REB 1.5 (GOBLIN) [id:11173090] | CJ McCollum OVER RA 4.5 (GOBLIN) [id:11176910] | Christian Brau
+20260406,demonhunter,3,6.0,0.1505,2,0,-1.0,DEMON:3,Stephon Castle OVER PA 29.5 (DEMON) [id:11149310] | Onyeka Okongwu OVER RA 10.5 (DEMON) [id:11169425] | Aaron Gordon OVE
+20260406,demonhunter,4,10.0,0.0898,2,0,-1.0,DEMON:4,Cameron Johnson OVER REB 4.5 (DEMON) [id:11151406] | Christian Braun OVER FG3M 1.5 (DEMON) [id:11145265] | CJ McCollum O
+20260406,demonhunter,5,20.0,0.0466,1,0,-1.0,DEMON:5,Jamal Murray OVER PTS 28.5 (DEMON) [id:11167774] | Josh Hart OVER PA 20.5 (DEMON) [id:11178054] | CJ McCollum OVER PTS 1
+20260405,system,3,6.0,0.5028,1,0,-1.0,GOBLIN:1/STANDARD:2,P.J. Washington OVER FG3M 0.5 (GOBLIN) [id:11132780] | Collin Sexton UNDER RA 7 (STANDARD) [id:11158828] | Mike Conley U
+20260405,system,4,10.0,0.3618,2,0,-1.0,GOBLIN:2/STANDARD:2,Tre Jones OVER PRA 19.5 (GOBLIN) [id:11139548] | James Harden OVER RA 9.5 (GOBLIN) [id:11155346] | Desmond Bane UNDER PT
+20260405,system,5,20.0,0.2307,3,0,-1.0,GOBLIN:3/STANDARD:2,Klay Thompson OVER PR 9.5 (GOBLIN) [id:11147310] | Precious Achiuwa OVER RA 7.5 (GOBLIN) [id:11148258] | Dennis Schröder
+20260405,windfall,3,6.0,0.3229,1,0,-1.0,DEMON:1/GOBLIN:1/STANDARD:1,Ayo Dosunmu OVER PA 14.5 (GOBLIN) [id:11131259] | Devin Booker OVER PA 33.5 (STANDARD) [id:11133923] | Precious Achiuwa 
+20260405,windfall,4,10.0,0.2949,1,0,-1.0,DEMON:1/GOBLIN:1/STANDARD:2,Ayo Dosunmu OVER PR 14.5 (GOBLIN) [id:11120045] | Leonard Miller UNDER PR 24.5 (STANDARD) [id:11160039] | Collin Sexton 
+20260405,windfall,5,20.0,0.142,3,0,-1.0,DEMON:1/GOBLIN:2/STANDARD:2,Julius Randle OVER AST 2.5 (GOBLIN) [id:11143567] | Collin Sexton OVER FG3M 1.5 (GOBLIN) [id:11158789] | Cooper Flagg UN
+20260405,demonhunter,3,6.0,0.1667,0,0,-1.0,DEMON:3,Daniel Gafford OVER PTS 12.5 (DEMON) [id:11132870] | James Harden OVER RA 13.5 (DEMON) [id:11132686] | P.J. Washington O
+20260405,demonhunter,4,10.0,0.0978,1,0,-1.0,DEMON:4,P.J. Washington OVER REB 6.5 (DEMON) [id:11132795] | Payton Pritchard OVER PTS 17.5 (DEMON) [id:11132253] | Nique Cliffo
+20260405,demonhunter,5,20.0,0.0538,2,0,-1.0,DEMON:5,Daniel Gafford OVER PA 14.5 (DEMON) [id:11133561] | Oso Ighodaro OVER PR 15.5 (DEMON) [id:11146482] | Naji Marshall OVER
+20260404,system,3,6.0,0.4494,2,0,-1.0,GOBLIN:1/STANDARD:2,Davion Mitchell OVER FG3M 0.5 (GOBLIN) [id:11110926] | Christian Braun OVER PR 15.5 (STANDARD) [id:11104887] | Bruce Bro
+20260404,system,4,10.0,0.2825,4,1,9.0,GOBLIN:2/STANDARD:2,Bam Adebayo OVER AST 2.5 (GOBLIN) [id:11109316] | Nikola Jokić OVER AST 8.5 (GOBLIN) [id:11105210] | Andrew Wiggins UNDE
+20260404,system,5,20.0,0.4626,2,0,-1.0,GOBLIN:3/STANDARD:2,Davion Mitchell OVER FG3M 0.5 (GOBLIN) [id:11110926] | Nikola Jokić OVER RA 21.5 (GOBLIN) [id:11110585] | Andrew Wiggins
+20260404,windfall,3,6.0,0.3029,1,0,-1.0,DEMON:1/GOBLIN:1/STANDARD:1,Nikola Jokić OVER RA 21.5 (GOBLIN) [id:11110585] | Jaime Jaquez OVER PA 21 (STANDARD) [id:11109401] | Cameron Johnson OV
+20260404,windfall,4,10.0,0.1459,2,0,-1.0,DEMON:1/GOBLIN:1/STANDARD:2,Bam Adebayo OVER RA 11.5 (GOBLIN) [id:11110486] | Nikola Jokić OVER PR 39.5 (STANDARD) [id:11105227] | Andrew Wiggins UN
+20260404,windfall,5,20.0,0.1191,4,0,-1.0,DEMON:1/GOBLIN:2/STANDARD:2,Paul Reed OVER PTS 4.5 (GOBLIN) [id:11117319] | Jaime Jaquez OVER FG3M 0.5 (GOBLIN) [id:11109382] | Davion Mitchell UNDE
+20260404,demonhunter,3,6.0,0.1667,1,0,-1.0,DEMON:3,Nikola Jokić OVER RA 28.5 (DEMON) [id:11105240] | Andrew Wiggins OVER FG3M 2.5 (DEMON) [id:11109274] | Jamal Murray OVER
+20260404,demonhunter,4,10.0,0.0978,1,0,-1.0,DEMON:4,Cameron Johnson OVER FG3M 2.5 (DEMON) [id:11104830] | Jamal Murray OVER PTS 28.5 (DEMON) [id:11105074] | Jaime Jaquez OV
+20260404,demonhunter,5,20.0,0.0561,4,0,-1.0,DEMON:5,Christian Braun OVER REB 4.5 (DEMON) [id:11104891] | Cameron Johnson OVER PA 15.5 (DEMON) [id:11118967] | Julian Champag
+20260403,system,3,6.0,0.4414,1,0,-1.0,GOBLIN:1/STANDARD:2,Dylan Cardwell OVER REB 3.5 (GOBLIN) [id:11091011] | Precious Achiuwa OVER PR 22.5 (STANDARD) [id:11086940] | Cooper Fla
+20260403,system,4,10.0,0.2788,2,0,-1.0,GOBLIN:2/STANDARD:2,VJ Edgecombe OVER PA 14.5 (GOBLIN) [id:11084135] | Saddiq Bey OVER FG3M 1.5 (GOBLIN) [id:11086945] | Donte DiVincenzo UN
+20260403,system,5,20.0,0.2073,3,0,-1.0,GOBLIN:3/STANDARD:2,Saddiq Bey OVER FG3M 1.5 (GOBLIN) [id:11086945] | Tre Jones OVER PTS 9.5 (GOBLIN) [id:11087690] | Matas Buzelis OVER PTS
+20260403,windfall,3,6.0,0.2495,0,0,-1.0,DEMON:1/GOBLIN:1/STANDARD:1,Matas Buzelis OVER FG3M 1.5 (GOBLIN) [id:11082079] | Ayo Dosunmu OVER AST 4 (STANDARD) [id:11092560] | Josh Hart OVER FG
+20260403,windfall,4,10.0,0.1394,3,0,-1.0,DEMON:1/GOBLIN:1/STANDARD:2,Matas Buzelis OVER REB 4.5 (GOBLIN) [id:11082099] | Naji Marshall OVER AST 3.5 (STANDARD) [id:11092575] | Devin Carter U
+20260403,windfall,5,20.0,0.1143,4,0,-1.0,DEMON:1/GOBLIN:2/STANDARD:2,Matas Buzelis OVER REB 4.5 (GOBLIN) [id:11082099] | OG Anunoby OVER FG3M 1.5 (GOBLIN) [id:11082155] | Scottie Barnes UND
+20260403,demonhunter,3,6.0,0.18,2,0,-1.0,DEMON:3,Dyson Daniels OVER FG3M 0.5 (DEMON) [id:11079793] | DeMar DeRozan OVER AST 4.5 (DEMON) [id:11086835] | Ayo Dosunmu OVER 
+20260403,demonhunter,4,10.0,0.104,3,0,-1.0,DEMON:4,DeMar DeRozan OVER AST 4.5 (DEMON) [id:11086835] | Dyson Daniels OVER FG3M 0.5 (DEMON) [id:11079793] | OG Anunoby OVER F
+20260403,demonhunter,5,20.0,0.0516,2,0,-1.0,DEMON:5,Precious Achiuwa OVER REB 9.5 (DEMON) [id:11086942] | DeMar DeRozan OVER AST 4.5 (DEMON) [id:11086835] | Nique Clifford 
+20260402,system,3,6.0,0.3657,2,0,-1.0,GOBLIN:1/STANDARD:2,Derik Queen OVER REB 2.5 (GOBLIN) [id:11074424] | Cason Wallace OVER RA 3.5 (STANDARD) [id:11062013] | Saddiq Bey OVER P
+20260402,system,4,10.0,0.2597,2,0,-1.0,GOBLIN:2/STANDARD:2,Luguentz Dort OVER RA 1.5 (GOBLIN) [id:11068747] | Evan Mobley OVER RA 8.5 (GOBLIN) [id:11062367] | Derik Queen OVER PRA
+20260402,system,5,20.0,0.1896,3,0,-1.0,GOBLIN:3/STANDARD:2,Luguentz Dort OVER RA 2.5 (GOBLIN) [id:11053006] | James Harden OVER PTS 14.5 (GOBLIN) [id:11057480] | Derik Queen OVER 
+20260402,windfall,3,6.0,0.2858,1,0,-1.0,DEMON:1/GOBLIN:1/STANDARD:1,Derik Queen OVER REB 2.5 (GOBLIN) [id:11074424] | Saddiq Bey OVER PTS 16.5 (STANDARD) [id:11056918] | Jarrett Allen OVER
+20260402,windfall,4,10.0,0.1585,3,0,-1.0,DEMON:1/GOBLIN:1/STANDARD:2,Derik Queen OVER REB 2.5 (GOBLIN) [id:11074424] | Saddiq Bey OVER PTS 16.5 (STANDARD) [id:11056918] | Max Strus OVER PR 
+20260402,windfall,5,20.0,0.1327,4,0,-1.0,DEMON:1/GOBLIN:2/STANDARD:2,Derik Queen OVER REB 2.5 (GOBLIN) [id:11074424] | Zion Williamson OVER RA 5.5 (GOBLIN) [id:11074425] | Jaylin Williams O

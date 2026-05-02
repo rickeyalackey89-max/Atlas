@@ -1,0 +1,54 @@
+{
+  "balanced_4leg": {
+    "strategy": "Balanced 4-leg (payout boost)",
+    "slip": {
+      "pool": "System_4",
+      "legs": "Dean Wade OVER PR 4.5 (GOBLIN) [id:11800202] | Sandro Mamukelashvili OVER PR 4.5 (GOBLIN) [id:11808630] | Anthony Black UNDER PA 16.5 (STANDARD) [id:11788858] | Jaylon Tyson OVER PTS 5.5 (STANDARD) [id:11791639]",
+      "n_legs": 4,
+      "source_hit_prob": 0.3195428750932349,
+      "source_payout": 10.0,
+      "source_ev": 3.1954287509323493,
+      "quality_score": 0.479542875093235,
+      "hit_prob": 0.3195428750932349,
+      "payout_eff": 10.0,
+      "ev_mult": 3.1954287509323493,
+      "tier_mix": "2G+2S+0D",
+      "issues": [],
+      "bonuses": [
+        "STANDARD UNDER direction",
+        "Good STANDARD stat: PA",
+        "Good STANDARD stat: PTS",
+        "Strong EV: 3.20x"
+      ],
+      "goblin_count": 2,
+      "standard_count": 2,
+      "demon_count": 0
+    }
+  },
+  "jackpot_5leg": {
+    "strategy": "Jackpot 5-leg (max EV)",
+    "slip": {
+      "pool": "System_5",
+      "legs": "Jakob Poeltl OVER AST 0.5 (GOBLIN) [id:11785179] | Jabari Smith OVER REB 4.5 (GOBLIN) [id:11785289] | Donovan Mitchell OVER REB 2.5 (GOBLIN) [id:11785156] | Anthony Black UNDER PTS 13.5 (STANDARD) [id:11785021] | Sandro Mamukelashvili OVER PRA 10.5 (STANDARD) [id:11791135]",
+      "n_legs": 5,
+      "source_hit_prob": 0.2916368780911363,
+      "source_payout": 20.0,
+      "source_ev": 5.832737561822726,
+      "quality_score": 0.5016368780911363,
+      "hit_prob": 0.2916368780911363,
+      "payout_eff": 20.0,
+      "ev_mult": 5.832737561822726,
+      "tier_mix": "3G+2S+0D",
+      "issues": [],
+      "bonuses": [
+        "STANDARD UNDER direction",
+        "Good STANDARD stat: PTS",
+        "Good STANDARD stat: PRA",
+        "Strong EV: 5.83x"
+      ],
+      "goblin_count": 3,
+      "standard_count": 2,
+      "demon_count": 0
+    }
+  }
+}

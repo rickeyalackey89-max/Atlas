@@ -85,6 +85,7 @@ def run_publish_stage(
     wind3_winprob: Optional[pd.DataFrame] = None,
     wind4_winprob: Optional[pd.DataFrame] = None,
     wind5_winprob: Optional[pd.DataFrame] = None,
+    marketed_slips: Optional[list] = None,
     iael_invalidations_path: Optional[Path] = None,
     iael_status_path: Optional[Path] = None,
     write_csv_clean: Optional[Callable[[pd.DataFrame, Path], Path]] = None,
@@ -147,6 +148,26 @@ def run_publish_stage(
     # DEMONHUNTER – single CSV with best 3/4/5-leg all-DEMON slips
     if demonhunter is not None and len(demonhunter) > 0:
         w(demonhunter, run_dir / "demonhunter.csv")
+
+    # MARKETED SLIPS – JSON output for subscriber product
+    if marketed_slips is not None and len(marketed_slips) > 0:
+        marketed_path = run_dir / "marketed_slips.json"
+        with open(marketed_path, 'w') as f:
+            json.dump({
+                "generated_at_utc": datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"),
+                "slips": marketed_slips,
+                "meta": {
+                    "builder": "marketed_slip_builder",
+                    "correlation_adjusted": True,
+                    "stat_calibrated": True,
+                    "templates": ["3-leg: 1G+2S", "4-leg: 2G+2S", "5-leg: 2G+2S+1D"]
+                }
+            }, f, indent=2)
+        
+        # Copy to latest if configured
+        if cfg and cfg.get("marketed_slips", {}).get("publish_to_latest", False):
+            latest_path = OUT_DIR / cfg.get("marketed_slips", {}).get("output_name", "marketed_slips_latest.json")
+            shutil.copy2(marketed_path, latest_path)
 
     dashboard_dir = OUT_DIR / "runs_manifest" / ts
     dashboard_dir.mkdir(parents=True, exist_ok=True)
@@ -219,6 +240,12 @@ def run_publish_stage(
         print(f" - {windfall_dir / 'recommended_4leg_winprob.csv'} (WINDFALL winprob)")
     if wind5_winprob is not None:
         print(f" - {windfall_dir / 'recommended_5leg_winprob.csv'} (WINDFALL winprob)")
+
+    if marketed_slips is not None and len(marketed_slips) > 0:
+        print(f" - {run_dir / 'marketed_slips.json'} (MARKETED SLIPS - {len(marketed_slips)} slips)")
+        if cfg and cfg.get("marketed_slips", {}).get("publish_to_latest", False):
+            latest_name = cfg.get("marketed_slips", {}).get("output_name", "marketed_slips_latest.json")
+            print(f" - {OUT_DIR / latest_name} (MARKETED SLIPS latest)")
 
     if snapshot_artifacts:
         print(f" - {dashboard_dir / 'injury_invalidations_latest.json'} (IAEL snapshot)")

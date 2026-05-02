@@ -1,0 +1,164 @@
+[
+  {
+    "slip_label": "3-leg",
+    "run_id": "20260501_080424",
+    "built_at": "2026-05-01T16:21:07Z",
+    "n_legs": 3,
+    "tier_mix": "1G+2S+0D",
+    "hit_prob": 0.3262,
+    "legs": [
+      {
+        "player": "Rui Hachimura",
+        "team": "LAL",
+        "opp": "HOU",
+        "stat": "FG3M",
+        "line": 0.5,
+        "direction": "OVER",
+        "tier": "GOBLIN",
+        "p_cal": 0.7836,
+        "game_date": "2026-05-01"
+      },
+      {
+        "player": "Desmond Bane",
+        "team": "ORL",
+        "opp": "DET",
+        "stat": "PTS",
+        "line": 19.5,
+        "direction": "UNDER",
+        "tier": "STANDARD",
+        "p_cal": 0.652,
+        "game_date": "2026-05-01"
+      },
+      {
+        "player": "Jalen Duren",
+        "team": "DET",
+        "opp": "ORL",
+        "stat": "PRA",
+        "line": 24.5,
+        "direction": "UNDER",
+        "tier": "STANDARD",
+        "p_cal": 0.6385,
+        "game_date": "2026-05-01"
+      }
+    ]
+  },
+  {
+    "slip_label": "4-leg",
+    "run_id": "20260501_080424",
+    "built_at": "2026-05-01T16:21:07Z",
+    "n_legs": 4,
+    "tier_mix": "2G+2S+0D",
+    "hit_prob": 0.2277,
+    "legs": [
+      {
+        "player": "Jakob Poeltl",
+        "team": "TOR",
+        "opp": "CLE",
+        "stat": "AST",
+        "line": 0.5,
+        "direction": "OVER",
+        "tier": "GOBLIN",
+        "p_cal": 0.7823,
+        "game_date": "2026-05-01"
+      },
+      {
+        "player": "Jaylon Tyson",
+        "team": "CLE",
+        "opp": "TOR",
+        "stat": "REB",
+        "line": 1.5,
+        "direction": "OVER",
+        "tier": "GOBLIN",
+        "p_cal": 0.7767,
+        "game_date": "2026-05-01"
+      },
+      {
+        "player": "Duncan Robinson",
+        "team": "DET",
+        "opp": "ORL",
+        "stat": "PRA",
+        "line": 14.0,
+        "direction": "UNDER",
+        "tier": "STANDARD",
+        "p_cal": 0.621,
+        "game_date": "2026-05-01"
+      },
+      {
+        "player": "Jalen Suggs",
+        "team": "ORL",
+        "opp": "DET",
+        "stat": "RA",
+        "line": 8.5,
+        "direction": "UNDER",
+        "tier": "STANDARD",
+        "p_cal": 0.6036,
+        "game_date": "2026-05-01"
+      }
+    ]
+  },
+  {
+    "slip_label": "5-leg",
+    "run_id": "20260501_080424",
+    "built_at": "2026-05-01T16:21:07Z",
+    "n_legs": 5,
+    "tier_mix": "2G+2S+1D",
+    "hit_prob": 0.1025,
+    "legs": [
+      {
+        "player": "Sam Merrill",
+        "team": "CLE",
+        "opp": "TOR",
+        "stat": "FG3M",
+        "line": 0.5,
+        "direction": "OVER",
+        "tier": "GOBLIN",
+        "p_cal": 0.7756,
+        "game_date": "2026-05-01"
+      },
+      {
+        "player": "Dorian Finney-Smith",
+        "team": "HOU",
+        "opp": "LAL",
+        "stat": "PTS",
+        "line": 1.5,
+        "direction": "OVER",
+        "tier": "GOBLIN",
+        "p_cal": 0.774,
+        "game_date": "2026-05-01"
+      },
+      {
+        "player": "Cade Cunningham",
+        "team": "DET",
+        "opp": "ORL",
+        "stat": "RA",
+        "line": 15.5,
+        "direction": "UNDER",
+        "tier": "STANDARD",
+        "p_cal": 0.6085,
+        "game_date": "2026-05-01"
+      },
+      {
+        "player": "LeBron James",
+        "team": "LAL",
+        "opp": "HOU",
+        "stat": "PRA",
+        "line": 38.5,
+        "direction": "UNDER",
+        "tier": "STANDARD",
+        "p_cal": 0.5947,
+        "game_date": "2026-05-01"
+      },
+      {
+        "player": "Anthony Black",
+        "team": "ORL",
+        "opp": "DET",
+        "stat": "FG3M",
+        "line": 1.5,
+        "direction": "OVER",
+        "tier": "DEMON",
+        "p_cal": 0.4717,
+        "game_date": "2026-05-01"
+      }
+    ]
+  }
+]
