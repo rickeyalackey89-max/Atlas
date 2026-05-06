@@ -236,6 +236,8 @@ def parse_txt_rows_text(txt_path: Path) -> List[Dict[str, str]]:
     out_rows: List[Dict[str, str]] = []
     ctx: Dict[str, str] = {"game_date": "", "game_time": "", "matchup": "", "team": ""}
     active: Optional[Dict[str, str]] = None
+    pending_player: Optional[str] = None  # player name whose status arrives on the next line
+    _STATUS_WORDS = {"PROBABLE", "QUESTIONABLE", "DOUBTFUL", "OUT", "AVAILABLE"}
 
     def flush() -> None:
         nonlocal active
@@ -276,6 +278,19 @@ def parse_txt_rows_text(txt_path: Path) -> List[Dict[str, str]]:
         ):
             tokens = tokens[1:]
             tokens = tokens[1:]
+        # PENDING PLAYER: status/reason line arrives after a split player-line (pdftotext layout wrap)
+        if pending_player is not None and tokens and tokens[0].upper() in _STATUS_WORDS:
+            flush()
+            active = {
+                "team": ctx["team"],
+                "player": pending_player,
+                "status": normalize_status(tokens[0]),
+                "reason": " ".join(tokens[1:]).strip(),
+                "game_date": ctx["game_date"],
+            }
+            pending_player = None
+            continue
+
         # Check for NOT YET SUBMITTED on otherwise valid game header line
         if "NOT YET SUBMITTED" in line.upper():
             # If line contains matchup, treat as game header but don't set team
@@ -289,6 +304,7 @@ def parse_txt_rows_text(txt_path: Path) -> List[Dict[str, str]]:
         mi = _find_matchup_index(tokens)
         if mi is not None:
             flush()
+            pending_player = None  # stale pending state is invalid once a new game starts
             
             # Variant 1: Date + time + matchup
             if DATE_PREFIX_RE.match(tokens[0]):
@@ -302,6 +318,32 @@ def parse_txt_rows_text(txt_path: Path) -> List[Dict[str, str]]:
                 ctx["game_time"] = tokens[ti] if ti is not None else ""
                 ctx["matchup"] = tokens[mi]
                 ctx["team"] = ""
+                # Check if team + player follow on the same line (inline format)
+                tail = tokens[mi + 1:]
+                if tail:
+                    for n in (4, 3, 2, 1):
+                        if len(tail) <= n:
+                            continue
+                        team_u = _team_abbr_from_tokens(tail[:n])
+                        if team_u and ("," in " ".join(tail[n:])):
+                            ctx["team"] = team_u
+                            psr = _parse_line_player_status_reason(tail[n:])
+                            if psr:
+                                player, status, reason = psr
+                                flush()
+                                active = {
+                                    "team": ctx["team"],
+                                    "player": player,
+                                    "status": normalize_status(status),
+                                    "reason": reason,
+                                    "game_date": ctx["game_date"],
+                                }
+                            else:
+                                # Status on the next line — store player name
+                                leftover = " ".join(tail[n:]).strip()
+                                if "," in leftover:
+                                    pending_player = leftover
+                            break
                 continue
             
             # Variant 2: Time + matchup (no date) or Variant 3: Matchup only
@@ -314,6 +356,32 @@ def parse_txt_rows_text(txt_path: Path) -> List[Dict[str, str]]:
                 ctx["matchup"] = tokens[mi]
             
             ctx["team"] = ""
+            # Check if team + player follow on the same line (inline format)
+            tail = tokens[mi + 1:]
+            if tail:
+                for n in (4, 3, 2, 1):
+                    if len(tail) <= n:
+                        continue
+                    team_u = _team_abbr_from_tokens(tail[:n])
+                    if team_u and ("," in " ".join(tail[n:])):
+                        ctx["team"] = team_u
+                        psr = _parse_line_player_status_reason(tail[n:])
+                        if psr:
+                            player, status, reason = psr
+                            flush()
+                            active = {
+                                "team": ctx["team"],
+                                "player": player,
+                                "status": normalize_status(status),
+                                "reason": reason,
+                                "game_date": ctx["game_date"],
+                            }
+                        else:
+                            # Status on the next line — store player name
+                            leftover = " ".join(tail[n:]).strip()
+                            if "," in leftover:
+                                pending_player = leftover
+                        break
             continue
 
         # REASON continuation: no matchup, no comma-leader, and we have active

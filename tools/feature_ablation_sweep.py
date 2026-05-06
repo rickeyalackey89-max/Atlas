@@ -35,7 +35,7 @@ parser.add_argument("--seeds", type=int, default=1,
 args = parser.parse_args()
 
 # ===================================================================
-# Architecture constants (copied from gbm_v12_train.py)
+# Architecture constants (copied from gbm_v17_train.py)
 # ===================================================================
 ALL_SEEDS = [65536, 9999, 137, 999, 98765, 54321, 12345]
 SEEDS = ALL_SEEDS[:args.seeds]
@@ -146,7 +146,7 @@ def run_lodo_fast(cv, feats, um, hit_arr, date_arr, sorted_dates):
 
 
 # ===================================================================
-# Feature engineering (same as gbm_v12_train.py)
+# Feature engineering (same as gbm_v17_train.py)
 # ===================================================================
 def compute_all_features(cv, logs):
     """Compute all 33 base features + extra candidates. Returns (um, hit_arr, date_arr, sorted_dates)."""

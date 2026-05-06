@@ -3,7 +3,7 @@ Patch v16 resim cache to v17 compatibility by computing all GBM features.
 
 This script transforms the raw v16 cache leg data into the 34 GBM features
 required by the v17 model, using the exact same feature engineering logic
-as tools/gbm_v12_train.py.
+as tools/gbm_v17_train.py.
 
 Usage:
     python tools/patch_v16_to_v17_cache.py
@@ -27,7 +27,7 @@ sys.path.insert(0, str(ROOT / "src"))
 
 from Atlas.core.minutes import minutes_sensitivity
 
-# Constants from gbm_v12_train.py
+# Constants from gbm_v17_train.py
 FEATS = [
     "z_line", "min_cv", "is_combo", "bp_score_gated", "bp_has",
     "is_assists", "is_threes", "games_norm", "thin_flag", "line_norm",

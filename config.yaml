@@ -417,6 +417,21 @@ marketed_slips:
     STANDARD: 0.3
     DEMON: 0.28
   direction_filters: {}
+  # Empirical calibration: scale raw hit_prob up to match actual observed win rates.
+  # Derived from v17 resim cache (44 dates, 165,792 legs): 3L actual=60.5%, 4L=37.2%, 5L=20.9%
+  # vs computed means: 3L=0.362, 4L=0.279, 5L=0.137
+  hit_prob_calibration:
+    3: 1.67
+    4: 1.33
+    5: 1.53
+
+  # high_confidence label fires only when calibrated hit_prob meets the per-leg-count bar.
+  # 3-leg bar: 3 legs at 75% = 0.42  |  4-leg: 4 at 70% = 0.24  |  5-leg: 4 at 70% + demon at 50% = 0.12
+  # All slips are always published — this is a label only, not a filter.
+  high_confidence_thresholds:
+    3: 0.42
+    4: 0.24
+    5: 0.12
   correlation:
     same_team_penalty: 0.03
     hedge_bonus: 0.015

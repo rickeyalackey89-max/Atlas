@@ -77,22 +77,25 @@ def get_top_picks_by_tier(df, tier, n=10):
     else:  # GOBLIN and DEMON
         tier_df['_rank_score'] = (p_cal * l20).values
 
+    # Sort by composite score, deduplicate (one pick per player), take top N
     tier_df = tier_df.sort_values('_rank_score', ascending=False)
-    
+    tier_df = tier_df.drop_duplicates(subset=['player'], keep='first')
+
     # Select top N and relevant columns for graphics
     graphics_cols = [
         'player', 'stat', 'line', 'direction', 'tier', 'p_cal',
         'team', 'opp', 'game_date', 'start_time'
     ]
-    
-    # Add available columns only
     available_cols = [col for col in graphics_cols if col in tier_df.columns]
     top_picks = tier_df[available_cols].head(n).copy()
-    
-    # Add rank and format probability as percentage
-    top_picks['rank'] = range(1, len(top_picks) + 1)
+
+    # Format probability percentage
     top_picks['hit_probability_pct'] = (top_picks['p_cal'] * 100).round(1)
-    
+
+    # Final display order: highest hit_probability_pct first
+    top_picks = top_picks.sort_values('hit_probability_pct', ascending=False)
+    top_picks['rank'] = range(1, len(top_picks) + 1)
+
     return top_picks
 
 def generate_graphics_csv(atlas_root, output_file, run_id=None):
@@ -127,7 +130,7 @@ def generate_graphics_csv(atlas_root, output_file, run_id=None):
     for tier in ['GOBLIN', 'STANDARD', 'DEMON']:
         top_picks = get_top_picks_by_tier(df, tier, n=10)
         if not top_picks.empty:
-            print(f"\\nTop {len(top_picks)} {tier} picks:")
+            print(f"\nTop {len(top_picks)} {tier} picks:")
             for _, row in top_picks.head(3).iterrows():  # Show top 3
                 print(f"  {row['rank']}. {row['player']} {row['stat']} {row['direction']} {row['line']} ({row['hit_probability_pct']}%)")
             all_picks.append(top_picks)
@@ -155,7 +158,7 @@ def generate_graphics_csv(atlas_root, output_file, run_id=None):
     # Save CSV
     final_df.to_csv(output_file, index=False)
     
-    print(f"\\n✅ Daily graphics CSV generated: {output_file}")
+    print(f"\n[OK] Daily graphics CSV generated: {output_file}")
     print(f"Total picks: {len(final_df)}")
     print(f"Breakdown: {final_df.groupby('tier').size().to_dict()}")
     
@@ -183,10 +186,10 @@ def main():
             run_id=args.run_id
         )
         
-        print(f"\\n🎨 Ready for graphics team!")
+        print(f"\nReady for graphics team!")
         
     except Exception as e:
-        print(f"❌ Error: {e}")
+        print(f"[ERROR] {e}")
         return 1
     
     return 0

@@ -1,0 +1,39 @@
+{
+  "report_date": "2026-05-04",
+  "report_label": "08:45AM",
+  "source_url": "https://ak-static.cms.nba.com/referee/injury/Injury-Report_2026-05-04_08_45AM.pdf",
+  "pulled_at_local": "2026-05-04T08:00:05-05:00",
+  "pdf_sha1": "bcc0ad8c40a88f952e980385b65e6228685d3407",
+  "rows": [
+    {
+      "report_date": "2026-05-04",
+      "report_label": "08:45AM",
+      "team": "PHI",
+      "player": "Embiid, Joel",
+      "status": "PROBABLE",
+      "reason": "Injury/Illness - Right Hip; Contusion Injury/Illness - Right Finger; Tendon",
+      "game_date": "05/04/2026",
+      "hard_invalid": false,
+      "tag_probable": true,
+      "out_frac": 0.0
+    },
+    {
+      "report_date": "2026-05-04",
+      "report_label": "08:45AM",
+      "team": "PHI",
+      "player": "Maxey, Tyrese",
+      "status": "AVAILABLE",
+      "reason": "Strain - Splint Injury/Illness - Left Hamstring; Tightness Injury/Illness - Right Achilles Tendon;",
+      "game_date": "05/04/2026",
+      "hard_invalid": false,
+      "tag_probable": false,
+      "out_frac": 0.0
+    }
+  ],
+  "schema": "atlas.iael_normalized.v1",
+  "generated_at": "2026-05-04T14:34:38-05:00",
+  "_atlas_publish": {
+    "published_from": "2026-05-04_11_06AM.json",
+    "published_at": "2026-05-04T14:34:38-05:00"
+  }
+}

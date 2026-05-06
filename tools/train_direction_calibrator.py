@@ -26,26 +26,102 @@ from sklearn.isotonic import IsotonicRegression
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 # ── data paths ──────────────────────────────────────────────────────
-BASE = Path(__file__).resolve().parents[1] / "data" / "telemetry" / "v13_corpus"_TAG_FILE = Path(__file__).resolve().parents[1] / \"data\" / \"telemetry\" / \"replay_runs\" / \".corpus_tag\"
-_CORPUS_TAG = _TAG_FILE.read_text().strip() if _TAG_FILE.exists() else \"kernel_v2_perstat_corr015\"RUN_DATES = [
-    "20260315", "20260316", "20260317", "20260318",
-    "20260319", "20260320", "20260321", "20260322",
-    "20260323", "20260324", "20260325", "20260326",
-    "20260328", "20260329", "20260330", "20260331",
-    "20260401", "20260402", "20260403", "20260404",
-    "20260405", "20260406", "20260407",
+_REPO_ROOT = Path(__file__).resolve().parents[1]
+BASE = _REPO_ROOT / "data" / "telemetry" / "v17_corpus"
+OUTPUT_DIR = _REPO_ROOT / "data" / "model"
+
+# Regular-season dates in v17_corpus
+RUN_DATES = [
+    "20260209", "20260210", "20260211", "20260212",
+    "20260225", "20260226", "20260227", "20260228",
+    "20260301", "20260302", "20260303", "20260304",
+    "20260305", "20260306", "20260307", "20260308",
+    "20260309", "20260310", "20260315", "20260316",
+    "20260317", "20260318", "20260319", "20260320",
+    "20260321", "20260322", "20260323", "20260324",
+    "20260325", "20260326", "20260328", "20260330",
+    "20260331", "20260401", "20260402", "20260403",
+    "20260404", "20260405", "20260406", "20260407",
+    "20260408", "20260409", "20260410", "20260412",
 ]
-OUTPUT_DIR = Path(__file__).resolve().parents[1] / "data" / "model"
+
+# Playoff run dirs (explicit paths — not in corpus folder)
+EXTRA_RUN_DIRS: list[Path] = [
+    _REPO_ROOT / "data" / "output" / "runs" / "20260430_182420",
+    _REPO_ROOT / "data" / "telemetry" / "live_runs" / "20260501_110422",
+    _REPO_ROOT / "data" / "telemetry" / "live_runs" / "20260502_110546",
+]
+
+
+def _load_run_dir(run_dir: Path, date: str, all_rows: list) -> None:
+    """Load one run dir and append rows to all_rows."""
+    eval_files = list(run_dir.rglob("eval_legs.csv"))
+    scored_files = list(run_dir.rglob("scored_legs_deduped.csv"))
+    if not eval_files or not scored_files:
+        return
+    eval_df = pd.read_csv(eval_files[0], low_memory=False)
+    scored_df = pd.read_csv(scored_files[0], low_memory=False)
+
+    # Build truth lookup
+    truth: dict[tuple, int] = {}
+    for _, row in eval_df.iterrows():
+        p = str(row.get("player", "")).strip().lower()
+        l = float(row["line"]) if pd.notna(row.get("line")) else 0
+        s = str(row.get("stat", "")).strip().upper()
+        d = str(row.get("direction", "")).strip().lower()
+        if pd.notna(row.get("hit")):
+            truth[(p, l, s, d)] = int(row["hit"])
+
+    # Use p_cal (post-GBM) as input — we're correcting what gets displayed
+    prob_col = None
+    for c in ("p_cal", "p_adj", "p"):
+        if c in scored_df.columns:
+            prob_col = c
+            break
+    if not prob_col:
+        return
+
+    for _, row in scored_df.iterrows():
+        p = str(row.get("player", "")).strip().lower()
+        l = float(row["line"]) if pd.notna(row.get("line")) else 0
+        s = str(row.get("stat", "")).strip().upper()
+        d = str(row.get("direction", "")).strip().lower()
+        prob = float(row[prob_col]) if pd.notna(row.get(prob_col)) else 0.5
+        key = (p, l, s, d)
+        if key in truth:
+            all_rows.append({
+                "stat": s, "direction": d, "prob": prob,
+                "hit": truth[key], "date": date,
+                "stat_dir": f"{s}|{d.upper()}",
+                "prob_col_used": prob_col,
+            })
 
 
 def load_corpus() -> pd.DataFrame:
-    """Load scored legs + truth from all 12 dates."""
-    all_rows = []
+    """Load scored legs + truth from all corpus dates (regular season + playoff)."""
+    all_rows: list = []
     for date in RUN_DATES:
-        # Try flat layout first, then atlas_replay prefix
         run_dir = BASE / date
         if not run_dir.exists():
-            run_dir = BASE / f"{_CORPUS_TAG}_{date}"
+            continue
+        _load_run_dir(run_dir, date, all_rows)
+
+    # Playoff extra dirs
+    for run_dir in EXTRA_RUN_DIRS:
+        if not run_dir.exists():
+            print(f"  [WARN] Playoff dir not found: {run_dir}")
+            continue
+        date = run_dir.name[:8]
+        _load_run_dir(run_dir, date, all_rows)
+
+    return pd.DataFrame(all_rows)
+
+
+def _load_corpus_OLD() -> pd.DataFrame:
+    """Legacy loader kept for reference — not used."""
+    all_rows = []
+    for date in RUN_DATES:
+        run_dir = BASE / date
         if not run_dir.exists():
             continue
         eval_files = list(run_dir.rglob("eval_legs.csv"))
@@ -196,7 +272,7 @@ def main() -> None:
         "meta": {
             "family": "isotonic_hybrid",
             "mix": 1.0,
-            "source_col": "p_adj",
+            "source_col": "p_cal",
             "x_thresholds": over_x,
             "y_thresholds": over_y,
             "protected_calibration": {
@@ -211,7 +287,13 @@ def main() -> None:
         },
     }
 
-    out_path = OUTPUT_DIR / "telemetry_calibration.isotonic_direction_split.json"
+    # Write to the production file that config.yaml already points to
+    out_path = OUTPUT_DIR / "telemetry_calibration.demon_isotonic.json"
+    # Also write a dated backup
+    backup_path = OUTPUT_DIR / f"telemetry_calibration.isotonic_direction_split_{datetime.now().strftime('%Y%m%d')}.json"
+    with open(backup_path, "w") as f:
+        json.dump(calibration, f, indent=2)
+    print(f"Backup saved to: {backup_path}")
     with open(out_path, "w") as f:
         json.dump(calibration, f, indent=2)
     print(f"\nSaved to: {out_path}")
@@ -219,11 +301,14 @@ def main() -> None:
     # Print the key before/after for UNDER high-prob tail
     print("\n=== KEY RESULT: UNDER 0.80+ tail ===")
     tail = under_df[under_df["prob"] >= 0.80]
-    tail_cal = ir_under.predict(np.asarray(tail["prob"].values, dtype=float))
-    print(f"  N={len(tail)} legs")
-    print(f"  Before: model avg={tail['prob'].mean():.3f}, actual={tail['hit'].mean():.3f}")
-    print(f"  After:  calibrated avg={tail_cal.mean():.3f}, actual={tail['hit'].mean():.3f}")
-    print(f"  Gap reduced: {tail['hit'].mean()-tail['prob'].mean():+.3f} -> {tail['hit'].mean()-tail_cal.mean():+.3f}")
+    if len(tail) == 0:
+        print("  N=0 legs with p_cal >= 0.80 (good — model no longer produces extreme UNDER probs)")
+    else:
+        tail_cal = ir_under.predict(np.asarray(tail["prob"].values, dtype=float))
+        print(f"  N={len(tail)} legs")
+        print(f"  Before: model avg={tail['prob'].mean():.3f}, actual={tail['hit'].mean():.3f}")
+        print(f"  After:  calibrated avg={tail_cal.mean():.3f}, actual={tail['hit'].mean():.3f}")
+        print(f"  Gap reduced: {tail['hit'].mean()-tail['prob'].mean():+.3f} -> {tail['hit'].mean()-tail_cal.mean():+.3f}")
 
 
 if __name__ == "__main__":

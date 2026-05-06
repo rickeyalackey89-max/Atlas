@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-16"?>
 <Task version="1.2" xmlns="http://schemas.microsoft.com/windows/2004/02/mit/task">
   <RegistrationInfo>
-    <Description>Atlas 9AM morning pre-fetch — refreshes gamelogs, defense stats, role metrics, crafted stats, rotowire lines</Description>
+    <Description>Atlas 8AM full live run — run #1 of 4 daily (8AM, 11AM, 2:30PM, 5:30PM). Full pipeline: fetch, score, publish, bundle, dashboard push.</Description>
   </RegistrationInfo>
   <Triggers>
     <CalendarTrigger>
-      <StartBoundary>2026-04-01T09:00:00</StartBoundary>
+      <StartBoundary>2026-04-01T08:00:00</StartBoundary>
       <Enabled>true</Enabled>
       <ScheduleByDay><DaysInterval>1</DaysInterval></ScheduleByDay>
     </CalendarTrigger>
@@ -27,7 +27,7 @@
     <Enabled>true</Enabled>
     <Hidden>false</Hidden>
     <WakeToRun>true</WakeToRun>
-    <ExecutionTimeLimit>PT30M</ExecutionTimeLimit>
+    <ExecutionTimeLimit>PT2H</ExecutionTimeLimit>
     <Priority>7</Priority>
   </Settings>
   <Actions Context="Author">

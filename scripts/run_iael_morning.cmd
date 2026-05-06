@@ -1,47 +1,61 @@
 @echo off
-setlocal
+setlocal enabledelayedexpansion
 
 REM ================================================================
-REM run_iael_morning.cmd — Early data pre-fetch (no model run)
-REM Schedule: ~9:00 AM ET  (before first live run)
+REM run_iael_morning.cmd — 8AM Full Live Run
+REM Schedule: ~8:00 AM ET
 REM
-REM Refreshes external data sources so the 11 AM live run starts
-REM with warm caches: gamelogs, defense stats, role metrics,
-REM crafted player stats, rotowire lines.
+REM Full Atlas live pipeline: IAEL preflight, data fetch, scoring,
+REM publishing, bundling, dashboard push, telemetry archive.
+REM This is run #1 of 4 daily runs (8AM, 11AM, 2:30PM, 5:30PM).
 REM ================================================================
 
 set ATLAS_ROOT=C:\Users\13142\Atlas\Atlas
+set DASH_ROOT=C:\Users\13142\Atlas\atlas-dashboard
 set PY=C:\Users\13142\AppData\Local\Programs\Python\Python311\python.exe
 set LOG=%ATLAS_ROOT%\data\telemetry\iael_runs.log
+set ODDSAPI_KEY=3f9cb58724c78a06a555ecef04cc55dd
 
 cd /d %ATLAS_ROOT%
 echo.>> %LOG%
-echo ===== %date% %time% MORNING PRE-FETCH START =====>> %LOG%
+echo ===== %date% %time% 8AM LIVE RUN START =====>> %LOG%
 
-%PY% tools\refresh_nba_gamelogs.py >> %LOG% 2>&1
+REM (1) Full live pipeline (IAEL preflight + fetch + score + publish + bundle)
+%PY% -m Atlas.cli live >> %LOG% 2>&1
 if errorlevel 1 (
-  echo [WARN] refresh_nba_gamelogs failed >> %LOG%
+  echo [FAIL] Atlas.cli live >> %LOG%
+  exit /b 1
 )
 
-%PY% tools\fetch_nba_defense_stats.py >> %LOG% 2>&1
+REM (2) Dashboard publish
+cd /d %DASH_ROOT%
+powershell -NoProfile -ExecutionPolicy Bypass -File publish-atlas.ps1 "%ATLAS_ROOT%" >> %LOG% 2>&1
 if errorlevel 1 (
-  echo [WARN] fetch_nba_defense_stats failed >> %LOG%
+  echo [WARN] publish-atlas.ps1 failed >> %LOG%
 )
 
-%PY% tools\fetch_role_metrics.py >> %LOG% 2>&1
-if errorlevel 1 (
-  echo [WARN] fetch_role_metrics failed >> %LOG%
+REM (3) Archive run artifacts to telemetry
+cd /d %ATLAS_ROOT%
+set TODAY_TAG=%date:~10,4%%date:~4,2%%date:~7,2%
+set TELEM_LIVE=%ATLAS_ROOT%\data\telemetry\live_runs\%TODAY_TAG%_8am
+if not exist "%TELEM_LIVE%" mkdir "%TELEM_LIVE%"
+
+for /f "delims=" %%d in ('dir /b /ad /od "%ATLAS_ROOT%\data\output\runs"') do set LATEST_RUN=%%d
+if defined LATEST_RUN (
+  set RUN_DIR=%ATLAS_ROOT%\data\output\runs\!LATEST_RUN!
+  if exist "!RUN_DIR!\scored_legs_deduped.csv" copy "!RUN_DIR!\scored_legs_deduped.csv" "%TELEM_LIVE%\" >> %LOG% 2>&1
+  if exist "!RUN_DIR!\scored_board.csv" copy "!RUN_DIR!\scored_board.csv" "%TELEM_LIVE%\" >> %LOG% 2>&1
+  if exist "!RUN_DIR!\meta.json" copy "!RUN_DIR!\meta.json" "%TELEM_LIVE%\" >> %LOG% 2>&1
+  if exist "!RUN_DIR!\slip_results.csv" copy "!RUN_DIR!\slip_results.csv" "%TELEM_LIVE%\" >> %LOG% 2>&1
+  echo [TELEM] Archived run !LATEST_RUN! to %TELEM_LIVE% >> %LOG%
 )
 
-%PY% tools\fetch_crafted_player_stats.py >> %LOG% 2>&1
-if errorlevel 1 (
-  echo [WARN] fetch_crafted_player_stats failed >> %LOG%
+for /f "delims=" %%b in ('dir /b /od "%ATLAS_ROOT%\data\bundles\atlas_bundle_*.zip" 2^>nul') do set LATEST_BUNDLE=%%b
+if defined LATEST_BUNDLE (
+  copy "%ATLAS_ROOT%\data\bundles\!LATEST_BUNDLE!" "%TELEM_LIVE%\" >> %LOG% 2>&1
+  if not exist "%ATLAS_ROOT%\data\telemetry\bundles" mkdir "%ATLAS_ROOT%\data\telemetry\bundles"
+  copy "%ATLAS_ROOT%\data\bundles\!LATEST_BUNDLE!" "%ATLAS_ROOT%\data\telemetry\bundles\" >> %LOG% 2>&1
 )
 
-%PY% tools\fetch_rotowire_lines.py >> %LOG% 2>&1
-if errorlevel 1 (
-  echo [WARN] fetch_rotowire_lines failed >> %LOG%
-)
-
-echo ===== %date% %time% MORNING PRE-FETCH END =====>> %LOG%
+echo ===== %date% %time% 8AM LIVE RUN END =====>> %LOG%
 exit /b 0

@@ -1178,7 +1178,7 @@ def main() -> None:
     # Build dashboard payload from slip CSVs
     try:
         dashboard_dir = OUT_DIR / "dashboard"
-        payload_path = build_cloudflare_payload(run_dir, dashboard_dir)
+        payload_path = build_cloudflare_payload(run_dir, dashboard_dir, marketed_slips=marketed_slips or [], gamelogs_path=LOGS_PATH)
         print(f"Dashboard payload: {payload_path}")
     except Exception as e:
         print(f"Warning: failed to build dashboard payload: {e}", file=sys.stderr)

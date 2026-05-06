@@ -4,6 +4,26 @@
 
 ---
 
+## Working Directory — CRITICAL
+
+**All Atlas commands and tools must run from `C:\Users\13142\Atlas` (workspace root).**
+
+```powershell
+# CORRECT
+cd C:\Users\13142\Atlas
+$env:PYTHONIOENCODING='utf-8'
+py -m Atlas.cli live                          # live run
+py Atlas\tools\marketed_slip_trainer_v2.py    # trainer
+
+# WRONG — inner folder breaks relative path resolution for calibration JSONs
+cd C:\Users\13142\Atlas\Atlas
+py tools\marketed_slip_trainer_v2.py          # DO NOT DO THIS
+```
+
+Relative paths like `data/model/marketed_calibration.json` resolve against CWD. Running from the inner `Atlas\Atlas` directory causes calibration files to silently fall back to hardcoded values, producing wrong results.
+
+---
+
 ## Entry Points
 
 | Command | Purpose |
@@ -22,42 +42,51 @@ CLI is defined in `src/Atlas/cli.py`. It delegates to `src/Atlas/runtime/orchest
 The orchestrator (`src/Atlas/runtime/orchestrator.py` → `run_today()`) executes these stages:
 
 ### Stage 1 — Fetch Raw Board
+
 - **Live:** Fetches PrizePicks API → writes `data/board/fetch_board.csv`.
 - **Replay:** Loads pinned raw JSON from `--raw` path.
 - No-slate check: if `fetch_board.csv` has zero data rows, exit cleanly.
 
 ### Stage 1b — Refresh Game Logs
+
 - **Live only** (skipped in replay): Calls `tools/refresh_nba_gamelogs.py` to update
   `data/gamelogs/nba_gamelogs.csv` with recent box scores.
 
 ### Stage 2 — Rebuild today.csv
+
 - Converts raw board into the canonical `data/board/today.csv` that the scoring kernel reads.
 - Sets `ATLAS_GAME_DATE` env var from board data or local time.
 
 ### Stage 2a.5 — Fetch Role Metrics Snapshot
+
 - Fetches external role metrics (VORP, plus/minus, usage projections) when configured.
 - Writes snapshot to `data/output/dashboard/role_metrics_latest.json`.
 
 ### Stage 2b — Fetch Rotowire Lines
+
 - Fetches spreads and game totals → `data/input/rotowire_lines.json`.
 - Validates date match against `ATLAS_GAME_DATE`.
 - **Replay:** Uses pinned Rotowire snapshot.
 
 ### Stage 2c — Fetch BettingPros Props
+
 - External consensus lines → `data/input/external_priors_today.csv`.
 - Used as bounded priors (cap=0.03, scale=3.0) during optimization.
 
 ### Stage 2d — Freeze IAEL Snapshot
+
 - Captures the injury state for the run (invalidations + status + normalized snapshot).
 - This snapshot is immutable for the rest of the run.
 
 ### Stage 3 — Build Share Matrix
+
 - Calls `tools/build_share_matrix.py` → writes `data/model/share_matrix.csv`.
 - Uses `src/Atlas/model/team_share_allocator_v2.py` to compute redistribution weights
   from game logs.
 - Must run **before** model scoring (kernel reads the matrix).
 
 ### Stage 3 (continued) — Model Scoring (`model_all`)
+
 - Invokes `src/Atlas/engine/main.py` which:
   1. Loads `config.yaml`, `today.csv`, game logs, injury data, share matrix.
   2. Calls `_run_score_board_new()` from `src/Atlas/engine/new_engine.py`.
@@ -73,6 +102,7 @@ The orchestrator (`src/Atlas/runtime/orchestrator.py` → `run_today()`) execute
   11. Calls `run_publish_stage()` → writes run directory + latest surfaces.
 
 ### Stage 4 — Post-Run
+
 - Fingerprints output artifacts (sha256, row counts).
 - Writes bundle zip to `data/bundles/` (optional).
 - Emits run_end event to audit log.
@@ -81,7 +111,7 @@ The orchestrator (`src/Atlas/runtime/orchestrator.py` → `run_today()`) execute
 
 ## Source Code Map
 
-```
+```text
 src/Atlas/
 ├── cli.py                          # CLI entry point (live/replay/tools)
 ├── __init__.py
@@ -158,6 +188,7 @@ python -m Atlas.cli replay --raw data\raw\prizepicks_YYYYMMDD_HHMMSS.json
 ```
 
 For strict replay with pinned artifacts:
+
 ```powershell
 $env:ATLAS_STRICT_REPLAY = "1"
 $env:ATLAS_IAEL_INVALIDATIONS_PATH = "data\archives\iael\2026\<date>\<ts>\injury_invalidations.json"
@@ -197,7 +228,7 @@ and Rotowire data needed to fully reproduce a run.
 
 ## Daily Automation & Telemetry Archive
 
-Four Windows Task Scheduler jobs run daily (all wake from sleep):
+Five Windows Task Scheduler jobs run daily (all wake from sleep):
 
 ```mermaid
 flowchart TB
@@ -206,6 +237,7 @@ flowchart TB
         T2["9:00 AM\nrun_iael_morning.cmd"]
         T3["11:00 AM\nrun_iael_11am.cmd"]
         T4["2:30 PM\nrun_iael_230pm.cmd"]
+        T5["5:30 PM\nrun_iael_530pm.cmd"]
     end
 
     subgraph six_am["6 AM — Eval Backfill"]
@@ -232,7 +264,7 @@ flowchart TB
         F5 --> D5["data/input/"]
     end
 
-    subgraph live["11 AM / 2:30 PM — Full Live Run"]
+    subgraph live["11 AM / 2:30 PM / 5:30 PM — Full Live Run"]
         direction TB
         CLI["python -m Atlas.cli live"]
         CLI -->|"IAEL preflight"| IAEL["refresh_iael_today.py"]
@@ -309,6 +341,7 @@ Every live run (manual or scheduled) triggers `_archive_run_to_telemetry()` in `
 ### Task Scheduler Settings
 
 All tasks use XML definitions in `scripts/task_*.xml` with:
+
 - **WakeToRun:** `true` — wakes the PC from sleep
 - **StartWhenAvailable:** `true` — runs on next boot if missed
 - **DisallowStartIfOnBatteries:** `false`

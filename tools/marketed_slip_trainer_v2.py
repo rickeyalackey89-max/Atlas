@@ -53,9 +53,9 @@ BASE_CONFIG = {
         "calibration_path": "data/model/marketed_calibration.json",
         "excluded_stats": ["BLK", "STL", "TO"],
         "min_thresholds": {
-            "GOBLIN": 0.55,
-            "STANDARD": 0.40,
-            "DEMON": 0.30,
+            "GOBLIN": 0.57,     # matches production config.yaml
+            "STANDARD": 0.30,   # matches production config.yaml
+            "DEMON": 0.28,      # matches production config.yaml
         },
         "direction_filters": {},
         "correlation": {
@@ -418,6 +418,68 @@ def main():
     print(f"  Final combined: {fmt(final_result)}")
     print_breakdown(final_result, "Full breakdown")
 
+    # ── Phase 6: hit_prob filter sweep ────────────────────────────────
+    section("PHASE 6 — MIN SLIP HIT_PROB FILTER")
+    print(f"  Drop slips whose correlation-adjusted joint probability < threshold.")
+    print(f"  Applied on top of Phase 5 optimal config.")
+    print(f"  Baseline to beat: {final_result['win_rate']:.1%} ({final_result['total_wins']}/{final_result['total_slips']})\n")
+
+    cv_p6, dates_p6 = load_data()
+
+    def evaluate_with_hitprob(min_hit_prob: float) -> dict:
+        builder = MarketedSlipBuilder(best_config)
+        builder.templates = FIXED_TEMPLATES
+        total_slips = 0
+        total_wins = 0
+        by_label = {t["label"]: {"slips": 0, "wins": 0} for t in FIXED_TEMPLATES}
+        for date in dates_p6:
+            date_df = cv_p6[cv_p6["game_date"] == date].copy()
+            if date_df.empty:
+                continue
+            if best_score_overrides:
+                date_df = _apply_scoring_overrides(date_df, best_score_overrides)
+            slips = builder.build_slips(date_df)
+            for slip in slips:
+                if min_hit_prob > 0.0 and slip.get("hit_prob", 0.0) < min_hit_prob:
+                    continue
+                legs = slip["legs"]
+                all_hit = True
+                for leg in legs:
+                    mask = (
+                        (date_df["player"].str.strip() == str(leg.get("player", "")).strip()) &
+                        (date_df["stat"].str.upper()   == str(leg.get("stat", "")).upper()) &
+                        (date_df["direction"].str.upper() == str(leg.get("direction", "")).upper()) &
+                        (abs(date_df["line"] - float(leg.get("line", 0))) < 0.01)
+                    )
+                    if not mask.any() or not bool(date_df[mask]["hit"].iloc[0]):
+                        all_hit = False
+                total_slips += 1
+                total_wins += int(all_hit)
+                by_label[slip["label"]]["slips"] += 1
+                by_label[slip["label"]]["wins"] += int(all_hit)
+        wr = total_wins / max(total_slips, 1)
+        return {
+            "win_rate": wr, "total_wins": total_wins, "total_slips": total_slips,
+            "by_label": {l: d["wins"] / max(d["slips"], 1) for l, d in by_label.items()},
+            "by_stat": {}, "by_dir": {},
+        }
+
+    phase6_results = []
+    for mhp in [0.0, 0.04, 0.06, 0.07, 0.08, 0.09, 0.10, 0.11, 0.12, 0.15]:
+        r6 = evaluate_with_hitprob(mhp)
+        phase6_results.append((mhp, r6))
+        beat = "  <-- BEATS" if r6["win_rate"] > final_result["win_rate"] else ""
+        print(f"  mhp={mhp:.2f}  {fmt(r6)}{beat}")
+
+    meaningful_p6 = [(mhp, r) for mhp, r in phase6_results if r["total_slips"] >= 30]
+    best_p6 = max(meaningful_p6, key=lambda x: x[1]["win_rate"]) if meaningful_p6 else None
+    if best_p6 and best_p6[1]["win_rate"] > final_result["win_rate"]:
+        print(f"\n  ++ Phase 6 best (>=30 slips): mhp={best_p6[0]}  {fmt(best_p6[1])}")
+        print(f"     Improvement: {final_result['win_rate']:.1%} -> {best_p6[1]['win_rate']:.1%} "
+              f"({(best_p6[1]['win_rate'] - final_result['win_rate'])*100:+.1f}pp)")
+    else:
+        print(f"\n  Phase 6: no improvement over {final_result['win_rate']:.1%} baseline (at >=30 slips)")
+
     # ── Summary ───────────────────────────────────────────────────────
     elapsed = time.time() - t0
     section("OPTIMIZATION SUMMARY")
@@ -427,6 +489,8 @@ def main():
     print(f"  Phase 3 best:{fmt(best_phase3)}")
     print(f"  Phase 4 best:{fmt(best_phase4)}")
     print(f"  FINAL:       {fmt(final_result)}")
+    if best_p6 and best_p6[1]["win_rate"] > final_result["win_rate"]:
+        print(f"  PHASE 6 (mhp={best_p6[0]}): {fmt(best_p6[1])}")
     print(f"\n  Improvement: {baseline_result['win_rate']:.1%} -> {final_result['win_rate']:.1%} "
           f"({(final_result['win_rate'] - baseline_result['win_rate'])*100:+.1f}pp)")
     print(f"\n  RECOMMENDED CONFIG:")
@@ -437,6 +501,46 @@ def main():
     if best_score_overrides:
         print(f"    scoring_weights: {best_score_overrides}")
     print(f"\n  Completed in {elapsed:.1f}s")
+
+    # ── Save artifact ─────────────────────────────────────────────────
+    from datetime import datetime
+
+    def _sum(r: dict) -> dict:
+        return {
+            "win_rate": round(r["win_rate"], 4),
+            "wins": r.get("total_wins", r.get("wins", 0)),
+            "total": r.get("total_slips", r.get("total", 0)),
+            "by_label": {k: round(v, 4) for k, v in r.get("by_label", {}).items()},
+        }
+
+    artifact = {
+        "run_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "elapsed_s": round(elapsed, 1),
+        "cache_path": str(CACHE_PATH),
+        "n_legs": int(len(df)),
+        "summary": {
+            "baseline":    _sum(baseline_result),
+            "phase1_best": _sum(best_phase1),
+            "phase2_best": _sum(best_phase2),
+            "phase3_best": _sum(best_phase3),
+            "phase4_best": _sum(best_phase4),
+            "final":       _sum(final_result),
+        },
+        "improvement_pp": round((final_result["win_rate"] - baseline_result["win_rate"]) * 100, 2),
+        "by_stat":      {k: round(v, 4) for k, v in final_result.get("by_stat", {}).items()},
+        "by_direction": {k: round(v, 4) for k, v in final_result.get("by_dir", {}).items()},
+        "recommended_config": {
+            "min_thresholds":   best_config["marketed_slips"]["min_thresholds"],
+            "excluded_stats":   best_config["marketed_slips"]["excluded_stats"],
+            "direction_filters": best_config["marketed_slips"]["direction_filters"],
+            "scoring_weights":  best_score_overrides or {},
+        },
+    }
+    artifact_dir = Path(__file__).resolve().parents[1] / "data" / "model"
+    artifact_path = artifact_dir / "marketed_slip_trainer_result.json"
+    with open(artifact_path, "w") as f:
+        json.dump(artifact, f, indent=2)
+    print(f"\n  Artifact saved: {artifact_path}")
 
 
 if __name__ == "__main__":

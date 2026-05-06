@@ -9,7 +9,7 @@ Reference for all model and slip-builder trainers — inputs, outputs, runtime, 
 Trainers must run in this order (each depends on outputs from previous):
 
 ```text
-1. GBM Trainer (gbm_v12_train.py)          → produces GBM ensemble models
+1. GBM Trainer (gbm_v17_train.py)          → produces GBM ensemble models
 2. Calibration Trainers                      → produces isotonic calibration JSONs
    a. calibration_trainer.py                 → compares 12 methods, picks best
    b. train_direction_calibrator.py          → OVER/UNDER split isotonic
@@ -25,7 +25,7 @@ The leg trainers use scored_legs that include GBM-calibrated probabilities (`p_c
 
 ---
 
-## 1. GBM Trainer (`tools/gbm_v12_train.py`)
+## 1. GBM Trainer (`tools/gbm_v17_train.py`)
 
 **Purpose:** Train a 35-feature LightGBM ensemble (7 seeds × 2 directions = 14 models) via Leave-One-Date-Out (LODO) cross-validation. Primary metric: Brier score. Production: v14, T=1.08, LODO 0.198097.
 
@@ -35,13 +35,13 @@ The leg trainers use scored_legs that include GBM-calibrated probabilities (`p_c
 
 ```powershell
 # Baseline LODO on v17 cache
-python tools/gbm_v12_train.py --cache v17
+python tools/gbm_v17_train.py --cache v17
 
 # Test candidate features
-python tools/gbm_v12_train.py --cache v17 --extra-feats role_ctx_outs_n opp_defense_rel
+python tools/gbm_v17_train.py --cache v17 --extra-feats role_ctx_outs_n opp_defense_rel
 
 # Train + deploy to production
-python tools/gbm_v12_train.py --cache v17 --promote
+python tools/gbm_v17_train.py --cache v17 --promote
 ```
 
 ### GBM Arguments
@@ -429,10 +429,60 @@ When the corpus expands, ALL trainers must have their `RUN_DATES` lists updated 
 
 ---
 
+## Working Directory Rule — CRITICAL
+
+**ALL trainers and tools must be run from `C:\Users\13142\Atlas` (the workspace root), NOT from `C:\Users\13142\Atlas\Atlas` (the inner repo folder).**
+
+```powershell
+# CORRECT — workspace root
+cd C:\Users\13142\Atlas
+$env:PYTHONIOENCODING='utf-8'
+py Atlas\tools\marketed_slip_trainer_v2.py
+
+# WRONG — inner folder, calibration JSONs and relative paths will not resolve
+cd C:\Users\13142\Atlas\Atlas
+py tools\marketed_slip_trainer_v2.py   # <-- DO NOT RUN FROM HERE
+```
+
+**Why:** Multiple tools (including `marketed_slip_builder.py`) resolve calibration files and config paths relative to the working directory. When run from `Atlas\Atlas`, the path `data/model/marketed_calibration.json` resolves to `C:\Users\13142\Atlas\Atlas\data\model\...` which may or may not exist depending on what's installed. Running from `Atlas\` ensures all relative paths are consistent with how the live pipeline sees them.
+
+**Symptom of wrong CWD:** `marketed_calibration.json` not found → builder falls back to hardcoded multipliers → baseline slip win rate reads ~26% instead of the correct ~39.5%.
+
+---
+
+## marketed_slip_trainer_v2 — Baseline Reference
+
+**Verified correct baseline (May 3 2026, v17 cache, production config):**
+
+| Metric | Value |
+|---|---|
+| Baseline win rate | **39.5%** (51/129 slips) |
+| 3-leg | 60.5% |
+| 4-leg | 37.2% |
+| 5-leg | 20.9% |
+| Cache | `data/model/_v17_resim_cache.pkl` (44 dates, 165,792 legs) |
+| Thresholds | GOBLIN=0.57, STANDARD=0.30, DEMON=0.28 |
+| Excluded stats | BLK, STL, TO |
+| Direction filters | none |
+| Cal file | `data/model/marketed_calibration.json` v1.2 |
+
+The `BASE_CONFIG` inside `marketed_slip_trainer_v2.py` **must exactly match production `config.yaml` marketed_slips thresholds** before running. Verify before every sweep:
+
+```powershell
+# Check production thresholds
+Select-String "GOBLIN|STANDARD|DEMON" Atlas\config.yaml | Select-Object -First 10
+# Check trainer BASE_CONFIG matches
+Select-String "GOBLIN|STANDARD|DEMON" Atlas\tools\marketed_slip_trainer_v2.py | Select-Object -First 10
+```
+
+---
+
 ## Pre-Flight Checklist
 
 Before launching any trainer:
 
+- [ ] **CWD is correct:** Running from `C:\Users\13142\Atlas` (workspace root), not `Atlas\Atlas`
+- [ ] **BASE_CONFIG matches production:** Trainer thresholds match `config.yaml` marketed_slips section
 - [ ] **Cache exists:** `data/model/_v{N}_resim_cache.pkl` with expected date count
 - [ ] **Gamelogs current:** `data/gamelogs/nba_gamelogs.csv` covers all replay dates
 - [ ] **Corpus complete:** Every date in `RUN_DATES` has both `scored_legs_deduped.csv` and `eval_legs.csv` with >0 rows
@@ -446,7 +496,7 @@ Before launching any trainer:
 
 | Trainer                 | Input                            | Output                       | Runtime   | Metric      |
 | ----------------------- | -------------------------------- | ---------------------------- | --------- | ----------- |
-| gbm_v12_train           | Resim cache + gamelogs           | LODO Brier + ensemble models | 15–25 min | Brier ↓     |
+| gbm_v17_train           | Resim cache + gamelogs           | LODO Brier + ensemble models | 15–25 min | Brier ↓     |
 | calibration_trainer     | Eval legs corpus                 | 12-method comparison + JSONs | 10–30 min | Brier ↓     |
 | train_direction_cal     | 23-date replay corpus            | Isotonic JSON                | 1–2 min   | Gap ↓       |
 | leg_trainer_v5_ev       | v13_corpus (44 dates)            | Best slip configs (console)  | 4–12 hrs  | slip_wins ↑ |

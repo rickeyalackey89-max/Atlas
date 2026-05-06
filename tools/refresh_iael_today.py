@@ -460,11 +460,13 @@ def main() -> int:
         return 0
 
     rep = str(st.get("report_date") or "").strip()
-    if not rep:
-        st["report_date"] = today_yyyy_mm_dd()
+    today = today_yyyy_mm_dd()
+    if rep != today:
+        old = rep if rep else "(missing)"
+        st["report_date"] = today
         st["generated_at"] = datetime.now().isoformat(timespec="seconds")
         write_status(status_path, st)
-        print(f"[IAEL] Filled missing report_date with today={st['report_date']}")
+        print(f"[IAEL] Updated report_date: {old} -> {today}")
     else:
         print(f"[IAEL] report_date already present: {rep}")
 

@@ -1,0 +1,69 @@
+{
+  "report_date": "2026-05-05",
+  "report_label": "09:15PM",
+  "source_url": "https://ak-static.cms.nba.com/referee/injury/Injury-Report_2026-05-05_09_15PM.pdf",
+  "pulled_at_local": "2026-05-05T20:32:20-05:00",
+  "pdf_sha1": "5f52dbba2c2300851ef92bd83997e3fb71b7b423",
+  "rows": [
+    {
+      "report_date": "2026-05-05",
+      "report_label": "09:15PM",
+      "team": "DET",
+      "player": "Huerter, Kevin",
+      "status": "OUT",
+      "reason": "Injury/Illness - Left Adductor; Strain",
+      "game_date": "05/05/2026",
+      "hard_invalid": true,
+      "tag_probable": false,
+      "out_frac": 0.12
+    },
+    {
+      "report_date": "2026-05-05",
+      "report_label": "09:15PM",
+      "team": "OKC",
+      "player": "Sorber, Thomas",
+      "status": "OUT",
+      "reason": "Recovery",
+      "game_date": "05/05/2026",
+      "hard_invalid": true,
+      "tag_probable": false,
+      "out_frac": 0.12
+    },
+    {
+      "report_date": "2026-05-05",
+      "report_label": "09:15PM",
+      "team": "OKC",
+      "player": "Williams, Jalen",
+      "status": "OUT",
+      "reason": "Injury/Illness - Left Hamstring; Strain",
+      "game_date": "05/05/2026",
+      "hard_invalid": true,
+      "tag_probable": false,
+      "out_frac": 0.12
+    },
+    {
+      "report_date": "2026-05-05",
+      "report_label": "09:15PM",
+      "team": "PHI",
+      "player": "Embiid, Joel",
+      "status": "PROBABLE",
+      "reason": "Injury/Illness - Right Ankle; Sprain Injury/Illness - Right Finger; Tendon",
+      "game_date": "05/06/2026",
+      "hard_invalid": false,
+      "tag_probable": true,
+      "out_frac": 0.0
+    },
+    {
+      "report_date": "2026-05-05",
+      "report_label": "09:15PM",
+      "team": "PHI",
+      "player": "Maxey, Tyrese",
+      "status": "AVAILABLE",
+      "reason": "Strain - Splint Injury/Illness - Right Achilles Tendon;",
+      "game_date": "05/06/2026",
+      "hard_invalid": false,
+      "tag_probable": false,
+      "out_frac": 0.0
+    }
+  ]
+}

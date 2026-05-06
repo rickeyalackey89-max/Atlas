@@ -1,36 +1,36 @@
 {
-  "report_date": "2026-05-01",
-  "report_label": "08:45AM",
-  "pulled_at_local": "2026-05-01T08:00:10-05:00",
+  "report_date": "2026-05-05",
+  "report_label": "09:45PM",
+  "pulled_at_local": "2026-05-05T20:53:25-05:00",
   "invalidated_players_count": 5,
   "invalidated_players": [
     {
-      "team": "HOU",
-      "player": "Adams, Steven",
+      "team": "DET",
+      "player": "Huerter, Kevin",
       "status": "OUT",
       "reason": ""
     },
     {
-      "team": "HOU",
-      "player": "Durant, Kevin",
-      "status": "DOUBTFUL",
-      "reason": ""
-    },
-    {
-      "team": "HOU",
-      "player": "VanVleet, Fred",
+      "team": "LAL",
+      "player": "Doncic, Luka",
       "status": "OUT",
       "reason": ""
     },
     {
-      "team": "ORL",
-      "player": "Isaac, Jonathan",
-      "status": "DOUBTFUL",
+      "team": "MIN",
+      "player": "DiVincenzo, Donte",
+      "status": "OUT",
       "reason": ""
     },
     {
-      "team": "ORL",
-      "player": "Wagner, Franz",
+      "team": "OKC",
+      "player": "Sorber, Thomas",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "OKC",
+      "player": "Williams, Jalen",
       "status": "OUT",
       "reason": ""
     }

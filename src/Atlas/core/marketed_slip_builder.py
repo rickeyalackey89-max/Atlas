@@ -190,12 +190,15 @@ class MarketedSlipBuilder:
         
         return float(base_prob * max(corr_mult, 0.3))  # Floor at 30% of base
     
-    def _build_single_slip(self, pool: pd.DataFrame, template: Dict[str, Any], 
-                          used_players: set, used_teams: set) -> Optional[Dict[str, Any]]:
+    def _build_single_slip(self, pool: pd.DataFrame, template: Dict[str, Any],
+                          used_players: set, used_teams: set,
+                          single_game_slate: bool = False) -> Optional[Dict[str, Any]]:
         """Build a single slip following the template constraints."""
-        
+
         selected_legs = []
         slip_teams = set()
+        # When single_game_slate, track players per team (cap at 4) instead of 1 per team
+        slip_team_counts: Dict[str, int] = {}
 
         # Track what we're adding to used sets (for rollback on failure)
         new_players = set()
@@ -210,21 +213,25 @@ class MarketedSlipBuilder:
 
                 tier_pool = pool[pool["tier"] == tier].copy()
                 tier_pool = tier_pool.sort_values("marketed_score", ascending=False)
-                
+
                 selected = 0
                 for _, leg in tier_pool.iterrows():
                     player = leg["player"]
                     team = leg["team"]
-                    
-                    # Constraint checks
+
+                    # Player uniqueness always enforced
                     if player in used_players or player in new_players:
                         continue
-                    if team in used_teams or team in new_teams or team in slip_teams:
+
+                    # Team constraint: max 2 per team on multi-game slates, 4 per team on single-game slates
+                    max_per_team = 4 if single_game_slate else 2
+                    if slip_team_counts.get(team, 0) >= max_per_team:
                         continue
 
                     # Add to slip
                     selected_legs.append(leg)
                     slip_teams.add(team)
+                    slip_team_counts[team] = slip_team_counts.get(team, 0) + 1
                     new_players.add(player)
                     new_teams.add(team)
                     selected += 1
@@ -234,10 +241,9 @@ class MarketedSlipBuilder:
                 
                 # Check if we got enough for this tier
                 if selected < count:
-                    # Try DEMON -> GOBLIN fallback for 5-leg template
-                    return None  # Template failed, not enough qualifying legs
-            else:
-                template_label = template["label"]  # Normal template success
+                    return None  # Not enough qualifying legs for this tier
+                else:
+                    template_label = template["label"]
             
             # Commit the new players/teams to used sets
             used_players.update(new_players)
@@ -249,13 +255,20 @@ class MarketedSlipBuilder:
             # Calculate payout using pp_kernel
             payout_mult = self._calculate_payout(selected_legs)
             
+            n_legs = len(selected_legs)
+            # Apply empirical calibration so displayed probability matches actual win rate
+            cal_factors = self.config.get("hit_prob_calibration", {})
+            scale = cal_factors.get(n_legs) or cal_factors.get(str(n_legs)) or 1.0
+            hit_prob_display = min(float(hit_prob) * float(scale), 0.99)
+
             return {
                 "label": template_label,
                 "legs": [leg.to_dict() for leg in selected_legs],
-                "hit_prob": hit_prob,
+                "hit_prob": hit_prob_display,
+                "hit_prob_raw": hit_prob,
                 "payout_mult": payout_mult,
-                "ev": hit_prob * payout_mult,
-                "n_legs": len(selected_legs)
+                "ev": hit_prob_display * payout_mult,
+                "n_legs": n_legs
             }
             
         except Exception:
@@ -290,12 +303,33 @@ class MarketedSlipBuilder:
         if pool.empty:
             return []
         
+        # Detect single-game slate using the full board (pre-filter), not the
+        # qualified pool — a tight threshold on a multi-game day would otherwise
+        # falsely trigger this and bypass team-diversity caps.
+        unique_games = set()
+        for _, row in df.iterrows():
+            teams = tuple(sorted([str(row.get("team", "")), str(row.get("opp", ""))]))
+            unique_games.add(teams)
+        single_game_slate = (len(unique_games) == 1)
+        if single_game_slate:
+            print("[MARKETED] Single-game slate detected — team diversity restrictions bypassed (max 4 per team)")
+
         # Build slips following templates — each template is independent
         # (subscriber picks one slip; the same player can appear across templates)
+        hc_thresholds = self.config.get("high_confidence_thresholds", {})
+
+        # Shared across all templates: once a player is in one slip they can't appear in another
+        used_players_global: set = set()
         slips = []
         for template in self.templates:
-            slip = self._build_single_slip(pool, template, set(), set())
+            slip = self._build_single_slip(pool, template, used_players_global, set(), single_game_slate=single_game_slate)
             if slip:
+                n = slip.get("n_legs", 0)
+                bar = hc_thresholds.get(n) or hc_thresholds.get(str(n))
+                # hit_prob is already calibrated (empirical scale applied in _build_single_slip)
+                slip["high_confidence"] = (
+                    bar is not None and slip.get("hit_prob", 0.0) >= float(bar)
+                )
                 slips.append(slip)
         
         return slips

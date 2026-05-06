@@ -130,7 +130,7 @@ if "p_new" in cv.columns and cv["p_new"].isna().mean() > 0.5:
         cv["p_new"] = cv["p"].astype(float)
 
 # ===================================================================
-# Build base features (replicating gbm_v12_train.py exactly)
+# Build base features (replicating gbm_v17_train.py exactly)
 # ===================================================================
 print("\nBuilding base features ...")
 t0 = time.time()
@@ -628,7 +628,7 @@ if selected:
           f"({(current_brier - baseline_brier)*1000:+.3f} mB)")
     print(f"Selected features: {selected}")
     print(f"\nTo train with these features:")
-    print(f"  python tools/gbm_v12_train.py --cache {args.cache} --extra-feats {' '.join(selected)}")
+    print(f"  python tools/gbm_v17_train.py --cache {args.cache} --extra-feats {' '.join(selected)}")
 else:
     print("No features survived greedy selection.")
 
@@ -655,7 +655,7 @@ out = {
     "greedy_selected": selected,
     "greedy_final_brier": float(current_brier),
     "greedy_delta_mB": float((current_brier - baseline_brier) * 1000),
-    "train_command": f"python tools/gbm_v12_train.py --cache {args.cache} --extra-feats {' '.join(selected)}" if selected else None,
+    "train_command": f"python tools/gbm_v17_train.py --cache {args.cache} --extra-feats {' '.join(selected)}" if selected else None,
 }
 with open(out_path, "w") as f:
     yaml.dump(out, f, default_flow_style=False, sort_keys=False)

@@ -149,7 +149,7 @@ def run_publish_stage(
     if demonhunter is not None and len(demonhunter) > 0:
         w(demonhunter, run_dir / "demonhunter.csv")
 
-    # MARKETED SLIPS – JSON output for subscriber product
+    # MARKETED SLIPS – JSON + CSV output for subscriber product
     if marketed_slips is not None and len(marketed_slips) > 0:
         marketed_path = run_dir / "marketed_slips.json"
         with open(marketed_path, 'w') as f:
@@ -163,7 +163,30 @@ def run_publish_stage(
                     "templates": ["3-leg: 1G+2S", "4-leg: 2G+2S", "5-leg: 2G+2S+1D"]
                 }
             }, f, indent=2)
-        
+
+        # CSV companion — one row per leg for easy viewing
+        import pandas as _pd
+        csv_rows = []
+        for slip in marketed_slips:
+            for leg in slip.get("legs", []):
+                csv_rows.append({
+                    "slip": slip.get("label"),
+                    "high_confidence": slip.get("high_confidence", False),
+                    "hit_prob": round(slip.get("hit_prob", 0.0), 4),
+                    "payout_mult": round(slip.get("payout_mult", 0.0), 3),
+                    "ev": round(slip.get("ev", 0.0), 4),
+                    "player": leg.get("player"),
+                    "team": leg.get("team"),
+                    "opp": leg.get("opp"),
+                    "stat": leg.get("stat"),
+                    "direction": leg.get("direction"),
+                    "tier": leg.get("tier"),
+                    "line": leg.get("line"),
+                    "p_cal": round(float(leg.get("p_cal", 0.0)), 4) if leg.get("p_cal") is not None else None,
+                })
+        marketed_csv_path = run_dir / "marketed_slips.csv"
+        _pd.DataFrame(csv_rows).to_csv(marketed_csv_path, index=False)
+
         # Copy to latest if configured
         if cfg and cfg.get("marketed_slips", {}).get("publish_to_latest", False):
             latest_path = OUT_DIR / cfg.get("marketed_slips", {}).get("output_name", "marketed_slips_latest.json")
@@ -243,6 +266,7 @@ def run_publish_stage(
 
     if marketed_slips is not None and len(marketed_slips) > 0:
         print(f" - {run_dir / 'marketed_slips.json'} (MARKETED SLIPS - {len(marketed_slips)} slips)")
+        print(f" - {run_dir / 'marketed_slips.csv'} (MARKETED SLIPS CSV)")
         if cfg and cfg.get("marketed_slips", {}).get("publish_to_latest", False):
             latest_name = cfg.get("marketed_slips", {}).get("output_name", "marketed_slips_latest.json")
             print(f" - {OUT_DIR / latest_name} (MARKETED SLIPS latest)")

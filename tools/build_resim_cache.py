@@ -37,6 +37,7 @@ sys.path.insert(0, str(ROOT / "src"))
 from Atlas.core.fingerprint import build_manifest, config_fingerprint
 
 REPLAY_RUNS = ROOT / "data" / "telemetry" / "replay_runs"
+LIVE_RUNS = ROOT / "data" / "telemetry" / "live_runs"
 RAW_DIR = ROOT / "data" / "raw"
 CORPUS_OUT = ROOT / "data" / "telemetry"  # corpus dirs go here
 
@@ -117,6 +118,57 @@ def find_all_dates(tag: str = CORPUS_TAG,
 
         if best_scored and best_eval:
             seen.add(date)
+            results.append((date, best_scored, best_eval))
+
+    results.sort(key=lambda x: x[0])
+    return results
+
+
+def find_live_run_dates(
+        skip_dates: frozenset[str] | None = None,
+) -> list[tuple[str, Path, Path]]:
+    """Find dates from live runs (data/telemetry/live_runs/) that have both
+    scored_legs_deduped.csv and eval_legs.csv.
+
+    Live run dirs are named YYYYMMDD_HHMMSS or YYYYMMDD_<label>.  For each
+    calendar date the latest run dir (by mtime) that carries both files is
+    used.  Returns (date_str, scored_path, eval_path) sorted by date.
+    """
+    if skip_dates is None:
+        skip_dates = ALL_STAR_SKIP
+
+    today = dt.date.today().strftime("%Y%m%d")
+    skip_dates = skip_dates | {today}
+
+    if not LIVE_RUNS.exists():
+        return []
+
+    # Group run dirs by date (first 8 chars)
+    by_date: dict[str, list[Path]] = {}
+    for d in LIVE_RUNS.iterdir():
+        if not d.is_dir():
+            continue
+        date = d.name[:8]
+        if not date.isdigit() or len(date) != 8:
+            continue
+        if date in skip_dates:
+            continue
+        by_date.setdefault(date, []).append(d)
+
+    results: list[tuple[str, Path, Path]] = []
+    for date, run_dirs in sorted(by_date.items()):
+        # Among run dirs for this date, prefer the latest one with BOTH files
+        candidates = sorted(run_dirs, key=lambda p: p.stat().st_mtime, reverse=True)
+        best_scored: Path | None = None
+        best_eval: Path | None = None
+        for run_dir in candidates:
+            s = run_dir / "scored_legs_deduped.csv"
+            e = run_dir / "eval_legs.csv"
+            if s.is_file() and s.stat().st_size > 100 and e.is_file() and e.stat().st_size > 100:
+                best_scored = s
+                best_eval = e
+                break
+        if best_scored and best_eval:
             results.append((date, best_scored, best_eval))
 
     results.sort(key=lambda x: x[0])
@@ -379,11 +431,24 @@ def main() -> int:
 
     # Discover dates
     print(f"Scanning replay dates (tag={args.corpus_tag})...")
-    all_dates = find_all_dates(tag=args.corpus_tag)
-    print(f"Found {len(all_dates)} dates with scored_legs + eval_legs\n")
+    replay_dates = find_all_dates(tag=args.corpus_tag)
+    print(f"  Replay corpus: {len(replay_dates)} dates")
+
+    print("Scanning live run dates (data/telemetry/live_runs/)...")
+    live_dates = find_live_run_dates()
+    print(f"  Live runs:     {len(live_dates)} dates")
+
+    # Merge: replay takes priority; live fills in dates not covered by replay
+    replay_date_set = {d for d, _, _ in replay_dates}
+    live_fill = [(d, s, e) for d, s, e in live_dates if d not in replay_date_set]
+    if live_fill:
+        print(f"  Adding {len(live_fill)} new dates from live runs: {[d for d,_,_ in live_fill]}")
+
+    all_dates = sorted(replay_dates + live_fill, key=lambda x: x[0])
+    print(f"Total: {len(all_dates)} dates\n")
 
     if not all_dates:
-        print("ERROR: No valid replay dates found!")
+        print("ERROR: No valid dates found in replay corpus or live runs!")
         return 1
 
     # Show expansion candidates

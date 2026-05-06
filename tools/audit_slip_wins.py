@@ -64,7 +64,7 @@ def load_eval_for_date(date_str: str):
 
 def score_slip(slip: dict, hit_lookup: dict):
     """Determine if a slip won (all legs hit). Returns (won, legs_hit, legs_total, n_unmatched)."""
-    legs = slip.get("legs_detail", [])
+    legs = slip.get("legs_detail") or slip.get("legs", [])
     hits = []
     unmatched = 0
     for leg in legs:
@@ -85,7 +85,7 @@ def score_slip(slip: dict, hit_lookup: dict):
 
 def extract_tiers(slip: dict):
     """Summarize tier composition of a slip."""
-    tiers = [l.get("tier", "?").upper() for l in slip.get("legs_detail", [])]
+    tiers = [l.get("tier", "?").upper() for l in (slip.get("legs_detail") or slip.get("legs", []))]
     counts = defaultdict(int)
     for t in tiers:
         counts[t] += 1
@@ -133,7 +133,7 @@ def main():
         date_won = 0
         by_feed = defaultdict(lambda: defaultdict(lambda: {"n": 0, "won": 0, "ev": 0.0}))
 
-        for feed in ["system", "windfall", "demonhunter"]:
+        for feed in ["system", "windfall", "demonhunter", "marketed_slips"]:
             for slip in payload.get(feed, []):
                 n_legs = slip.get("n_legs", len(slip.get("legs_detail", [])))
                 payout = slip.get("payout_mult", 1.0)
@@ -174,7 +174,7 @@ def main():
         wr_str = f"{win_rate:.1%}" if win_rate is not None else "N/A"
         print(f"  {date_str}  |  {date_slip_count} slips  |  {date_won} won  |  Win Rate: {wr_str}")
 
-        for feed in ["system", "windfall", "demonhunter"]:
+        for feed in ["system", "windfall", "demonhunter", "marketed_slips"]:
             if feed not in by_feed:
                 continue
             for n_legs in sorted(by_feed[feed].keys()):

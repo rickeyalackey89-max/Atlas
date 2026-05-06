@@ -1,5 +1,5 @@
 """
-GBM 34-feature test trainer - separate from production gbm_v12_train.py
+GBM 34-feature test trainer - separate from production gbm_v17_train.py
 Tests 34-feature model performance vs 33-feature baseline.
 """
 import argparse

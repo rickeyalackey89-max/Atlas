@@ -150,10 +150,9 @@ def _compute_yesterday_slip_record(repo_root: Path) -> dict:
             continue
     if not hit_lookup:
         return {}
-    # Score marketed slips; deduplicate wins by leg-set frozenset
+    # Score marketed slips — every run counts independently
     wins = 0
     total = 0
-    seen_wins: set = set()
     for rd in run_dirs:
         mp = rd / "marketed_slips.csv"
         if not mp.exists():
@@ -165,17 +164,14 @@ def _compute_yesterday_slip_record(repo_root: Path) -> dict:
                     sn = (row.get("slip") or "").strip()
                     slips.setdefault(sn, []).append(row)
             for slip_name, legs in slips.items():
-                leg_keys = tuple(
+                leg_keys = [
                     (l.get("player", "").strip(), l.get("stat", "").strip(),
                      l.get("line", "").strip(), (l.get("direction") or "").upper())
                     for l in legs
-                )
+                ]
                 slip_won = all(hit_lookup.get(k, 0) == 1 for k in leg_keys)
                 if slip_won:
-                    frozen = frozenset(leg_keys)
-                    if frozen not in seen_wins:
-                        seen_wins.add(frozen)
-                        wins += 1
+                    wins += 1
                 total += 1
         except Exception:
             continue

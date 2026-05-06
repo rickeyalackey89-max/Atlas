@@ -6,7 +6,7 @@ This script wraps LODO runs or trainer executions to automatically protect
 the DEMON tier calibration fix from being overwritten.
 
 Usage:
-  python tools/safe_lodo_run.py "python tools/gbm_v12_train.py --cache v13"
+  python tools/safe_lodo_run.py "python tools/gbm_v17_train.py --cache v17"
   python tools/safe_lodo_run.py "python tools/leg_trainer_v5_ev.py"
   python tools/safe_lodo_run.py "python tools/role_ctx_trainer_v1.py"
 
@@ -92,7 +92,7 @@ def main():
     if len(sys.argv) != 2:
         print("Usage: python tools/safe_lodo_run.py \"<command_to_run>\"")
         print("\nExamples:")
-        print("  python tools/safe_lodo_run.py \"python tools/gbm_v12_train.py --cache v13\"")
+        print("  python tools/safe_lodo_run.py \"python tools/gbm_v17_train.py --cache v17\"")
         print("  python tools/safe_lodo_run.py \"python tools/leg_trainer_v5_ev.py\"")
         sys.exit(1)
     

@@ -56,6 +56,10 @@ def _default_archive_dir() -> Path:
     return _repo_root() / "data" / "archives" / "oddsapi"
 
 
+def _default_market_json_path() -> Path:
+    return _repo_root() / "data" / "input" / "odds_market_today.json"
+
+
 # ---------------------------------------------------------------------------
 # OddsAPI market key → Atlas stat name
 # ---------------------------------------------------------------------------
@@ -75,8 +79,8 @@ MARKET_TO_STAT: Dict[str, str] = {
     "player_blocks_steals":             "BS",
 }
 
-# Default: the 4 highest-coverage prop markets (conserves free-tier budget)
-DEFAULT_MARKETS = "player_points,player_rebounds,player_assists,player_threes"
+# All 12 supported prop markets — requires Developer plan
+DEFAULT_MARKETS = "player_points,player_rebounds,player_assists,player_threes,player_blocks,player_steals,player_turnovers,player_points_rebounds_assists,player_points_rebounds,player_points_assists,player_rebounds_assists,player_blocks_steals"
 
 BASE_URL = "https://api.the-odds-api.com/v4"
 
@@ -209,6 +213,76 @@ def _parse_event_props(event: Dict[str, Any], asof: str) -> List[Dict[str, str]]
     return result
 
 
+def _parse_event_props_per_book(event: Dict[str, Any]) -> List[Dict[str, Any]]:
+    """Parse one event's odds preserving per-bookmaker (DK/FD) raw American lines.
+
+    Returns list of {player, player_norm, stat, line, dk_over, dk_under,
+    fd_over, fd_under, dk_imp_over, fd_imp_over}.
+    """
+    import unicodedata
+
+    def _norm(name: str) -> str:
+        return unicodedata.normalize("NFKD", name).encode("ascii", "ignore").decode("ascii").strip().lower()
+
+    # (player, stat, line) -> {bm_key: {over: price, under: price}}
+    agg: Dict[tuple, Dict[str, Dict[str, float]]] = {}
+
+    for bm in event.get("bookmakers", []):
+        bm_key = bm.get("key", "")
+        if bm_key not in ("draftkings", "fanduel"):
+            continue
+        for mkt in bm.get("markets", []):
+            stat = MARKET_TO_STAT.get(mkt.get("key", ""))
+            if not stat:
+                continue
+            player_lines: Dict[tuple, Dict[str, float]] = {}
+            for outcome in mkt.get("outcomes", []):
+                player = outcome.get("description", "").strip()
+                line = outcome.get("point")
+                if not player or line is None:
+                    continue
+                key = (player, float(line))
+                if key not in player_lines:
+                    player_lines[key] = {}
+                player_lines[key][outcome["name"]] = outcome["price"]
+            for (player, line), sides in player_lines.items():
+                if "Over" not in sides or "Under" not in sides:
+                    continue
+                rk = (player, stat, line)
+                if rk not in agg:
+                    agg[rk] = {}
+                agg[rk][bm_key] = {"over": sides["Over"], "under": sides["Under"]}
+
+    rows: List[Dict[str, Any]] = []
+    for (player, stat, line), books in agg.items():
+        row: Dict[str, Any] = {
+            "player":       player,
+            "player_norm":  _norm(player),
+            "stat":         stat,
+            "line":         line,
+            "dk_over":      None,
+            "dk_under":     None,
+            "fd_over":      None,
+            "fd_under":     None,
+            "dk_imp_over":  None,
+            "fd_imp_over":  None,
+        }
+        if "draftkings" in books:
+            dk = books["draftkings"]
+            imp_o, _ = devig_over_under(dk["over"], dk["under"])
+            row["dk_over"]   = int(round(dk["over"]))
+            row["dk_under"]  = int(round(dk["under"]))
+            row["dk_imp_over"] = round(imp_o, 4)
+        if "fanduel" in books:
+            fd = books["fanduel"]
+            imp_o, _ = devig_over_under(fd["over"], fd["under"])
+            row["fd_over"]   = int(round(fd["over"]))
+            row["fd_under"]  = int(round(fd["under"]))
+            row["fd_imp_over"] = round(imp_o, 4)
+        rows.append(row)
+    return rows
+
+
 # ---------------------------------------------------------------------------
 # Write / merge
 # ---------------------------------------------------------------------------
@@ -292,11 +366,13 @@ def main() -> None:
         _write_csv([], out_path)
         return
 
-    # Step 2: Fetch props per event
+    # Step 2: Fetch props per event — cache raw responses for both parsers
     all_rows: List[Dict[str, str]] = []
+    raw_event_data: List[Dict[str, Any]] = []
     for ev in events:
         try:
             data = fetch_event_props(api_key, ev["id"], regions, markets)
+            raw_event_data.append(data)
             rows = _parse_event_props(data, asof)
             all_rows.extend(rows)
         except requests.HTTPError as e:
@@ -322,6 +398,27 @@ def main() -> None:
     _write_csv(deduped, out_path)
     _merge_into_external_priors(deduped, merged_path)
     _archive_snapshot(out_path, game_date, archive_dir)
+
+    # Step 4: Write per-bookmaker JSON for Market tab (DK + FD raw American odds)
+    market_json_path = _default_market_json_path()
+    market_rows: List[Dict[str, Any]] = []
+    for data in raw_event_data:
+        market_rows.extend(_parse_event_props_per_book(data))
+    # Dedupe: keep entry with most bookmaker coverage
+    mkt_seen: Dict[tuple, Dict[str, Any]] = {}
+    for r in market_rows:
+        k = (r["player_norm"], r["stat"], r["line"])
+        if k not in mkt_seen:
+            mkt_seen[k] = r
+        else:
+            existing = mkt_seen[k]
+            score_new = (r["dk_over"] is not None) + (r["fd_over"] is not None)
+            score_old = (existing["dk_over"] is not None) + (existing["fd_over"] is not None)
+            if score_new > score_old:
+                mkt_seen[k] = r
+    market_json_path.parent.mkdir(parents=True, exist_ok=True)
+    market_json_path.write_text(json.dumps(list(mkt_seen.values()), indent=2), encoding="utf-8")
+    print(f"[OddsAPI] Market JSON -> {market_json_path}  ({len(mkt_seen)} entries)")
 
     print(f"[OddsAPI] Done. {len(deduped)} props fetched for {game_date}.")
 

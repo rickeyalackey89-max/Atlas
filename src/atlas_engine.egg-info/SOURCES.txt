@@ -11,6 +11,7 @@ src/Atlas/core/external_priors.py
 src/Atlas/core/features.py
 src/Atlas/core/fingerprint.py
 src/Atlas/core/iael_filter.py
+src/Atlas/core/marketed_slip_builder.py
 src/Atlas/core/matchup_enricher.py
 src/Atlas/core/minutes.py
 src/Atlas/core/payout_tables.py
