@@ -465,10 +465,11 @@ def _tee_stream_to_console_and_buffer(stream, buffer: list[str], prefix: str = "
             if not line:
                 break
             buffer.append(line)
+            safe_line = line.encode(sys.stdout.encoding or "utf-8", errors="replace").decode(sys.stdout.encoding or "utf-8", errors="replace")
             if prefix:
-                print(prefix + line, end="")
+                print(prefix + safe_line, end="")
             else:
-                print(line, end="")
+                print(safe_line, end="")
     finally:
         try:
             stream.close()
@@ -925,11 +926,27 @@ def _infer_game_date_from_today_csv(today_path: Path) -> Optional[str]:
 
 def generate_daily_graphics_csv(ctx: RunContext) -> None:
     """Generate daily graphics CSV for subscriber content after successful run."""
+    # Reconfigure stdout/stderr to UTF-8 so subprocess output with emoji can't crash print()
+    try:
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+        sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
     try:
         _banner("GENERATE DAILY GRAPHICS CSV")
-        
-        # Get the current run output directory
-        run_output_dir = _output_root_for_run(ctx)
+
+        # The engine creates its own timestamped run dir — find the latest one
+        # rather than relying on ctx.run_id which is the orchestrator start time.
+        if RUNS_DIR.exists():
+            run_dirs = sorted(
+                [d for d in RUNS_DIR.iterdir() if d.is_dir()],
+                key=lambda d: d.stat().st_mtime,
+                reverse=True,
+            )
+            run_output_dir = run_dirs[0] if run_dirs else _output_root_for_run(ctx)
+        else:
+            run_output_dir = _output_root_for_run(ctx)
+
         scored_legs_path = run_output_dir / "scored_legs_deduped.csv"
         
         if not scored_legs_path.exists():
@@ -954,39 +971,52 @@ def generate_daily_graphics_csv(ctx: RunContext) -> None:
             "--output", str(output_path)
         ]
         
+        import os as _os
+        _sub_env = {**_os.environ, "PYTHONIOENCODING": "utf-8"}
         csv_result = subprocess.run(
             csv_cmd,
             cwd=PROJECT_ROOT,
             capture_output=True,
             text=True,
+            encoding="utf-8",
+            env=_sub_env,
             timeout=120
         )
         
+        def _safe(s: str) -> str:
+            enc = sys.stdout.encoding or "utf-8"
+            return s.encode(enc, errors="replace").decode(enc, errors="replace")
+
         if csv_result.returncode != 0:
-            print(f"[GRAPHICS] ❌ CSV generation failed: {csv_result.stderr}")
+            print(f"[GRAPHICS] FAIL CSV generation failed: {_safe(csv_result.stderr)}")
             emit_event(ctx, "graphics_generation", status="csv_failed", error=csv_result.stderr)
             return
             
-        print(f"[GRAPHICS] ✅ Daily picks CSV generated: {output_path}")
+        print(f"[GRAPHICS] OK Daily picks CSV generated: {output_path}")
         
         # Generate visual graphics
         try:
+            marketed_slips_path = run_output_dir / "marketed_slips.csv"
             graphics_cmd = [
                 sys.executable, str(TOOLS_DIR / "generate_daily_graphics.py"),
                 "--csv", str(output_path),
                 "--output-dir", str(graphics_dir)
             ]
+            if marketed_slips_path.exists() and marketed_slips_path.stat().st_size > 0:
+                graphics_cmd += ["--marketed-slips", str(marketed_slips_path)]
             
             graphics_result = subprocess.run(
                 graphics_cmd,
                 cwd=PROJECT_ROOT,
                 capture_output=True,
                 text=True,
+                encoding="utf-8",
+                env=_sub_env,
                 timeout=180
             )
             
             if graphics_result.returncode == 0:
-                print(f"[GRAPHICS] ✅ Visual graphics generated successfully")
+                print(f"[GRAPHICS] Visual graphics generated successfully")
                 print(f"[GRAPHICS] Check: {graphics_dir}")
                 
                 # Copy CSV to latest surface for easy access
@@ -997,19 +1027,21 @@ def generate_daily_graphics_csv(ctx: RunContext) -> None:
                 emit_event(ctx, "graphics_generation", status="success", 
                           csv_path=str(output_path), graphics_dir=str(graphics_dir))
             else:
-                print(f"[GRAPHICS] ⚠️ Visual graphics failed: {graphics_result.stderr}")
+                print(f"[GRAPHICS] WARN Visual graphics failed: {_safe(graphics_result.stderr)}")
                 print(f"[GRAPHICS] CSV still available: {output_path}")
                 emit_event(ctx, "graphics_generation", status="csv_only", 
                           csv_path=str(output_path), graphics_error=graphics_result.stderr)
                 
         except Exception as graphics_e:
-            print(f"[GRAPHICS] ⚠️ Visual graphics exception: {graphics_e}")
+            print(f"[GRAPHICS] WARN Visual graphics exception: {_safe(str(graphics_e))}")
             print(f"[GRAPHICS] CSV still available: {output_path}")
             emit_event(ctx, "graphics_generation", status="csv_only", 
                       csv_path=str(output_path), graphics_exception=str(graphics_e))
             
     except Exception as e:
-        print(f"[GRAPHICS] ❌ Graphics generation exception: {e}")
+        enc = sys.stdout.encoding or "utf-8"
+        safe_e = str(e).encode(enc, errors="replace").decode(enc, errors="replace")
+        print(f"[GRAPHICS] FAIL Graphics generation exception: {safe_e}")
         emit_event(ctx, "graphics_generation", status="error", exception=str(e))
 
 
@@ -1121,6 +1153,22 @@ def run_today(
         emit_event(ctx, "rotowire_date_mismatch", expected=game_date, found=rw_date)
         raise SystemExit(f"[rotowire] rotowire_lines.json date mismatch: expected={game_date} found={rw_date}")
 
+    # 2d) Refresh IAEL snapshot before freezing — ensures injuries reported since
+    # the morning cron are captured (e.g. afternoon status-change outs).
+    if not _strict_replay_enabled():
+        with StageTimer(ctx, "refresh_iael_snapshot"):
+            refresh_script = TOOLS_DIR / "refresh_iael_today.py"
+            if refresh_script.exists():
+                emit_event(ctx, "iael_refresh_start", script=str(refresh_script))
+                result = subprocess.run(
+                    [_py(), str(refresh_script)],
+                    capture_output=False,
+                    check=False,
+                )
+                emit_event(ctx, "iael_refresh_done", returncode=result.returncode)
+            else:
+                emit_event(ctx, "iael_refresh_missing", script=str(refresh_script))
+
     # Freeze the injury state for this run before model scoring starts.
     run_root = _output_root_for_run(ctx)
     iael_run_snapshot = _prepare_iael_run_snapshot(ctx, run_root)
@@ -1153,6 +1201,28 @@ def run_today(
     # 5) Generate daily graphics CSV for subscriber content
     with StageTimer(ctx, "generate_daily_graphics"):
         generate_daily_graphics_csv(ctx)
+
+    # 6) Discord picks-today post (best-effort, never blocks the run)
+    with StageTimer(ctx, "discord_post"):
+        try:
+            import subprocess as _subp
+            import os as _os2
+            _discord_env = {**_os2.environ, "PYTHONIOENCODING": "utf-8"}
+            _discord_result = _subp.run(
+                [sys.executable, str(TOOLS_DIR / "discord_post.py"), "--picks-today"],
+                cwd=PROJECT_ROOT,
+                capture_output=True,
+                text=True,
+                encoding="utf-8",
+                env=_discord_env,
+                timeout=45,
+            )
+            for _line in (_discord_result.stdout or "").splitlines():
+                print(_line)
+            if _discord_result.returncode != 0:
+                print(f"[DISCORD] WARN exit {_discord_result.returncode}: {_discord_result.stderr[:200]}")
+        except Exception as _disc_e:
+            print(f"[DISCORD] WARN exception (non-fatal): {_disc_e}")
 
     _banner("DONE")
     print("Atlas run complete. latest/{all,early,main,late} updated.")

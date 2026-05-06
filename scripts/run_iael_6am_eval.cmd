@@ -59,5 +59,37 @@ for /d %%r in ("%ATLAS_ROOT%\data\output\runs\%YESTERDAY%_*") do (
 )
 
 echo [EVAL] Processed %FOUND_RUNS% run(s) with eval legs >> %LOG%
+
+REM (4) Post yesterday's results to Discord #results channel
+echo [DISCORD] Posting yesterday's slip results to Discord >> %LOG%
+%PY% tools\discord_post.py --date %YESTERDAY:~0,4%-%YESTERDAY:~4,2%-%YESTERDAY:~6,2% >> %LOG% 2>&1
+if errorlevel 1 (
+  echo [WARN] Discord results post failed (non-fatal) >> %LOG%
+) else (
+  echo [OK] Discord results posted >> %LOG%
+)
+
+REM (5) Rebuild dashboard payload + publish (captures fresh yesterday_slips record)
+set VENV_PY=%ATLAS_ROOT%\.venv314\Scripts\python.exe
+for /f "delims=" %%r in ('%PY% -c "import os,sys; d=r\"%ATLAS_ROOT%\data\output\runs\"; runs=sorted([x for x in os.listdir(d) if len(x)==15 and x[8]==\"_\"], reverse=True); print(os.path.join(d,runs[0])) if runs else sys.exit(1)"') do set LATEST_RUN=%%r
+if not defined LATEST_RUN (
+  echo [WARN] No run dir found, skipping payload rebuild >> %LOG%
+  goto :end
+)
+echo [PUBLISH] Rebuilding dashboard payload for %LATEST_RUN% >> %LOG%
+%VENV_PY% src\Atlas\stages\publish\build_cloudflare_payload.py "%LATEST_RUN%" >> %LOG% 2>&1
+if errorlevel 1 (
+  echo [WARN] Payload rebuild failed (non-fatal) >> %LOG%
+  goto :end
+)
+echo [PUBLISH] Publishing to dashboard >> %LOG%
+powershell.exe -ExecutionPolicy RemoteSigned -File "%ATLAS_ROOT%\..\atlas-dashboard\publish-atlas.ps1" -AtlasRoot "%ATLAS_ROOT%" >> %LOG% 2>&1
+if errorlevel 1 (
+  echo [WARN] Dashboard publish failed (non-fatal) >> %LOG%
+) else (
+  echo [OK] Dashboard published with fresh stats >> %LOG%
+)
+
+:end
 echo ===== %date% %time% 6AM EVAL BACKFILL END =====>> %LOG%
 exit /b 0
