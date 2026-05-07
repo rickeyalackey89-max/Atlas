@@ -117,12 +117,16 @@ class MarketedSlipBuilder:
         # Exclusions from config
         excluded_stats = set(self.config.get("excluded_stats", ["BLK", "STL", "TO"]))
         
-        # Minimum thresholds from config
+        # Minimum thresholds from config (applied to p_cal_marketed, post-haircut)
         min_thresholds = self.config.get("min_thresholds", {
             "GOBLIN": 0.60,
             "STANDARD": 0.54, 
             "DEMON": 0.45
         })
+
+        # Raw p_cal floor (applied before haircut) — used to enforce DEMON quality parity
+        # with DemonHunter's min_leg_prob without haircut distortion
+        min_raw_thresholds = self.config.get("min_raw_thresholds", {})
         
         # Direction preferences from config
         direction_filters = self.config.get("direction_filters", {})
@@ -133,12 +137,19 @@ class MarketedSlipBuilder:
         threshold_ser = df["tier"].map(min_thresholds)
         thresh_mask = df["tier"].isin(min_thresholds.keys()) & (df["p_cal_marketed"] >= threshold_ser)
 
+        # Raw p_cal guard (bypasses haircut distortion for tiers like DEMON)
+        if min_raw_thresholds:
+            raw_threshold_ser = df["tier"].map(min_raw_thresholds)
+            raw_thresh_mask = ~df["tier"].isin(min_raw_thresholds.keys()) | (df["p_cal"] >= raw_threshold_ser)
+        else:
+            raw_thresh_mask = pd.Series(True, index=df.index)
+
         dir_mask = pd.Series(True, index=df.index)
         for _tier, _allowed in direction_filters.items():
             tier_rows = df["tier"] == _tier
             dir_mask = dir_mask & (~tier_rows | df["direction"].isin(_allowed))
 
-        pool = df[stat_mask & thresh_mask & dir_mask].copy()
+        pool = df[stat_mask & thresh_mask & raw_thresh_mask & dir_mask].copy()
 
         if pool.empty:
             return pd.DataFrame()

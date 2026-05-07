@@ -441,6 +441,9 @@ marketed_slips:
     GOBLIN: 0.57
     STANDARD: 0.3
     DEMON: 0.28
+  # Raw p_cal floor (pre-haircut) — enforces DEMON parity with DemonHunter min_leg_prob
+  min_raw_thresholds:
+    DEMON: 0.62
   direction_filters: {}
   # Empirical calibration: scale raw hit_prob up to match actual observed win rates.
   # Derived from v18 resim cache (50 dates, 173,495 legs): 3L actual=60.5%, 4L=37.2%, 5L=20.9%
