@@ -30,7 +30,7 @@ Automatically protects calibration settings around any command:
 
 ```bash
 # Protected GBM training
-python tools/safe_lodo_run.py "python tools/gbm_v17_train.py --cache v17 --promote"
+python tools/safe_lodo_run.py "python tools/gbm_v17_train.py --cache v18 --promote"
 
 # Protected leg trainer
 python tools/safe_lodo_run.py "python tools/leg_trainer_v5_ev.py"
@@ -53,7 +53,7 @@ python tools/protect_demon_calibration.py --status
 python tools/protect_demon_calibration.py --backup
 
 # 3. Run training with protection
-python tools/safe_lodo_run.py "python tools/gbm_v17_train.py --cache v17"
+python tools/safe_lodo_run.py "python tools/gbm_v17_train.py --cache v18"
 ```
 
 ### After Git Operations:

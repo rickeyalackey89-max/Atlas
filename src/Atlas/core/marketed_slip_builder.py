@@ -94,7 +94,13 @@ class MarketedSlipBuilder:
         dir_te  = pd.to_numeric(df.get("player_dir_te", pd.Series(0.0, index=df.index)), errors="coerce").fillna(0.0)
 
         goblin_score   = (p_cal * l20).values
-        standard_score = dir_te.values
+        # When zero-DNP fired, player_dir_te reflects backup-role history and
+        # incorrectly scores UNDER legs very high. Neutralize it so STANDARD
+        # legs score on p_cal_marketed instead of biased historical hit rate.
+        zdnp_mult = pd.to_numeric(df.get("zero_dnp_mult", pd.Series(1.0, index=df.index)), errors="coerce").fillna(1.0)
+        zdnp_thresh = 1.40
+        dir_te_eff = np.where(zdnp_mult.values >= zdnp_thresh, 0.0, dir_te.values)
+        standard_score = dir_te_eff
         demon_score    = goblin_score
 
         tier_arr = df["tier"].values

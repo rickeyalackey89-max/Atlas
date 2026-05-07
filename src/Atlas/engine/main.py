@@ -915,30 +915,50 @@ def main() -> None:
     scored["p_for_cal_src"] = scored["p_cal_src"]
 
     telemetry_cfg = (cfg.get("telemetry", {}) or {})
+    post_calibration_cfg = (telemetry_cfg.get("post_calibration", {}) or {})
+
+    def _post_calibration_float(name: str, default: float) -> float:
+        try:
+            return float(post_calibration_cfg.get(name, default))
+        except Exception:
+            return float(default)
+
+    if "p_cal" not in scored.columns:
+        scored["p_cal"] = scored["p_for_cal"]
+
+    # Temperature scaling (applied after calibration or identity passthrough)
+    temp_scale = float(telemetry_cfg.get("temperature_scaling", 1.0))
+    if temp_scale != 1.0:
+        import numpy as _np
+        _p: "np.ndarray[Any, Any]" = scored["p_cal"].values.astype(float).clip(1e-6, 1 - 1e-6)  # type: ignore[assignment]
+        _logit = _np.log(_p / (1 - _p))
+        scored["p_cal"] = 1.0 / (1.0 + _np.exp(-_logit / temp_scale))
+
+    # GBM ENSEMBLE CALIBRATION (posthoc calibrator)
+    try:
+        from Atlas.engine.gbm_ensemble import apply_gbm_ensemble
+        scored = apply_gbm_ensemble(scored, logs=logs, cfg=cfg, repo_root=PROJECT_ROOT)
+    except Exception as _gbm_err:
+        print(f"[GBM_ENSEMBLE] Skipped: {_gbm_err!r}")
+
+    # POST-GBM ISOTONIC OVERLAY
+    # Applied AFTER GBM so the isotonic corrects GBM p_cal output, not pre-GBM p_for_cal.
+    # source_col="p_cal" reads GBM output. JSON uses protected_tier="DEMON" to route DEMON
+    # legs through the DEMON-specific curve; non-DEMON legs use the global curve.
     try:
         from Atlas.runtime.telemetry_calibration import apply_calibration_to_column, load_calibration
-
-        post_calibration_cfg = (telemetry_cfg.get("post_calibration", {}) or {})
-
-        def _post_calibration_float(name: str, default: float) -> float:
-            try:
-                return float(post_calibration_cfg.get(name, default))
-            except Exception:
-                return float(default)
-
-        if bool(telemetry_cfg.get("apply_active_calibration", True)):
+        if bool(telemetry_cfg.get("apply_active_calibration", False)):
             raw_path = telemetry_cfg.get("active_calibration_path")
             calib_path = None
             if raw_path:
                 candidate = Path(str(raw_path))
                 calib_path = candidate if candidate.is_absolute() else (PROJECT_ROOT / candidate)
-
             calib = load_calibration(PROJECT_ROOT, calibration_path=calib_path)
             if calib is not None:
                 scored = apply_calibration_to_column(
                     scored,
                     calib,
-                    source_col="p_for_cal",
+                    source_col="p_cal",
                     out_col="p_cal",
                     apply_under_penalty=True,
                 )
@@ -988,24 +1008,6 @@ def main() -> None:
                 )
     except Exception:
         pass
-
-    if "p_cal" not in scored.columns:
-        scored["p_cal"] = scored["p_for_cal"]
-
-    # Temperature scaling (applied after calibration or identity passthrough)
-    temp_scale = float(telemetry_cfg.get("temperature_scaling", 1.0))
-    if temp_scale != 1.0:
-        import numpy as _np
-        _p: "np.ndarray[Any, Any]" = scored["p_cal"].values.astype(float).clip(1e-6, 1 - 1e-6)  # type: ignore[assignment]
-        _logit = _np.log(_p / (1 - _p))
-        scored["p_cal"] = 1.0 / (1.0 + _np.exp(-_logit / temp_scale))
-
-    # GBM ENSEMBLE CALIBRATION (posthoc calibrator)
-    try:
-        from Atlas.engine.gbm_ensemble import apply_gbm_ensemble
-        scored = apply_gbm_ensemble(scored, logs=logs, cfg=cfg, repo_root=PROJECT_ROOT)
-    except Exception as _gbm_err:
-        print(f"[GBM_ENSEMBLE] Skipped: {_gbm_err!r}")
 
     # ZERO-DNP POST-CAL OVERRIDE
     # When the zero-DNP minutes correction fired significantly (mult >= threshold),

@@ -257,7 +257,7 @@ A local copy is also written to `data/telemetry/v13_corpus/<YYYYMMDD>/` on C dri
 5. Verify: Check summary output — every date should show `scored=3000+` and `eval_legs=3000+`
 6. Extract clean corpus: `python tools/build_v16_corpus.py` (use `--dry-run` first)
 7. Build resim cache from clean corpus
-8. Retrain GBM: `python tools/gbm_v17_train.py --cache v17 --promote`
+8. Retrain GBM: `python tools/gbm_v17_train.py --cache v18 --promote`
 9. Re-run DemonHunter trainer or reapply saved configs (see below)
 
 ### After GBM Retrain: Reapply DemonHunter Configs

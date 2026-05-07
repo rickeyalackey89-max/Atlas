@@ -465,6 +465,38 @@ def build_slips_by_tier_buckets(
         if df.empty:
             return pd.DataFrame(columns=_EMPTY_SLIPS_COLS)
 
+    # --- Leg quality filters: per-tier signal thresholds ---
+    # Use player_dir_te to filter STANDARD legs and l20_edge to filter GOBLIN legs.
+    # These signals are the strongest predictors of actual leg hit rate and are what
+    # the marketed builder uses to achieve its observed ~39.5% slip win rate.
+    # Config key: slip_build.leg_quality_filters.{min_standard_player_dir_te, min_goblin_l20_edge}
+    lqf = sb.get("leg_quality_filters") if isinstance(sb, dict) else None
+    if isinstance(lqf, dict) and "tier" in df.columns:
+        min_std_pdte = float(lqf.get("min_standard_player_dir_te", 0.0) or 0.0)
+        min_gob_l20  = float(lqf.get("min_goblin_l20_edge", 0.0) or 0.0)
+
+        if min_std_pdte != 0.0 and "player_dir_te" in df.columns:
+            before_len = len(df)
+            std_mask  = df["tier"].str.upper() == "STANDARD"
+            pdte_vals = pd.to_numeric(df["player_dir_te"], errors="coerce")
+            # Only apply filter to STANDARD legs; leave GOBLIN/DEMON untouched
+            drop_mask = std_mask & (pdte_vals < min_std_pdte)
+            df = df[~drop_mask].reset_index(drop=True)
+            if (os.getenv("ATLAS_DEBUG_BUILDER") or "").strip() == "1":
+                print(f"[BUILDER][DEBUG] leg_quality_filters STANDARD player_dir_te>={min_std_pdte}: {before_len} -> {len(df)} legs")
+
+        if min_gob_l20 != 0.0 and "l20_edge" in df.columns:
+            before_len = len(df)
+            gob_mask  = df["tier"].str.upper() == "GOBLIN"
+            l20_vals  = pd.to_numeric(df["l20_edge"], errors="coerce")
+            drop_mask = gob_mask & (l20_vals < min_gob_l20)
+            df = df[~drop_mask].reset_index(drop=True)
+            if (os.getenv("ATLAS_DEBUG_BUILDER") or "").strip() == "1":
+                print(f"[BUILDER][DEBUG] leg_quality_filters GOBLIN l20_edge>={min_gob_l20}: {before_len} -> {len(df)} legs")
+
+        if df.empty:
+            return pd.DataFrame(columns=_EMPTY_SLIPS_COLS)
+
     # --- Stat+direction exclusion filter ---
     exclude_sd = sb.get("exclude_stat_directions")
     if isinstance(exclude_sd, (list, tuple)) and len(exclude_sd) > 0 and "stat" in df.columns and "direction" in df.columns:
@@ -496,6 +528,17 @@ def build_slips_by_tier_buckets(
         df = df[games_col >= min_nba_games].reset_index(drop=True)
         if (os.getenv("ATLAS_DEBUG_BUILDER") or "").strip() == "1":
             print(f"[BUILDER][DEBUG] min_nba_games filter ({min_nba_games}): {before_len} -> {len(df)} legs")
+        if df.empty:
+            return pd.DataFrame(columns=_EMPTY_SLIPS_COLS)
+
+    # --- Allowed stats whitelist (e.g. restrict DH to PRA+PTS only) ---
+    allowed_stats = sb.get("allowed_stats")
+    if isinstance(allowed_stats, (list, tuple)) and len(allowed_stats) > 0 and "stat" in df.columns:
+        before_len = len(df)
+        allowed_set = {str(s).strip().upper() for s in allowed_stats}
+        df = df[df["stat"].astype(str).str.strip().str.upper().isin(allowed_set)].reset_index(drop=True)
+        if (os.getenv("ATLAS_DEBUG_BUILDER") or "").strip() == "1":
+            print(f"[BUILDER][DEBUG] allowed_stats filter {allowed_set}: {before_len} -> {len(df)} legs")
         if df.empty:
             return pd.DataFrame(columns=_EMPTY_SLIPS_COLS)
 

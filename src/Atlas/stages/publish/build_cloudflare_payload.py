@@ -374,7 +374,7 @@ def build_cloudflare_payload(
     out_dir: Path,
     marketed_slips: Optional[list] = None,
     gamelogs_path: Optional[Path] = None,
-    include_yesterday_slips: bool = True,
+    include_yesterday_slips: bool = False,
 ) -> Path:
     """
     Build cloudflare_payload.json from the slip CSVs in run_dir.
@@ -383,8 +383,8 @@ def build_cloudflare_payload(
         run_dir: The run directory containing System/, Windfall/, demonhunter.csv
         out_dir: Where to write cloudflare_payload.json (usually data/output/dashboard/)
         marketed_slips: Optional list of marketed slip dicts to include in payload
-        include_yesterday_slips: If False, omit yesterday_slips from performance block.
-            Live runs should pass False — only the 6am eval run should write this.
+        include_yesterday_slips: Only the 6am eval run should pass True.
+            Defaults to False — live runs MUST NOT recompute this field.
 
     Returns:
         Path to the written payload file.
@@ -668,5 +668,6 @@ if __name__ == "__main__":
         sys.exit(1)
     run_dir = Path(sys.argv[1])
     out_dir = run_dir.parents[1] / "dashboard"
-    result = build_cloudflare_payload(run_dir, out_dir)
+    # Called by 6am eval run — this is the ONLY path that should update yesterday_slips
+    result = build_cloudflare_payload(run_dir, out_dir, include_yesterday_slips=True)
     print(f"Wrote: {result}")

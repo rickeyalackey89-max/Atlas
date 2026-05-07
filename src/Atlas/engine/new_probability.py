@@ -1051,6 +1051,63 @@ def _load_iael_status_latest() -> pd.DataFrame:
         return pd.DataFrame()
 
 
+def _zero_dnp_minutes_mult(
+    outs: list[str],
+    player_min_mean: float,
+    gamelogs: pd.DataFrame,
+    *,
+    cfg: dict,
+) -> tuple[float, str]:
+    """
+    When a star player with 0 DNP games in the gamelog is OUT, their backup will
+    play significantly more minutes than their historical average.
+
+    Returns (mult, debug_str) where mult scales mu_close for the beneficiary.
+    mult=1.0 means no adjustment (disabled or no qualifying out player found).
+    """
+    enabled = bool(cfg.get("zero_dnp_enabled", True))
+    if not enabled:
+        return 1.0, "disabled"
+    if not outs or not isinstance(gamelogs, pd.DataFrame) or gamelogs.empty:
+        return 1.0, "no_outs_or_gl"
+
+    dnp_thresh = int(cfg.get("zero_dnp_dnp_thresh", 2))
+    min_cap = float(cfg.get("zero_dnp_min_cap", 2.5))
+    min_blend = float(cfg.get("zero_dnp_min_blend", 0.80))
+
+    best_mult = 1.0
+    best_reason = "no_zero_dnp_out"
+
+    for out_player in outs:
+        last_name = str(out_player).split()[-1] if out_player else ""
+        if not last_name:
+            continue
+        out_gl = gamelogs[gamelogs["player"].str.contains(last_name, case=False, na=False)]
+        if out_gl.empty:
+            continue
+        dnp_count = int((out_gl["minutes"].fillna(0) == 0).sum())
+        if dnp_count >= dnp_thresh:
+            continue  # Player has DNP history — share matrix is valid
+        # Zero-DNP case: compute expected starter-load multiplier
+        playing_gl = out_gl[out_gl["minutes"].fillna(0) > 0]
+        if playing_gl.empty:
+            continue
+        out_avg_min = float(playing_gl["minutes"].mean())
+        if not np.isfinite(out_avg_min) or out_avg_min <= 0:
+            continue
+        player_min = max(float(player_min_mean), 3.0)
+        ratio = float(np.clip(out_avg_min / player_min, 1.0, min_cap))
+        mult = 1.0 + (ratio - 1.0) * min_blend
+        if mult > best_mult:
+            best_mult = float(mult)
+            best_reason = (
+                f"zero_dnp:{out_player}(dnp={dnp_count}"
+                f",out_min={out_avg_min:.0f},pl_min={player_min:.0f},x{mult:.3f})"
+            )
+
+    return best_mult, best_reason
+
+
 def _extract_team_outs(iael_df: pd.DataFrame, team_u: str) -> list[str]:
     """
     Best-effort extraction of OUT-ish players for a given team from IAEL dataframe.
@@ -2208,6 +2265,21 @@ def simulate_leg_probability_new(
             minute_drop = minute_drop * _underdog_minute_scale
             _blow_rate_mult = 1.0 - _underdog_rate_penalty
 
+    # ── Zero-DNP minutes correction ──────────────────────────────────────
+    # When a star player with no DNP history is OUT, their backup plays
+    # far more minutes than their historical average. Scale mu_close up
+    # so the MC sim reflects starter-load expectations.
+    _zero_dnp_mult = 1.0
+    _zero_dnp_debug = "not_triggered"
+    if role_enabled and isinstance(iael_eff, pd.DataFrame) and not iael_eff.empty and team:
+        _outs_for_dnp = _extract_team_outs(iael_eff, str(team).upper().strip())
+        _player_min_mean_for_dnp = float(s.get("min_mean", 0.0) or 0.0)
+        _zero_dnp_mult, _zero_dnp_debug = _zero_dnp_minutes_mult(
+            _outs_for_dnp, _player_min_mean_for_dnp, gamelogs, cfg=cfg
+        )
+        if _zero_dnp_mult > 1.0:
+            mu_close = float(np.clip(mu_close * _zero_dnp_mult, 0.0, 47.0))
+
     # Continuous curve: starters lose minutes, bench gains garbage time.
     # minute_drop can be negative (= minute gain) for low-baseline players.
     mu_blow = max(0.0, min(48.0, mu_close - minute_drop))
@@ -2779,6 +2851,8 @@ def simulate_leg_probability_new(
         "role_ctx_sigma_mult": float(role_sigma_mult),
         "role_ctx_reason": str(role_reason),
         "role_ctx_damp_applied": ",".join(_damp_applied) if _damp_applied else "",
+        "zero_dnp_mult": float(_zero_dnp_mult),
+        "zero_dnp_debug": str(_zero_dnp_debug),
 
         # Recent form + opponent defense diagnostics
         "recent_form_blend": float(_recent_form_blend),

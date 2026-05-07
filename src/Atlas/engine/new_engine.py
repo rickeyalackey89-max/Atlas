@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 """
-New engine scoring kernel (v9d).
+New engine scoring kernel (v18).
 
 Scores each board row through simulate_leg_probability_new, then applies
 calibration and the Phase 7A-2 / 7A-3 post-processing pipeline.
@@ -51,10 +51,15 @@ def _normalize_iael_for_kernel(iael_df: pd.DataFrame | None) -> pd.DataFrame:
 
     # Normalize from invalidations schema
     if "team_norm" in cols and "player_norm" in cols and "status" in cols:
+        # Prefer the original player name (Last, First format) over the pre-sorted player_norm.
+        # share_name_key() correctly handles "Last, First" -> "first last" canonical form,
+        # but if we pass the already-sorted player_norm it can't recover the right order
+        # (e.g. "divincenzo donte" vs the correct "donte divincenzo" from share_name_key).
+        player_col = cols.get("player") or cols.get("player_norm")
         out = iael_df.rename(
             columns={
                 cols["team_norm"]: "team",
-                cols["player_norm"]: "out_player",
+                player_col: "out_player",
                 cols["status"]: "status",
             }
         ).copy()

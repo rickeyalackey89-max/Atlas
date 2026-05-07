@@ -21,7 +21,7 @@ data/
 │   ├── rotowire_lines.json
 │   └── slate.csv
 ├── model/              # Trained model artifacts (PRODUCTION-CRITICAL)
-│   ├── ensemble/         # v14 GBM models (14 files + meta)
+│   ├── ensemble/         # v18 GBM models (14 files + meta)
 │   ├── calibration_map.json
 │   ├── player_te_lookup.json
 │   ├── posthoc_calibrator_coeffs.json
@@ -56,7 +56,7 @@ These files are **production-critical** and must not be moved or deleted.
 
 | File | Purpose |
 |---|---|
-| `ensemble_meta.json` | v14 version stamp, features, params, metrics |
+| `ensemble_meta.json` | v18 version stamp, features, params, metrics |
 | `posthoc_calibrator_gbm_over_s{SEED}.txt` (×7) | LightGBM OVER models, one per seed |
 | `posthoc_calibrator_gbm_under_s{SEED}.txt` (×7) | LightGBM UNDER models, one per seed |
 

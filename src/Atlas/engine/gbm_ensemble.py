@@ -1,6 +1,6 @@
 """Runtime GBM ensemble calibrator.
 
-Loads the v9d (or later) LightGBM ensemble from data/model/ensemble/,
+Loads the v18 LightGBM ensemble from data/model/ensemble/,
 computes a superset of features from the scored DataFrame + gamelogs,
 and slices to the feature list specified in ensemble_meta.json before
 producing a calibrated probability column.
@@ -230,10 +230,11 @@ def _compute_b2b_lookup(logs: pd.DataFrame) -> set[tuple[str, str]]:
 
 
 def compute_features(scored: pd.DataFrame, logs: pd.DataFrame) -> tuple[np.ndarray, np.ndarray]:
-    """Compute the 39 v16 features from a scored DataFrame + gamelogs.
+    """Compute the full v18 feature superset from a scored DataFrame + gamelogs.
 
-    Returns (X, under_mask) where X is (n_legs, 39) float array and
-    under_mask is boolean array of UNDER legs.
+    Returns (X, under_mask) where X is (n_legs, n_feats) float array and
+    under_mask is boolean array of UNDER legs. The model slices to the
+    feature list in ensemble_meta.json at prediction time.
     """
     n = len(scored)
     player_history = _build_player_history(logs)
@@ -252,9 +253,12 @@ def compute_features(scored: pd.DataFrame, logs: pd.DataFrame) -> tuple[np.ndarr
     _stat_norm = {"POINTS": "PTS", "REBOUNDS": "REB", "ASSISTS": "AST", "REBS": "REB", "ASTS": "AST", "3PM": "FG3M"}
     stat_u = stat_u.replace(_stat_norm)
 
-    p_new = _col("p_cal", 0.5)
-    if "p_cal" not in scored.columns:
-        p_new = _col("p_adj", 0.5) if "p_adj" in scored.columns else _col("p", 0.5)
+    # Use raw pre-calibration probability for features — consistent with GBM training
+    # (resim cache: p_new = scored["p"], the raw MC kernel output).
+    # The telemetry isotonic runs before this in main.py and writes to p_cal, but the
+    # GBM was trained on raw p/p_adj — using post-isotonic p_cal here would corrupt
+    # abs_logit_p / logit_p_x_demon relative to the training distribution.
+    p_new = _col("p_adj", 0.5) if "p_adj" in scored.columns else _col("p", 0.5)
     logit_p: np.ndarray = sp_logit(np.clip(p_new, P_LO, P_HI))
 
     line = _col("line", 0.0)

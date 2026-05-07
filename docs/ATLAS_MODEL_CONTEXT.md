@@ -1,7 +1,7 @@
 # Atlas Model Context
 
-> **Last updated:** 2026-05-03 — reflects v17 production ensemble.
-> **Config fingerprint:** `188fdb89e3faab4b`
+> **Last updated:** 2026-05-06 — reflects v18 production ensemble.
+> **Config fingerprint:** `1bad99ae7d43ac8b`
 
 ---
 
@@ -17,25 +17,25 @@ Atlas is **not** just a probability calculator. It is a full decision pipeline:
 1. Fetch the current PrizePicks board and convert it to structured data.
 2. Freeze the injury state and redistribute production from out players to teammates.
 3. Score every leg through a Monte-Carlo probability kernel.
-4. Post-process with a 7-seed LightGBM ensemble calibrator (v17).
+4. Post-process with a 7-seed LightGBM ensemble calibrator (v18).
 5. Apply telemetry-driven isotonic calibration.
 6. Build slips across three output families (System, Windfall, DemonHunter).
 7. Publish run artifacts and optional bundle zip.
 
 ---
 
-## Current Production — v17
+## Current Production — v18
 
 | Metric | Value |
 |---|---|
-| **Ensemble LODO Brier** | **0.200748** |
-| **Features** | 34 (v9d base + sb_over_prob) |
+| **Ensemble LODO Brier** | **0.201529** |
+| **Features** | 33 (canonical contract) |
 | **Temperature** | 1.04 |
 | **Seeds** | 65536, 9999, 137, 999, 98765, 54321, 12345 |
 | **Architecture** | direction-split GBMs (OVER d8/nl30, UNDER d11/nl50) |
-| **Training legs** | 165,792 across 44 dates |
-| **Training cache** | `data/model/_v17_resim_cache.pkl` |
-| **Date range** | 2026-02-09 to 2026-04-12 |
+| **Training legs** | 173,495 across 50 dates |
+| **Training cache** | `data/model/_v18_resim_cache.pkl` |
+| **Date range** | 2026-02-09 to 2026-05-05 |
 
 Canonical contract: `src/Atlas/contracts/model_contract.py`.
 Full metadata: `data/model/ensemble/ensemble_meta.json`.
@@ -63,7 +63,7 @@ Full metadata: `data/model/ensemble/ensemble_meta.json`.
 The ensemble produces 14 model files (7 OVER + 7 UNDER, one per seed) stored in
 `data/model/ensemble/`.
 
-### Feature List (34 features)
+### Feature List (33 features)
 
 ```
 z_line, min_cv, is_combo, bp_score_gated, bp_has, is_assists, is_threes,
@@ -71,8 +71,7 @@ games_norm, thin_flag, line_norm, is_home_feat, min_sensitivity,
 game_total_norm, is_b2b, l20_edge, l10_has, margin, stat_cat, tier_cat,
 l40_hr, logit_p_x_demon, player_te, player_stat_te, player_dir_te,
 player_n_norm, line_dist, tail_risk, line_tightness, margin_x_under,
-q_blowout, rate_cv, abs_logit_p, q_x_under,
-sb_over_prob
+q_blowout, rate_cv, abs_logit_p, q_x_under
 ```
 
 Categorical features: `stat_cat`, `tier_cat`.
@@ -105,7 +104,7 @@ along with v16. Production is on pre-trainer defaults:
 ### Role Context
 
 ~24% of legs have active role context adjustments (`role_ctx_outs_used > 0`).
-The production GBM (v17) was trained on v17 cache data that includes role context
+The production GBM (v18) was trained on v18 cache data that includes role context
 effects in `p_role`.
 
 ### Direction Split (OVER vs UNDER)
@@ -188,7 +187,7 @@ The probability chain for each leg:
 p (raw MC) → p_role (role-adjusted) → p_adj (blowout-adjusted) → p_for_cal → p_cal (calibrated)
 ```
 
-### 5. Post-hoc Calibration (v17 Ensemble)
+### 5. Post-hoc Calibration (v18 Ensemble)
 `calibration.py` + `calibration_map.py`:
 
 The 7-seed LightGBM ensemble takes `p_adj` plus 34 features and produces a calibrated

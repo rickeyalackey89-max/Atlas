@@ -27,29 +27,34 @@ The leg trainers use scored_legs that include GBM-calibrated probabilities (`p_c
 
 ## 1. GBM Trainer (`tools/gbm_v17_train.py`)
 
-**Purpose:** Train a 35-feature LightGBM ensemble (7 seeds × 2 directions = 14 models) via Leave-One-Date-Out (LODO) cross-validation. Primary metric: Brier score. Production: v14, T=1.08, LODO 0.198097.
+**Purpose:** Train a 33-feature LightGBM ensemble (7 seeds × 2 directions = 14 models) via Leave-One-Date-Out (LODO) cross-validation. Primary metric: Brier score. Production: v18, T=1.04, LODO 0.201529.
 
-> **Note:** The 2 features added in v14 (`sb_over_prob`, `sb_line_diff`) are sportsbook-derived context features included in the training cache and ensemble. The GBM trainer reads from the resim cache which contains all 35 columns.
+> **Note:** The canonical 33-feature set is the production contract. Do not add features without updating `src/Atlas/contracts/model_contract.py`.
 
 ### GBM CLI
 
 ```powershell
-# Baseline LODO on v17 cache
-python tools/gbm_v17_train.py --cache v17
+# Baseline LODO on v18 cache
+python tools/gbm_v17_train.py --cache v18
 
 # Test candidate features
-python tools/gbm_v17_train.py --cache v17 --extra-feats role_ctx_outs_n opp_defense_rel
+python tools/gbm_v17_train.py --cache v18 --extra-feats role_ctx_outs_n opp_defense_rel
 
 # Train + deploy to production
-python tools/gbm_v17_train.py --cache v17 --promote
+python tools/gbm_v17_train.py --cache v18 --promote
+
+# Promote already-trained staging ensemble without re-running LODO
+python tools/gbm_v17_train.py --cache v18 --from-staging [--force-promote]
 ```
 
 ### GBM Arguments
 
 | Arg             | Default | Description                                  |
 | --------------- | ------- | -------------------------------------------- |
-| `--cache`       | `v17`   | Cache version: `v9`, `v12`, `v13`, or `v17`  |
+| `--cache`       | `v18`   | Cache version: `v18` or later                |
 | `--promote`     | off     | Save trained models to `data/model/ensemble/`|
+| `--from-staging`| off     | Promote staged ensemble without re-running LODO |
+| `--force-promote`| off    | Override regression safety gate              |
 | `--extra-feats` | none    | Candidate features to test (space-separated) |
 
 ### GBM Required Inputs
@@ -80,7 +85,7 @@ Features like `min_cv`, `is_combo`, `z_line`, `bp_score_gated`, etc. are **compu
 - **OVER:** depth=8, leaves=30, L2=1.0, min_child=200
 - **UNDER:** depth=11, leaves=50, L2=6.0, min_child=150
 - **Rounds:** 200, learning_rate=0.03
-- **Temperature:** 1.08 (v14 production; trainer searches [1.00, 1.02, 1.04, 1.06, 1.08, 1.10, 1.12])
+- **Temperature:** 1.04 (v18 production; trainer searches [1.00, 1.02, 1.04, 1.06, 1.08, 1.10, 1.12])
 - **Clip:** p ∈ [0.03, 0.97]
 
 ### Candidate Extra Features
@@ -96,7 +101,7 @@ Features like `min_cv`, `is_combo`, `z_line`, `bp_score_gated`, etc. are **compu
 
 ### GBM Interpreting Results
 
-- **Good:** LODO Brier ≤ 0.200748 (v17 golden baseline: 0.200748)
+- **Good:** LODO Brier ≤ 0.201529 (v18 production baseline: 0.201529)
 - Per-date breakdown should be consistent (no single-date blowups)
 - Feature importance shows which features drive predictions
 
@@ -452,7 +457,7 @@ py tools\marketed_slip_trainer_v2.py   # <-- DO NOT RUN FROM HERE
 
 ## marketed_slip_trainer_v2 — Baseline Reference
 
-**Verified correct baseline (May 3 2026, v17 cache, production config):**
+**Verified correct baseline (May 6 2026, v18 cache, production config):****
 
 | Metric | Value |
 |---|---|
@@ -503,4 +508,4 @@ Before launching any trainer:
 | leg_trainer_v5_hit      | v13_corpus (44 dates)            | Best slip configs (console)  | 6–16 hrs  | slip_wins ↑ |
 | demonhunter_v4          | v13_corpus (44 dates)            | Results YAML                 | 2–4 hrs   | slip_wins ↑ |
 | slip_builder_trainer    | D-drive replay corpus (44 dates) | Best 3-leg configs (console) | 30–60 min | slip_wins ↑ |
-| external_priors_trainer | Resim cache (v12)                | Results YAML                 | 5–10 min  | Brier ↓     |
+| external_priors_trainer | Resim cache (v18)                | Results YAML                 | 5–10 min  | Brier ↓     |

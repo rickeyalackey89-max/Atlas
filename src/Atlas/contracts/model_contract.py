@@ -1,11 +1,11 @@
 """
 src/Atlas/contracts/model_contract.py
 
-CANONICAL MODEL CONTRACT — v17
+CANONICAL MODEL CONTRACT — v18
 ==============================
 ⚠️  READ BEFORE MODIFYING ANY MODEL PARAMETERS  ⚠️
 
-This module is the single source of truth for the v17 production model.
+This module is the single source of truth for the v18 production model.
 It is loaded and validated at the start of every live run via the
 orchestrator. If any parameter drifts from the canonical contract,
 the run will emit a loud warning (and optionally hard-stop).
@@ -30,12 +30,12 @@ from typing import Dict, List, Optional, Tuple
 
 
 # ──────────────────────────────────────────────────────────────
-# Canonical v17 contract values
+# Canonical v18 contract values
 # ──────────────────────────────────────────────────────────────
 
 @dataclass(frozen=True)
 class ModelContract:
-    version: str = "v17"
+    version: str = "v18"
     architecture: str = "dn-d11nl50-top7-33feat"
 
     # Ensemble
@@ -62,14 +62,14 @@ class ModelContract:
     p_clamp_max: float = 0.97
 
     # Baseline metrics (for regression detection)
-    baseline_lodo_brier: float = 0.200748
-    baseline_raw_brier: float = 0.25
-    baseline_training_legs: int = 165792
-    baseline_training_dates: int = 44
+    baseline_lodo_brier: float = 0.201529
+    baseline_raw_brier: float = 0.216372
+    baseline_training_legs: int = 173495
+    baseline_training_dates: int = 50
 
 
 CONTRACT = ModelContract()
-V17 = CONTRACT  # backward compat alias
+V18 = CONTRACT  # current production alias
 
 
 # ──────────────────────────────────────────────────────────────

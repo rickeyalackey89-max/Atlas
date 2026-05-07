@@ -1,4 +1,9 @@
 pricing_engine: pp_kernel
+discord:
+  enabled: true
+  top_n_slips: 3
+  # thread_id: ""   # optional: post into a specific Discord thread
+  # webhook URL is read from ATLAS_DISCORD_WEBHOOK env var — never set here
 pp_kernel:
   p_min: 0.01
   p_max: 0.99
@@ -104,9 +109,9 @@ pp_kernel:
         c: -0.502224
 telemetry:
   schema_version: 2
-  active_calibration: demon_isotonic
+  active_calibration: v18_post_gbm
   apply_active_calibration: true
-  active_calibration_path: data/model/telemetry_calibration.demon_isotonic.json
+  active_calibration_path: data/model/telemetry_calibration.v18_post_gbm.json
   calibration_policy:
     allow_family_split: true
     family_order:
@@ -141,6 +146,15 @@ role_ctx:
   under_relief_q_min: 0.1
   under_relief_haircut_min: 0.05
   under_relief_factor: 0.0
+  # Zero-DNP correction: when a star has 0 DNP games and goes OUT,
+  # their backup's minutes expectation is scaled up accordingly.
+  zero_dnp_enabled: true
+  zero_dnp_dnp_thresh: 2      # out player must have < 2 DNPs to trigger
+  zero_dnp_min_cap: 2.5       # max minutes ratio (caps extreme outliers)
+  zero_dnp_min_blend: 0.80    # blend factor (1.0 = full ratio, 0.8 = 80% of the gap)
+  # Post-GBM blend: prevent GBM from overriding MC signal when zero-DNP fired
+  zero_dnp_postcal_blend_thresh: 1.40   # only applies when mult >= this
+  zero_dnp_postcal_blend_weight: 0.70   # weight on p_adj (vs GBM p_cal)
 posthoc_calibrator:
   enabled: true
   coefficients_path: data/model/posthoc_calibrator_coeffs_enriched.json
@@ -252,6 +266,12 @@ slip_build:
     frag_power: 1.0
     min_std_w: 0.0
     min_std_ref: 6.0
+  # Leg quality signal filters — mirrors marketed builder selection logic.
+  # STANDARD legs below player_dir_te threshold are historically sub-coin-flip.
+  # GOBLIN legs below l20_edge threshold lack recent-form confirmation.
+  leg_quality_filters:
+    min_standard_player_dir_te: 0.02
+    min_goblin_l20_edge: 0.05
   by_legs:
     '3':
       max_direction_per_slip:
@@ -346,16 +366,17 @@ slip_build:
             family_w: 0.0
             frag_w: 0.0
 optimizer:
-  top_n_slips: 10
+  top_n_slips: 1
   top_n_slips_by_legs:
-    '3': 10
-    '4': 6
-    '5': 10
+    '3': 1
+    '4': 1
+    '5': 1
   top_n_slips_by_legs_by_sort_mode:
     hit:
-      '3': 10
-      '4': 10
-      '5': 10
+      '3': 1
+      '4': 1
+      '5': 1
+  emit_winprob_variants: false
   seed: 7
   external_priors:
     enabled: true
@@ -374,7 +395,8 @@ optimizer:
 demonhunter:
   by_legs:
     '3':
-      min_leg_prob: 0.35
+      min_leg_prob: 0.42
+      allowed_stats: [PRA, PTS]
       max_same_stat: 0
       max_players_per_team: 1
       per_tier: 800
@@ -386,7 +408,8 @@ demonhunter:
         family_w: 0.05
         frag_w: 0.05
     '4':
-      min_leg_prob: 0.35
+      min_leg_prob: 0.42
+      allowed_stats: [PRA, PTS]
       max_same_stat: 3
       max_players_per_team: 1
       per_tier: 200
@@ -396,7 +419,8 @@ demonhunter:
         family_w: 0.0
         frag_w: 0.0
     '5':
-      min_leg_prob: 0.33
+      min_leg_prob: 0.42
+      allowed_stats: [PRA, PTS]
       max_same_stat: 0
       max_players_per_team: 1
       per_tier: 200
@@ -418,7 +442,7 @@ marketed_slips:
     DEMON: 0.28
   direction_filters: {}
   # Empirical calibration: scale raw hit_prob up to match actual observed win rates.
-  # Derived from v17 resim cache (44 dates, 165,792 legs): 3L actual=60.5%, 4L=37.2%, 5L=20.9%
+  # Derived from v18 resim cache (50 dates, 173,495 legs): 3L actual=60.5%, 4L=37.2%, 5L=20.9%
   # vs computed means: 3L=0.362, 4L=0.279, 5L=0.137
   hit_prob_calibration:
     3: 1.67
