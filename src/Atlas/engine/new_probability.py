@@ -148,6 +148,8 @@ def _market_usage_baseline(stat_u: str) -> float:
         return 0.78
     if stat in {'BLK', 'STL', 'STOCKS'}:
         return 0.70
+    if stat in {'FTA'}:
+        return 0.95  # FTA is strongly minutes-correlated but less volatile than scoring
     return 0.82
 
 
@@ -204,6 +206,15 @@ def _stat_specific_pressure_mult(stat_u: str, burden_ratio: float) -> float:
         if burden_ratio >= 0.90:
             return 1.00
         return 0.99
+
+    if stat in {'FTA'}:
+        if burden_ratio >= 1.10:
+            return 1.05
+        if burden_ratio >= 0.96:
+            return 1.02
+        if burden_ratio >= 0.84:
+            return 1.00
+        return 0.98
 
     if burden_ratio >= 1.15:
         return 1.05

@@ -104,6 +104,11 @@ STAT_MAP: dict[str, str] = {
 
     "BLKS+STLS": "BS",
     "BLOCKS+STEALS": "BS",
+
+    # Free throw attempts
+    "FREE THROWS ATTEMPTED": "FTA",
+    "FREE THROW ATTEMPTS": "FTA",
+    "FTA": "FTA",
 }
 
 ODDS_TYPE_TO_TIER = {

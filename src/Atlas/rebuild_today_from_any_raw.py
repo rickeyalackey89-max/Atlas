@@ -111,6 +111,11 @@ STAT_MAP: dict[str, str] = {
 
     "BLKS+STLS": "BS",
     "BLOCKS+STEALS": "BS",
+
+    # Free throw attempts
+    "FREE THROWS ATTEMPTED": "FTA",
+    "FREE THROW ATTEMPTS": "FTA",
+    "FTA": "FTA",
 }
 
 # Map odds_type -> tier used elsewhere in the project

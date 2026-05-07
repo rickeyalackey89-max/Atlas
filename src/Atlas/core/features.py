@@ -35,6 +35,7 @@ STAT_COLS: Dict[str, tuple[str, ...]] = {
     "AST": ("ast",),
     "FG3M": ("fg3m",),
     "3PM": ("fg3m",),  # alias
+    "FTA": ("fta",),
     # combos
     "PR": ("pts", "reb"),
     "PA": ("pts", "ast"),
