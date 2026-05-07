@@ -397,7 +397,7 @@ demonhunter:
   by_legs:
     '3':
       min_leg_prob: 0.62
-      allowed_stats: [PRA, PTS]
+      allowed_stats: [PRA, PTS, FTA]
       max_same_stat: 0
       max_players_per_team: 1
       per_tier: 800
@@ -410,7 +410,7 @@ demonhunter:
         frag_w: 0.05
     '4':
       min_leg_prob: 0.62
-      allowed_stats: [PRA, PTS]
+      allowed_stats: [PRA, PTS, FTA]
       max_same_stat: 3
       max_players_per_team: 1
       per_tier: 200
@@ -421,7 +421,7 @@ demonhunter:
         frag_w: 0.0
     '5':
       min_leg_prob: 0.62
-      allowed_stats: [PRA, PTS]
+      allowed_stats: [PRA, PTS, FTA]
       max_same_stat: 0
       max_players_per_team: 1
       per_tier: 200
