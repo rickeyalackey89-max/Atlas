@@ -110,7 +110,7 @@ pp_kernel:
 telemetry:
   schema_version: 2
   active_calibration: v18_post_gbm
-  apply_active_calibration: true
+  apply_active_calibration: false
   active_calibration_path: data/model/telemetry_calibration.v18_post_gbm.json
   calibration_policy:
     allow_family_split: true
