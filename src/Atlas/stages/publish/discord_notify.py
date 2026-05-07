@@ -87,13 +87,14 @@ def _read_slip_csv(path: Path) -> Optional[pd.DataFrame]:
 
 def _send_webhook(webhook_url: str, payload: dict) -> bool:
     """POST JSON payload to a Discord webhook. Returns True on success."""
+    import time
     data = json.dumps(payload).encode("utf-8")
     req = urllib.request.Request(
         webhook_url,
         data=data,
         headers={
             "Content-Type": "application/json",
-            "User-Agent": "DiscordBot (https://github.com/Atlas, 1.0)",
+            "User-Agent": "Mozilla/5.0 (compatible; AtlasSports/1.0)",
         },
         method="POST",
     )
@@ -102,7 +103,21 @@ def _send_webhook(webhook_url: str, payload: dict) -> bool:
             return resp.status in (200, 204)
     except urllib.error.HTTPError as e:
         body = e.read().decode("utf-8", errors="replace")[:300]
-        print(f"[DISCORD] HTTP {e.code}: {body}")
+        if e.code == 429:
+            # Rate limited — wait and retry once
+            try:
+                retry_after = json.loads(body).get("retry_after", 2)
+            except Exception:
+                retry_after = 2
+            print(f"[DISCORD] Rate limited, retrying after {retry_after}s")
+            time.sleep(float(retry_after) + 0.5)
+            try:
+                with urllib.request.urlopen(req, timeout=10) as resp2:
+                    return resp2.status in (200, 204)
+            except Exception as e2:
+                print(f"[DISCORD] Retry failed: {e2!r}")
+                return False
+        print(f"[DISCORD] FAIL HTTP {e.code}: {body}")
         return False
     except Exception as e:
         print(f"[DISCORD] Send error: {e!r}")
