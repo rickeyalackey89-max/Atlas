@@ -498,6 +498,7 @@ ALLOWED_STATS = {
     "REB_AST",
     "3PM",
     "BLKS_STLS",
+    "FTA",
 }
 
 
