@@ -1,14 +1,20 @@
 #!/usr/bin/env python
 """
-Leg Selection Trainer v5 — HIT Split
-=====================================
-Runs only 4-leg HIT and 5-leg HIT categories.
-Tuned grid based on 3-leg HIT findings:
-  - S1 structural was almost entirely wasted (862/864 early-exited)
-  - All improvement came from S2/S3 beam/pool tuning
-  - min_edge=0.01 won (finer than EV's 0.03)
-  - No max_leg_prob helped
-  - SHRINK S1, EXPAND S2/S3
+Leg Selection Trainer v5 — Windfall Slips (probability-sorted)
+===============================================================
+Optimizes params for Windfall family slips: GOBLIN+STANDARD+DEMON mix,
+probability-sorted (sort_mode='hit'), using build_windfall_slips() to match
+production exactly (correct mixes, payout tables, mix_ok_fn, per_tier=400).
+
+Windfall-specific: min_edge and exclude_stat_directions are stripped before
+each builder call — Windfall never uses them (they starve DEMON-tier legs).
+S1 grid therefore skips exclude/edge sweeps and focuses on beam, penalty,
+min_leg_prob, and stat_family settings.
+
+Grid lessons (from prior HIT training):
+  - All improvement from beam/pool tuning (S2/S3), not structural S1
+  - Strategy: SMALL S1, LARGE S2/S3
+  - min_edge=0 always wins for Windfall (DEMON legs have no edge signal)
 """
 from __future__ import annotations
 
@@ -31,7 +37,7 @@ import yaml
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from Atlas.core.fingerprint import build_manifest, config_fingerprint
-from Atlas.core.slip_builders import build_slips_by_tier_buckets
+from Atlas.core.slip_builders import build_windfall_slips
 from Atlas.stages.optimize.build_slips_today import _cfg_for_n_legs
 
 # ── data paths ──────────────────────────────────────────────────────
@@ -58,32 +64,37 @@ def _load_run_dates() -> list[str]:
 
 RUN_DATES = _load_run_dates()
 
+# Production Windfall mixes (GOBLIN+STANDARD+DEMON)
+# These are enforced inside build_windfall_slips(); listed here for reference.
+# 3-leg: {G:1,S:1,D:1}  4-leg: {G:1,S:2,D:1}  5-leg: {G:2,S:2,D:1}
 CATEGORIES = [
-    ("3-leg HIT", 3, "hit"),
-    ("4-leg HIT", 4, "hit"),
-    ("5-leg HIT", 5, "hit"),
+    ("3-leg WINDFALL", 3, "hit"),
+    ("4-leg WINDFALL", 4, "hit"),
+    ("5-leg WINDFALL", 5, "hit"),
 ]
-
-MIXES = {
-    3: {"STANDARD": 2, "DEMON": 1},
-    4: {"STANDARD": 2, "DEMON": 2},
-    5: {"STANDARD": 3, "DEMON": 2},
-}
-PAYOUT_FLEX = {"3": 2.25, "4": 5.0, "5": 10.0}
 
 SEEDS = [42, 137, 9999, 2026, 777]
 TOP_K = 5
-MAX_ATTEMPTS = 30_000
 SLIP_WIN_WEIGHT = 10
 N_WORKERS = max(1, (os.cpu_count() or 1) - 1)
 
-# v12 corpus hit rates: REB_over=0.370, FG3M_over=0.395, AST_over=0.414,
-# RA_over=0.430, PR_over=0.453 — these are now the worst performers.
-# Old UNDER combos improved post-blowout/calibration (REB_under=0.536, PR_under=0.522).
+# v18 corpus hit rates (low-performers)
 WORST_SD_COMBOS = [
     "REB_over", "FG3M_over", "AST_over", "RA_over",
     "PR_over", "PA_over", "PRA_over",
 ]
+
+
+def _strip_windfall_cfg(cfg: dict) -> dict:
+    """Strip keys that Windfall ignores at production runtime.
+    Mirrors _windfall_cfg() in build_slips_today.py.
+    """
+    out = dict(cfg)
+    sb = dict(out.get("slip_build") or {})
+    sb.pop("exclude_stat_directions", None)
+    sb.pop("min_edge", None)
+    out["slip_build"] = sb
+    return out
 
 
 # ── data loading ────────────────────────────────────────────────────
@@ -128,13 +139,11 @@ def sort_dates_by_difficulty(
         total_wins = 0
         for seed in SEEDS[:2]:
             try:
-                slips = build_slips_by_tier_buckets(
-                    legs_df=scored_df, n_legs=n_legs, top_n=TOP_K,
-                    payout_power_mult=1.0, payout_flex=PAYOUT_FLEX,
-                    pricing_engine="atlas", cfg=resolved_cfg, seed=seed,
-                    per_tier=500, max_attempts=MAX_ATTEMPTS, sort_mode=sort_mode,
-                    mixes=MIXES, required_tiers=["STANDARD", "DEMON"],
-                    mix_ok_fn=lambda n, s: True,
+                windfall_cfg = _strip_windfall_cfg(resolved_cfg)
+                slips = build_windfall_slips(
+                    scored_df, n_legs=n_legs, top_n=TOP_K,
+                    seed=seed, sort_mode=sort_mode,
+                    pricing_engine="atlas", cfg=windfall_cfg,
                 )
             except Exception:
                 continue
@@ -215,13 +224,11 @@ def score_config(
         total_dates += 1
         for seed in SEEDS:
             try:
-                slips = build_slips_by_tier_buckets(
-                    legs_df=scored_df, n_legs=n_legs, top_n=TOP_K,
-                    payout_power_mult=1.0, payout_flex=PAYOUT_FLEX,
-                    pricing_engine="atlas", cfg=resolved_cfg, seed=seed,
-                    per_tier=500, max_attempts=MAX_ATTEMPTS, sort_mode=sort_mode,
-                    mixes=MIXES, required_tiers=["STANDARD", "DEMON"],
-                    mix_ok_fn=lambda n, s: True,
+                windfall_cfg = _strip_windfall_cfg(resolved_cfg)
+                slips = build_windfall_slips(
+                    scored_df, n_legs=n_legs, top_n=TOP_K,
+                    seed=seed, sort_mode=sort_mode,
+                    pricing_engine="atlas", cfg=windfall_cfg,
                 )
             except Exception:
                 continue
@@ -282,42 +289,32 @@ def _cleanup_worker_data(path):
         pass
 
 
-# ── HIT-tuned grids ─────────────────────────────────────────────────
-# Lessons from 3-leg HIT: structural grid found NOTHING.
-# All improvement from beam/pool.  min_edge=0.01 won.
-# Strategy: SMALL S1, LARGE S2/S3
+# ── Windfall-tuned grids ─────────────────────────────────────────────
+# Windfall strips exclude_stat_directions and min_edge at runtime — sweeping
+# them wastes compute. Focus S1 on penalty structure, stat_family_mode,
+# beam_window_growth, min_leg_prob, and max_direction_per_slip.
+# S2/S3 beam/pool tuning is where Windfall improvement lives.
 def build_structural_grid() -> list[dict[str, Any]]:
-    """Minimal structural grid — HIT gets nothing from exclude/penalty combos.
-    Added stat_family_mode + beam_window_growth per 3-leg trainer findings."""
-    exclude_options: list[list[str]] = [
-        [],
-        WORST_SD_COMBOS[:3],
-    ]
+    """Windfall structural grid — no exclude/edge, focus on penalty and family mode."""
     max_under_options: list[int | None] = [None, 2]
-    # Finer edge steps (0.01 won for 3-leg HIT)
-    min_edge_options = [0.0, 0.01, 0.02, 0.04]
     max_same_stat_options = [2, 3]
     penalty_options = [
         {"team_w": 0.0, "family_w": 0.0, "frag_w": 0.0},
         {"team_w": 0.05, "family_w": 0.05, "frag_w": 0.0},
         {"team_w": 0.05, "family_w": 0.05, "frag_w": 0.05},
+        {"team_w": 0.10, "family_w": 0.05, "frag_w": 0.05},
     ]
     stat_family_options = ["coarse", "fine"]
     beam_window_options = [1.5, 2.0]
 
     grid: list[dict[str, Any]] = []
-    for exclude, max_under, min_edge, max_stat, penalty, sfm, bwg in itertools.product(
-        exclude_options, max_under_options, min_edge_options,
-        max_same_stat_options, penalty_options,
+    for max_under, max_stat, penalty, sfm, bwg in itertools.product(
+        max_under_options, max_same_stat_options, penalty_options,
         stat_family_options, beam_window_options,
     ):
         combo: dict[str, Any] = {}
-        if exclude:
-            combo["exclude_stat_directions"] = list(exclude)
         if max_under is not None:
             combo["max_direction_per_slip"] = {"under": max_under}
-        if min_edge > 0.0:
-            combo["min_edge"] = min_edge
         combo["max_same_stat"] = max_stat
         combo["penalty"] = dict(penalty)
         combo["stat_family_mode"] = sfm
@@ -330,9 +327,9 @@ def build_structural_grid() -> list[dict[str, Any]]:
 
 
 def build_refinement_grid(s1_winner: dict[str, Any]) -> list[dict[str, Any]]:
-    """Minimal refinement — not where HIT gains come from."""
+    """Minimal refinement — try min_leg_prob variants and max_players."""
     grid: list[dict[str, Any]] = []
-    for mlgp in [0.52, 0.54]:
+    for mlgp in [0.57, 0.60, 0.62]:
         combo = copy.deepcopy(s1_winner)
         combo["min_leg_prob"] = mlgp
         grid.append(combo)
@@ -393,10 +390,9 @@ def build_exploration_grid(n_legs: int, winner: dict[str, Any]) -> list[dict[str
 
 
 def build_finetune_grid(s2_winner: dict[str, Any], n_legs: int) -> list[dict[str, Any]]:
-    """EXPANDED fine-tuning — also where HIT gains come from."""
+    """EXPANDED fine-tuning — beam/pool and penalty perturbations for Windfall."""
     grid: list[dict[str, Any]] = []
     perturbations = {
-        "min_edge": [-0.005, 0.005, -0.01, 0.01],
         "beam_width": [-25, 25, -50, 50, -100, 100],
         "phase1_frac": [-0.02, 0.02, -0.05, 0.05],
         "target_pool_mult": [-25, 25, -50, 50, -100, 100],
@@ -592,7 +588,7 @@ def train(base_cfg: dict, data: list[tuple[str, pd.DataFrame, dict]], cats: list
 
             best = (s1b_combo, s1b_result) if s1b_result.get("weighted", 0) >= s1_result.get("weighted", 0) else (s1_combo, s1_result)
 
-            # S2: exploration (LARGE for HIT — this is where the value lives)
+            # S2: exploration (LARGE for Windfall — this is where the value lives)
             s2_grid = build_exploration_grid(n_legs, best[0])
             print(f"  S2: exploration ({len(s2_grid)} combos)")
             s2_combo, s2_result = _run_grid(s2_grid, base_cfg, sorted_data, n_legs, sort_mode, "S2", pool=pool)
@@ -600,7 +596,7 @@ def train(base_cfg: dict, data: list[tuple[str, pd.DataFrame, dict]], cats: list
 
             best = (s2_combo, s2_result) if s2_result.get("weighted", 0) >= best[1].get("weighted", 0) else best
 
-            # S3: fine-tuning (EXPANDED for HIT)
+            # S3: fine-tuning (EXPANDED for Windfall)
             s3_grid = build_finetune_grid(best[0], n_legs)
             print(f"  S3: fine-tuning ({len(s3_grid)} combos)")
             s3_combo, s3_result = _run_grid(s3_grid, base_cfg, sorted_data, n_legs, sort_mode, "S3", pool=pool)
@@ -656,11 +652,11 @@ def main() -> None:
         print(f"Skipping: {skip_set}")
 
     print("=" * 60)
-    print("Leg Trainer v5 — HIT SPLIT")
+    print("Leg Trainer v5 — WINDFALL (probability-sorted)")
     print(f"  Categories: {[c[0] for c in cats]}")
-    print(f"  Seeds: {SEEDS}  Top-K: {TOP_K}  Max attempts: {MAX_ATTEMPTS}")
+    print(f"  Seeds: {SEEDS}  Top-K: {TOP_K}  Builder: build_windfall_slips (GOBLIN+STANDARD+DEMON)")
     print(f"  Workers: {args.workers}  (cores: {os.cpu_count()})")
-    print(f"  Stages: S1 (small) -> S1b (small) -> S2 (LARGE) -> S3 (EXPANDED)")
+    print(f"  Stages: S1 (small, no exclude/edge) -> S1b (small) -> S2 (LARGE) -> S3 (EXPANDED)")
     print("=" * 60)
 
     data = load_all_dates()
@@ -681,7 +677,7 @@ def main() -> None:
     results = train(base_cfg, data, cats, n_workers=args.workers)
 
     print("\n" + "=" * 60)
-    print("HIT RESULTS")
+    print("WINDFALL RESULTS")
     print("=" * 60)
     out_data = {}
     for cat_name, info in results.items():
@@ -701,9 +697,9 @@ def main() -> None:
             "leg_rate": round(r["leg_rate"], 4),
         }
 
-    out_path = Path(__file__).resolve().parent / "leg_trainer_results_v5_hit.yaml"
+    out_path = Path(__file__).resolve().parent / "leg_trainer_results_v5_windfall.yaml"
     out_data["_manifest"] = build_manifest(
-        source="leg_trainer_v5_hit", cfg=base_cfg,
+        source="leg_trainer_v5_windfall", cfg=base_cfg,
         ensemble_dir=base_cfg.get("posthoc_calibrator", {}).get("ensemble_dir"),
     )
     print(f"  Config fingerprint: {out_data['_manifest']['config_fingerprint']}")

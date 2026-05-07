@@ -1,13 +1,16 @@
 #!/usr/bin/env python
 """
-Leg Selection Trainer v5 — EV Split
-====================================
-Runs only 4-leg EV and 5-leg EV categories.
-Tuned grid based on 3-leg EV findings:
+Leg Selection Trainer v5 — System Slips (EV-sorted)
+=====================================================
+Optimizes params for System family slips: GOBLIN+STANDARD mix,
+payout-EV-sorted (sort_mode='ev'), using build_system_slips() to match
+production exactly (correct mixes, payout tables, mix_ok_fn, per_tier=650).
+
+Grid lessons:
   - frag_w promoted to S1 grid (was the #1 improvement)
-  - No-exclude bias (won in 3-leg)
+  - No-exclude bias (won in 3-leg EV)
   - Finer min_edge steps
-  - max_same_stat includes 3 (won in 3-leg)
+  - max_same_stat=3 won in 3-leg EV
 """
 from __future__ import annotations
 
@@ -30,7 +33,7 @@ import yaml
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from Atlas.core.fingerprint import build_manifest, config_fingerprint
-from Atlas.core.slip_builders import build_slips_by_tier_buckets
+from Atlas.core.slip_builders import build_system_slips
 from Atlas.stages.optimize.build_slips_today import _cfg_for_n_legs
 
 # ── data paths ──────────────────────────────────────────────────────
@@ -57,28 +60,21 @@ def _load_run_dates() -> list[str]:
 
 RUN_DATES = _load_run_dates()
 
+# Production System mixes (GOBLIN+STANDARD only — no DEMON)
+# These are enforced inside build_system_slips(); listed here for reference.
+# 3-leg: {GOBLIN:1, STANDARD:2}  4-leg: {GOBLIN:2, STANDARD:2}  5-leg: {GOBLIN:3, STANDARD:2}
 CATEGORIES = [
-    ("3-leg EV",  3, "ev"),
-    ("4-leg EV",  4, "ev"),
-    ("5-leg EV",  5, "ev"),
+    ("3-leg SYSTEM", 3, "ev"),
+    ("4-leg SYSTEM", 4, "ev"),
+    ("5-leg SYSTEM", 5, "ev"),
 ]
-
-MIXES = {
-    3: {"STANDARD": 2, "DEMON": 1},
-    4: {"STANDARD": 2, "DEMON": 2},
-    5: {"STANDARD": 3, "DEMON": 2},
-}
-PAYOUT_FLEX = {"3": 2.25, "4": 5.0, "5": 10.0}
 
 SEEDS = [42, 137, 9999, 2026, 777]
 TOP_K = 5
-MAX_ATTEMPTS = 30_000
 SLIP_WIN_WEIGHT = 10
 N_WORKERS = max(1, (os.cpu_count() or 1) - 1)
 
-# v12 corpus hit rates: REB_over=0.370, FG3M_over=0.395, AST_over=0.414,
-# RA_over=0.430, PR_over=0.453 — these are now the worst performers.
-# Old UNDER combos improved post-blowout/calibration (REB_under=0.536, PR_under=0.522).
+# v18 corpus hit rates (low-performers — candidates for System exclusion grid)
 WORST_SD_COMBOS = [
     "REB_over", "FG3M_over", "AST_over", "RA_over",
     "PR_over", "PA_over", "PRA_over",
@@ -127,13 +123,10 @@ def sort_dates_by_difficulty(
         total_wins = 0
         for seed in SEEDS[:2]:
             try:
-                slips = build_slips_by_tier_buckets(
-                    legs_df=scored_df, n_legs=n_legs, top_n=TOP_K,
-                    payout_power_mult=1.0, payout_flex=PAYOUT_FLEX,
-                    pricing_engine="atlas", cfg=resolved_cfg, seed=seed,
-                    per_tier=500, max_attempts=MAX_ATTEMPTS, sort_mode=sort_mode,
-                    mixes=MIXES, required_tiers=["STANDARD", "DEMON"],
-                    mix_ok_fn=lambda n, s: True,
+                slips = build_system_slips(
+                    scored_df, n_legs=n_legs, top_n=TOP_K,
+                    seed=seed, sort_mode=sort_mode,
+                    pricing_engine="atlas", cfg=resolved_cfg,
                 )
             except Exception:
                 continue
@@ -214,13 +207,10 @@ def score_config(
         total_dates += 1
         for seed in SEEDS:
             try:
-                slips = build_slips_by_tier_buckets(
-                    legs_df=scored_df, n_legs=n_legs, top_n=TOP_K,
-                    payout_power_mult=1.0, payout_flex=PAYOUT_FLEX,
-                    pricing_engine="atlas", cfg=resolved_cfg, seed=seed,
-                    per_tier=500, max_attempts=MAX_ATTEMPTS, sort_mode=sort_mode,
-                    mixes=MIXES, required_tiers=["STANDARD", "DEMON"],
-                    mix_ok_fn=lambda n, s: True,
+                slips = build_system_slips(
+                    scored_df, n_legs=n_legs, top_n=TOP_K,
+                    seed=seed, sort_mode=sort_mode,
+                    pricing_engine="atlas", cfg=resolved_cfg,
                 )
             except Exception:
                 continue
@@ -669,9 +659,9 @@ def main() -> None:
         print(f"Skipping: {skip_set}")
 
     print("=" * 60)
-    print("Leg Trainer v5 — EV SPLIT")
+    print("Leg Trainer v5 — SYSTEM (EV-sorted)")
     print(f"  Categories: {[c[0] for c in cats]}")
-    print(f"  Seeds: {SEEDS}  Top-K: {TOP_K}  Max attempts: {MAX_ATTEMPTS}")
+    print(f"  Seeds: {SEEDS}  Top-K: {TOP_K}  Builder: build_system_slips (GOBLIN+STANDARD)")
     print(f"  Workers: {args.workers}  (cores: {os.cpu_count()})")
     print(f"  Stages: S1 (structural+frag_w) -> S1b -> S2 -> S3")
     print("=" * 60)
@@ -694,7 +684,7 @@ def main() -> None:
     results = train(base_cfg, data, cats, n_workers=args.workers)
 
     print("\n" + "=" * 60)
-    print("EV RESULTS")
+    print("SYSTEM (EV) RESULTS")
     print("=" * 60)
     out_data = {}
     for cat_name, info in results.items():
