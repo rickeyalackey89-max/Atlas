@@ -36,12 +36,14 @@ from Atlas.core.minutes import minutes_sensitivity
 # CLI
 # ===================================================================
 parser = argparse.ArgumentParser(description="GBM ensemble trainer with safe promotion")
-parser.add_argument("--cache", choices=["v9", "v12", "v13", "v14", "v15", "v16", "v17", "v18test"],
+parser.add_argument("--cache", choices=["v9", "v12", "v13", "v14", "v15", "v16", "v17", "v18test", "v18"],
                     default="v12", help="Which resim cache to train on")
 parser.add_argument("--promote", action="store_true",
                     help="Promote to data/model/ensemble/ after safety check")
 parser.add_argument("--force-promote", action="store_true",
                     help="Promote even if LODO regresses vs current production")
+parser.add_argument("--from-staging", action="store_true",
+                    help="Promote the already-trained staging ensemble without re-running LODO")
 parser.add_argument("--extra-feats", nargs="*", default=[],
                     help="Additional features beyond the 33 base")
 args = parser.parse_args()
@@ -106,6 +108,7 @@ CACHE_PATHS = {
     "v17": ROOT / "data" / "model" / "_v17_resim_cache.pkl",
     "v17_34feat": ROOT / "data" / "model" / "_v17_34feat_resim_cache.pkl",
     "v18test": ROOT / "data" / "model" / "_v18test_resim_cache.pkl",
+    "v18": ROOT / "data" / "model" / "_v18_resim_cache.pkl",
 }
 TEAM_NORM = {"GS": "GSW", "NO": "NOP", "NY": "NYK", "SA": "SAS",
              "UTAH": "UTA", "WSH": "WAS", "PHO": "PHX", "BRO": "BKN"}
@@ -784,7 +787,56 @@ def save_meta(cv, dates, sorted_dates, raw_brier, best_brier, temperature,
     with open(meta_path, "w") as f:
         json.dump(meta, f, indent=2)
     print(f"Saved meta -> {meta_path}")
+
+    # Standalone manifest for audit pickup -- written to data/model/ regardless of
+    # whether this is staging or production so audit tools find it without parsing
+    # ensemble_meta.json.
+    standalone = {
+        "manifest_version": 1,
+        "source": f"gbm_v17_train:{args.cache}",
+        "generated_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+        "config_fingerprint": meta["config_fingerprint"],
+        "ensemble_version": meta["version"],
+        "lodo_brier": meta["lodo_brier_ensemble"],
+        "previous_production_brier": meta["previous_production_brier"],
+        "raw_brier": meta["raw_brier"],
+        "temperature": meta["temperature"],
+        "training_dates": meta["training_dates"],
+        "training_legs": meta["training_legs"],
+        "training_cache": meta["training_cache"],
+        "date_range": meta["date_range"],
+        "n_features": len(meta["features"]),
+        "features": meta["features"],
+        "promoted": args.promote,
+        "ens_dir": str(ens_dir),
+        "per_fold_summary": meta["per_fold_summary"],
+    }
+    standalone_path = ROOT / "data" / "model" / "gbm_training_manifest.json"
+    with open(standalone_path, "w") as f:
+        json.dump(standalone, f, indent=2)
+    print(f"Saved training manifest -> {standalone_path}")
+
     return meta
+
+
+def save_oof_predictions(cv, oof_preds, hit_arr, ens_dir):
+    """Save LODO OOF predictions for isotonic calibration training.
+
+    Columns: game_date, player, stat, direction, line, tier, p_new, p_oof, hit
+    p_oof is the held-out GBM prediction for each leg -- the correct input for
+    fitting a post-GBM isotonic calibrator (unlike in-sample predictions which
+    reflect overfitting on training dates).
+    """
+    keep_cols = [c for c in ["game_date", "player", "stat", "direction", "line", "tier"] if c in cv.columns]
+    oof_df = cv[keep_cols].copy()
+    oof_df["p_new"] = cv["p_new"].values
+    oof_df["p_oof"] = oof_preds
+    oof_df["hit"] = hit_arr
+    oof_df = oof_df[oof_df["p_oof"].notna()].reset_index(drop=True)
+    oof_path = ens_dir / "oof_predictions.csv"
+    oof_df.to_csv(oof_path, index=False)
+    print(f"Saved OOF predictions -> {oof_path}  ({len(oof_df)} rows, {oof_df['p_oof'].isna().sum()} NaN)")
+    return oof_df
 
 
 def save_player_te(pa_full, psa_full, pda_full, global_hr, ens_dir):
@@ -806,7 +858,69 @@ def save_player_te(pa_full, psa_full, pda_full, global_hr, ens_dir):
 # ===================================================================
 # Main
 # ===================================================================
+def promote_from_staging():
+    """Copy already-trained staging ensemble to production without re-running LODO."""
+    staging_dir = ROOT / f"data/model/ensemble_{args.cache}"
+    meta_path = staging_dir / "ensemble_meta.json"
+    if not staging_dir.exists() or not meta_path.exists():
+        print(f"ERROR: Staging ensemble not found: {staging_dir}")
+        print(f"Run without --from-staging first to train to staging.")
+        sys.exit(1)
+
+    with open(meta_path) as f:
+        meta = json.load(f)
+
+    staged_brier = meta.get("lodo_brier_ensemble")
+    staged_version = meta.get("version", args.cache)
+    print(f"Staging ensemble: {staging_dir}")
+    print(f"  Version:    {staged_version}")
+    print(f"  LODO Brier: {staged_brier}")
+    print(f"  Dates:      {meta.get('training_dates')}")
+    print(f"  Legs:       {meta.get('training_legs')}")
+    print(f"  Temp:       {meta.get('temperature')}")
+
+    ok, reason, prod_brier = check_promotion_safety(staged_brier, args.force_promote)
+    print(f"\n{'='*60}")
+    print(f"PROMOTION SAFETY CHECK")
+    print(f"{'='*60}")
+    print(f"  {reason}")
+    if not ok:
+        print(f"\n*** BLOCKED. Use --force-promote to override. ***")
+        sys.exit(1)
+
+    import shutil
+    PRODUCTION_ENS_DIR.mkdir(parents=True, exist_ok=True)
+    # Backup existing production
+    bak_dir = ROOT / f"data/model/ensemble_prev"
+    if PRODUCTION_ENS_DIR.exists() and any(PRODUCTION_ENS_DIR.iterdir()):
+        if bak_dir.exists():
+            shutil.rmtree(bak_dir)
+        shutil.copytree(PRODUCTION_ENS_DIR, bak_dir)
+        print(f"  Backed up production -> {bak_dir}")
+    # Copy staging -> production
+    for f in staging_dir.iterdir():
+        shutil.copy2(f, PRODUCTION_ENS_DIR / f.name)
+    print(f"  Copied {staging_dir.name}/ -> ensemble/")
+
+    # Update meta with promotion timestamp
+    meta["promoted_from_staging"] = staged_version
+    meta["promoted_at"] = time.strftime("%Y-%m-%d %H:%M:%S")
+    with open(PRODUCTION_ENS_DIR / "ensemble_meta.json", "w") as f:
+        json.dump(meta, f, indent=2)
+
+    print(f"\n{'='*60}")
+    print(f"{args.cache} PROMOTED to production from staging (no LODO rerun)")
+    print(f"  Production: {PRODUCTION_ENS_DIR}")
+    print(f"  LODO Brier: {staged_brier}")
+    print(f"{'='*60}")
+
+
 def main():
+    # ------ Short-circuit: promote from staging ------
+    if args.from_staging:
+        promote_from_staging()
+        return
+
     # ------ Load cache ------
     cache_path = CACHE_PATHS[args.cache]
     if not cache_path.exists():
@@ -938,6 +1052,7 @@ def main():
             save_meta(cv, dates, sorted_dates, raw_brier, best_brier, best_temp,
                       fold_briers, global_hr, staging_dir, prod_brier)
             save_player_te(pa_full, psa_full, pda_full, global_hr, staging_dir)
+            save_oof_predictions(cv, oof_preds, hit_arr, staging_dir)
             print(f"\n*** PROMOTION BLOCKED -- models saved to staging: {staging_dir} ***")
             print(f"*** Re-run with --force-promote to override. ***")
             sys.exit(1)
@@ -947,6 +1062,7 @@ def main():
     save_meta(cv, dates, sorted_dates, raw_brier, best_brier, best_temp,
               fold_briers, global_hr, ens_dir, prod_brier)
     save_player_te(pa_full, psa_full, pda_full, global_hr, ens_dir)
+    save_oof_predictions(cv, oof_preds, hit_arr, ens_dir)
 
     # ------ Summary ------
     print(f"\n{'='*60}")
