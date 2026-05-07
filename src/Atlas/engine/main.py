@@ -720,7 +720,7 @@ def load_iael_invalidations(
         else:
             print(f"[IAEL] Loaded invalidations={len(df)}.")
 
-        return df[["team_norm", "player_norm", "player_key", "status"]].reset_index(drop=True)
+        return df[["team_norm", "player_norm", "player_key", "player", "status"]].reset_index(drop=True)
 
     except Exception as e:
         print(f"[IAEL][ERROR] Failed to parse invalidations JSON: {e!r}")
@@ -914,10 +914,10 @@ def main() -> None:
 
     scored["p_for_cal_src"] = scored["p_cal_src"]
 
+    telemetry_cfg = (cfg.get("telemetry", {}) or {})
     try:
         from Atlas.runtime.telemetry_calibration import apply_calibration_to_column, load_calibration
 
-        telemetry_cfg = (cfg.get("telemetry", {}) or {})
         post_calibration_cfg = (telemetry_cfg.get("post_calibration", {}) or {})
 
         def _post_calibration_float(name: str, default: float) -> float:
@@ -996,8 +996,7 @@ def main() -> None:
     temp_scale = float(telemetry_cfg.get("temperature_scaling", 1.0))
     if temp_scale != 1.0:
         import numpy as _np
-        _p = scored["p_cal"].values.astype(float)
-        _p = _np.clip(_p, 1e-6, 1 - 1e-6)
+        _p: "np.ndarray[Any, Any]" = scored["p_cal"].values.astype(float).clip(1e-6, 1 - 1e-6)  # type: ignore[assignment]
         _logit = _np.log(_p / (1 - _p))
         scored["p_cal"] = 1.0 / (1.0 + _np.exp(-_logit / temp_scale))
 
@@ -1008,6 +1007,47 @@ def main() -> None:
     except Exception as _gbm_err:
         print(f"[GBM_ENSEMBLE] Skipped: {_gbm_err!r}")
 
+    # ZERO-DNP POST-CAL OVERRIDE
+    # When the zero-DNP minutes correction fired significantly (mult >= threshold),
+    # the GBM features (z_line, l20_edge, margin) still reflect backup-role history
+    # and will confidently override the MC signal. Blend p_adj back in to prevent
+    # the GBM from being overconfident on lines set for a player's backup role.
+    _zdnp_cfg = (cfg.get("role_ctx", {}) or {})
+    _zdnp_blend_thresh = float(_zdnp_cfg.get("zero_dnp_postcal_blend_thresh", 1.40))
+    _zdnp_blend_weight = float(_zdnp_cfg.get("zero_dnp_postcal_blend_weight", 0.70))
+    # Track direction-flip legs before blending so we can drop them from the optimizer pool.
+    # A direction flip = MC (p_adj) and GBM (p_cal) are on opposite sides of 0.5,
+    # or MC is a coin-flip (within 5% of 0.5) while GBM is confident (>8% from 0.5).
+    # For these legs we set p_cal = p_adj so the builder sees the correct signal.
+    # The OVER counterpart for the same player/stat gets its p_cal blended UP,
+    # so the builder reallocates naturally — OVER beats UNDER in the competition.
+    scored["_zero_dnp_flip"] = False
+    if "zero_dnp_mult" in scored.columns:
+        import numpy as _np2
+        _zdnp_mult_vals = scored["zero_dnp_mult"].fillna(1.0)
+        _zdnp_mask = _zdnp_mult_vals >= _zdnp_blend_thresh
+        if _zdnp_mask.any():
+            _p_adj_vals = scored.loc[_zdnp_mask, "p_adj"].fillna(0.5).to_numpy(dtype=float)
+            _p_cal_vals = scored.loc[_zdnp_mask, "p_cal"].fillna(0.5).to_numpy(dtype=float)
+            _direction_disagree = (
+                # Hard flip: MC and GBM are on opposite sides of 0.5
+                ((_p_adj_vals < 0.5) & (_p_cal_vals >= 0.5)) |
+                ((_p_adj_vals >= 0.5) & (_p_cal_vals < 0.5)) |
+                # Coin-flip: MC is uncertain (within 5% of 0.5) regardless of GBM confidence
+                (_np2.abs(_p_adj_vals - 0.5) < 0.05)
+            )
+            _blended = _np2.where(
+                _direction_disagree,
+                _p_adj_vals,   # full override to p_adj — corrects the direction signal
+                _zdnp_blend_weight * _p_adj_vals + (1.0 - _zdnp_blend_weight) * _p_cal_vals,
+            )
+            scored.loc[_zdnp_mask, "p_cal"] = _np2.clip(_blended, 1e-6, 1 - 1e-6)
+            flip_indices = scored.index[_zdnp_mask][_direction_disagree]
+            scored.loc[flip_indices, "_zero_dnp_flip"] = True
+            _n_override = int(_direction_disagree.sum())
+            _n_blend = int(_zdnp_mask.sum()) - _n_override
+            print(f"[ZERO_DNP] Post-cal: {_n_override} legs direction-corrected to p_adj, {_n_blend} blended (mult>={_zdnp_blend_thresh})")
+
     # PREP FOR OPTIMIZER (staged)
     from Atlas.stages.prep_for_optimizer.prep_for_optimizer import run_prep_for_optimizer
 
@@ -1016,6 +1056,16 @@ def main() -> None:
         cfg=cfg,
         iael_df=iael_df,
     )
+
+    # Drop zero-DNP direction-flip legs from the optimizer pool only.
+    # scored (full output CSV) retains them with corrected p_cal for diagnostics.
+    # These legs are coin-flips or direction-wrong per the MC — removing them lets
+    # the builder reallocate to other players rather than picking another backup leg.
+    if "_zero_dnp_flip" in scored_for_optimizer.columns:
+        _n_flip_dropped = int(scored_for_optimizer["_zero_dnp_flip"].sum())
+        if _n_flip_dropped:
+            scored_for_optimizer = scored_for_optimizer[~scored_for_optimizer["_zero_dnp_flip"]].copy()
+            print(f"[ZERO_DNP] Dropped {_n_flip_dropped} direction-corrected legs from optimizer pool")
 
     optimizer_cfg = (cfg.get("optimizer", {}) or {})
     top_n = int(optimizer_cfg.get("top_n_slips", 10))
@@ -1113,23 +1163,26 @@ def main() -> None:
     if demonhunter is not None and len(demonhunter) > 0:
         demonhunter = _annotate_q_slips(demonhunter)
 
-    # Secondary "no-kernel" slips for win-prob comparison (default outputs remain unchanged)
-    slips_winprob = run_build_slips(
-        scored_for_optimizer=scored_for_optimizer,
-        top_n=top_n,
-        seed=seed,
-        cfg=cfg,
-        pricing_engine="atlas",
-        sort_mode="hit",
-    )
-
-    # Apply annotation to win-prob slips
-    sys3_win = _annotate_q_slips(slips_winprob.sys3)
-    sys4_win = _annotate_q_slips(slips_winprob.sys4)
-    sys5_win = _annotate_q_slips(slips_winprob.sys5)
-    wind3_win = _annotate_q_slips(slips_winprob.wind3)
-    wind4_win = _annotate_q_slips(slips_winprob.wind4)
-    wind5_win = _annotate_q_slips(slips_winprob.wind5)
+    # Secondary "no-kernel" slips for win-prob comparison — skipped when emit_winprob_variants=false
+    _emit_winprob = bool((cfg.get("optimizer") or {}).get("emit_winprob_variants", True))
+    if _emit_winprob:
+        slips_winprob = run_build_slips(
+            scored_for_optimizer=scored_for_optimizer,
+            top_n=top_n,
+            seed=seed,
+            cfg=cfg,
+            pricing_engine="atlas",
+            sort_mode="hit",
+        )
+        sys3_win = _annotate_q_slips(slips_winprob.sys3)
+        sys4_win = _annotate_q_slips(slips_winprob.sys4)
+        sys5_win = _annotate_q_slips(slips_winprob.sys5)
+        wind3_win = _annotate_q_slips(slips_winprob.wind3)
+        wind4_win = _annotate_q_slips(slips_winprob.wind4)
+        wind5_win = _annotate_q_slips(slips_winprob.wind5)
+    else:
+        sys3_win = sys4_win = sys5_win = None
+        wind3_win = wind4_win = wind5_win = None
 
     # --- Marketed Slips (subscriber product) ---
     marketed_slips = []
@@ -1178,10 +1231,14 @@ def main() -> None:
     # Build dashboard payload from slip CSVs
     try:
         dashboard_dir = OUT_DIR / "dashboard"
-        payload_path = build_cloudflare_payload(run_dir, dashboard_dir, marketed_slips=marketed_slips or [], gamelogs_path=LOGS_PATH)
+        payload_path = build_cloudflare_payload(run_dir, dashboard_dir, marketed_slips=marketed_slips or [], gamelogs_path=LOGS_PATH, include_yesterday_slips=False)
         print(f"Dashboard payload: {payload_path}")
     except Exception as e:
-        print(f"Warning: failed to build dashboard payload: {e}", file=sys.stderr)
+        import sys as _sys
+        print(f"Warning: failed to build dashboard payload: {e}", file=_sys.stderr)
+
+    # Discord picks post is handled by the orchestrator (discord_post.py --picks-today).
+    # Do not call notify_discord here — it would double-post to the same channel.
 
 if __name__ == "__main__":
     main()

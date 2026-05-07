@@ -41,7 +41,7 @@ RUNS_DIR = DATA_DIR / "output" / "runs"
 POWER_PAYOUTS = {3: 5, 4: 10, 5: 20}
 EXAMPLE_STAKE = 20
 RUN_LABELS = ["11am", "2:30pm", "5:30pm"]
-TIER_EMOJI = {"GOBLIN": "🟢", "STANDARD": "🔵", "DEMON": "🔴"}
+TIER_EMOJI = {"GOBLIN": "🟢", "STANDARD": "🔵", "DEMON": "🔴"}  # dots only — tier names never shown publicly
 
 
 
@@ -159,7 +159,40 @@ def _payout_str(n_legs: int) -> str:
     return f"${EXAMPLE_STAKE} bet → **${total}** ({mult}x payout)"
 
 
-def _build_embed(slip_results: list, target_date: str) -> dict:
+def _build_embed_manual(wins: int, total: int, target_date: str, note: str = None, slip_fields: list = None) -> dict:
+    """Build a results embed with manually supplied win/total counts and optional slip detail fields."""
+    try:
+        d = datetime.strptime(target_date, "%Y-%m-%d")
+        date_label = d.strftime("%A, %B %d").replace(" 0", " ")
+    except Exception:
+        date_label = target_date
+
+    color = 0x4ADE80 if wins >= total / 2 else 0xF5A623 if wins > 0 else 0xF87171
+    description = (
+        f"**{wins}/{total} slips hit** — {date_label}\n\n"
+        f"We target 1 in 3. Yesterday we went **{wins} for {total}**."
+        + (" Here's what cashed 👇" if wins > 0 else " Tough slate — the model stays disciplined.")
+    )
+    if note:
+        description += f"\n\n{note}"
+
+    fields = list(slip_fields) if slip_fields else []
+    fields.append({
+        "name": "Today's Picks",
+        "value": "Full slips + rankings at **[atlassports.ai/dashboard](https://atlassports.ai/dashboard/)** — Premium members get all 3 daily slips.",
+        "inline": False,
+    })
+    return {
+        "title": f"🏀 Atlas Premium Slips — {date_label} Results",
+        "description": description,
+        "color": color,
+        "fields": fields,
+        "footer": {"text": "Atlas Sports AI • atlassports.ai • Past results do not guarantee future performance"},
+        "timestamp": datetime.now(tz=timezone.utc).isoformat(),
+    }
+
+
+def _build_embed(slip_results: list, target_date: str, note: str = None) -> dict:
     try:
         d = datetime.strptime(target_date, "%Y-%m-%d")
         date_label = d.strftime("%A, %B %d").replace(" 0", " ")
@@ -183,6 +216,8 @@ def _build_embed(slip_results: list, target_date: str) -> dict:
         f"We target 1 in 3. Yesterday we went **{n_wins} for {total}**."
         + (" Here's what cashed 👇" if wins else " Tough slate — the model stays disciplined.")
     )
+    if note:
+        description += f"\n\n{note}"
 
     fields = []
     seen_win_keys = set()
@@ -196,7 +231,7 @@ def _build_embed(slip_results: list, target_date: str) -> dict:
         seen_win_keys.add(win_key)
         leg_lines = []
         for l in w["legs"]:
-            emoji = TIER_EMOJI.get(l["tier"], "⚫")
+            emoji = TIER_EMOJI.get(l["tier"], "🔵")
             leg_lines.append(f"{emoji} {l['player']} **{l['direction']} {l['stat']} {l['line']}**")
         leg_lines.append(f"💰 {_payout_str(w['n_legs'])}")
         fields.append({
@@ -256,6 +291,9 @@ def main() -> int:
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--date", type=str, default=None, help="Game date YYYY-MM-DD (results mode only, default: yesterday)")
     parser.add_argument("--picks-today", action="store_true", help="Post today's premium picks instead of yesterday's results")
+    parser.add_argument("--wins", type=int, default=None, help="Override win count (skips auto-compute from run dirs)")
+    parser.add_argument("--total", type=int, default=None, help="Override total slip count")
+    parser.add_argument("--note", type=str, default=None, help="Custom note appended to the embed description")
     args = parser.parse_args()
 
     if args.picks_today:
@@ -270,6 +308,16 @@ def _main_results(args) -> int:
         return 0
 
     target_date = args.date or (date.today() - timedelta(days=1)).isoformat()
+
+    # Manual override mode — skip auto-compute from run dirs
+    wins_override = getattr(args, "wins", None)
+    total_override = getattr(args, "total", None)
+    note_override = getattr(args, "note", None)
+    if wins_override is not None and total_override is not None:
+        print(f"[DISCORD] Manual override: {wins_override}/{total_override} for {target_date}")
+        embed = _build_embed_manual(wins_override, total_override, target_date, note=note_override)
+        return 0 if post_to_discord(webhook_url=webhook_url, embed=embed, dry_run=args.dry_run) else 1
+
     print(f"[DISCORD] Loading marketed slip results for {target_date}...")
 
     run_dirs = _find_run_dirs(target_date)
@@ -291,7 +339,7 @@ def _main_results(args) -> int:
     for r in slip_results:
         print(f"  {r['run_label']:8s} {r['slip_name']:6s}: {'WIN' if r['won'] else 'MISS'}")
 
-    embed = _build_embed(slip_results, target_date)
+    embed = _build_embed(slip_results, target_date, note=note_override)
     return 0 if post_to_discord(webhook_url=webhook_url, embed=embed, dry_run=args.dry_run) else 1
 
 
@@ -350,7 +398,7 @@ def _build_picks_embed(picks: list) -> dict:
     for p in picks:
         leg_lines = []
         for l in p["legs"]:
-            emoji = TIER_EMOJI.get(l["tier"], "⚫")
+            emoji = TIER_EMOJI.get(l["tier"], "🔵")
             leg_lines.append(f"{emoji} {l['player']} **{l['direction']} {l['stat']} {l['line']}**")
         mult = mult_map.get(p["n_legs"], f"{p['n_legs']}x")
         hp = p["hit_prob"]

@@ -16,6 +16,15 @@ set PY=C:\Users\13142\AppData\Local\Programs\Python\Python311\python.exe
 set LOG=%ATLAS_ROOT%\data\telemetry\iael_runs.log
 set ODDSAPI_KEY=3f9cb58724c78a06a555ecef04cc55dd
 
+REM Load Discord webhooks from user registry if not already in the process environment.
+REM Required for Task Scheduler processes that may not inherit the interactive session env.
+if not defined DISCORD_PICKS_WEBHOOK_URL (
+  for /f "delims=" %%A in ('powershell -NoProfile -Command "[System.Environment]::GetEnvironmentVariable(\"DISCORD_PICKS_WEBHOOK_URL\",\"User\")"') do set DISCORD_PICKS_WEBHOOK_URL=%%A
+)
+if not defined ATLAS_DISCORD_WEBHOOK (
+  for /f "delims=" %%A in ('powershell -NoProfile -Command "[System.Environment]::GetEnvironmentVariable(\"ATLAS_DISCORD_WEBHOOK\",\"User\")"') do set ATLAS_DISCORD_WEBHOOK=%%A
+)
+
 cd /d %ATLAS_ROOT%
 echo.>> %LOG%
 echo ===== %date% %time% 8AM LIVE RUN START =====>> %LOG%

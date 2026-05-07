@@ -150,7 +150,9 @@ def _compute_yesterday_slip_record(repo_root: Path) -> dict:
             continue
     if not hit_lookup:
         return {}
-    # Score marketed slips — every run counts independently
+    # Score marketed slips — deduplicate across runs by leg composition so the
+    # same slip appearing in the 8am, 2:30pm, and 5:30pm runs is only counted once.
+    seen_slip_keys: set = set()
     wins = 0
     total = 0
     for rd in run_dirs:
@@ -169,6 +171,11 @@ def _compute_yesterday_slip_record(repo_root: Path) -> dict:
                      l.get("line", "").strip(), (l.get("direction") or "").upper())
                     for l in legs
                 ]
+                # Use frozenset of legs as dedup key — same players/stats/lines/dirs = same slip
+                dedup_key = frozenset(leg_keys)
+                if dedup_key in seen_slip_keys:
+                    continue
+                seen_slip_keys.add(dedup_key)
                 slip_won = all(hit_lookup.get(k, 0) == 1 for k in leg_keys)
                 if slip_won:
                     wins += 1
@@ -185,9 +192,29 @@ def _compute_yesterday_slip_record(repo_root: Path) -> dict:
     }
 
 
+def _load_today_slate_teams(repo_root: Path) -> set:
+    """Return the set of team abbreviations (upper) playing on today's slate."""
+    try:
+        board_path = repo_root / "data" / "board" / "today.csv"
+        if not board_path.exists():
+            return set()
+        df = pd.read_csv(board_path, usecols=lambda c: c in {"team", "opp"})
+        teams: set = set()
+        for col in ("team", "opp"):
+            if col in df.columns:
+                teams.update(df[col].dropna().astype(str).str.upper().str.strip().tolist())
+        return teams
+    except Exception:
+        return set()
+
+
 def _load_injury_context(repo_root: Path) -> dict:
-    """Load latest IAEL injury report for dashboard display."""
-    out: dict = {"invalidated_players": [], "report_date": None, "report_label": None}
+    """Load latest IAEL injury report for dashboard display, filtered to today's slate teams."""
+    out: dict = {"invalidated_players": [], "questionable_players": [], "report_date": None, "report_label": None}
+
+    # Only show injuries for teams actually playing today
+    slate_teams = _load_today_slate_teams(repo_root)
+
     iael_path = repo_root / "data" / "output" / "dashboard" / "injury_invalidations_latest.json"
     if not iael_path.exists():
         return out
@@ -196,9 +223,37 @@ def _load_injury_context(repo_root: Path) -> dict:
             data = json.load(f)
         out["report_date"] = data.get("report_date")
         out["report_label"] = data.get("report_label")
-        out["invalidated_players"] = data.get("invalidated_players", [])
+        all_invalidated = data.get("invalidated_players", [])
+        if slate_teams:
+            out["invalidated_players"] = [
+                p for p in all_invalidated
+                if str(p.get("team", "")).upper().strip() in slate_teams
+            ]
+        else:
+            out["invalidated_players"] = all_invalidated
     except Exception:
         pass
+
+    # Pull QUESTIONABLE players from the normalized snapshot
+    normalized_path = repo_root / "data" / "output" / "injury" / "normalized" / "latest.json"
+    if normalized_path.exists():
+        try:
+            with open(normalized_path, "r", encoding="utf-8") as f:
+                norm = json.load(f)
+            for row in norm.get("rows", []):
+                team_u = str(row.get("team", "")).upper().strip()
+                if slate_teams and team_u not in slate_teams:
+                    continue
+                if (row.get("status", "").upper() == "QUESTIONABLE"
+                        and not row.get("hard_invalid", False)):
+                    out["questionable_players"].append({
+                        "team": row.get("team", ""),
+                        "player": row.get("player", ""),
+                        "status": "QUESTIONABLE",
+                        "reason": row.get("reason", ""),
+                    })
+        except Exception:
+            pass
     return out
 
 
@@ -299,20 +354,38 @@ def _compute_l10(
     return round(hits / games, 4), games
 
 
+def _preserve_yesterday_slips(out_dir: Path) -> dict:
+    """Read yesterday_slips from the existing payload so live runs don't erase it."""
+    try:
+        existing = out_dir / "cloudflare_payload.json"
+        if not existing.exists():
+            return {}
+        data = json.loads(existing.read_text(encoding="utf-8"))
+        ys = data.get("performance", {}).get("yesterday_slips")
+        if ys:
+            return {"yesterday_slips": ys}
+    except Exception:
+        pass
+    return {}
+
+
 def build_cloudflare_payload(
     run_dir: Path,
     out_dir: Path,
     marketed_slips: Optional[list] = None,
     gamelogs_path: Optional[Path] = None,
+    include_yesterday_slips: bool = True,
 ) -> Path:
     """
     Build cloudflare_payload.json from the slip CSVs in run_dir.
-    
+
     Args:
         run_dir: The run directory containing System/, Windfall/, demonhunter.csv
         out_dir: Where to write cloudflare_payload.json (usually data/output/dashboard/)
         marketed_slips: Optional list of marketed slip dicts to include in payload
-    
+        include_yesterday_slips: If False, omit yesterday_slips from performance block.
+            Live runs should pass False — only the 6am eval run should write this.
+
     Returns:
         Path to the written payload file.
     """
@@ -341,7 +414,10 @@ def build_cloudflare_payload(
         "gamescript": [],
         "marketed_slips": [],
         "top_hit_list": [],
-        "performance": {**_compute_performance_stats(_repo_root()), "yesterday_slips": _compute_yesterday_slip_record(_repo_root())},
+        "performance": {
+            **_compute_performance_stats(_repo_root()),
+            **({"yesterday_slips": _compute_yesterday_slip_record(_repo_root())} if include_yesterday_slips else _preserve_yesterday_slips(out_dir)),
+        },
         "injury_context": _load_injury_context(_repo_root()),
     }
     
@@ -552,6 +628,8 @@ def build_cloudflare_payload(
 
     out_dir.mkdir(parents=True, exist_ok=True)
     out_path = out_dir / "cloudflare_payload.json"
+    # Inject total_slips into main payload so landing page can read it
+    payload["total_slips"] = len(payload.get("system") or []) + len(payload.get("windfall") or []) + len(payload.get("demonhunter") or []) + len(payload.get("marketed_slips") or [])
     out_path.write_text(json.dumps(_sanitize(payload), indent=2), encoding="utf-8")
 
     # Write lightweight picks file for homepage
@@ -575,7 +653,7 @@ def build_cloudflare_payload(
         "generated_at": payload.get("generated_at", ""),
         "picks": [{k: leg.get(k) for k in picks_fields} for leg in picks_list],
         "total_legs": len(all_legs_list),
-        "total_slips": len(payload.get("system") or []) + len(payload.get("windfall") or []) + len(payload.get("demonhunter") or []),
+        "total_slips": len(payload.get("system") or []) + len(payload.get("windfall") or []) + len(payload.get("demonhunter") or []) + len(payload.get("marketed_slips") or []),
     }
     picks_path = out_dir / "picks_today.json"
     picks_path.write_text(json.dumps(_sanitize(picks_payload)), encoding="utf-8")
