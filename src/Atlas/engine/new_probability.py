@@ -1074,6 +1074,7 @@ def _zero_dnp_minutes_mult(
     dnp_thresh = int(cfg.get("zero_dnp_dnp_thresh", 2))
     min_cap = float(cfg.get("zero_dnp_min_cap", 2.5))
     min_blend = float(cfg.get("zero_dnp_min_blend", 0.80))
+    games_missed_max = int(cfg.get("zero_dnp_games_missed_max", 7))
 
     best_mult = 1.0
     best_reason = "no_zero_dnp_out"
@@ -1088,6 +1089,17 @@ def _zero_dnp_minutes_mult(
         dnp_count = int((out_gl["minutes"].fillna(0) == 0).sum())
         if dnp_count >= dnp_thresh:
             continue  # Player has DNP history — share matrix is valid
+        # Staleness gate: if the out player has missed > games_missed_max consecutive
+        # games, the GBM and share matrix have already adapted — don't override.
+        if games_missed_max > 0 and "game_date" in out_gl.columns:
+            _sorted_gl = out_gl.sort_values("game_date", ascending=False)
+            _recent_mins = _sorted_gl["minutes"].fillna(0).to_numpy()
+            if len(_recent_mins) > 0 and np.any(_recent_mins > 0):
+                _consecutive_missed = int(np.argmax(_recent_mins > 0))
+            else:
+                _consecutive_missed = len(_recent_mins)
+            if _consecutive_missed > games_missed_max:
+                continue  # Out too long — GBM and share matrix have already learned
         # Zero-DNP case: compute expected starter-load multiplier
         playing_gl = out_gl[out_gl["minutes"].fillna(0) > 0]
         if playing_gl.empty:
@@ -1102,7 +1114,8 @@ def _zero_dnp_minutes_mult(
             best_mult = float(mult)
             best_reason = (
                 f"zero_dnp:{out_player}(dnp={dnp_count}"
-                f",out_min={out_avg_min:.0f},pl_min={player_min:.0f},x{mult:.3f})"
+                f",out_min={out_avg_min:.0f},pl_min={player_min:.0f},x{mult:.3f}"
+                f",missed={_consecutive_missed if 'game_date' in out_gl.columns else '?'})"
             )
 
     return best_mult, best_reason

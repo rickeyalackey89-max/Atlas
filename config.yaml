@@ -155,6 +155,7 @@ role_ctx:
   # Post-GBM blend: prevent GBM from overriding MC signal when zero-DNP fired
   zero_dnp_postcal_blend_thresh: 1.40   # only applies when mult >= this
   zero_dnp_postcal_blend_weight: 0.70   # weight on p_adj (vs GBM p_cal)
+  zero_dnp_games_missed_max: 7          # suppress zero-DNP correction after this many consecutive games missed (GBM has learned)
 posthoc_calibrator:
   enabled: true
   coefficients_path: data/model/posthoc_calibrator_coeffs_enriched.json
