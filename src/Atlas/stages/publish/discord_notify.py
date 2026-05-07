@@ -85,8 +85,51 @@ def _read_slip_csv(path: Path) -> Optional[pd.DataFrame]:
     return None
 
 
+def _send_bot_message(payload: dict) -> bool:
+    """POST JSON payload to Discord via bot token + channel ID. Returns True on success."""
+    import time
+    token = os.environ.get("ATLAS_DISCORD_BOT_TOKEN", "").strip()
+    channel_id = os.environ.get("ATLAS_DISCORD_CHANNEL_ID", "").strip()
+    if not token or not channel_id:
+        return False
+    url = f"https://discord.com/api/v10/channels/{channel_id}/messages"
+    data = json.dumps(payload).encode("utf-8")
+    req = urllib.request.Request(
+        url,
+        data=data,
+        headers={
+            "Content-Type": "application/json",
+            "Authorization": f"Bot {token}",
+        },
+        method="POST",
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=10) as resp:
+            return resp.status in (200, 204)
+    except urllib.error.HTTPError as e:
+        body = e.read().decode("utf-8", errors="replace")[:300]
+        if e.code == 429:
+            try:
+                retry_after = json.loads(body).get("retry_after", 2)
+            except Exception:
+                retry_after = 2
+            print(f"[DISCORD] Rate limited, retrying after {retry_after}s")
+            time.sleep(float(retry_after) + 0.5)
+            try:
+                with urllib.request.urlopen(req, timeout=10) as resp2:
+                    return resp2.status in (200, 204)
+            except Exception as e2:
+                print(f"[DISCORD] Retry failed: {e2!r}")
+                return False
+        print(f"[DISCORD] FAIL HTTP {e.code}: {body}")
+        return False
+    except Exception as e:
+        print(f"[DISCORD] Send error: {e!r}")
+        return False
+
+
 def _send_webhook(webhook_url: str, payload: dict) -> bool:
-    """POST JSON payload to a Discord webhook. Returns True on success."""
+    """POST JSON payload to a Discord webhook. Returns True on success. (Legacy fallback)"""
     import time
     data = json.dumps(payload).encode("utf-8")
     req = urllib.request.Request(
@@ -104,7 +147,6 @@ def _send_webhook(webhook_url: str, payload: dict) -> bool:
     except urllib.error.HTTPError as e:
         body = e.read().decode("utf-8", errors="replace")[:300]
         if e.code == 429:
-            # Rate limited — wait and retry once
             try:
                 retry_after = json.loads(body).get("retry_after", 2)
             except Exception:
@@ -148,11 +190,17 @@ def _fmt_marketed_slips(df: pd.DataFrame) -> list[str]:
 def notify_discord(run_dir: Path, cfg: Optional[dict] = None) -> None:
     """
     Post today's marketed slip picks to Discord.
-    Reads webhook URL from ATLAS_DISCORD_WEBHOOK env var.
-    No-ops silently if env var is unset.
+    Prefers ATLAS_DISCORD_BOT_TOKEN + ATLAS_DISCORD_CHANNEL_ID (bot API).
+    Falls back to ATLAS_DISCORD_WEBHOOK if bot vars not set.
+    No-ops silently if neither is configured.
     """
+    bot_token = os.environ.get("ATLAS_DISCORD_BOT_TOKEN", "").strip()
+    channel_id = os.environ.get("ATLAS_DISCORD_CHANNEL_ID", "").strip()
     webhook_url = os.environ.get("ATLAS_DISCORD_WEBHOOK", "").strip()
-    if not webhook_url:
+
+    use_bot = bool(bot_token and channel_id)
+    use_webhook = bool(webhook_url)
+    if not use_bot and not use_webhook:
         return
 
     # Also respect config opt-out
@@ -180,28 +228,30 @@ def notify_discord(run_dir: Path, cfg: Optional[dict] = None) -> None:
 
     # ── Build Discord embed ───────────────────────────────────────────
     description = "\n\n".join(blocks)
-    # Discord embed description limit: 4096 chars
     if len(description) > 3900:
         description = description[:3900] + "\n…"
 
     embed = {
         "title": f"🏀 Atlas Picks — {game_date}",
         "description": description,
-        "color": 0x00CFFF,  # Atlas cyan
+        "color": 0x00CFFF,
         "footer": {"text": "Atlas Sports AI • atlassports.ai"},
         "timestamp": datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"),
     }
 
     payload = {"embeds": [embed]}
 
-    # Add thread_id if configured (posts into a specific channel thread)
-    thread_id = discord_cfg.get("thread_id", "")
-    url = webhook_url
-    if thread_id:
-        url = f"{webhook_url}?thread_id={thread_id}"
-
-    success = _send_webhook(url, payload)
-    if success:
-        print(f"[DISCORD] Posted {len(blocks)} slip(s) from marketed_slips.csv.")
+    # Try bot first, fall back to webhook
+    if use_bot:
+        success = _send_bot_message(payload)
+        method = "bot"
     else:
-        print("[DISCORD] Post failed — check webhook URL / permissions.")
+        thread_id = discord_cfg.get("thread_id", "")
+        url = f"{webhook_url}?thread_id={thread_id}" if thread_id else webhook_url
+        success = _send_webhook(url, payload)
+        method = "webhook"
+
+    if success:
+        print(f"[DISCORD] Posted {len(blocks)} slip(s) via {method}.")
+    else:
+        print(f"[DISCORD] Post failed via {method}.")

@@ -263,12 +263,43 @@ def _build_embed(slip_results: list, target_date: str, note: str = None) -> dict
     }
 
 
-def post_to_discord(webhook_url: str, embed: dict, dry_run: bool = False) -> bool:
-    payload = {"embeds": [embed], "thread_name": embed.get("title", "Atlas Results")}
+def post_to_discord(embed: dict, dry_run: bool = False,
+                    webhook_url: str = "") -> bool:
+    """Send an embed via bot token (preferred) or webhook (fallback)."""
+    payload = {"embeds": [embed]}
     if dry_run:
         print("[DISCORD] DRY RUN -- payload:")
         print(json.dumps(payload, indent=2, ensure_ascii=True))
         return True
+
+    bot_token = os.environ.get("ATLAS_DISCORD_BOT_TOKEN", "").strip()
+    channel_id = os.environ.get("ATLAS_DISCORD_CHANNEL_ID", "").strip()
+
+    if bot_token and channel_id:
+        try:
+            import urllib.request, urllib.error
+            url = f"https://discord.com/api/v10/channels/{channel_id}/messages"
+            data = json.dumps(payload).encode("utf-8")
+            req = urllib.request.Request(
+                url, data=data,
+                headers={"Content-Type": "application/json", "Authorization": f"Bot {bot_token}"},
+                method="POST",
+            )
+            with urllib.request.urlopen(req, timeout=10) as resp:
+                ok = resp.status in (200, 204)
+            if ok:
+                print("[DISCORD] OK Posted via bot")
+            else:
+                print("[DISCORD] Bot post returned unexpected status")
+            return ok
+        except Exception as e:
+            print(f"[DISCORD] Bot post error: {e}")
+            # Fall through to webhook
+
+    if not webhook_url:
+        print("[DISCORD] No bot token/channel or webhook URL set")
+        return False
+
     try:
         import requests
     except ImportError:
@@ -277,7 +308,7 @@ def post_to_discord(webhook_url: str, embed: dict, dry_run: bool = False) -> boo
     try:
         resp = requests.post(webhook_url, json=payload, timeout=30)
         if resp.status_code in (200, 204):
-            print(f"[DISCORD] OK Posted ({resp.status_code})")
+            print(f"[DISCORD] OK Posted via webhook ({resp.status_code})")
             return True
         print(f"[DISCORD] FAIL HTTP {resp.status_code}: {resp.text[:300]}")
         return False
@@ -303,8 +334,9 @@ def main() -> int:
 
 def _main_results(args) -> int:
     webhook_url = os.environ.get("DISCORD_WEBHOOK_URL", "").strip()
-    if not webhook_url and not args.dry_run:
-        print("[DISCORD] SKIP No DISCORD_WEBHOOK_URL set")
+    bot_ready = bool(os.environ.get("ATLAS_DISCORD_BOT_TOKEN") and os.environ.get("ATLAS_DISCORD_CHANNEL_ID"))
+    if not webhook_url and not bot_ready and not args.dry_run:
+        print("[DISCORD] SKIP No ATLAS_DISCORD_BOT_TOKEN/CHANNEL_ID or DISCORD_WEBHOOK_URL set")
         return 0
 
     target_date = args.date or (date.today() - timedelta(days=1)).isoformat()
@@ -316,7 +348,7 @@ def _main_results(args) -> int:
     if wins_override is not None and total_override is not None:
         print(f"[DISCORD] Manual override: {wins_override}/{total_override} for {target_date}")
         embed = _build_embed_manual(wins_override, total_override, target_date, note=note_override)
-        return 0 if post_to_discord(webhook_url=webhook_url, embed=embed, dry_run=args.dry_run) else 1
+        return 0 if post_to_discord(embed=embed, dry_run=args.dry_run, webhook_url=webhook_url) else 1
 
     print(f"[DISCORD] Loading marketed slip results for {target_date}...")
 
@@ -340,7 +372,7 @@ def _main_results(args) -> int:
         print(f"  {r['run_label']:8s} {r['slip_name']:6s}: {'WIN' if r['won'] else 'MISS'}")
 
     embed = _build_embed(slip_results, target_date, note=note_override)
-    return 0 if post_to_discord(webhook_url=webhook_url, embed=embed, dry_run=args.dry_run) else 1
+    return 0 if post_to_discord(embed=embed, dry_run=args.dry_run, webhook_url=webhook_url) else 1
 
 
 def _load_todays_picks() -> list:
@@ -427,8 +459,9 @@ def _build_picks_embed(picks: list) -> dict:
 
 def _main_picks_today(args) -> int:
     webhook_url = os.environ.get("DISCORD_PICKS_WEBHOOK_URL", "").strip()
-    if not webhook_url and not args.dry_run:
-        print("[DISCORD-PICKS] SKIP No DISCORD_PICKS_WEBHOOK_URL set")
+    bot_ready = bool(os.environ.get("ATLAS_DISCORD_BOT_TOKEN") and os.environ.get("ATLAS_DISCORD_CHANNEL_ID"))
+    if not webhook_url and not bot_ready and not args.dry_run:
+        print("[DISCORD-PICKS] SKIP No ATLAS_DISCORD_BOT_TOKEN/CHANNEL_ID or DISCORD_PICKS_WEBHOOK_URL set")
         return 0
 
     picks = _load_todays_picks()
@@ -438,7 +471,7 @@ def _main_picks_today(args) -> int:
 
     print(f"[DISCORD-PICKS] Posting {len(picks)} slips for today")
     embed = _build_picks_embed(picks)
-    return 0 if post_to_discord(webhook_url=webhook_url, embed=embed, dry_run=args.dry_run) else 1
+    return 0 if post_to_discord(embed=embed, dry_run=args.dry_run, webhook_url=webhook_url) else 1
 
 
 if __name__ == "__main__":
