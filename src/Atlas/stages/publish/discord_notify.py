@@ -19,6 +19,22 @@ from typing import Optional
 
 import pandas as pd
 
+_DISCORD_UA = "DiscordBot (https://github.com/Atlas, 1.0)"
+
+
+def _get_env(name: str) -> str:
+    """Read env var from process env, falling back to Windows User env."""
+    val = os.environ.get(name, "").strip()
+    if val:
+        return val
+    try:
+        import winreg
+        key = winreg.OpenKey(winreg.HKEY_CURRENT_USER, r"Environment")
+        v, _ = winreg.QueryValueEx(key, name)
+        return str(v).strip()
+    except Exception:
+        return ""
+
 # Tier emojis
 _TIER = {"DEMON": "🔴", "GOBLIN": "🟢", "STANDARD": "⚪"}
 _STAT_SHORT = {
@@ -88,8 +104,8 @@ def _read_slip_csv(path: Path) -> Optional[pd.DataFrame]:
 def _send_bot_message(payload: dict) -> bool:
     """POST JSON payload to Discord via bot token + channel ID. Returns True on success."""
     import time
-    token = os.environ.get("ATLAS_DISCORD_BOT_TOKEN", "").strip()
-    channel_id = os.environ.get("ATLAS_DISCORD_CHANNEL_ID", "").strip()
+    token = _get_env("ATLAS_DISCORD_BOT_TOKEN")
+    channel_id = _get_env("ATLAS_DISCORD_CHANNEL_ID")
     if not token or not channel_id:
         return False
     url = f"https://discord.com/api/v10/channels/{channel_id}/messages"
@@ -100,6 +116,7 @@ def _send_bot_message(payload: dict) -> bool:
         headers={
             "Content-Type": "application/json",
             "Authorization": f"Bot {token}",
+            "User-Agent": _DISCORD_UA,
         },
         method="POST",
     )
@@ -194,9 +211,9 @@ def notify_discord(run_dir: Path, cfg: Optional[dict] = None) -> None:
     Falls back to ATLAS_DISCORD_WEBHOOK if bot vars not set.
     No-ops silently if neither is configured.
     """
-    bot_token = os.environ.get("ATLAS_DISCORD_BOT_TOKEN", "").strip()
-    channel_id = os.environ.get("ATLAS_DISCORD_CHANNEL_ID", "").strip()
-    webhook_url = os.environ.get("ATLAS_DISCORD_WEBHOOK", "").strip()
+    bot_token = _get_env("ATLAS_DISCORD_BOT_TOKEN")
+    channel_id = _get_env("ATLAS_DISCORD_CHANNEL_ID")
+    webhook_url = _get_env("ATLAS_DISCORD_WEBHOOK")
 
     use_bot = bool(bot_token and channel_id)
     use_webhook = bool(webhook_url)

@@ -37,6 +37,23 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 DATA_DIR = Path(os.environ.get("ATLAS_DATA_DIR", PROJECT_ROOT / "data"))
 RUNS_DIR = DATA_DIR / "output" / "runs"
 
+_DISCORD_UA = "DiscordBot (https://github.com/Atlas, 1.0)"
+
+
+def _get_env(name: str) -> str:
+    """Read env var from process env, falling back to Windows User env."""
+    val = os.environ.get(name, "").strip()
+    if val:
+        return val
+    try:
+        import winreg
+        key = winreg.OpenKey(winreg.HKEY_CURRENT_USER, r"Environment")
+        v, _ = winreg.QueryValueEx(key, name)
+        return str(v).strip()
+    except Exception:
+        return ""
+
+
 # PrizePicks Power Play standard payouts
 POWER_PAYOUTS = {3: 5, 4: 10, 5: 20}
 EXAMPLE_STAKE = 20
@@ -272,8 +289,8 @@ def post_to_discord(embed: dict, dry_run: bool = False,
         print(json.dumps(payload, indent=2, ensure_ascii=True))
         return True
 
-    bot_token = os.environ.get("ATLAS_DISCORD_BOT_TOKEN", "").strip()
-    channel_id = os.environ.get("ATLAS_DISCORD_CHANNEL_ID", "").strip()
+    bot_token = _get_env("ATLAS_DISCORD_BOT_TOKEN")
+    channel_id = _get_env("ATLAS_DISCORD_CHANNEL_ID")
 
     if bot_token and channel_id:
         try:
@@ -282,7 +299,11 @@ def post_to_discord(embed: dict, dry_run: bool = False,
             data = json.dumps(payload).encode("utf-8")
             req = urllib.request.Request(
                 url, data=data,
-                headers={"Content-Type": "application/json", "Authorization": f"Bot {bot_token}"},
+                headers={
+                    "Content-Type": "application/json",
+                    "Authorization": f"Bot {bot_token}",
+                    "User-Agent": _DISCORD_UA,
+                },
                 method="POST",
             )
             with urllib.request.urlopen(req, timeout=10) as resp:
@@ -333,8 +354,8 @@ def main() -> int:
 
 
 def _main_results(args) -> int:
-    webhook_url = os.environ.get("DISCORD_WEBHOOK_URL", "").strip()
-    bot_ready = bool(os.environ.get("ATLAS_DISCORD_BOT_TOKEN") and os.environ.get("ATLAS_DISCORD_CHANNEL_ID"))
+    webhook_url = _get_env("DISCORD_WEBHOOK_URL")
+    bot_ready = bool(_get_env("ATLAS_DISCORD_BOT_TOKEN") and _get_env("ATLAS_DISCORD_CHANNEL_ID"))
     if not webhook_url and not bot_ready and not args.dry_run:
         print("[DISCORD] SKIP No ATLAS_DISCORD_BOT_TOKEN/CHANNEL_ID or DISCORD_WEBHOOK_URL set")
         return 0
@@ -458,8 +479,8 @@ def _build_picks_embed(picks: list) -> dict:
 
 
 def _main_picks_today(args) -> int:
-    webhook_url = os.environ.get("DISCORD_PICKS_WEBHOOK_URL", "").strip()
-    bot_ready = bool(os.environ.get("ATLAS_DISCORD_BOT_TOKEN") and os.environ.get("ATLAS_DISCORD_CHANNEL_ID"))
+    webhook_url = _get_env("DISCORD_PICKS_WEBHOOK_URL")
+    bot_ready = bool(_get_env("ATLAS_DISCORD_BOT_TOKEN") and _get_env("ATLAS_DISCORD_CHANNEL_ID"))
     if not webhook_url and not bot_ready and not args.dry_run:
         print("[DISCORD-PICKS] SKIP No ATLAS_DISCORD_BOT_TOKEN/CHANNEL_ID or DISCORD_PICKS_WEBHOOK_URL set")
         return 0
