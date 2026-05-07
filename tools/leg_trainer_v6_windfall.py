@@ -1,16 +1,20 @@
 #!/usr/bin/env python
 """
-Leg Selection Trainer v5 — System Slips (EV-sorted)
-=====================================================
-Optimizes params for System family slips: GOBLIN+STANDARD mix,
-payout-EV-sorted (sort_mode='ev'), using build_system_slips() to match
-production exactly (correct mixes, payout tables, mix_ok_fn, per_tier=650).
+Leg Selection Trainer v6 — Windfall Slips (probability-sorted)
+===============================================================
+Optimizes params for Windfall family slips: GOBLIN+STANDARD+DEMON mix,
+probability-sorted (sort_mode='hit'), using build_windfall_slips() to match
+production exactly (correct mixes, payout tables, mix_ok_fn, per_tier=400).
 
-Grid lessons:
-  - frag_w promoted to S1 grid (was the #1 improvement)
-  - No-exclude bias (won in 3-leg EV)
-  - Finer min_edge steps
-  - max_same_stat=3 won in 3-leg EV
+Windfall-specific: min_edge and exclude_stat_directions are stripped before
+each builder call — Windfall never uses them (they starve DEMON-tier legs).
+S1 grid therefore skips exclude/edge sweeps and focuses on beam, penalty,
+min_leg_prob, and stat_family settings.
+
+Grid lessons (from prior HIT training):
+  - All improvement from beam/pool tuning (S2/S3), not structural S1
+  - Strategy: SMALL S1, LARGE S2/S3
+  - min_edge=0 always wins for Windfall (DEMON legs have no edge signal)
 """
 from __future__ import annotations
 
@@ -33,7 +37,7 @@ import yaml
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from Atlas.core.fingerprint import build_manifest, config_fingerprint
-from Atlas.core.slip_builders import build_system_slips
+from Atlas.core.slip_builders import build_windfall_slips
 from Atlas.stages.optimize.build_slips_today import _cfg_for_n_legs
 
 # ── data paths ──────────────────────────────────────────────────────
@@ -60,13 +64,13 @@ def _load_run_dates() -> list[str]:
 
 RUN_DATES = _load_run_dates()
 
-# Production System mixes (GOBLIN+STANDARD only — no DEMON)
-# These are enforced inside build_system_slips(); listed here for reference.
-# 3-leg: {GOBLIN:1, STANDARD:2}  4-leg: {GOBLIN:2, STANDARD:2}  5-leg: {GOBLIN:3, STANDARD:2}
+# Production Windfall mixes (GOBLIN+STANDARD+DEMON)
+# These are enforced inside build_windfall_slips(); listed here for reference.
+# 3-leg: {G:1,S:1,D:1}  4-leg: {G:1,S:2,D:1}  5-leg: {G:2,S:2,D:1}
 CATEGORIES = [
-    ("3-leg SYSTEM", 3, "ev"),
-    ("4-leg SYSTEM", 4, "ev"),
-    ("5-leg SYSTEM", 5, "ev"),
+    ("3-leg WINDFALL", 3, "hit"),
+    ("4-leg WINDFALL", 4, "hit"),
+    ("5-leg WINDFALL", 5, "hit"),
 ]
 
 SEEDS = [42, 137, 9999, 2026, 777]
@@ -74,11 +78,23 @@ TOP_K = 5
 SLIP_WIN_WEIGHT = 10
 N_WORKERS = max(1, (os.cpu_count() or 1) - 1)
 
-# v18 corpus hit rates (low-performers — candidates for System exclusion grid)
+# v18 corpus hit rates (low-performers)
 WORST_SD_COMBOS = [
     "REB_over", "FG3M_over", "AST_over", "RA_over",
     "PR_over", "PA_over", "PRA_over",
 ]
+
+
+def _strip_windfall_cfg(cfg: dict) -> dict:
+    """Strip keys that Windfall ignores at production runtime.
+    Mirrors _windfall_cfg() in build_slips_today.py.
+    """
+    out = dict(cfg)
+    sb = dict(out.get("slip_build") or {})
+    sb.pop("exclude_stat_directions", None)
+    sb.pop("min_edge", None)
+    out["slip_build"] = sb
+    return out
 
 
 # ── data loading ────────────────────────────────────────────────────
@@ -123,10 +139,11 @@ def sort_dates_by_difficulty(
         total_wins = 0
         for seed in SEEDS[:2]:
             try:
-                slips = build_system_slips(
+                windfall_cfg = _strip_windfall_cfg(resolved_cfg)
+                slips = build_windfall_slips(
                     scored_df, n_legs=n_legs, top_n=TOP_K,
                     seed=seed, sort_mode=sort_mode,
-                    pricing_engine="atlas", cfg=resolved_cfg,
+                    pricing_engine="atlas", cfg=windfall_cfg,
                 )
             except Exception:
                 continue
@@ -207,10 +224,11 @@ def score_config(
         total_dates += 1
         for seed in SEEDS:
             try:
-                slips = build_system_slips(
+                windfall_cfg = _strip_windfall_cfg(resolved_cfg)
+                slips = build_windfall_slips(
                     scored_df, n_legs=n_legs, top_n=TOP_K,
                     seed=seed, sort_mode=sort_mode,
-                    pricing_engine="atlas", cfg=resolved_cfg,
+                    pricing_engine="atlas", cfg=windfall_cfg,
                 )
             except Exception:
                 continue
@@ -271,45 +289,32 @@ def _cleanup_worker_data(path):
         pass
 
 
-# ── EV-tuned structural grid ────────────────────────────────────────
-# Lessons from 3-leg EV: frag_w=0.05 was the #1 improvement,
-# no excludes won, max_same_stat=3 won, light penalties (0.05/0.05)
-# 3-leg slip builder trainer: stat_family_mode=fine + beam_window_growth=1.5
-# dominated all top-5 combos for both EV and HIT.
+# ── Windfall-tuned grids ─────────────────────────────────────────────
+# Windfall strips exclude_stat_directions and min_edge at runtime — sweeping
+# them wastes compute. Focus S1 on penalty structure, stat_family_mode,
+# beam_window_growth, min_leg_prob, and max_direction_per_slip.
+# S2/S3 beam/pool tuning is where Windfall improvement lives.
 def build_structural_grid() -> list[dict[str, Any]]:
-    exclude_options: list[list[str]] = [
-        [],
-        WORST_SD_COMBOS[:3],
-        WORST_SD_COMBOS[:5],
-    ]
-    max_under_options: list[int | None] = [None, 2, 1]
-    # Finer min_edge (3-leg won at 0.03)
-    min_edge_options = [0.0, 0.02, 0.03, 0.04]
+    """Windfall structural grid — no exclude/edge, focus on penalty and family mode."""
+    max_under_options: list[int | None] = [None, 2]
     max_same_stat_options = [2, 3]
-    # frag_w in S1 (was the breakthrough in 3-leg EV S1b)
     penalty_options = [
         {"team_w": 0.0, "family_w": 0.0, "frag_w": 0.0},
         {"team_w": 0.05, "family_w": 0.05, "frag_w": 0.0},
         {"team_w": 0.05, "family_w": 0.05, "frag_w": 0.05},
         {"team_w": 0.10, "family_w": 0.05, "frag_w": 0.05},
-        {"team_w": 0.15, "family_w": 0.10, "frag_w": 0.0},
     ]
     stat_family_options = ["coarse", "fine"]
     beam_window_options = [1.5, 2.0]
 
     grid: list[dict[str, Any]] = []
-    for exclude, max_under, min_edge, max_stat, penalty, sfm, bwg in itertools.product(
-        exclude_options, max_under_options, min_edge_options,
-        max_same_stat_options, penalty_options,
+    for max_under, max_stat, penalty, sfm, bwg in itertools.product(
+        max_under_options, max_same_stat_options, penalty_options,
         stat_family_options, beam_window_options,
     ):
         combo: dict[str, Any] = {}
-        if exclude:
-            combo["exclude_stat_directions"] = list(exclude)
         if max_under is not None:
             combo["max_direction_per_slip"] = {"under": max_under}
-        if min_edge > 0.0:
-            combo["min_edge"] = min_edge
         combo["max_same_stat"] = max_stat
         combo["penalty"] = dict(penalty)
         combo["stat_family_mode"] = sfm
@@ -322,41 +327,22 @@ def build_structural_grid() -> list[dict[str, Any]]:
 
 
 def build_refinement_grid(s1_winner: dict[str, Any]) -> list[dict[str, Any]]:
+    """Minimal refinement — try min_leg_prob variants and max_players."""
     grid: list[dict[str, Any]] = []
-
-    # min_leg_prob variations
-    for mlgp in [0.52, 0.54]:
+    for mlgp in [0.57, 0.60, 0.62]:
         combo = copy.deepcopy(s1_winner)
         combo["min_leg_prob"] = mlgp
         grid.append(combo)
-
-    # max_players_per_team = 2
     combo = copy.deepcopy(s1_winner)
     combo["max_players_per_team"] = 2
     grid.append(combo)
-
-    # Exclude 7 (all)
-    if len(s1_winner.get("exclude_stat_directions", [])) < 7:
-        combo = copy.deepcopy(s1_winner)
-        combo["exclude_stat_directions"] = list(WORST_SD_COMBOS[:7])
-        grid.append(combo)
-
-    # Higher frag_w
+    # Try frag_w=0.05 if not already there
     base_frag = s1_winner.get("penalty", {}).get("frag_w", 0.0)
-    for frag in [base_frag + 0.05, base_frag + 0.10]:
-        if frag > 0.20:
-            continue
+    if base_frag < 0.05:
         combo = copy.deepcopy(s1_winner)
         pen = combo.setdefault("penalty", {})
-        pen["frag_w"] = round(frag, 3)
+        pen["frag_w"] = 0.05
         grid.append(combo)
-
-    # frag_w + min_leg_prob combo
-    combo = copy.deepcopy(s1_winner)
-    pen = combo.setdefault("penalty", {})
-    pen["frag_w"] = round(base_frag + 0.05, 3) if base_frag + 0.05 <= 0.20 else base_frag
-    combo["min_leg_prob"] = 0.52
-    grid.append(combo)
 
     seen = set()
     unique = []
@@ -369,14 +355,15 @@ def build_refinement_grid(s1_winner: dict[str, Any]) -> list[dict[str, Any]]:
 
 
 def build_exploration_grid(n_legs: int, winner: dict[str, Any]) -> list[dict[str, Any]]:
+    """EXPANDED beam/pool grid — this is where HIT improvement lives."""
     if n_legs == 4:
-        beam_options = [300, 400, 500, 600]
-        phase1_options = [0.10, 0.20, 0.40]
-        pool_mult_options = [250, 400, 600]
+        beam_options = [200, 300, 400, 500, 600]
+        phase1_options = [0.05, 0.10, 0.20, 0.40]
+        pool_mult_options = [200, 300, 400, 500]
     else:  # 5-leg
-        beam_options = [400, 500, 650, 750]
-        phase1_options = [0.10, 0.30, 0.50]
-        pool_mult_options = [350, 500, 700]
+        beam_options = [300, 400, 500, 650, 800]
+        phase1_options = [0.05, 0.10, 0.30, 0.50]
+        pool_mult_options = [250, 400, 550, 700]
 
     grid: list[dict[str, Any]] = []
     for beam, phase1, pool_mult in itertools.product(
@@ -388,53 +375,60 @@ def build_exploration_grid(n_legs: int, winner: dict[str, Any]) -> list[dict[str
         combo["target_pool_mult"] = pool_mult
         grid.append(combo)
 
-    # phase1_pool_frac variants on the middle combo
-    for ppf in [0.50, 0.75]:
-        combo = copy.deepcopy(winner)
-        combo["beam_width"] = beam_options[1]
-        combo["phase1_frac"] = phase1_options[1]
-        combo["target_pool_mult"] = pool_mult_options[1]
-        combo["phase1_pool_frac"] = ppf
-        grid.append(combo)
+    # phase1_pool_frac variants
+    for ppf in [0.25, 0.50, 0.75]:
+        for beam in beam_options[1:3]:
+            combo = copy.deepcopy(winner)
+            combo["beam_width"] = beam
+            combo["phase1_frac"] = phase1_options[1]
+            combo["target_pool_mult"] = pool_mult_options[1]
+            combo["phase1_pool_frac"] = ppf
+            grid.append(combo)
 
     random.shuffle(grid)
     return grid
 
 
 def build_finetune_grid(s2_winner: dict[str, Any], n_legs: int) -> list[dict[str, Any]]:
+    """EXPANDED fine-tuning — beam/pool and penalty perturbations for Windfall."""
     grid: list[dict[str, Any]] = []
     perturbations = {
-        "min_edge": [-0.01, 0.01],
-        "beam_width": [-50, 50],
-        "phase1_frac": [-0.05, 0.05],
-        "target_pool_mult": [-50, 50],
+        "beam_width": [-25, 25, -50, 50, -100, 100],
+        "phase1_frac": [-0.02, 0.02, -0.05, 0.05],
+        "target_pool_mult": [-25, 25, -50, 50, -100, 100],
     }
-    pen_perturbations = {
-        "team_w": [-0.02, 0.02],
-        "family_w": [-0.02, 0.02],
-        "frag_w": [-0.02, 0.02],
-    }
+
     for pname, deltas in perturbations.items():
-        base_val = s2_winner.get(pname, 0.0)
         if pname in ("beam_width", "target_pool_mult"):
-            base_val = int(base_val) if base_val else 200
+            base_val = int(s2_winner.get(pname, 200))
         else:
-            base_val = float(base_val) if base_val else 0.0
+            base_val = float(s2_winner.get(pname, 0.0))
         for delta in deltas:
             new_val = base_val + delta
             if pname == "min_edge" and new_val < 0.0:
                 continue
             if pname in ("beam_width", "target_pool_mult") and new_val < 50:
                 continue
-            if pname == "phase1_frac" and (new_val < 0.05 or new_val > 0.95):
+            if pname == "phase1_frac" and (new_val < 0.01 or new_val > 0.95):
                 continue
             combo = copy.deepcopy(s2_winner)
             if pname in ("beam_width", "target_pool_mult"):
                 combo[pname] = int(new_val)
             else:
-                combo[pname] = round(new_val, 3)
+                combo[pname] = round(new_val, 4)
             grid.append(combo)
 
+    # phase1_pool_frac fine-tuning
+    for ppf in [0.25, 0.50, 0.75]:
+        combo = copy.deepcopy(s2_winner)
+        combo["phase1_pool_frac"] = ppf
+        grid.append(combo)
+
+    pen_perturbations = {
+        "team_w": [-0.02, 0.02, -0.05],
+        "family_w": [-0.02, 0.02, -0.05],
+        "frag_w": [-0.02, 0.02, 0.05],
+    }
     base_pen = s2_winner.get("penalty", {})
     for pen_key, deltas in pen_perturbations.items():
         base_val = float(base_pen.get(pen_key, 0.0))
@@ -475,7 +469,7 @@ def _run_grid(
 
     if pool is not None and total_combos > 1:
         # ── parallel: process in batches, update best_weighted between batches
-        batch_size = pool._processes  # type: ignore[attr-defined]
+        batch_size = pool._processes
         for batch_start in range(0, total_combos, batch_size):
             batch = grid[batch_start:batch_start + batch_size]
             args = [(c, base_cfg, n_legs, sort_mode, best_weighted) for c in batch]
@@ -581,13 +575,12 @@ def train(base_cfg: dict, data: list[tuple[str, pd.DataFrame, dict]], cats: list
                 s1_result = s1_result_raw or {"weighted": 0, "slip_wins": 0, "legs_hit": 0, "legs_matched": 0, "leg_rate": 0}
                 _print_combo(s1_combo)
             else:
-                # S1: structural (EV-tuned grid with frag_w)
                 s1_grid = build_structural_grid()
                 print(f"  S1: structural ({len(s1_grid)} combos, {len(SEEDS)} seeds)")
                 s1_combo, s1_result = _run_grid(s1_grid, base_cfg, sorted_data, n_legs, sort_mode, "S1", pool=pool)
                 _print_combo(s1_combo)
 
-            # S1b: refinement (always run)
+            # S1b: refinement (SMALL — always run)
             s1b_grid = build_refinement_grid(s1_combo)
             print(f"  S1b: refinement ({len(s1b_grid)} combos)")
             s1b_combo, s1b_result = _run_grid(s1b_grid, base_cfg, sorted_data, n_legs, sort_mode, "S1b", pool=pool)
@@ -595,7 +588,7 @@ def train(base_cfg: dict, data: list[tuple[str, pd.DataFrame, dict]], cats: list
 
             best = (s1b_combo, s1b_result) if s1b_result.get("weighted", 0) >= s1_result.get("weighted", 0) else (s1_combo, s1_result)
 
-            # S2: exploration
+            # S2: exploration (LARGE for Windfall — this is where the value lives)
             s2_grid = build_exploration_grid(n_legs, best[0])
             print(f"  S2: exploration ({len(s2_grid)} combos)")
             s2_combo, s2_result = _run_grid(s2_grid, base_cfg, sorted_data, n_legs, sort_mode, "S2", pool=pool)
@@ -603,7 +596,7 @@ def train(base_cfg: dict, data: list[tuple[str, pd.DataFrame, dict]], cats: list
 
             best = (s2_combo, s2_result) if s2_result.get("weighted", 0) >= best[1].get("weighted", 0) else best
 
-            # S3: fine-tuning
+            # S3: fine-tuning (EXPANDED for Windfall)
             s3_grid = build_finetune_grid(best[0], n_legs)
             print(f"  S3: fine-tuning ({len(s3_grid)} combos)")
             s3_combo, s3_result = _run_grid(s3_grid, base_cfg, sorted_data, n_legs, sort_mode, "S3", pool=pool)
@@ -627,8 +620,8 @@ def train(base_cfg: dict, data: list[tuple[str, pd.DataFrame, dict]], cats: list
 
         # Save 3-leg structural winner for warm-starting 4/5-leg
         if n_legs == 3 and structural_winner is None:
-            structural_winner = copy.deepcopy(best[0])
-            print(f"  -> Saved 3-leg structural winner for warm-start")
+            structural_winner = copy.deepcopy(s1_combo)
+            print(f"  -> Saved 3-leg structural winner for 4/5-leg warm-start")
 
     total_elapsed = time.time() - total_start
     print(f"\n  Total: {total_elapsed:.0f}s ({total_elapsed / 3600:.1f} hrs)")
@@ -659,11 +652,11 @@ def main() -> None:
         print(f"Skipping: {skip_set}")
 
     print("=" * 60)
-    print("Leg Trainer v5 — SYSTEM (EV-sorted)")
+    print("Leg Trainer v6 — WINDFALL (probability-sorted)")
     print(f"  Categories: {[c[0] for c in cats]}")
-    print(f"  Seeds: {SEEDS}  Top-K: {TOP_K}  Builder: build_system_slips (GOBLIN+STANDARD)")
+    print(f"  Seeds: {SEEDS}  Top-K: {TOP_K}  Builder: build_windfall_slips (GOBLIN+STANDARD+DEMON)")
     print(f"  Workers: {args.workers}  (cores: {os.cpu_count()})")
-    print(f"  Stages: S1 (structural+frag_w) -> S1b -> S2 -> S3")
+    print(f"  Stages: S1 (small, no exclude/edge) -> S1b (small) -> S2 (LARGE) -> S3 (EXPANDED)")
     print("=" * 60)
 
     data = load_all_dates()
@@ -684,7 +677,7 @@ def main() -> None:
     results = train(base_cfg, data, cats, n_workers=args.workers)
 
     print("\n" + "=" * 60)
-    print("SYSTEM (EV) RESULTS")
+    print("WINDFALL RESULTS")
     print("=" * 60)
     out_data = {}
     for cat_name, info in results.items():
@@ -704,9 +697,9 @@ def main() -> None:
             "leg_rate": round(r["leg_rate"], 4),
         }
 
-    out_path = Path(__file__).resolve().parent / "leg_trainer_results_v5_ev.yaml"
+    out_path = Path(__file__).resolve().parent / "leg_trainer_results_v6_windfall.yaml"
     out_data["_manifest"] = build_manifest(
-        source="leg_trainer_v5_ev", cfg=base_cfg,
+        source="leg_trainer_v6_windfall", cfg=base_cfg,
         ensemble_dir=base_cfg.get("posthoc_calibrator", {}).get("ensemble_dir"),
     )
     print(f"  Config fingerprint: {out_data['_manifest']['config_fingerprint']}")
