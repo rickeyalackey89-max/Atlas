@@ -242,7 +242,7 @@ slip_build:
   phase1_frac: 0.1
   phase1_pool_frac: 0.5
   beam_width: 250
-  min_leg_prob: 0.52
+  min_leg_prob: 0.57
   max_leg_prob: 0.0
   require_healthy_data: true
   min_nba_games: 10
@@ -279,7 +279,7 @@ slip_build:
         under: 1
       min_edge: 0.02
       max_same_stat: 2
-      min_leg_prob: 0.52
+      min_leg_prob: 0.57
       stat_family_mode: coarse
       beam_window_growth: 2.0
       beam_width: 500
@@ -319,7 +319,7 @@ slip_build:
       prefer_calibrated_prob: false
       by_legs:
         '3':
-          min_leg_prob: 0.52
+          min_leg_prob: 0.57
           max_leg_prob: 0.65
           beam_window_growth: 1.5
           stat_family_mode: fine
@@ -340,7 +340,7 @@ slip_build:
             under: 2
           min_edge: 0.05
           max_same_stat: 3
-          min_leg_prob: 0.52
+          min_leg_prob: 0.57
           stat_family_mode: coarse
           beam_window_growth: 1.5
           beam_width: 300
@@ -355,7 +355,7 @@ slip_build:
             under: 2
           min_edge: 0.04
           max_same_stat: 3
-          min_leg_prob: 0.52
+          min_leg_prob: 0.57
           stat_family_mode: coarse
           beam_window_growth: 1.5
           beam_width: 650
@@ -441,8 +441,10 @@ marketed_slips:
     GOBLIN: 0.57
     STANDARD: 0.3
     DEMON: 0.28
-  # Raw p_cal floor (pre-haircut) — enforces DEMON parity with DemonHunter min_leg_prob
+  # Raw p_cal floor (pre-haircut) — top-15 per tier across 50-date corpus (p10 of top-15 floor)
   min_raw_thresholds:
+    GOBLIN: 0.77
+    STANDARD: 0.57
     DEMON: 0.62
   direction_filters: {}
   # Empirical calibration: scale raw hit_prob up to match actual observed win rates.
