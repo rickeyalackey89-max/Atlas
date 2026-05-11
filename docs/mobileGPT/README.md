@@ -4,6 +4,10 @@ This folder is the mobile entry point for Atlas work with ChatGPT, Codex, GitHub
 
 ## Start Here
 
+## First Mobile Prompt
+
+Read `docs/mobileGPT/MOBILE_WORKFLOW.md`, `docs/README.md`, and `ai/AGENT.md`.
+Summarize current Atlas context, identify the correct repo for this task, and do not edit files until I approve the plan.
 Open [MOBILE_WORKFLOW.md](MOBILE_WORKFLOW.md) first.
 
 That document tells mobile ChatGPT/Codex:
