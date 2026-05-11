@@ -32,6 +32,10 @@ if not defined ATLAS_DISCORD_WEBHOOK (
   for /f "delims=" %%A in ('powershell -NoProfile -Command "[System.Environment]::GetEnvironmentVariable(\"ATLAS_DISCORD_WEBHOOK\",\"User\")"') do set ATLAS_DISCORD_WEBHOOK=%%A
 )
 
+REM 2:30PM updates the website, but does not post premium picks to Discord yet.
+REM Weekend free-slip automation is tracked in ai/WEBSITE_TODO.md.
+set ATLAS_DISCORD_PICKS_POST=0
+
 cd /d %ATLAS_ROOT%
 echo.>> %LOG%
 echo ===== %date% %time% 230PM LIVE RUN START =====>> %LOG%

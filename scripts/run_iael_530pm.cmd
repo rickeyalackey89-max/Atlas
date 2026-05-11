@@ -32,9 +32,15 @@ if not defined ATLAS_DISCORD_WEBHOOK (
   for /f "delims=" %%A in ('powershell -NoProfile -Command "[System.Environment]::GetEnvironmentVariable(\"ATLAS_DISCORD_WEBHOOK\",\"User\")"') do set ATLAS_DISCORD_WEBHOOK=%%A
 )
 
+REM Premium picks post only from the weekday 8AM and 5:30PM scheduled runs.
+set ATLAS_DISCORD_PICKS_POST=0
+for /f "delims=" %%A in ('powershell -NoProfile -Command "(Get-Date).DayOfWeek"') do set ATLAS_DAY_OF_WEEK=%%A
+if /I not "%ATLAS_DAY_OF_WEEK%"=="Saturday" if /I not "%ATLAS_DAY_OF_WEEK%"=="Sunday" set ATLAS_DISCORD_PICKS_POST=1
+
 cd /d %ATLAS_ROOT%
 echo.>> %LOG%
 echo ===== %date% %time% 530PM LIVE RUN START =====>> %LOG%
+echo [DISCORD] Premium picks post flag=%ATLAS_DISCORD_PICKS_POST% (%ATLAS_DAY_OF_WEEK%) >> %LOG%
 
 REM (1) Full live pipeline (IAEL preflight + fetch + score + publish + bundle)
 %PY% -m Atlas.cli live >> %LOG% 2>&1

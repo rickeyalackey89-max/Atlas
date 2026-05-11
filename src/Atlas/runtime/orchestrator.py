@@ -1210,9 +1210,17 @@ def run_today(
         or _os_pub_guard.environ.get("ATLAS_AUTHORITY", "").lower() in {"replay", "sandbox"}
         or _os_pub_guard.environ.get("ATLAS_SUPPRESS_PUBLISH") == "1"
     )
+    _discord_picks_enabled = _os_pub_guard.environ.get("ATLAS_DISCORD_PICKS_POST", "").strip().lower() in {
+        "1",
+        "true",
+        "yes",
+        "on",
+    }
     with StageTimer(ctx, "discord_post"):
         if _suppress_pub:
             print("[DISCORD] skipped (replay/sandbox)")
+        elif not _discord_picks_enabled:
+            print("[DISCORD] skipped (ATLAS_DISCORD_PICKS_POST not enabled)")
         else:
             try:
                 import subprocess as _subp

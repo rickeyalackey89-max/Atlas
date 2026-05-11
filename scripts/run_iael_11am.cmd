@@ -23,6 +23,9 @@ if not defined ODDSAPI_KEY (
   echo [WARN] ODDSAPI_KEY not set; OddsAPI fetch will be skipped >> %LOG%
 )
 
+REM 11AM updates the website, but does not post premium picks to Discord.
+set ATLAS_DISCORD_PICKS_POST=0
+
 cd /d %ATLAS_ROOT%
 echo.>> %LOG%
 echo ===== %date% %time% 11AM LIVE RUN START =====>> %LOG%

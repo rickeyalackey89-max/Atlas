@@ -20,6 +20,7 @@ Env vars:
 Usage:
     python tools/discord_post.py                          # yesterday results
     python tools/discord_post.py --date 2026-05-04        # specific date results
+    python tools/discord_post.py --date 2026-05-04 --run-dir data/output/runs/20260504_173000
     python tools/discord_post.py --picks-today            # today's picks
     python tools/discord_post.py --picks-today --dry-run  # preview picks
 """
@@ -343,6 +344,7 @@ def main() -> int:
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--date", type=str, default=None, help="Game date YYYY-MM-DD (results mode only, default: yesterday)")
     parser.add_argument("--picks-today", action="store_true", help="Post today's premium picks instead of yesterday's results")
+    parser.add_argument("--run-dir", type=str, default=None, help="Specific run dir to score in results mode")
     parser.add_argument("--wins", type=int, default=None, help="Override win count (skips auto-compute from run dirs)")
     parser.add_argument("--total", type=int, default=None, help="Override total slip count")
     parser.add_argument("--note", type=str, default=None, help="Custom note appended to the embed description")
@@ -373,7 +375,18 @@ def _main_results(args) -> int:
 
     print(f"[DISCORD] Loading marketed slip results for {target_date}...")
 
-    run_dirs = _find_run_dirs(target_date)
+    if args.run_dir:
+        run_dir = Path(args.run_dir)
+        if not run_dir.is_absolute():
+            run_dir = RUNS_DIR / args.run_dir
+        expected_prefix = target_date.replace("-", "")
+        if not run_dir.is_dir() or not run_dir.name.startswith(expected_prefix):
+            print(f"[DISCORD] FAIL selected run dir does not match {target_date}: {run_dir}")
+            return 1
+        run_dirs = [run_dir]
+        print(f"[DISCORD] Using selected report run: {run_dir.name}")
+    else:
+        run_dirs = _find_run_dirs(target_date)
     if not run_dirs:
         print(f"[DISCORD] SKIP No run dirs found for {target_date}")
         return 0
@@ -497,4 +510,3 @@ def _main_picks_today(args) -> int:
 
 if __name__ == "__main__":
     sys.exit(main())
-

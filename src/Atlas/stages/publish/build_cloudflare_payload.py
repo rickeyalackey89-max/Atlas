@@ -107,14 +107,17 @@ def _compute_performance_stats(repo_root: Path) -> dict:
 
 
 def _compute_yesterday_slip_record(repo_root: Path) -> dict:
-    """Score yesterday's slips by family (Market, System, Windfall) from the LAST run only.
+    """Score yesterday's slips by family (Market, System, Windfall).
 
     Rules:
-    - Only the most recent run directory for yesterday is used.
+    - Weekend game dates use the run closest to 2:30 PM.
+    - Weekday game dates use the run closest to 5:30 PM.
+    - ATLAS_YESTERDAY_REPORT_RUN can override the selected run.
     - A leg with no truth in eval_legs (DNP / not scored) voids the entire slip —
       the slip is excluded from wins AND total (not counted as a loss).
     - Returns per-family win/total plus an aggregate.
     """
+    import os as _os
     import re as _re
     from datetime import date, timedelta
     today = date.today()
@@ -132,14 +135,42 @@ def _compute_yesterday_slip_record(repo_root: Path) -> dict:
     if not run_dirs:
         return {}
 
-    # Only the last run
-    last_run = run_dirs[-1]
+    def _run_seconds(run_dir: Path) -> int | None:
+        try:
+            hhmmss = run_dir.name[9:]
+            return int(hhmmss[:2]) * 3600 + int(hhmmss[2:4]) * 60 + int(hhmmss[4:6])
+        except Exception:
+            return None
+
+    def _target_seconds(game_date: date) -> int:
+        # Saturday/Sunday: 2:30 PM report. Monday-Friday: 5:30 PM report.
+        return (14 * 3600 + 30 * 60) if game_date.weekday() >= 5 else (17 * 3600 + 30 * 60)
+
+    report_run: Path | None = None
+    configured_report_run = _os.environ.get("ATLAS_YESTERDAY_REPORT_RUN", "").strip()
+    if configured_report_run:
+        candidate = Path(configured_report_run)
+        if not candidate.is_absolute():
+            candidate = runs_dir / configured_report_run
+        if candidate.is_dir() and candidate.name.startswith(prefix) and _run_seconds(candidate) is not None:
+            report_run = candidate
+
+    if report_run is None:
+        target = _target_seconds(yesterday)
+        report_run = min(
+            run_dirs,
+            key=lambda d: (
+                abs((_run_seconds(d) or 0) - target),
+                (_run_seconds(d) or 0) > target,
+                _run_seconds(d) or 0,
+            ),
+        )
 
     # Build hit lookup from eval_legs of that run only
     # key: (player, stat, line, direction) -> 0 or 1
     # Missing key = DNP / no truth
     hit_lookup: dict = {}
-    el = last_run / "eval_legs.csv"
+    el = report_run / "eval_legs.csv"
     if el.exists():
         try:
             with open(el, newline="", encoding="utf-8", errors="replace") as f:
@@ -169,7 +200,7 @@ def _compute_yesterday_slip_record(repo_root: Path) -> dict:
 
     def _score_marketed() -> dict:
         """Score marketed_slips.csv — each slip_name (3-leg/4-leg/5-leg) is one slip."""
-        mp = last_run / "marketed_slips.csv"
+        mp = report_run / "marketed_slips.csv"
         wins, total = 0, 0
         if not mp.exists():
             return {"wins": wins, "total": total}
@@ -235,8 +266,8 @@ def _compute_yesterday_slip_record(repo_root: Path) -> dict:
         return {"wins": wins, "total": total}
 
     market = _score_marketed()
-    system = _score_family_dir(last_run / "System")
-    windfall = _score_family_dir(last_run / "Windfall")
+    system = _score_family_dir(report_run / "System")
+    windfall = _score_family_dir(report_run / "Windfall")
 
     agg_wins = market["wins"] + system["wins"] + windfall["wins"]
     agg_total = market["total"] + system["total"] + windfall["total"]
@@ -246,7 +277,7 @@ def _compute_yesterday_slip_record(repo_root: Path) -> dict:
 
     return {
         "date": yesterday_str,
-        "run_id": last_run.name,
+        "run_id": report_run.name,
         "wins": agg_wins,
         "total": agg_total,
         "pct": round(agg_wins / agg_total, 4) if agg_total else 0,
