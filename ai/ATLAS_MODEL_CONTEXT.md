@@ -425,4 +425,5 @@ The problem almost always maps to one of:
 4. **Replay reproducibility** — any live run can be replayed from pinned artifacts to verify
    that the model produces the same outputs.
 5. **Narrow changes** — prefer config-only adjustments and bounded fixes over broad
-   refactors. Get explicit approval before changing core model behavior.
+   refactors. Call out core model behavior changes clearly and validate them with
+   the fastest meaningful replay or live-run check.

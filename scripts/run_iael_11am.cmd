@@ -13,7 +13,15 @@ set ATLAS_ROOT=C:\Users\13142\Atlas\Atlas
 set DASH_ROOT=C:\Users\13142\Atlas\atlas-dashboard
 set PY=%ATLAS_ROOT%\.venv314\Scripts\python.exe
 set LOG=%ATLAS_ROOT%\data\telemetry\iael_runs.log
-set ODDSAPI_KEY=3f9cb58724c78a06a555ecef04cc55dd
+
+REM Load OddsAPI key from user registry if not already in the process environment.
+REM Required for Task Scheduler processes that may not inherit the interactive session env.
+if not defined ODDSAPI_KEY (
+  for /f "delims=" %%A in ('powershell -NoProfile -Command "[System.Environment]::GetEnvironmentVariable(\"ODDSAPI_KEY\",\"User\")"') do set ODDSAPI_KEY=%%A
+)
+if not defined ODDSAPI_KEY (
+  echo [WARN] ODDSAPI_KEY not set; OddsAPI fetch will be skipped >> %LOG%
+)
 
 cd /d %ATLAS_ROOT%
 echo.>> %LOG%
