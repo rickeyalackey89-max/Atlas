@@ -1,6 +1,10 @@
 # Playoff Regime Fixes — May 2026
 
-Applied May 9, 2026. These are **temporary mitigations** until the GBM is retrained on playoff data (target: Tuesday, May 13 with 14 playoff dates).
+Applied May 9, 2026.
+
+> **Current status:** historical/superseded by the May 10 CatBoost playoff v5cD runtime. Keep this doc as provenance for why playoff-specific mitigations were introduced, but do not treat the May 9 GBM/isotonic plan as the active production path.
+>
+> Active runtime reference: [CURRENT_STATE_2026-05-10.md](CURRENT_STATE_2026-05-10.md).
 
 ---
 
@@ -88,17 +92,16 @@ excluded_stats:
 
 ---
 
-## What to Do on Tuesday (GBM Retrain)
+## Superseded Retrain Plan
 
-1. **Run `tools/eval_date.py`** for all playoff dates since May 1 to populate eval legs
-2. **Check resim cache** — confirm playoff dates are not already in `_v18_resim_cache.pkl`
-3. **Expand LODO corpus** — replay missing playoff dates to add to training data
-4. **Retrain GBM** via `tools/gbm_v12_train.py` (or current version) with playoff dates included
-5. **Retrain direction isotonic** via `tools/train_direction_calibrator.py` on expanded corpus
-6. **Re-evaluate `player_dir_te` window** — consider computing TE on last-30-days only, not full season
-7. **Revisit UNDER window bounds** — after retrain, run same tier analysis to see if 0.60–0.70 still holds or shifts
-8. **Re-enable FTA** if playoff-era FTA calibration looks reasonable
-9. **Revert UNDER STANDARD scoring** if TE signal recovers after playoff-aware retrain
+The original May 9 plan was to retrain GBM/isotonic after more playoff eval dates arrived. On May 10, the production path changed:
+
+1. CatBoost playoff v5cD became the active calibrator.
+2. LightGBM v18 stayed as a historical baseline.
+3. Telemetry isotonic stayed present but disabled.
+4. The UNDER probability window was disabled in current config (`0.0 / 0.0`) because v5cD is treated as the active calibrated surface.
+
+Future retraining should start from [TUNING_PLAYBOOK.md](TUNING_PLAYBOOK.md), not from this historical Tuesday plan.
 
 ---
 

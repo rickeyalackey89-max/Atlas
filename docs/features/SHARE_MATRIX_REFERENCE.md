@@ -10,12 +10,12 @@ At runtime it is used to decide whether an IAEL out should actually produce supp
 
 ## Where It Comes From
 
-The matrix is built by [tools/build_share_matrix.py](../tools/build_share_matrix.py).
+The matrix is built by [tools/build_share_matrix.py](../../tools/build_share_matrix.py).
 
 Build flow:
 
 1. Read historical logs from `data/gamelogs/nba_gamelogs.csv` unless a different path is supplied.
-2. Pass those logs into `Atlas.model.team_share_reallocator.build_removed_share_matrix(...)`.
+2. Pass those logs into `Atlas.model.share_matrix_builder_v2.generate_share_matrix_v2(...)`.
 3. Write the result to `data/model/share_matrix.csv`.
 
 The builder also applies cleanup filters:
@@ -26,7 +26,7 @@ The builder also applies cleanup filters:
 
 ## How The Engine Reads It
 
-The runtime loader lives in [src/Atlas/engine/new_probability.py](../src/Atlas/engine/new_probability.py).
+The runtime loader lives in [src/Atlas/engine/new_probability.py](../../src/Atlas/engine/new_probability.py).
 
 On first use it:
 
@@ -74,7 +74,7 @@ The model still applies the rest of the normal probability pipeline after that, 
 
 ## Teamshare Support Logic
 
-The allocator side in [src/Atlas/model/team_share_reallocator.py](../src/Atlas/model/team_share_reallocator.py) uses the same matrix to decide how much redistribution support is actually credible for a given out pattern.
+The allocator side in [src/Atlas/model/team_share_allocator_v2.py](../../src/Atlas/model/team_share_allocator_v2.py) uses the same matrix to decide how much redistribution support is actually credible for a given out pattern.
 
 Two key controls are:
 

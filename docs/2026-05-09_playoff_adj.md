@@ -1,5 +1,7 @@
 # 2026-05-09 Playoff Adjustment Session
 
+> **Current status:** historical May 9 note. The active production path changed on 2026-05-10 to CatBoost playoff v5cD with telemetry isotonic disabled. Keep this file for provenance; use [CURRENT_STATE_2026-05-10.md](CURRENT_STATE_2026-05-10.md) and [TUNING_PLAYBOOK.md](TUNING_PLAYBOOK.md) for current decisions.
+
 **Date:** May 9, 2026
 **Slate:** 2-game playoff (OKC vs LAL, CLE vs DET)
 **Run verified:** `20260509_125038` — Built 3 marketed slips (5-leg, 4-leg, 3-leg) ✅

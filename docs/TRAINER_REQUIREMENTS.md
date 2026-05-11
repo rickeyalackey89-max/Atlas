@@ -1,5 +1,11 @@
 # Atlas Trainer Requirements
 
+> **Audit status:** intentionally not refreshed in this docs pass.
+>
+> This file still describes the historical GBM/isotonic trainer stack in several places. Current production is CatBoost playoff v5cD, and trainer compatibility with the May 10 CatBoost/runtime changes still needs a dedicated audit before these instructions are used for promotion.
+>
+> Current runtime reference: [CURRENT_STATE_2026-05-10.md](CURRENT_STATE_2026-05-10.md).
+
 Reference for all model and slip-builder trainers — inputs, outputs, runtime, ordering.
 
 ---

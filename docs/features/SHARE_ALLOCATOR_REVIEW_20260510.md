@@ -12,7 +12,7 @@ Audit conducted while the post-kernel-tune corpus replay was running. This is a 
 
 ## CraftedNBA Field Coverage (2026-05-10 snapshot, 518 players)
 
-Source: `https://craftednba.com/api/player-stats` via [tools/fetch_role_metrics.py](../tools/fetch_role_metrics.py)
+Source: `https://craftednba.com/api/player-stats` via [tools/fetch_role_metrics.py](../../tools/fetch_role_metrics.py)
 
 | Field | Populated | Status | Used By Allocator |
 |---|---|---|---|

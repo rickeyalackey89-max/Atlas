@@ -1,5 +1,7 @@
 # Fragility Feature Research — May 3, 2026
 
+> **Current status:** historical research note. This experiment informed later playoff work, but production has moved beyond the v17/v18 GBM-only path. Current active runtime is CatBoost playoff v5cD; see [../CURRENT_STATE_2026-05-10.md](../CURRENT_STATE_2026-05-10.md).
+
 ## Summary
 
 `fragility` is computed by the kernel on every scored leg but has never been in the GBM feature set. This session proved it has real signal. A full retrain is not yet feasible due to the v17 corpus lacking source columns, but all infrastructure is in place for a clean v18 retrain as playoff dates accumulate.

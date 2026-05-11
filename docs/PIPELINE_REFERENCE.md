@@ -1,6 +1,7 @@
 # Atlas Pipeline Reference
 
-> **Last updated:** 2026-05-09 — full file-to-file trace of the live pipeline.
+> **Last updated:** 2026-05-10 — full file-to-file trace of the live pipeline.
+> **Current runtime:** CatBoost playoff v5cD active; v18 LightGBM and telemetry isotonic disabled.
 
 ---
 
@@ -157,7 +158,7 @@ Sets `ATLAS_GAME_DATE` env var from board data.
 ### Stage 3 (cont) — Engine Scoring
 
 **Entry:** `src/Atlas/engine/main.py`
-**Kernel path:** `new_engine.py` → `new_probability.py` → GBM ensemble → telemetry calibration → slip builders → publish stage
+**Kernel path:** `new_engine.py` → `new_probability.py` → May 10 kernel transforms → CatBoost v5cD → slip builders → publish stage
 
 **Reads:**
 | File | Purpose |
@@ -170,8 +171,10 @@ Sets `ATLAS_GAME_DATE` env var from board data.
 | `data/input/rotowire_lines.json` | Spreads + game totals (blowout, q_blowout) |
 | `data/input/external_priors_today.csv` | BettingPros + OddsAPI merged priors |
 | `data/input/odds_market_today.json` | Market consensus |
-| `data/model/ensemble/*.txt` | 14 GBM models (7 OVER + 7 UNDER seeds) |
-| `data/model/telemetry_calibration.playoff_isotonic.json` | Active isotonic calibration overlay |
+| `data/model/ensemble/*.txt` | Historical v18 GBM models; currently disabled |
+| `data/model/telemetry_calibration.playoff_isotonic.json` | Isotonic calibration file; currently disabled |
+| `data/model/catboost_playoff/catboost_v5cD_full_corpus.cbm` | Active CatBoost playoff calibrator |
+| `data/model/catboost_playoff/catboost_v5cD_full_corpus.meta.json` | Active CatBoost feature/parameter contract |
 | `data/model/marketed_calibration.json` | Marketed slip leg calibration |
 
 **Probability chain per leg:**
@@ -180,10 +183,10 @@ p (raw Monte Carlo 10K sim)
   -> p_role       (share matrix role adjustment)
   -> p_adj_pre_under_relief
   -> p_adj        (blowout/fragility + under-relief)
-  -> p_for_cal    (GBM ensemble input)
-  -> p_cal        (GBM ensemble output, 7-seed blend)
-  -> telemetry isotonic overlay (playoff_isotonic.json)
-  -> post-cal blends (combo-under haircuts)
+  -> p_adj        (after May 10 kernel transforms)
+  -> p_for_cal    (currently p_adj universally)
+  -> p_catboost   (CatBoost v5cD residual calibrator)
+  -> p_cal        (production calibrated probability)
   -> p_cal_marketed (marketed_calibration.json haircut)
 ```
 
@@ -303,6 +306,7 @@ src/Atlas/
 │   └── slip_scoring.py             # Slip-level EV and win probability scoring
 ├── engine/                         # Scoring engine
 │   ├── api.py                      # EngineOutputs dataclass
+│   ├── catboost_calibrator.py      # Active CatBoost playoff v5cD runtime calibrator
 │   ├── calibration.py              # GBM ensemble calibrator (7 seeds x 2 directions)
 │   ├── calibration_map.py          # Telemetry calibration overlay application
 │   ├── main.py                     # Engine orchestration: load -> score -> calibrate -> build -> publish
@@ -344,7 +348,10 @@ tools/
 ├── fetch_crafted_player_stats.py   # CraftedNBA role metrics fetch
 ├── fetch_oddsapi_props.py          # OddsAPI external priors fetch
 ├── fetch_rotowire_lines.py         # Rotowire spreads/totals fetch
-├── gbm_v12_train.py                # GBM trainer (LODO cross-validation, --promote to deploy)
+├── gbm_v19_train.py                # Current GBM trainer pattern (LODO cross-validation)
+├── catboost_playoff_v5cD_full_corpus.py # Trains active v5cD full-corpus CatBoost model
+├── replay_v5cD_corpus.py           # 10-date v5cD replay validation
+├── slip_eval_v5cD_corpus.py        # v5cD slip-level evaluation
 ├── generate_daily_graphics_csv.py  # Daily graphics CSV generator
 ├── leg_trainer_v5_ev.py            # Slip builder param sweep (EV optimizer)
 ├── leg_trainer_v5_hit.py           # Slip builder param sweep (hit rate optimizer)
@@ -486,11 +493,14 @@ data/telemetry/
 | `data/board/today.csv` | `rebuild_today_from_any_raw.py` | Engine (`main.py`) |
 | `data/gamelogs/nba_gamelogs.csv` | `refresh_nba_gamelogs.py` | Engine (features), share matrix builder, eval backfill |
 | `data/model/share_matrix.csv` | `build_share_matrix.py` | Engine (`new_probability.py`) |
-| `data/model/ensemble/*.txt` | GBM trainer (`gbm_v12_train.py`) | Engine (`calibration.py`) |
-| `data/model/telemetry_calibration.playoff_isotonic.json` | `train_playoff_isotonic.py` | Engine (`telemetry_calibration.py`) |
+| `data/model/ensemble/*.txt` | GBM trainer (`gbm_v19_train.py` / historical trainers) | Historical GBM path (`calibration.py`) |
+| `data/model/catboost_playoff/catboost_v5cD_full_corpus.cbm` | `catboost_playoff_v5cD_full_corpus.py` | Active engine (`catboost_calibrator.py`) |
+| `data/model/catboost_playoff/catboost_v5cD_full_corpus.meta.json` | `catboost_playoff_v5cD_full_corpus.py` | Active engine (`catboost_calibrator.py`) |
+| `data/model/telemetry_calibration.playoff_isotonic.json` | `train_playoff_isotonic.py` | Optional telemetry path; currently disabled |
 | `data/model/marketed_calibration.json` | `marketed_slip_trainer_v3.py` | Engine (`marketed_slip_builder.py`) |
 | `data/input/external_priors_today.csv` | `fetch_bettingpros_props.py` + `fetch_oddsapi_props.py` | Engine (`external_priors.py`) |
 | `data/output/marketed_slips_latest.json` | Engine publish stage | Discord post, Twitter post |
 | `data/output/dashboard/cloudflare_payload.json` | Engine | `_publish_to_cloudflare_dashboard()` -> Cloudflare Pages |
 | `data/telemetry/live_runs/{id}/eval_legs.csv` | 6 AM backfill | All evaluation tools (corpus reader, Brier, AUC) |
-| `data/model/_v12_resim_cache.pkl` | `gbm_v12_train.py` | GBM trainer LODO, leg trainers |
+| `data/model/_v18_resim_cache.pkl` | v18 GBM training workflow | Historical LightGBM baseline |
+| `data/model/_v1_playoff_resim_cache.pkl` | `build_playoff_resim_cache.py` | Active CatBoost v5cD training |

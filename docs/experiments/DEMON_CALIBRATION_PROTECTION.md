@@ -1,5 +1,9 @@
 # DEMON Calibration Protection Guide
 
+> **Current status:** historical experiment note. Current production uses CatBoost playoff v5cD with `telemetry.apply_active_calibration: false`; the old `demon_fix` isotonic path is not active. Use this document only if intentionally working on historical telemetry-calibration experiments.
+
+Active runtime reference: [../CURRENT_STATE_2026-05-10.md](../CURRENT_STATE_2026-05-10.md).
+
 ## 🎯 Problem
 During LODO runs and model training, various trainer scripts can overwrite `config.yaml` and lose the custom **DEMON tier calibration fix** that reduces DEMON tier overconfidence by ~10%.
 
@@ -77,6 +81,8 @@ python tools/protect_demon_calibration.py --apply
 - `active_calibration: demon_fix`
 - `apply_active_calibration: true`  
 - `active_calibration_path: data/model/telemetry_calibration.demon_fix.json`
+
+These settings are not the current production settings. Do not reapply them during normal CatBoost v5cD operations.
 
 ## 🎯 Key Benefits
 - **Automatic detection** when calibration settings change

@@ -24,7 +24,7 @@ For props, the best CraftedNBA information is the role/workload block and the st
 
 ### Parser
 
-Current parser file: [tools/fetch_role_metrics.py](tools/fetch_role_metrics.py)
+Current parser file: [tools/fetch_role_metrics.py](../../tools/fetch_role_metrics.py)
 
 The parser is HTML-driven. It now maps these important glossary headers explicitly:
 
@@ -36,13 +36,13 @@ The parser is HTML-driven. It now maps these important glossary headers explicit
 
 ### Enrichment
 
-Enrichment file: [src/Atlas/core/matchup_enricher.py](src/Atlas/core/matchup_enricher.py)
+Enrichment file: [src/Atlas/core/matchup_enricher.py](../../src/Atlas/core/matchup_enricher.py)
 
 The matchup enricher already renames parsed fields into `role_metrics_*` columns and merges them by `player_key + game_date`.
 
 ### Runtime use
 
-Runtime file: [src/Atlas/engine/new_probability.py](src/Atlas/engine/new_probability.py)
+Runtime file: [src/Atlas/engine/new_probability.py](../../src/Atlas/engine/new_probability.py)
 
 Current live seams:
 

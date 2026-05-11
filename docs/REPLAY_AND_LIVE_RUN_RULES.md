@@ -1,5 +1,8 @@
 # Atlas Live Run and Replay Rules
 
+> **Last updated:** 2026-05-11
+> **Current runtime:** CatBoost playoff v5cD. Replay should exercise the current pipeline unless a test explicitly pins an older baseline.
+
 This document is the reference for what live runs are for, what replay is for, how replay should be launched during testing, where the pinned inputs live, and where each mode is allowed to write outputs.
 
 ## Purpose
@@ -38,7 +41,7 @@ The replay output folder is where the scored CSVs, replay diagnostics, replay da
 Use the direct raw replay entrypoint:
 
 ```powershell
-python -m Atlas.cli replay --raw C:\Users\rick\projects\Atlas\data\raw\prizepicks_YYYYMMDD_HHMMSS.json
+python -m Atlas.cli replay --raw C:\Users\13142\Atlas\Atlas\data\raw\prizepicks_YYYYMMDD_HHMMSS.json
 ```
 
 That is the preferred replay path for testing. A bundle is not required when the pinned raw file and matching archive artifacts are already available.
@@ -58,12 +61,12 @@ If the pinned artifact set is incomplete, strict replay should stop and report t
 ## Where The Replay Inputs Live
 
 Use these locations during replay setup:
-1. Raw PrizePicks JSON files: `C:\Users\rick\projects\Atlas\data\raw`
-2. IAEL archive snapshots by date and timestamp: `C:\Users\rick\projects\Atlas\data\archives\iael\2026`
-3. Historical normalized injury snapshots: `C:\Users\rick\projects\Atlas\data\output\injury\normalized`
-4. Pinned dashboard role-metrics artifacts: `C:\Users\rick\projects\Atlas\data\output\dashboard`
-5. Replay output root: `C:\Users\rick\projects\Atlas\data\telemetry\replay_runs`
-6. Replay truth source used for eval reconstruction: `C:\Users\rick\projects\Atlas\data\telemetry\Last 10\Last10.csv`
+1. Raw PrizePicks JSON files: `C:\Users\13142\Atlas\Atlas\data\raw`
+2. IAEL archive snapshots by date and timestamp: `C:\Users\13142\Atlas\Atlas\data\archives\iael\2026`
+3. Historical normalized injury snapshots: `C:\Users\13142\Atlas\Atlas\data\output\injury\normalized`
+4. Pinned dashboard role-metrics artifacts: `C:\Users\13142\Atlas\Atlas\data\output\dashboard`
+5. Replay output root: `C:\Users\13142\Atlas\Atlas\data\telemetry\replay_runs`
+6. Replay truth source: `C:\Users\13142\Atlas\Atlas\data\gamelogs\nba_gamelogs.csv`
 
 The dashboard folder is also the default fallback location for pinned role metrics in replay when explicit role-metrics env paths are not supplied.
 
@@ -73,18 +76,18 @@ Strict replay should use pinned environment paths for the non-live inputs:
 
 ```powershell
 $env:ATLAS_STRICT_REPLAY = "1"
-$env:ATLAS_IAEL_INVALIDATIONS_PATH = "C:\Users\rick\projects\Atlas\data\archives\iael\2026\<date>\<timestamp>\injury_invalidations.json"
-$env:ATLAS_IAEL_STATUS_PATH = "C:\Users\rick\projects\Atlas\data\archives\iael\2026\<date>\<timestamp>\status.json"
-$env:ATLAS_IAEL_NORMALIZED_PATH = "C:\Users\rick\projects\Atlas\data\output\injury\normalized\<timestamp>.json"
-$env:ATLAS_ROTOWIRE_LINES_PATH = "C:\Users\rick\projects\Atlas\data\archives\iael\2026\<date>\<timestamp>\rotowire_lines.json"
+$env:ATLAS_IAEL_INVALIDATIONS_PATH = "C:\Users\13142\Atlas\Atlas\data\archives\iael\2026\<date>\<timestamp>\injury_invalidations.json"
+$env:ATLAS_IAEL_STATUS_PATH = "C:\Users\13142\Atlas\Atlas\data\archives\iael\2026\<date>\<timestamp>\status.json"
+$env:ATLAS_IAEL_NORMALIZED_PATH = "C:\Users\13142\Atlas\Atlas\data\output\injury\normalized\<timestamp>.json"
+$env:ATLAS_ROTOWIRE_LINES_PATH = "C:\Users\13142\Atlas\Atlas\data\archives\iael\2026\<date>\<timestamp>\rotowire_lines.json"
 ```
 
 Optional explicit role-metrics pins:
 
 ```powershell
-$env:ATLAS_ROLE_METRICS_PATH = "C:\Users\rick\projects\Atlas\data\output\dashboard\role_metrics_latest.json"
-$env:ATLAS_ROLE_METRICS_HTML_PATH = "C:\Users\rick\projects\Atlas\data\output\dashboard\role_metrics_latest.html"
-$env:ATLAS_ROLE_METRICS_MANIFEST_PATH = "C:\Users\rick\projects\Atlas\data\output\dashboard\role_metrics_snapshot_manifest.json"
+$env:ATLAS_ROLE_METRICS_PATH = "C:\Users\13142\Atlas\Atlas\data\output\dashboard\role_metrics_latest.json"
+$env:ATLAS_ROLE_METRICS_HTML_PATH = "C:\Users\13142\Atlas\Atlas\data\output\dashboard\role_metrics_latest.html"
+$env:ATLAS_ROLE_METRICS_MANIFEST_PATH = "C:\Users\13142\Atlas\Atlas\data\output\dashboard\role_metrics_snapshot_manifest.json"
 ```
 
 If those role-metrics env vars are not provided, strict replay should fall back to the pinned dashboard artifacts above. Replay should not skip role metrics and should not fetch them from a live URL during strict replay.
@@ -257,10 +260,10 @@ A local copy is also written to `data/telemetry/v13_corpus/<YYYYMMDD>/` on C dri
 5. Verify: Check summary output — every date should show `scored=3000+` and `eval_legs=3000+`
 6. Extract clean corpus: `python tools/build_v16_corpus.py` (use `--dry-run` first)
 7. Build resim cache from clean corpus
-8. Retrain GBM: `python tools/gbm_v17_train.py --cache v18 --promote`
+8. Retrain only through the current tuning plan. As of 2026-05-11, CatBoost v5cD should be revalidated before historical GBM promotion paths are used.
 9. Re-run DemonHunter trainer or reapply saved configs (see below)
 
-### After GBM Retrain: Reapply DemonHunter Configs
+### After Trainer Changes: Verify Slip/Discord Configs
 
 The GBM trainer does not modify `config.yaml`, but the leg trainer workflow (when auto-applied) can inadvertently clobber the `demonhunter:` section at the bottom of config.yaml. After any trainer-driven config change, verify the `demonhunter:` block still exists in `config.yaml`.
 

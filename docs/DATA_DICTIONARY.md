@@ -1,6 +1,7 @@
 # Atlas Data Dictionary
 
-> **Last updated:** 2026-05-07 — D drive no longer exists; all canonical data lives in the workspace on C drive.
+> **Last updated:** 2026-05-11
+> **Current runtime:** CatBoost playoff v5cD is active. v18 LightGBM and telemetry isotonic artifacts remain available as historical baselines but are disabled in production.
 
 ---
 
@@ -21,7 +22,8 @@ data/
 │   ├── rotowire_lines.json
 │   └── slate.csv
 ├── model/              # Trained model artifacts (PRODUCTION-CRITICAL)
-│   ├── ensemble/         # v18 GBM models (14 files + meta)
+│   ├── catboost_playoff/ # Active CatBoost v5cD calibrator + metadata
+│   ├── ensemble/         # Historical v18 GBM models (14 files + meta)
 │   ├── calibration_map.json
 │   ├── player_te_lookup.json
 │   ├── posthoc_calibrator_coeffs.json
@@ -42,8 +44,8 @@ data/
 │       └── <YYYYMMDD_HHMMSS>/
 ├── raw/                # Raw PrizePicks JSON snapshots
 └── telemetry/          # Telemetry corpus and evaluation
-    ├── games_logged/     # (empty)
-    └── v9d_corpus/       # Current reader reference corpus (10 runs, 49,956 legs)
+    ├── games_logged/     # Daily game-log refresh markers
+    └── live_runs/        # Archived live runs and 6AM eval_legs backfills
 ```
 
 ---
@@ -52,7 +54,20 @@ data/
 
 These files are **production-critical** and must not be moved or deleted.
 
-### Ensemble (`data/model/ensemble/`)
+### Active CatBoost (`data/model/catboost_playoff/`)
+
+| File | Purpose |
+|---|---|
+| `catboost_v5cD_full_corpus.cbm` | Active playoff CatBoost residual calibrator |
+| `catboost_v5cD_full_corpus.meta.json` | Active feature list, parameters, training dates, and Brier summary |
+
+Current production probability chain:
+
+```text
+p -> p_role -> p_adj -> p_for_cal -> p_catboost -> p_cal
+```
+
+### Historical Ensemble (`data/model/ensemble/`)
 
 | File | Purpose |
 |---|---|
@@ -60,7 +75,7 @@ These files are **production-critical** and must not be moved or deleted.
 | `posthoc_calibrator_gbm_over_s{SEED}.txt` (×7) | LightGBM OVER models, one per seed |
 | `posthoc_calibrator_gbm_under_s{SEED}.txt` (×7) | LightGBM UNDER models, one per seed |
 
-Seeds: 65536, 9999, 137, 999, 98765, 54321, 12345. Architecture: `dn-d11nl50-top7-35feat`.
+Seeds: 65536, 9999, 137, 999, 98765, 54321, 12345. These files are retained for historical v18 evaluation and future comparison work. `posthoc_calibrator.enabled` is currently `false`.
 
 ### Calibration Artifacts
 
@@ -78,11 +93,12 @@ Seeds: 65536, 9999, 137, 999, 98765, 54321, 12345. Architecture: `dn-d11nl50-top
 
 | File | Purpose |
 |---|---|
-| `telemetry_calibration.isotonic_hybrid_protect_role_ctx_on.json` | **Active** isotonic calibration |
+| `telemetry_calibration.playoff_isotonic.json` | Playoff isotonic candidate; currently disabled |
+| `telemetry_calibration.isotonic_hybrid_protect_role_ctx_on.json` | Historical isotonic calibration |
 | `telemetry_calibration.isotonic_global_p_cal.json` | Global p_cal isotonic variant |
 | `telemetry_calibration.isotonic_hybrid_roleoff_guarded.json` | Role-off guarded variant |
 
-The active calibration is set by `telemetry.active_calibration` in `config.yaml`.
+The selected calibration name is set by `telemetry.active_calibration` in `config.yaml`, but production currently has `telemetry.apply_active_calibration: false`.
 
 ### Other Model Files
 
@@ -138,17 +154,16 @@ See [ATLAS_MODEL_CONTEXT.md](ATLAS_MODEL_CONTEXT.md) for the full column-by-colu
 Quick reference for the probability chain:
 ```
 p (raw MC) → p_role (role-adjusted) → p_adj (blowout-adjusted)
-  → p_for_cal (sent to GBM) → p_cal (calibrated output)
+  → p_for_cal (active calibrator input) → p_catboost → p_cal
 ```
 
 ---
 
 ## Telemetry / Evaluation (`data/telemetry/`)
 
-### `v9d_corpus/` — Reader Reference Corpus
+### `live_runs/` — Daily Evaluation Archive
 
-Contains 10 replay runs (49,956 total legs across 22 dates) used to validate the v9d
-baseline. This is the pinned evaluation corpus — do not delete.
+Contains archived live runs and 6AM `eval_legs.csv` backfills. This is the source for website Performance tab leg windows and live model monitoring.
 
 Each run directory contains:
 - `scored_legs_deduped.csv` — model outputs
@@ -164,7 +179,7 @@ Produced by `replay_eval.py` during replay evaluation. Key columns beyond scored
 | `actual_stat` | Realized stat value from box score |
 | `hit` | 1 if the leg hit, 0 if not |
 | `brier` | Per-leg Brier score component |
-| `p_adj` | Probability used for Brier calculation |
+| `p_cal` | Final probability used for Brier calculation in current production |
 
 This is the file used for all Brier score computations and reader backtests.
 

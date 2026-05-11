@@ -1,8 +1,9 @@
 # scored_legs_deduped.csv — Data Dictionary
 
 Every column produced by the Atlas engine for the deduped optimizer-ready leg surface.
-Source: `data/output/runs/{run_id}/scored_legs_deduped.csv` — 184 columns as of v17.
+Source: `data/output/runs/{run_id}/scored_legs_deduped.csv` — 170 columns in reference run `20260510_174904`.
 Truth labels (`hit`) are **not** present here; they are joined from gamelogs via `replay_eval.py`.
+Current runtime: CatBoost playoff v5cD writes `p_catboost_residual`, `p_catboost`, and final `p_cal`.
 
 ---
 
@@ -18,13 +19,14 @@ flowchart TD
     pAdjPreUFD["p_adj_pre_under_frag_dampen\nBefore competitive usage bonus is added"]
     pAdj["p_adj\nFinal kernel output\n(after competitive usage bonus)"]
     pClose["p_close\nBlowout-adjusted for close-game script"]
-    pForCal["p_for_cal\nSent to GBM calibrator\n(= p_adj after external prior nudge)"]
-    pGBM["p_gbm\nGBM ensemble output\n(7 seeds, direction-specific model)"]
-    pCal["p_cal\nFinal calibrated probability\n(GBM → isotonic telemetry overlay)"]
+    pForCal["p_for_cal\nSent to active calibrator\n(currently = p_adj)"]
+    pCatRes["p_catboost_residual\nCatBoost v5cD residual"]
+    pCat["p_catboost\nCatBoost v5cD probability"]
+    pCal["p_cal\nFinal calibrated probability\n(currently CatBoost output)"]
     pCalMarketed["p_cal_marketed\nMarket-slip calibrated probability\n(stat × tier multiplier, NaN for non-marketed legs)"]
 
     MC --> p --> pRole --> pAdjPreUR --> pAdjPreUFD --> pAdjPreCU --> pAdj
-    pAdj --> pForCal --> pGBM --> pCal --> pCalMarketed
+    pAdj --> pForCal --> pCatRes --> pCat --> pCal --> pCalMarketed
     pAdj --> pClose
 ```
 
@@ -107,7 +109,9 @@ flowchart TD
 | `p_adj_pre_under_relief` | float | $p$ after blowout adjustment via `adjust_probability_for_blowout(p_role, q_blowout, minutes_s)`. Starters above the curve crossover (14 min) are attenuated; bench below are gently boosted. |
 | `p_adj_pre_under_frag_dampen` | float | $p$ after under-relief haircut is applied (see §9). Snapshot before the under-fragility dampener runs. |
 | `p_adj_pre_competitive_usage` | float | $p$ after under-fragility dampening. Snapshot before the competitive usage bonus is added. |
-| `p_adj` | float | **Final kernel output.** $p\_adj = p\_adj\_pre\_competitive\_usage + competitive\_usage\_bonus$. This is the probability entering the GBM calibrator. |
+| `p_adj` | float | **Final kernel output after active transforms.** This is the probability handed to the active calibrator as `p_for_cal`. |
+| `p_adj_pre_shrink` | float | Snapshot before May 10 high-probability shrink. |
+| `p_adj_pre_subset_shift` | float | Snapshot before May 10 subset logit shifts/floors. |
 
 ### 5.2 Close-game channel
 
@@ -360,15 +364,21 @@ Handles players who are newly active after being listed as DNP — their gamelog
 
 ---
 
-## 17 — GBM Calibration
+## 17 — Active Calibration
 
 | Column | Type | Description |
 |---|---|---|
-| `p_for_cal` | float | Probability sent to the GBM calibrator. Equals `p_adj` after external prior nudge (or `p_adj` directly if priors are off). |
-| `p_for_cal_src` | str | Column name used as the input to the GBM — documents which probability was fed in |
-| `p_gbm` | float | Raw output of the GBM ensemble (7-seed, direction-specific models). Average of 7 seed predictions for the matching OVER or UNDER model. |
-| `p_cal_src` | str | Documents the calibration path taken (e.g. `p_adj→GBM→isotonic`) |
-| `p_cal` | float | **Final calibrated probability** after GBM ensemble + isotonic telemetry overlay. This is the primary output probability for slip selection. |
+| `p_for_cal` | float | Probability sent to the active calibrator. In the current v5cD runtime this is set from `p_adj` after kernel transforms. |
+| `p_for_cal_src` | str | Column name used as calibrator input. Current runtime should indicate the `p_adj` handoff. |
+| `p_gbm` | float | Historical GBM output column when LightGBM is enabled. Not the current active probability. |
+| `p_catboost_residual` | float | Raw residual predicted by CatBoost v5cD (`hit - p_for_cal` target). |
+| `p_catboost` | float | CatBoost v5cD probability after residual scaling/clipping. |
+| `p_cal_src` | str | Documents the calibration path taken. Current path is CatBoost v5cD. |
+| `p_cal` | float | **Final calibrated probability** used for slip selection. Current runtime sets this from `p_catboost`. |
+
+Current v5cD transform:
+
+$$p\_{cal} = \text{clip}(p\_{for\_cal} + 0.50 \times \text{clip}(\text{residual}, -0.20, +0.20), 0.03, 0.97)$$
 
 ### GBM Feature Target Encodings
 
@@ -385,7 +395,7 @@ These are player-level Bayesian target encodings computed from historical leg ou
 
 ## 18 — Telemetry Calibration Overlay
 
-Isotonic calibration layer applied on top of GBM output. Keyed by the active calibration JSON (`telemetry.active_calibration` in config).
+Optional isotonic calibration layer. It is configured but disabled in current production (`telemetry.apply_active_calibration: false`). If re-enabled, it applies on top of current `p_cal`.
 
 | Column | Type | Description |
 |---|---|---|
