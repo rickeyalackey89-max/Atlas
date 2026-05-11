@@ -1,0 +1,13 @@
+slip,high_confidence,hit_prob,payout_mult,ev,player,team,opp,stat,direction,tier,line,p_cal
+5-leg,True,0.2077,2.145,0.4453,Ajay Mitchell,OKC,LAL,PRA,OVER,GOBLIN,19.5,0.7367
+5-leg,True,0.2077,2.145,0.4453,Alex Caruso,OKC,LAL,PR,OVER,GOBLIN,5.5,0.7628
+5-leg,True,0.2077,2.145,0.4453,Dean Wade,CLE,DET,PTS,OVER,STANDARD,3.5,0.7547
+5-leg,True,0.2077,2.145,0.4453,Tobias Harris,DET,CLE,REB,OVER,STANDARD,6.0,0.7412
+5-leg,True,0.2077,2.145,0.4453,Ausar Thompson,DET,CLE,REB,OVER,DEMON,7.5,0.5455
+4-leg,True,0.4119,1.897,0.7815,Austin Reaves,LAL,OKC,REB,OVER,GOBLIN,2.5,0.7786
+4-leg,True,0.4119,1.897,0.7815,Cade Cunningham,DET,CLE,REB,OVER,GOBLIN,3.5,0.7328
+4-leg,True,0.4119,1.897,0.7815,Isaiah Joe,OKC,LAL,PTS,OVER,STANDARD,5.5,0.7727
+4-leg,True,0.4119,1.897,0.7815,Jaylin Williams,OKC,LAL,RA,OVER,STANDARD,4.5,0.7388
+3-leg,False,0.5349,1.931,1.0329,Cason Wallace,OKC,LAL,REB,OVER,GOBLIN,1.5,0.7596
+3-leg,False,0.5349,1.931,1.0329,Jared McCain,OKC,LAL,PA,OVER,STANDARD,5.5,0.7378
+3-leg,False,0.5349,1.931,1.0329,Donovan Mitchell,CLE,DET,REB,OVER,STANDARD,4.0,0.7328
