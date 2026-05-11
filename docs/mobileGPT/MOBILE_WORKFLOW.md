@@ -69,6 +69,7 @@ Allowed from mobile:
 - Update small Markdown files.
 - Check whether scheduled runs completed.
 - Ask for status summaries of model/runtime artifacts.
+- Making small edits and refactors.
 
 Restricted or high-risk from mobile:
 
