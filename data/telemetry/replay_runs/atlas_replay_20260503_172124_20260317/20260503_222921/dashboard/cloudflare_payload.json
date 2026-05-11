@@ -1,0 +1,872 @@
+{
+  "generated_at": "2026-05-03T17:34:37.649281-05:00",
+  "run_id": "20260503_173436",
+  "system": [
+    {
+      "product": "System",
+      "n_legs": 3,
+      "legs": "Dean Wade OVER PA 4.5 (GOBLIN) [id:10652912] | Dylan Harper OVER PRA 18.5 (STANDARD) [id:10650455] | Ajay Mitchell UNDER PR 17 (STANDARD) [id:10644952]",
+      "legs_detail": [
+        {
+          "raw": "Dean Wade OVER PA 4.5 (GOBLIN) [id:10652912]",
+          "player": "Dean Wade",
+          "dir": "OVER",
+          "stat": "PA",
+          "line": 4.5,
+          "tier": "GOBLIN",
+          "id": 10652912
+        },
+        {
+          "raw": "Dylan Harper OVER PRA 18.5 (STANDARD) [id:10650455]",
+          "player": "Dylan Harper",
+          "dir": "OVER",
+          "stat": "PRA",
+          "line": 18.5,
+          "tier": "STANDARD",
+          "id": 10650455
+        },
+        {
+          "raw": "Ajay Mitchell UNDER PR 17 (STANDARD) [id:10644952]",
+          "player": "Ajay Mitchell",
+          "dir": "UNDER",
+          "stat": "PR",
+          "line": 17.0,
+          "tier": "STANDARD",
+          "id": 10644952
+        }
+      ],
+      "hit_prob": 0.5238688586411748,
+      "ev_mult": 1.9863661929661485,
+      "payout_mult": 6.0,
+      "avg_fragility": 0.0496731082613908
+    },
+    {
+      "product": "System",
+      "n_legs": 4,
+      "legs": "Dean Wade OVER PA 4.5 (GOBLIN) [id:10652912] | Stephon Castle OVER RA 10.5 (GOBLIN) [id:10654433] | Karl-Anthony Towns OVER RA 14.5 (STANDARD) [id:10650152] | Wendell Carter UNDER PA 13.5 (STANDARD) [id:10648771]",
+      "legs_detail": [
+        {
+          "raw": "Dean Wade OVER PA 4.5 (GOBLIN) [id:10652912]",
+          "player": "Dean Wade",
+          "dir": "OVER",
+          "stat": "PA",
+          "line": 4.5,
+          "tier": "GOBLIN",
+          "id": 10652912
+        },
+        {
+          "raw": "Stephon Castle OVER RA 10.5 (GOBLIN) [id:10654433]",
+          "player": "Stephon Castle",
+          "dir": "OVER",
+          "stat": "RA",
+          "line": 10.5,
+          "tier": "GOBLIN",
+          "id": 10654433
+        },
+        {
+          "raw": "Karl-Anthony Towns OVER RA 14.5 (STANDARD) [id:10650152]",
+          "player": "Karl-Anthony Towns",
+          "dir": "OVER",
+          "stat": "RA",
+          "line": 14.5,
+          "tier": "STANDARD",
+          "id": 10650152
+        },
+        {
+          "raw": "Wendell Carter UNDER PA 13.5 (STANDARD) [id:10648771]",
+          "player": "Wendell Carter",
+          "dir": "UNDER",
+          "stat": "PA",
+          "line": 13.5,
+          "tier": "STANDARD",
+          "id": 10648771
+        }
+      ],
+      "hit_prob": 0.4592583090284576,
+      "ev_mult": 1.908939752048352,
+      "payout_mult": 10.0,
+      "avg_fragility": 0.0955645120612415
+    },
+    {
+      "product": "System",
+      "n_legs": 5,
+      "legs": "Andrew Nembhard OVER AST 4.5 (GOBLIN) [id:10651053] | Stephon Castle OVER RA 9.5 (GOBLIN) [id:10650716] | Dean Wade OVER PA 4.5 (GOBLIN) [id:10652912] | Isaiah Hartenstein UNDER PA 10.5 (STANDARD) [id:10648255] | Adem Bona UNDER PR 13 (STANDARD) [id:10644810]",
+      "legs_detail": [
+        {
+          "raw": "Andrew Nembhard OVER AST 4.5 (GOBLIN) [id:10651053]",
+          "player": "Andrew Nembhard",
+          "dir": "OVER",
+          "stat": "AST",
+          "line": 4.5,
+          "tier": "GOBLIN",
+          "id": 10651053
+        },
+        {
+          "raw": "Stephon Castle OVER RA 9.5 (GOBLIN) [id:10650716]",
+          "player": "Stephon Castle",
+          "dir": "OVER",
+          "stat": "RA",
+          "line": 9.5,
+          "tier": "GOBLIN",
+          "id": 10650716
+        },
+        {
+          "raw": "Dean Wade OVER PA 4.5 (GOBLIN) [id:10652912]",
+          "player": "Dean Wade",
+          "dir": "OVER",
+          "stat": "PA",
+          "line": 4.5,
+          "tier": "GOBLIN",
+          "id": 10652912
+        },
+        {
+          "raw": "Isaiah Hartenstein UNDER PA 10.5 (STANDARD) [id:10648255]",
+          "player": "Isaiah Hartenstein",
+          "dir": "UNDER",
+          "stat": "PA",
+          "line": 10.5,
+          "tier": "STANDARD",
+          "id": 10648255
+        },
+        {
+          "raw": "Adem Bona UNDER PR 13 (STANDARD) [id:10644810]",
+          "player": "Adem Bona",
+          "dir": "UNDER",
+          "stat": "PR",
+          "line": 13.0,
+          "tier": "STANDARD",
+          "id": 10644810
+        }
+      ],
+      "hit_prob": 0.4377405938598883,
+      "ev_mult": 2.155381648536108,
+      "payout_mult": 20.0,
+      "avg_fragility": 0.0929060333022674
+    }
+  ],
+  "system_winprob": [
+    {
+      "product": "System WinProb",
+      "n_legs": 3,
+      "legs": "Malik Monk OVER PTS 8.5 (GOBLIN) [id:10654956] | Grayson Allen OVER PA 17.5 (STANDARD) [id:10649269] | Jordan Goodwin OVER PTS 5.5 (STANDARD) [id:10652151]",
+      "legs_detail": [
+        {
+          "raw": "Malik Monk OVER PTS 8.5 (GOBLIN) [id:10654956]",
+          "player": "Malik Monk",
+          "dir": "OVER",
+          "stat": "PTS",
+          "line": 8.5,
+          "tier": "GOBLIN",
+          "id": 10654956
+        },
+        {
+          "raw": "Grayson Allen OVER PA 17.5 (STANDARD) [id:10649269]",
+          "player": "Grayson Allen",
+          "dir": "OVER",
+          "stat": "PA",
+          "line": 17.5,
+          "tier": "STANDARD",
+          "id": 10649269
+        },
+        {
+          "raw": "Jordan Goodwin OVER PTS 5.5 (STANDARD) [id:10652151]",
+          "player": "Jordan Goodwin",
+          "dir": "OVER",
+          "stat": "PTS",
+          "line": 5.5,
+          "tier": "STANDARD",
+          "id": 10652151
+        }
+      ],
+      "hit_prob": 0.4036736930355161,
+      "ev_mult": 2.422042158213097,
+      "payout_mult": 6.0,
+      "avg_fragility": 0.0263731496109416
+    },
+    {
+      "product": "System WinProb",
+      "n_legs": 4,
+      "legs": "Grayson Allen OVER PA 14.5 (GOBLIN) [id:10652204] | Jared McCain OVER PA 4.5 (GOBLIN) [id:10652736] | Grant Williams OVER PRA 10.5 (STANDARD) [id:10643912] | Jordan Goodwin OVER PTS 5.5 (STANDARD) [id:10652151]",
+      "legs_detail": [
+        {
+          "raw": "Grayson Allen OVER PA 14.5 (GOBLIN) [id:10652204]",
+          "player": "Grayson Allen",
+          "dir": "OVER",
+          "stat": "PA",
+          "line": 14.5,
+          "tier": "GOBLIN",
+          "id": 10652204
+        },
+        {
+          "raw": "Jared McCain OVER PA 4.5 (GOBLIN) [id:10652736]",
+          "player": "Jared McCain",
+          "dir": "OVER",
+          "stat": "PA",
+          "line": 4.5,
+          "tier": "GOBLIN",
+          "id": 10652736
+        },
+        {
+          "raw": "Grant Williams OVER PRA 10.5 (STANDARD) [id:10643912]",
+          "player": "Grant Williams",
+          "dir": "OVER",
+          "stat": "PRA",
+          "line": 10.5,
+          "tier": "STANDARD",
+          "id": 10643912
+        },
+        {
+          "raw": "Jordan Goodwin OVER PTS 5.5 (STANDARD) [id:10652151]",
+          "player": "Jordan Goodwin",
+          "dir": "OVER",
+          "stat": "PTS",
+          "line": 5.5,
+          "tier": "STANDARD",
+          "id": 10652151
+        }
+      ],
+      "hit_prob": 0.3786719660656348,
+      "ev_mult": 3.786719660656348,
+      "payout_mult": 10.0,
+      "avg_fragility": 0.01753517146178
+    },
+    {
+      "product": "System WinProb",
+      "n_legs": 5,
+      "legs": "Jaylon Tyson OVER AST 0.5 (GOBLIN) [id:10653216] | Grant Williams OVER RA 3.5 (GOBLIN) [id:10645599] | Russell Westbrook OVER PA 14.5 (GOBLIN) [id:10655494] | Jaden McDaniels UNDER PR 19.5 (STANDARD) [id:10649301] | Jordan Goodwin OVER PTS 5.5 (STANDARD) [id:10652151]",
+      "legs_detail": [
+        {
+          "raw": "Jaylon Tyson OVER AST 0.5 (GOBLIN) [id:10653216]",
+          "player": "Jaylon Tyson",
+          "dir": "OVER",
+          "stat": "AST",
+          "line": 0.5,
+          "tier": "GOBLIN",
+          "id": 10653216
+        },
+        {
+          "raw": "Grant Williams OVER RA 3.5 (GOBLIN) [id:10645599]",
+          "player": "Grant Williams",
+          "dir": "OVER",
+          "stat": "RA",
+          "line": 3.5,
+          "tier": "GOBLIN",
+          "id": 10645599
+        },
+        {
+          "raw": "Russell Westbrook OVER PA 14.5 (GOBLIN) [id:10655494]",
+          "player": "Russell Westbrook",
+          "dir": "OVER",
+          "stat": "PA",
+          "line": 14.5,
+          "tier": "GOBLIN",
+          "id": 10655494
+        },
+        {
+          "raw": "Jaden McDaniels UNDER PR 19.5 (STANDARD) [id:10649301]",
+          "player": "Jaden McDaniels",
+          "dir": "UNDER",
+          "stat": "PR",
+          "line": 19.5,
+          "tier": "STANDARD",
+          "id": 10649301
+        },
+        {
+          "raw": "Jordan Goodwin OVER PTS 5.5 (STANDARD) [id:10652151]",
+          "player": "Jordan Goodwin",
+          "dir": "OVER",
+          "stat": "PTS",
+          "line": 5.5,
+          "tier": "STANDARD",
+          "id": 10652151
+        }
+      ],
+      "hit_prob": 0.2745784221080116,
+      "ev_mult": 5.491568442160233,
+      "payout_mult": 20.0,
+      "avg_fragility": 0.073789217796045
+    }
+  ],
+  "windfall": [
+    {
+      "product": "Windfall",
+      "n_legs": 3,
+      "legs": "Dean Wade OVER PA 4.5 (GOBLIN) [id:10652912] | Alex Sarr UNDER PTS 12.5 (STANDARD) [id:10647408] | Stephon Castle OVER AST 10.5 (DEMON) [id:10650278]",
+      "legs_detail": [
+        {
+          "raw": "Dean Wade OVER PA 4.5 (GOBLIN) [id:10652912]",
+          "player": "Dean Wade",
+          "dir": "OVER",
+          "stat": "PA",
+          "line": 4.5,
+          "tier": "GOBLIN",
+          "id": 10652912
+        },
+        {
+          "raw": "Alex Sarr UNDER PTS 12.5 (STANDARD) [id:10647408]",
+          "player": "Alex Sarr",
+          "dir": "UNDER",
+          "stat": "PTS",
+          "line": 12.5,
+          "tier": "STANDARD",
+          "id": 10647408
+        },
+        {
+          "raw": "Stephon Castle OVER AST 10.5 (DEMON) [id:10650278]",
+          "player": "Stephon Castle",
+          "dir": "OVER",
+          "stat": "AST",
+          "line": 10.5,
+          "tier": "DEMON",
+          "id": 10650278
+        }
+      ],
+      "hit_prob": 0.3421224509801642,
+      "ev_mult": 0.7339769534288628,
+      "payout_mult": 6.0,
+      "avg_fragility": 0.1050415767923316
+    },
+    {
+      "product": "Windfall",
+      "n_legs": 4,
+      "legs": "Jalen Brunson OVER RA 8.5 (GOBLIN) [id:10655285] | Quentin Grimes UNDER PRA 28.5 (STANDARD) [id:10644629] | VJ Edgecombe OVER PTS 18.5 (STANDARD) [id:10644634] | Alex Caruso OVER PTS 9.5 (DEMON) [id:10644962]",
+      "legs_detail": [
+        {
+          "raw": "Jalen Brunson OVER RA 8.5 (GOBLIN) [id:10655285]",
+          "player": "Jalen Brunson",
+          "dir": "OVER",
+          "stat": "RA",
+          "line": 8.5,
+          "tier": "GOBLIN",
+          "id": 10655285
+        },
+        {
+          "raw": "Quentin Grimes UNDER PRA 28.5 (STANDARD) [id:10644629]",
+          "player": "Quentin Grimes",
+          "dir": "UNDER",
+          "stat": "PRA",
+          "line": 28.5,
+          "tier": "STANDARD",
+          "id": 10644629
+        },
+        {
+          "raw": "VJ Edgecombe OVER PTS 18.5 (STANDARD) [id:10644634]",
+          "player": "VJ Edgecombe",
+          "dir": "OVER",
+          "stat": "PTS",
+          "line": 18.5,
+          "tier": "STANDARD",
+          "id": 10644634
+        },
+        {
+          "raw": "Alex Caruso OVER PTS 9.5 (DEMON) [id:10644962]",
+          "player": "Alex Caruso",
+          "dir": "OVER",
+          "stat": "PTS",
+          "line": 9.5,
+          "tier": "DEMON",
+          "id": 10644962
+        }
+      ],
+      "hit_prob": 0.2323302196105778,
+      "ev_mult": 0.9235787067029584,
+      "payout_mult": 10.0,
+      "avg_fragility": 0.153098626356721
+    },
+    {
+      "product": "Windfall",
+      "n_legs": 5,
+      "legs": "Tre Johnson OVER RA 2.5 (GOBLIN) [id:10649700] | Devin Booker OVER PTS 23.5 (GOBLIN) [id:10652321] | Mikal Bridges UNDER PRA 20.5 (STANDARD) [id:10650180] | Chet Holmgren OVER PRA 27 (STANDARD) [id:10644989] | Duncan Robinson OVER PTS 13.5 (DEMON) [id:10647681]",
+      "legs_detail": [
+        {
+          "raw": "Tre Johnson OVER RA 2.5 (GOBLIN) [id:10649700]",
+          "player": "Tre Johnson",
+          "dir": "OVER",
+          "stat": "RA",
+          "line": 2.5,
+          "tier": "GOBLIN",
+          "id": 10649700
+        },
+        {
+          "raw": "Devin Booker OVER PTS 23.5 (GOBLIN) [id:10652321]",
+          "player": "Devin Booker",
+          "dir": "OVER",
+          "stat": "PTS",
+          "line": 23.5,
+          "tier": "GOBLIN",
+          "id": 10652321
+        },
+        {
+          "raw": "Mikal Bridges UNDER PRA 20.5 (STANDARD) [id:10650180]",
+          "player": "Mikal Bridges",
+          "dir": "UNDER",
+          "stat": "PRA",
+          "line": 20.5,
+          "tier": "STANDARD",
+          "id": 10650180
+        },
+        {
+          "raw": "Chet Holmgren OVER PRA 27 (STANDARD) [id:10644989]",
+          "player": "Chet Holmgren",
+          "dir": "OVER",
+          "stat": "PRA",
+          "line": 27.0,
+          "tier": "STANDARD",
+          "id": 10644989
+        },
+        {
+          "raw": "Duncan Robinson OVER PTS 13.5 (DEMON) [id:10647681]",
+          "player": "Duncan Robinson",
+          "dir": "OVER",
+          "stat": "PTS",
+          "line": 13.5,
+          "tier": "DEMON",
+          "id": 10647681
+        }
+      ],
+      "hit_prob": 0.1937088687617839,
+      "ev_mult": 1.013657834191185,
+      "payout_mult": 20.0,
+      "avg_fragility": 0.1265508438029384
+    }
+  ],
+  "windfall_winprob": [
+    {
+      "product": "Windfall WinProb",
+      "n_legs": 3,
+      "legs": "Tim Hardaway OVER PR 9.5 (GOBLIN) [id:10645890] | Jordan Goodwin OVER PTS 5.5 (STANDARD) [id:10652151] | Grayson Allen OVER PA 18.5 (DEMON) [id:10653370]",
+      "legs_detail": [
+        {
+          "raw": "Tim Hardaway OVER PR 9.5 (GOBLIN) [id:10645890]",
+          "player": "Tim Hardaway",
+          "dir": "OVER",
+          "stat": "PR",
+          "line": 9.5,
+          "tier": "GOBLIN",
+          "id": 10645890
+        },
+        {
+          "raw": "Jordan Goodwin OVER PTS 5.5 (STANDARD) [id:10652151]",
+          "player": "Jordan Goodwin",
+          "dir": "OVER",
+          "stat": "PTS",
+          "line": 5.5,
+          "tier": "STANDARD",
+          "id": 10652151
+        },
+        {
+          "raw": "Grayson Allen OVER PA 18.5 (DEMON) [id:10653370]",
+          "player": "Grayson Allen",
+          "dir": "OVER",
+          "stat": "PA",
+          "line": 18.5,
+          "tier": "DEMON",
+          "id": 10653370
+        }
+      ],
+      "hit_prob": 0.3827784907186398,
+      "ev_mult": 2.296670944311839,
+      "payout_mult": 6.0,
+      "avg_fragility": 0.0351174451568326
+    },
+    {
+      "product": "Windfall WinProb",
+      "n_legs": 4,
+      "legs": "Jared McCain OVER PA 4.5 (GOBLIN) [id:10652736] | Grayson Allen OVER PA 17.5 (STANDARD) [id:10649269] | Grant Williams OVER PRA 10.5 (STANDARD) [id:10643912] | Jordan Goodwin OVER REB 3.5 (DEMON) [id:10652152]",
+      "legs_detail": [
+        {
+          "raw": "Jared McCain OVER PA 4.5 (GOBLIN) [id:10652736]",
+          "player": "Jared McCain",
+          "dir": "OVER",
+          "stat": "PA",
+          "line": 4.5,
+          "tier": "GOBLIN",
+          "id": 10652736
+        },
+        {
+          "raw": "Grayson Allen OVER PA 17.5 (STANDARD) [id:10649269]",
+          "player": "Grayson Allen",
+          "dir": "OVER",
+          "stat": "PA",
+          "line": 17.5,
+          "tier": "STANDARD",
+          "id": 10649269
+        },
+        {
+          "raw": "Grant Williams OVER PRA 10.5 (STANDARD) [id:10643912]",
+          "player": "Grant Williams",
+          "dir": "OVER",
+          "stat": "PRA",
+          "line": 10.5,
+          "tier": "STANDARD",
+          "id": 10643912
+        },
+        {
+          "raw": "Jordan Goodwin OVER REB 3.5 (DEMON) [id:10652152]",
+          "player": "Jordan Goodwin",
+          "dir": "OVER",
+          "stat": "REB",
+          "line": 3.5,
+          "tier": "DEMON",
+          "id": 10652152
+        }
+      ],
+      "hit_prob": 0.30050436909566,
+      "ev_mult": 3.0050436909566,
+      "payout_mult": 10.0,
+      "avg_fragility": 0.0194109108327239
+    },
+    {
+      "product": "Windfall WinProb",
+      "n_legs": 5,
+      "legs": "Brandon Miller OVER REB 3.5 (GOBLIN) [id:10644381] | Jalen Green OVER REB 2.5 (GOBLIN) [id:10652818] | Naz Reid UNDER PRA 24.5 (STANDARD) [id:10649430] | Grayson Allen OVER PA 17.5 (STANDARD) [id:10649269] | Grant Williams OVER PRA 12.5 (DEMON) [id:10645597]",
+      "legs_detail": [
+        {
+          "raw": "Brandon Miller OVER REB 3.5 (GOBLIN) [id:10644381]",
+          "player": "Brandon Miller",
+          "dir": "OVER",
+          "stat": "REB",
+          "line": 3.5,
+          "tier": "GOBLIN",
+          "id": 10644381
+        },
+        {
+          "raw": "Jalen Green OVER REB 2.5 (GOBLIN) [id:10652818]",
+          "player": "Jalen Green",
+          "dir": "OVER",
+          "stat": "REB",
+          "line": 2.5,
+          "tier": "GOBLIN",
+          "id": 10652818
+        },
+        {
+          "raw": "Naz Reid UNDER PRA 24.5 (STANDARD) [id:10649430]",
+          "player": "Naz Reid",
+          "dir": "UNDER",
+          "stat": "PRA",
+          "line": 24.5,
+          "tier": "STANDARD",
+          "id": 10649430
+        },
+        {
+          "raw": "Grayson Allen OVER PA 17.5 (STANDARD) [id:10649269]",
+          "player": "Grayson Allen",
+          "dir": "OVER",
+          "stat": "PA",
+          "line": 17.5,
+          "tier": "STANDARD",
+          "id": 10649269
+        },
+        {
+          "raw": "Grant Williams OVER PRA 12.5 (DEMON) [id:10645597]",
+          "player": "Grant Williams",
+          "dir": "OVER",
+          "stat": "PRA",
+          "line": 12.5,
+          "tier": "DEMON",
+          "id": 10645597
+        }
+      ],
+      "hit_prob": 0.213399807735068,
+      "ev_mult": 4.267996154701361,
+      "payout_mult": 20.0,
+      "avg_fragility": 0.0797652479678043
+    }
+  ],
+  "demonhunter": [
+    {
+      "product": "Demonhunter",
+      "n_legs": 3,
+      "legs": "Precious Achiuwa OVER PTS 16.5 (DEMON) [id:10651810] | Jaden McDaniels OVER PA 24.5 (DEMON) [id:10652335] | Brandon Miller OVER PR 29.5 (DEMON) [id:10644463]",
+      "legs_detail": [
+        {
+          "raw": "Precious Achiuwa OVER PTS 16.5 (DEMON) [id:10651810]",
+          "player": "Precious Achiuwa",
+          "dir": "OVER",
+          "stat": "PTS",
+          "line": 16.5,
+          "tier": "DEMON",
+          "id": 10651810
+        },
+        {
+          "raw": "Jaden McDaniels OVER PA 24.5 (DEMON) [id:10652335]",
+          "player": "Jaden McDaniels",
+          "dir": "OVER",
+          "stat": "PA",
+          "line": 24.5,
+          "tier": "DEMON",
+          "id": 10652335
+        },
+        {
+          "raw": "Brandon Miller OVER PR 29.5 (DEMON) [id:10644463]",
+          "player": "Brandon Miller",
+          "dir": "OVER",
+          "stat": "PR",
+          "line": 29.5,
+          "tier": "DEMON",
+          "id": 10644463
+        }
+      ],
+      "hit_prob": 0.0600834369021827,
+      "ev_mult": 0.3836655262860766,
+      "payout_mult": 6.0,
+      "avg_fragility": 0.0544464481832402
+    },
+    {
+      "product": "Demonhunter",
+      "n_legs": 4,
+      "legs": "Donovan Mitchell OVER PTS 28.5 (DEMON) [id:10646741] | Cameron Johnson OVER PR 19.5 (DEMON) [id:10645838] | Nique Clifford OVER AST 3.5 (DEMON) [id:10651763] | Coby White OVER PRA 20.5 (DEMON) [id:10643856]",
+      "legs_detail": [
+        {
+          "raw": "Donovan Mitchell OVER PTS 28.5 (DEMON) [id:10646741]",
+          "player": "Donovan Mitchell",
+          "dir": "OVER",
+          "stat": "PTS",
+          "line": 28.5,
+          "tier": "DEMON",
+          "id": 10646741
+        },
+        {
+          "raw": "Cameron Johnson OVER PR 19.5 (DEMON) [id:10645838]",
+          "player": "Cameron Johnson",
+          "dir": "OVER",
+          "stat": "PR",
+          "line": 19.5,
+          "tier": "DEMON",
+          "id": 10645838
+        },
+        {
+          "raw": "Nique Clifford OVER AST 3.5 (DEMON) [id:10651763]",
+          "player": "Nique Clifford",
+          "dir": "OVER",
+          "stat": "AST",
+          "line": 3.5,
+          "tier": "DEMON",
+          "id": 10651763
+        },
+        {
+          "raw": "Coby White OVER PRA 20.5 (DEMON) [id:10643856]",
+          "player": "Coby White",
+          "dir": "OVER",
+          "stat": "PRA",
+          "line": 20.5,
+          "tier": "DEMON",
+          "id": 10643856
+        }
+      ],
+      "hit_prob": 0.0934731567929246,
+      "ev_mult": 0.0343403202325087,
+      "payout_mult": 10.0,
+      "avg_fragility": 0.0673988907601187
+    },
+    {
+      "product": "Demonhunter",
+      "n_legs": 5,
+      "legs": "Kyle Kuzma OVER FG3M 2.5 (DEMON) [id:10649054] | Christian Braun OVER PA 19.5 (DEMON) [id:10645845] | Stephon Castle OVER RA 15.5 (DEMON) [id:10651875] | Maxime Raynaud OVER PTS 14.5 (DEMON) [id:10651169] | Coby White OVER PTS 19.5 (DEMON) [id:10643851]",
+      "legs_detail": [
+        {
+          "raw": "Kyle Kuzma OVER FG3M 2.5 (DEMON) [id:10649054]",
+          "player": "Kyle Kuzma",
+          "dir": "OVER",
+          "stat": "FG3M",
+          "line": 2.5,
+          "tier": "DEMON",
+          "id": 10649054
+        },
+        {
+          "raw": "Christian Braun OVER PA 19.5 (DEMON) [id:10645845]",
+          "player": "Christian Braun",
+          "dir": "OVER",
+          "stat": "PA",
+          "line": 19.5,
+          "tier": "DEMON",
+          "id": 10645845
+        },
+        {
+          "raw": "Stephon Castle OVER RA 15.5 (DEMON) [id:10651875]",
+          "player": "Stephon Castle",
+          "dir": "OVER",
+          "stat": "RA",
+          "line": 15.5,
+          "tier": "DEMON",
+          "id": 10651875
+        },
+        {
+          "raw": "Maxime Raynaud OVER PTS 14.5 (DEMON) [id:10651169]",
+          "player": "Maxime Raynaud",
+          "dir": "OVER",
+          "stat": "PTS",
+          "line": 14.5,
+          "tier": "DEMON",
+          "id": 10651169
+        },
+        {
+          "raw": "Coby White OVER PTS 19.5 (DEMON) [id:10643851]",
+          "player": "Coby White",
+          "dir": "OVER",
+          "stat": "PTS",
+          "line": 19.5,
+          "tier": "DEMON",
+          "id": 10643851
+        }
+      ],
+      "hit_prob": 0.063826222094779,
+      "ev_mult": 0.0088244570534793,
+      "payout_mult": 20.0,
+      "avg_fragility": 0.0696328665679378
+    }
+  ],
+  "gamescript": [],
+  "marketed_slips": [
+    {
+      "label": "3-leg",
+      "n_legs": 3,
+      "hit_prob": 0.7469884967960487,
+      "payout_mult": 1.9309787692112594,
+      "ev": 1.442418928158203,
+      "high_confidence": true,
+      "legs": [
+        {
+          "player": "Coby White",
+          "dir": "OVER",
+          "stat": "PA",
+          "line": 11.5,
+          "tier": "GOBLIN",
+          "team": "CHA",
+          "opp": "MIA",
+          "p_cal": 0.8630587127055346
+        },
+        {
+          "player": "Ajay Mitchell",
+          "dir": "UNDER",
+          "stat": "PA",
+          "line": 17.0,
+          "tier": "STANDARD",
+          "team": "OKC",
+          "opp": "ORL",
+          "p_cal": 0.7920836739714755
+        },
+        {
+          "player": "Dennis Schr\u00f6der",
+          "dir": "UNDER",
+          "stat": "PR",
+          "line": 10.5,
+          "tier": "STANDARD",
+          "team": "CLE",
+          "opp": "MIL",
+          "p_cal": 0.8158199913480279
+        }
+      ]
+    },
+    {
+      "label": "4-leg",
+      "n_legs": 4,
+      "hit_prob": 0.49310572574772604,
+      "payout_mult": 1.8973665961010275,
+      "ev": 0.9356023323798898,
+      "high_confidence": true,
+      "legs": [
+        {
+          "player": "Cameron Johnson",
+          "dir": "OVER",
+          "stat": "PR",
+          "line": 9.5,
+          "tier": "GOBLIN",
+          "team": "DEN",
+          "opp": "PHI",
+          "p_cal": 0.8831858152502662
+        },
+        {
+          "player": "Jordan Goodwin",
+          "dir": "OVER",
+          "stat": "PTS",
+          "line": 4.5,
+          "tier": "GOBLIN",
+          "team": "PHX",
+          "opp": "MIN",
+          "p_cal": 0.8552578190934026
+        },
+        {
+          "player": "Luguentz Dort",
+          "dir": "UNDER",
+          "stat": "PR",
+          "line": 10.5,
+          "tier": "STANDARD",
+          "team": "OKC",
+          "opp": "ORL",
+          "p_cal": 0.8168058045535701
+        },
+        {
+          "player": "Norman Powell",
+          "dir": "UNDER",
+          "stat": "RA",
+          "line": 5.5,
+          "tier": "STANDARD",
+          "team": "MIA",
+          "opp": "CHA",
+          "p_cal": 0.8528833693901556
+        }
+      ]
+    },
+    {
+      "label": "5-leg",
+      "n_legs": 5,
+      "hit_prob": 0.16444384611971152,
+      "payout_mult": 2.1445422618829917,
+      "ev": 0.3526567777103048,
+      "high_confidence": true,
+      "legs": [
+        {
+          "player": "LaMelo Ball",
+          "dir": "OVER",
+          "stat": "PRA",
+          "line": 24.5,
+          "tier": "GOBLIN",
+          "team": "CHA",
+          "opp": "MIA",
+          "p_cal": 0.8497487344040549
+        },
+        {
+          "player": "Dean Wade",
+          "dir": "OVER",
+          "stat": "RA",
+          "line": 3.5,
+          "tier": "GOBLIN",
+          "team": "CLE",
+          "opp": "MIL",
+          "p_cal": 0.8494128449714413
+        },
+        {
+          "player": "Adem Bona",
+          "dir": "UNDER",
+          "stat": "REB",
+          "line": 6.0,
+          "tier": "STANDARD",
+          "team": "PHI",
+          "opp": "DEN",
+          "p_cal": 0.8422402741369772
+        },
+        {
+          "player": "Naz Reid",
+          "dir": "UNDER",
+          "stat": "PR",
+          "line": 21.5,
+          "tier": "STANDARD",
+          "team": "MIN",
+          "opp": "PHX",
+          "p_cal": 0.7549582220987116
+        },
+        {
+          "player": "Trae Young",
+          "dir": "OVER",
+          "stat": "RA",
+          "line": 8.5,
+          "tier": "DEMON",
+          "team": "WAS",
+          "opp": "DET",
+          "p_cal": 0.44817772530643635
+        }
+      ]
+    }
+  ]
+}

@@ -107,7 +107,15 @@ def _compute_performance_stats(repo_root: Path) -> dict:
 
 
 def _compute_yesterday_slip_record(repo_root: Path) -> dict:
-    """Count yesterday's marketed slip wins from data/output/runs/."""
+    """Score yesterday's slips by family (Market, System, Windfall) from the LAST run only.
+
+    Rules:
+    - Only the most recent run directory for yesterday is used.
+    - A leg with no truth in eval_legs (DNP / not scored) voids the entire slip —
+      the slip is excluded from wins AND total (not counted as a loss).
+    - Returns per-family win/total plus an aggregate.
+    """
+    import re as _re
     from datetime import date, timedelta
     today = date.today()
     yesterday = today - timedelta(days=1)
@@ -123,20 +131,21 @@ def _compute_yesterday_slip_record(repo_root: Path) -> dict:
     )
     if not run_dirs:
         return {}
-    # Build hit lookup from eval_legs
+
+    # Only the last run
+    last_run = run_dirs[-1]
+
+    # Build hit lookup from eval_legs of that run only
+    # key: (player, stat, line, direction) -> 0 or 1
+    # Missing key = DNP / no truth
     hit_lookup: dict = {}
-    for rd in run_dirs:
-        el = rd / "eval_legs.csv"
-        if not el.exists():
-            continue
+    el = last_run / "eval_legs.csv"
+    if el.exists():
         try:
             with open(el, newline="", encoding="utf-8", errors="replace") as f:
                 for row in _csv_module.DictReader(f):
                     hit_val = row.get("hit", "")
                     if hit_val not in ("0", "1", "0.0", "1.0"):
-                        continue
-                    gd = (row.get("game_date") or "")[:10]
-                    if gd != yesterday_str:
                         continue
                     key = (
                         row.get("player", "").strip(),
@@ -147,49 +156,105 @@ def _compute_yesterday_slip_record(repo_root: Path) -> dict:
                     if key not in hit_lookup:
                         hit_lookup[key] = int(float(hit_val))
         except Exception:
-            continue
-    if not hit_lookup:
-        return {}
-    # Score marketed slips — deduplicate across runs by leg composition so the
-    # same slip appearing in the 8am, 2:30pm, and 5:30pm runs is only counted once.
-    seen_slip_keys: set = set()
-    wins = 0
-    total = 0
-    for rd in run_dirs:
-        mp = rd / "marketed_slips.csv"
+            pass
+
+    def _score_legs(leg_keys: list) -> str:
+        """Return 'win', 'loss', or 'void' for a list of (player,stat,line,dir) tuples."""
+        for k in leg_keys:
+            if k not in hit_lookup:
+                return "void"  # any DNP voids the slip
+        if all(hit_lookup[k] == 1 for k in leg_keys):
+            return "win"
+        return "loss"
+
+    def _score_marketed() -> dict:
+        """Score marketed_slips.csv — each slip_name (3-leg/4-leg/5-leg) is one slip."""
+        mp = last_run / "marketed_slips.csv"
+        wins, total = 0, 0
         if not mp.exists():
-            continue
+            return {"wins": wins, "total": total}
         try:
             slips: dict = {}
             with open(mp, newline="", encoding="utf-8", errors="replace") as f:
                 for row in _csv_module.DictReader(f):
                     sn = (row.get("slip") or "").strip()
                     slips.setdefault(sn, []).append(row)
-            for slip_name, legs in slips.items():
+            for legs in slips.values():
                 leg_keys = [
                     (l.get("player", "").strip(), l.get("stat", "").strip(),
                      l.get("line", "").strip(), (l.get("direction") or "").upper())
                     for l in legs
                 ]
-                # Use frozenset of legs as dedup key — same players/stats/lines/dirs = same slip
-                dedup_key = frozenset(leg_keys)
-                if dedup_key in seen_slip_keys:
+                result = _score_legs(leg_keys)
+                if result == "void":
                     continue
-                seen_slip_keys.add(dedup_key)
-                slip_won = all(hit_lookup.get(k, 0) == 1 for k in leg_keys)
-                if slip_won:
-                    wins += 1
                 total += 1
+                if result == "win":
+                    wins += 1
         except Exception:
-            continue
-    if total == 0:
+            pass
+        return {"wins": wins, "total": total}
+
+    def _parse_leg_str(s: str):
+        """Parse 'Player OVER STAT 7.5 (TIER) [id:...]' -> (player, stat, line, direction) or None."""
+        m = _re.match(r'^(.+?)\s+(OVER|UNDER)\s+(\w+)\s+([\d.]+)', str(s).strip())
+        if not m:
+            return None
+        return (m.group(1).strip(), m.group(3).strip(), m.group(4).strip(), m.group(2).upper())
+
+    def _score_family_dir(family_dir: Path) -> dict:
+        """Score all 3 recommended slip files (3/4/5-leg) for one family directory."""
+        wins, total = 0, 0
+        for n in [3, 4, 5]:
+            csv_path = family_dir / f"recommended_{n}leg.csv"
+            if not csv_path.exists():
+                continue
+            try:
+                with open(csv_path, newline="", encoding="utf-8", errors="replace") as f:
+                    reader = _csv_module.DictReader(f)
+                    rows_list = list(reader)
+                if not rows_list:
+                    continue
+                row = rows_list[0]  # top-1 slip only
+                leg_cols = sorted([c for c in row.keys() if _re.match(r'leg_\d+$', c)])
+                leg_keys = []
+                for lc in leg_cols:
+                    parsed = _parse_leg_str(row.get(lc, ""))
+                    if parsed:
+                        leg_keys.append(parsed)
+                if not leg_keys:
+                    continue
+                result = _score_legs(leg_keys)
+                if result == "void":
+                    continue
+                total += 1
+                if result == "win":
+                    wins += 1
+            except Exception:
+                continue
+        return {"wins": wins, "total": total}
+
+    market = _score_marketed()
+    system = _score_family_dir(last_run / "System")
+    windfall = _score_family_dir(last_run / "Windfall")
+
+    agg_wins = market["wins"] + system["wins"] + windfall["wins"]
+    agg_total = market["total"] + system["total"] + windfall["total"]
+
+    if agg_total == 0:
         return {}
+
     return {
         "date": yesterday_str,
-        "wins": wins,
-        "total": total,
-        "pct": round(wins / total, 4),
+        "run_id": last_run.name,
+        "wins": agg_wins,
+        "total": agg_total,
+        "pct": round(agg_wins / agg_total, 4) if agg_total else 0,
+        "market": {**market, "pct": round(market["wins"] / market["total"], 4) if market["total"] else 0},
+        "system": {**system, "pct": round(system["wins"] / system["total"], 4) if system["total"] else 0},
+        "windfall": {**windfall, "pct": round(windfall["wins"] / windfall["total"], 4) if windfall["total"] else 0},
     }
+
 
 
 def _load_today_slate_teams(repo_root: Path) -> set:

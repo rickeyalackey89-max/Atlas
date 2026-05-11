@@ -17,7 +17,7 @@ from collections import defaultdict
 
 ATLAS_DIR = Path(__file__).resolve().parent.parent
 DASHBOARD_DIR = ATLAS_DIR.parent / "atlas-dashboard"
-CORPUS_DIR = ATLAS_DIR / "data" / "telemetry" / "v17_corpus"
+CORPUS_DIR = ATLAS_DIR / "data" / "telemetry" / "v18_corpus"
 OUTPUT_DIR = ATLAS_DIR / "data" / "output" / "graphics"
 
 

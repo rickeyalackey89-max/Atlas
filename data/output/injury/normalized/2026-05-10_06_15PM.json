@@ -1,0 +1,81 @@
+{
+  "report_date": "2026-05-10",
+  "report_label": "06:15PM",
+  "source_url": "https://ak-static.cms.nba.com/referee/injury/Injury-Report_2026-05-10_06_15PM.pdf",
+  "pulled_at_local": "2026-05-10T17:30:25-05:00",
+  "pdf_sha1": "e18715393463f14d7254893c41808dbbd23288d9",
+  "rows": [
+    {
+      "report_date": "2026-05-10",
+      "report_label": "06:15PM",
+      "team": "NYK",
+      "player": "Anunoby, OG",
+      "status": "OUT",
+      "reason": "Strain",
+      "game_date": "05/10/2026",
+      "hard_invalid": true,
+      "tag_probable": false,
+      "out_frac": 0.12
+    },
+    {
+      "report_date": "2026-05-10",
+      "report_label": "06:15PM",
+      "team": "PHI",
+      "player": "Embiid, Joel",
+      "status": "AVAILABLE",
+      "reason": "Injury/Illness - Right Hip; Soreness Injury/Illness - Right Finger; Tendon",
+      "game_date": "05/10/2026",
+      "hard_invalid": false,
+      "tag_probable": false,
+      "out_frac": 0.0
+    },
+    {
+      "report_date": "2026-05-10",
+      "report_label": "06:15PM",
+      "team": "PHI",
+      "player": "Maxey, Tyrese",
+      "status": "AVAILABLE",
+      "reason": "Strain - Splint Injury/Illness - Right Achilles Tendon;",
+      "game_date": "05/10/2026",
+      "hard_invalid": false,
+      "tag_probable": false,
+      "out_frac": 0.0
+    },
+    {
+      "report_date": "2026-05-10",
+      "report_label": "06:15PM",
+      "team": "MIN",
+      "player": "DiVincenzo, Donte",
+      "status": "OUT",
+      "reason": "Repair",
+      "game_date": "05/10/2026",
+      "hard_invalid": true,
+      "tag_probable": false,
+      "out_frac": 0.12
+    },
+    {
+      "report_date": "2026-05-10",
+      "report_label": "06:15PM",
+      "team": "DET",
+      "player": "Huerter, Kevin",
+      "status": "QUESTIONABLE",
+      "reason": "Injury/Illness - Left Adductor; Strain",
+      "game_date": "05/11/2026",
+      "hard_invalid": false,
+      "tag_probable": false,
+      "out_frac": 0.0
+    },
+    {
+      "report_date": "2026-05-10",
+      "report_label": "06:15PM",
+      "team": "DET",
+      "player": "LeVert, Caris",
+      "status": "QUESTIONABLE",
+      "reason": "Injury/Illness - Right Heel; Contusion",
+      "game_date": "05/11/2026",
+      "hard_invalid": false,
+      "tag_probable": false,
+      "out_frac": 0.0
+    }
+  ]
+}

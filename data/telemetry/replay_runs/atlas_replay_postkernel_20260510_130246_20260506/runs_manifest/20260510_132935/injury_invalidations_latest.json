@@ -1,0 +1,51 @@
+{
+  "report_date": "2026-05-06",
+  "report_label": "06:45PM",
+  "pulled_at_local": "2026-05-06T17:59:12-05:00",
+  "invalidated_players_count": 7,
+  "invalidated_players": [
+    {
+      "team": "DET",
+      "player": "Huerter, Kevin",
+      "status": "DOUBTFUL",
+      "reason": ""
+    },
+    {
+      "team": "LAL",
+      "player": "Doncic, Luka",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "LAL",
+      "player": "Vanderbilt, Jarred",
+      "status": "DOUBTFUL",
+      "reason": ""
+    },
+    {
+      "team": "MIN",
+      "player": "DiVincenzo, Donte",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "OKC",
+      "player": "Sorber, Thomas",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "OKC",
+      "player": "Williams, Jalen",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "PHI",
+      "player": "Embiid, Joel",
+      "status": "OUT",
+      "reason": ""
+    }
+  ],
+  "policy": "Remove OUT/DOUBTFUL from eligibility. PROBABLE allowed but tagged."
+}

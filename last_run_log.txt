@@ -1,0 +1,214 @@
+prizepicks gate: kept_today_upcoming=2070 dropped_no_start=0 dropped_future_date=1504 dropped_past=0
+[ROSTER_MAP] Wrote 595 entries to C:\Users\13142\Atlas\Atlas\data\input\roster_map.csv
+Wrote: C:\Users\13142\Atlas\Atlas\data\board\fetch_board.csv (rows=2586)
+Wrote: data\board\today.csv
+Snapshot: data\board\snapshots\today_20260506_223015.csv
+Rebuilt today.csv from: C:\Users\13142\Atlas\Atlas\data\raw\prizepicks_20260506_173009.json
+Rows: 2456
+
+Tier counts:
+tier
+DEMON       958
+STANDARD    842
+GOBLIN      656
+Name: count, dtype: int64
+
+Stat counts (canonical):
+stat
+PTS                        293
+PRA                        237
+REB                        221
+PR                         211
+RA                         197
+PA                         159
+AST                        153
+FG3M                       107
+FANTASY SCORE              100
+STL                         81
+FG ATTEMPTED                65
+3-PT ATTEMPTED              65
+TWO POINTERS MADE           65
+TWO POINTERS ATTEMPTED      64
+FG MADE                     64
+BLOCKED SHOTS               64
+BS                          61
+FREE THROWS ATTEMPTED       54
+FREE THROWS MADE            44
+PERSONAL FOULS              33
+TOV                         27
+OFFENSIVE REBOUNDS          26
+DUNKS                       17
+QUARTERS WITH 3+ POINTS     15
+DOUBLE-DOUBLE               15
+DEFENSIVE REBOUNDS          12
+QUARTERS WITH 5+ POINTS      6
+Name: count, dtype: int64
+
+WARNING: Non-canonical stat rows retained: 709
+Sample unknown/mapped-through stats:
+               stat_raw                    stat
+          FANTASY SCORE           FANTASY SCORE
+           FG ATTEMPTED            FG ATTEMPTED
+ TWO POINTERS ATTEMPTED  TWO POINTERS ATTEMPTED
+     DEFENSIVE REBOUNDS      DEFENSIVE REBOUNDS
+                FG MADE                 FG MADE
+         3-PT ATTEMPTED          3-PT ATTEMPTED
+      TWO POINTERS MADE       TWO POINTERS MADE
+  FREE THROWS ATTEMPTED   FREE THROWS ATTEMPTED
+       FREE THROWS MADE        FREE THROWS MADE
+         PERSONAL FOULS          PERSONAL FOULS
+QUARTERS WITH 3+ POINTS QUARTERS WITH 3+ POINTS
+QUARTERS WITH 5+ POINTS QUARTERS WITH 5+ POINTS
+          BLOCKED SHOTS           BLOCKED SHOTS
+     OFFENSIVE REBOUNDS      OFFENSIVE REBOUNDS
+                  DUNKS                   DUNKS
+[CRAFTEDNBA] rows=518 snapshot_id=craftednba_player_stats_20260506_20260506T223027Z
+[CRAFTEDNBA] wrote: C:\Users\13142\Atlas\Atlas\data\output\dashboard\role_metrics_latest.json
+[CRAFTEDNBA] wrote: C:\Users\13142\Atlas\Atlas\data\output\dashboard\role_metrics_latest.html
+[CRAFTEDNBA] wrote: C:\Users\13142\Atlas\Atlas\data\output\dashboard\role_metrics_snapshot_manifest.json
+[CRAFTEDNBA] wrote: C:\Users\13142\Atlas\Atlas\data\output\role_metrics\snapshots\2026-05-06\craftednba_player_stats_20260506_20260506T223027Z.json
+[CRAFTEDNBA] wrote: C:\Users\13142\Atlas\Atlas\data\output\role_metrics\snapshots\2026-05-06\craftednba_player_stats_20260506_20260506T223027Z.html
+[rotowire] GET https://www.rotowire.com/betting/nba/tables/nba-games-by-market.php?date=2026-05-06
+[rotowire] status=200 bytes=42427
+[rotowire] wrote C:\Users\13142\Atlas\Atlas\data\input\rotowire_lines.json (events=2) at 2026-05-06T22:30:29Z
+[rotowire] updated last-good: C:\Users\13142\Atlas\Atlas\data\input\rotowire_lines_last_good.json
+[BP] Fetching BettingPros NBA props for 2026-05-06 ...
+[BP] Page 1/10 fetched (25 props, 247 total)
+[BP] Page 2/10 fetched (25 props)
+[BP] Page 3/10 fetched (25 props)
+[BP] Page 4/10 fetched (25 props)
+[BP] Page 5/10 fetched (25 props)
+[BP] Page 6/10 fetched (25 props)
+[BP] Page 7/10 fetched (25 props)
+[BP] Page 8/10 fetched (25 props)
+[BP] Page 9/10 fetched (25 props)
+[BP] Page 10/10 fetched (22 props)
+[BP] Converted 247 raw props -> 247 unique CSV rows
+[BP] Wrote 247 rows -> C:\Users\13142\Atlas\Atlas\data\input\bettingpros_props_today.csv
+[BP] Merged external priors: 1181 existing + 247 bettingpros = 1428 total -> C:\Users\13142\Atlas\Atlas\data\input\external_priors_today.csv
+[BP] Archived -> C:\Users\13142\Atlas\Atlas\data\archives\bettingpros\bettingpros_props_2026-05-06.csv
+[BP] Stats breakdown: {'AST': 20, 'BLK': 23, 'FG3M': 28, 'PA': 23, 'PR': 24, 'PRA': 26, 'PTS': 25, 'RA': 25, 'REB': 26, 'STL': 27}
+[BP] Done. 247 props ready for external priors.
+[OddsAPI] Fetching NBA player props for 2026-05-06  markets=player_points,player_rebounds,player_assists,player_threes,player_blocks,player_steals,player_turnovers,player_points_rebounds_assists,player_points_rebounds,player_points_assists,player_rebounds_assists,player_blocks_steals  regions=us
+[OddsAPI] 4 NBA events found  (credits remaining: 98827)
+  event d146e1029554...  8 bookmakers  cost=11  remaining=98816
+  event 246001ab42d4...  8 bookmakers  cost=11  remaining=98805
+  event 862af0717b53...  8 bookmakers  cost=10  remaining=98795
+  event a306b74e13d8...  8 bookmakers  cost=9  remaining=98786
+[OddsAPI] Total: 1436 raw -> 505 unique (player, stat) pairs
+[OddsAPI] Wrote 505 rows -> C:\Users\13142\Atlas\Atlas\data\input\oddsapi_props_today.csv
+[OddsAPI] Merged: 924 existing + 505 oddsapi = 1429 total -> C:\Users\13142\Atlas\Atlas\data\input\external_priors_today.csv
+[OddsAPI] Archived -> C:\Users\13142\Atlas\Atlas\data\archives\oddsapi\oddsapi_props_2026-05-06.csv
+[OddsAPI] Market JSON -> C:\Users\13142\Atlas\Atlas\data\input\odds_market_today.json  (506 entries)
+[OddsAPI] Done. 505 props fetched for 2026-05-06.
+[INJURY] target_date=2026-05-06
+OK: pulled https://ak-static.cms.nba.com/referee/injury/Injury-Report_2026-05-06_06_15PM.pdf -> 2026-05-06_06_15PM.json (rows=12) invalid=7
+[IAEL] Running injury pipeline: C:\Users\13142\Atlas\Atlas\scripts\dev\adhoc\injury\injury_pull_and_parse.py
+[IAEL] Published latest.json <- 2026-05-06_06_15PM.json
+[IAEL] Team mismatch scope limited to active fetch_board teams: ['MIN', 'NYK', 'PHI', 'SAS']
+[IAEL] Freshness OK: age=0.0 min (<=30) during enforced window.
+[IAEL] invalidations_latest.json: C:\Users\13142\Atlas\Atlas\data\output\dashboard\invalidations_latest.json
+[IAEL] Updated report_date: (missing) -> 2026-05-06
+[IAEL] Published latest.json <- 2026-05-06_06_15PM.json
+[SHARE_MATRIX] Loaded role metrics from C:\Users\13142\Atlas\Atlas\data\output\runs_manifest\20260506_173008\role_metrics_latest.json (518 players)
+OK wrote C:\Users\13142\Atlas\Atlas\data\model\share_matrix.csv rows=327 (after cleanup)
+OK: Live IAEL verified for today (2026-05-06). (cached)
+[OBS] audit log: C:\Users\13142\Atlas\Atlas\.atlas_audit\events_20260506_173008.jsonl
+[CONTRACT] v17 model contract validated ù 33 features, T=1.04, 7 seeds. All clear.
+
+========================================================================
+[FETCH (fresh PrizePicks data) attempt 1/3] 2026-05-06 17:30:08
+========================================================================
+
+========================================================================
+[REBUILD (canonical today.csv)] 2026-05-06 17:30:14
+CMD: C:\Users\13142\Atlas\Atlas\.venv314\Scripts\python.exe C:\Users\13142\Atlas\Atlas\tools\rebuild_today_from_any_raw.py
+========================================================================
+
+========================================================================
+[ROLE METRICS FETCH (craftednba api)] 2026-05-06 17:30:16
+========================================================================
+[ROLE_METRICS] No explicit HTML source is configured; fetching the daily CraftedNBA API snapshot.
+[ROLE_METRICS] Set ATLAS_ROLE_METRICS_URL or ATLAS_ROLE_METRICS_HTML_PATH to force the legacy HTML parser.
+
+========================================================================
+[FETCH ROLE METRICS (craftednba api)] 2026-05-06 17:30:16
+CMD: C:\Users\13142\Atlas\Atlas\.venv314\Scripts\python.exe C:\Users\13142\Atlas\Atlas\tools\fetch_crafted_player_stats.py --game-date 2026-05-06
+========================================================================
+
+========================================================================
+[FETCH ROTOWIRE (lines/spreads)] 2026-05-06 17:30:27
+CMD: C:\Users\13142\Atlas\Atlas\.venv314\Scripts\python.exe C:\Users\13142\Atlas\Atlas\tools\fetch_rotowire_lines.py
+========================================================================
+
+========================================================================
+[FETCH BETTINGPROS (player props)] 2026-05-06 17:30:29
+CMD: C:\Users\13142\Atlas\Atlas\.venv314\Scripts\python.exe C:\Users\13142\Atlas\Atlas\tools\fetch_bettingpros_props.py
+========================================================================
+
+========================================================================
+[FETCH ODDSAPI (player props)] 2026-05-06 17:30:31
+CMD: C:\Users\13142\Atlas\Atlas\.venv314\Scripts\python.exe C:\Users\13142\Atlas\Atlas\tools\fetch_oddsapi_props.py
+========================================================================
+
+========================================================================
+[BUILD SHARE MATRIX (role context)] 2026-05-06 17:30:38
+CMD: C:\Users\13142\Atlas\Atlas\.venv314\Scripts\python.exe C:\Users\13142\Atlas\Atlas\tools\build_share_matrix.py
+========================================================================
+[DEBUG] Dropped 878 invalid rows from today.csv (blank/unknown stat/line)
+[IAEL] Loaded invalidations=10. Report: 2026-05-06 06:15PM
+[GBM_ENSEMBLE] Applied replace mode, mean p_gbm=0.4761, mean p_cal=0.4761
+[ZERO_DNP] Post-cal: 46 direction-flip legs excluded from optimizer, 70 blends (mult>=1.4)
+[IAEL][SOFT] QUESTIONABLE legs=406 players=8 (top10 by leg count):
+player
+Julius Randle       59
+Anthony Edwards     57
+Jaden McDaniels     56
+Naz Reid            53
+Ayo Dosunmu         52
+Rudy Gobert         49
+Mike Conley         45
+Terrence Shannon    35
+[IAEL] Removed 0 legs out of 1575 (statuses=['DOUBTFUL', 'OUT'])
+[ZERO_DNP] Dropped 46 direction-flip legs from optimizer pool
+Built 3 marketed slips
+ - C:\Users\13142\Atlas\Atlas\data\output\runs\20260506_173415\run_manifest.json (config fingerprint)
+Model run complete.
+Outputs folder: C:\Users\13142\Atlas\Atlas\data\output
+Run folder: C:\Users\13142\Atlas\Atlas\data\output\runs\20260506_173415
+Wrote:
+ - C:\Users\13142\Atlas\Atlas\data\output\runs\20260506_173415\scored_legs.csv
+ - C:\Users\13142\Atlas\Atlas\data\output\runs\20260506_173415\scored_legs_deduped.csv
+ - C:\Users\13142\Atlas\Atlas\data\output\runs\20260506_173415\System\recommended_3leg.csv (SYSTEM)
+ - C:\Users\13142\Atlas\Atlas\data\output\runs\20260506_173415\System\recommended_4leg.csv (SYSTEM)
+ - C:\Users\13142\Atlas\Atlas\data\output\runs\20260506_173415\System\recommended_5leg.csv (SYSTEM)
+ - C:\Users\13142\Atlas\Atlas\data\output\runs\20260506_173415\Windfall\recommended_3leg.csv (WINDFALL)
+ - C:\Users\13142\Atlas\Atlas\data\output\runs\20260506_173415\Windfall\recommended_4leg.csv (WINDFALL)
+ - C:\Users\13142\Atlas\Atlas\data\output\runs\20260506_173415\Windfall\recommended_5leg.csv (WINDFALL)
+ - C:\Users\13142\Atlas\Atlas\data\output\runs\20260506_173415\marketed_slips.json (MARKETED SLIPS - 3 slips)
+ - C:\Users\13142\Atlas\Atlas\data\output\runs\20260506_173415\marketed_slips.csv (MARKETED SLIPS CSV)
+ - C:\Users\13142\Atlas\Atlas\data\output\marketed_slips_latest.json (MARKETED SLIPS latest)
+ - C:\Users\13142\Atlas\Atlas\data\output\runs_manifest\20260506_173415\injury_invalidations_latest.json (IAEL snapshot)
+ - C:\Users\13142\Atlas\Atlas\data\output\runs_manifest\20260506_173415\status_latest.json (IAEL snapshot)
+ - C:\Users\13142\Atlas\Atlas\data\output\runs_manifest\20260506_173415\injury_snapshot_manifest.json (IAEL snapshot manifest)
+Dashboard payload: C:\Users\13142\Atlas\Atlas\data\output\dashboard\cloudflare_payload.json
+[PUBLISH] wrote C:\Users\13142\Atlas\Atlas\data\output\injury\normalized\2026-05-06_05_34PM.json
+[PUBLISH] updated C:\Users\13142\Atlas\Atlas\data\output\injury\normalized\latest.json
+
+========================================================================
+[GENERATE DAILY GRAPHICS CSV] 2026-05-06 17:34:26
+========================================================================
+[GRAPHICS] OK Daily picks CSV generated: C:\Users\13142\Atlas\Atlas\data\output\graphics\daily_top_picks_20260506.csv
+[GRAPHICS] Visual graphics generated successfully
+[GRAPHICS] Check: C:\Users\13142\Atlas\Atlas\data\output\graphics
+[DISCORD-PICKS] SKIP No DISCORD_PICKS_WEBHOOK_URL set
+
+========================================================================
+[DONE] 2026-05-06 17:34:35
+========================================================================
+Atlas run complete. latest/{all,early,main,late} updated.
+[BUNDLE] attempting post-run bundle
+[BUNDLE] inferred run_id=20260506_173415
+[BUNDLE] FULL_RUN zip written: C:\Users\13142\Atlas\Atlas\data\bundles\atlas_bundle_20260506_173415.zip
+[TELEM] Archived run 20260506_173415 to C:\Users\13142\Atlas\Atlas\data\telemetry\live_runs\20260506_173415
+[DASH] Published to Cloudflare dashboard

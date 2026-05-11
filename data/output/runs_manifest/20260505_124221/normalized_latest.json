@@ -1,0 +1,45 @@
+{
+  "report_date": "2026-05-05",
+  "report_label": "01:30PM",
+  "source_url": "https://ak-static.cms.nba.com/referee/injury/Injury-Report_2026-05-05_01_30PM.pdf",
+  "pulled_at_local": "2026-05-05T12:42:48-05:00",
+  "pdf_sha1": "1e8181782b187e10fe4732b108a4f432549efbe9",
+  "rows": [
+    {
+      "report_date": "2026-05-05",
+      "report_label": "01:30PM",
+      "team": "DET",
+      "player": "Huerter, Kevin",
+      "status": "QUESTIONABLE",
+      "reason": "Injury/Illness - Left Adductor; Strain",
+      "game_date": "05/05/2026",
+      "hard_invalid": false,
+      "tag_probable": false,
+      "out_frac": 0.0
+    },
+    {
+      "report_date": "2026-05-05",
+      "report_label": "01:30PM",
+      "team": "OKC",
+      "player": "Sorber, Thomas",
+      "status": "OUT",
+      "reason": "Recovery",
+      "game_date": "05/05/2026",
+      "hard_invalid": true,
+      "tag_probable": false,
+      "out_frac": 0.12
+    },
+    {
+      "report_date": "2026-05-05",
+      "report_label": "01:30PM",
+      "team": "OKC",
+      "player": "Williams, Jalen",
+      "status": "OUT",
+      "reason": "Injury/Illness - Left Hamstring; Strain",
+      "game_date": "05/05/2026",
+      "hard_invalid": true,
+      "tag_probable": false,
+      "out_frac": 0.12
+    }
+  ]
+}

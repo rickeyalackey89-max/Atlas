@@ -1,0 +1,13 @@
+slip,high_confidence,hit_prob,payout_mult,ev,player,team,opp,stat,direction,tier,line,p_cal
+3-leg,True,0.6988,1.931,1.3493,Jarrett Allen,CLE,TOR,PTS,OVER,GOBLIN,8.5,0.903
+3-leg,True,0.6988,1.931,1.3493,Anthony Black,ORL,DET,RA,UNDER,STANDARD,6.0,0.8421
+3-leg,True,0.6988,1.931,1.3493,Jamal Shead,TOR,CLE,PTS,UNDER,STANDARD,8.5,0.6945
+4-leg,True,0.3921,1.897,0.7439,Tristan da Silva,ORL,DET,REB,OVER,GOBLIN,1.5,0.8996
+4-leg,True,0.3921,1.897,0.7439,Dean Wade,CLE,TOR,RA,OVER,GOBLIN,3.5,0.8485
+4-leg,True,0.3921,1.897,0.7439,Austin Reaves,LAL,HOU,REB,UNDER,STANDARD,4.0,0.8104
+4-leg,True,0.3921,1.897,0.7439,Dennis Schröder,CLE,TOR,FG3M,UNDER,STANDARD,0.5,0.8043
+5-leg,True,0.1503,2.145,0.3222,Sandro Mamukelashvili,TOR,CLE,REB,OVER,GOBLIN,1.5,0.6405
+5-leg,True,0.1503,2.145,0.3222,Isaiah Stewart,DET,ORL,PR,OVER,GOBLIN,4.5,0.6937
+5-leg,True,0.1503,2.145,0.3222,Scottie Barnes,TOR,CLE,REB,UNDER,STANDARD,7.0,0.7599
+5-leg,True,0.1503,2.145,0.3222,Max Strus,CLE,TOR,PA,UNDER,STANDARD,10.5,0.7575
+5-leg,True,0.1503,2.145,0.3222,Sam Merrill,CLE,TOR,PRA,OVER,DEMON,9.5,0.7104

@@ -1,0 +1,24 @@
+{
+  "run_dir": "C:\\Users\\13142\\Atlas\\Atlas\\data\\telemetry\\live_runs\\20260503_530pm",
+  "source_scored_path": "C:\\Users\\13142\\Atlas\\Atlas\\data\\telemetry\\live_runs\\20260503_530pm\\scored_legs_deduped.csv",
+  "output_eval_path": "C:\\Users\\13142\\Atlas\\Atlas\\data\\telemetry\\live_runs\\20260503_530pm\\eval_legs.csv",
+  "report": {
+    "rows": 734,
+    "matched_rows": 734,
+    "unmatched_rows": 0,
+    "match_rate": 1.0,
+    "quality_counts": {
+      "player_date": 734
+    },
+    "supported_stats": [
+      "AST",
+      "FG3M",
+      "PA",
+      "PR",
+      "PRA",
+      "PTS",
+      "RA",
+      "REB"
+    ]
+  }
+}

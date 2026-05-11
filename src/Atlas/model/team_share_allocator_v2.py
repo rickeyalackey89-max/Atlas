@@ -127,15 +127,21 @@ def classify_outgoing_player(
     if odarko >= 3.0 or copm >= 3.0:
         adv_bump = True
 
+    # NOTE: transfer_fractions raised 2026-05-10 after share_allocator
+    # accuracy diagnostic. Previous values under-transferred by 5-7x at the
+    # per-stat level because of the sum=1 stat_mix dilution. Per-stat loop
+    # now uses archetype-modulated independent transfer (no sum=1 split),
+    # so transfer_fraction here represents the FULL per-stat redistribution
+    # rate for a player who dominates that stat.
     if usage >= 0.28 or minutes >= 30.0 or role_index >= 0.75:
-        return OutgoingPlayerClass(label="star", transfer_fraction=0.72, depth_multiplier=max(0.35, 1.0 - 0.20 * team_depth))
+        return OutgoingPlayerClass(label="star", transfer_fraction=0.95, depth_multiplier=max(0.55, 1.0 - 0.20 * team_depth))
     if usage >= 0.16 or minutes >= 24.0 or role_index >= 0.50 or (adv_bump and (usage >= 0.12 or minutes >= 20.0)):
         label = "core_adv" if adv_bump and usage < 0.16 and minutes < 24.0 and role_index < 0.50 else "core"
-        return OutgoingPlayerClass(label=label, transfer_fraction=0.54, depth_multiplier=max(0.45, 1.0 - 0.15 * team_depth))
+        return OutgoingPlayerClass(label=label, transfer_fraction=0.78, depth_multiplier=max(0.60, 1.0 - 0.15 * team_depth))
     if usage >= 0.08 or minutes >= 14.0 or role_index >= 0.25 or (adv_bump and (usage >= 0.05 or minutes >= 10.0)):
         label = "role_adv" if adv_bump and usage < 0.08 and minutes < 14.0 and role_index < 0.25 else "role"
-        return OutgoingPlayerClass(label=label, transfer_fraction=0.32, depth_multiplier=max(0.60, 1.0 - 0.10 * team_depth))
-    return OutgoingPlayerClass(label="bench", transfer_fraction=0.12, depth_multiplier=max(0.80, 1.0 - 0.05 * team_depth))
+        return OutgoingPlayerClass(label=label, transfer_fraction=0.48, depth_multiplier=max(0.70, 1.0 - 0.10 * team_depth))
+    return OutgoingPlayerClass(label="bench", transfer_fraction=0.15, depth_multiplier=max(0.80, 1.0 - 0.05 * team_depth))
 
 
 def compute_redistribution_cap(*, base_transfer_fraction: float, team_depth: float, multi_out_penalty: float = 0.0) -> float:
@@ -334,11 +340,14 @@ def _player_role_index(team_base: pd.DataFrame, player_key: str) -> float:
 
 
 def _stat_mix_for_out(out_row: pd.Series) -> dict[str, float]:
-    raw = {stat: max(0.0, _safe_float(out_row.get(f"avg_{stat.lower()}_share", 0.0))) for stat in STAT_FAMILIES}
-    total = float(sum(raw.values()))
-    if total <= 0:
-        return {stat: 1.0 / len(STAT_FAMILIES) for stat in STAT_FAMILIES}
-    return {stat: raw[stat] / total for stat in STAT_FAMILIES}
+    """Return raw per-stat shares (NOT normalized to sum=1).
+
+    Each value is the out player's contribution to team total for that stat
+    (e.g., avg_pts_share=0.25 means they account for 25% of team PTS). Used
+    downstream to modulate per-stat transfer by archetype, NOT to divide a
+    single transfer budget across stats. Each stat redistributes independently.
+    """
+    return {stat: max(0.0, _safe_float(out_row.get(f"avg_{stat.lower()}_share", 0.0))) for stat in STAT_FAMILIES}
 
 
 def _candidate_score(row: pd.Series, stat_u: str, team_max_min: float) -> float:
@@ -362,6 +371,10 @@ def _candidate_score(row: pd.Series, stat_u: str, team_max_min: float) -> float:
         adv_mult = 1.0
 
     raw = (0.70 * stat_share + 0.30 * min_share) * role_headroom * adv_mult
+    # Sharpen the score (square) so top 2-3 candidates dominate redistribution
+    # instead of spreading thinly across 8-12 teammates. Matches observed
+    # behavior in gamelogs where rebounds/usage concentrate on a few players.
+    raw = raw * raw
     return max(0.0, raw)
 
 
@@ -550,10 +563,28 @@ def build_share_matrix_v2(
             out_canon = share_name_key(out_display)
             team_label = str(out_row.get("team_u", team_u))
 
+            # Per-stat family boost: REB redistributes more aggressively than
+            # PTS when a star/core (typically a big) is out, because rebounds
+            # are largely positional. Diagnostic showed REB under-predicted by
+            # ~5x more than PTS for star outs. AST stayed in-line.
+            _stat_family_boost = {
+                "star":  {"PTS": 1.00, "REB": 1.05, "AST": 0.95},
+                "core":  {"PTS": 1.00, "REB": 1.05, "AST": 0.95},
+                "core_adv": {"PTS": 1.00, "REB": 1.05, "AST": 0.95},
+                "role":  {"PTS": 1.00, "REB": 1.00, "AST": 0.95},
+                "role_adv": {"PTS": 1.00, "REB": 1.00, "AST": 0.95},
+                "bench": {"PTS": 1.00, "REB": 1.00, "AST": 1.00},
+            }
             for stat_u in STAT_FAMILIES:
-                stat_share = float(stat_mix.get(stat_u, 0.0))
-                if stat_share <= 0:
+                raw_share = float(stat_mix.get(stat_u, 0.0))
+                if raw_share <= 0:
                     continue
+                # Archetype modulation: shares >=0.20 get full per-stat transfer,
+                # lower shares scale linearly down. Replaces the old sum=1
+                # dilution that capped total transfer to ~0.19 per stat.
+                archetype_mult = min(1.0, raw_share / 0.20)
+                stat_boost = float(_stat_family_boost.get(cls.label, {}).get(stat_u, 1.0))
+                stat_share = archetype_mult * stat_boost
 
                 candidate_scores: dict[str, float] = {}
                 for cand_key, cand_row in candidate_map.items():

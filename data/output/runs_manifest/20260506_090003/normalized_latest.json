@@ -1,0 +1,69 @@
+{
+  "report_date": "2026-05-06",
+  "report_label": "09:45AM",
+  "source_url": "https://ak-static.cms.nba.com/referee/injury/Injury-Report_2026-05-06_09_45AM.pdf",
+  "pulled_at_local": "2026-05-06T09:00:29-05:00",
+  "pdf_sha1": "8e5cacb2be31876c507b0a06bccefb8dc7ba7ab0",
+  "rows": [
+    {
+      "report_date": "2026-05-06",
+      "report_label": "09:45AM",
+      "team": "PHI",
+      "player": "Embiid, Joel",
+      "status": "PROBABLE",
+      "reason": "Injury/Illness - Right Ankle; Sprain Injury/Illness - Right Finger; Tendon",
+      "game_date": "05/06/2026",
+      "hard_invalid": false,
+      "tag_probable": true,
+      "out_frac": 0.0
+    },
+    {
+      "report_date": "2026-05-06",
+      "report_label": "09:45AM",
+      "team": "PHI",
+      "player": "Maxey, Tyrese",
+      "status": "AVAILABLE",
+      "reason": "Strain - Splint Injury/Illness - Right Achilles Tendon;",
+      "game_date": "05/06/2026",
+      "hard_invalid": false,
+      "tag_probable": false,
+      "out_frac": 0.0
+    },
+    {
+      "report_date": "2026-05-06",
+      "report_label": "09:45AM",
+      "team": "MIN",
+      "player": "DiVincenzo, Donte",
+      "status": "OUT",
+      "reason": "Repair Injury/Illness - Right Calf; Injury",
+      "game_date": "05/06/2026",
+      "hard_invalid": true,
+      "tag_probable": false,
+      "out_frac": 0.12
+    },
+    {
+      "report_date": "2026-05-06",
+      "report_label": "09:45AM",
+      "team": "MIN",
+      "player": "Dosunmu, Ayo",
+      "status": "QUESTIONABLE",
+      "reason": "Maintenance",
+      "game_date": "05/06/2026",
+      "hard_invalid": false,
+      "tag_probable": false,
+      "out_frac": 0.0
+    },
+    {
+      "report_date": "2026-05-06",
+      "report_label": "09:45AM",
+      "team": "MIN",
+      "player": "Edwards, Anthony",
+      "status": "QUESTIONABLE",
+      "reason": "Injury/Illness - Left Knee; Bone Bruise",
+      "game_date": "05/06/2026",
+      "hard_invalid": false,
+      "tag_probable": false,
+      "out_frac": 0.0
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+slip,high_confidence,hit_prob,payout_mult,ev,player,team,opp,stat,direction,tier,line,p_cal
+5-leg,True,0.1726,2.145,0.3702,Ausar Thompson,DET,CLE,AST,OVER,GOBLIN,2.5,0.7205
+5-leg,True,0.1726,2.145,0.3702,Austin Reaves,LAL,OKC,RA,OVER,GOBLIN,7.5,0.7528
+5-leg,True,0.1726,2.145,0.3702,Kelly Oubre,PHI,NYK,PTS,OVER,STANDARD,11.0,0.7503
+5-leg,True,0.1726,2.145,0.3702,Isaiah Joe,OKC,LAL,PTS,OVER,STANDARD,7.0,0.7435
+5-leg,True,0.1726,2.145,0.3702,Cade Cunningham,DET,CLE,REB,OVER,DEMON,5.5,0.6581
+4-leg,True,0.3241,1.897,0.615,Chet Holmgren,OKC,LAL,PA,OVER,GOBLIN,14.5,0.7431
+4-leg,True,0.3241,1.897,0.615,Daniss Jenkins,DET,CLE,REB,OVER,GOBLIN,1.5,0.8055
+4-leg,True,0.3241,1.897,0.615,Jaylin Williams,OKC,LAL,PA,OVER,STANDARD,5.5,0.7447
+4-leg,True,0.3241,1.897,0.615,Quentin Grimes,PHI,NYK,PRA,OVER,STANDARD,11.5,0.7976
+3-leg,True,0.5306,1.931,1.0246,De'Aaron Fox,SAS,MIN,PTS,OVER,GOBLIN,14.5,0.7527
+3-leg,True,0.5306,1.931,1.0246,Julian Champagnie,SAS,MIN,PTS,OVER,STANDARD,8.5,0.7224
+3-leg,True,0.5306,1.931,1.0246,Max Strus,CLE,DET,PTS,OVER,STANDARD,8.5,0.7099

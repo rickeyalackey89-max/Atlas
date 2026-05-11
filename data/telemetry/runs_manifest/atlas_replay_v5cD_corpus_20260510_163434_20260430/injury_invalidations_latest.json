@@ -1,0 +1,57 @@
+{
+  "report_date": "2026-04-30",
+  "report_label": "07:00PM",
+  "pulled_at_local": "2026-04-30T18:17:06-05:00",
+  "invalidated_players_count": 8,
+  "invalidated_players": [
+    {
+      "team": "ATL",
+      "player": "Landale, Jock",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "HOU",
+      "player": "Adams, Steven",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "HOU",
+      "player": "Durant, Kevin",
+      "status": "DOUBTFUL",
+      "reason": ""
+    },
+    {
+      "team": "HOU",
+      "player": "VanVleet, Fred",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "MIN",
+      "player": "DiVincenzo, Donte",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "MIN",
+      "player": "Edwards, Anthony",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "ORL",
+      "player": "Isaac, Jonathan",
+      "status": "DOUBTFUL",
+      "reason": ""
+    },
+    {
+      "team": "ORL",
+      "player": "Wagner, Franz",
+      "status": "OUT",
+      "reason": ""
+    }
+  ],
+  "policy": "Remove OUT/DOUBTFUL from eligibility. PROBABLE allowed but tagged."
+}

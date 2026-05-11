@@ -41,7 +41,7 @@ from Atlas.core.slip_builders import build_windfall_slips
 from Atlas.stages.optimize.build_slips_today import _cfg_for_n_legs
 
 # ── data paths ──────────────────────────────────────────────────────
-BASE = Path(r"C:\Users\13142\Atlas\Atlas\data\telemetry\v17_corpus")
+BASE = Path(r"C:\Users\13142\Atlas\Atlas\data\telemetry\v18_corpus")
 
 def _load_run_dates() -> list[str]:
     """Load dates from corpus_manifest.json if available, else hardcoded fallback."""

@@ -1,0 +1,13 @@
+slip,high_confidence,hit_prob,payout_mult,ev,player,team,opp,stat,direction,tier,line,p_cal
+5-leg,True,0.1845,2.145,0.3957,Jaylin Williams,OKC,LAL,PRA,OVER,GOBLIN,4.5,0.8341
+5-leg,True,0.1845,2.145,0.3957,Isaiah Joe,OKC,LAL,PTS,OVER,GOBLIN,0.5,0.8709
+5-leg,True,0.1845,2.145,0.3957,Jaxson Hayes,LAL,OKC,PR,OVER,STANDARD,9.0,0.7219
+5-leg,True,0.1845,2.145,0.3957,Jarrett Allen,CLE,DET,PTS,OVER,STANDARD,11.5,0.6481
+5-leg,True,0.1845,2.145,0.3957,Dean Wade,CLE,DET,PA,OVER,DEMON,6.5,0.5857
+4-leg,False,0.2095,1.897,0.3975,Evan Mobley,CLE,DET,PTS,OVER,GOBLIN,9.5,0.7219
+4-leg,False,0.2095,1.897,0.3975,Jared McCain,OKC,LAL,PTS,OVER,GOBLIN,2.5,0.779
+4-leg,False,0.2095,1.897,0.3975,Tobias Harris,DET,CLE,PRA,OVER,STANDARD,26.5,0.6481
+4-leg,False,0.2095,1.897,0.3975,Daniss Jenkins,DET,CLE,PTS,OVER,STANDARD,10.5,0.5857
+3-leg,False,0.3332,1.931,0.6434,Duncan Robinson,DET,CLE,PTS,OVER,GOBLIN,6.5,0.7219
+3-leg,False,0.3332,1.931,0.6434,Luke Kennard,LAL,OKC,PA,OVER,STANDARD,10.5,0.5857
+3-leg,False,0.3332,1.931,0.6434,Rui Hachimura,LAL,OKC,PA,OVER,STANDARD,15.5,0.5857

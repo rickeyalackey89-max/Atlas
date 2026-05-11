@@ -1,0 +1,13 @@
+slip,high_confidence,hit_prob,payout_mult,ev,player,team,opp,stat,direction,tier,line,p_cal
+3-leg,True,0.8014,1.931,1.5475,Obi Toppin,IND,LAL,REB,OVER,GOBLIN,1.5,0.8695
+3-leg,True,0.8014,1.931,1.5475,Ajay Mitchell,OKC,BOS,PTS,UNDER,STANDARD,11.5,0.874
+3-leg,True,0.8014,1.931,1.5475,Jamal Shead,TOR,LAC,PR,UNDER,STANDARD,11.5,0.8297
+4-leg,True,0.3248,1.897,0.6162,Jalen Williams,OKC,BOS,PRA,OVER,GOBLIN,14.5,0.8615
+4-leg,True,0.3248,1.897,0.6162,Jaylin Williams,OKC,BOS,RA,OVER,GOBLIN,2.5,0.8282
+4-leg,True,0.3248,1.897,0.6162,Austin Reaves,LAL,IND,RA,UNDER,STANDARD,10.0,0.7796
+4-leg,True,0.3248,1.897,0.6162,Scoot Henderson,POR,MIL,PTS,UNDER,STANDARD,13.5,0.6465
+5-leg,True,0.1543,2.145,0.3308,Cam Spencer,MEM,SAS,AST,OVER,GOBLIN,2.5,0.8645
+5-leg,True,0.1543,2.145,0.3308,Bennedict Mathurin,LAC,TOR,RA,OVER,GOBLIN,4.5,0.7525
+5-leg,True,0.1543,2.145,0.3308,Andrew Wiggins,MIA,CLE,PA,UNDER,STANDARD,15.5,0.7916
+5-leg,True,0.1543,2.145,0.3308,Tari Eason,HOU,MIN,PTS,UNDER,STANDARD,7.5,0.8235
+5-leg,True,0.1543,2.145,0.3308,Cason Wallace,OKC,BOS,RA,OVER,DEMON,5.5,0.3931

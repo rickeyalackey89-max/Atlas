@@ -1,0 +1,25 @@
+{
+  "run_dir": "C:\\Users\\13142\\Atlas\\Atlas\\data\\telemetry\\replay_runs\\atlas_replay_postkernel_20260510_130246_20260504\\runs\\20260510_132213",
+  "source_scored_path": "C:\\Users\\13142\\Atlas\\Atlas\\data\\telemetry\\replay_runs\\atlas_replay_postkernel_20260510_130246_20260504\\runs\\20260510_132213\\scored_legs_deduped.csv",
+  "output_eval_path": "C:\\Users\\13142\\Atlas\\Atlas\\data\\telemetry\\replay_runs\\atlas_replay_postkernel_20260510_130246_20260504\\runs\\20260510_132213\\eval_legs.csv",
+  "report": {
+    "rows": 2914,
+    "matched_rows": 2914,
+    "unmatched_rows": 0,
+    "match_rate": 1.0,
+    "quality_counts": {
+      "player_date": 2914
+    },
+    "supported_stats": [
+      "AST",
+      "FG3M",
+      "FTA",
+      "PA",
+      "PR",
+      "PRA",
+      "PTS",
+      "RA",
+      "REB"
+    ]
+  }
+}

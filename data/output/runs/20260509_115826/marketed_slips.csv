@@ -1,0 +1,4 @@
+slip,high_confidence,hit_prob,payout_mult,ev,player,team,opp,stat,direction,tier,line,p_cal
+3-leg,True,0.5748,1.931,1.1099,Jaylin Williams,OKC,LAL,REB,OVER,GOBLIN,1.5,0.8177
+3-leg,True,0.5748,1.931,1.1099,Isaiah Joe,OKC,LAL,PTS,OVER,STANDARD,3.5,0.8059
+3-leg,True,0.5748,1.931,1.1099,Jaxson Hayes,LAL,OKC,PR,OVER,STANDARD,9.0,0.7219

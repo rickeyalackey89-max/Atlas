@@ -1888,13 +1888,72 @@ def simulate_leg_probability_new(
     base_rate_mu = float(s.get("rate_mean", 0.0))
     rate_sd_base = max(0.01, float(s.get("rate_std", 0.01)))
 
+    # Resolve blowout config and stat early — needed by playoff block and rate-std block below.
+    _bcfg = blowout_cfg or {}
+    stat_u = str(stat).upper().strip()
+
+    # ── Playoff regime adjustment ─────────────────────────────────────────────
+    # Regular-season rate_mean overstates per-minute production in playoffs
+    # (lower pace, tighter defense, targeted schemes).  Empirical deltas from
+    # 9 playoff dates vs full regular season:
+    #   PTS -11%, AST -16%, FG3M -20%, REB -5.5%
+    # Starters play significantly more minutes in playoffs (+5–9 min for top tier).
+    # Both corrections are applied here before any further adjustments.
+    # Config key: blowout.playoff_rate_penalty  (dict per stat, default: enabled=false)
+    _playoff_cfg = (_bcfg if hasattr(_bcfg, 'get') else {}).get("playoff_regime", {}) or {}  # type: ignore[union-attr]
+    _playoff_enabled = bool(_playoff_cfg.get("enabled", False))
+    _is_playoff = False
+    _playoff_rate_applied = "off"
+    _playoff_min_applied = "off"
+    if _playoff_enabled:
+        _playoff_start_str = str(_playoff_cfg.get("start_date", "2026-04-30"))
+        try:
+            _row_game_date = row.get("game_date") if hasattr(row, "get") else getattr(row, "game_date", None)
+            if _row_game_date is not None:
+                _gd_str = str(_row_game_date)[:10]
+                _is_playoff = _gd_str >= _playoff_start_str
+        except Exception:
+            _is_playoff = False
+
+    if _playoff_enabled and _is_playoff and base_rate_mu > 0:
+        # Per-stat rate penalty multipliers (data-backed, conservative)
+        _default_rate_penalties: dict[str, float] = {
+            "PTS": 0.89, "PA": 0.89, "PR": 0.89, "PRA": 0.89,
+            "AST": 0.84, "RA": 0.84,
+            "FG3M": 0.80, "3PM": 0.80,
+            "REB": 0.945,
+            "FTA": 0.91,
+            "BLK": 0.95, "STL": 0.95, "STOCKS": 0.95,
+        }
+        _rate_penalties = _playoff_cfg.get("rate_penalties", _default_rate_penalties)
+        _penalty = float(_rate_penalties.get(stat_u, _playoff_cfg.get("default_rate_penalty", 0.93)))
+        _old_rate_for_po = base_rate_mu
+        base_rate_mu = base_rate_mu * _penalty
+        _playoff_rate_applied = f"x{_penalty:.3f}_({_old_rate_for_po:.4f}->{base_rate_mu:.4f})"
+
+    # Playoff starter minutes boost: elite starters play +5-9 min more in playoffs
+    # vs their L20 window mean (which is still ~35% regular-season games).
+    if _playoff_enabled and _is_playoff and mu_close >= 30.0:
+        _min_boost_cfg = _playoff_cfg.get("starter_minutes_boost", {})
+        _elite_floor = float(_min_boost_cfg.get("elite_floor", 33.0))
+        _core_floor  = float(_min_boost_cfg.get("core_floor",  30.0))
+        _elite_boost = float(_min_boost_cfg.get("elite_boost",  6.0))
+        _core_boost  = float(_min_boost_cfg.get("core_boost",   3.5))
+        _boost_cap   = float(_min_boost_cfg.get("boost_cap",   47.0))
+        _old_mu = mu_close
+        if mu_close >= _elite_floor:
+            mu_close = min(_boost_cap, mu_close + _elite_boost)
+            _playoff_min_applied = f"elite+{_elite_boost:.1f}({_old_mu:.1f}->{mu_close:.1f})"
+        elif mu_close >= _core_floor:
+            mu_close = min(_boost_cap, mu_close + _core_boost)
+            _playoff_min_applied = f"core+{_core_boost:.1f}({_old_mu:.1f}->{mu_close:.1f})"
+    # ─────────────────────────────────────────────────────────────────────────
+
     # Rate std inflation — compensate for observed underestimation of outcome variance.
     # Per-stat-type multipliers: combo stats need more inflation because the sim
     # draws a single rate and misses the positive covariance between component
     # stats that thickens the tails in real game outcomes.
-    _bcfg = blowout_cfg or {}
     _per_stat_mult = _bcfg.get("rate_std_multiplier_by_stat", {})
-    stat_u = str(stat).upper().strip()
     _rate_std_mult = float(_per_stat_mult.get(stat_u, _bcfg.get("rate_std_multiplier", 1.0)))
     rate_sd_base = rate_sd_base * _rate_std_mult
 
@@ -1941,6 +2000,23 @@ def simulate_leg_probability_new(
             _opp_factor = 1.0 + float(_nba_def_rel)
         else:
             _opp_factor = compute_opp_defense_factor(gamelogs, _opp_team, stat, lookback=10)
+
+        # Series multiplier: amplify opponent defense signal as series progresses.
+        # Teams increasingly know each other's schemes → defense impact grows.
+        _ser_cfg = _bcfg.get("series_multiplier", {}) or {}
+        _ser_lookup = _bcfg.get("_series_game_lookup", {}) or {}
+        if _ser_cfg.get("enabled", False) and _ser_lookup:
+            _gd_str = str(row.get("game_date", ""))[:10]
+            _team_str = str(row.get("team", "")).upper().strip()
+            _pair_key = (tuple(sorted([_team_str, _opp_team])), _gd_str)
+            _ser_game = _ser_lookup.get(_pair_key, 1)
+            _ser_table = _ser_cfg.get("multipliers", [1.01, 1.08, 1.10, 1.12])
+            _ser_mult = float(_ser_table[min(_ser_game - 1, len(_ser_table) - 1)])
+            # Scale the deviation from neutral (1.0); neutral defenses unaffected
+            _opp_factor = 1.0 + _ser_mult * (_opp_factor - 1.0)
+            _form_debug["series_game"] = int(_ser_game)
+            _form_debug["series_mult"] = float(_ser_mult)
+
         _form_debug["opp_defense_factor"] = float(_opp_factor)
         _form_debug["opp_defense_rel"] = float(np.clip(_opp_factor - 1.0, -0.5, 0.5))
     else:
@@ -2885,6 +2961,11 @@ def simulate_leg_probability_new(
 
         "games_used": int(s.get("games", 0)),
         "thin_window_mult": float(_thin_mult if 0 < _games_used < _thin_window_games else 1.0),
+
+        # Playoff regime diagnostics
+        "is_playoff": bool(_is_playoff),
+        "playoff_rate_applied": str(_playoff_rate_applied),
+        "playoff_min_applied": str(_playoff_min_applied),
     }
 
     if isinstance(role_debug, dict):

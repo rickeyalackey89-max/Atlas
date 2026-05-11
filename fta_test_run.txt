@@ -1,0 +1,65 @@
+prizepicks gate: kept_today_upcoming=2093 dropped_no_start=0 dropped_future_date=1455 dropped_past=0
+[ROSTER_MAP] Wrote 595 entries to C:\Users\13142\Atlas\Atlas\data\input\roster_map.csv
+Wrote: C:\Users\13142\Atlas\Atlas\data\board\fetch_board.csv (rows=2660)
+Wrote: data\board\today.csv
+Snapshot: data\board\snapshots\today_20260507_174316.csv
+Rebuilt today.csv from: C:\Users\13142\Atlas\Atlas\data\raw\prizepicks_20260507_124310.json
+Rows: 2404
+
+Tier counts:
+tier
+DEMON       1025
+STANDARD     698
+GOBLIN       681
+Name: count, dtype: int64
+
+Stat counts (canonical):
+stat
+PTS                        320
+PRA                        235
+PR                         220
+REB                        215
+RA                         186
+PA                         174
+AST                        148
+FG3M                        99
+STL                         88
+FG MADE                     79
+FG ATTEMPTED                75
+FANTASY SCORE               64
+3-PT ATTEMPTED              64
+BLOCKED SHOTS               62
+BS                          51
+FTA                         49
+FREE THROWS MADE            36
+OFFENSIVE REBOUNDS          35
+TWO POINTERS MADE           34
+PERSONAL FOULS              32
+TOV                         31
+TWO POINTERS ATTEMPTED      30
+DEFENSIVE REBOUNDS          30
+DUNKS                       18
+DOUBLE-DOUBLE               12
+QUARTERS WITH 3+ POINTS     11
+QUARTERS WITH 5+ POINTS      6
+Name: count, dtype: int64
+
+WARNING: Non-canonical stat rows retained: 588
+Sample unknown/mapped-through stats:
+               stat_raw                    stat
+          FANTASY SCORE           FANTASY SCORE
+           FG ATTEMPTED            FG ATTEMPTED
+ TWO POINTERS ATTEMPTED  TWO POINTERS ATTEMPTED
+                FG MADE                 FG MADE
+         3-PT ATTEMPTED          3-PT ATTEMPTED
+       FREE THROWS MADE        FREE THROWS MADE
+      TWO POINTERS MADE       TWO POINTERS MADE
+     DEFENSIVE REBOUNDS      DEFENSIVE REBOUNDS
+     OFFENSIVE REBOUNDS      OFFENSIVE REBOUNDS
+          BLOCKED SHOTS           BLOCKED SHOTS
+         PERSONAL FOULS          PERSONAL FOULS
+QUARTERS WITH 3+ POINTS QUARTERS WITH 3+ POINTS
+QUARTERS WITH 5+ POINTS QUARTERS WITH 5+ POINTS
+                  DUNKS                   DUNKS
+          DOUBLE-DOUBLE           DOUBLE-DOUBLE
+[CRAFTEDNBA] rows=518 snapshot_id=craftednba_player_stats_20260507_20260507T174337Z

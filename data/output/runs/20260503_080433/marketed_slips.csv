@@ -1,0 +1,8 @@
+slip,high_confidence,hit_prob,payout_mult,ev,player,team,opp,stat,direction,tier,line,p_cal
+3-leg,True,0.4813,1.931,0.9294,Jarrett Allen,CLE,TOR,PTS,OVER,GOBLIN,8.5,0.9013
+3-leg,True,0.4813,1.931,0.9294,Anthony Black,ORL,DET,RA,UNDER,STANDARD,6.0,0.8393
+3-leg,True,0.4813,1.931,0.9294,Jamal Shead,TOR,CLE,PRA,UNDER,STANDARD,17.5,0.8779
+4-leg,True,0.3827,1.897,0.726,Jarrett Allen,CLE,TOR,PTS,OVER,GOBLIN,8.5,0.9013
+4-leg,True,0.3827,1.897,0.726,Isaiah Stewart,DET,ORL,PR,OVER,GOBLIN,4.5,0.7711
+4-leg,True,0.3827,1.897,0.726,Anthony Black,ORL,DET,RA,UNDER,STANDARD,6.0,0.8393
+4-leg,True,0.3827,1.897,0.726,Jamal Shead,TOR,CLE,PRA,UNDER,STANDARD,17.5,0.8779

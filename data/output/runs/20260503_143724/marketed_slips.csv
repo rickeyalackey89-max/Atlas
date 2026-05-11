@@ -1,0 +1,13 @@
+slip,high_confidence,hit_prob,payout_mult,ev,player,team,opp,stat,direction,tier,line,p_cal
+3-leg,True,0.6797,1.931,1.3125,Jarrett Allen,CLE,TOR,PTS,OVER,GOBLIN,8.5,0.902
+3-leg,True,0.6797,1.931,1.3125,Jamal Shead,TOR,CLE,PR,UNDER,STANDARD,10.5,0.7674
+3-leg,True,0.6797,1.931,1.3125,Dennis Schröder,CLE,TOR,PTS,UNDER,STANDARD,6.0,0.7292
+4-leg,True,0.355,1.897,0.6737,Sam Merrill,CLE,TOR,PR,OVER,GOBLIN,4.5,0.8377
+4-leg,True,0.355,1.897,0.6737,Jaylon Tyson,CLE,TOR,PTS,OVER,GOBLIN,4.5,0.715
+4-leg,True,0.355,1.897,0.6737,Scottie Barnes,TOR,CLE,PTS,UNDER,STANDARD,21.5,0.816
+4-leg,True,0.355,1.897,0.6737,Max Strus,CLE,TOR,PR,UNDER,STANDARD,12.5,0.739
+5-leg,False,0.1012,2.145,0.2169,Jakob Poeltl,TOR,CLE,PR,OVER,GOBLIN,9.5,0.7875
+5-leg,False,0.1012,2.145,0.2169,Dean Wade,CLE,TOR,REB,OVER,GOBLIN,2.5,0.7605
+5-leg,False,0.1012,2.145,0.2169,Collin Murray-Boyles,TOR,CLE,PR,OVER,STANDARD,19.5,0.7626
+5-leg,False,0.1012,2.145,0.2169,Ja'Kobe Walter,TOR,CLE,REB,UNDER,STANDARD,3.5,0.7637
+5-leg,False,0.1012,2.145,0.2169,Sandro Mamukelashvili,TOR,CLE,PR,OVER,DEMON,11.5,0.3984

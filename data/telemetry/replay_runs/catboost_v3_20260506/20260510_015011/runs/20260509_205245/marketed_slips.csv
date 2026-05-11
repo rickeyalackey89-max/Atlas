@@ -1,0 +1,13 @@
+slip,high_confidence,hit_prob,payout_mult,ev,player,team,opp,stat,direction,tier,line,p_cal
+5-leg,True,0.3079,2.145,0.6602,Ayo Dosunmu,MIN,SAS,PR,OVER,GOBLIN,9.5,0.9521
+5-leg,True,0.3079,2.145,0.6602,De'Aaron Fox,SAS,MIN,PTS,OVER,GOBLIN,13.5,0.7535
+5-leg,True,0.3079,2.145,0.6602,Devin Vassell,SAS,MIN,REB,OVER,STANDARD,4.0,0.9444
+5-leg,True,0.3079,2.145,0.6602,VJ Edgecombe,PHI,NYK,PR,OVER,STANDARD,17.5,0.8841
+5-leg,True,0.3079,2.145,0.6602,Jalen Brunson,NYK,PHI,RA,OVER,DEMON,10.5,0.6419
+4-leg,True,0.6163,1.897,1.1694,Dylan Harper,SAS,MIN,PTS,OVER,GOBLIN,8.5,0.9642
+4-leg,True,0.6163,1.897,1.1694,Jaden McDaniels,MIN,SAS,PTS,OVER,GOBLIN,10.5,0.9258
+4-leg,True,0.6163,1.897,1.1694,Julian Champagnie,SAS,MIN,PA,OVER,STANDARD,10.0,0.8433
+4-leg,True,0.6163,1.897,1.1694,Quentin Grimes,PHI,NYK,PTS,OVER,STANDARD,6.0,0.7714
+3-leg,True,0.6478,1.931,1.251,Joel Embiid,PHI,NYK,RA,OVER,GOBLIN,10.5,0.8633
+3-leg,True,0.6478,1.931,1.251,Karl-Anthony Towns,NYK,PHI,PTS,OVER,STANDARD,18.5,0.7406
+3-leg,True,0.6478,1.931,1.251,Rudy Gobert,MIN,SAS,PA,OVER,STANDARD,9.5,0.7383

@@ -1,0 +1,13 @@
+slip,high_confidence,hit_prob,payout_mult,ev,player,team,opp,stat,direction,tier,line,p_cal
+5-leg,True,0.174,2.145,0.3732,Ausar Thompson,DET,CLE,AST,OVER,GOBLIN,2.5,0.7129
+5-leg,True,0.174,2.145,0.3732,Austin Reaves,LAL,OKC,AST,OVER,GOBLIN,3.5,0.7102
+5-leg,True,0.174,2.145,0.3732,Julian Champagnie,SAS,MIN,PA,OVER,STANDARD,10.0,0.8037
+5-leg,True,0.174,2.145,0.3732,Isaiah Joe,OKC,LAL,PTS,OVER,STANDARD,6.5,0.7539
+5-leg,True,0.174,2.145,0.3732,Cade Cunningham,DET,CLE,FG3M,OVER,DEMON,2.5,0.6934
+4-leg,True,0.2752,1.897,0.5221,Ayo Dosunmu,MIN,SAS,PA,OVER,GOBLIN,11.5,0.7457
+4-leg,True,0.2752,1.897,0.5221,Chet Holmgren,OKC,LAL,AST,OVER,GOBLIN,0.5,0.747
+4-leg,True,0.2752,1.897,0.5221,Max Strus,CLE,DET,PTS,OVER,STANDARD,9.5,0.7039
+4-leg,True,0.2752,1.897,0.5221,Naz Reid,MIN,SAS,REB,OVER,STANDARD,6.0,0.7797
+3-leg,True,0.4902,1.931,0.9466,Daniss Jenkins,DET,CLE,FG3M,OVER,GOBLIN,0.5,0.7741
+3-leg,True,0.4902,1.931,0.9466,Paul George,PHI,NYK,PTS,UNDER,STANDARD,17.5,0.6909
+3-leg,True,0.4902,1.931,0.9466,Victor Wembanyama,SAS,MIN,PTS,UNDER,STANDARD,26.5,0.6902

@@ -27,10 +27,10 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 # ── data paths ──────────────────────────────────────────────────────
 _REPO_ROOT = Path(__file__).resolve().parents[1]
-BASE = _REPO_ROOT / "data" / "telemetry" / "v17_corpus"
+BASE = _REPO_ROOT / "data" / "telemetry" / "v18_corpus"
 OUTPUT_DIR = _REPO_ROOT / "data" / "model"
 
-# Regular-season dates in v17_corpus
+# Regular-season dates in v18_corpus
 RUN_DATES = [
     "20260209", "20260210", "20260211", "20260212",
     "20260225", "20260226", "20260227", "20260228",

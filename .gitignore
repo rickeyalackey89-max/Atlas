@@ -27,6 +27,8 @@ data/output.zip
 
 # Logs
 *.log
+*.err
+*.pid
 
 # Audit
 .atlas_audit/
@@ -47,6 +49,11 @@ data/output/runs/*/debug/
 # Large intermediate zips — not needed in git
 data/bundles/
 archives/bundles/
+docs.zip
+
+# Local transcripts / trainer scratch output
+READ.txt
+catboost_info/
 
 # Large binary caches — exceed GitHub 100 MB limit, rebuild with build_v16_cache.py
 data/model/_v16_resim_cache.pkl

@@ -1,0 +1,14 @@
+{
+  "artifacts": {
+    "injury_invalidations_latest.json": {
+      "destination": "C:\\Users\\13142\\Atlas\\Atlas\\data\\output\\runs_manifest\\20260506_071802\\injury_invalidations_latest.json",
+      "source": "C:\\Users\\13142\\Atlas\\Atlas\\data\\output\\runs_manifest\\20260506_071338\\injury_invalidations_latest.json"
+    },
+    "status_latest.json": {
+      "destination": "C:\\Users\\13142\\Atlas\\Atlas\\data\\output\\runs_manifest\\20260506_071802\\status_latest.json",
+      "source": "C:\\Users\\13142\\Atlas\\Atlas\\data\\output\\runs_manifest\\20260506_071338\\status_latest.json"
+    }
+  },
+  "generated_at_utc": "2026-05-06T12:18:02Z",
+  "run_dir": "C:\\Users\\13142\\Atlas\\Atlas\\data\\output\\runs\\20260506_071802"
+}

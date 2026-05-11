@@ -1,0 +1,9 @@
+{
+  "run_id": null,
+  "snapshot_id": "20260508_193908Z",
+  "date": "2026-05-08",
+  "rotowire_snapshot_dir": "C:\\Users\\13142\\Atlas\\Atlas\\data\\archives\\iael\\2026\\2026-05-08\\20260508_193908Z",
+  "rotowire_src": "C:\\Users\\13142\\Atlas\\Atlas\\data\\input\\rotowire_lines.json",
+  "rotowire_dst": "C:\\Users\\13142\\Atlas\\Atlas\\data\\archives\\iael\\2026\\2026-05-08\\20260508_193908Z\\rotowire_lines.json",
+  "fetched_at": "2026-05-08T19:39:08Z"
+}

@@ -455,6 +455,28 @@ def build_slips_by_tier_buckets(
         if df.empty:
             return pd.DataFrame(columns=_EMPTY_SLIPS_COLS)
 
+    # --- UNDER probability window: hard-exclude UNDER legs outside calibrated range ---
+    # Playoff regime analysis (May 8 eval, 1036 UNDER legs):
+    #   0.50-0.60: actual=0.38-0.39, gap=+0.14 to +0.19 — underperforming, exclude
+    #   0.60-0.70: actual=0.69-0.76, gap=-0.06 to -0.08 — well-calibrated, keep
+    #   0.70+:     actual=0.43-0.53, gap=+0.20 to +0.38 — overconfident, exclude
+    # Config keys: slip_build.min_under_prob, slip_build.max_under_prob
+    min_under_prob = float(sb.get("min_under_prob", 0.0) or 0.0)
+    max_under_prob = float(sb.get("max_under_prob", 0.0) or 0.0)
+    if (min_under_prob > 0.0 or max_under_prob > 0.0) and "direction" in df.columns:
+        before_len = len(df)
+        under_mask = df["direction"].astype(str).str.strip().str.upper() == "UNDER"
+        drop_mask = pd.Series(False, index=df.index)
+        if min_under_prob > 0.0:
+            drop_mask = drop_mask | (under_mask & (df["p_eff"] < min_under_prob))
+        if max_under_prob > 0.0:
+            drop_mask = drop_mask | (under_mask & (df["p_eff"] > max_under_prob))
+        df = df[~drop_mask].reset_index(drop=True)
+        if (os.getenv("ATLAS_DEBUG_BUILDER") or "").strip() == "1":
+            print(f"[BUILDER][DEBUG] UNDER window [{min_under_prob:.2f}, {max_under_prob:.2f}] filter: {before_len} -> {len(df)} legs (dropped {before_len - len(df)} UNDER legs)")
+        if df.empty:
+            return pd.DataFrame(columns=_EMPTY_SLIPS_COLS)
+
     # --- Min edge filter: exclude legs below edge threshold ---
     min_edge = float(sb.get("min_edge", 0.0) or 0.0)
     if min_edge > 0.0 and "edge_score" in df.columns:
@@ -588,6 +610,26 @@ def build_slips_by_tier_buckets(
     phase1_frac = float(sb.get("phase1_frac", 0.30))
     phase1_pool_frac = float(sb.get("phase1_pool_frac", 0.60))
     max_players_per_team = int(sb.get("max_players_per_team", 2))  # 2 = allow pairs (production default)
+
+    # Single-game slate detection (2026-05-10): when board only has 1 game on it,
+    # override max_players_per_team by leg count. 3-leg stays tight at 2 to force
+    # cross-team diversification, 4-leg/5-leg relax to 3 since the slate has only
+    # 2 teams to draw from. Falls back to default cap if no override configured.
+    sg_caps = sb.get("single_game_caps_by_legs", {}) or {}
+    if sg_caps and "team" in df.columns and "opp" in df.columns:
+        try:
+            unique_games = set()
+            for t, o in zip(df["team"].astype(str), df["opp"].astype(str)):
+                unique_games.add(tuple(sorted([t, o])))
+            if len(unique_games) == 1:
+                sg_override = sg_caps.get(int(n_legs)) or sg_caps.get(str(n_legs))
+                if sg_override is not None:
+                    max_players_per_team = int(sg_override)
+                    if (os.getenv("ATLAS_DEBUG_BUILDER") or "").strip() == "1":
+                        print(f"[BUILDER][DEBUG] single-game slate detected: n_legs={n_legs} max_per_team={max_players_per_team}")
+        except Exception:
+            pass
+
     no_same_game_within_slip = bool(sb.get("no_same_game_within_slip", False))
 
     # Clamp to safe ranges (prevents config typos from breaking sampling).
@@ -951,7 +993,7 @@ def build_slips_by_tier_buckets(
     max_attempts = saved_max  # restore full budget for phase 2
 
     if (os.getenv("ATLAS_DEBUG_BUILDER") or "").strip() == "1":
-        print(f"[BUILDER][DEBUG] After phase1: slips={len(slips)}, attempts={attempts}, counters={_run_phase._last_counters if hasattr(_run_phase, '_last_counters') else 'N/A'}")
+        print(f"[BUILDER][DEBUG] After phase1: slips={len(slips)}, attempts={attempts}, counters=N/A")
 
     # Phase 2: explore (full bucket) until full target_pool reached
     _run_phase(buckets_p2, target_pool)
@@ -1496,6 +1538,7 @@ def build_windfall_slips(
     pricing_engine: str,
     sort_mode: str = "ev",
     cfg: dict[str, Any],
+    max_attempts: int = 400000,
 ) -> pd.DataFrame:
     mixes = {
         3: {"GOBLIN": 1, "STANDARD": 1, "DEMON": 1},
@@ -1512,7 +1555,7 @@ def build_windfall_slips(
         cfg=cfg,
         seed=seed,
         per_tier=400,
-        max_attempts=400000,
+        max_attempts=max_attempts,
         sort_mode=sort_mode,
         mixes=mixes,
         required_tiers=["GOBLIN", "STANDARD", "DEMON"],
@@ -1529,6 +1572,7 @@ def build_system_slips(
     sort_mode: str = "ev",
     pricing_engine: str,
     cfg: dict[str, Any],
+    max_attempts: int = 500000,
 ) -> pd.DataFrame:
     mixes = {
         3: {"GOBLIN": 1, "STANDARD": 2},
@@ -1556,7 +1600,7 @@ def build_system_slips(
         cfg=cfg,
         seed=seed,
         per_tier=650,
-        max_attempts=500000,
+        max_attempts=max_attempts,
         sort_mode=sort_mode,
         mixes=mixes,
         required_tiers=["GOBLIN", "STANDARD"],

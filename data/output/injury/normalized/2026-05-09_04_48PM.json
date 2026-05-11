@@ -1,0 +1,111 @@
+{
+  "report_date": "2026-05-09",
+  "report_label": "05:30PM",
+  "source_url": "https://ak-static.cms.nba.com/referee/injury/Injury-Report_2026-05-09_05_30PM.pdf",
+  "pulled_at_local": "2026-05-09T16:45:03-05:00",
+  "pdf_sha1": "199836b931d34afa53aa782164697f0ca0750899",
+  "rows": [
+    {
+      "report_date": "2026-05-09",
+      "report_label": "05:30PM",
+      "team": "DET",
+      "player": "Huerter, Kevin",
+      "status": "OUT",
+      "reason": "Injury/Illness - Left Adductor; Strain",
+      "game_date": "05/09/2026",
+      "hard_invalid": true,
+      "tag_probable": false,
+      "out_frac": 0.12
+    },
+    {
+      "report_date": "2026-05-09",
+      "report_label": "05:30PM",
+      "team": "CLE",
+      "player": "Merrill, Sam",
+      "status": "AVAILABLE",
+      "reason": "Injury/Illness - Left Hamstring; Strain Injury/Illness - Right ACL; Surgical",
+      "game_date": "05/09/2026",
+      "hard_invalid": false,
+      "tag_probable": false,
+      "out_frac": 0.0
+    },
+    {
+      "report_date": "2026-05-09",
+      "report_label": "05:30PM",
+      "team": "OKC",
+      "player": "Sorber, Thomas",
+      "status": "OUT",
+      "reason": "Recovery",
+      "game_date": "05/09/2026",
+      "hard_invalid": true,
+      "tag_probable": false,
+      "out_frac": 0.12
+    },
+    {
+      "report_date": "2026-05-09",
+      "report_label": "05:30PM",
+      "team": "OKC",
+      "player": "Williams, Jalen",
+      "status": "OUT",
+      "reason": "Injury/Illness - Left Hamstring; Strain Injury/Illness - Right Finger;",
+      "game_date": "05/09/2026",
+      "hard_invalid": true,
+      "tag_probable": false,
+      "out_frac": 0.12
+    },
+    {
+      "report_date": "2026-05-09",
+      "report_label": "05:30PM",
+      "team": "OKC",
+      "player": "Vanderbilt, Jarred",
+      "status": "QUESTIONABLE",
+      "reason": "Dislocation Injury/Illness - Right Hamstring;",
+      "game_date": "05/09/2026",
+      "hard_invalid": false,
+      "tag_probable": false,
+      "out_frac": 0.0
+    },
+    {
+      "report_date": "2026-05-09",
+      "report_label": "05:30PM",
+      "team": "NYK",
+      "player": "Anunoby, OG",
+      "status": "QUESTIONABLE",
+      "reason": "Strain",
+      "game_date": "05/10/2026",
+      "hard_invalid": false,
+      "tag_probable": false,
+      "out_frac": 0.0
+    },
+    {
+      "report_date": "2026-05-09",
+      "report_label": "05:30PM",
+      "team": "PHI",
+      "player": "Embiid, Joel",
+      "status": "PROBABLE",
+      "reason": "Injury/Illness - Right Hip; Soreness Injury/Illness - Right Finger; Tendon",
+      "game_date": "05/10/2026",
+      "hard_invalid": false,
+      "tag_probable": true,
+      "out_frac": 0.0
+    },
+    {
+      "report_date": "2026-05-09",
+      "report_label": "05:30PM",
+      "team": "PHI",
+      "player": "Maxey, Tyrese",
+      "status": "AVAILABLE",
+      "reason": "Strain - Splint",
+      "game_date": "05/10/2026",
+      "hard_invalid": false,
+      "tag_probable": false,
+      "out_frac": 0.0
+    }
+  ],
+  "schema": "atlas.iael_normalized.v1",
+  "generated_at": "2026-05-09T16:48:31-05:00",
+  "_atlas_publish": {
+    "published_from": "2026-05-09_05_30PM.json",
+    "published_at": "2026-05-09T16:48:31-05:00"
+  }
+}

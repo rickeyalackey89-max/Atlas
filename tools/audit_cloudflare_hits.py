@@ -14,10 +14,10 @@ import sys
 
 ATLAS_DIR = Path(__file__).resolve().parent.parent
 DASHBOARD_DIR = ATLAS_DIR.parent / "atlas-dashboard"
-CORPUS_DIR = ATLAS_DIR / "data" / "telemetry" / "v17_corpus"
+CORPUS_DIR = ATLAS_DIR / "data" / "telemetry" / "v18_corpus"
 OUTPUT_PATH = ATLAS_DIR / "data" / "output" / "graphics" / "cloudflare_hits_audit.csv"
 
-# Dates with eval data (from v17_corpus), most recent first
+# Dates with eval data (from v18_corpus), most recent first
 EVAL_DATES = sorted([d.name for d in CORPUS_DIR.iterdir() if d.is_dir()], reverse=True)
 
 

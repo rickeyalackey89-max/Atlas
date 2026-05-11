@@ -1,0 +1,651 @@
+{
+  "manifest_version": 1,
+  "source": "run_publish",
+  "generated_utc": "2026-05-03T23:13:51Z",
+  "config_fingerprint": "c101901de69d1d7f",
+  "ensemble_version": "v17",
+  "ensemble_lodo_brier": 0.201402,
+  "ensemble_features": 33,
+  "kernel_params": {
+    "spread_sd": 12.0,
+    "threshold_margin": 15.5,
+    "star_minute_drop": 8.0,
+    "role_minute_drop": 0.5,
+    "post_sim_exponent": 0.3,
+    "rate_min_correlation": 0.35,
+    "thin_window_games": 15,
+    "thin_window_max_mult": 1.6,
+    "opp_defense_strength": 1.0,
+    "rate_std_multiplier_by_stat": {
+      "PRA": 1.3,
+      "PR": 1.3,
+      "PA": 1.3,
+      "PTS": 1.3,
+      "RA": 1.1,
+      "AST": 1.2,
+      "REB": 1.0,
+      "FG3M": 1.0
+    }
+  },
+  "role_ctx": {
+    "projection_clamp_lo": 0.9,
+    "projection_clamp_hi": 1.11,
+    "variance_k": 0.65,
+    "under_relief_factor": null,
+    "under_relief_q_min": null,
+    "under_relief_haircut_min": null
+  },
+  "ensemble": {
+    "version": "v17",
+    "architecture": "dn-d11nl50-top7-33feat",
+    "features": [
+      "z_line",
+      "min_cv",
+      "is_combo",
+      "bp_score_gated",
+      "bp_has",
+      "is_assists",
+      "is_threes",
+      "games_norm",
+      "thin_flag",
+      "line_norm",
+      "is_home_feat",
+      "min_sensitivity",
+      "game_total_norm",
+      "is_b2b",
+      "l20_edge",
+      "l10_has",
+      "margin",
+      "stat_cat",
+      "tier_cat",
+      "l40_hr",
+      "logit_p_x_demon",
+      "player_te",
+      "player_stat_te",
+      "player_dir_te",
+      "player_n_norm",
+      "line_dist",
+      "tail_risk",
+      "line_tightness",
+      "margin_x_under",
+      "q_blowout",
+      "rate_cv",
+      "abs_logit_p",
+      "q_x_under"
+    ],
+    "n_features": 33,
+    "lodo_brier": 0.201402,
+    "training_cache": "v17",
+    "training_dates": 47,
+    "training_legs": 170552,
+    "temperature": 1.04,
+    "seeds": [
+      65536,
+      9999,
+      137,
+      999,
+      98765,
+      54321,
+      12345
+    ]
+  },
+  "calibration": {
+    "posthoc_enabled": true,
+    "ensemble_dir": "data/model/ensemble",
+    "active_calibration": "demon_isotonic",
+    "apply_active_calibration": true
+  },
+  "full_config": {
+    "pricing_engine": "pp_kernel",
+    "pp_kernel": {
+      "p_min": 0.01,
+      "p_max": 0.99,
+      "coeffs": {
+        "DEFAULT": {
+          "STANDARD": {
+            "a": 0.3164,
+            "b": -0.288
+          },
+          "GOBLIN": {
+            "a": -0.374114,
+            "b": -0.020276
+          },
+          "DEMON": {
+            "a": -0.493783,
+            "b": -1.436801,
+            "c": -0.502224
+          }
+        },
+        "PTS": {
+          "STANDARD": {
+            "a": 0.3164,
+            "b": -0.288
+          },
+          "GOBLIN": {
+            "a": -0.374114,
+            "b": -0.020276
+          },
+          "DEMON": {
+            "a": -0.493783,
+            "b": -1.436801,
+            "c": -0.502224
+          }
+        },
+        "REB": {
+          "STANDARD": {
+            "a": 0.3164,
+            "b": -0.288
+          },
+          "GOBLIN": {
+            "a": -0.374114,
+            "b": -0.020276
+          },
+          "DEMON": {
+            "a": -0.493783,
+            "b": -1.436801,
+            "c": -0.502224
+          }
+        },
+        "AST": {
+          "STANDARD": {
+            "a": 0.3164,
+            "b": -0.288
+          },
+          "GOBLIN": {
+            "a": -0.374114,
+            "b": -0.020276
+          },
+          "DEMON": {
+            "a": -0.493783,
+            "b": -1.436801,
+            "c": -0.502224
+          }
+        },
+        "FG3M": {
+          "STANDARD": {
+            "a": 0.3164,
+            "b": -0.288
+          },
+          "GOBLIN": {
+            "a": -0.374114,
+            "b": -0.020276
+          },
+          "DEMON": {
+            "a": -0.493783,
+            "b": -1.436801,
+            "c": -0.502224
+          }
+        },
+        "PRA": {
+          "STANDARD": {
+            "a": 0.3164,
+            "b": -0.288
+          },
+          "GOBLIN": {
+            "a": -0.374114,
+            "b": -0.020276
+          },
+          "DEMON": {
+            "a": -0.493783,
+            "b": -1.436801,
+            "c": -0.502224
+          }
+        },
+        "PR": {
+          "STANDARD": {
+            "a": 0.3164,
+            "b": -0.288
+          },
+          "GOBLIN": {
+            "a": -0.374114,
+            "b": -0.020276
+          },
+          "DEMON": {
+            "a": -0.493783,
+            "b": -1.436801,
+            "c": -0.502224
+          }
+        },
+        "PA": {
+          "STANDARD": {
+            "a": 0.3164,
+            "b": -0.288
+          },
+          "GOBLIN": {
+            "a": -0.374114,
+            "b": -0.020276
+          },
+          "DEMON": {
+            "a": -0.493783,
+            "b": -1.436801,
+            "c": -0.502224
+          }
+        },
+        "RA": {
+          "STANDARD": {
+            "a": 0.3164,
+            "b": -0.288
+          },
+          "GOBLIN": {
+            "a": -0.374114,
+            "b": -0.020276
+          },
+          "DEMON": {
+            "a": -0.493783,
+            "b": -1.436801,
+            "c": -0.502224
+          }
+        }
+      }
+    },
+    "telemetry": {
+      "schema_version": 2,
+      "active_calibration": "demon_isotonic",
+      "apply_active_calibration": true,
+      "active_calibration_path": "data/model/telemetry_calibration.demon_isotonic.json",
+      "calibration_policy": {
+        "allow_family_split": true,
+        "family_order": [
+          "role_off",
+          "role_on"
+        ],
+        "strict_source_gating": true
+      },
+      "post_calibration": {
+        "combo_under_midq_blend_retain": 1.0,
+        "combo_under_highq_blend_retain": 1.0,
+        "combo_under_lowmidq_blend_retain": 1.0,
+        "combo_under_midq_ra_trim_retain": 1.0
+      }
+    },
+    "role_ctx": {
+      "enabled": true,
+      "projection_clamp_lo": 0.9,
+      "projection_clamp_hi": 1.11,
+      "projection_softcap_k": 0.9,
+      "variance_k": 0.65,
+      "variance_clamp_lo": 1.0,
+      "variance_clamp_hi": 1.1,
+      "combo_shrink": 0.5,
+      "min_games": 3,
+      "close_sens_mult": 0.35,
+      "weight_scale": 8.8,
+      "weight_power": 1.2,
+      "accumulation": "additive",
+      "max_outs_used": 5,
+      "star_beneficiary_damp": 0.4,
+      "core_beneficiary_damp": 1.0,
+      "demon_tier_damp": 0.0,
+      "over_direction_damp": 1.0,
+      "multi_injury_boost": 1.3,
+      "under_relief_q_min": 0.1,
+      "under_relief_haircut_min": 0.05,
+      "under_relief_factor": 0.0
+    },
+    "posthoc_calibrator": {
+      "enabled": true,
+      "coefficients_path": "data/model/posthoc_calibrator_coeffs_enriched.json",
+      "ensemble_dir": "data/model/ensemble",
+      "mode": "replace"
+    },
+    "blowout": {
+      "spread_sd": 12.0,
+      "threshold_margin": 15.5,
+      "star_minute_drop": 8.0,
+      "role_minute_drop": 0.5,
+      "post_sim_exponent": 0.3,
+      "rate_std_multiplier": 1.0,
+      "matchup_blowout_weight": 0.25,
+      "team_blowout_weight": 0.15,
+      "blowout_curve": {
+        "slope": -0.28,
+        "intercept": 4.0,
+        "crossover": 14.0,
+        "max_gain": 5.0,
+        "max_drop": 12.0
+      },
+      "rotation_tiers": {
+        "starter_minute_drop": 3.5,
+        "bench_minute_drop": 0.5
+      },
+      "asymmetric_blowout": {
+        "enabled": false,
+        "favored_minute_scale": 0.55,
+        "underdog_minute_scale": 1.35,
+        "favored_rate_boost": 0.1,
+        "underdog_rate_penalty": 0.08
+      },
+      "rate_std_multiplier_by_stat": {
+        "PRA": 1.3,
+        "PR": 1.3,
+        "PA": 1.3,
+        "PTS": 1.3,
+        "RA": 1.1,
+        "AST": 1.2,
+        "REB": 1.0,
+        "FG3M": 1.0
+      },
+      "rate_std_under_mult": 2.0,
+      "rate_min_correlation": 0.35,
+      "thin_window_games": 15,
+      "thin_window_max_mult": 1.6,
+      "recency_halflife": 4,
+      "recency_halflife_by_stat": {},
+      "recent_form_blend": 0.0,
+      "opp_defense_strength": 1.0,
+      "adjustment_rules": [
+        {
+          "name": "combo_scoring_over_high_q_structural_v1",
+          "direction": "OVER",
+          "families": [
+            "combo_scoring"
+          ],
+          "min_q": 0.35,
+          "starter_like": true,
+          "minute_drop_mult": 0.78,
+          "sensitivity_mult": 0.92
+        },
+        {
+          "name": "assists_over_high_q_structural_v1",
+          "direction": "OVER",
+          "families": [
+            "assists"
+          ],
+          "min_q": 0.35,
+          "minute_drop_mult": 0.76,
+          "sensitivity_mult": 0.88
+        },
+        {
+          "name": "threes_over_high_q_structural_v1",
+          "direction": "OVER",
+          "families": [
+            "threes"
+          ],
+          "min_q": 0.35,
+          "minute_drop_mult": 0.82,
+          "sensitivity_mult": 0.9
+        },
+        {
+          "name": "rebounds_over_midq_structural_v1",
+          "direction": "OVER",
+          "families": [
+            "rebounds"
+          ],
+          "min_q": 0.2,
+          "max_q": 0.3,
+          "minute_drop_mult": 0.9,
+          "sensitivity_mult": 0.94
+        }
+      ],
+      "_blowout_team_stats": {
+        "team_blowout_rate": {},
+        "team_margin_sd": {},
+        "matchup_blowout_rate": {},
+        "league_blowout_rate": 0.0,
+        "league_margin_sd": 16.0
+      }
+    },
+    "slip_build": {
+      "max_players_per_team": 2,
+      "no_same_game_within_slip": false,
+      "prefer_calibrated_prob": true,
+      "max_slips_per_player": 5,
+      "target_pool_mult": 200,
+      "phase1_frac": 0.1,
+      "phase1_pool_frac": 0.5,
+      "beam_width": 250,
+      "min_leg_prob": 0.52,
+      "max_leg_prob": 0.0,
+      "require_healthy_data": true,
+      "min_nba_games": 10,
+      "max_same_stat": 2,
+      "stat_family_mode": "coarse",
+      "beam_window_growth": 2.0,
+      "correlation_adj": {
+        "enabled": false,
+        "same_team_penalty": 0.02,
+        "hedge_bonus": 0.01
+      },
+      "soft_exposure": {
+        "enabled": false,
+        "threshold": 4,
+        "penalty_per_extra": 0.05,
+        "hard_cap": 6
+      },
+      "penalty": {
+        "team_w": 0.15,
+        "team_power": 2.0,
+        "family_w": 0.1,
+        "family_power": 2.0,
+        "frag_w": 0.0,
+        "frag_power": 1.0,
+        "min_std_w": 0.0,
+        "min_std_ref": 6.0
+      },
+      "by_legs": {
+        "3": {
+          "max_direction_per_slip": {
+            "under": 1
+          },
+          "min_edge": 0.02,
+          "max_same_stat": 2,
+          "min_leg_prob": 0.52,
+          "stat_family_mode": "coarse",
+          "beam_window_growth": 2.0,
+          "beam_width": 500,
+          "phase1_frac": 0.3,
+          "target_pool_mult": 500,
+          "penalty": {
+            "team_w": 0.02,
+            "family_w": 0.0,
+            "frag_w": 0.0
+          }
+        },
+        "4": {
+          "max_direction_per_slip": {
+            "under": 1
+          },
+          "min_edge": 0.02,
+          "max_same_stat": 3,
+          "stat_family_mode": "fine",
+          "beam_window_growth": 1.5,
+          "beam_width": 500,
+          "phase1_frac": 0.2,
+          "target_pool_mult": 600,
+          "penalty": {
+            "team_w": 0.0,
+            "family_w": 0.02,
+            "frag_w": 0.0
+          }
+        },
+        "5": {
+          "max_direction_per_slip": {
+            "under": 2
+          },
+          "min_edge": 0.02,
+          "max_same_stat": 2,
+          "stat_family_mode": "coarse",
+          "beam_window_growth": 2.0,
+          "penalty": {
+            "team_w": 0.1,
+            "family_w": 0.05,
+            "frag_w": 0.08
+          }
+        }
+      },
+      "by_sort_mode": {
+        "hit": {
+          "prefer_calibrated_prob": false,
+          "by_legs": {
+            "3": {
+              "min_leg_prob": 0.52,
+              "max_leg_prob": 0.65,
+              "beam_window_growth": 1.5,
+              "stat_family_mode": "fine",
+              "min_edge": 0.01,
+              "beam_width": 400,
+              "phase1_frac": 0.1,
+              "target_pool_mult": 350,
+              "penalty": {
+                "team_w": 0.05,
+                "family_w": 0.05,
+                "frag_w": 0.0
+              }
+            },
+            "4": {
+              "exclude_stat_directions": [
+                "REB_over",
+                "FG3M_over",
+                "AST_over"
+              ],
+              "max_direction_per_slip": {
+                "under": 2
+              },
+              "min_edge": 0.05,
+              "max_same_stat": 3,
+              "min_leg_prob": 0.52,
+              "stat_family_mode": "coarse",
+              "beam_window_growth": 1.5,
+              "beam_width": 300,
+              "phase1_frac": 0.05,
+              "target_pool_mult": 300,
+              "penalty": {
+                "team_w": 0.0,
+                "family_w": 0.0,
+                "frag_w": 0.0
+              }
+            },
+            "5": {
+              "max_direction_per_slip": {
+                "under": 2
+              },
+              "min_edge": 0.04,
+              "max_same_stat": 3,
+              "min_leg_prob": 0.52,
+              "stat_family_mode": "coarse",
+              "beam_window_growth": 1.5,
+              "beam_width": 650,
+              "phase1_frac": 0.3,
+              "target_pool_mult": 700,
+              "phase1_pool_frac": 0.75,
+              "penalty": {
+                "team_w": 0.0,
+                "family_w": 0.0,
+                "frag_w": 0.0
+              }
+            }
+          }
+        }
+      }
+    },
+    "optimizer": {
+      "top_n_slips": 10,
+      "top_n_slips_by_legs": {
+        "3": 10,
+        "4": 6,
+        "5": 10
+      },
+      "top_n_slips_by_legs_by_sort_mode": {
+        "hit": {
+          "3": 10,
+          "4": 10,
+          "5": 10
+        }
+      },
+      "seed": 7,
+      "external_priors": {
+        "enabled": true,
+        "path": "data/input/external_priors_today.csv",
+        "cap": 0.05,
+        "scale": 1.5,
+        "p_floor": 0.02,
+        "p_ceil": 0.98,
+        "sources": {
+          "rotowire": {
+            "weight": 1.0
+          },
+          "bettingpros": {
+            "weight": 1.0
+          },
+          "oddsapi": {
+            "weight": 1.0
+          }
+        }
+      }
+    },
+    "demonhunter": {
+      "by_legs": {
+        "3": {
+          "min_leg_prob": 0.35,
+          "max_same_stat": 0,
+          "max_players_per_team": 1,
+          "per_tier": 800,
+          "beam_width": 600,
+          "target_pool_mult": 600,
+          "phase1_frac": 0.5,
+          "penalty": {
+            "team_w": 0.05,
+            "family_w": 0.05,
+            "frag_w": 0.05
+          }
+        },
+        "4": {
+          "min_leg_prob": 0.35,
+          "max_same_stat": 3,
+          "max_players_per_team": 1,
+          "per_tier": 200,
+          "phase1_frac": 0.1,
+          "penalty": {
+            "team_w": 0.0,
+            "family_w": 0.0,
+            "frag_w": 0.0
+          }
+        },
+        "5": {
+          "min_leg_prob": 0.33,
+          "max_same_stat": 0,
+          "max_players_per_team": 1,
+          "per_tier": 200,
+          "phase1_frac": 0.1,
+          "penalty": {
+            "team_w": 0.05,
+            "family_w": 0.05,
+            "frag_w": 0.05
+          }
+        }
+      }
+    },
+    "marketed_slips": {
+      "enabled": true,
+      "calibration_path": "data/model/marketed_calibration.json",
+      "excluded_stats": [
+        "BLK",
+        "STL",
+        "TO"
+      ],
+      "min_thresholds": {
+        "GOBLIN": 0.57,
+        "STANDARD": 0.3,
+        "DEMON": 0.28
+      },
+      "direction_filters": {},
+      "hit_prob_calibration": {
+        "3": 1.67,
+        "4": 1.33,
+        "5": 1.53
+      },
+      "high_confidence_thresholds": {
+        "3": 0.42,
+        "4": 0.24,
+        "5": 0.12
+      },
+      "correlation": {
+        "same_team_penalty": 0.03,
+        "hedge_bonus": 0.015,
+        "blowout_penalty": 0.02
+      },
+      "output_name": "marketed_slips_latest.json",
+      "publish_to_latest": true
+    }
+  }
+}

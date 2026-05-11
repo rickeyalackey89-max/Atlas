@@ -11,7 +11,7 @@ REM ================================================================
 
 set ATLAS_ROOT=C:\Users\13142\Atlas\Atlas
 set DASH_ROOT=C:\Users\13142\Atlas\atlas-dashboard
-set PY=C:\Users\13142\AppData\Local\Programs\Python\Python311\python.exe
+set PY=%ATLAS_ROOT%\.venv314\Scripts\python.exe
 set LOG=%ATLAS_ROOT%\data\telemetry\iael_runs.log
 set ODDSAPI_KEY=3f9cb58724c78a06a555ecef04cc55dd
 

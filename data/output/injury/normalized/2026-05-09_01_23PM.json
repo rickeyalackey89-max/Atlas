@@ -1,0 +1,75 @@
+{
+  "report_date": "2026-05-09",
+  "report_label": "02:15PM",
+  "source_url": "https://ak-static.cms.nba.com/referee/injury/Injury-Report_2026-05-09_02_15PM.pdf",
+  "pulled_at_local": "2026-05-09T13:19:37-05:00",
+  "pdf_sha1": "b2094605b1dc830fe1b850fdce4f0f851e1b9104",
+  "rows": [
+    {
+      "report_date": "2026-05-09",
+      "report_label": "02:15PM",
+      "team": "DET",
+      "player": "Huerter, Kevin",
+      "status": "DOUBTFUL",
+      "reason": "Injury/Illness - Left Adductor; Strain",
+      "game_date": "05/09/2026",
+      "hard_invalid": true,
+      "tag_probable": false,
+      "out_frac": 0.08
+    },
+    {
+      "report_date": "2026-05-09",
+      "report_label": "02:15PM",
+      "team": "CLE",
+      "player": "Merrill, Sam",
+      "status": "QUESTIONABLE",
+      "reason": "Injury/Illness - Left Hamstring; Strain Injury/Illness - Right ACL; Surgical",
+      "game_date": "05/09/2026",
+      "hard_invalid": false,
+      "tag_probable": false,
+      "out_frac": 0.0
+    },
+    {
+      "report_date": "2026-05-09",
+      "report_label": "02:15PM",
+      "team": "OKC",
+      "player": "Sorber, Thomas",
+      "status": "OUT",
+      "reason": "Recovery",
+      "game_date": "05/09/2026",
+      "hard_invalid": true,
+      "tag_probable": false,
+      "out_frac": 0.12
+    },
+    {
+      "report_date": "2026-05-09",
+      "report_label": "02:15PM",
+      "team": "OKC",
+      "player": "Williams, Jalen",
+      "status": "OUT",
+      "reason": "Injury/Illness - Left Hamstring; Strain Injury/Illness - Right Finger;",
+      "game_date": "05/09/2026",
+      "hard_invalid": true,
+      "tag_probable": false,
+      "out_frac": 0.12
+    },
+    {
+      "report_date": "2026-05-09",
+      "report_label": "02:15PM",
+      "team": "OKC",
+      "player": "Vanderbilt, Jarred",
+      "status": "QUESTIONABLE",
+      "reason": "Dislocation",
+      "game_date": "05/09/2026",
+      "hard_invalid": false,
+      "tag_probable": false,
+      "out_frac": 0.0
+    }
+  ],
+  "schema": "atlas.iael_normalized.v1",
+  "generated_at": "2026-05-09T13:23:56-05:00",
+  "_atlas_publish": {
+    "published_from": "2026-05-09_02_15PM.json",
+    "published_at": "2026-05-09T13:23:56-05:00"
+  }
+}

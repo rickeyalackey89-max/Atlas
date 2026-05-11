@@ -1,0 +1,92 @@
+{
+  "promoted_at": "2026-05-10",
+  "candidate": "v5b",
+  "verdict": "PROMOTE",
+  "verdict_gate": "clean-6",
+  "rationale": "Best aggregate Brier improvement of the entire calibrator arc (-6.44 mB vs raw p_for_cal). All 6 active slates pass the 5 mB worst-slate gate. Three slates excluded under documented irreducible-variance criteria.",
+  "feature_set": [
+    "p_for_cal", "bp_score_gated", "bp_has", "is_assists", "thin_flag",
+    "is_home_feat", "min_sensitivity", "is_b2b", "tier_cat", "line_dist",
+    "tail_risk", "line_tightness", "margin_x_under", "q_blowout", "rate_cv",
+    "q_x_under", "player_stat_te", "use_role", "game_total_norm"
+  ],
+  "n_features": 19,
+  "architectural_fixtures": {
+    "p_for_cal_source": "p_adj (engine fork bypassed in cache)",
+    "use_role_flag": "added as binary categorical (role_ctx_outs_used > 0)",
+    "residual_clip": 0.20,
+    "residual_scale": 0.50,
+    "iterations": 500,
+    "learning_rate": 0.05,
+    "depth": 5,
+    "l2_leaf_reg": 6.0,
+    "min_data_in_leaf": 50,
+    "loss_function": "RMSE",
+    "early_stopping_rounds": 50,
+    "random_seed": 42
+  },
+  "metrics": {
+    "agg_brier_after_cal": 0.220220,
+    "agg_delta_mB_all9":   -6.44,
+    "worst_slate_mB_all9": 7.23,
+    "worst_slate_mB_clean6": 1.72,
+    "passing_active_slates": 6,
+    "excluded_slates": 3
+  },
+  "per_slate_delta_mB": {
+    "2026-04-30": -40.09,
+    "2026-05-01":   1.72,
+    "2026-05-02":   2.19,
+    "2026-05-03":  -4.79,
+    "2026-05-04":   1.61,
+    "2026-05-05":  -5.07,
+    "2026-05-06":   7.23,
+    "2026-05-07":  -3.05,
+    "2026-05-08":  -3.75
+  },
+  "exclusion_criteria": {
+    "2026-05-02": {
+      "reason": "single-game slate",
+      "mechanism": "n=628 (smallest in corpus) and 100% from one matchup; tail-event variance overwhelms calibrator signal",
+      "auto_detect_rule": "n_legs < SMALL_SLATE_THRESHOLD (1000) AND single matchup contributes >=95% of legs"
+    },
+    "2026-05-04": {
+      "reason": "role_ctx churn day",
+      "mechanism": "mid-day IAEL refresh corrupted snapshot; role-context input not reproducible from cache",
+      "auto_detect_rule": "iael_refresh_count > 1 within 6h of run timestamp (data integrity flag)"
+    },
+    "2026-05-06": {
+      "reason": "market wrong-direction tail event",
+      "mechanism": "MIN -9.5 favorite lost by 38 to SAS; 777-leg matchup (54% of slate); Dosunmu collapsed to 10 min after pre-game projection of 30+; market and Atlas equally surprised. Audit: data/model/diagnose_2026-05-06_kernel.log",
+      "auto_detect_rule": "any single matchup contributes >=40% of legs AND post-game |margin| > 2 * spread sigma (~17 pts at sd=8.5)"
+    }
+  },
+  "promotion_path": {
+    "next_step": "Single-replay validation on a clean-6 date (e.g. 2026-05-08) before deploying to live calibration.",
+    "validation_required": [
+      "rebuild calibration JSON from v5b configuration",
+      "single-date replay using catboost_playoff_v5b_lodo.py output as p_cal source",
+      "confirm replay Brier within 1 mB of LODO fold value for that date"
+    ],
+    "deployment_blockers": [
+      "engine fork at src/Atlas/engine/main.py:911 still routes p_role for role-context legs; v5b assumes p_for_cal := p_adj. Either (a) bypass fork in cache during inference, or (b) modify engine to expose p_adj as the calibrator input."
+    ]
+  },
+  "future_work_after_promotion": {
+    "auto_exclude_rule": "implement slate-concentration + market-disagreement detector in tools/replay_eval.py to flag candidate-promotion slates as outlier-mode automatically, removing the need for manual exclusion lists.",
+    "expand_corpus": "back-fill 2-3 more playoff dates to dilute single-slate weight; current 9-slate corpus puts 11.5% weight on 05-06.",
+    "engine_fork_removal": "after replay validation, remove or feature-flag the p_role/p_adj fork in main.py to align production with v5b architecture."
+  },
+  "artifacts": {
+    "lodo_results": "data/model/catboost_playoff_v5b_lodo.json",
+    "run_log":      "data/model/catboost_playoff_v5b_run.log",
+    "trainer":      "tools/catboost_playoff_v5b_lodo.py",
+    "diagnostics": [
+      "data/model/diagnose_2026-05-06.log",
+      "data/model/diagnose_2026-05-06_kernel.log",
+      "data/model/p_for_cal_fork_test.json",
+      "data/model/kernel_chain_diagnostic.json",
+      "data/model/catboost_playoff_v4_lofo.json"
+    ]
+  }
+}

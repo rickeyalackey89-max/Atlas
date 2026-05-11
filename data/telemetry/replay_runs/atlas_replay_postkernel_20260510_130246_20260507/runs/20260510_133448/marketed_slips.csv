@@ -1,0 +1,13 @@
+slip,high_confidence,hit_prob,payout_mult,ev,player,team,opp,stat,direction,tier,line,p_cal
+5-leg,True,0.1789,2.145,0.3837,Ausar Thompson,DET,CLE,AST,OVER,GOBLIN,2.5,0.7202
+5-leg,True,0.1789,2.145,0.3837,Austin Reaves,LAL,OKC,PA,OVER,GOBLIN,20.5,0.7277
+5-leg,True,0.1789,2.145,0.3837,Kelly Oubre,PHI,NYK,PTS,OVER,STANDARD,11.5,0.7559
+5-leg,True,0.1789,2.145,0.3837,Cade Cunningham,DET,CLE,PTS,OVER,STANDARD,27.5,0.7297
+5-leg,True,0.1789,2.145,0.3837,Donovan Mitchell,CLE,DET,REB,OVER,DEMON,4.5,0.6849
+4-leg,True,0.3088,1.897,0.586,Ayo Dosunmu,MIN,SAS,PR,OVER,GOBLIN,11.5,0.7731
+4-leg,True,0.3088,1.897,0.586,Chet Holmgren,OKC,LAL,REB,OVER,GOBLIN,7.5,0.757
+4-leg,True,0.3088,1.897,0.586,Julian Champagnie,SAS,MIN,PTS,OVER,STANDARD,8.5,0.7195
+4-leg,True,0.3088,1.897,0.586,Quentin Grimes,PHI,NYK,PTS,OVER,STANDARD,6.5,0.7141
+3-leg,True,0.5242,1.931,1.0122,Daniss Jenkins,DET,CLE,REB,OVER,GOBLIN,1.5,0.8055
+3-leg,True,0.5242,1.931,1.0122,Rui Hachimura,LAL,OKC,PTS,OVER,STANDARD,13.0,0.7102
+3-leg,True,0.5242,1.931,1.0122,Tobias Harris,DET,CLE,PTS,OVER,STANDARD,17.5,0.71

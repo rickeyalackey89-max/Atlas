@@ -1,0 +1,14 @@
+{
+  "artifacts": {
+    "injury_invalidations_latest.json": {
+      "destination": "C:\\Users\\13142\\Atlas\\Atlas\\data\\telemetry\\replay_runs\\catboost_v2_20260508\\20260510_015733\\runs_manifest\\20260509_210009\\injury_invalidations_latest.json",
+      "source": "C:\\Users\\13142\\Atlas\\Atlas\\data\\archives\\iael\\2026\\2026-05-08\\20260508_224058Z\\injury_invalidations.json"
+    },
+    "status_latest.json": {
+      "destination": "C:\\Users\\13142\\Atlas\\Atlas\\data\\telemetry\\replay_runs\\catboost_v2_20260508\\20260510_015733\\runs_manifest\\20260509_210009\\status_latest.json",
+      "source": "C:\\Users\\13142\\Atlas\\Atlas\\data\\archives\\iael\\2026\\2026-05-08\\20260508_224058Z\\status.json"
+    }
+  },
+  "generated_at_utc": "2026-05-10T02:00:09Z",
+  "run_dir": "C:\\Users\\13142\\Atlas\\Atlas\\data\\telemetry\\replay_runs\\catboost_v2_20260508\\20260510_015733\\runs\\20260509_210009"
+}

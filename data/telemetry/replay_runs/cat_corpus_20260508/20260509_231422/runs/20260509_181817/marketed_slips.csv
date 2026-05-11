@@ -1,0 +1,13 @@
+slip,high_confidence,hit_prob,payout_mult,ev,player,team,opp,stat,direction,tier,line,p_cal
+5-leg,True,0.1513,2.145,0.3245,Anthony Edwards,MIN,SAS,REB,OVER,GOBLIN,2.5,0.7876
+5-leg,True,0.1513,2.145,0.3245,De'Aaron Fox,SAS,MIN,FG3M,OVER,GOBLIN,0.5,0.7754
+5-leg,True,0.1513,2.145,0.3245,Mitchell Robinson,NYK,PHI,PTS,OVER,STANDARD,4.5,0.6969
+5-leg,True,0.1513,2.145,0.3245,Terrence Shannon,MIN,SAS,PTS,OVER,STANDARD,10.0,0.6787
+5-leg,True,0.1513,2.145,0.3245,Jordan Clarkson,NYK,PHI,PTS,OVER,DEMON,8.5,0.5755
+4-leg,False,0.225,1.897,0.427,Devin Vassell,SAS,MIN,RA,OVER,GOBLIN,4.5,0.7113
+4-leg,False,0.225,1.897,0.427,Dylan Harper,SAS,MIN,PTS,OVER,GOBLIN,6.5,0.7378
+4-leg,False,0.225,1.897,0.427,Naz Reid,MIN,SAS,REB,OVER,STANDARD,6.0,0.7428
+4-leg,False,0.225,1.897,0.427,Quentin Grimes,PHI,NYK,REB,OVER,STANDARD,2.5,0.7024
+3-leg,False,0.3776,1.931,0.7291,Jaden McDaniels,MIN,SAS,PRA,OVER,GOBLIN,17.5,0.7372
+3-leg,False,0.3776,1.931,0.7291,Julian Champagnie,SAS,MIN,PTS,OVER,STANDARD,8.5,0.6268
+3-leg,False,0.3776,1.931,0.7291,Luke Kornet,SAS,MIN,PTS,OVER,STANDARD,3.5,0.6198

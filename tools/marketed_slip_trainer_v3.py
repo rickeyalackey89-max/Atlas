@@ -27,6 +27,7 @@ from __future__ import annotations
 
 import copy
 import json
+import multiprocessing as mp
 import sys
 import time
 from pathlib import Path
@@ -40,8 +41,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from Atlas.core.marketed_slip_builder import MarketedSlipBuilder
 
 # ── Paths ────────────────────────────────────────────────────────────
-CACHE_PATH = Path(r"C:\Users\13142\Atlas\Atlas\data\model\_v17_resim_cache.pkl")
-BASE = Path(r"C:\Users\13142\Atlas\Atlas\data\telemetry\v17_corpus")
+CACHE_PATH = Path(r"C:\Users\13142\Atlas\Atlas\data\model\_v18_resim_cache.pkl")
+BASE = Path(r"C:\Users\13142\Atlas\Atlas\data\telemetry\v18_corpus")
 
 # ── Fixed templates — DO NOT SWEEP ───────────────────────────────────
 FIXED_TEMPLATES = [
@@ -50,25 +51,34 @@ FIXED_TEMPLATES = [
     {"label": "5-leg", "goblin": 2, "standard": 2, "demon": 1},
 ]
 
-# ── Confirmed optimal base config (from v2 trainer) ──────────────────
-BEST_CONFIG = {
-    "marketed_slips": {
-        "enabled": True,
-        "calibration_path": "data/model/marketed_calibration.json",
-        "excluded_stats": ["BLK", "STL", "TO"],
-        "min_thresholds": {
-            "GOBLIN": 0.57,
-            "STANDARD": 0.30,
-            "DEMON": 0.28,
-        },
-        "direction_filters": {},
-        "correlation": {
-            "same_team_penalty": 0.03,
-            "hedge_bonus": 0.015,
-            "blowout_penalty": 0.02,
-        },
+# ── Confirmed optimal base config — read from config.yaml ────────────
+def _load_best_config() -> dict:
+    import yaml
+    cfg_path = Path(__file__).resolve().parents[1] / "config.yaml"
+    with open(cfg_path, "r", encoding="utf-8") as f:
+        full_cfg = yaml.safe_load(f)
+    ms = full_cfg.get("marketed_slips", {})
+    return {
+        "marketed_slips": {
+            "enabled": True,
+            "calibration_path": ms.get("calibration_path", "data/model/marketed_calibration.json"),
+            "excluded_stats": ms.get("excluded_stats", ["BLK", "STL", "TO"]),
+            "min_thresholds": {
+                k: float(v)
+                for k, v in ms.get(
+                    "min_thresholds", {"GOBLIN": 0.57, "STANDARD": 0.30, "DEMON": 0.28}
+                ).items()
+            },
+            "direction_filters": ms.get("direction_filters", {}),
+            "correlation": ms.get(
+                "correlation",
+                {"same_team_penalty": 0.03, "hedge_bonus": 0.015, "blowout_penalty": 0.02},
+            ),
+        }
     }
-}
+
+
+BEST_CONFIG = _load_best_config()
 
 # ── Phase 5: Min weak-link leg score ─────────────────────────────────
 # marketed_score for GOBLIN/DEMON = p_cal * l20_edge  (typical range 0.10-0.60)
@@ -80,12 +90,31 @@ MIN_LEG_SCORE_VALUES = [0.0, 0.05, 0.08, 0.10, 0.12, 0.15, 0.18, 0.20, 0.25, 0.3
 MIN_HIT_PROB_VALUES = [0.0, 0.02, 0.04, 0.06, 0.08, 0.10, 0.12, 0.15, 0.18, 0.20]
 
 # ── Phase 7: Per-stat threshold boosts ───────────────────────────────
-# Low-hit stats from v2 output: AST 27.8%, REB 29.1%, PTS 31.6%, PA 29.7%
-# High-hit stats: PRA 52.7%, RA 48.1%, FG3M 46.4%, PR 39.7%
-# Boost = added to base tier threshold for these specific stats
+# WEAK_STATS is recomputed dynamically in main() from corpus hit rates.
+# Default fallback shown here; actual values depend on the loaded corpus.
+# Boost = added to base tier threshold for low-hit-rate stats.
 # e.g., GOBLIN boost 0.10 means AST GOBLIN legs need p_cal_marketed >= 0.67
-WEAK_STATS = ["AST", "REB", "PTS", "PA"]
+WEAK_STATS: list[str] = ["AST", "REB", "PTS", "PA"]  # fallback only
 STAT_BOOST_VALUES = [0.0, 0.05, 0.08, 0.10, 0.12, 0.15]  # per-stat boost options
+
+
+def compute_weak_stats(cv: pd.DataFrame, min_samples: int = 200) -> list[str]:
+    """Return stats with below-median leg hit rate in the corpus."""
+    if "hit" not in cv.columns or "stat" not in cv.columns:
+        return list(WEAK_STATS)
+    agg = cv.groupby("stat")["hit"].agg(["mean", "count"])
+    agg = agg[agg["count"] >= min_samples]
+    if agg.empty:
+        return list(WEAK_STATS)
+    median_rate = float(agg["mean"].median())
+    return sorted(agg[agg["mean"] < median_rate].index.tolist())
+
+
+def _phase7_worker(args: tuple) -> tuple:
+    """Pool worker for Phase 7 per-stat boost sweep. Evaluates one (stat, boost) pair."""
+    config_dict, stat, boost = args
+    r = evaluate_config(config_dict, stat_boosts={stat: boost})
+    return stat, boost, r
 
 
 # ── Data ─────────────────────────────────────────────────────────────
@@ -115,6 +144,10 @@ def load_data() -> tuple[pd.DataFrame, list[str]]:
         train_dates = all_dates
 
     cv_train = cv[cv["game_date"].isin(train_dates)].copy()
+    # Preflight check
+    assert len(cv_train) > 1000, f"Preflight FAIL: only {len(cv_train)} legs loaded"
+    for _col in ("game_date", "stat", "hit", "p_cal", "tier", "direction"):
+        assert _col in cv_train.columns, f"Preflight FAIL: missing column '{_col}'"
     print(f"Loaded {len(train_dates)} dates, {len(cv_train):,} legs\n")
 
     _CV_CACHE = cv_train
@@ -153,6 +186,8 @@ def evaluate_config(
     by_dir = {"OVER": {"slips": 0, "wins": 0}, "UNDER": {"slips": 0, "wins": 0}}
 
     base_thresholds = effective_config["marketed_slips"]["min_thresholds"]
+    # Pre-instantiate calibration builder once (not per-date)
+    builder2 = MarketedSlipBuilder(effective_config) if stat_boosts else None
 
     for date in dates:
         date_df = cv[cv["game_date"] == date].copy()
@@ -163,10 +198,6 @@ def evaluate_config(
         # the boosted threshold for their stat
         if stat_boosts:
             keep_mask = pd.Series(True, index=date_df.index)
-            # Builder applies stat_calibration to get p_cal_marketed before
-            # comparing to threshold. We need to reproduce that computation here
-            # to correctly filter. Use the builder's calibration data.
-            builder2 = MarketedSlipBuilder(effective_config)
             tmp_df = builder2._apply_stat_calibration(date_df.copy())
             for stat, boost in stat_boosts.items():
                 if boost <= 0:
@@ -279,7 +310,9 @@ def section(title: str):
 
 def main():
     t0 = time.time()
-    load_data()
+    cv_loaded, _ = load_data()
+    weak_stats = compute_weak_stats(cv_loaded)
+    print(f"  Weak stats (below-median leg hit rate): {weak_stats}\n")
 
     TARGET_WIN_RATE = 0.395  # v2 confirmed optimal
 
@@ -344,23 +377,34 @@ def main():
 
     # ── Phase 7: Per-stat threshold boosts ───────────────────────────
     section("PHASE 7 — PER-STAT THRESHOLD BOOST SWEEP")
-    print(f"  Weak stats: {WEAK_STATS}")
+    print(f"  Weak stats: {weak_stats}")
     print(f"  Tests boost added to base tier threshold for each weak stat individually,")
     print(f"  then combined best-of.")
     print(f"  Boost values: {STAT_BOOST_VALUES}\n")
 
-    # 7a: Individual stat boosts
+    # 7a: Individual stat boosts — parallel pool
+    tasks_7a = [
+        (copy.deepcopy(BEST_CONFIG), stat, boost)
+        for stat in weak_stats
+        for boost in STAT_BOOST_VALUES
+    ]
+    n_p7_workers = min(4, max(1, mp.cpu_count() - 1), len(tasks_7a))
+    print(f"  Running {len(tasks_7a)} tasks with {n_p7_workers} workers...")
+    with mp.Pool(n_p7_workers) as pool:
+        p7a_raw = pool.map(_phase7_worker, tasks_7a)
+
+    from collections import defaultdict
+    p7a_by_stat: dict[str, list] = defaultdict(list)
+    for _stat, _boost, _r in p7a_raw:
+        p7a_by_stat[_stat].append((_r["win_rate"], _boost, _r))
+
     best_individual_boosts: dict[str, float] = {}
-    for stat in WEAK_STATS:
+    for stat in weak_stats:
+        stat_results = sorted(p7a_by_stat[stat], key=lambda x: -x[0])
         print(f"  -- {stat} boost sweep --")
-        stat_results = []
-        for boost in STAT_BOOST_VALUES:
-            boosts = {stat: boost}
-            r = evaluate_config(copy.deepcopy(BEST_CONFIG), stat_boosts=boosts)
-            stat_results.append((r["win_rate"], boost, r))
-            sign = "🔥" if r["win_rate"] > best_result["win_rate"] else "  "
+        for wr, boost, r in stat_results:
+            sign = "🔥" if wr > best_result["win_rate"] else "  "
             print(f"    {sign} {stat} boost={boost:.2f}  ->  {fmt(r)}")
-        stat_results.sort(key=lambda x: -x[0])
         best_individual_boosts[stat] = stat_results[0][1]
         print(f"    Best for {stat}: boost={stat_results[0][1]:.2f} at {stat_results[0][0]:.1%}")
 
@@ -376,13 +420,9 @@ def main():
             best_stat_boosts = combined_boosts
             print(f"\n  ++ Phase 7 (combined) improved to {best_result['win_rate']:.1%}")
         else:
-            # Try individual best from per-stat sweeps
-            for stat in WEAK_STATS:
-                single_results = []
-                for boost in STAT_BOOST_VALUES:
-                    r2 = evaluate_config(copy.deepcopy(BEST_CONFIG), stat_boosts={stat: boost})
-                    single_results.append((r2["win_rate"], boost, r2))
-                single_results.sort(key=lambda x: -x[0])
+            # Reuse 7a results — no re-evaluation needed
+            for stat in weak_stats:
+                single_results = sorted(p7a_by_stat[stat], key=lambda x: -x[0])
                 if single_results[0][0] > best_result["win_rate"]:
                     best_result = single_results[0][2]
                     best_stat_boosts = {stat: single_results[0][1]}

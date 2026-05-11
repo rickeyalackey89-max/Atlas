@@ -7,7 +7,7 @@ the DEMON tier calibration fix from being overwritten.
 
 Usage:
   python tools/safe_lodo_run.py "python tools/gbm_v17_train.py --cache v17"
-  python tools/safe_lodo_run.py "python tools/leg_trainer_v5_ev.py"
+  python tools/safe_lodo_run.py "python tools/leg_trainer_v5_system.py"
   python tools/safe_lodo_run.py "python tools/role_ctx_trainer_v1.py"
 
 The script will:
@@ -93,7 +93,7 @@ def main():
         print("Usage: python tools/safe_lodo_run.py \"<command_to_run>\"")
         print("\nExamples:")
         print("  python tools/safe_lodo_run.py \"python tools/gbm_v17_train.py --cache v17\"")
-        print("  python tools/safe_lodo_run.py \"python tools/leg_trainer_v5_ev.py\"")
+        print("  python tools/safe_lodo_run.py \"python tools/leg_trainer_v5_system.py\"")
         sys.exit(1)
     
     command = sys.argv[1]

@@ -1,0 +1,13 @@
+slip,high_confidence,hit_prob,payout_mult,ev,player,team,opp,stat,direction,tier,line,p_cal
+5-leg,True,0.4456,2.145,0.9556,Ayo Dosunmu,MIN,SAS,PA,OVER,GOBLIN,9.5,0.9386
+5-leg,True,0.4456,2.145,0.9556,De'Aaron Fox,SAS,MIN,RA,OVER,GOBLIN,6.5,0.8868
+5-leg,True,0.4456,2.145,0.9556,Terrence Shannon,MIN,SAS,PTS,OVER,STANDARD,10.0,0.9581
+5-leg,True,0.4456,2.145,0.9556,Devin Vassell,SAS,MIN,PTS,OVER,STANDARD,11.5,0.849
+5-leg,True,0.4456,2.145,0.9556,Jalen Brunson,NYK,PHI,RA,OVER,DEMON,10.5,0.7311
+4-leg,True,0.5077,1.897,0.9634,Dylan Harper,SAS,MIN,FG3M,OVER,GOBLIN,0.5,0.9208
+4-leg,True,0.5077,1.897,0.9634,Jaden McDaniels,MIN,SAS,PA,OVER,GOBLIN,14.5,0.8183
+4-leg,True,0.5077,1.897,0.9634,Julian Champagnie,SAS,MIN,PA,OVER,STANDARD,9.5,0.8385
+4-leg,True,0.5077,1.897,0.9634,Jose Alvarado,NYK,PHI,AST,OVER,STANDARD,1.5,0.9226
+3-leg,True,0.7566,1.931,1.461,Joel Embiid,PHI,NYK,FG3M,OVER,GOBLIN,0.5,0.9384
+3-leg,True,0.7566,1.931,1.461,VJ Edgecombe,PHI,NYK,PA,OVER,STANDARD,16.5,0.8278
+3-leg,True,0.7566,1.931,1.461,Karl-Anthony Towns,NYK,PHI,PTS,OVER,STANDARD,19.5,0.7798

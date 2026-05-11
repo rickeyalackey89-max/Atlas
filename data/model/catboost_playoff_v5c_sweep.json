@@ -1,0 +1,308 @@
+{
+  "cache": "C:\\Users\\13142\\Atlas\\Atlas\\data\\model\\_v1_playoff_resim_cache.pkl",
+  "features": [
+    "p_for_cal",
+    "bp_score_gated",
+    "bp_has",
+    "is_assists",
+    "thin_flag",
+    "is_home_feat",
+    "min_sensitivity",
+    "is_b2b",
+    "tier_cat",
+    "line_dist",
+    "tail_risk",
+    "line_tightness",
+    "margin_x_under",
+    "q_blowout",
+    "rate_cv",
+    "q_x_under",
+    "player_stat_te",
+    "use_role",
+    "game_total_norm"
+  ],
+  "exclude_slates_clean6": [
+    "2026-05-02",
+    "2026-05-04",
+    "2026-05-06"
+  ],
+  "v5b_baseline": {
+    "iterations": 500,
+    "learning_rate": 0.05,
+    "residual_scale": 0.5
+  },
+  "v5b_baseline_metrics": {
+    "agg_delta_mB": -6.43823279443953,
+    "worst_slate_mB": 7.228660834421641,
+    "clean6_worst_mB": 1.7169152747329997
+  },
+  "sweep": [
+    {
+      "name": "v5c-A_iter500_lr0075_scale050",
+      "iterations": 500,
+      "learning_rate": 0.075,
+      "residual_scale": 0.5
+    },
+    {
+      "name": "v5c-B_iter500_lr0075_scale060",
+      "iterations": 500,
+      "learning_rate": 0.075,
+      "residual_scale": 0.6
+    },
+    {
+      "name": "v5c-C_iter500_lr0075_scale070",
+      "iterations": 500,
+      "learning_rate": 0.075,
+      "residual_scale": 0.7
+    }
+  ],
+  "results": {
+    "v5c-A_iter500_lr0075_scale050": {
+      "n_features": 19,
+      "agg_brier_after_cal": 0.220584748236847,
+      "agg_delta_mB": -6.073884275245661,
+      "clean_agg_delta_mB": -10.230279038045298,
+      "worst_slate_mB": 10.232291140833293,
+      "clean_worst_slate_mB": 3.818490387359291,
+      "verdict_strict": "REJECT",
+      "verdict_clean": "PROMOTE",
+      "folds": [
+        {
+          "date": "2026-04-30",
+          "n": 1942,
+          "brier_pforcal": 0.29764291564301654,
+          "brier_after_cal": 0.25664684018273437,
+          "delta_mB": -40.996075460282164
+        },
+        {
+          "date": "2026-05-01",
+          "n": 1938,
+          "brier_pforcal": 0.21154156551952835,
+          "brier_after_cal": 0.21536005590688764,
+          "delta_mB": 3.818490387359291
+        },
+        {
+          "date": "2026-05-02",
+          "n": 628,
+          "brier_pforcal": 0.26844688044341286,
+          "brier_after_cal": 0.27867917158424615,
+          "delta_mB": 10.232291140833293
+        },
+        {
+          "date": "2026-05-03",
+          "n": 1323,
+          "brier_pforcal": 0.22522789168529816,
+          "brier_after_cal": 0.2184146685465569,
+          "delta_mB": -6.813223138741275
+        },
+        {
+          "date": "2026-05-04",
+          "n": 1371,
+          "brier_pforcal": 0.21291025536947653,
+          "brier_after_cal": 0.21533483618280325,
+          "delta_mB": 2.4245808133267213
+        },
+        {
+          "date": "2026-05-05",
+          "n": 1523,
+          "brier_pforcal": 0.19957331891847138,
+          "brier_after_cal": 0.19415440758770336,
+          "delta_mB": -5.418911330768022
+        },
+        {
+          "date": "2026-05-06",
+          "n": 1434,
+          "brier_pforcal": 0.1965793088493834,
+          "brier_after_cal": 0.20350796594363157,
+          "delta_mB": 6.92865709424817
+        },
+        {
+          "date": "2026-05-07",
+          "n": 1562,
+          "brier_pforcal": 0.21026077394257942,
+          "brier_after_cal": 0.20751151921389374,
+          "delta_mB": -2.749254728685674
+        },
+        {
+          "date": "2026-05-08",
+          "n": 1465,
+          "brier_pforcal": 0.22388894738433351,
+          "brier_after_cal": 0.21979301890012293,
+          "delta_mB": -4.095928484210587
+        }
+      ],
+      "elapsed_sec": 147.6648828983307,
+      "config": {
+        "name": "v5c-A_iter500_lr0075_scale050",
+        "iterations": 500,
+        "learning_rate": 0.075,
+        "residual_scale": 0.5
+      }
+    },
+    "v5c-B_iter500_lr0075_scale060": {
+      "n_features": 19,
+      "agg_brier_after_cal": 0.22034596692209452,
+      "agg_delta_mB": -6.312665589998156,
+      "clean_agg_delta_mB": -11.285653030482957,
+      "worst_slate_mB": 12.949129116743007,
+      "clean_worst_slate_mB": 5.40033878362764,
+      "verdict_strict": "REJECT",
+      "verdict_clean": "REJECT",
+      "folds": [
+        {
+          "date": "2026-04-30",
+          "n": 1942,
+          "brier_pforcal": 0.29764291564301654,
+          "brier_after_cal": 0.2502227030784723,
+          "delta_mB": -47.420212564544265
+        },
+        {
+          "date": "2026-05-01",
+          "n": 1938,
+          "brier_pforcal": 0.21154156551952835,
+          "brier_after_cal": 0.216941904303156,
+          "delta_mB": 5.40033878362764
+        },
+        {
+          "date": "2026-05-02",
+          "n": 628,
+          "brier_pforcal": 0.26844688044341286,
+          "brier_after_cal": 0.28139600956015587,
+          "delta_mB": 12.949129116743007
+        },
+        {
+          "date": "2026-05-03",
+          "n": 1323,
+          "brier_pforcal": 0.22522789168529816,
+          "brier_after_cal": 0.21787347001320448,
+          "delta_mB": -7.354421672093686
+        },
+        {
+          "date": "2026-05-04",
+          "n": 1371,
+          "brier_pforcal": 0.21291025536947653,
+          "brier_after_cal": 0.21677579685784254,
+          "delta_mB": 3.8655414883660146
+        },
+        {
+          "date": "2026-05-05",
+          "n": 1523,
+          "brier_pforcal": 0.19957331891847138,
+          "brier_after_cal": 0.19397268659243025,
+          "delta_mB": -5.600632326041133
+        },
+        {
+          "date": "2026-05-06",
+          "n": 1434,
+          "brier_pforcal": 0.1965793088493834,
+          "brier_after_cal": 0.20592272242729157,
+          "delta_mB": 9.34341357790816
+        },
+        {
+          "date": "2026-05-07",
+          "n": 1562,
+          "brier_pforcal": 0.21026077394257942,
+          "brier_after_cal": 0.20772152190104054,
+          "delta_mB": -2.5392520415388753
+        },
+        {
+          "date": "2026-05-08",
+          "n": 1465,
+          "brier_pforcal": 0.22388894738433351,
+          "brier_after_cal": 0.21964403054132867,
+          "delta_mB": -4.244916843004848
+        }
+      ],
+      "elapsed_sec": 142.8271622657776,
+      "config": {
+        "name": "v5c-B_iter500_lr0075_scale060",
+        "iterations": 500,
+        "learning_rate": 0.075,
+        "residual_scale": 0.6
+      }
+    },
+    "v5c-C_iter500_lr0075_scale070": {
+      "n_features": 19,
+      "agg_brier_after_cal": 0.22042589243077473,
+      "agg_delta_mB": -6.232740081317939,
+      "clean_agg_delta_mB": -12.010818007180568,
+      "worst_slate_mB": 15.813321683580185,
+      "clean_worst_slate_mB": 7.254556810843971,
+      "verdict_strict": "REJECT",
+      "verdict_clean": "REJECT",
+      "folds": [
+        {
+          "date": "2026-04-30",
+          "n": 1942,
+          "brier_pforcal": 0.29764291564301654,
+          "brier_after_cal": 0.24438951538841122,
+          "delta_mB": -53.25340025460532
+        },
+        {
+          "date": "2026-05-01",
+          "n": 1938,
+          "brier_pforcal": 0.21154156551952835,
+          "brier_after_cal": 0.21879612233037232,
+          "delta_mB": 7.254556810843971
+        },
+        {
+          "date": "2026-05-02",
+          "n": 628,
+          "brier_pforcal": 0.26844688044341286,
+          "brier_after_cal": 0.28426020212699304,
+          "delta_mB": 15.813321683580185
+        },
+        {
+          "date": "2026-05-03",
+          "n": 1323,
+          "brier_pforcal": 0.22522789168529816,
+          "brier_after_cal": 0.21760550847925333,
+          "delta_mB": -7.62238320604483
+        },
+        {
+          "date": "2026-05-04",
+          "n": 1371,
+          "brier_pforcal": 0.21291025536947653,
+          "brier_after_cal": 0.2185096946536295,
+          "delta_mB": 5.599439284152963
+        },
+        {
+          "date": "2026-05-05",
+          "n": 1523,
+          "brier_pforcal": 0.19957331891847138,
+          "brier_after_cal": 0.19409105247720376,
+          "delta_mB": -5.482266441267619
+        },
+        {
+          "date": "2026-05-06",
+          "n": 1434,
+          "brier_pforcal": 0.1965793088493834,
+          "brier_after_cal": 0.2086776352342589,
+          "delta_mB": 12.098326384875485
+        },
+        {
+          "date": "2026-05-07",
+          "n": 1562,
+          "brier_pforcal": 0.21026077394257942,
+          "brier_after_cal": 0.20818860227621966,
+          "delta_mB": -2.0721716663597567
+        },
+        {
+          "date": "2026-05-08",
+          "n": 1465,
+          "brier_pforcal": 0.22388894738433351,
+          "brier_after_cal": 0.21971686621402453,
+          "delta_mB": -4.172081170308983
+        }
+      ],
+      "elapsed_sec": 141.06791281700134,
+      "config": {
+        "name": "v5c-C_iter500_lr0075_scale070",
+        "iterations": 500,
+        "learning_rate": 0.075,
+        "residual_scale": 0.7
+      }
+    }
+  },
+  "elapsed_sec": 431.560524225235
+}

@@ -1,0 +1,36 @@
+{
+  "artifacts": {
+    "invalidations": {
+      "destination": "C:\\Users\\13142\\Atlas\\Atlas\\data\\telemetry\\runs_manifest\\atlas_replay_postkernel_20260510_130246_20260509\\injury_invalidations_latest.json",
+      "sha256": "bd5d6b3df108ba53e2c19724d94f42cabeb2042c144de21f294f6df18fbd174e",
+      "source": "C:\\Users\\13142\\Atlas\\Atlas\\data\\archives\\iael\\2026\\2026-05-09\\20260509_214505Z\\injury_invalidations.json"
+    },
+    "normalized": {
+      "destination": "C:\\Users\\13142\\Atlas\\Atlas\\data\\telemetry\\runs_manifest\\atlas_replay_postkernel_20260510_130246_20260509\\normalized_latest.json",
+      "sha256": "b1b22a514129d8d7f9585fea92a71493f580593aeb0e37e48eb51aa45385357f",
+      "source": "C:\\Users\\13142\\Atlas\\Atlas\\data\\output\\injury\\normalized\\2026-05-09_12_50PM.json"
+    },
+    "role_metrics": {
+      "destination": "C:\\Users\\13142\\Atlas\\Atlas\\data\\telemetry\\runs_manifest\\atlas_replay_postkernel_20260510_130246_20260509\\role_metrics_latest.json",
+      "sha256": "0916d3e49621142ba9d53d5a2f195c2aed0e7d913fd4edb603a659f3778b76f0",
+      "source": "C:\\Users\\13142\\Atlas\\Atlas\\data\\output\\dashboard\\role_metrics_latest.json"
+    },
+    "role_metrics_html": {
+      "destination": "C:\\Users\\13142\\Atlas\\Atlas\\data\\telemetry\\runs_manifest\\atlas_replay_postkernel_20260510_130246_20260509\\role_metrics_latest.html",
+      "sha256": "d6137c8868f63ab8bedd2a8d9e947b944c96af2cd9086a533b9b213ebb2f95dd",
+      "source": "C:\\Users\\13142\\Atlas\\Atlas\\data\\output\\dashboard\\role_metrics_latest.html"
+    },
+    "role_metrics_manifest": {
+      "destination": "C:\\Users\\13142\\Atlas\\Atlas\\data\\telemetry\\runs_manifest\\atlas_replay_postkernel_20260510_130246_20260509\\role_metrics_snapshot_manifest.json",
+      "sha256": "4376f04828217c84f60d1f5b163ababa80fbcc941f1564eaea954f2b24640bdc",
+      "source": "C:\\Users\\13142\\Atlas\\Atlas\\data\\output\\dashboard\\role_metrics_snapshot_manifest.json"
+    },
+    "status": {
+      "destination": "C:\\Users\\13142\\Atlas\\Atlas\\data\\telemetry\\runs_manifest\\atlas_replay_postkernel_20260510_130246_20260509\\status_latest.json",
+      "sha256": "5f589fa0c317f855ad871d6356ea624749c770a0a03c991c1ea5be571ec91250",
+      "source": "C:\\Users\\13142\\Atlas\\Atlas\\data\\archives\\iael\\2026\\2026-05-09\\20260509_214505Z\\status.json"
+    }
+  },
+  "generated_at": "2026-05-10T13:40:02",
+  "run_id": "20260510_133958"
+}

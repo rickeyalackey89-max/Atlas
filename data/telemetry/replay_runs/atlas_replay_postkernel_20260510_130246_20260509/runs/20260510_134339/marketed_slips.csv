@@ -1,0 +1,13 @@
+slip,high_confidence,hit_prob,payout_mult,ev,player,team,opp,stat,direction,tier,line,p_cal
+5-leg,True,0.1733,2.145,0.3717,Ausar Thompson,DET,CLE,AST,OVER,GOBLIN,2.5,0.7218
+5-leg,True,0.1733,2.145,0.3717,Austin Reaves,LAL,OKC,AST,OVER,GOBLIN,3.5,0.7165
+5-leg,True,0.1733,2.145,0.3717,Kelly Oubre,PHI,NYK,PTS,OVER,STANDARD,12.5,0.7561
+5-leg,True,0.1733,2.145,0.3717,Cade Cunningham,DET,CLE,PTS,OVER,STANDARD,26.5,0.7512
+5-leg,True,0.1733,2.145,0.3717,Donovan Mitchell,CLE,DET,REB,OVER,DEMON,4.5,0.6954
+4-leg,True,0.2878,1.897,0.546,Ayo Dosunmu,MIN,SAS,AST,OVER,GOBLIN,1.5,0.7333
+4-leg,True,0.2878,1.897,0.546,Chet Holmgren,OKC,LAL,REB,OVER,GOBLIN,7.5,0.7519
+4-leg,True,0.2878,1.897,0.546,Isaiah Joe,OKC,LAL,PTS,OVER,STANDARD,3.5,0.7488
+4-leg,True,0.2878,1.897,0.546,Julian Champagnie,SAS,MIN,PTS,OVER,STANDARD,8.5,0.7371
+3-leg,True,0.5394,1.931,1.0415,Daniss Jenkins,DET,CLE,FG3M,OVER,GOBLIN,0.5,0.7664
+3-leg,True,0.5394,1.931,1.0415,Quentin Grimes,PHI,NYK,PRA,OVER,STANDARD,11.5,0.7998
+3-leg,True,0.5394,1.931,1.0415,Jaylin Williams,OKC,LAL,PA,OVER,STANDARD,5.5,0.732

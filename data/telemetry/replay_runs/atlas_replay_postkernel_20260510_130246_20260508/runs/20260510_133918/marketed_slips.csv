@@ -1,0 +1,13 @@
+slip,high_confidence,hit_prob,payout_mult,ev,player,team,opp,stat,direction,tier,line,p_cal
+5-leg,True,0.1866,2.145,0.4001,Ausar Thompson,DET,CLE,AST,OVER,GOBLIN,2.5,0.7232
+5-leg,True,0.1866,2.145,0.4001,Austin Reaves,LAL,OKC,RA,OVER,GOBLIN,7.5,0.7517
+5-leg,True,0.1866,2.145,0.4001,Julian Champagnie,SAS,MIN,PA,OVER,STANDARD,9.5,0.7775
+5-leg,True,0.1866,2.145,0.4001,Kelly Oubre,PHI,NYK,PTS,OVER,STANDARD,12.5,0.7551
+5-leg,True,0.1866,2.145,0.4001,Cade Cunningham,DET,CLE,REB,OVER,DEMON,5.5,0.6815
+4-leg,True,0.2945,1.897,0.5587,Ayo Dosunmu,MIN,SAS,REB,OVER,GOBLIN,1.5,0.749
+4-leg,True,0.2945,1.897,0.5587,Chet Holmgren,OKC,LAL,RA,OVER,GOBLIN,8.5,0.7933
+4-leg,True,0.2945,1.897,0.5587,Quentin Grimes,PHI,NYK,PA,OVER,STANDARD,9.5,0.7348
+4-leg,True,0.2945,1.897,0.5587,Isaiah Joe,OKC,LAL,PTS,OVER,STANDARD,4.5,0.7056
+3-leg,True,0.481,1.931,0.9287,Daniss Jenkins,DET,CLE,FG3M,OVER,GOBLIN,0.5,0.7642
+3-leg,True,0.481,1.931,0.9287,Naz Reid,MIN,SAS,PTS,UNDER,STANDARD,11.5,0.6886
+3-leg,True,0.481,1.931,0.9287,Paul George,PHI,NYK,PTS,UNDER,STANDARD,17.5,0.6882

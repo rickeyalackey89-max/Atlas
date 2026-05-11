@@ -1,0 +1,13 @@
+slip,high_confidence,hit_prob,payout_mult,ev,player,team,opp,stat,direction,tier,line,p_cal
+3-leg,True,0.5583,1.931,1.078,Jose Alvarado,NYK,WAS,PRA,OVER,GOBLIN,9.5,0.8779
+3-leg,True,0.5583,1.931,1.078,Scoot Henderson,POR,DEN,PTS,UNDER,STANDARD,14.5,0.7105
+3-leg,True,0.5583,1.931,1.078,Tristan Vukcevic,WAS,NYK,PTS,UNDER,STANDARD,11.5,0.6452
+4-leg,True,0.4414,1.897,0.8375,Cameron Johnson,DEN,POR,PR,OVER,GOBLIN,9.5,0.8721
+4-leg,True,0.4414,1.897,0.8375,Peyton Watson,DEN,POR,REB,OVER,GOBLIN,1.5,0.8618
+4-leg,True,0.4414,1.897,0.8375,Scottie Barnes,TOR,PHX,PR,UNDER,STANDARD,24.5,0.8442
+4-leg,True,0.4414,1.897,0.8375,Naz Reid,MIN,BOS,PTS,UNDER,STANDARD,12.5,0.761
+5-leg,True,0.2539,2.145,0.5445,Mikal Bridges,NYK,WAS,PA,OVER,GOBLIN,11.5,0.8446
+5-leg,True,0.2539,2.145,0.5445,Neemias Queta,BOS,MIN,PA,OVER,GOBLIN,7.5,0.8397
+5-leg,True,0.2539,2.145,0.5445,Immanuel Quickley,TOR,PHX,PTS,UNDER,STANDARD,15.5,0.8524
+5-leg,True,0.2539,2.145,0.5445,Malik Monk,SAC,BKN,PRA,UNDER,STANDARD,19.5,0.7204
+5-leg,True,0.2539,2.145,0.5445,Ja'Kobe Walter,TOR,PHX,PRA,OVER,DEMON,11.5,0.6167

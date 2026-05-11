@@ -1203,26 +1203,61 @@ def run_today(
         generate_daily_graphics_csv(ctx)
 
     # 6) Discord picks-today post (best-effort, never blocks the run)
+    #    Skipped during replay/backtest to avoid posting historical slates.
+    import os as _os_pub_guard
+    _suppress_pub = (
+        _os_pub_guard.environ.get("ATLAS_STRICT_REPLAY") == "1"
+        or _os_pub_guard.environ.get("ATLAS_AUTHORITY", "").lower() in {"replay", "sandbox"}
+        or _os_pub_guard.environ.get("ATLAS_SUPPRESS_PUBLISH") == "1"
+    )
     with StageTimer(ctx, "discord_post"):
-        try:
-            import subprocess as _subp
-            import os as _os2
-            _discord_env = {**_os2.environ, "PYTHONIOENCODING": "utf-8"}
-            _discord_result = _subp.run(
-                [sys.executable, str(TOOLS_DIR / "discord_post.py"), "--picks-today"],
-                cwd=PROJECT_ROOT,
-                capture_output=True,
-                text=True,
-                encoding="utf-8",
-                env=_discord_env,
-                timeout=45,
-            )
-            for _line in (_discord_result.stdout or "").splitlines():
-                print(_line)
-            if _discord_result.returncode != 0:
-                print(f"[DISCORD] WARN exit {_discord_result.returncode}: {_discord_result.stderr[:200]}")
-        except Exception as _disc_e:
-            print(f"[DISCORD] WARN exception (non-fatal): {_disc_e}")
+        if _suppress_pub:
+            print("[DISCORD] skipped (replay/sandbox)")
+        else:
+            try:
+                import subprocess as _subp
+                import os as _os2
+                _discord_env = {**_os2.environ, "PYTHONIOENCODING": "utf-8"}
+                _discord_result = _subp.run(
+                    [sys.executable, str(TOOLS_DIR / "discord_post.py"), "--picks-today"],
+                    cwd=PROJECT_ROOT,
+                    capture_output=True,
+                    text=True,
+                    encoding="utf-8",
+                    env=_discord_env,
+                    timeout=45,
+                )
+                for _line in (_discord_result.stdout or "").splitlines():
+                    print(_line)
+                if _discord_result.returncode != 0:
+                    print(f"[DISCORD] WARN exit {_discord_result.returncode}: {_discord_result.stderr[:200]}")
+            except Exception as _disc_e:
+                print(f"[DISCORD] WARN exception (non-fatal): {_disc_e}")
+
+    # 7) Twitter picks-today post (best-effort, never blocks the run)
+    with StageTimer(ctx, "twitter_post"):
+        if _suppress_pub:
+            print("[TWITTER] skipped (replay/sandbox)")
+        else:
+            try:
+                import subprocess as _subp2
+                import os as _os3
+                _twitter_env = {**_os3.environ, "PYTHONIOENCODING": "utf-8"}
+                _twitter_result = _subp2.run(
+                    [sys.executable, str(TOOLS_DIR / "twitter_post.py"), "--picks-today"],
+                    cwd=PROJECT_ROOT,
+                    capture_output=True,
+                    text=True,
+                    encoding="utf-8",
+                    env=_twitter_env,
+                    timeout=30,
+                )
+                for _line in (_twitter_result.stdout or "").splitlines():
+                    print(_line)
+                if _twitter_result.returncode != 0:
+                    print(f"[TWITTER] WARN exit {_twitter_result.returncode}: {_twitter_result.stderr[:200]}")
+            except Exception as _tw_e:
+                print(f"[TWITTER] WARN exception (non-fatal): {_tw_e}")
 
     _banner("DONE")
     print("Atlas run complete. latest/{all,early,main,late} updated.")

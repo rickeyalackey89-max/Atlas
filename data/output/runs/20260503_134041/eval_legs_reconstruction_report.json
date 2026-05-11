@@ -1,0 +1,25 @@
+{
+  "run_dir": "C:\\Users\\13142\\Atlas\\Atlas\\data\\output\\runs\\20260503_134041",
+  "source_scored_path": "C:\\Users\\13142\\Atlas\\Atlas\\data\\output\\runs\\20260503_134041\\scored_legs_deduped.csv",
+  "output_eval_path": "C:\\Users\\13142\\Atlas\\Atlas\\data\\output\\runs\\20260503_134041\\eval_legs.csv",
+  "report": {
+    "rows": 1429,
+    "matched_rows": 1406,
+    "unmatched_rows": 23,
+    "match_rate": 0.9839048285514346,
+    "quality_counts": {
+      "player_date": 1406,
+      "no_player_date_match": 23
+    },
+    "supported_stats": [
+      "AST",
+      "FG3M",
+      "PA",
+      "PR",
+      "PRA",
+      "PTS",
+      "RA",
+      "REB"
+    ]
+  }
+}

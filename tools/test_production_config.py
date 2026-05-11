@@ -24,7 +24,7 @@ def load_data():
     dates = sorted(cv["game_date"].unique())
     
     # Use corpus dates like trainer
-    corpus_path = Path("data/telemetry/v17_corpus/corpus_manifest.json")
+    corpus_path = Path("data/telemetry/v18_corpus/corpus_manifest.json")
     if corpus_path.exists():
         with open(corpus_path) as f:
             manifest = json.load(f)

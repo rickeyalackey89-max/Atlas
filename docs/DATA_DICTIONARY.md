@@ -1,6 +1,6 @@
 # Atlas Data Dictionary
 
-> **Last updated:** 2026-03-31 — reflects workspace after cleanup to D:\AtlasTestMarch26.
+> **Last updated:** 2026-05-07 — D drive no longer exists; all canonical data lives in the workspace on C drive.
 
 ---
 
@@ -219,9 +219,9 @@ See [ATLAS_MODEL_CONTEXT.md](ATLAS_MODEL_CONTEXT.md) for detailed config knob re
 
 ---
 
-## Archived to D:\AtlasTestMarch26\
+## Archived (removed from workspace 2026-03-31)
 
-The following were moved out of the workspace on 2026-03-31 during cleanup:
+The following were moved out of the workspace during cleanup and are no longer available:
 
 | Archive Folder | Original Location | Size |
 |---|---|---|

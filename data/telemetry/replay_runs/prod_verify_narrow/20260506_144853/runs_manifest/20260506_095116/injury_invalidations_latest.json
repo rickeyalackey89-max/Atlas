@@ -1,0 +1,51 @@
+{
+  "report_date": "2026-03-26",
+  "report_label": "07:30AM",
+  "pulled_at_local": "2026-03-26T06:48:11-05:00",
+  "invalidated_players_count": 7,
+  "invalidated_players": [
+    {
+      "team": "CHA",
+      "player": "Evbuomwan, Tosan",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "CHA",
+      "player": "Hall, PJ",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "CHA",
+      "player": "Reeves, Antonio",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "CHA",
+      "player": "Salaun, Tidjane",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "ORL",
+      "player": "Black, Anthony",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "ORL",
+      "player": "Isaac, Jonathan",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "ORL",
+      "player": "Wagner, Franz",
+      "status": "OUT",
+      "reason": ""
+    }
+  ],
+  "policy": "Remove OUT/DOUBTFUL from eligibility. PROBABLE allowed but tagged."
+}

@@ -30,7 +30,7 @@ import yaml
 # ── Paths ───────────────────────────────────────────────────────────────────
 ROOT       = Path(__file__).resolve().parents[2]   # C:\Users\13142\Atlas
 ATLAS_ROOT = ROOT / "Atlas"
-CACHE_PATH  = ATLAS_ROOT / "data" / "model" / "_v17_resim_cache.pkl"
+CACHE_PATH  = ATLAS_ROOT / "data" / "model" / "_v17_resim_cache.bak.pkl"
 CONFIG_PATH = ATLAS_ROOT / "config.yaml"
 
 sys.path.insert(0, str(ATLAS_ROOT / "src"))
@@ -41,6 +41,7 @@ from Atlas.core.slip_builders import (
     build_demonhunter_slips,
 )
 from Atlas.core.marketed_slip_builder import MarketedSlipBuilder
+from Atlas.stages.optimize.build_slips_today import _cfg_for_n_legs
 
 # ── Load cache ───────────────────────────────────────────────────────────────
 print(f"Loading cache: {CACHE_PATH}")
@@ -55,11 +56,17 @@ print(f"Loaded {len(dates)} dates, {len(df_all):,} legs\n")
 with open(CONFIG_PATH) as f:
     config = yaml.safe_load(f)
 
-slip_cfg      = config.get("slip_build", {})
 optimizer_cfg = config.get("optimizer", {})
 top_n         = optimizer_cfg.get("top_n_slips", 3)
 seed          = optimizer_cfg.get("seed", 42)
 pricing_engine = config.get("pricing_engine", "power")
+
+# Pre-compute per-n-legs configs matching production _cfg_for_n_legs logic
+# (applies by_legs and by_sort_mode overrides the same way the real engine does)
+cfg_by_legs: dict[int, dict] = {}
+top_n_by_legs: dict[int, int] = {}
+for _n in [3, 4, 5]:
+    cfg_by_legs[_n], top_n_by_legs[_n] = _cfg_for_n_legs(config, _n, top_n, "ev")
 
 marketed_builder = MarketedSlipBuilder(config)
 
@@ -138,25 +145,29 @@ for i, date in enumerate(dates):
     if len(day_df) < 10:
         continue
 
+    # The resim cache has no projection_id — the slip builder requires it for
+    # per-leg dedup.  Synthesize unique integer IDs from the row index.
+    if "projection_id" not in day_df.columns:
+        day_df["projection_id"] = day_df.index.astype(str)
+
     if (i + 1) % 10 == 0:
         print(f"  {i+1}/{len(dates)} dates done...")
 
-    # ── System, Windfall, DemonHunter ────────────────────────────────────
+    # ── System, Windfall ─────────────────────────────────────────────────
     for family, build_fn in [
-        ("system",      build_system_slips),
-        ("windfall",    build_windfall_slips),
-        ("demonhunter", build_demonhunter_slips),
+        ("system",   build_system_slips),
+        ("windfall", build_windfall_slips),
     ]:
         for n_legs in [3, 4, 5]:
             try:
                 slips_df = build_fn(
                     legs_df=day_df,
                     n_legs=n_legs,
-                    top_n=top_n,
+                    top_n=top_n_by_legs[n_legs],
                     seed=seed,
                     pricing_engine=pricing_engine,
                     sort_mode="ev",
-                    cfg=slip_cfg,
+                    cfg=cfg_by_legs[n_legs],  # full config with by_legs overrides applied
                 )
             except Exception:
                 continue
@@ -173,6 +184,31 @@ for i, date in enumerate(dates):
             if won is not None:
                 stats[family][n_legs]["n"] += 1
                 stats[family][n_legs]["won"] += int(won)
+
+    # ── DemonHunter (different signature — no n_legs/top_n; needs full config) ──
+    try:
+        dh_df = build_demonhunter_slips(
+            legs_df=day_df,
+            seed=seed,
+            pricing_engine=pricing_engine,
+            sort_mode="hit",
+            cfg=config,  # FULL config — DH reads cfg["demonhunter"] for overrides
+        )
+    except Exception:
+        dh_df = None
+
+    if dh_df is not None and not dh_df.empty:
+        for _, dh_row in dh_df.iterrows():
+            n_legs = int(dh_row.get("n_legs", 0))
+            if n_legs not in [3, 4, 5]:
+                continue
+            legs_str = str(dh_row.get("legs", ""))
+            if not legs_str:
+                continue
+            won = _score_legs_str(str(date), legs_str)
+            if won is not None:
+                stats["demonhunter"][n_legs]["n"] += 1
+                stats["demonhunter"][n_legs]["won"] += int(won)
 
     # ── Marketed slips ────────────────────────────────────────────────────
     try:

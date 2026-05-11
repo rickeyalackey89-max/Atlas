@@ -1,0 +1,25 @@
+{
+  "run_dir": "data\\output\\runs\\20260430_182420",
+  "source_scored_path": "data\\output\\runs\\20260430_182420\\scored_legs_deduped.csv",
+  "output_eval_path": "data\\output\\runs\\20260430_182420\\eval_legs.csv",
+  "report": {
+    "rows": 1385,
+    "matched_rows": 1289,
+    "unmatched_rows": 96,
+    "match_rate": 0.9306859205776173,
+    "quality_counts": {
+      "no_player_date_match": 96,
+      "player_date": 1289
+    },
+    "supported_stats": [
+      "AST",
+      "FG3M",
+      "PA",
+      "PR",
+      "PRA",
+      "PTS",
+      "RA",
+      "REB"
+    ]
+  }
+}

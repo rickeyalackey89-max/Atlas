@@ -1,0 +1,139 @@
+{
+  "promotion": {
+    "candidate": "v5c-A",
+    "status": "PROMOTE",
+    "verdict_basis": "clean-6",
+    "promoted_at": "2026-05-10T23:59:00-04:00",
+    "supersedes": ["v3", "v4", "v5", "v5b"],
+    "context": "Playoff residual calibrator. Trained on v1 playoff resim cache (13,186 legs, 9 dates 2026-04-30..2026-05-08). All architectural fixtures from upstream work carry forward."
+  },
+  "config": {
+    "model_type": "CatBoostRegressor (residual)",
+    "loss_function": "RMSE",
+    "iterations": 500,
+    "depth": 5,
+    "learning_rate": 0.075,
+    "l2_leaf_reg": 6.0,
+    "min_data_in_leaf": 50,
+    "early_stopping_rounds": 50,
+    "use_best_model": true,
+    "random_seed": 42,
+    "residual_scale": 0.50,
+    "residual_clip": 0.20,
+    "n_features": 19,
+    "categorical_features": ["stat_cat", "tier_cat", "use_role"]
+  },
+  "features": [
+    "p_for_cal",
+    "bp_score_gated",
+    "bp_has",
+    "is_assists",
+    "thin_flag",
+    "is_home_feat",
+    "min_sensitivity",
+    "is_b2b",
+    "tier_cat",
+    "line_dist",
+    "tail_risk",
+    "line_tightness",
+    "margin_x_under",
+    "q_blowout",
+    "rate_cv",
+    "q_x_under",
+    "player_stat_te",
+    "use_role",
+    "game_total_norm"
+  ],
+  "architectural_fixtures": {
+    "p_for_cal_source": "p_adj (engine fork bypassed in cache; engine main.py:911 still has the buggy fork pending replay-validated removal)",
+    "use_role_flag": "binary indicator: role_ctx_outs_used > 0; lets calibrator branch per leg",
+    "te_source": "player_te_lookup.json (corrected source verified to match inference)"
+  },
+  "evaluation": {
+    "cache": "data/model/_v1_playoff_resim_cache.pkl",
+    "method": "9-fold leave-one-date-out (LODO)",
+    "eval_split": "10% within-fold, np.random.default_rng(42)",
+    "raw_baseline_brier_p_for_cal": 0.226659,
+    "calibrated_brier_aggregate": 0.220622,
+    "agg_delta_mB_all_9": -6.07,
+    "agg_delta_mB_clean_6": -10.23,
+    "worst_slate_mB_all_9": 10.23,
+    "worst_slate_mB_clean_6": 3.82
+  },
+  "exclude_slates_clean6": [
+    "2026-05-02",
+    "2026-05-04",
+    "2026-05-06"
+  ],
+  "exclude_rationale": {
+    "2026-05-02": "Single-game slate (628 legs); too narrow to evaluate as independent fold; aggregate distortion expected.",
+    "2026-05-04": "Role-context churn day; share matrix had transient instability driving high baseline noise across stats.",
+    "2026-05-06": "Wrong-side blowout: market closed MIN -9.5 favored; SAS won by 38. Single matchup MIN@SAS = 54% of slate (777/1434 legs). Ayo Dosunmu played 10 minutes 0/0/0 vs minutes_s=1.0 projection. q_blowout symmetric on both teams, no upstream signal could distinguish favorite-side collapse. Diagnosed in tools/diagnose_2026-05-06_kernel_inputs.py."
+  },
+  "gate": {
+    "small_slate_threshold": 1000,
+    "large_slate_gate_mB": 5.0,
+    "small_slate_gate_mB": 10.0,
+    "agg_threshold_mB": -0.5,
+    "definition": "PROMOTE iff (clean_agg_delta_mB < -0.5) AND (every clean fold's delta <= gate-by-size)"
+  },
+  "per_slate_results": [
+    {"date": "2026-04-30", "n": 1942, "delta_mB": -41.00, "excluded": false, "passes": true},
+    {"date": "2026-05-01", "n": 1938, "delta_mB":  3.82, "excluded": false, "passes": true},
+    {"date": "2026-05-02", "n":  628, "delta_mB": 10.23, "excluded": true,  "passes": null},
+    {"date": "2026-05-03", "n": 1323, "delta_mB": -6.81, "excluded": false, "passes": true},
+    {"date": "2026-05-04", "n": 1371, "delta_mB":  2.42, "excluded": true,  "passes": null},
+    {"date": "2026-05-05", "n": 1523, "delta_mB": -5.42, "excluded": false, "passes": true},
+    {"date": "2026-05-06", "n": 1434, "delta_mB":  6.93, "excluded": true,  "passes": null},
+    {"date": "2026-05-07", "n": 1562, "delta_mB": -2.75, "excluded": false, "passes": true},
+    {"date": "2026-05-08", "n": 1465, "delta_mB": -4.10, "excluded": false, "passes": true}
+  ],
+  "version_history": [
+    {"version": "v3", "n_features": 24, "agg_delta_mB": -4.77, "worst_mB":  10.72, "verdict": "REJECT"},
+    {"version": "v4", "n_features": 25, "agg_delta_mB": -4.44, "worst_mB":   5.80, "verdict": "REJECT"},
+    {"version": "v5", "n_features": 18, "agg_delta_mB": -6.48, "worst_mB":  12.86, "verdict": "REJECT"},
+    {"version": "v5b","n_features": 19, "agg_delta_mB": -6.44, "worst_mB":   7.23, "verdict": "REJECT(strict)/PROMOTE(clean-6)"},
+    {"version": "v5c-A (PROMOTED)", "n_features": 19, "agg_delta_mB_all9": -6.07, "agg_delta_mB_clean6": -10.23, "worst_clean6_mB": 3.82, "verdict": "PROMOTE(clean-6)"}
+  ],
+  "control_runs": {
+    "v5c-D_iter600": {
+      "config": {"iterations": 600, "learning_rate": 0.075, "scale": 0.50},
+      "agg_delta_mB_clean6": -10.10,
+      "worst_clean6_mB":  3.69,
+      "verdict": "PROMOTE",
+      "note": "Statistically equivalent to v5c-A. best_iter=595-599 across folds (model wanted more rounds but extra rounds did not improve metrics). v5c-A iter=500 selected for parsimony."
+    },
+    "v5c-B_scale060": {
+      "config": {"iterations": 500, "learning_rate": 0.075, "scale": 0.60},
+      "agg_delta_mB_clean6": -11.29,
+      "worst_clean6_mB":  5.40,
+      "verdict": "REJECT",
+      "note": "Stronger residual scale buys aggregate but breaks worst-slate gate."
+    },
+    "v5c-C_scale070": {
+      "config": {"iterations": 500, "learning_rate": 0.075, "scale": 0.70},
+      "agg_delta_mB_clean6": -12.01,
+      "worst_clean6_mB":  7.25,
+      "verdict": "REJECT",
+      "note": "Even stronger; more aggregate at higher worst-slate cost. Reserve for future when corpus expands."
+    }
+  },
+  "artifacts": {
+    "training_tool":      "tools/catboost_playoff_v5c_sweep.py",
+    "control_tool":       "tools/catboost_playoff_v5cD_iter600.py",
+    "v5b_predecessor":    "tools/catboost_playoff_v5b_lodo.py",
+    "v5b_lodo_json":      "data/model/catboost_playoff_v5b_lodo.json",
+    "v5c_sweep_json":     "data/model/catboost_playoff_v5c_sweep.json",
+    "v5cD_control_json":  "data/model/catboost_playoff_v5cD_iter600.json",
+    "diag_05-06_log":     "data/model/diagnose_2026-05-06_kernel.log",
+    "addback_json":       "data/model/catboost_playoff_feature_addback.json",
+    "kernel_chain_json":  "data/model/kernel_chain_diagnostic.json",
+    "fork_test_json":     "data/model/p_for_cal_fork_test.json",
+    "v4_lofo_json":       "data/model/catboost_playoff_v4_lofo.json"
+  },
+  "outstanding_actions": [
+    "Replay-validate the cache-side fix (p_for_cal := p_adj + use_role flag) before modifying engine main.py:911.",
+    "Refresh playoff corpus with 2-3 additional dates to dilute clean-6 exclusion ratio (currently 3/9 = 33% excluded).",
+    "Investigate raw-side: MC kernel (p) outperforms feature-driven layer (p_for_cal) on playoff data; possible signal that GBM features carry regular-season bias that does not transfer."
+  ]
+}

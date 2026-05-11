@@ -14,8 +14,8 @@ Trainers must run in this order (each depends on outputs from previous):
    a. calibration_trainer.py                 → compares 12 methods, picks best
    b. train_direction_calibrator.py          → OVER/UNDER split isotonic
 3. Leg Trainers (can run in parallel)        → produces slip builder config
-   a. leg_trainer_v5_ev.py                   → EV-optimized slip params
-   b. leg_trainer_v5_hit.py                  → HIT-optimized slip params
+   a. leg_trainer_v5_system.py                → EV-optimized slip params (System builder)
+   b. leg_trainer_v5_windfall.py              → HIT-optimized slip params (Windfall builder)
    c. demonhunter_trainer_v4.py              → DEMON-only slip params
    d. slip_builder_trainer.py                → 3-leg EV/HIT slip params (stat_family_mode, beam_window_growth)
    e. external_priors_trainer.py             → external prior cap/scale/floor/ceil
@@ -193,81 +193,81 @@ python tools/train_direction_calibrator.py
 
 ---
 
-## 3a. Leg Trainer v5 EV (`tools/leg_trainer_v5_ev.py`)
+## 3a. Leg Trainer v5 System (`tools/leg_trainer_v5_system.py`)
 
-**Purpose:** Grid-search slip builder parameters to maximize EV (expected value) of 3/4/5-leg parlays.
+**Purpose:** Grid-search slip builder parameters to maximize EV (expected value) of 3/4/5-leg parlays for the **System** (score_adj-sorted) builder.
 
-### EV Trainer CLI
+### System Trainer CLI
 
 ```powershell
-python tools/leg_trainer_v5_ev.py
+python tools/leg_trainer_v5_system.py
 ```
 
-### EV Trainer Required Inputs
+### System Trainer Required Inputs
 
 | File        | Path                                                       | Format                     |
 | ----------- | ---------------------------------------------------------- | -------------------------- |
-| Scored legs | `data/telemetry/v13_corpus/{date}/scored_legs_deduped.csv` | Full scored legs with p_cal |
-| Eval legs   | `data/telemetry/v13_corpus/{date}/eval_legs.csv`           | Truth labels (hit)         |
+| Scored legs | `data/telemetry/v18_corpus/{date}/scored_legs_deduped.csv` | Full scored legs with p_cal |
+| Eval legs   | `data/telemetry/v18_corpus/{date}/eval_legs.csv`           | Truth labels (hit)         |
 
-**Dates:** 44 dates hardcoded in `RUN_DATES` (2026-02-08 through 2026-04-07).
+**Dates:** Defined in `RUN_DATES`. Corpus auto-discovered (v18_corpus → v18_corpus → D-drive fallback).
 
-### EV Scored Legs Required Columns
+### System Scored Legs Required Columns
 
 `player`, `stat`, `line`, `direction`, `tier`, `p_cal`, `score_adj`, `team`, `opp`, `fragility`
 
-### EV Eval Legs Required Columns
+### System Eval Legs Required Columns
 
 `player`, `stat`, `line`, `direction`, `hit`
 
-### EV Search Structure (4 stages per category)
+### System Search Structure (4 stages per category)
 
 | Stage | Focus                                                                           | Combos | Time       |
 | ----- | ------------------------------------------------------------------------------- | ------ | ---------- |
 | S1    | Structural: excludes, min_edge, penalties, stat_family_mode, beam_window_growth | ~1440  | ~30–60 min |
-| S1b   | Refinement: min_leg_prob, max_players                                           | ~10–20 | ~10s       |
+| S1b   | Refinement: min_leg_prob, max_players, leg_quality_filters                      | ~15–25 | ~10s       |
 | S2    | Exploration: beam_width, phase1_frac, pool_mult                                 | ~80+   | ~100s      |
 | S3    | Fine-tuning: ±small steps on best                                               | ~40–80 | ~100s      |
 
-### EV Key Parameters
+### System Key Parameters
 
 - **Seeds:** [42, 137, 9999, 2026, 777]
 - **TOP_K:** 5 slips evaluated per config
 - **MAX_ATTEMPTS:** 30,000 per slip per seed
-- **Categories:** 3-leg EV, 4-leg EV, 5-leg EV
+- **Categories:** 3-leg SYSTEM, 4-leg SYSTEM, 5-leg SYSTEM
+- **Output YAML:** `tools/leg_trainer_results_v5_system.yaml`
+- **Config target:** `slip_build.by_legs.{3|4|5}`
 
-### EV Outputs
-
-Console output with best configs per category per stage. Apply winning params to `config.yaml` → `slip_build`.
-
-### EV Runtime
+### System Runtime
 
 ~2–6 hours
 
 ---
 
-## 3b. Leg Trainer v5 HIT (`tools/leg_trainer_v5_hit.py`)
+## 3b. Leg Trainer v5 Windfall (`tools/leg_trainer_v5_windfall.py`)
 
-**Purpose:** Same as EV trainer but optimizes for HIT rate (raw probability selection). Expanded beam/pool grids.
+**Purpose:** Same as System trainer but optimizes for HIT rate (raw probability selection) for the **Windfall** (hit-sorted) builder. Expanded beam/pool grids.
 
-### HIT Trainer CLI
+### Windfall Trainer CLI
 
 ```powershell
-python tools/leg_trainer_v5_hit.py
+python tools/leg_trainer_v5_windfall.py
 ```
 
-### HIT Trainer Required Inputs
+### Windfall Trainer Required Inputs
 
-Same as v5 EV: `data/telemetry/v13_corpus/{date}/` with `scored_legs_deduped.csv` + `eval_legs.csv`.
+Same as v5 System: corpus auto-discovered with `scored_legs_deduped.csv` + `eval_legs.csv`.
 
-### HIT Differences from EV
+### Windfall Differences from System
 
 - Larger S2/S3 grids (~150+ and ~100+ combos vs ~80 and ~40)
-- S1 grid: ~384 combos (includes stat_family_mode, beam_window_growth)
+- S1 grid: ~64 combos (no exclude/edge — Windfall strips them at runtime)
 - Adds `phase1_pool_frac` parameter sweep
-- HIT mode: selects by pure probability rather than edge
+- Sort mode: `hit` (selects by pure probability rather than edge)
+- **Output YAML:** `tools/leg_trainer_results_v5_windfall.yaml`
+- **Config target:** `slip_build.by_sort_mode.hit.by_legs.{3|4|5}`
 
-### HIT Runtime
+### Windfall Runtime
 
 ~4–8 hours
 
@@ -427,8 +427,8 @@ After running replays, consolidate from `data/telemetry/replay_runs/` using `too
 
 When the corpus expands, ALL trainers must have their `RUN_DATES` lists updated simultaneously. The lists must be identical across:
 
-- `leg_trainer_v5_ev.py`
-- `leg_trainer_v5_hit.py`
+- `leg_trainer_v5_system.py`
+- `leg_trainer_v5_windfall.py`
 - `demonhunter_trainer_v4.py`
 - `slip_builder_trainer.py`
 
@@ -504,8 +504,8 @@ Before launching any trainer:
 | gbm_v17_train           | Resim cache + gamelogs           | LODO Brier + ensemble models | 15–25 min | Brier ↓     |
 | calibration_trainer     | Eval legs corpus                 | 12-method comparison + JSONs | 10–30 min | Brier ↓     |
 | train_direction_cal     | 23-date replay corpus            | Isotonic JSON                | 1–2 min   | Gap ↓       |
-| leg_trainer_v5_ev       | v13_corpus (44 dates)            | Best slip configs (console)  | 4–12 hrs  | slip_wins ↑ |
-| leg_trainer_v5_hit      | v13_corpus (44 dates)            | Best slip configs (console)  | 6–16 hrs  | slip_wins ↑ |
+| leg_trainer_v5_system   | v18_corpus (auto-discovered)     | Best slip configs + YAML     | 4–12 hrs  | slip_wins ↑ |
+| leg_trainer_v5_windfall | v18_corpus (auto-discovered)     | Best slip configs + YAML     | 6–16 hrs  | slip_wins ↑ |
 | demonhunter_v4          | v13_corpus (44 dates)            | Results YAML                 | 2–4 hrs   | slip_wins ↑ |
 | slip_builder_trainer    | D-drive replay corpus (44 dates) | Best 3-leg configs (console) | 30–60 min | slip_wins ↑ |
 | external_priors_trainer | Resim cache (v18)                | Results YAML                 | 5–10 min  | Brier ↓     |

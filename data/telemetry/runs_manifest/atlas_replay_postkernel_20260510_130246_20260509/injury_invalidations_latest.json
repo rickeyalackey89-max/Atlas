@@ -1,0 +1,27 @@
+{
+  "report_date": "2026-05-09",
+  "report_label": "05:30PM",
+  "pulled_at_local": "2026-05-09T16:45:03-05:00",
+  "invalidated_players_count": 3,
+  "invalidated_players": [
+    {
+      "team": "DET",
+      "player": "Huerter, Kevin",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "OKC",
+      "player": "Sorber, Thomas",
+      "status": "OUT",
+      "reason": ""
+    },
+    {
+      "team": "OKC",
+      "player": "Williams, Jalen",
+      "status": "OUT",
+      "reason": ""
+    }
+  ],
+  "policy": "Remove OUT/DOUBTFUL from eligibility. PROBABLE allowed but tagged."
+}

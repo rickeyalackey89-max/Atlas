@@ -1,0 +1,133 @@
+{
+  "cache": "C:\\Users\\13142\\Atlas\\Atlas\\data\\model\\_v1_playoff_resim_cache.pkl",
+  "n_legs": 13186,
+  "n_dates": 9,
+  "n_use_role": 3897,
+  "v4_features": [
+    "p_for_cal",
+    "z_line",
+    "is_combo",
+    "bp_score_gated",
+    "bp_has",
+    "is_assists",
+    "thin_flag",
+    "line_norm",
+    "is_home_feat",
+    "min_sensitivity",
+    "game_total_norm",
+    "is_b2b",
+    "stat_cat",
+    "tier_cat",
+    "line_dist",
+    "tail_risk",
+    "line_tightness",
+    "margin_x_under",
+    "q_blowout",
+    "rate_cv",
+    "q_x_under",
+    "player_te",
+    "player_stat_te",
+    "player_n_norm",
+    "use_role"
+  ],
+  "lofo_drops_from_v3": [
+    "min_cv",
+    "margin",
+    "is_threes"
+  ],
+  "addback_adds": [
+    "player_te",
+    "player_stat_te",
+    "player_n_norm"
+  ],
+  "fork_test_add": [
+    "use_role"
+  ],
+  "p_for_cal_source": "p_adj",
+  "hyperparams": {
+    "iterations": 500,
+    "depth": 5,
+    "learning_rate": 0.05,
+    "l2_leaf_reg": 6.0,
+    "min_data_in_leaf": 50,
+    "residual_clip": 0.2,
+    "residual_scale": 0.5
+  },
+  "v4_lodo": {
+    "label": "v4",
+    "n_features": 25,
+    "agg_brier_pforcal": 0.22665863251209267,
+    "agg_brier_after_cal": 0.22221465664208362,
+    "agg_delta_mB": -4.443975870009053,
+    "worst_slate_mB": 5.796978583579748,
+    "n_slates_regressing": 4,
+    "per_slate_pass": false,
+    "verdict": "REJECT",
+    "folds": [
+      {
+        "date": "2026-04-30",
+        "n": 1942,
+        "brier_pforcal": 0.29764291564301654,
+        "brier_after_cal": 0.26947839141134056,
+        "delta_mB": -28.16452423167598
+      },
+      {
+        "date": "2026-05-01",
+        "n": 1938,
+        "brier_pforcal": 0.21154156551952835,
+        "brier_after_cal": 0.21549457611739556,
+        "delta_mB": 3.953010597867207
+      },
+      {
+        "date": "2026-05-02",
+        "n": 628,
+        "brier_pforcal": 0.26844688044341286,
+        "brier_after_cal": 0.2689856368187947,
+        "delta_mB": 0.5387563753818658
+      },
+      {
+        "date": "2026-05-03",
+        "n": 1323,
+        "brier_pforcal": 0.22522789168529816,
+        "brier_after_cal": 0.22365328645339475,
+        "delta_mB": -1.5746052319034198
+      },
+      {
+        "date": "2026-05-04",
+        "n": 1371,
+        "brier_pforcal": 0.21291025536947653,
+        "brier_after_cal": 0.21477358291441956,
+        "delta_mB": 1.863327544943033
+      },
+      {
+        "date": "2026-05-05",
+        "n": 1523,
+        "brier_pforcal": 0.19957331891847138,
+        "brier_after_cal": 0.19464707766148262,
+        "delta_mB": -4.926241256988762
+      },
+      {
+        "date": "2026-05-06",
+        "n": 1434,
+        "brier_pforcal": 0.1965793088493834,
+        "brier_after_cal": 0.20237628743296315,
+        "delta_mB": 5.796978583579748
+      },
+      {
+        "date": "2026-05-07",
+        "n": 1562,
+        "brier_pforcal": 0.21026077394257942,
+        "brier_after_cal": 0.20718841402740862,
+        "delta_mB": -3.072359915170797
+      },
+      {
+        "date": "2026-05-08",
+        "n": 1465,
+        "brier_pforcal": 0.22388894738433351,
+        "brier_after_cal": 0.2181656516056966,
+        "delta_mB": -5.723295778636922
+      }
+    ]
+  },
+  "elapsed_sec": 134.92228031158447
+}

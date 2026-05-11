@@ -36,9 +36,9 @@ class MarketedSlipBuilder:
         
         # Templates: locked tier compositions
         self.templates = [
-            {"label": "3-leg", "goblin": 1, "standard": 2, "demon": 0},
-            {"label": "4-leg", "goblin": 2, "standard": 2, "demon": 0},
             {"label": "5-leg", "goblin": 2, "standard": 2, "demon": 1},
+            {"label": "4-leg", "goblin": 2, "standard": 2, "demon": 0},
+            {"label": "3-leg", "goblin": 1, "standard": 2, "demon": 0},
         ]
         
     def _load_stat_calibration(self) -> Dict[str, Dict[str, float]]:
@@ -77,16 +77,10 @@ class MarketedSlipBuilder:
         """
         df = df.copy()
 
-        # Calibrated probability (used for hit_prob output, not selection)
-        # Vectorized: build (stat, tier) -> mult lookup then zip-map
-        default_mults = {"GOBLIN": 0.95, "STANDARD": 0.85, "DEMON": 0.75}
-        mult_map: Dict[Tuple[str, str], float] = {}
-        for _stat, _tiers in self.stat_calibration.items():
-            for _tier, _m in _tiers.items():
-                mult_map[(_stat, _tier)] = _m
-        keys = list(zip(df["stat"].values, df["tier"].values))
-        mults = [mult_map.get(k, default_mults.get(k[1], 1.0)) for k in keys]
-        df["p_cal_marketed"] = df["p_cal"] * mults
+        # Marketed probability now trusts the calibrated model probability directly.
+        # v5cD CatBoost is well-calibrated across the full board, so we no longer
+        # apply stat-specific haircut adjustments before selection.
+        df["p_cal_marketed"] = pd.to_numeric(df["p_cal"], errors="coerce").fillna(0.5)
 
         # Tier-specific selection score (fully vectorized with np.where)
         p_cal   = pd.to_numeric(df["p_cal"],   errors="coerce").fillna(0.5)
@@ -100,7 +94,14 @@ class MarketedSlipBuilder:
         zdnp_mult = pd.to_numeric(df.get("zero_dnp_mult", pd.Series(1.0, index=df.index)), errors="coerce").fillna(1.0)
         zdnp_thresh = 1.40
         dir_te_eff = np.where(zdnp_mult.values >= zdnp_thresh, 0.0, dir_te.values)
-        standard_score = dir_te_eff
+
+        # Playoff regime fix: player_dir_te for STANDARD legs is trained on regular-season
+        # data. In playoffs, TE is near-zero for OVERs (mean ~-0.002) and inflated for
+        # UNDERs due to stale history — neither is a reliable ranking signal.
+        # Score ALL STANDARD legs on p_cal_marketed (actual model probability) so OVER and
+        # UNDER compete on equal footing. GOBLIN/DEMON keep their tier-specific signals.
+        p_cal_marketed = pd.to_numeric(df.get("p_cal_marketed", p_cal), errors="coerce").fillna(p_cal)
+        standard_score = p_cal_marketed.values
         demon_score    = goblin_score
 
         tier_arr = df["tier"].values
@@ -149,7 +150,24 @@ class MarketedSlipBuilder:
             tier_rows = df["tier"] == _tier
             dir_mask = dir_mask & (~tier_rows | df["direction"].isin(_allowed))
 
-        pool = df[stat_mask & thresh_mask & raw_thresh_mask & dir_mask].copy()
+        # --- UNDER probability window: exclude UNDER legs outside calibrated range ---
+        # Playoff regime analysis: 0.60-0.70 is the only UNDER band where actual > model.
+        # Below 0.60: actual hit rate ~38-39% (underperforming). Above 0.70: overconfident.
+        # Config keys: marketed_slips.min_under_prob, marketed_slips.max_under_prob
+        min_under_prob = float(self.config.get("min_under_prob", 0.0) or 0.0)
+        max_under_prob = float(self.config.get("max_under_prob", 0.0) or 0.0)
+        if (min_under_prob > 0.0 or max_under_prob > 0.0) and "direction" in df.columns and "p_cal" in df.columns:
+            under_mask = df["direction"].astype(str).str.strip().str.upper() == "UNDER"
+            under_drop = pd.Series(False, index=df.index)
+            if min_under_prob > 0.0:
+                under_drop = under_drop | (under_mask & (pd.to_numeric(df["p_cal"], errors="coerce") < min_under_prob))
+            if max_under_prob > 0.0:
+                under_drop = under_drop | (under_mask & (pd.to_numeric(df["p_cal"], errors="coerce") > max_under_prob))
+            under_prob_mask = ~under_drop
+        else:
+            under_prob_mask = pd.Series(True, index=df.index)
+
+        pool = df[stat_mask & thresh_mask & raw_thresh_mask & dir_mask & under_prob_mask].copy()
 
         if pool.empty:
             return pd.DataFrame()
@@ -217,6 +235,14 @@ class MarketedSlipBuilder:
         # When single_game_slate, track players per team (cap at 4) instead of 1 per team
         slip_team_counts: Dict[str, int] = {}
 
+        # Template n_legs for per-leg-count cap lookup on single-game slates
+        template_n_legs = int(template.get("goblin", 0)) + int(template.get("standard", 0)) + int(template.get("demon", 0))
+        # Single-game caps by leg count (2026-05-10): 3-leg=2, 4-leg=3, 5-leg=3
+        # Tight diversification on small 3-leg slips; modest relaxation on 4/5-leg
+        # since the slate only has 2-4 teams to draw from.
+        sg_caps_cfg = self.config.get("single_game_caps_by_legs", {}) or {}
+        sg_cap_for_n = sg_caps_cfg.get(template_n_legs) or sg_caps_cfg.get(str(template_n_legs))
+
         # Track what we're adding to used sets (for rollback on failure)
         new_players = set()
         new_teams = set()
@@ -240,8 +266,14 @@ class MarketedSlipBuilder:
                     if player in used_players or player in new_players:
                         continue
 
-                    # Team constraint: max 2 per team on multi-game slates, 4 per team on single-game slates
-                    max_per_team = 4 if single_game_slate else 2
+                    # Team constraint:
+                    #   - Multi-game slate: default 2 per team (or config override)
+                    #   - Single-game slate: per-leg-count cap from single_game_caps_by_legs
+                    #     (typical: 3-leg=2, 4-leg=3, 5-leg=3). Falls back to legacy default of 4.
+                    if single_game_slate and sg_cap_for_n is not None:
+                        max_per_team = int(sg_cap_for_n)
+                    else:
+                        max_per_team = int(self.config.get("max_players_per_team", 4 if single_game_slate else 2))
                     if slip_team_counts.get(team, 0) >= max_per_team:
                         continue
 
@@ -352,16 +384,26 @@ class MarketedSlipBuilder:
         return slips
 
 
-def build_marketed_slips(df: pd.DataFrame, config: Dict[str, Any]) -> List[Dict[str, Any]]:
+def build_marketed_slips(
+    df: pd.DataFrame, config: Dict[str, Any]
+) -> Tuple[List[Dict[str, Any]], "pd.Series"]:
     """
     Convenience function to build marketed slips.
-    
+
     Args:
         df: Scored legs DataFrame from Atlas engine
         config: Full Atlas configuration dictionary
-        
+
     Returns:
-        List of slip dictionaries
+        Tuple of (slips, p_cal_marketed_series) where p_cal_marketed_series is a
+        float Series indexed by df.index — NaN for legs not processed by the
+        marketed builder (non-marketed legs are never passed through calibration).
     """
     builder = MarketedSlipBuilder(config)
-    return builder.build_slips(df)
+    # Run calibration on a copy to extract p_cal_marketed keyed to df.index.
+    # build_slips() repeats this step internally (pure/deterministic), so the
+    # double call is harmless.
+    cal_df = builder._apply_stat_calibration(df)
+    p_cal_marketed = cal_df["p_cal_marketed"].reindex(df.index)
+    slips = builder.build_slips(df)
+    return slips, p_cal_marketed

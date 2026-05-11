@@ -1,0 +1,247 @@
+{
+  "cache": "C:\\Users\\13142\\Atlas\\Atlas\\data\\model\\_v1_playoff_resim_cache.pkl",
+  "n_legs": 13186,
+  "n_dates": 9,
+  "n_use_role": 3897,
+  "raw_brier_baseline": 0.23216600893122616,
+  "raw_brier_padj": 0.22665863251209267,
+  "hyperparams": {
+    "iterations": 500,
+    "depth": 5,
+    "learning_rate": 0.05,
+    "l2_leaf_reg": 6.0,
+    "min_data_in_leaf": 50,
+    "residual_clip": 0.2,
+    "residual_scale": 0.5
+  },
+  "results": {
+    "BASELINE": {
+      "label": "BASE",
+      "n_features": 24,
+      "agg_brier_pforcal": 0.23216600893122616,
+      "agg_brier_after_cal": 0.22739479021462677,
+      "agg_delta_mB": -4.7712187165993845,
+      "worst_slate_mB": 10.721211992963442,
+      "n_slates_regressing": 4,
+      "per_slate_pass": false,
+      "verdict": "REJECT",
+      "folds": [
+        {
+          "date": "2026-04-30",
+          "n": 1942,
+          "brier_pforcal": 0.322414061426805,
+          "brier_after_cal": 0.28883809404602573,
+          "delta_mB": -33.57596738077928
+        },
+        {
+          "date": "2026-05-01",
+          "n": 1938,
+          "brier_pforcal": 0.2124147019371767,
+          "brier_after_cal": 0.21695456819672276,
+          "delta_mB": 4.539866259546055
+        },
+        {
+          "date": "2026-05-02",
+          "n": 628,
+          "brier_pforcal": 0.2787830454004254,
+          "brier_after_cal": 0.28950425739338886,
+          "delta_mB": 10.721211992963442
+        },
+        {
+          "date": "2026-05-03",
+          "n": 1323,
+          "brier_pforcal": 0.22702956822782874,
+          "brier_after_cal": 0.22772067973347035,
+          "delta_mB": 0.6911115056416062
+        },
+        {
+          "date": "2026-05-04",
+          "n": 1371,
+          "brier_pforcal": 0.21188567585869109,
+          "brier_after_cal": 0.22063796300783414,
+          "delta_mB": 8.752287149143056
+        },
+        {
+          "date": "2026-05-05",
+          "n": 1523,
+          "brier_pforcal": 0.20233740450323442,
+          "brier_after_cal": 0.19800704839050146,
+          "delta_mB": -4.33035611273297
+        },
+        {
+          "date": "2026-05-06",
+          "n": 1434,
+          "brier_pforcal": 0.20354053890267199,
+          "brier_after_cal": 0.20007085704139518,
+          "delta_mB": -3.4696818612768023
+        },
+        {
+          "date": "2026-05-07",
+          "n": 1562,
+          "brier_pforcal": 0.20882132606002715,
+          "brier_after_cal": 0.20469788657308619,
+          "delta_mB": -4.123439486940966
+        },
+        {
+          "date": "2026-05-08",
+          "n": 1465,
+          "brier_pforcal": 0.2262158021107671,
+          "brier_after_cal": 0.22065798582253443,
+          "delta_mB": -5.557816288232681
+        }
+      ]
+    },
+    "OPT_A": {
+      "label": "OPT_A",
+      "n_features": 24,
+      "agg_brier_pforcal": 0.22665863251209267,
+      "agg_brier_after_cal": 0.22349418243996444,
+      "agg_delta_mB": -3.164450072128233,
+      "worst_slate_mB": 11.355830015595425,
+      "n_slates_regressing": 4,
+      "per_slate_pass": false,
+      "verdict": "REJECT",
+      "folds": [
+        {
+          "date": "2026-04-30",
+          "n": 1942,
+          "brier_pforcal": 0.29764291564301654,
+          "brier_after_cal": 0.2699202150740167,
+          "delta_mB": -27.722700568999837
+        },
+        {
+          "date": "2026-05-01",
+          "n": 1938,
+          "brier_pforcal": 0.21154156551952835,
+          "brier_after_cal": 0.21724581247247746,
+          "delta_mB": 5.704246952949105
+        },
+        {
+          "date": "2026-05-02",
+          "n": 628,
+          "brier_pforcal": 0.26844688044341286,
+          "brier_after_cal": 0.2798027104590083,
+          "delta_mB": 11.355830015595425
+        },
+        {
+          "date": "2026-05-03",
+          "n": 1323,
+          "brier_pforcal": 0.22522789168529816,
+          "brier_after_cal": 0.2271571920862429,
+          "delta_mB": 1.9293004009447445
+        },
+        {
+          "date": "2026-05-04",
+          "n": 1371,
+          "brier_pforcal": 0.21291025536947653,
+          "brier_after_cal": 0.22213558921082996,
+          "delta_mB": 9.225333841353434
+        },
+        {
+          "date": "2026-05-05",
+          "n": 1523,
+          "brier_pforcal": 0.19957331891847138,
+          "brier_after_cal": 0.19501782743803267,
+          "delta_mB": -4.555491480438711
+        },
+        {
+          "date": "2026-05-06",
+          "n": 1434,
+          "brier_pforcal": 0.1965793088493834,
+          "brier_after_cal": 0.19522727048492555,
+          "delta_mB": -1.3520383644578526
+        },
+        {
+          "date": "2026-05-07",
+          "n": 1562,
+          "brier_pforcal": 0.21026077394257942,
+          "brier_after_cal": 0.20594424427162433,
+          "delta_mB": -4.316529670955083
+        },
+        {
+          "date": "2026-05-08",
+          "n": 1465,
+          "brier_pforcal": 0.22388894738433351,
+          "brier_after_cal": 0.2200279322087241,
+          "delta_mB": -3.8610151756094115
+        }
+      ]
+    },
+    "OPT_C": {
+      "label": "OPT_C",
+      "n_features": 25,
+      "agg_brier_pforcal": 0.22665863251209267,
+      "agg_brier_after_cal": 0.22415493335645958,
+      "agg_delta_mB": -2.503699155633088,
+      "worst_slate_mB": 7.943604017397298,
+      "n_slates_regressing": 4,
+      "per_slate_pass": false,
+      "verdict": "REJECT",
+      "folds": [
+        {
+          "date": "2026-04-30",
+          "n": 1942,
+          "brier_pforcal": 0.29764291564301654,
+          "brier_after_cal": 0.2752806941607572,
+          "delta_mB": -22.362221482259358
+        },
+        {
+          "date": "2026-05-01",
+          "n": 1938,
+          "brier_pforcal": 0.21154156551952835,
+          "brier_after_cal": 0.2167408440185174,
+          "delta_mB": 5.199278498989046
+        },
+        {
+          "date": "2026-05-02",
+          "n": 628,
+          "brier_pforcal": 0.26844688044341286,
+          "brier_after_cal": 0.27639048446081016,
+          "delta_mB": 7.943604017397298
+        },
+        {
+          "date": "2026-05-03",
+          "n": 1323,
+          "brier_pforcal": 0.22522789168529816,
+          "brier_after_cal": 0.22784433081991884,
+          "delta_mB": 2.616439134620674
+        },
+        {
+          "date": "2026-05-04",
+          "n": 1371,
+          "brier_pforcal": 0.21291025536947653,
+          "brier_after_cal": 0.22047915992979614,
+          "delta_mB": 7.568904560319611
+        },
+        {
+          "date": "2026-05-05",
+          "n": 1523,
+          "brier_pforcal": 0.19957331891847138,
+          "brier_after_cal": 0.19263680437063815,
+          "delta_mB": -6.936514547833228
+        },
+        {
+          "date": "2026-05-06",
+          "n": 1434,
+          "brier_pforcal": 0.1965793088493834,
+          "brier_after_cal": 0.1958155850605232,
+          "delta_mB": -0.7637237888601933
+        },
+        {
+          "date": "2026-05-07",
+          "n": 1562,
+          "brier_pforcal": 0.21026077394257942,
+          "brier_after_cal": 0.206654553767518,
+          "delta_mB": -3.606220175061403
+        },
+        {
+          "date": "2026-05-08",
+          "n": 1465,
+          "brier_pforcal": 0.22388894738433351,
+          "brier_after_cal": 0.22307172032230135,
+          "delta_mB": -0.8172270620321609
+        }
+      ]
+    }
+  }
+}

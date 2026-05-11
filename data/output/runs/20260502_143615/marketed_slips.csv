@@ -1,0 +1,13 @@
+slip,high_confidence,hit_prob,payout_mult,ev,player,team,opp,stat,direction,tier,line,p_cal
+3-leg,True,0.2535,1.931,0.4894,Quentin Grimes,PHI,BOS,PTS,OVER,GOBLIN,3.5,0.8333
+3-leg,True,0.2535,1.931,0.4894,Tyrese Maxey,PHI,BOS,REB,UNDER,STANDARD,3.5,0.7077
+3-leg,True,0.2535,1.931,0.4894,Andre Drummond,PHI,BOS,PRA,UNDER,STANDARD,6.0,0.6326
+4-leg,True,0.2025,1.897,0.3842,Quentin Grimes,PHI,BOS,PTS,OVER,GOBLIN,3.5,0.8333
+4-leg,True,0.2025,1.897,0.3842,VJ Edgecombe,PHI,BOS,PA,OVER,GOBLIN,11.5,0.8249
+4-leg,True,0.2025,1.897,0.3842,Tyrese Maxey,PHI,BOS,REB,UNDER,STANDARD,3.5,0.7077
+4-leg,True,0.2025,1.897,0.3842,Andre Drummond,PHI,BOS,PRA,UNDER,STANDARD,6.0,0.6326
+5-leg,False,0.0857,2.145,0.1839,Quentin Grimes,PHI,BOS,PTS,OVER,GOBLIN,3.5,0.8333
+5-leg,False,0.0857,2.145,0.1839,VJ Edgecombe,PHI,BOS,PA,OVER,GOBLIN,11.5,0.8249
+5-leg,False,0.0857,2.145,0.1839,Tyrese Maxey,PHI,BOS,REB,UNDER,STANDARD,3.5,0.7077
+5-leg,False,0.0857,2.145,0.1839,Andre Drummond,PHI,BOS,PRA,UNDER,STANDARD,6.0,0.6326
+5-leg,False,0.0857,2.145,0.1839,Neemias Queta,BOS,PHI,PA,OVER,DEMON,9.5,0.4812

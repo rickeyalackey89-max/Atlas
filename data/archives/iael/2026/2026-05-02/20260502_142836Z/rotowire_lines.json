@@ -1,0 +1,1 @@
+{"sport": "NBA", "source": "rotowire.com/betting/nba/tables/nba-games-by-market.php", "date": "2026-05-02", "events": [{"gameID": "2976809", "eventTime": 1777764600, "game_date": "2026-05-02", "homeTeam": "BOS", "awayTeam": "PHI", "spread": {"home": -8.5, "away": 8.5}, "ml": {"home": -285, "away": 230}, "ou": 205.5, "source": "mgm"}], "fetched_at": "2026-05-02T14:28:36Z"}

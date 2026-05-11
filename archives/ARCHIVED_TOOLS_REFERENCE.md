@@ -1,6 +1,6 @@
 # Archived Tools Reference — 2026-04-16
 
-All archived files live on **D:\AtlasTestMarch26\archived_tools\**.
+Superseded scripts archived from the workspace. These files are no longer present in the repo.
 
 ## superseded_trainers/ (6 files)
 Old leg trainer and demonhunter trainer versions replaced by v5/v4.

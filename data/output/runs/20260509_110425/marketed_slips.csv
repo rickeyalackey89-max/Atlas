@@ -1,0 +1,13 @@
+slip,high_confidence,hit_prob,payout_mult,ev,player,team,opp,stat,direction,tier,line,p_cal
+3-leg,True,0.4295,1.931,0.8294,Jaylin Williams,OKC,LAL,REB,OVER,GOBLIN,1.5,0.8686
+3-leg,True,0.4295,1.931,0.8294,Austin Reaves,LAL,OKC,AST,UNDER,STANDARD,6.0,0.6925
+3-leg,True,0.4295,1.931,0.8294,Shai Gilgeous-Alexander,OKC,LAL,AST,UNDER,STANDARD,7.0,0.6622
+4-leg,True,0.3931,1.897,0.7459,Jarrett Allen,CLE,DET,PTS,OVER,GOBLIN,6.5,0.8746
+4-leg,True,0.3931,1.897,0.7459,Isaiah Joe,OKC,LAL,PTS,OVER,GOBLIN,0.5,0.9169
+4-leg,True,0.3931,1.897,0.7459,Cason Wallace,OKC,LAL,PA,UNDER,STANDARD,8.5,0.6939
+4-leg,True,0.3931,1.897,0.7459,Ausar Thompson,DET,CLE,PRA,UNDER,STANDARD,19.5,0.6953
+5-leg,True,0.2288,2.145,0.4906,Evan Mobley,CLE,DET,PTS,OVER,GOBLIN,9.5,0.8143
+5-leg,True,0.2288,2.145,0.4906,Jake LaRavia,LAL,OKC,PR,OVER,GOBLIN,4.5,0.8088
+5-leg,True,0.2288,2.145,0.4906,Jaxson Hayes,LAL,OKC,PA,OVER,STANDARD,5.5,0.7652
+5-leg,True,0.2288,2.145,0.4906,Cade Cunningham,DET,CLE,AST,UNDER,STANDARD,9.0,0.6809
+5-leg,True,0.2288,2.145,0.4906,Dean Wade,CLE,DET,PA,OVER,DEMON,6.5,0.7534

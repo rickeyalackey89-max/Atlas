@@ -11,7 +11,7 @@ REM This is the truth-backfill step that makes Brier scoring work.
 REM ================================================================
 
 set ATLAS_ROOT=C:\Users\13142\Atlas\Atlas
-set PY=C:\Users\13142\AppData\Local\Programs\Python\Python311\python.exe
+set PY=%ATLAS_ROOT%\.venv314\Scripts\python.exe
 set LOG=%ATLAS_ROOT%\data\telemetry\iael_runs.log
 set GAMELOGS=%ATLAS_ROOT%\data\gamelogs\nba_gamelogs.csv
 
@@ -35,12 +35,16 @@ echo [EVAL] Looking for live runs from %YESTERDAY% >> %LOG%
 set FOUND_RUNS=0
 for /d %%r in ("%ATLAS_ROOT%\data\telemetry\live_runs\%YESTERDAY%_*") do (
   if exist "%%r\scored_legs_deduped.csv" (
-    echo [EVAL] Writing eval_legs for %%r >> %LOG%
-    %PY% tools\create_eval_leg_backtestv2.py --run-dir "%%r" --gamelogs-path "%GAMELOGS%" >> %LOG% 2>&1
-    if errorlevel 1 (
-      echo [WARN] eval_legs failed for %%r >> %LOG%
+    if exist "%%r\eval_legs.csv" (
+      echo [EVAL] Skipping %%r (eval_legs.csv already exists) >> %LOG%
     ) else (
-      set /a FOUND_RUNS+=1
+      echo [EVAL] Writing eval_legs for %%r >> %LOG%
+      %PY% tools\create_eval_leg_backtestv2.py --run-dir "%%r" --gamelogs-path "%GAMELOGS%" >> %LOG% 2>&1
+      if errorlevel 1 (
+        echo [WARN] eval_legs failed for %%r >> %LOG%
+      ) else (
+        set /a FOUND_RUNS+=1
+      )
     )
   )
 )
@@ -48,12 +52,16 @@ for /d %%r in ("%ATLAS_ROOT%\data\telemetry\live_runs\%YESTERDAY%_*") do (
 REM (3) Also write eval legs for any runs still in data/output/runs/ from yesterday
 for /d %%r in ("%ATLAS_ROOT%\data\output\runs\%YESTERDAY%_*") do (
   if exist "%%r\scored_legs_deduped.csv" (
-    echo [EVAL] Writing eval_legs for output run %%r >> %LOG%
-    %PY% tools\create_eval_leg_backtestv2.py --run-dir "%%r" --gamelogs-path "%GAMELOGS%" >> %LOG% 2>&1
-    if errorlevel 1 (
-      echo [WARN] eval_legs failed for %%r >> %LOG%
+    if exist "%%r\eval_legs.csv" (
+      echo [EVAL] Skipping %%r (eval_legs.csv already exists) >> %LOG%
     ) else (
-      set /a FOUND_RUNS+=1
+      echo [EVAL] Writing eval_legs for output run %%r >> %LOG%
+      %PY% tools\create_eval_leg_backtestv2.py --run-dir "%%r" --gamelogs-path "%GAMELOGS%" >> %LOG% 2>&1
+      if errorlevel 1 (
+        echo [WARN] eval_legs failed for %%r >> %LOG%
+      ) else (
+        set /a FOUND_RUNS+=1
+      )
     )
   )
 )

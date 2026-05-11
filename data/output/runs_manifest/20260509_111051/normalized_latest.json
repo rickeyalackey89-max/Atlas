@@ -1,0 +1,69 @@
+{
+  "report_date": "2026-05-09",
+  "report_label": "12:00PM",
+  "source_url": "https://ak-static.cms.nba.com/referee/injury/Injury-Report_2026-05-09_12_00PM.pdf",
+  "pulled_at_local": "2026-05-09T11:11:20-05:00",
+  "pdf_sha1": "c3dbaf5748ad8d9e4855e3da5c78896796d37082",
+  "rows": [
+    {
+      "report_date": "2026-05-09",
+      "report_label": "12:00PM",
+      "team": "DET",
+      "player": "Huerter, Kevin",
+      "status": "DOUBTFUL",
+      "reason": "Injury/Illness - Left Adductor; Strain",
+      "game_date": "05/09/2026",
+      "hard_invalid": true,
+      "tag_probable": false,
+      "out_frac": 0.08
+    },
+    {
+      "report_date": "2026-05-09",
+      "report_label": "12:00PM",
+      "team": "CLE",
+      "player": "Merrill, Sam",
+      "status": "QUESTIONABLE",
+      "reason": "Injury/Illness - Left Hamstring; Strain Injury/Illness - Right ACL; Surgical",
+      "game_date": "05/09/2026",
+      "hard_invalid": false,
+      "tag_probable": false,
+      "out_frac": 0.0
+    },
+    {
+      "report_date": "2026-05-09",
+      "report_label": "12:00PM",
+      "team": "OKC",
+      "player": "Sorber, Thomas",
+      "status": "OUT",
+      "reason": "Recovery",
+      "game_date": "05/09/2026",
+      "hard_invalid": true,
+      "tag_probable": false,
+      "out_frac": 0.12
+    },
+    {
+      "report_date": "2026-05-09",
+      "report_label": "12:00PM",
+      "team": "OKC",
+      "player": "Williams, Jalen",
+      "status": "OUT",
+      "reason": "Injury/Illness - Left Hamstring; Strain Injury/Illness - Right Finger;",
+      "game_date": "05/09/2026",
+      "hard_invalid": true,
+      "tag_probable": false,
+      "out_frac": 0.12
+    },
+    {
+      "report_date": "2026-05-09",
+      "report_label": "12:00PM",
+      "team": "OKC",
+      "player": "Vanderbilt, Jarred",
+      "status": "QUESTIONABLE",
+      "reason": "Dislocation",
+      "game_date": "05/09/2026",
+      "hard_invalid": false,
+      "tag_probable": false,
+      "out_frac": 0.0
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+slip,high_confidence,hit_prob,payout_mult,ev,player,team,opp,stat,direction,tier,line,p_cal
+5-leg,True,0.2032,2.145,0.4358,Ajay Mitchell,OKC,LAL,AST,OVER,GOBLIN,2.5,0.8498
+5-leg,True,0.2032,2.145,0.4358,Alex Caruso,OKC,LAL,FG3M,OVER,GOBLIN,0.5,0.7865
+5-leg,True,0.2032,2.145,0.4358,Tobias Harris,DET,CLE,PTS,OVER,STANDARD,17.5,0.7692
+5-leg,True,0.2032,2.145,0.4358,Rui Hachimura,LAL,OKC,PA,OVER,STANDARD,13.5,0.7773
+5-leg,True,0.2032,2.145,0.4358,Deandre Ayton,LAL,OKC,RA,OVER,DEMON,9.5,0.6352
+4-leg,True,0.3575,1.897,0.6783,Anthony Edwards,MIN,SAS,REB,OVER,GOBLIN,2.5,0.7634
+4-leg,True,0.3575,1.897,0.6783,Ausar Thompson,DET,CLE,AST,OVER,GOBLIN,1.5,0.7904
+4-leg,True,0.3575,1.897,0.6783,Isaiah Joe,OKC,LAL,PTS,OVER,STANDARD,7.0,0.7846
+4-leg,True,0.3575,1.897,0.6783,Marcus Smart,LAL,OKC,RA,OVER,STANDARD,6.0,0.8299
+3-leg,True,0.5268,1.931,1.0172,Austin Reaves,LAL,OKC,AST,OVER,GOBLIN,3.5,0.7618
+3-leg,True,0.5268,1.931,1.0172,Jaylin Williams,OKC,LAL,PA,OVER,STANDARD,5.5,0.7568
+3-leg,True,0.5268,1.931,1.0172,Chet Holmgren,OKC,LAL,PA,OVER,STANDARD,17.5,0.7234

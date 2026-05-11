@@ -1,0 +1,9 @@
+slip,high_confidence,hit_prob,payout_mult,ev,player,team,opp,stat,direction,tier,line,p_cal
+5-leg,True,0.1533,2.145,0.3287,Jordan Clarkson,NYK,PHI,PTS,OVER,GOBLIN,4.5,0.746
+5-leg,True,0.1533,2.145,0.3287,Mike Conley,MIN,SAS,PRA,OVER,GOBLIN,7.5,0.715
+5-leg,True,0.1533,2.145,0.3287,Mitchell Robinson,NYK,PHI,PTS,OVER,STANDARD,4.5,0.6976
+5-leg,True,0.1533,2.145,0.3287,Terrence Shannon,MIN,SAS,PTS,OVER,STANDARD,10.0,0.6807
+5-leg,True,0.1533,2.145,0.3287,Julian Champagnie,SAS,MIN,PTS,OVER,DEMON,9.5,0.5974
+3-leg,True,0.5572,1.931,1.076,Naz Reid,MIN,SAS,REB,OVER,GOBLIN,3.5,0.99
+3-leg,True,0.5572,1.931,1.076,Luke Kornet,SAS,MIN,PTS,OVER,STANDARD,3.5,0.6636
+3-leg,True,0.5572,1.931,1.076,Quentin Grimes,PHI,NYK,REB,OVER,STANDARD,2.5,0.6991

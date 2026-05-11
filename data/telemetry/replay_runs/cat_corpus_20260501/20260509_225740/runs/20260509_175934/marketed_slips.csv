@@ -1,0 +1,13 @@
+slip,high_confidence,hit_prob,payout_mult,ev,player,team,opp,stat,direction,tier,line,p_cal
+5-leg,True,0.1339,2.145,0.2872,Amen Thompson,HOU,LAL,PA,OVER,GOBLIN,19.5,0.7196
+5-leg,True,0.1339,2.145,0.2872,Ausar Thompson,DET,ORL,PRA,OVER,GOBLIN,14.5,0.7481
+5-leg,True,0.1339,2.145,0.2872,Donovan Mitchell,CLE,TOR,REB,OVER,STANDARD,4.0,0.7456
+5-leg,True,0.1339,2.145,0.2872,Jaylon Tyson,CLE,TOR,PTS,OVER,STANDARD,5.5,0.6435
+5-leg,True,0.1339,2.145,0.2872,Dorian Finney-Smith,HOU,LAL,PTS,OVER,DEMON,3.5,0.573
+4-leg,True,0.2699,1.897,0.5122,Collin Murray-Boyles,TOR,CLE,PA,OVER,GOBLIN,9.5,0.7232
+4-leg,True,0.2699,1.897,0.5122,Dean Wade,CLE,TOR,PR,OVER,GOBLIN,4.5,0.8579
+4-leg,True,0.2699,1.897,0.5122,Austin Reaves,LAL,HOU,PTS,UNDER,STANDARD,23.5,0.6411
+4-leg,True,0.2699,1.897,0.5122,Anthony Black,ORL,DET,PTS,UNDER,STANDARD,13.5,0.6203
+3-leg,False,0.3987,1.931,0.7699,Dennis Schröder,CLE,TOR,PR,OVER,GOBLIN,4.5,0.7565
+3-leg,False,0.3987,1.931,0.7699,Cade Cunningham,DET,ORL,PA,UNDER,STANDARD,38.5,0.6213
+3-leg,False,0.3987,1.931,0.7699,Desmond Bane,ORL,DET,PA,UNDER,STANDARD,22.5,0.6182

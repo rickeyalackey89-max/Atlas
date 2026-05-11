@@ -1,0 +1,129 @@
+{
+  "report_date": "2026-05-08",
+  "report_label": "06:30PM",
+  "source_url": "https://ak-static.cms.nba.com/referee/injury/Injury-Report_2026-05-08_06_30PM.pdf",
+  "pulled_at_local": "2026-05-08T17:40:56-05:00",
+  "pdf_sha1": "57eaf8f69cf5c45312683920849e6bf888ed8a97",
+  "rows": [
+    {
+      "report_date": "2026-05-08",
+      "report_label": "06:30PM",
+      "team": "NYK",
+      "player": "Anunoby, OG",
+      "status": "OUT",
+      "reason": "Strain",
+      "game_date": "05/08/2026",
+      "hard_invalid": true,
+      "tag_probable": false,
+      "out_frac": 0.12
+    },
+    {
+      "report_date": "2026-05-08",
+      "report_label": "06:30PM",
+      "team": "NYK",
+      "player": "Hart, Josh",
+      "status": "AVAILABLE",
+      "reason": "Injury/Illness - Left Thumb; Sprain",
+      "game_date": "05/08/2026",
+      "hard_invalid": false,
+      "tag_probable": false,
+      "out_frac": 0.0
+    },
+    {
+      "report_date": "2026-05-08",
+      "report_label": "06:30PM",
+      "team": "NYK",
+      "player": "Robinson, Mitchell",
+      "status": "AVAILABLE",
+      "reason": "Injury/Illness - Illness; Illness Injury/Illness - Right Ankle; Sprain;",
+      "game_date": "05/08/2026",
+      "hard_invalid": false,
+      "tag_probable": false,
+      "out_frac": 0.0
+    },
+    {
+      "report_date": "2026-05-08",
+      "report_label": "06:30PM",
+      "team": "PHI",
+      "player": "Embiid, Joel",
+      "status": "AVAILABLE",
+      "reason": "Right Hip Soreness Injury/Illness - Right Finger; Tendon",
+      "game_date": "05/08/2026",
+      "hard_invalid": false,
+      "tag_probable": false,
+      "out_frac": 0.0
+    },
+    {
+      "report_date": "2026-05-08",
+      "report_label": "06:30PM",
+      "team": "PHI",
+      "player": "Maxey, Tyrese",
+      "status": "AVAILABLE",
+      "reason": "Strain - Splint Injury/Illness - Right Achilles Tendon;",
+      "game_date": "05/08/2026",
+      "hard_invalid": false,
+      "tag_probable": false,
+      "out_frac": 0.0
+    },
+    {
+      "report_date": "2026-05-08",
+      "report_label": "06:30PM",
+      "team": "MIN",
+      "player": "DiVincenzo, Donte",
+      "status": "OUT",
+      "reason": "Repair",
+      "game_date": "05/08/2026",
+      "hard_invalid": true,
+      "tag_probable": false,
+      "out_frac": 0.12
+    },
+    {
+      "report_date": "2026-05-08",
+      "report_label": "06:30PM",
+      "team": "MIN",
+      "player": "Dosunmu, Ayo",
+      "status": "QUESTIONABLE",
+      "reason": "Injury/Illness - Right Heel; Soreness",
+      "game_date": "05/08/2026",
+      "hard_invalid": false,
+      "tag_probable": false,
+      "out_frac": 0.0
+    },
+    {
+      "report_date": "2026-05-08",
+      "report_label": "06:30PM",
+      "team": "MIN",
+      "player": "Edwards, Anthony",
+      "status": "QUESTIONABLE",
+      "reason": "Injury/Illness - Left Knee; Bone Bruise",
+      "game_date": "05/08/2026",
+      "hard_invalid": false,
+      "tag_probable": false,
+      "out_frac": 0.0
+    },
+    {
+      "report_date": "2026-05-08",
+      "report_label": "06:30PM",
+      "team": "DET",
+      "player": "Huerter, Kevin",
+      "status": "DOUBTFUL",
+      "reason": "Injury/Illness - Left Adductor; Strain",
+      "game_date": "05/09/2026",
+      "hard_invalid": true,
+      "tag_probable": false,
+      "out_frac": 0.08
+    },
+    {
+      "report_date": "2026-05-08",
+      "report_label": "06:30PM",
+      "team": "CLE",
+      "player": "Merrill, Sam",
+      "status": "QUESTIONABLE",
+      "reason": "Injury/Illness - Left Hamstring; Strain",
+      "game_date": "05/09/2026",
+      "hard_invalid": false,
+      "tag_probable": false,
+      "out_frac": 0.0
+    }
+  ]
+}

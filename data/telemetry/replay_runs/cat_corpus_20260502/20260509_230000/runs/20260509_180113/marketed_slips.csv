@@ -1,0 +1,8 @@
+slip,high_confidence,hit_prob,payout_mult,ev,player,team,opp,stat,direction,tier,line,p_cal
+4-leg,True,0.2761,1.897,0.5239,Baylor Scheierman,BOS,PHI,PTS,OVER,GOBLIN,1.5,0.8708
+4-leg,True,0.2761,1.897,0.5239,Jayson Tatum,BOS,PHI,FG3M,OVER,GOBLIN,1.5,0.8051
+4-leg,True,0.2761,1.897,0.5239,Andre Drummond,PHI,BOS,PRA,OVER,STANDARD,5.5,0.7347
+4-leg,True,0.2761,1.897,0.5239,Tyrese Maxey,PHI,BOS,PA,UNDER,STANDARD,30.5,0.6042
+3-leg,False,0.379,1.931,0.7319,Joel Embiid,PHI,BOS,FG3M,OVER,GOBLIN,0.5,0.7449
+3-leg,False,0.379,1.931,0.7319,Sam Hauser,BOS,PHI,RA,OVER,STANDARD,4.0,0.685
+3-leg,False,0.379,1.931,0.7319,Jaylen Brown,BOS,PHI,PA,UNDER,STANDARD,30.5,0.6212

@@ -1,0 +1,13 @@
+slip,high_confidence,hit_prob,payout_mult,ev,player,team,opp,stat,direction,tier,line,p_cal
+5-leg,True,0.1574,2.145,0.3376,Ajay Mitchell,OKC,LAL,FG3M,OVER,GOBLIN,0.5,0.7975
+5-leg,True,0.1574,2.145,0.3376,Anthony Black,ORL,DET,REB,OVER,GOBLIN,2.5,0.7125
+5-leg,True,0.1574,2.145,0.3376,Rui Hachimura,LAL,OKC,PTS,OVER,STANDARD,11.5,0.7972
+5-leg,True,0.1574,2.145,0.3376,Tobias Harris,DET,ORL,PTS,OVER,STANDARD,17.5,0.7337
+5-leg,True,0.1574,2.145,0.3376,Cason Wallace,OKC,LAL,FG3M,OVER,DEMON,1.5,0.5856
+4-leg,True,0.2675,1.897,0.5075,Ausar Thompson,DET,ORL,PRA,OVER,GOBLIN,16.5,0.7259
+4-leg,True,0.2675,1.897,0.5075,Austin Reaves,LAL,OKC,REB,OVER,GOBLIN,2.5,0.7789
+4-leg,True,0.2675,1.897,0.5075,Marcus Smart,LAL,OKC,REB,OVER,STANDARD,2.5,0.8153
+4-leg,True,0.2675,1.897,0.5075,Duncan Robinson,DET,ORL,PA,OVER,STANDARD,12.5,0.7146
+3-leg,True,0.4992,1.931,0.964,Baylor Scheierman,BOS,PHI,REB,OVER,GOBLIN,1.5,0.7764
+3-leg,True,0.4992,1.931,0.964,Naz Reid,MIN,SAS,REB,OVER,STANDARD,5.5,0.7735
+3-leg,True,0.4992,1.931,0.964,Isaiah Hartenstein,OKC,LAL,PTS,OVER,STANDARD,7.5,0.6852

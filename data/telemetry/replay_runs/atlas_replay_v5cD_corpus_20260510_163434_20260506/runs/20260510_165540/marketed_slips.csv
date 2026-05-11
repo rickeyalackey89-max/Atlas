@@ -1,0 +1,13 @@
+slip,high_confidence,hit_prob,payout_mult,ev,player,team,opp,stat,direction,tier,line,p_cal
+5-leg,True,0.1402,2.145,0.3007,Ajay Mitchell,OKC,LAL,FG3M,OVER,GOBLIN,0.5,0.7638
+5-leg,True,0.1402,2.145,0.3007,Alex Caruso,OKC,LAL,FG3M,OVER,GOBLIN,0.5,0.7261
+5-leg,True,0.1402,2.145,0.3007,Quentin Grimes,PHI,NYK,RA,OVER,STANDARD,4.5,0.8107
+5-leg,True,0.1402,2.145,0.3007,Jose Alvarado,NYK,PHI,FG3M,OVER,STANDARD,0.5,0.8463
+5-leg,True,0.1402,2.145,0.3007,Anthony Edwards,MIN,SAS,REB,OVER,DEMON,4.5,0.5688
+4-leg,True,0.2947,1.897,0.5591,Andre Drummond,PHI,NYK,REB,OVER,GOBLIN,4.5,0.7511
+4-leg,True,0.2947,1.897,0.5591,Ausar Thompson,DET,CLE,AST,OVER,GOBLIN,2.5,0.7007
+4-leg,True,0.2947,1.897,0.5591,Isaiah Joe,OKC,LAL,PTS,OVER,STANDARD,6.5,0.7707
+4-leg,True,0.2947,1.897,0.5591,Naz Reid,MIN,SAS,REB,OVER,STANDARD,6.0,0.8172
+3-leg,True,0.4663,1.931,0.9004,Austin Reaves,LAL,OKC,AST,OVER,GOBLIN,3.5,0.694
+3-leg,True,0.4663,1.931,0.9004,Jaylin Williams,OKC,LAL,PTS,OVER,STANDARD,3.5,0.7217
+3-leg,True,0.4663,1.931,0.9004,Rui Hachimura,LAL,OKC,PA,OVER,STANDARD,13.5,0.7291

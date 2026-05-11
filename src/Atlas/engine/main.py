@@ -895,6 +895,21 @@ def main() -> None:
 
     scored = _run_score_board_new(board=board, logs=logs, cfg=cfg, iael_df=iael_df)
 
+    # POST-SCORE GUARD: GOBLIN/DEMON are structurally OVER-only.
+    # Defense-in-depth — board ingest already raises on UNDER+GOBLIN/DEMON, but if any
+    # downstream code synthesises tier/direction (alt-line generation, dedupe, etc.) we
+    # catch it here before any calibration / slip-building / publishing touches it.
+    if {"tier", "direction"}.issubset(scored.columns):
+        _t = scored["tier"].astype(str).str.upper().str.strip()
+        _d = scored["direction"].astype(str).str.upper().str.strip()
+        _bad = scored[(_d == "UNDER") & (_t.isin(["GOBLIN", "DEMON"]))]
+        if not _bad.empty:
+            _sample = _bad.head(10)[["player", "stat", "line", "tier", "direction"]]
+            raise ValueError(
+                "scored frame contains invalid rows: UNDER present for DEMON/GOBLIN.\n"
+                + _sample.to_string(index=False)
+            )
+
     # CALIBRATION CONTRACT COLUMNS (schema enforcement)
         # p_for_cal: chosen upstream probability for calibration
     # p_cal_src: source of p_for_cal ("p_adj" vs "p_role")
@@ -906,11 +921,177 @@ def main() -> None:
     p_adj = _to_series(scored.get("p_adj", scored.get("p", 0.5)), errors="coerce").fillna(0.5).clip(0, 1)
     p_role = _to_series(scored.get("p_role", p_adj), errors="coerce").fillna(p_adj).clip(0, 1)
 
+    # BLOWOUT TAIL BYPASS (2026-05-10)
+    # Validated by tools/k4_blowout_bypass_loso.py.
+    # At q_blowout < q_lo OR q_blowout >= q_hi, revert p_adj to p_role
+    # (skip blowout adjustment because it over-corrects at the tails).
+    # keep band [0.15, 0.50): LOSO -0.36 mB, 0/9 regress.
+    _bypass_cfg = (cfg.get("kernel_blowout_bypass", {}) or {})
+    if bool(_bypass_cfg.get("enabled", False)):
+        _q_lo = float(_bypass_cfg.get("q_lo", 0.15))
+        _q_hi = float(_bypass_cfg.get("q_hi", 0.50))
+        _q = pd.to_numeric(scored.get("q_blowout", pd.Series(0.0, index=scored.index)),
+                           errors="coerce").fillna(0.0).to_numpy()
+        _bypass = (_q < _q_lo) | (_q >= _q_hi)
+        if _bypass.any():
+            scored["p_adj_pre_blowout_bypass"] = p_adj.values
+            _p_arr = p_adj.to_numpy().copy()
+            _p_arr[_bypass] = p_role.to_numpy()[_bypass]
+            p_adj = pd.Series(_p_arr, index=p_adj.index).clip(0, 1)
+            scored["p_adj"] = p_adj.values
+            scored["blowout_bypass_applied"] = _bypass.astype(int)
+
+    # HIGH-PROBABILITY SHRINKAGE (2026-05-10)
+    # Per-slate audit found monotone-increasing calibration gap above p_adj=0.70.
+    # LOSO-validated (data/model/high_prob_shrink_loso.json):
+    #   p_thr=0.75, k=0.0501 — agg -0.22 mB, 0/9 slates regress.
+    # Applied at the kernel handoff so all downstream stages (calibrator, slip
+    # builder, telemetry) see shrunk p_adj. Raw value preserved as p_adj_pre_shrink.
+    _shrink_cfg = (cfg.get("kernel_high_prob_shrink", {}) or {})
+    if bool(_shrink_cfg.get("enabled", False)):
+        _p_thr = float(_shrink_cfg.get("p_thr", 0.75))
+        _k = float(_shrink_cfg.get("k", 1.0))
+        scored["p_adj_pre_shrink"] = p_adj.values
+        _p_arr = p_adj.to_numpy().copy()
+        _mask = _p_arr > _p_thr
+        if _mask.any() and _k != 1.0:
+            _eps = 1e-6
+            _p_clip = np.clip(_p_arr[_mask], _eps, 1 - _eps)
+            _z_thr = float(np.log(_p_thr / (1 - _p_thr)))
+            _z = np.log(_p_clip / (1 - _p_clip))
+            _z_new = _z_thr + _k * (_z - _z_thr)
+            _p_arr[_mask] = 1.0 / (1.0 + np.exp(-_z_new))
+            p_adj = pd.Series(_p_arr, index=p_adj.index).clip(0, 1)
+            scored["p_adj"] = p_adj.values
+            scored["high_prob_shrink_applied"] = _mask.astype(int)
+        else:
+            scored["high_prob_shrink_applied"] = 0
+
+    # SUBSET LOGIT SHIFTS (2026-05-10)
+    # Validated by tools/loso_subset_shift.py — only LOSO-passing shifts wired in.
+    # Currently active: UNDER subset (delta=-0.1651, LOSO -0.08 mB, 0/9 regress).
+    _shifts_cfg = cfg.get("kernel_subset_shifts", []) or []
+    if _shifts_cfg:
+        _delta_arr = np.zeros(len(scored), dtype=float)
+        _applied_names: list[str] = []
+        for _entry in _shifts_cfg:
+            if not bool(_entry.get("enabled", True)):
+                continue
+            _name = str(_entry.get("name", "unnamed"))
+            _delta = float(_entry.get("delta", 0.0))
+            if _delta == 0.0:
+                continue
+            _flt = _entry.get("filter", {}) or {}
+            _m = pd.Series(True, index=scored.index)
+            for _col, _want in _flt.items():
+                if _col not in scored.columns:
+                    _m = pd.Series(False, index=scored.index)
+                    break
+                _vals = scored[_col].astype(str).str.upper().str.strip()
+                if isinstance(_want, list):
+                    _m &= _vals.isin([str(w).upper().strip() for w in _want])
+                else:
+                    _m &= (_vals == str(_want).upper().strip())
+            _m_arr = _m.to_numpy()
+            if _m_arr.any():
+                _delta_arr[_m_arr] += _delta
+                _applied_names.append(f"{_name}({int(_m_arr.sum())})")
+        if np.any(_delta_arr != 0.0):
+            scored["p_adj_pre_subset_shift"] = p_adj.values
+            _eps = 1e-6
+            _p_clip = np.clip(p_adj.to_numpy(), _eps, 1 - _eps)
+            _z = np.log(_p_clip / (1 - _p_clip))
+            _z_new = _z + _delta_arr
+            _p_new = 1.0 / (1.0 + np.exp(-_z_new))
+            p_adj = pd.Series(_p_new, index=p_adj.index).clip(0, 1)
+            scored["p_adj"] = p_adj.values
+            scored["subset_shift_applied"] = ",".join(_applied_names) if _applied_names else ""
+
+    # PROBABILITY FLOORS (2026-05-10)
+    # Validated by tools/k1_goblin_floor_fixed_loso.py.
+    # Currently active: GOBLIN OVER floor=0.40 (LOSO -8.52 mB, 0/9 regress).
+    _floors_cfg = cfg.get("kernel_prob_floors", []) or []
+    if _floors_cfg:
+        _floor_applied: list[str] = []
+        for _entry in _floors_cfg:
+            if not bool(_entry.get("enabled", True)):
+                continue
+            _name = str(_entry.get("name", "unnamed"))
+            _floor = float(_entry.get("floor", 0.0))
+            if _floor <= 0.0:
+                continue
+            _flt = _entry.get("filter", {}) or {}
+            _m = pd.Series(True, index=scored.index)
+            for _col, _want in _flt.items():
+                if _col not in scored.columns:
+                    _m = pd.Series(False, index=scored.index)
+                    break
+                _vals = scored[_col].astype(str).str.upper().str.strip()
+                if isinstance(_want, list):
+                    _m &= _vals.isin([str(w).upper().strip() for w in _want])
+                else:
+                    _m &= (_vals == str(_want).upper().strip())
+            _m_arr = _m.to_numpy()
+            if _m_arr.any():
+                _p_arr = p_adj.to_numpy()
+                _below = _m_arr & (_p_arr < _floor)
+                if _below.any():
+                    _p_arr = _p_arr.copy()
+                    _p_arr[_below] = _floor
+                    p_adj = pd.Series(_p_arr, index=p_adj.index).clip(0, 1)
+                    scored["p_adj"] = p_adj.values
+                    _floor_applied.append(f"{_name}({int(_below.sum())})")
+        if _floor_applied:
+            scored["prob_floor_applied"] = ",".join(_floor_applied)
+
+    # SUBSET LOGIT SHRINKS TOWARD 0.5 (2026-05-10) — variance inflation.
+    # Validated by tools/k2_combo_shrink_loso.py.
+    # Currently active: combo stats (RA/PA/PRA/PR) k=0.90 (LOSO -0.59 mB, 0/9 regress).
+    _shrinks_cfg = cfg.get("kernel_logit_shrinks", []) or []
+    if _shrinks_cfg:
+        _shrink_applied: list[str] = []
+        for _entry in _shrinks_cfg:
+            if not bool(_entry.get("enabled", True)):
+                continue
+            _name = str(_entry.get("name", "unnamed"))
+            _k = float(_entry.get("k", 1.0))
+            if _k == 1.0:
+                continue
+            _flt = _entry.get("filter", {}) or {}
+            _m = pd.Series(True, index=scored.index)
+            for _col, _want in _flt.items():
+                if _col not in scored.columns:
+                    _m = pd.Series(False, index=scored.index)
+                    break
+                _vals = scored[_col].astype(str).str.upper().str.strip()
+                if isinstance(_want, list):
+                    _m &= _vals.isin([str(w).upper().strip() for w in _want])
+                else:
+                    _m &= (_vals == str(_want).upper().strip())
+            _m_arr = _m.to_numpy()
+            if _m_arr.any():
+                _p_arr = p_adj.to_numpy().copy()
+                _eps = 1e-6
+                _p_clip = np.clip(_p_arr[_m_arr], _eps, 1 - _eps)
+                _z = np.log(_p_clip / (1 - _p_clip))
+                _p_arr[_m_arr] = 1.0 / (1.0 + np.exp(-_k * _z))
+                p_adj = pd.Series(_p_arr, index=p_adj.index).clip(0, 1)
+                scored["p_adj"] = p_adj.values
+                _shrink_applied.append(f"{_name}({int(_m_arr.sum())})")
+        if _shrink_applied:
+            scored["logit_shrink_applied"] = ",".join(_shrink_applied)
+    # use_role retained for downstream post-cal blend logic that segments by role context.
     use_role = scored["role_ctx_outs_used"] > 0
+
+    # FORK FIX (2026-05-10): p_for_cal := p_adj universally.
+    # The previous fork (np.where(role_ctx_outs_used > 0, p_role, p_adj)) regressed
+    # Brier by +2.37 mB on the playoff resim cache and +8.03 mB on the use_role
+    # subset. p_role is strictly worse than p_adj on legs where the fork fired.
+    # See data/model/engine_fork_diagnostic.json.
     under_relief_applied = _to_series(scored.get("under_relief_applied", False), errors="coerce").fillna(0).astype(bool)
     p_adj_source = np.where(under_relief_applied, "p_adj_under_relief", "p_adj")
-    scored["p_for_cal"] = np.where(use_role, p_role, p_adj)
-    scored["p_cal_src"] = np.where(use_role, "p_role", p_adj_source)
+    scored["p_for_cal"] = p_adj
+    scored["p_cal_src"] = p_adj_source
     scored["p_cal"] = scored["p_for_cal"]
 
     scored["p_for_cal_src"] = scored["p_cal_src"]
@@ -941,6 +1122,16 @@ def main() -> None:
         scored = apply_gbm_ensemble(scored, logs=logs, cfg=cfg, repo_root=PROJECT_ROOT)
     except Exception as _gbm_err:
         print(f"[GBM_ENSEMBLE] Skipped: {_gbm_err!r}")
+
+    # CATBOOST PLAYOFF CALIBRATOR
+    # Applied after GBM (or after p_for_cal identity if GBM disabled).
+    # Calls gbm_ensemble.compute_features() internally to build all 33 GBM features
+    # + p_for_cal — real feature values regardless of whether GBM is enabled.
+    try:
+        from Atlas.engine.catboost_calibrator import apply_catboost_calibrator
+        scored = apply_catboost_calibrator(scored, logs=logs, cfg=cfg, repo_root=PROJECT_ROOT)
+    except Exception as _cat_err:
+        print(f"[CATBOOST_CAL] Skipped: {_cat_err!r}")
 
     # POST-GBM ISOTONIC OVERLAY
     # Applied AFTER GBM so the isotonic corrects GBM p_cal output, not pre-GBM p_for_cal.
@@ -1192,7 +1383,9 @@ def main() -> None:
     if cfg.get("marketed_slips", {}).get("enabled", False):
         try:
             from Atlas.core.marketed_slip_builder import build_marketed_slips
-            marketed_slips = build_marketed_slips(scored_for_optimizer, cfg)
+            marketed_slips, _p_cal_marketed = build_marketed_slips(scored_for_optimizer, cfg)
+            scored_for_optimizer = scored_for_optimizer.copy()
+            scored_for_optimizer["p_cal_marketed"] = _p_cal_marketed
             print(f"Built {len(marketed_slips)} marketed slips")
         except Exception as e:
             print(f"Marketed slips builder failed: {e}")

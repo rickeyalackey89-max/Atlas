@@ -1,0 +1,8 @@
+slip,high_confidence,hit_prob,payout_mult,ev,player,team,opp,stat,direction,tier,line,p_cal
+4-leg,False,0.214,1.897,0.406,Ayo Dosunmu,MIN,SAS,FG3M,OVER,GOBLIN,0.5,0.7337
+4-leg,False,0.214,1.897,0.406,De'Aaron Fox,SAS,MIN,PTS,OVER,GOBLIN,12.5,0.7119
+4-leg,False,0.214,1.897,0.406,Terrence Shannon,MIN,SAS,PTS,OVER,STANDARD,8.0,0.6728
+4-leg,False,0.214,1.897,0.406,Luke Kornet,SAS,MIN,PTS,OVER,STANDARD,2.5,0.6501
+3-leg,True,0.4297,1.931,0.8297,Devin Vassell,SAS,MIN,REB,OVER,GOBLIN,2.5,0.7672
+3-leg,True,0.4297,1.931,0.8297,Naz Reid,MIN,SAS,RA,OVER,STANDARD,8.5,0.7195
+3-leg,True,0.4297,1.931,0.8297,Anthony Edwards,MIN,SAS,PTS,UNDER,STANDARD,25.5,0.6301

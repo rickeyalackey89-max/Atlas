@@ -1,0 +1,168 @@
+3-leg SYSTEM:
+  overrides:
+    penalty:
+      team_w: 0.12
+      family_w: 0.1
+      frag_w: 0.1
+    stat_family_mode: coarse
+    beam_window_growth: 1.5
+    min_leg_prob: 0.52
+    max_leg_prob: 0.75
+    beam_width: 150
+    phase1_frac: 0.1
+    target_pool_mult: 150
+  family: system
+  sort_mode: ev
+  n_legs: 3
+  slip_wins: 337
+  weighted: 12481
+  dates: 50
+  legs_hit: 2371
+  legs_matched: 3672
+  leg_rate: 0.6456971677559913
+4-leg SYSTEM:
+  overrides:
+    penalty:
+      team_w: 0.05
+      family_w: 0.05
+      frag_w: 0.03
+    stat_family_mode: fine
+    beam_window_growth: 1.5
+    min_leg_prob: 0.52
+    max_leg_prob: 0.75
+    beam_width: 500
+    phase1_frac: 0.4
+    target_pool_mult: 250
+  family: system
+  sort_mode: ev
+  n_legs: 4
+  slip_wins: 248
+  weighted: 13190
+  dates: 50
+  legs_hit: 3270
+  legs_matched: 4893
+  leg_rate: 0.668301655426119
+5-leg SYSTEM:
+  overrides:
+    penalty:
+      team_w: 0.02
+      family_w: 0.0
+      frag_w: 0.0
+    stat_family_mode: fine
+    beam_window_growth: 2.0
+    min_leg_prob: 0.55
+    beam_width: 650
+    phase1_frac: 0.1
+    target_pool_mult: 500
+  family: system
+  sort_mode: ev
+  n_legs: 5
+  slip_wins: 176
+  weighted: 12802
+  dates: 50
+  legs_hit: 4002
+  legs_matched: 5875
+  leg_rate: 0.6811914893617022
+3-leg WINDFALL:
+  overrides:
+    penalty:
+      team_w: 0.1
+      family_w: 0.05
+      frag_w: 0.05
+    stat_family_mode: coarse
+    beam_window_growth: 2.0
+    min_leg_prob: 0.5
+    max_leg_prob: 0.75
+    max_players_per_team: 2
+    beam_width: 300
+    phase1_frac: 0.25
+    target_pool_mult: 150
+  family: windfall
+  sort_mode: hit
+  n_legs: 3
+  slip_wins: 202
+  weighted: 8179
+  dates: 50
+  legs_hit: 2119
+  legs_matched: 3666
+  leg_rate: 0.5780141843971631
+4-leg WINDFALL:
+  overrides:
+    penalty:
+      team_w: 0.1
+      family_w: 0.05
+      frag_w: 0.05
+    stat_family_mode: coarse
+    beam_window_growth: 2.0
+    min_leg_prob: 0.5
+    max_leg_prob: 0.75
+    max_players_per_team: 2
+    beam_width: 500
+    phase1_frac: 0.45
+    target_pool_mult: 250
+  family: windfall
+  sort_mode: hit
+  n_legs: 4
+  slip_wins: 114
+  weighted: 7403
+  dates: 50
+  legs_hit: 2843
+  legs_matched: 4893
+  leg_rate: 0.5810341303903536
+5-leg WINDFALL:
+  overrides:
+    penalty:
+      team_w: 0.1
+      family_w: 0.05
+      frag_w: 0.05
+    stat_family_mode: coarse
+    beam_window_growth: 2.0
+    min_leg_prob: 0.5
+    max_leg_prob: 0.75
+    max_players_per_team: 2
+    beam_width: 450
+    phase1_frac: 0.5
+    target_pool_mult: 500
+  family: windfall
+  sort_mode: hit
+  n_legs: 5
+  slip_wins: 93
+  weighted: 8302
+  dates: 50
+  legs_hit: 3652
+  legs_matched: 5874
+  leg_rate: 0.6217228464419475
+_manifest:
+  manifest_version: 1
+  source: slip_builder_trainer
+  generated_utc: '2026-05-09T15:09:51Z'
+  config_fingerprint: d80c0e5b12a7586f
+  ensemble_version: unknown
+  ensemble_lodo_brier: null
+  ensemble_features: 0
+  kernel_params:
+    spread_sd: 12.0
+    threshold_margin: 15.5
+    star_minute_drop: 8.0
+    role_minute_drop: 0.5
+    post_sim_exponent: 0.3
+    rate_min_correlation: 0.35
+    thin_window_games: 15
+    thin_window_max_mult: 1.6
+    opp_defense_strength: 1.0
+    rate_std_multiplier_by_stat:
+      PRA: 1.3
+      PR: 1.3
+      PA: 1.3
+      PTS: 1.3
+      RA: 1.1
+      AST: 1.2
+      REB: 1.0
+      FG3M: 1.0
+  role_ctx:
+    projection_clamp_lo: 0.9
+    projection_clamp_hi: 1.11
+    variance_k: 0.65
+    under_relief_factor: null
+    under_relief_q_min: null
+    under_relief_haircut_min: null

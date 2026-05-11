@@ -144,6 +144,20 @@ def validate_config(config: dict, contract: ModelContract = CONTRACT) -> List[Co
     return violations
 
 
+def _check_catboost_meta(repo_root: Path) -> Optional[str]:
+    """Return active CatBoost calibrator version string, or None if not present/enabled."""
+    cat_meta_path = repo_root / "data" / "model" / "catboost_playoff_ensemble_meta.json"
+    if not cat_meta_path.exists():
+        return None
+    try:
+        meta = json.loads(cat_meta_path.read_text(encoding="utf-8"))
+        if meta.get("verdict") == "PROMOTE":
+            return str(meta.get("version", "catboost_playoff_v1"))
+    except Exception:
+        pass
+    return None
+
+
 def enforce_contract(
     repo_root: Path,
     config: Optional[dict] = None,
@@ -162,8 +176,13 @@ def enforce_contract(
         violations.extend(validate_config(config))
 
     if not violations:
-        print(f"[CONTRACT] {CONTRACT.version} model contract validated — {CONTRACT.feature_count} features, "
-              f"T={CONTRACT.temperature}, {len(CONTRACT.seeds)} seeds. All clear.")
+        cat_version = _check_catboost_meta(repo_root)
+        if cat_version:
+            print(f"[CONTRACT] {cat_version} — {CONTRACT.feature_count} features (v18 basis), "
+                  f"T={CONTRACT.temperature}, {len(CONTRACT.seeds)} GBM seeds retained. All clear.")
+        else:
+            print(f"[CONTRACT] {CONTRACT.version} model contract validated — {CONTRACT.feature_count} features, "
+                  f"T={CONTRACT.temperature}, {len(CONTRACT.seeds)} seeds. All clear.")
         return True
 
     # Violations found

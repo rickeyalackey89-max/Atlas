@@ -1,0 +1,10 @@
+slip,high_confidence,hit_prob,payout_mult,ev,player,team,opp,stat,direction,tier,line,p_cal
+5-leg,True,0.2025,2.145,0.4343,Dean Wade,CLE,DET,REB,OVER,GOBLIN,1.5,0.99
+5-leg,True,0.2025,2.145,0.4343,Dennis Schröder,CLE,DET,PA,OVER,GOBLIN,6.5,0.7229
+5-leg,True,0.2025,2.145,0.4343,Jared McCain,OKC,LAL,PTS,OVER,STANDARD,4.0,0.7071
+5-leg,True,0.2025,2.145,0.4343,Isaiah Joe,OKC,LAL,PRA,OVER,STANDARD,8.5,0.7692
+5-leg,True,0.2025,2.145,0.4343,Jake LaRavia,LAL,OKC,PTS,OVER,DEMON,4.5,0.5737
+4-leg,True,0.2429,1.897,0.4609,Jaylin Williams,OKC,LAL,AST,OVER,GOBLIN,0.5,0.8043
+4-leg,True,0.2429,1.897,0.4609,Tobias Harris,DET,CLE,REB,OVER,GOBLIN,4.5,0.7525
+4-leg,True,0.2429,1.897,0.4609,Alex Caruso,OKC,LAL,PTS,OVER,STANDARD,6.5,0.6636
+4-leg,True,0.2429,1.897,0.4609,Jaylon Tyson,CLE,DET,RA,OVER,STANDARD,4.5,0.6991

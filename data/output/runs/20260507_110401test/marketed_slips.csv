@@ -1,0 +1,13 @@
+slip,high_confidence,hit_prob,payout_mult,ev,player,team,opp,stat,direction,tier,line,p_cal
+3-leg,False,0.3521,1.931,0.68,Jaxson Hayes,LAL,OKC,PTS,OVER,GOBLIN,1.5,0.7186
+3-leg,False,0.3521,1.931,0.68,Austin Reaves,LAL,OKC,RA,UNDER,STANDARD,9.5,0.6177
+3-leg,False,0.3521,1.931,0.68,Ajay Mitchell,OKC,LAL,RA,UNDER,STANDARD,7.5,0.6589
+4-leg,False,0.2295,1.897,0.4354,Jaylin Williams,OKC,LAL,PTS,OVER,GOBLIN,0.5,0.79
+4-leg,False,0.2295,1.897,0.4354,Isaiah Joe,OKC,LAL,PR,OVER,GOBLIN,4.5,0.8437
+4-leg,False,0.2295,1.897,0.4354,Isaiah Stewart,DET,CLE,PR,UNDER,STANDARD,6.5,0.6474
+4-leg,False,0.2295,1.897,0.4354,Jake LaRavia,LAL,OKC,PR,UNDER,STANDARD,6.5,0.5835
+5-leg,False,0.0943,2.145,0.2021,Jared McCain,OKC,LAL,PTS,OVER,GOBLIN,0.5,0.8216
+5-leg,False,0.0943,2.145,0.2021,Dean Wade,CLE,DET,REB,OVER,GOBLIN,1.5,0.7186
+5-leg,False,0.0943,2.145,0.2021,Luguentz Dort,OKC,LAL,PRA,UNDER,STANDARD,11.5,0.7186
+5-leg,False,0.0943,2.145,0.2021,Jaylon Tyson,CLE,DET,PR,UNDER,STANDARD,10.5,0.6589
+5-leg,False,0.0943,2.145,0.2021,Duncan Robinson,DET,CLE,PRA,OVER,DEMON,17.5,0.408

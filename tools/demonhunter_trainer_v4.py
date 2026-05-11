@@ -20,6 +20,10 @@ from __future__ import annotations
 
 import copy
 import itertools
+import multiprocessing as mp
+from multiprocessing.pool import Pool
+import os
+import pickle
 import random
 import sys
 import time
@@ -36,7 +40,7 @@ from Atlas.core.fingerprint import build_manifest, config_fingerprint
 from Atlas.core.slip_builders import build_slips_by_tier_buckets
 
 # ── data paths ──────────────────────────────────────────────────────
-BASE = Path(r"C:\Users\13142\Atlas\Atlas\data\telemetry\v17_corpus")
+BASE = Path(r"C:\Users\13142\Atlas\Atlas\data\telemetry\v18_corpus")
 
 def _load_run_dates() -> list[str]:
     """Load dates from corpus_manifest.json if available, else hardcoded fallback."""
@@ -79,6 +83,7 @@ TOP_K = 3                  # 3 slips per seed (was 5)
 MAX_ATTEMPTS = 30_000
 SLIP_WIN_WEIGHT = 10
 MIN_DATES_BEFORE_PRUNE = 4  # Don't prune until 4 dates have been scored
+N_WORKERS = os.cpu_count() or 1
 
 
 def _demon_mix_ok(n_legs: int, legs: Any) -> bool:
@@ -119,16 +124,19 @@ def load_all_dates() -> list[tuple[str, pd.DataFrame, dict]]:
 
 
 def sort_dates_by_difficulty(
-    data: list[tuple[str, pd.DataFrame, dict]],
+    data: list[tuple],
     base_cfg: dict,
     n_legs: int,
-) -> list[tuple[str, pd.DataFrame, dict]]:
+    sweep_seeds: list | None = None,
+) -> list[tuple]:
     """Sort dates hardest-first so early-exit pruning is most effective."""
     wins_per_date: list[tuple[int, int]] = []
-    for idx, (date, scored_df, truth) in enumerate(data):
+    _quick_seeds = (sweep_seeds or SEEDS)[:2]
+    for idx, entry in enumerate(data):
+        date, scored_df, truth = entry[0], entry[1], entry[2]
         total_wins = 0
         mixes = {n_legs: DEMON_MIXES[n_legs]}
-        for seed in SEEDS:
+        for seed in _quick_seeds:
             try:
                 slips = build_slips_by_tier_buckets(
                     legs_df=scored_df, n_legs=n_legs, top_n=TOP_K,
@@ -149,7 +157,7 @@ def sort_dates_by_difficulty(
                     total_wins += 1
         wins_per_date.append((total_wins, idx))
     wins_per_date.sort(key=lambda x: x[0])
-    sorted_data = [data[idx] for _, idx in wins_per_date]
+    sorted_data = [(data[idx][0], data[idx][1], data[idx][2], w) for w, idx in wins_per_date]
     order_str = ", ".join(f"{data[idx][0]}({w}w)" for w, idx in wins_per_date)
     print(f"  Date difficulty order: {order_str}")
     return sorted_data
@@ -190,11 +198,15 @@ def evaluate_slip(slip_row, truth: dict) -> tuple[bool, int, int]:
 def score_config(
     overrides: dict[str, Any],
     base_cfg: dict,
-    data: list[tuple[str, pd.DataFrame, dict]],
+    data: list[tuple],
     n_legs: int,
     sort_mode: str,
     best_weighted: float = -1.0,
+    sweep_seeds: list | None = None,
+    sweep_top_k: int | None = None,
 ) -> dict[str, Any] | None:
+    _seeds = sweep_seeds if sweep_seeds is not None else SEEDS
+    _top_k = sweep_top_k if sweep_top_k is not None else TOP_K
     cfg = copy.deepcopy(base_cfg)
     sb = cfg.setdefault("slip_build", {})
 
@@ -213,11 +225,12 @@ def score_config(
     total_legs_matched = 0
     total_legs_hit = 0
 
-    for idx, (date, scored_df, truth) in enumerate(data):
+    for idx, entry in enumerate(data):
+        date, scored_df, truth = entry[0], entry[1], entry[2]
         # Only prune after MIN_DATES_BEFORE_PRUNE dates have been scored
         if idx >= MIN_DATES_BEFORE_PRUNE:
             remaining = len(data) - idx
-            max_possible_future = remaining * len(SEEDS) * TOP_K
+            max_possible_future = remaining * len(_seeds) * _top_k
             current_weighted = total_slip_wins * SLIP_WIN_WEIGHT + total_legs_hit
             best_possible = current_weighted + max_possible_future * SLIP_WIN_WEIGHT
             if best_weighted >= 0 and best_possible <= best_weighted:
@@ -227,12 +240,12 @@ def score_config(
         mixes = {n_legs: DEMON_MIXES[n_legs]}
         pt = per_tier_override or 400
 
-        for seed in SEEDS:
+        for seed in _seeds:
             try:
                 slips = build_slips_by_tier_buckets(
                     legs_df=scored_df,
                     n_legs=n_legs,
-                    top_n=TOP_K,
+                    top_n=_top_k,
                     payout_power_mult=PAYOUT_POWER_MULT[n_legs],
                     payout_flex=PAYOUT_FLEX,
                     pricing_engine="atlas",
@@ -250,7 +263,7 @@ def score_config(
             if slips is None or slips.empty:
                 continue
 
-            for rank in range(min(TOP_K, len(slips))):
+            for rank in range(min(_top_k, len(slips))):
                 all_hit, matched, hit_count = evaluate_slip(slips.iloc[rank], truth)
                 if all_hit:
                     total_slip_wins += 1
@@ -387,6 +400,70 @@ def build_s2_grid(n_legs: int, s1_winner: dict[str, Any]) -> list[dict[str, Any]
     return unique
 
 
+# ── S3: fine-tune around S2 winner ────────────────────────────────────
+def build_s3_grid(n_legs: int, s2_winner: dict[str, Any]) -> list[dict[str, Any]]:
+    """Fine-grained ±delta sweep around S2 winner. ~20-30 combos, all seeds, full corpus."""
+    grid: list[dict[str, Any]] = []
+
+    base_pt = int(s2_winner.get("per_tier", 400))
+    base_mlp = float(s2_winner.get("min_leg_prob", 0.56))
+    base_bw = int(s2_winner.get("beam_width", 400))
+
+    for pt_delta in [-200, -100, 0, 100, 200]:
+        pt = max(100, base_pt + pt_delta)
+        combo = copy.deepcopy(s2_winner)
+        combo["per_tier"] = pt
+        grid.append(combo)
+
+    for mlp_delta in [-0.02, -0.01, 0.0, 0.01, 0.02]:
+        mlp = round(base_mlp + mlp_delta, 3)
+        if mlp <= 0:
+            continue
+        combo = copy.deepcopy(s2_winner)
+        combo["min_leg_prob"] = mlp
+        grid.append(combo)
+
+    for bw_delta in [-200, -100, 0, 100, 200]:
+        bw = max(50, base_bw + bw_delta)
+        combo = copy.deepcopy(s2_winner)
+        combo["beam_width"] = bw
+        grid.append(combo)
+
+    seen = set()
+    unique = []
+    for c in grid:
+        key = str(sorted(c.items()))
+        if key not in seen:
+            seen.add(key)
+            unique.append(c)
+    return unique
+
+
+# ── Parallel worker infrastructure ────────────────────────────────────
+_DH_WORKER_DATA: list | None = None
+_DH_WORKER_CFG: dict | None = None
+
+
+def _dh_worker_init(data_pkl: bytes, cfg_pkl: bytes) -> None:
+    """Pool initializer: load data into worker-global state once per process."""
+    global _DH_WORKER_DATA, _DH_WORKER_CFG
+    import pickle as _pkl
+    _DH_WORKER_DATA = _pkl.loads(data_pkl)
+    _DH_WORKER_CFG = _pkl.loads(cfg_pkl)
+
+
+def _dh_score_worker(args: tuple) -> tuple:
+    """Pool worker: score one combo using worker-global data/cfg."""
+    combo, n_legs, sort_mode, best_weighted, sweep_seeds, sweep_top_k = args
+    result = score_config(
+        combo, _DH_WORKER_CFG, _DH_WORKER_DATA, n_legs, sort_mode,
+        best_weighted=best_weighted,
+        sweep_seeds=sweep_seeds,
+        sweep_top_k=sweep_top_k,
+    )
+    return combo, result
+
+
 # ── Grid runner ──────────────────────────────────────────────────────
 def _run_grid(
     grid: list[dict[str, Any]],
@@ -395,7 +472,12 @@ def _run_grid(
     n_legs: int,
     sort_mode: str,
     label: str,
+    n_workers: int = 1,
+    sweep_seeds: list | None = None,
+    sweep_top_k: int | None = None,
 ) -> tuple[dict[str, Any], dict[str, Any]]:
+    _sweep_seeds = sweep_seeds if sweep_seeds is not None else SEEDS
+    _sweep_top_k = sweep_top_k if sweep_top_k is not None else TOP_K
     total_combos = len(grid)
     start = time.time()
     best_weighted: float = -1.0
@@ -404,29 +486,61 @@ def _run_grid(
     skipped = 0
     evaluated = 0
 
-    for i, combo in enumerate(grid):
-        if (i + 1) % 10 == 0:
-            elapsed = time.time() - start
-            rate = (i + 1) / elapsed if elapsed > 0 else 0
-            eta = (total_combos - i - 1) / rate if rate > 0 else 0
-            print(f"    ... {i + 1}/{total_combos}  eval={evaluated} skip={skipped}"
-                  f"  best_w={best_weighted:.0f}"
-                  f"  ({best_result.get('slip_wins', 0)} wins)"
-                  f"  {elapsed:.0f}s elapsed  ETA {eta:.0f}s")
+    if n_workers > 1:
+        import pickle as _pkl
+        data_bytes = _pkl.dumps(data)
+        cfg_bytes = _pkl.dumps(base_cfg)
+        tasks = [
+            (combo, n_legs, sort_mode, -1.0, _sweep_seeds, _sweep_top_k)
+            for combo in grid
+        ]
+        with mp.Pool(n_workers, initializer=_dh_worker_init,
+                     initargs=(data_bytes, cfg_bytes)) as pool:
+            for i, (combo, result) in enumerate(
+                pool.imap_unordered(_dh_score_worker, tasks)
+            ):
+                if result is None:
+                    skipped += 1
+                else:
+                    evaluated += 1
+                    if result["weighted"] > best_weighted:
+                        best_weighted = result["weighted"]
+                        best_combo = copy.deepcopy(combo)
+                        best_result = result
+                if (i + 1) % 10 == 0:
+                    elapsed = time.time() - start
+                    rate = (i + 1) / elapsed if elapsed > 0 else 0
+                    eta = (total_combos - i - 1) / rate if rate > 0 else 0
+                    print(f"    ... {i + 1}/{total_combos}  eval={evaluated} skip={skipped}"
+                          f"  best_w={best_weighted:.0f}"
+                          f"  ({best_result.get('slip_wins', 0)} wins)"
+                          f"  {elapsed:.0f}s elapsed  ETA {eta:.0f}s", flush=True)
+    else:
+        for i, combo in enumerate(grid):
+            if (i + 1) % 10 == 0:
+                elapsed = time.time() - start
+                rate = (i + 1) / elapsed if elapsed > 0 else 0
+                eta = (total_combos - i - 1) / rate if rate > 0 else 0
+                print(f"    ... {i + 1}/{total_combos}  eval={evaluated} skip={skipped}"
+                      f"  best_w={best_weighted:.0f}"
+                      f"  ({best_result.get('slip_wins', 0)} wins)"
+                      f"  {elapsed:.0f}s elapsed  ETA {eta:.0f}s")
 
-        result = score_config(
-            combo, base_cfg, data, n_legs, sort_mode,
-            best_weighted=best_weighted,
-        )
-        if result is None:
-            skipped += 1
-            continue
+            result = score_config(
+                combo, base_cfg, data, n_legs, sort_mode,
+                best_weighted=best_weighted,
+                sweep_seeds=_sweep_seeds,
+                sweep_top_k=_sweep_top_k,
+            )
+            if result is None:
+                skipped += 1
+                continue
 
-        evaluated += 1
-        if result["weighted"] > best_weighted:
-            best_weighted = result["weighted"]
-            best_combo = copy.deepcopy(combo)
-            best_result = result
+            evaluated += 1
+            if result["weighted"] > best_weighted:
+                best_weighted = result["weighted"]
+                best_combo = copy.deepcopy(combo)
+                best_result = result
 
     elapsed = time.time() - start
     print(f"    {label} BEST: weighted={best_result.get('weighted', 0)}"
@@ -457,8 +571,19 @@ def _print_combo(combo: dict[str, Any]) -> None:
     print(f"    beam={bw}  phase1={pf}  pool={pm}  per_tier={pt}  ppf={ppf}")
 
 
-# ── 2-stage per-category search ──────────────────────────────────────
-def train(base_cfg: dict, data: list[tuple[str, pd.DataFrame, dict]]) -> dict:
+# ── 3-stage per-category search ──────────────────────────────────────
+def train(
+    base_cfg: dict,
+    data: list[tuple[str, pd.DataFrame, dict]],
+    n_workers: int = 1,
+    hard_only: int = 0,
+    hard_min_wins: int = 1,
+    resume_winners: dict | None = None,
+    sweep_seeds: list | None = None,
+    sweep_top_k: int | None = None,
+) -> dict:
+    _seeds = sweep_seeds if sweep_seeds is not None else SEEDS
+    _top_k = sweep_top_k if sweep_top_k is not None else TOP_K
     results: dict[str, dict[str, Any]] = {}
     total_start = time.time()
     structural_winner: dict[str, Any] | None = None  # warm-start for 4/5-leg
@@ -468,27 +593,64 @@ def train(base_cfg: dict, data: list[tuple[str, pd.DataFrame, dict]]) -> dict:
         print(f"\n  === {cat_name} ===")
         sorted_data = sort_dates_by_difficulty(data, base_cfg, n_legs)
 
-        # S1: structural — run fully for 3-leg, warm-start for 4/5-leg
-        if structural_winner is not None and n_legs > 3:
+        # Optionally trim to N hardest dates for sweep, re-verify on full corpus
+        sweep_data = sorted_data
+        if hard_only > 0:
+            hard_dates = [e for e in sorted_data if e[3] <= hard_min_wins][:hard_only]
+            if hard_dates:
+                sweep_data = hard_dates
+                print(f"  hard-only: sweeping on {len(sweep_data)} hardest dates "
+                      f"(re-verify on all {len(sorted_data)})")
+
+        # S1: structural — resume / warm-start for 4/5-leg / full grid for 3-leg
+        _resume_combo = (resume_winners or {}).get(n_legs)
+        if _resume_combo is not None:
+            print(f"  S1: RESUMED from prior results (n_legs={n_legs})")
+            s1_combo = copy.deepcopy(_resume_combo)
+            s1_result_raw = score_config(s1_combo, base_cfg, sweep_data, n_legs, sort_mode,
+                                          sweep_seeds=_seeds, sweep_top_k=_top_k)
+            s1_result = s1_result_raw or {"weighted": 0, "slip_wins": 0, "legs_hit": 0, "legs_matched": 0, "leg_rate": 0}
+            _print_combo(s1_combo)
+        elif structural_winner is not None and n_legs > 3:
             s1_grid_size = len(build_s1_grid())
             print(f"  S1: WARM-START from 3-leg winner (skipped {s1_grid_size} combos)")
             s1_combo = copy.deepcopy(structural_winner)
-            s1_result_raw = score_config(s1_combo, base_cfg, sorted_data, n_legs, sort_mode)
+            s1_result_raw = score_config(s1_combo, base_cfg, sweep_data, n_legs, sort_mode,
+                                          sweep_seeds=_seeds, sweep_top_k=_top_k)
             s1_result = s1_result_raw or {"weighted": 0, "slip_wins": 0, "legs_hit": 0, "legs_matched": 0, "leg_rate": 0}
             _print_combo(s1_combo)
         else:
             s1_grid = build_s1_grid()
-            print(f"  S1: structural+filters ({len(s1_grid)} combos, {len(SEEDS)} seeds, TOP_K={TOP_K})")
-            s1_combo, s1_result = _run_grid(s1_grid, base_cfg, sorted_data, n_legs, sort_mode, "S1")
+            print(f"  S1: structural+filters ({len(s1_grid)} combos, {len(_seeds)} seeds, TOP_K={_top_k})")
+            s1_combo, s1_result = _run_grid(s1_grid, base_cfg, sweep_data, n_legs, sort_mode, "S1",
+                                             n_workers=n_workers, sweep_seeds=_seeds, sweep_top_k=_top_k)
             _print_combo(s1_combo)
 
-        # S2: beam/pool/per_tier exploration (always run)
+        # S2: beam/pool/per_tier exploration
         s2_grid = build_s2_grid(n_legs, s1_combo)
         print(f"  S2: exploration ({len(s2_grid)} combos)")
-        s2_combo, s2_result = _run_grid(s2_grid, base_cfg, sorted_data, n_legs, sort_mode, "S2")
+        s2_combo, s2_result = _run_grid(s2_grid, base_cfg, sweep_data, n_legs, sort_mode, "S2",
+                                         n_workers=n_workers, sweep_seeds=_seeds, sweep_top_k=_top_k)
         _print_combo(s2_combo)
 
-        best = (s2_combo, s2_result) if s2_result.get("weighted", 0) >= s1_result.get("weighted", 0) else (s1_combo, s1_result)
+        s12_best = (
+            (s2_combo, s2_result)
+            if s2_result.get("weighted", 0) >= s1_result.get("weighted", 0)
+            else (s1_combo, s1_result)
+        )
+
+        # S3: fine-tune around S1/S2 winner (all seeds, full corpus)
+        s3_grid = build_s3_grid(n_legs, s12_best[0])
+        print(f"  S3: fine-tune ({len(s3_grid)} combos, {len(SEEDS)} seeds, full corpus)")
+        s3_combo, s3_result = _run_grid(s3_grid, base_cfg, sorted_data, n_legs, sort_mode, "S3",
+                                         n_workers=n_workers, sweep_seeds=SEEDS, sweep_top_k=TOP_K)
+        _print_combo(s3_combo)
+
+        best = (
+            (s3_combo, s3_result)
+            if s3_result.get("weighted", 0) >= s12_best[1].get("weighted", 0)
+            else s12_best
+        )
 
         cat_elapsed = time.time() - cat_start
         print(f"\n  >>> {cat_name} FINAL: weighted={best[1]['weighted']}"
@@ -514,9 +676,46 @@ def train(base_cfg: dict, data: list[tuple[str, pd.DataFrame, dict]]) -> dict:
 
 # ── main ─────────────────────────────────────────────────────────────
 def main() -> None:
+    import argparse
+    mp.freeze_support()
+    sys.stdout.reconfigure(line_buffering=True)  # type: ignore[attr-defined]
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--workers", type=int, default=N_WORKERS,
+                    help=f"Parallel workers (default: {N_WORKERS}, 1=serial)")
+    ap.add_argument("--hard-only", type=int, default=0, metavar="N",
+                    help="Sweep on N hardest dates only, re-verify winner on full corpus")
+    ap.add_argument("--hard-min-wins", type=int, default=1, metavar="W",
+                    help="When --hard-only is set, skip dates with fewer than W baseline wins (default: 1)")
+    ap.add_argument("--fast", action="store_true",
+                    help="Fast mode: 1 seed + top-2 during sweep (full seeds/top-k for final verify)")
+    ap.add_argument("--resume", type=str, default=None, metavar="FILE",
+                    help="Resume from a prior results YAML — skip S1 for already-completed leg counts")
+    args = ap.parse_args()
+    sweep_seeds = SEEDS[:1] if args.fast else SEEDS
+    sweep_top_k = 2 if args.fast else TOP_K
+
+    resume_winners: dict | None = None
+    if args.resume:
+        import yaml as _yaml
+        try:
+            with open(args.resume) as _f:
+                _prior = _yaml.safe_load(_f)
+            resume_winners = {}
+            for _cat, _info in _prior.items():
+                if _cat.startswith("_") or not isinstance(_info, dict):
+                    continue
+                _n = int(_cat.split("-")[0])
+                resume_winners[_n] = _info.get("overrides", {})
+            print(f"  Resumed from {args.resume}: {list(resume_winners.keys())} leg counts")
+        except Exception as _e:
+            print(f"  WARNING: could not parse resume file: {_e}")
+            resume_winners = None
+
     print("DemonHunter Trainer v4")
     print("=" * 50)
-    print(f"Seeds: {SEEDS} | TOP_K: {TOP_K} | MIN_DATES_BEFORE_PRUNE: {MIN_DATES_BEFORE_PRUNE}")
+    print(f"  Seeds: {sweep_seeds}  Top-K: {sweep_top_k}  Workers: {args.workers}  (cores: {os.cpu_count()})")
+    print(f"  Hard-only: {args.hard_only or 'all'}  Hard-min-wins: {args.hard_min_wins}  Fast: {args.fast}")
+    print(f"  MIN_DATES_BEFORE_PRUNE: {MIN_DATES_BEFORE_PRUNE}")
 
     data = load_all_dates()
     if not data:
@@ -531,7 +730,10 @@ def main() -> None:
     sb.pop("by_legs", None)
     sb.pop("by_sort_mode", None)
 
-    results = train(base_cfg, data)
+    results = train(base_cfg, data, n_workers=args.workers,
+                    hard_only=args.hard_only, hard_min_wins=args.hard_min_wins,
+                    resume_winners=resume_winners,
+                    sweep_seeds=sweep_seeds, sweep_top_k=sweep_top_k)
 
     # Embed config fingerprint
     results["_manifest"] = build_manifest(

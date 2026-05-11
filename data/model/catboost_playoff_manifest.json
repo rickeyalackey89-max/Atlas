@@ -1,0 +1,205 @@
+{
+  "manifest_type": "catboost_playoff_lodo_v2",
+  "created_at": "2026-05-09 21:27:39",
+  "verdict": "PROMOTE",
+  "summary": {
+    "n_dates": 9,
+    "n_legs_total": 13186,
+    "oof_brier_baseline": 0.232166,
+    "oof_brier_catboost": 0.226602,
+    "oof_brier_delta_mB": -5.56
+  },
+  "config": {
+    "cache": "_v1_playoff_resim_cache.pkl",
+    "features": [
+      "z_line",
+      "min_cv",
+      "is_combo",
+      "bp_score_gated",
+      "bp_has",
+      "is_assists",
+      "is_threes",
+      "games_norm",
+      "thin_flag",
+      "line_norm",
+      "is_home_feat",
+      "min_sensitivity",
+      "game_total_norm",
+      "is_b2b",
+      "l20_edge",
+      "l10_has",
+      "margin",
+      "stat_cat",
+      "tier_cat",
+      "l40_hr",
+      "logit_p_x_demon",
+      "player_te",
+      "player_stat_te",
+      "player_dir_te",
+      "player_n_norm",
+      "line_dist",
+      "tail_risk",
+      "line_tightness",
+      "margin_x_under",
+      "q_blowout",
+      "rate_cv",
+      "abs_logit_p",
+      "q_x_under",
+      "p_for_cal"
+    ],
+    "cat_features": [
+      "stat_cat",
+      "tier_cat"
+    ],
+    "hyperparams": {
+      "iterations": 800,
+      "depth": 8,
+      "learning_rate": 0.02,
+      "l2_leaf_reg": 6,
+      "bagging_temperature": 1.0,
+      "random_strength": 2.0,
+      "min_data_in_leaf": 30,
+      "loss_function": "Logloss",
+      "eval_metric": "Logloss",
+      "auto_class_weights": "Balanced",
+      "random_seed": 42,
+      "verbose": 100,
+      "early_stopping_rounds": 50,
+      "use_best_model": true
+    }
+  },
+  "fold_results": [
+    {
+      "date": "2026-04-30",
+      "n_test": 1942,
+      "n_train": 11244,
+      "best_iter": 798,
+      "brier_before": 0.322414,
+      "brier_after": 0.200693,
+      "delta": -0.121721,
+      "model_path": "C:\\Users\\13142\\Atlas\\Atlas\\data\\model\\catboost_playoff\\catboost_fold_2026-04-30.cbm"
+    },
+    {
+      "date": "2026-05-01",
+      "n_test": 1938,
+      "n_train": 11248,
+      "best_iter": 799,
+      "brier_before": 0.212415,
+      "brier_after": 0.247496,
+      "delta": 0.035081,
+      "model_path": "C:\\Users\\13142\\Atlas\\Atlas\\data\\model\\catboost_playoff\\catboost_fold_2026-05-01.cbm"
+    },
+    {
+      "date": "2026-05-02",
+      "n_test": 628,
+      "n_train": 12558,
+      "best_iter": 799,
+      "brier_before": 0.278783,
+      "brier_after": 0.33884,
+      "delta": 0.060057,
+      "model_path": "C:\\Users\\13142\\Atlas\\Atlas\\data\\model\\catboost_playoff\\catboost_fold_2026-05-02.cbm"
+    },
+    {
+      "date": "2026-05-03",
+      "n_test": 1323,
+      "n_train": 11863,
+      "best_iter": 799,
+      "brier_before": 0.22703,
+      "brier_after": 0.229584,
+      "delta": 0.002554,
+      "model_path": "C:\\Users\\13142\\Atlas\\Atlas\\data\\model\\catboost_playoff\\catboost_fold_2026-05-03.cbm"
+    },
+    {
+      "date": "2026-05-04",
+      "n_test": 1371,
+      "n_train": 11815,
+      "best_iter": 799,
+      "brier_before": 0.211886,
+      "brier_after": 0.225454,
+      "delta": 0.013568,
+      "model_path": "C:\\Users\\13142\\Atlas\\Atlas\\data\\model\\catboost_playoff\\catboost_fold_2026-05-04.cbm"
+    },
+    {
+      "date": "2026-05-05",
+      "n_test": 1523,
+      "n_train": 11663,
+      "best_iter": 799,
+      "brier_before": 0.202337,
+      "brier_after": 0.209678,
+      "delta": 0.00734,
+      "model_path": "C:\\Users\\13142\\Atlas\\Atlas\\data\\model\\catboost_playoff\\catboost_fold_2026-05-05.cbm"
+    },
+    {
+      "date": "2026-05-06",
+      "n_test": 1434,
+      "n_train": 11752,
+      "best_iter": 798,
+      "brier_before": 0.203541,
+      "brier_after": 0.219409,
+      "delta": 0.015869,
+      "model_path": "C:\\Users\\13142\\Atlas\\Atlas\\data\\model\\catboost_playoff\\catboost_fold_2026-05-06.cbm"
+    },
+    {
+      "date": "2026-05-07",
+      "n_test": 1562,
+      "n_train": 11624,
+      "best_iter": 799,
+      "brier_before": 0.208821,
+      "brier_after": 0.218847,
+      "delta": 0.010026,
+      "model_path": "C:\\Users\\13142\\Atlas\\Atlas\\data\\model\\catboost_playoff\\catboost_fold_2026-05-07.cbm"
+    },
+    {
+      "date": "2026-05-08",
+      "n_test": 1465,
+      "n_train": 11721,
+      "best_iter": 799,
+      "brier_before": 0.226216,
+      "brier_after": 0.216476,
+      "delta": -0.009739,
+      "model_path": "C:\\Users\\13142\\Atlas\\Atlas\\data\\model\\catboost_playoff\\catboost_fold_2026-05-08.cbm"
+    }
+  ],
+  "feature_importance_top10": [
+    {
+      "feature": "player_dir_te",
+      "importance": 13.23
+    },
+    {
+      "feature": "min_cv",
+      "importance": 13.07
+    },
+    {
+      "feature": "player_n_norm",
+      "importance": 10.2
+    },
+    {
+      "feature": "q_blowout",
+      "importance": 9.39
+    },
+    {
+      "feature": "game_total_norm",
+      "importance": 7.78
+    },
+    {
+      "feature": "player_te",
+      "importance": 6.54
+    },
+    {
+      "feature": "player_stat_te",
+      "importance": 3.95
+    },
+    {
+      "feature": "rate_cv",
+      "importance": 3.35
+    },
+    {
+      "feature": "is_home_feat",
+      "importance": 3.21
+    },
+    {
+      "feature": "q_x_under",
+      "importance": 3.04
+    }
+  ]
+}

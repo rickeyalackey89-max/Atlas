@@ -116,6 +116,28 @@ def _run_score_board_new(
     if _blowout_team_stats:
         blow["_blowout_team_stats"] = _blowout_team_stats
 
+    # Series game lookup: playoff game number for each (team_pair, game_date).
+    _series_cfg = blow.get("series_multiplier", {}) or {}
+    if _series_cfg.get("enabled", False):
+        _series_start = str(_series_cfg.get("start_date", "2026-04-30"))
+        _series_lookup: dict[tuple, int] = {}
+        try:
+            _gl = logs.copy()
+            _gl["game_date"] = pd.to_datetime(_gl["game_date"], errors="coerce").dt.strftime("%Y-%m-%d")
+            _po_gl = _gl[_gl["game_date"] >= _series_start]
+            if not _po_gl.empty and {"team", "opp"}.issubset(_po_gl.columns):
+                _pairs = _po_gl[["team", "opp", "game_date"]].dropna().drop_duplicates()
+                _pairs["pair"] = _pairs.apply(
+                    lambda r: tuple(sorted([str(r["team"]).upper(), str(r["opp"]).upper()])), axis=1
+                )
+                for _pair, _grp in _pairs.groupby("pair"):
+                    _dates = sorted(_grp["game_date"].unique())
+                    for _gn, _gd in enumerate(_dates, start=1):
+                        _series_lookup[(_pair, _gd)] = _gn
+        except Exception:
+            pass
+        blow["_series_game_lookup"] = _series_lookup
+
     rows: list[dict[str, Any]] = []
 
     iael_df_kernel = _normalize_iael_for_kernel(iael_df)
