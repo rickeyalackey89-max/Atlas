@@ -1,0 +1,36 @@
+{
+  "artifacts": {
+    "invalidations": {
+      "destination": "C:\\Users\\13142\\Atlas\\Atlas\\data\\output\\runs_manifest\\20260511_070255\\injury_invalidations_latest.json",
+      "sha256": "d79325e6f35942ac994547d8fec8f164349203057930deaf3a7048aebd50de01",
+      "source": "C:\\Users\\13142\\Atlas\\Atlas\\data\\output\\dashboard\\injury_invalidations_latest.json"
+    },
+    "normalized": {
+      "destination": "C:\\Users\\13142\\Atlas\\Atlas\\data\\output\\runs_manifest\\20260511_070255\\normalized_latest.json",
+      "sha256": "d989e22a416c3cbed79211b7435c16c606efbb71c2868b5c9a452bbc26a9852c",
+      "source": "C:\\Users\\13142\\Atlas\\Atlas\\data\\output\\injury\\normalized\\latest.json"
+    },
+    "role_metrics": {
+      "destination": "C:\\Users\\13142\\Atlas\\Atlas\\data\\output\\runs_manifest\\20260511_070255\\role_metrics_latest.json",
+      "sha256": "4714c0c2df7ce12540b8a6258896a6d8a6cf36312bad98fb949ad7ddba187458",
+      "source": "C:\\Users\\13142\\Atlas\\Atlas\\data\\output\\dashboard\\role_metrics_latest.json"
+    },
+    "role_metrics_html": {
+      "destination": "C:\\Users\\13142\\Atlas\\Atlas\\data\\output\\runs_manifest\\20260511_070255\\role_metrics_latest.html",
+      "sha256": "98782ca5da37d08458dc3286fd08158821006f99f1c47010ddf8bddcc832e57d",
+      "source": "C:\\Users\\13142\\Atlas\\Atlas\\data\\output\\dashboard\\role_metrics_latest.html"
+    },
+    "role_metrics_manifest": {
+      "destination": "C:\\Users\\13142\\Atlas\\Atlas\\data\\output\\runs_manifest\\20260511_070255\\role_metrics_snapshot_manifest.json",
+      "sha256": "1a7b04fa6cca59837acf96129baf6dcd5b676bca4bc124ec6837b50ea6dc1654",
+      "source": "C:\\Users\\13142\\Atlas\\Atlas\\data\\output\\dashboard\\role_metrics_snapshot_manifest.json"
+    },
+    "status": {
+      "destination": "C:\\Users\\13142\\Atlas\\Atlas\\data\\output\\runs_manifest\\20260511_070255\\status_latest.json",
+      "sha256": "63f65639214c008c8ad995d2a13731154253c0b6b80972fceb20dd7c018caf7b",
+      "source": "C:\\Users\\13142\\Atlas\\Atlas\\data\\output\\dashboard\\status_latest.json"
+    }
+  },
+  "generated_at": "2026-05-11T07:03:19",
+  "run_id": "20260511_070255"
+}

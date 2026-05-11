@@ -676,496 +676,575 @@ rotowire,NBA,Zaccharie Risacher,PR,2026-02-10 14:37:14,15.593809322762086,1.0,,,
 rotowire,NBA,Zaccharie Risacher,PRA,2026-02-10 14:37:14,16.994226065329013,1.0,,,,,,
 rotowire,NBA,Zaccharie Risacher,PTS,2026-02-10 14:37:14,12.334704701262794,1.0,,,,,,
 rotowire,NBA,Ziaire Williams,PTS,2026-02-10 14:37:14,0.0,1.0,,,,,,
-bettingpros,NBA,Victor Wembanyama,PR,2026-05-10 22:45:48,43.9,1.0,0.69497538235393,0.30502461764607003,5,1,14,side=over; rating=5; diff=4.4; line=39.5; L10=4o/6u/10g; streak=1o; opp_rank=14
-bettingpros,NBA,De'Aaron Fox,PA,2026-05-10 22:45:48,26.7,0.2,None,None,None,None,12,side=over; rating=0; diff=4.2; line=22.5; L10=6o/4u/10g; streak=3u; opp_rank=12
-bettingpros,NBA,Anthony Edwards,PA,2026-05-10 22:45:48,34.7,0.2,None,None,None,None,7,side=over; rating=0; diff=4.2; line=30.5; L10=2o/8u/10g; streak=1o; opp_rank=7
-bettingpros,NBA,Devin Vassell,PR,2026-05-10 22:45:48,20.5,0.2,None,None,None,None,14,side=over; rating=0; diff=4; line=16.5; L10=7o/3u/10g; streak=1o; opp_rank=14
-bettingpros,NBA,Devin Vassell,PRA,2026-05-10 22:45:48,23.3,0.2,None,None,None,None,13,side=over; rating=0; diff=3.8; line=19.5; L10=7o/3u/10g; streak=1o; opp_rank=13
-bettingpros,NBA,Stephon Castle,PRA,2026-05-10 22:45:48,33.1,0.2,None,None,None,None,13,side=over; rating=0; diff=3.6; line=29.5; L10=5o/5u/10g; streak=5u; opp_rank=13
-bettingpros,NBA,Anthony Edwards,PR,2026-05-10 22:45:48,36,0.2,None,None,None,None,7,side=over; rating=0; diff=3.5; line=32.5; L10=2o/8u/10g; streak=1o; opp_rank=7
-bettingpros,NBA,Devin Vassell,PA,2026-05-10 22:45:48,18.7,0.2,None,None,None,None,12,side=over; rating=0; diff=3.2; line=15.5; L10=5o/5u/10g; streak=1o; opp_rank=12
-bettingpros,NBA,Anthony Edwards,PRA,2026-05-10 22:45:48,40.3,0.2,None,None,None,None,7,side=over; rating=0; diff=2.8; line=36.5; L10=3o/7u/10g; streak=1o; opp_rank=7
-bettingpros,NBA,Julian Champagnie,PA,2026-05-10 22:45:48,13.1,0.2,None,None,None,None,12,side=over; rating=0; diff=2.6; line=10.5; L10=4o/6u/10g; streak=1u; opp_rank=12
-bettingpros,NBA,Stephon Castle,PA,2026-05-10 22:45:48,27.1,0.2,None,None,None,None,12,side=over; rating=0; diff=2.6; line=23.5; L10=6o/4u/10g; streak=2o; opp_rank=12
-bettingpros,NBA,Stephon Castle,PR,2026-05-10 22:45:48,25.1,0.2,None,None,None,None,14,side=over; rating=0; diff=2.6; line=21.5; L10=6o/4u/10g; streak=1u; opp_rank=14
-bettingpros,NBA,Terrence Shannon Jr.,PR,2026-05-10 22:45:48,14,0.2,None,None,None,None,7,side=over; rating=0; diff=2.5; line=11.5; L10=7o/3u/10g; streak=1u; opp_rank=7
-bettingpros,NBA,Stephon Castle,RA,2026-05-10 22:45:48,14,0.2,None,None,None,None,14,side=over; rating=0; diff=2.5; line=11.5; L10=5o/5u/10g; streak=1o; opp_rank=14
-bettingpros,NBA,Keldon Johnson,PRA,2026-05-10 22:45:48,16,0.2,None,None,None,None,13,side=over; rating=0; diff=2.5; line=13.5; L10=5o/5u/10g; streak=3o; opp_rank=13
-bettingpros,NBA,Naz Reid,PA,2026-05-10 22:45:48,16.9,0.2,None,None,None,None,7,side=over; rating=0; diff=2.4; line=14.5; L10=4o/6u/10g; streak=1o; opp_rank=7
-bettingpros,NBA,Keldon Johnson,PR,2026-05-10 22:45:48,14.9,0.2,None,None,None,None,14,side=over; rating=0; diff=2.4; line=12.5; L10=5o/5u/10g; streak=3o; opp_rank=14
-bettingpros,NBA,Dylan Harper,PR,2026-05-10 22:45:48,15.9,0.2,None,None,None,None,14,side=over; rating=0; diff=2.4; line=13.5; L10=5o/5u/10g; streak=1u; opp_rank=14
-bettingpros,NBA,De'Aaron Fox,RA,2026-05-10 22:45:48,10.7,0.2,None,None,None,None,14,side=over; rating=0; diff=2.2; line=8.5; L10=7o/3u/10g; streak=2u; opp_rank=14
-bettingpros,NBA,Naz Reid,PRA,2026-05-10 22:45:48,23.7,0.2,None,None,None,None,7,side=over; rating=0; diff=2.2; line=20.5; L10=7o/3u/10g; streak=1o; opp_rank=7
-bettingpros,NBA,Naz Reid,PTS,2026-05-10 22:45:48,14.5,0.2,None,None,None,None,6,side=over; rating=0; diff=2; line=12.5; L10=4o/6u/10g; streak=1o; opp_rank=6
-bettingpros,NBA,Dylan Harper,PTS,2026-05-10 22:45:48,12.4,0.2,None,None,None,None,13,side=over; rating=0; diff=1.9; line=10.5; L10=5o/5u/10g; streak=1u; opp_rank=13
-bettingpros,NBA,Rudy Gobert,PRA,2026-05-10 22:45:48,22.4,0.2,None,None,None,None,7,side=over; rating=0; diff=1.9; line=20.5; L10=5o/5u/10g; streak=1o; opp_rank=7
-bettingpros,NBA,Julius Randle,RA,2026-05-10 22:45:48,12.2,0.2,None,None,None,None,9,side=over; rating=0; diff=1.7; line=10.5; L10=4o/6u/10g; streak=2u; opp_rank=9
-bettingpros,NBA,Stephon Castle,AST,2026-05-10 22:45:48,8,0.2,None,None,None,None,10,side=over; rating=0; diff=1.5; line=6.5; L10=5o/5u/10g; streak=1o; opp_rank=10
-bettingpros,NBA,Dylan Harper,PA,2026-05-10 22:45:48,16.4,0.2,None,None,None,None,12,side=over; rating=0; diff=1.4; line=13.5; L10=5o/5u/10g; streak=1u; opp_rank=12
-bettingpros,NBA,Victor Wembanyama,REB,2026-05-10 22:45:48,13.8,0.2,None,None,None,None,15,side=over; rating=0; diff=1.3; line=12.5; L10=6o/4u/10g; streak=4o; opp_rank=15
-bettingpros,NBA,Naz Reid,PR,2026-05-10 22:45:48,21.3,0.2,None,None,None,None,7,side=over; rating=0; diff=1.3; line=18.5; L10=7o/3u/10g; streak=1o; opp_rank=7
-bettingpros,NBA,Luke Kornet,PTS,2026-05-10 22:45:48,3.7,0.2,None,None,None,None,13,side=over; rating=0; diff=1.2; line=2.5; L10=6o/4u/10g; streak=1u; opp_rank=13
-bettingpros,NBA,Keldon Johnson,PA,2026-05-10 22:45:48,11.7,0.2,None,None,None,None,12,side=over; rating=0; diff=1.2; line=10.5; L10=4o/6u/10g; streak=1o; opp_rank=12
-bettingpros,NBA,De'Aaron Fox,AST,2026-05-10 22:45:48,6.6,0.2,None,None,None,None,10,side=over; rating=0; diff=1.1; line=5.5; L10=6o/4u/10g; streak=2u; opp_rank=10
-bettingpros,NBA,Keldon Johnson,PTS,2026-05-10 22:45:48,10.6,0.2,None,None,None,None,13,side=over; rating=0; diff=1.1; line=8.5; L10=6o/4u/10g; streak=3o; opp_rank=13
-bettingpros,NBA,Rudy Gobert,PA,2026-05-10 22:45:48,11.6,0.2,None,None,None,None,7,side=over; rating=0; diff=1.1; line=10.5; L10=4o/6u/10g; streak=1o; opp_rank=7
-bettingpros,NBA,Julian Champagnie,RA,2026-05-10 22:45:48,7.6,0.2,None,None,None,None,14,side=over; rating=0; diff=1.1; line=6.5; L10=6o/4u/10g; streak=1o; opp_rank=14
-bettingpros,NBA,Jaden McDaniels,PTS,2026-05-10 22:45:48,16.5,0.2,None,None,None,None,6,side=over; rating=0; diff=1; line=15.5; L10=6o/4u/10g; streak=1o; opp_rank=6
-bettingpros,NBA,Devin Vassell,FG3M,2026-05-10 22:45:48,2.5,0.2,None,None,None,None,2,side=over; rating=0; diff=1; line=1.5; L10=5o/5u/10g; streak=1u; opp_rank=2
-bettingpros,NBA,Terrence Shannon Jr.,FG3M,2026-05-10 22:45:48,1.5,0.2,None,None,None,None,14,side=over; rating=0; diff=1; line=0.5; L10=6o/4u/10g; streak=1o; opp_rank=14
-bettingpros,NBA,Jaden McDaniels,PA,2026-05-10 22:45:48,19.5,0.2,None,None,None,None,7,side=over; rating=0; diff=1; line=18.5; L10=4o/6u/10g; streak=1o; opp_rank=7
-bettingpros,NBA,Victor Wembanyama,RA,2026-05-10 22:45:48,17.5,0.2,None,None,None,None,14,side=over; rating=0; diff=1; line=15.5; L10=6o/4u/10g; streak=4o; opp_rank=14
-bettingpros,NBA,Dylan Harper,RA,2026-05-10 22:45:48,7.5,0.2,None,None,None,None,14,side=over; rating=0; diff=1; line=6.5; L10=4o/6u/10g; streak=1u; opp_rank=14
-bettingpros,NBA,Naz Reid,AST,2026-05-10 22:45:48,2.4,0.2,None,None,None,None,9,side=over; rating=0; diff=0.9; line=1.5; L10=6o/4u/10g; streak=1o; opp_rank=9
-bettingpros,NBA,Jaden McDaniels,PR,2026-05-10 22:45:48,21.4,0.2,None,None,None,None,7,side=over; rating=0; diff=0.9; line=20.5; L10=6o/4u/10g; streak=1o; opp_rank=7
-bettingpros,NBA,Keldon Johnson,RA,2026-05-10 22:45:48,5.4,0.2,None,None,None,None,14,side=over; rating=0; diff=0.9; line=4.5; L10=7o/3u/10g; streak=1u; opp_rank=14
-bettingpros,NBA,Devin Vassell,RA,2026-05-10 22:45:48,7.4,0.2,None,None,None,None,14,side=over; rating=0; diff=0.9; line=6.5; L10=6o/4u/10g; streak=3o; opp_rank=14
-bettingpros,NBA,Jaden McDaniels,PRA,2026-05-10 22:45:48,24.4,0.2,None,None,None,None,7,side=over; rating=0; diff=0.9; line=23.5; L10=5o/5u/10g; streak=1o; opp_rank=7
-bettingpros,NBA,Keldon Johnson,REB,2026-05-10 22:45:48,4.3,0.2,None,None,None,None,15,side=over; rating=0; diff=0.8; line=3.5; L10=7o/3u/10g; streak=1u; opp_rank=15
-bettingpros,NBA,Naz Reid,FG3M,2026-05-10 22:45:48,2.3,0.2,None,None,None,None,14,side=over; rating=0; diff=0.8; line=1.5; L10=4o/6u/10g; streak=3o; opp_rank=14
-bettingpros,NBA,Rudy Gobert,PR,2026-05-10 22:45:48,20.8,0.2,None,None,None,None,7,side=over; rating=0; diff=0.8; line=18.5; L10=5o/5u/10g; streak=1o; opp_rank=7
-bettingpros,NBA,Ayo Dosunmu,AST,2026-05-10 22:45:48,4.2,0.2,None,None,None,None,9,side=over; rating=0; diff=0.7; line=3.5; L10=5o/5u/10g; streak=1o; opp_rank=9
-bettingpros,NBA,Julian Champagnie,FG3M,2026-05-10 22:45:48,2.2,0.2,None,None,None,None,2,side=over; rating=0; diff=0.7; line=1.5; L10=8o/2u/10g; streak=8o; opp_rank=2
-bettingpros,NBA,Naz Reid,RA,2026-05-10 22:45:48,9.2,0.2,None,None,None,None,9,side=over; rating=0; diff=0.7; line=8.5; L10=6o/4u/10g; streak=1o; opp_rank=9
-bettingpros,NBA,Ayo Dosunmu,RA,2026-05-10 22:45:48,8.2,0.2,None,None,None,None,9,side=over; rating=0; diff=0.7; line=7.5; L10=3o/7u/10g; streak=1o; opp_rank=9
-bettingpros,NBA,Naz Reid,BLK,2026-05-10 22:45:48,1.1,0.2,None,None,None,None,13,side=over; rating=0; diff=0.6; line=0.5; L10=4o/6u/10g; streak=1o; opp_rank=13
-bettingpros,NBA,Jaden McDaniels,BLK,2026-05-10 22:45:48,1.1,0.2,None,None,None,None,13,side=over; rating=0; diff=0.6; line=0.5; L10=8o/2u/10g; streak=7o; opp_rank=13
-bettingpros,NBA,Harrison Barnes,PTS,2026-05-10 22:45:48,3.1,0.2,None,None,None,None,13,side=over; rating=0; diff=0.6; line=2.5; L10=5o/5u/10g; streak=1u; opp_rank=13
-bettingpros,NBA,De'Aaron Fox,REB,2026-05-10 22:45:48,4.1,0.2,None,None,None,None,15,side=over; rating=0; diff=0.6; line=3.5; L10=4o/6u/10g; streak=4u; opp_rank=15
-bettingpros,NBA,Ayo Dosunmu,FG3M,2026-05-10 22:45:48,2.1,0.2,None,None,None,None,14,side=over; rating=0; diff=0.6; line=1.5; L10=4o/6u/10g; streak=1o; opp_rank=14
-bettingpros,NBA,Anthony Edwards,RA,2026-05-10 22:45:48,9.9,0.2,None,None,None,None,9,side=under; rating=0; diff=-0.6; line=10.5; L10=3o/7u/10g; streak=1o; opp_rank=9
-bettingpros,NBA,Luke Kornet,PRA,2026-05-10 22:45:48,8.1,0.2,None,None,None,None,13,side=over; rating=0; diff=0.6; line=7.5; L10=7o/3u/10g; streak=3u; opp_rank=13
-bettingpros,NBA,Jaden McDaniels,AST,2026-05-10 22:45:48,3,0.2,None,None,None,None,9,side=over; rating=0; diff=0.5; line=2.5; L10=6o/4u/10g; streak=1u; opp_rank=9
-bettingpros,NBA,Dylan Harper,AST,2026-05-10 22:45:48,4,0.2,None,None,None,None,10,side=over; rating=0; diff=0.5; line=3.5; L10=3o/7u/10g; streak=1u; opp_rank=10
-bettingpros,NBA,Julius Randle,REB,2026-05-10 22:45:48,7,0.2,None,None,None,None,8,side=over; rating=0; diff=0.5; line=6.5; L10=5o/5u/10g; streak=2u; opp_rank=8
-bettingpros,NBA,Ayo Dosunmu,REB,2026-05-10 22:45:48,4,0.2,None,None,None,None,8,side=over; rating=0; diff=0.5; line=3.5; L10=5o/5u/10g; streak=1o; opp_rank=8
-bettingpros,NBA,Julius Randle,STL,2026-05-10 22:45:48,1,0.2,None,None,None,None,5,side=over; rating=0; diff=0.5; line=0.5; L10=5o/5u/10g; streak=5o; opp_rank=5
-bettingpros,NBA,Naz Reid,STL,2026-05-10 22:45:48,1,0.2,None,None,None,None,5,side=over; rating=0; diff=0.5; line=0.5; L10=4o/6u/10g; streak=3u; opp_rank=5
-bettingpros,NBA,Devin Vassell,STL,2026-05-10 22:45:48,1,0.2,None,None,None,None,14,side=over; rating=0; diff=0.5; line=0.5; L10=7o/3u/10g; streak=1o; opp_rank=14
-bettingpros,NBA,Terrence Shannon Jr.,AST,2026-05-10 22:45:48,1.9,0.2,None,None,None,None,9,side=over; rating=0; diff=0.4; line=1.5; L10=3o/7u/10g; streak=1o; opp_rank=9
-bettingpros,NBA,Jaden McDaniels,REB,2026-05-10 22:45:48,4.9,0.2,None,None,None,None,8,side=over; rating=0; diff=0.4; line=4.5; L10=7o/3u/10g; streak=1o; opp_rank=8
-bettingpros,NBA,Ayo Dosunmu,STL,2026-05-10 22:45:48,0.9,0.2,None,None,None,None,5,side=over; rating=0; diff=0.4; line=0.5; L10=5o/5u/10g; streak=3o; opp_rank=5
-bettingpros,NBA,Keldon Johnson,FG3M,2026-05-10 22:45:48,0.9,0.2,None,None,None,None,2,side=over; rating=0; diff=0.4; line=0.5; L10=8o/2u/10g; streak=1o; opp_rank=2
-bettingpros,NBA,Victor Wembanyama,FG3M,2026-05-10 22:45:48,2.1,0.2,None,None,None,None,2,side=under; rating=0; diff=-0.4; line=2.5; L10=2o/8u/10g; streak=1o; opp_rank=2
-bettingpros,NBA,Jaden McDaniels,RA,2026-05-10 22:45:48,7.9,0.2,None,None,None,None,9,side=over; rating=0; diff=0.4; line=7.5; L10=6o/4u/10g; streak=1o; opp_rank=9
-bettingpros,NBA,Devin Vassell,AST,2026-05-10 22:45:48,2.8,0.2,None,None,None,None,10,side=over; rating=0; diff=0.3; line=2.5; L10=5o/5u/10g; streak=3o; opp_rank=10
-bettingpros,NBA,Julius Randle,BLK,2026-05-10 22:45:48,0.2,0.2,None,None,None,None,13,side=under; rating=0; diff=-0.3; line=0.5; L10=1o/9u/10g; streak=6u; opp_rank=13
-bettingpros,NBA,Anthony Edwards,BLK,2026-05-10 22:45:48,0.8,0.2,None,None,None,None,13,side=over; rating=0; diff=0.3; line=0.5; L10=5o/5u/10g; streak=1o; opp_rank=13
-bettingpros,NBA,Rudy Gobert,REB,2026-05-10 22:45:48,10.8,0.2,None,None,None,None,8,side=over; rating=0; diff=0.3; line=10.5; L10=4o/6u/10g; streak=3u; opp_rank=8
-bettingpros,NBA,Naz Reid,REB,2026-05-10 22:45:48,6.8,0.2,None,None,None,None,8,side=over; rating=0; diff=0.3; line=6.5; L10=7o/3u/10g; streak=6o; opp_rank=8
-bettingpros,NBA,Jaden McDaniels,STL,2026-05-10 22:45:48,1.2,0.2,None,None,None,None,5,side=under; rating=0; diff=-0.3; line=1.5; L10=1o/9u/10g; streak=3u; opp_rank=5
-bettingpros,NBA,Julian Champagnie,STL,2026-05-10 22:45:48,0.8,0.2,None,None,None,None,14,side=over; rating=0; diff=0.3; line=0.5; L10=7o/3u/10g; streak=2o; opp_rank=14
-bettingpros,NBA,Victor Wembanyama,STL,2026-05-10 22:45:48,1.2,0.2,None,None,None,None,14,side=under; rating=0; diff=-0.3; line=1.5; L10=1o/9u/10g; streak=4u; opp_rank=14
-bettingpros,NBA,Dylan Harper,STL,2026-05-10 22:45:48,0.8,0.2,None,None,None,None,14,side=over; rating=0; diff=0.3; line=0.5; L10=7o/3u/10g; streak=2o; opp_rank=14
-bettingpros,NBA,De'Aaron Fox,FG3M,2026-05-10 22:45:48,1.8,0.2,None,None,None,None,2,side=over; rating=0; diff=0.3; line=1.5; L10=6o/4u/10g; streak=1u; opp_rank=2
-bettingpros,NBA,Dylan Harper,FG3M,2026-05-10 22:45:48,0.8,0.2,None,None,None,None,2,side=over; rating=0; diff=0.3; line=0.5; L10=4o/6u/10g; streak=1u; opp_rank=2
-bettingpros,NBA,Anthony Edwards,AST,2026-05-10 22:45:48,4.3,0.2,None,None,None,None,9,side=under; rating=0; diff=-0.2; line=4.5; L10=2o/8u/10g; streak=1o; opp_rank=9
-bettingpros,NBA,Victor Wembanyama,AST,2026-05-10 22:45:48,3.7,0.2,None,None,None,None,10,side=over; rating=0; diff=0.2; line=3.5; L10=3o/7u/10g; streak=2u; opp_rank=10
-bettingpros,NBA,De'Aaron Fox,BLK,2026-05-10 22:45:48,0.3,0.2,None,None,None,None,6,side=under; rating=0; diff=-0.2; line=0.5; L10=2o/8u/10g; streak=4u; opp_rank=6
-bettingpros,NBA,Ayo Dosunmu,BLK,2026-05-10 22:45:48,0.3,0.2,None,None,None,None,13,side=under; rating=0; diff=-0.2; line=0.5; L10=2o/8u/10g; streak=1u; opp_rank=13
-bettingpros,NBA,Stephon Castle,BLK,2026-05-10 22:45:48,0.3,0.2,None,None,None,None,6,side=under; rating=0; diff=-0.2; line=0.5; L10=2o/8u/10g; streak=3u; opp_rank=6
-bettingpros,NBA,Rudy Gobert,STL,2026-05-10 22:45:48,0.7,0.2,None,None,None,None,5,side=over; rating=0; diff=0.2; line=0.5; L10=7o/3u/10g; streak=2u; opp_rank=5
-bettingpros,NBA,De'Aaron Fox,STL,2026-05-10 22:45:48,1.3,0.2,None,None,None,None,14,side=under; rating=0; diff=-0.2; line=1.5; L10=2o/8u/10g; streak=1u; opp_rank=14
-bettingpros,NBA,Anthony Edwards,STL,2026-05-10 22:45:48,1.3,0.2,None,None,None,None,5,side=under; rating=0; diff=-0.2; line=1.5; L10=1o/9u/10g; streak=8u; opp_rank=5
-bettingpros,NBA,Stephon Castle,STL,2026-05-10 22:45:48,1.3,0.2,None,None,None,None,14,side=under; rating=0; diff=-0.2; line=1.5; L10=3o/7u/10g; streak=1u; opp_rank=14
-bettingpros,NBA,Stephon Castle,FG3M,2026-05-10 22:45:48,1.3,0.2,None,None,None,None,2,side=under; rating=0; diff=-0.2; line=1.5; L10=6o/4u/10g; streak=2u; opp_rank=2
-bettingpros,NBA,Terrence Shannon Jr.,RA,2026-05-10 22:45:48,4.3,0.2,None,None,None,None,9,side=under; rating=0; diff=-0.2; line=4.5; L10=5o/5u/10g; streak=1u; opp_rank=9
-bettingpros,NBA,Rudy Gobert,AST,2026-05-10 22:45:48,1.6,0.2,None,None,None,None,9,side=over; rating=0; diff=0.1; line=1.5; L10=8o/2u/10g; streak=1o; opp_rank=9
-bettingpros,NBA,Julian Champagnie,AST,2026-05-10 22:45:48,1.6,0.2,None,None,None,None,10,side=over; rating=0; diff=0.1; line=1.5; L10=4o/6u/10g; streak=2o; opp_rank=10
-bettingpros,NBA,Rudy Gobert,BLK,2026-05-10 22:45:48,1.6,0.2,None,None,None,None,13,side=over; rating=0; diff=0.1; line=1.5; L10=5o/5u/10g; streak=1o; opp_rank=13
-bettingpros,NBA,Luke Kornet,BLK,2026-05-10 22:45:48,0.6,0.2,None,None,None,None,6,side=over; rating=0; diff=0.1; line=0.5; L10=4o/6u/10g; streak=2o; opp_rank=6
-bettingpros,NBA,Devin Vassell,BLK,2026-05-10 22:45:48,0.4,0.2,None,None,None,None,6,side=under; rating=0; diff=-0.1; line=0.5; L10=6o/4u/10g; streak=2u; opp_rank=6
-bettingpros,NBA,Julian Champagnie,BLK,2026-05-10 22:45:48,0.4,0.2,None,None,None,None,6,side=under; rating=0; diff=-0.1; line=0.5; L10=5o/5u/10g; streak=1u; opp_rank=6
-bettingpros,NBA,Luke Kornet,REB,2026-05-10 22:45:48,3.4,0.2,None,None,None,None,15,side=under; rating=0; diff=-0.1; line=3.5; L10=6o/4u/10g; streak=4u; opp_rank=15
-bettingpros,NBA,Anthony Edwards,REB,2026-05-10 22:45:48,5.6,0.2,None,None,None,None,8,side=over; rating=0; diff=0.1; line=5.5; L10=3o/7u/10g; streak=1o; opp_rank=8
-bettingpros,NBA,Devin Vassell,REB,2026-05-10 22:45:48,4.6,0.2,None,None,None,None,15,side=over; rating=0; diff=0.1; line=4.5; L10=6o/4u/10g; streak=3o; opp_rank=15
-bettingpros,NBA,Terrence Shannon Jr.,REB,2026-05-10 22:45:48,2.4,0.2,None,None,None,None,8,side=under; rating=0; diff=-0.1; line=2.5; L10=4o/6u/10g; streak=1u; opp_rank=8
-bettingpros,NBA,Dylan Harper,REB,2026-05-10 22:45:48,3.6,0.2,None,None,None,None,15,side=over; rating=0; diff=0.1; line=3.5; L10=6o/4u/10g; streak=3o; opp_rank=15
-bettingpros,NBA,Keldon Johnson,STL,2026-05-10 22:45:48,0.4,0.2,None,None,None,None,14,side=under; rating=0; diff=-0.1; line=0.5; L10=5o/5u/10g; streak=1o; opp_rank=14
-bettingpros,NBA,Terrence Shannon Jr.,STL,2026-05-10 22:45:48,0.6,0.2,None,None,None,None,5,side=over; rating=0; diff=0.1; line=0.5; L10=2o/8u/10g; streak=3u; opp_rank=5
-bettingpros,NBA,Mike Conley,FG3M,2026-05-10 22:45:48,0.6,0.2,None,None,None,None,14,side=over; rating=0; diff=0.1; line=0.5; L10=6o/4u/10g; streak=1u; opp_rank=14
-bettingpros,NBA,Julius Randle,FG3M,2026-05-10 22:45:48,1.4,0.2,None,None,None,None,14,side=under; rating=0; diff=-0.1; line=1.5; L10=5o/5u/10g; streak=2u; opp_rank=14
-bettingpros,NBA,Jaden McDaniels,FG3M,2026-05-10 22:45:48,1.6,0.2,None,None,None,None,14,side=over; rating=0; diff=0.1; line=1.5; L10=1o/9u/10g; streak=1o; opp_rank=14
-bettingpros,NBA,Rudy Gobert,RA,2026-05-10 22:45:48,12.4,0.2,None,None,None,None,9,side=under; rating=0; diff=-0.1; line=12.5; L10=5o/5u/10g; streak=2u; opp_rank=9
-bettingpros,NBA,Harrison Barnes,PRA,2026-05-10 22:45:48,4.6,0.2,None,None,None,None,13,side=over; rating=0; diff=0.1; line=4.5; L10=5o/5u/10g; streak=1u; opp_rank=13
-oddsapi,NBA,Jaden McDaniels,AST,2026-05-10 22:45:48,2.5,0.5,0.5398,0.4602,,,,n_books=5
-oddsapi,NBA,Julius Randle,AST,2026-05-10 22:45:48,3.5,0.6,0.5301,0.4699,,,,n_books=6
-oddsapi,NBA,Stephon Castle,AST,2026-05-10 22:45:48,6.5,0.7,0.5427,0.4573,,,,n_books=7
-oddsapi,NBA,Ayo Dosunmu,AST,2026-05-10 22:45:48,3.5,0.6,0.4748,0.5252,,,,n_books=6
-oddsapi,NBA,Dylan Harper,AST,2026-05-10 22:45:48,3.5,0.5,0.4109,0.5891,,,,n_books=5
-oddsapi,NBA,Anthony Edwards,AST,2026-05-10 22:45:48,4.5,0.6,0.46,0.54,,,,n_books=6
-oddsapi,NBA,Victor Wembanyama,AST,2026-05-10 22:45:48,3.5,0.6,0.4107,0.5893,,,,n_books=6
-oddsapi,NBA,De'Aaron Fox,AST,2026-05-10 22:45:48,5.5,0.6,0.4942,0.5058,,,,n_books=6
-oddsapi,NBA,Devin Vassell,AST,2026-05-10 22:45:48,2.5,0.5,0.4803,0.5197,,,,n_books=5
-oddsapi,NBA,Rudy Gobert,BLK,2026-05-10 22:45:48,1.5,0.4,0.4248,0.5752,,,,n_books=4
-oddsapi,NBA,Victor Wembanyama,BLK,2026-05-10 22:45:48,3.5,0.3,0.5631,0.4369,,,,n_books=3
-oddsapi,NBA,Julian Champagnie,PTS,2026-05-10 22:45:48,8.5,0.6,0.4875,0.5125,,,,n_books=6
-oddsapi,NBA,Julius Randle,PTS,2026-05-10 22:45:48,17.5,0.6,0.4824,0.5176,,,,n_books=6
-oddsapi,NBA,Dylan Harper,PTS,2026-05-10 22:45:48,10.5,0.6,0.4942,0.5058,,,,n_books=6
-oddsapi,NBA,Anthony Edwards,PTS,2026-05-10 22:45:48,25.5,0.4,0.522,0.478,,,,n_books=4
-oddsapi,NBA,Victor Wembanyama,PTS,2026-05-10 22:45:48,26.5,0.6,0.5126,0.4874,,,,n_books=6
-oddsapi,NBA,Keldon Johnson,PTS,2026-05-10 22:45:48,8.5,0.5,0.5187,0.4813,,,,n_books=5
-oddsapi,NBA,Jaden McDaniels,PTS,2026-05-10 22:45:48,15.5,0.5,0.5273,0.4727,,,,n_books=5
-oddsapi,NBA,Rudy Gobert,PTS,2026-05-10 22:45:48,8.5,0.5,0.4606,0.5394,,,,n_books=5
-oddsapi,NBA,Devin Vassell,PTS,2026-05-10 22:45:48,12.5,0.6,0.4936,0.5064,,,,n_books=6
-oddsapi,NBA,Stephon Castle,PTS,2026-05-10 22:45:48,16.5,0.5,0.5153,0.4847,,,,n_books=5
-oddsapi,NBA,Terrence Shannon Jr.,PTS,2026-05-10 22:45:48,8.5,0.5,0.492,0.508,,,,n_books=5
-oddsapi,NBA,De'Aaron Fox,PTS,2026-05-10 22:45:48,17.5,0.5,0.4833,0.5167,,,,n_books=5
-oddsapi,NBA,Naz Reid,PTS,2026-05-10 22:45:48,12.5,0.5,0.4855,0.5145,,,,n_books=5
-oddsapi,NBA,Ayo Dosunmu,PTS,2026-05-10 22:45:48,13.5,0.5,0.4916,0.5084,,,,n_books=5
-oddsapi,NBA,Julius Randle,PA,2026-05-10 22:45:48,20.5,0.3,0.5149,0.4851,,,,n_books=3
-oddsapi,NBA,Jaden McDaniels,PA,2026-05-10 22:45:48,18.5,0.3,0.5122,0.4878,,,,n_books=3
-oddsapi,NBA,Dylan Harper,PA,2026-05-10 22:45:48,13.5,0.3,0.5004,0.4996,,,,n_books=3
-oddsapi,NBA,Stephon Castle,PA,2026-05-10 22:45:48,23.5,0.3,0.5284,0.4716,,,,n_books=3
-oddsapi,NBA,Anthony Edwards,PA,2026-05-10 22:45:48,30.5,0.3,0.502,0.498,,,,n_books=3
-oddsapi,NBA,De'Aaron Fox,PA,2026-05-10 22:45:48,22.5,0.4,0.5152,0.4848,,,,n_books=4
-oddsapi,NBA,Ayo Dosunmu,PA,2026-05-10 22:45:48,16.5,0.3,0.5101,0.4899,,,,n_books=3
-oddsapi,NBA,Devin Vassell,PA,2026-05-10 22:45:48,15.5,0.3,0.4736,0.5264,,,,n_books=3
-oddsapi,NBA,Victor Wembanyama,PA,2026-05-10 22:45:48,29.5,0.3,0.5134,0.4866,,,,n_books=3
-oddsapi,NBA,Naz Reid,PR,2026-05-10 22:45:48,18.5,0.2,0.5298,0.4702,,,,n_books=2
-oddsapi,NBA,Jaden McDaniels,PR,2026-05-10 22:45:48,20.5,0.3,0.5333,0.4667,,,,n_books=3
-oddsapi,NBA,De'Aaron Fox,PR,2026-05-10 22:45:48,20.5,0.4,0.5056,0.4944,,,,n_books=4
-oddsapi,NBA,Anthony Edwards,PR,2026-05-10 22:45:48,32.5,0.3,0.4912,0.5088,,,,n_books=3
-oddsapi,NBA,Dylan Harper,PR,2026-05-10 22:45:48,13.5,0.3,0.5179,0.4821,,,,n_books=3
-oddsapi,NBA,Julius Randle,PR,2026-05-10 22:45:48,23.5,0.3,0.4936,0.5064,,,,n_books=3
-oddsapi,NBA,Ayo Dosunmu,PR,2026-05-10 22:45:48,16.5,0.3,0.5136,0.4864,,,,n_books=3
-oddsapi,NBA,Rudy Gobert,PR,2026-05-10 22:45:48,18.5,0.3,0.4939,0.5061,,,,n_books=3
-oddsapi,NBA,Devin Vassell,PR,2026-05-10 22:45:48,16.5,0.4,0.4999,0.5001,,,,n_books=4
-oddsapi,NBA,Keldon Johnson,PR,2026-05-10 22:45:48,12.5,0.3,0.4937,0.5063,,,,n_books=3
-oddsapi,NBA,Julian Champagnie,PR,2026-05-10 22:45:48,13.5,0.4,0.5081,0.4919,,,,n_books=4
-oddsapi,NBA,Stephon Castle,PR,2026-05-10 22:45:48,21.5,0.3,0.5192,0.4808,,,,n_books=3
-oddsapi,NBA,Victor Wembanyama,PR,2026-05-10 22:45:48,39.5,0.4,0.5031,0.4969,,,,n_books=4
-oddsapi,NBA,Terrence Shannon Jr.,PR,2026-05-10 22:45:48,10.5,0.2,0.541,0.459,,,,n_books=2
-oddsapi,NBA,Ayo Dosunmu,PRA,2026-05-10 22:45:48,20.5,0.4,0.4945,0.5055,,,,n_books=4
-oddsapi,NBA,Jaden McDaniels,PRA,2026-05-10 22:45:48,23.5,0.4,0.525,0.475,,,,n_books=4
-oddsapi,NBA,Dylan Harper,PRA,2026-05-10 22:45:48,16.5,0.3,0.5072,0.4928,,,,n_books=3
-oddsapi,NBA,Julian Champagnie,PRA,2026-05-10 22:45:48,15.5,0.4,0.486,0.514,,,,n_books=4
-oddsapi,NBA,Naz Reid,PRA,2026-05-10 22:45:48,20.5,0.4,0.5218,0.4782,,,,n_books=4
-oddsapi,NBA,Victor Wembanyama,PRA,2026-05-10 22:45:48,42.5,0.4,0.5052,0.4948,,,,n_books=4
-oddsapi,NBA,Julius Randle,PRA,2026-05-10 22:45:48,27.5,0.4,0.4916,0.5084,,,,n_books=4
-oddsapi,NBA,Devin Vassell,PRA,2026-05-10 22:45:48,19.5,0.5,0.4878,0.5122,,,,n_books=5
-oddsapi,NBA,Anthony Edwards,PRA,2026-05-10 22:45:48,36.5,0.3,0.5078,0.4922,,,,n_books=3
-oddsapi,NBA,De'Aaron Fox,PRA,2026-05-10 22:45:48,26.5,0.4,0.4812,0.5188,,,,n_books=4
-oddsapi,NBA,Stephon Castle,PRA,2026-05-10 22:45:48,28.5,0.3,0.5215,0.4785,,,,n_books=3
-oddsapi,NBA,Keldon Johnson,PRA,2026-05-10 22:45:48,13.5,0.5,0.5081,0.4919,,,,n_books=5
-oddsapi,NBA,Anthony Edwards,REB,2026-05-10 22:45:48,5.5,0.5,0.539,0.461,,,,n_books=5
-oddsapi,NBA,Naz Reid,REB,2026-05-10 22:45:48,6.5,0.7,0.5063,0.4937,,,,n_books=7
-oddsapi,NBA,Julius Randle,REB,2026-05-10 22:45:48,6.5,0.6,0.4778,0.5222,,,,n_books=6
-oddsapi,NBA,Julian Champagnie,REB,2026-05-10 22:45:48,4.5,0.5,0.5664,0.4336,,,,n_books=5
-oddsapi,NBA,Rudy Gobert,REB,2026-05-10 22:45:48,10.5,0.6,0.4582,0.5418,,,,n_books=6
-oddsapi,NBA,Keldon Johnson,REB,2026-05-10 22:45:48,3.5,0.6,0.4817,0.5183,,,,n_books=6
-oddsapi,NBA,Victor Wembanyama,REB,2026-05-10 22:45:48,12.5,0.6,0.5377,0.4623,,,,n_books=6
-oddsapi,NBA,De'Aaron Fox,REB,2026-05-10 22:45:48,3.5,0.6,0.45,0.55,,,,n_books=6
-oddsapi,NBA,Dylan Harper,REB,2026-05-10 22:45:48,3.5,0.6,0.4493,0.5507,,,,n_books=6
-oddsapi,NBA,Jaden McDaniels,REB,2026-05-10 22:45:48,4.5,0.6,0.5658,0.4342,,,,n_books=6
-oddsapi,NBA,Stephon Castle,REB,2026-05-10 22:45:48,4.5,0.5,0.554,0.446,,,,n_books=5
-oddsapi,NBA,Devin Vassell,REB,2026-05-10 22:45:48,3.5,0.4,0.5739,0.4261,,,,n_books=4
-oddsapi,NBA,Dylan Harper,RA,2026-05-10 22:45:48,6.5,0.3,0.4714,0.5286,,,,n_books=3
-oddsapi,NBA,Anthony Edwards,RA,2026-05-10 22:45:48,10.5,0.4,0.4726,0.5274,,,,n_books=4
-oddsapi,NBA,De'Aaron Fox,RA,2026-05-10 22:45:48,8.5,0.4,0.5351,0.4649,,,,n_books=4
-oddsapi,NBA,Julius Randle,RA,2026-05-10 22:45:48,10.5,0.4,0.468,0.532,,,,n_books=4
-oddsapi,NBA,Jaden McDaniels,RA,2026-05-10 22:45:48,7.5,0.4,0.5266,0.4734,,,,n_books=4
-oddsapi,NBA,Devin Vassell,RA,2026-05-10 22:45:48,6.5,0.4,0.4974,0.5026,,,,n_books=4
-oddsapi,NBA,Stephon Castle,RA,2026-05-10 22:45:48,11.5,0.4,0.5312,0.4688,,,,n_books=4
-oddsapi,NBA,Victor Wembanyama,RA,2026-05-10 22:45:48,15.5,0.3,0.5456,0.4544,,,,n_books=3
-oddsapi,NBA,De'Aaron Fox,STL,2026-05-10 22:45:48,1.5,0.3,0.409,0.591,,,,n_books=3
-oddsapi,NBA,Victor Wembanyama,STL,2026-05-10 22:45:48,1.5,0.3,0.3541,0.6459,,,,n_books=3
-oddsapi,NBA,Stephon Castle,STL,2026-05-10 22:45:48,1.5,0.3,0.3703,0.6297,,,,n_books=3
-oddsapi,NBA,Julius Randle,FG3M,2026-05-10 22:45:48,1.5,0.6,0.372,0.628,,,,n_books=6
-oddsapi,NBA,Jaden McDaniels,FG3M,2026-05-10 22:45:48,1.5,0.6,0.3985,0.6015,,,,n_books=6
-oddsapi,NBA,Julian Champagnie,FG3M,2026-05-10 22:45:48,1.5,0.7,0.5793,0.4207,,,,n_books=7
-oddsapi,NBA,Victor Wembanyama,FG3M,2026-05-10 22:45:48,2.5,0.5,0.3887,0.6113,,,,n_books=5
-oddsapi,NBA,Anthony Edwards,FG3M,2026-05-10 22:45:48,2.5,0.6,0.5831,0.4169,,,,n_books=6
-oddsapi,NBA,Stephon Castle,FG3M,2026-05-10 22:45:48,1.5,0.6,0.3697,0.6303,,,,n_books=6
-oddsapi,NBA,De'Aaron Fox,FG3M,2026-05-10 22:45:48,1.5,0.6,0.4484,0.5516,,,,n_books=6
-oddsapi,NBA,Devin Vassell,FG3M,2026-05-10 22:45:48,1.5,0.5,0.5956,0.4044,,,,n_books=5
-oddsapi,NBA,Rudy Gobert,AST,2026-05-10 22:45:48,1.5,0.3,0.5796,0.4204,,,,n_books=3
-oddsapi,NBA,Naz Reid,AST,2026-05-10 22:45:48,1.5,0.3,0.5575,0.4425,,,,n_books=3
-oddsapi,NBA,Terrence Shannon Jr.,AST,2026-05-10 22:45:48,1.5,0.2,0.4234,0.5766,,,,n_books=2
-oddsapi,NBA,Jaden McDaniels,BLK,2026-05-10 22:45:48,0.5,0.3,0.6164,0.3836,,,,n_books=3
-oddsapi,NBA,Anthony Edwards,BLK,2026-05-10 22:45:48,0.5,0.3,0.6088,0.3912,,,,n_books=3
-oddsapi,NBA,Naz Reid,BLK,2026-05-10 22:45:48,0.5,0.2,0.5881,0.4119,,,,n_books=2
-oddsapi,NBA,Devin Vassell,BLK,2026-05-10 22:45:48,0.5,0.3,0.4451,0.5549,,,,n_books=3
-oddsapi,NBA,Julian Champagnie,BLK,2026-05-10 22:45:48,0.5,0.3,0.3641,0.6359,,,,n_books=3
-oddsapi,NBA,Ayo Dosunmu,BLK,2026-05-10 22:45:48,0.5,0.3,0.2939,0.7061,,,,n_books=3
-oddsapi,NBA,Julius Randle,BLK,2026-05-10 22:45:48,0.5,0.3,0.2748,0.7252,,,,n_books=3
-oddsapi,NBA,De'Aaron Fox,BLK,2026-05-10 22:45:48,0.5,0.3,0.2507,0.7493,,,,n_books=3
-oddsapi,NBA,Stephon Castle,BLK,2026-05-10 22:45:48,0.5,0.3,0.2607,0.7393,,,,n_books=3
-oddsapi,NBA,Victor Wembanyama,BS,2026-05-10 22:45:48,5.5,0.1,0.4408,0.5592,,,,n_books=1
-oddsapi,NBA,Jaden McDaniels,BS,2026-05-10 22:45:48,2.5,0.1,0.3998,0.6002,,,,n_books=1
-oddsapi,NBA,Anthony Edwards,BS,2026-05-10 22:45:48,2.5,0.1,0.3804,0.6196,,,,n_books=1
-oddsapi,NBA,Rudy Gobert,BS,2026-05-10 22:45:48,1.5,0.1,0.6146,0.3854,,,,n_books=1
-oddsapi,NBA,Devin Vassell,BS,2026-05-10 22:45:48,1.5,0.1,0.5081,0.4919,,,,n_books=1
-oddsapi,NBA,Naz Reid,BS,2026-05-10 22:45:48,1.5,0.1,0.502,0.498,,,,n_books=1
-oddsapi,NBA,De'Aaron Fox,BS,2026-05-10 22:45:48,1.5,0.1,0.4919,0.5081,,,,n_books=1
-oddsapi,NBA,Stephon Castle,BS,2026-05-10 22:45:48,1.5,0.1,0.4508,0.5492,,,,n_books=1
-oddsapi,NBA,Julian Champagnie,BS,2026-05-10 22:45:48,1.5,0.1,0.4154,0.5846,,,,n_books=1
-oddsapi,NBA,Ayo Dosunmu,BS,2026-05-10 22:45:48,1.5,0.1,0.3746,0.6254,,,,n_books=1
-oddsapi,NBA,Julius Randle,BS,2026-05-10 22:45:48,1.5,0.1,0.3362,0.6638,,,,n_books=1
-oddsapi,NBA,Naz Reid,PA,2026-05-10 22:45:48,14.5,0.2,0.4889,0.5111,,,,n_books=2
-oddsapi,NBA,Julian Champagnie,PA,2026-05-10 22:45:48,10.5,0.3,0.4753,0.5247,,,,n_books=3
-oddsapi,NBA,Terrence Shannon Jr.,PA,2026-05-10 22:45:48,10.5,0.1,0.4677,0.5323,,,,n_books=1
-oddsapi,NBA,Rudy Gobert,PA,2026-05-10 22:45:48,10.5,0.3,0.4668,0.5332,,,,n_books=3
-oddsapi,NBA,Rudy Gobert,PRA,2026-05-10 22:45:48,20.5,0.4,0.4893,0.5107,,,,n_books=4
-oddsapi,NBA,Terrence Shannon Jr.,PRA,2026-05-10 22:45:48,12.5,0.2,0.5239,0.4761,,,,n_books=2
-oddsapi,NBA,Ayo Dosunmu,REB,2026-05-10 22:45:48,3.5,0.5,0.4803,0.5197,,,,n_books=5
-oddsapi,NBA,Terrence Shannon Jr.,REB,2026-05-10 22:45:48,2.5,0.4,0.5451,0.4549,,,,n_books=4
-oddsapi,NBA,Rudy Gobert,RA,2026-05-10 22:45:48,12.5,0.3,0.4753,0.5247,,,,n_books=3
-oddsapi,NBA,Naz Reid,RA,2026-05-10 22:45:48,8.5,0.2,0.4934,0.5066,,,,n_books=2
-oddsapi,NBA,Ayo Dosunmu,RA,2026-05-10 22:45:48,7.5,0.3,0.4411,0.5589,,,,n_books=3
-oddsapi,NBA,Julian Champagnie,RA,2026-05-10 22:45:48,6.5,0.3,0.4868,0.5132,,,,n_books=3
-oddsapi,NBA,Terrence Shannon Jr.,RA,2026-05-10 22:45:48,4.5,0.1,0.453,0.547,,,,n_books=1
-oddsapi,NBA,Jaden McDaniels,STL,2026-05-10 22:45:48,1.5,0.2,0.3635,0.6365,,,,n_books=2
-oddsapi,NBA,Anthony Edwards,STL,2026-05-10 22:45:48,1.5,0.2,0.3477,0.6523,,,,n_books=2
-oddsapi,NBA,Devin Vassell,STL,2026-05-10 22:45:48,0.5,0.2,0.651,0.349,,,,n_books=2
-oddsapi,NBA,Dylan Harper,STL,2026-05-10 22:45:48,0.5,0.2,0.6177,0.3823,,,,n_books=2
-oddsapi,NBA,Julian Champagnie,STL,2026-05-10 22:45:48,0.5,0.2,0.6015,0.3985,,,,n_books=2
-oddsapi,NBA,Ayo Dosunmu,STL,2026-05-10 22:45:48,0.5,0.2,0.5944,0.4056,,,,n_books=2
-oddsapi,NBA,Julius Randle,STL,2026-05-10 22:45:48,0.5,0.2,0.5723,0.4277,,,,n_books=2
-oddsapi,NBA,Naz Reid,STL,2026-05-10 22:45:48,0.5,0.2,0.5291,0.4709,,,,n_books=2
-oddsapi,NBA,Rudy Gobert,STL,2026-05-10 22:45:48,0.5,0.2,0.4944,0.5056,,,,n_books=2
-oddsapi,NBA,Keldon Johnson,STL,2026-05-10 22:45:48,0.5,0.2,0.4378,0.5622,,,,n_books=2
-oddsapi,NBA,Terrence Shannon Jr.,STL,2026-05-10 22:45:48,0.5,0.2,0.4168,0.5832,,,,n_books=2
-oddsapi,NBA,Naz Reid,FG3M,2026-05-10 22:45:48,1.5,0.5,0.5609,0.4391,,,,n_books=5
-oddsapi,NBA,Ayo Dosunmu,FG3M,2026-05-10 22:45:48,1.5,0.5,0.497,0.503,,,,n_books=5
-oddsapi,NBA,Terrence Shannon Jr.,FG3M,2026-05-10 22:45:48,0.5,0.4,0.6193,0.3807,,,,n_books=4
-oddsapi,NBA,Keldon Johnson,FG3M,2026-05-10 22:45:48,0.5,0.4,0.5846,0.4154,,,,n_books=4
-oddsapi,NBA,Dylan Harper,FG3M,2026-05-10 22:45:48,0.5,0.4,0.556,0.444,,,,n_books=4
-oddsapi,NBA,Harrison Barnes,PRA,2026-05-10 22:45:48,4.5,0.1,0.4653,0.5347,,,,n_books=1
-oddsapi,NBA,Luke Kornet,PRA,2026-05-10 22:45:48,7.5,0.1,0.4853,0.5147,,,,n_books=1
-oddsapi,NBA,Julian Champagnie,AST,2026-05-10 22:45:48,1.5,0.1,0.4122,0.5878,,,,n_books=1
-oddsapi,NBA,Cade Cunningham,AST,2026-05-10 22:45:48,8.5,0.4,0.5493,0.4507,,,,n_books=4
-oddsapi,NBA,James Harden,AST,2026-05-10 22:45:48,6.5,0.7,0.5381,0.4619,,,,n_books=7
-oddsapi,NBA,Donovan Mitchell,AST,2026-05-10 22:45:48,4.5,0.5,0.4209,0.5791,,,,n_books=5
-oddsapi,NBA,Evan Mobley,AST,2026-05-10 22:45:48,3.5,0.6,0.4327,0.5673,,,,n_books=6
-oddsapi,NBA,Daniss Jenkins,AST,2026-05-10 22:45:48,3.5,0.5,0.4129,0.5871,,,,n_books=5
-oddsapi,NBA,Ausar Thompson,AST,2026-05-10 22:45:48,2.5,0.5,0.5909,0.4091,,,,n_books=5
-oddsapi,NBA,Dennis Schroder,AST,2026-05-10 22:45:48,2.5,0.3,0.5085,0.4915,,,,n_books=3
-oddsapi,NBA,Duncan Robinson,AST,2026-05-10 22:45:48,2.5,0.3,0.3819,0.6181,,,,n_books=3
-oddsapi,NBA,Jalen Duren,AST,2026-05-10 22:45:48,2.5,0.3,0.3809,0.6191,,,,n_books=3
-oddsapi,NBA,Tobias Harris,AST,2026-05-10 22:45:48,1.5,0.4,0.5942,0.4058,,,,n_books=4
-oddsapi,NBA,Jarrett Allen,AST,2026-05-10 22:45:48,1.5,0.2,0.4481,0.5519,,,,n_books=2
-oddsapi,NBA,Evan Mobley,BLK,2026-05-10 22:45:48,1.5,0.3,0.5205,0.4795,,,,n_books=3
-oddsapi,NBA,Jarrett Allen,BLK,2026-05-10 22:45:48,1.5,0.3,0.3923,0.6077,,,,n_books=3
-oddsapi,NBA,Donovan Mitchell,PTS,2026-05-10 22:45:48,27.5,0.5,0.4982,0.5018,,,,n_books=5
-oddsapi,NBA,Cade Cunningham,PTS,2026-05-10 22:45:48,26.5,0.6,0.5145,0.4855,,,,n_books=6
-oddsapi,NBA,James Harden,PTS,2026-05-10 22:45:48,19.5,0.6,0.4876,0.5124,,,,n_books=6
-oddsapi,NBA,Tobias Harris,PTS,2026-05-10 22:45:48,18.5,0.5,0.4808,0.5192,,,,n_books=5
-oddsapi,NBA,Evan Mobley,PTS,2026-05-10 22:45:48,15.5,0.6,0.4928,0.5072,,,,n_books=6
-oddsapi,NBA,Jalen Duren,PTS,2026-05-10 22:45:48,13.5,0.5,0.5063,0.4937,,,,n_books=5
-oddsapi,NBA,Jarrett Allen,PTS,2026-05-10 22:45:48,12.5,0.6,0.5012,0.4988,,,,n_books=6
-oddsapi,NBA,Duncan Robinson,PTS,2026-05-10 22:45:48,11.5,0.6,0.4788,0.5212,,,,n_books=6
-oddsapi,NBA,Daniss Jenkins,PTS,2026-05-10 22:45:48,9.5,0.6,0.4888,0.5112,,,,n_books=6
-oddsapi,NBA,Ausar Thompson,PTS,2026-05-10 22:45:48,9.5,0.5,0.4831,0.5169,,,,n_books=5
-oddsapi,NBA,Max Strus,PTS,2026-05-10 22:45:48,8.5,0.6,0.482,0.518,,,,n_books=6
-oddsapi,NBA,Dennis Schroder,PTS,2026-05-10 22:45:48,6.5,0.4,0.5133,0.4867,,,,n_books=4
-oddsapi,NBA,Jaylon Tyson,PTS,2026-05-10 22:45:48,6.5,0.4,0.5049,0.4951,,,,n_books=4
-oddsapi,NBA,Dean Wade,PTS,2026-05-10 22:45:48,3.5,0.6,0.4987,0.5013,,,,n_books=6
-oddsapi,NBA,Cade Cunningham,PA,2026-05-10 22:45:48,36.5,0.4,0.4879,0.5121,,,,n_books=4
-oddsapi,NBA,Donovan Mitchell,PA,2026-05-10 22:45:48,31.5,0.4,0.498,0.502,,,,n_books=4
-oddsapi,NBA,James Harden,PA,2026-05-10 22:45:48,26.5,0.3,0.4862,0.5138,,,,n_books=3
-oddsapi,NBA,Tobias Harris,PA,2026-05-10 22:45:48,20.5,0.4,0.4794,0.5206,,,,n_books=4
-oddsapi,NBA,Evan Mobley,PA,2026-05-10 22:45:48,18.5,0.3,0.5169,0.4831,,,,n_books=3
-oddsapi,NBA,Jalen Duren,PA,2026-05-10 22:45:48,15.5,0.2,0.5122,0.4878,,,,n_books=2
-oddsapi,NBA,Jarrett Allen,PA,2026-05-10 22:45:48,14.5,0.2,0.4878,0.5122,,,,n_books=2
-oddsapi,NBA,Duncan Robinson,PA,2026-05-10 22:45:48,13.5,0.2,0.4985,0.5015,,,,n_books=2
-oddsapi,NBA,Daniss Jenkins,PA,2026-05-10 22:45:48,12.5,0.3,0.5058,0.4942,,,,n_books=3
-oddsapi,NBA,Ausar Thompson,PA,2026-05-10 22:45:48,12.5,0.4,0.4905,0.5095,,,,n_books=4
-oddsapi,NBA,Dennis Schroder,PA,2026-05-10 22:45:48,9.5,0.2,0.501,0.499,,,,n_books=2
-oddsapi,NBA,Cade Cunningham,PR,2026-05-10 22:45:48,32.5,0.4,0.4911,0.5089,,,,n_books=4
-oddsapi,NBA,Donovan Mitchell,PR,2026-05-10 22:45:48,31.5,0.4,0.5061,0.4939,,,,n_books=4
-oddsapi,NBA,Jalen Duren,PR,2026-05-10 22:45:48,24.5,0.3,0.4956,0.5044,,,,n_books=3
-oddsapi,NBA,James Harden,PR,2026-05-10 22:45:48,24.5,0.3,0.4923,0.5077,,,,n_books=3
-oddsapi,NBA,Tobias Harris,PR,2026-05-10 22:45:48,24.5,0.4,0.5023,0.4977,,,,n_books=4
-oddsapi,NBA,Evan Mobley,PR,2026-05-10 22:45:48,24.5,0.3,0.4766,0.5234,,,,n_books=3
-oddsapi,NBA,Jarrett Allen,PR,2026-05-10 22:45:48,20.5,0.3,0.5074,0.4926,,,,n_books=3
-oddsapi,NBA,Ausar Thompson,PR,2026-05-10 22:45:48,16.5,0.3,0.4896,0.5104,,,,n_books=3
-oddsapi,NBA,Duncan Robinson,PR,2026-05-10 22:45:48,13.5,0.3,0.5165,0.4835,,,,n_books=3
-oddsapi,NBA,Max Strus,PR,2026-05-10 22:45:48,12.5,0.3,0.4966,0.5034,,,,n_books=3
-oddsapi,NBA,Daniss Jenkins,PR,2026-05-10 22:45:48,11.5,0.2,0.529,0.471,,,,n_books=2
-oddsapi,NBA,Dean Wade,PR,2026-05-10 22:45:48,7.5,0.4,0.4758,0.5242,,,,n_books=4
-oddsapi,NBA,Cade Cunningham,PRA,2026-05-10 22:45:48,41.5,0.5,0.5063,0.4937,,,,n_books=5
-oddsapi,NBA,Donovan Mitchell,PRA,2026-05-10 22:45:48,36.5,0.3,0.4973,0.5027,,,,n_books=3
-oddsapi,NBA,James Harden,PRA,2026-05-10 22:45:48,31.5,0.4,0.4959,0.5041,,,,n_books=4
-oddsapi,NBA,Evan Mobley,PRA,2026-05-10 22:45:48,27.5,0.4,0.4964,0.5036,,,,n_books=4
-oddsapi,NBA,Jalen Duren,PRA,2026-05-10 22:45:48,26.5,0.3,0.5108,0.4892,,,,n_books=3
-oddsapi,NBA,Tobias Harris,PRA,2026-05-10 22:45:48,26.5,0.5,0.4986,0.5014,,,,n_books=5
-oddsapi,NBA,Jarrett Allen,PRA,2026-05-10 22:45:48,22.5,0.3,0.5179,0.4821,,,,n_books=3
-oddsapi,NBA,Ausar Thompson,PRA,2026-05-10 22:45:48,19.5,0.4,0.5003,0.4997,,,,n_books=4
-oddsapi,NBA,Duncan Robinson,PRA,2026-05-10 22:45:48,16.5,0.4,0.4972,0.5028,,,,n_books=4
-oddsapi,NBA,Daniss Jenkins,PRA,2026-05-10 22:45:48,15.5,0.4,0.4834,0.5166,,,,n_books=4
-oddsapi,NBA,Jalen Duren,REB,2026-05-10 22:45:48,10.5,0.6,0.5146,0.4854,,,,n_books=6
-oddsapi,NBA,Jarrett Allen,REB,2026-05-10 22:45:48,7.5,0.5,0.5654,0.4346,,,,n_books=5
-oddsapi,NBA,Evan Mobley,REB,2026-05-10 22:45:48,7.5,0.4,0.5657,0.4343,,,,n_books=4
-oddsapi,NBA,Ausar Thompson,REB,2026-05-10 22:45:48,7.5,0.5,0.4382,0.5618,,,,n_books=5
-oddsapi,NBA,Tobias Harris,REB,2026-05-10 22:45:48,6.5,0.6,0.4412,0.5588,,,,n_books=6
-oddsapi,NBA,Cade Cunningham,REB,2026-05-10 22:45:48,5.5,0.6,0.4627,0.5373,,,,n_books=6
-oddsapi,NBA,James Harden,REB,2026-05-10 22:45:48,4.5,0.5,0.5719,0.4281,,,,n_books=5
-oddsapi,NBA,Donovan Mitchell,REB,2026-05-10 22:45:48,4.5,0.6,0.432,0.568,,,,n_books=6
-oddsapi,NBA,Max Strus,REB,2026-05-10 22:45:48,3.5,0.5,0.5797,0.4203,,,,n_books=5
-oddsapi,NBA,Dean Wade,REB,2026-05-10 22:45:48,3.5,0.6,0.4336,0.5664,,,,n_books=6
-oddsapi,NBA,Daniss Jenkins,REB,2026-05-10 22:45:48,2.5,0.4,0.4573,0.5427,,,,n_books=4
-oddsapi,NBA,Duncan Robinson,REB,2026-05-10 22:45:48,2.5,0.5,0.4632,0.5368,,,,n_books=5
-oddsapi,NBA,Cade Cunningham,RA,2026-05-10 22:45:48,14.5,0.4,0.498,0.502,,,,n_books=4
-oddsapi,NBA,Jalen Duren,RA,2026-05-10 22:45:48,12.5,0.3,0.523,0.477,,,,n_books=3
-oddsapi,NBA,James Harden,RA,2026-05-10 22:45:48,11.5,0.4,0.5474,0.4526,,,,n_books=4
-oddsapi,NBA,Evan Mobley,RA,2026-05-10 22:45:48,11.5,0.4,0.4992,0.5008,,,,n_books=4
-oddsapi,NBA,Ausar Thompson,RA,2026-05-10 22:45:48,10.5,0.4,0.4671,0.5329,,,,n_books=4
-oddsapi,NBA,Jarrett Allen,RA,2026-05-10 22:45:48,9.5,0.2,0.5396,0.4604,,,,n_books=2
-oddsapi,NBA,Donovan Mitchell,RA,2026-05-10 22:45:48,8.5,0.3,0.4816,0.5184,,,,n_books=3
-oddsapi,NBA,Tobias Harris,RA,2026-05-10 22:45:48,8.5,0.3,0.4518,0.5482,,,,n_books=3
-oddsapi,NBA,Daniss Jenkins,RA,2026-05-10 22:45:48,5.5,0.2,0.5111,0.4889,,,,n_books=2
-oddsapi,NBA,Duncan Robinson,RA,2026-05-10 22:45:48,4.5,0.3,0.5163,0.4837,,,,n_books=3
-oddsapi,NBA,Ausar Thompson,STL,2026-05-10 22:45:48,1.5,0.2,0.6064,0.3936,,,,n_books=2
-oddsapi,NBA,Cade Cunningham,STL,2026-05-10 22:45:48,1.5,0.2,0.3969,0.6031,,,,n_books=2
-oddsapi,NBA,Donovan Mitchell,STL,2026-05-10 22:45:48,1.5,0.2,0.3781,0.6219,,,,n_books=2
-oddsapi,NBA,Tobias Harris,STL,2026-05-10 22:45:48,1.5,0.2,0.3552,0.6448,,,,n_books=2
-oddsapi,NBA,James Harden,STL,2026-05-10 22:45:48,1.5,0.2,0.3521,0.6479,,,,n_books=2
-oddsapi,NBA,Duncan Robinson,FG3M,2026-05-10 22:45:48,2.5,0.6,0.5571,0.4429,,,,n_books=6
-oddsapi,NBA,Donovan Mitchell,FG3M,2026-05-10 22:45:48,2.5,0.7,0.5443,0.4557,,,,n_books=7
-oddsapi,NBA,James Harden,FG3M,2026-05-10 22:45:48,2.5,0.6,0.4546,0.5454,,,,n_books=6
-oddsapi,NBA,Cade Cunningham,FG3M,2026-05-10 22:45:48,2.5,0.6,0.3948,0.6052,,,,n_books=6
-oddsapi,NBA,Max Strus,FG3M,2026-05-10 22:45:48,1.5,0.6,0.5971,0.4029,,,,n_books=6
-oddsapi,NBA,Tobias Harris,FG3M,2026-05-10 22:45:48,1.5,0.6,0.4316,0.5684,,,,n_books=6
-oddsapi,NBA,Daniss Jenkins,FG3M,2026-05-10 22:45:48,0.5,0.4,0.653,0.347,,,,n_books=4
-oddsapi,NBA,Jaylon Tyson,FG3M,2026-05-10 22:45:48,0.5,0.3,0.6446,0.3554,,,,n_books=3
-oddsapi,NBA,Evan Mobley,FG3M,2026-05-10 22:45:48,0.5,0.3,0.623,0.377,,,,n_books=3
-oddsapi,NBA,Dean Wade,FG3M,2026-05-10 22:45:48,0.5,0.3,0.5869,0.4131,,,,n_books=3
-oddsapi,NBA,Jalen Duren,BLK,2026-05-10 22:45:48,0.5,0.1,0.624,0.376,,,,n_books=1
-oddsapi,NBA,Cade Cunningham,BLK,2026-05-10 22:45:48,0.5,0.1,0.5482,0.4518,,,,n_books=1
-oddsapi,NBA,Duncan Robinson,BLK,2026-05-10 22:45:48,0.5,0.1,0.3008,0.6992,,,,n_books=1
-oddsapi,NBA,Dean Wade,BLK,2026-05-10 22:45:48,0.5,0.1,0.2632,0.7368,,,,n_books=1
-oddsapi,NBA,Ausar Thompson,BLK,2026-05-10 22:45:48,1.5,0.1,0.3938,0.6062,,,,n_books=1
-oddsapi,NBA,Tobias Harris,BLK,2026-05-10 22:45:48,0.5,0.1,0.4393,0.5607,,,,n_books=1
-oddsapi,NBA,James Harden,BLK,2026-05-10 22:45:48,0.5,0.1,0.4518,0.5482,,,,n_books=1
-oddsapi,NBA,Donovan Mitchell,BLK,2026-05-10 22:45:48,0.5,0.1,0.3236,0.6764,,,,n_books=1
-oddsapi,NBA,Dean Wade,PA,2026-05-10 22:45:48,5.5,0.1,0.4554,0.5446,,,,n_books=1
-oddsapi,NBA,Dean Wade,PRA,2026-05-10 22:45:48,8.5,0.1,0.4797,0.5203,,,,n_books=1
-oddsapi,NBA,Max Strus,PRA,2026-05-10 22:45:48,14.5,0.1,0.5082,0.4918,,,,n_books=1
-oddsapi,NBA,Dennis Schroder,PRA,2026-05-10 22:45:48,10.5,0.1,0.4899,0.5101,,,,n_books=1
-oddsapi,NBA,Jaylon Tyson,PRA,2026-05-10 22:45:48,10.5,0.1,0.5246,0.4754,,,,n_books=1
-oddsapi,NBA,Dean Wade,RA,2026-05-10 22:45:48,4.5,0.1,0.4459,0.5541,,,,n_books=1
-oddsapi,NBA,Shai Gilgeous-Alexander,AST,2026-05-10 22:45:48,6.5,0.6,0.51,0.49,,,,n_books=6
-oddsapi,NBA,LeBron James,AST,2026-05-10 22:45:48,7.5,0.6,0.492,0.508,,,,n_books=6
-oddsapi,NBA,Ajay Mitchell,AST,2026-05-10 22:45:48,4.5,0.6,0.4641,0.5359,,,,n_books=6
-oddsapi,NBA,Chet Holmgren,AST,2026-05-10 22:45:48,1.5,0.4,0.5106,0.4894,,,,n_books=4
-oddsapi,NBA,Austin Reaves,AST,2026-05-10 22:45:48,6.5,0.5,0.4514,0.5486,,,,n_books=5
-oddsapi,NBA,Marcus Smart,AST,2026-05-10 22:45:48,3.5,0.6,0.5467,0.4533,,,,n_books=6
-oddsapi,NBA,Isaiah Hartenstein,AST,2026-05-10 22:45:48,2.5,0.6,0.5327,0.4673,,,,n_books=6
-oddsapi,NBA,Deandre Ayton,BLK,2026-05-10 22:45:48,0.5,0.3,0.6157,0.3843,,,,n_books=3
-oddsapi,NBA,Isaiah Hartenstein,BLK,2026-05-10 22:45:48,0.5,0.3,0.5586,0.4414,,,,n_books=3
-oddsapi,NBA,Chet Holmgren,BLK,2026-05-10 22:45:48,1.5,0.3,0.5539,0.4461,,,,n_books=3
-oddsapi,NBA,Luke Kennard,PTS,2026-05-10 22:45:48,9.5,0.5,0.4914,0.5086,,,,n_books=5
-oddsapi,NBA,Isaiah Hartenstein,PTS,2026-05-10 22:45:48,8.5,0.6,0.4822,0.5178,,,,n_books=6
-oddsapi,NBA,Shai Gilgeous-Alexander,PTS,2026-05-10 22:45:48,28.5,0.6,0.5054,0.4946,,,,n_books=6
-oddsapi,NBA,Chet Holmgren,PTS,2026-05-10 22:45:48,17.5,0.5,0.5117,0.4883,,,,n_books=5
-oddsapi,NBA,Luguentz Dort,PTS,2026-05-10 22:45:48,6.5,0.6,0.4707,0.5293,,,,n_books=6
-oddsapi,NBA,LeBron James,PTS,2026-05-10 22:45:48,21.5,0.6,0.5097,0.4903,,,,n_books=6
-oddsapi,NBA,Rui Hachimura,PTS,2026-05-10 22:45:48,14.5,0.6,0.493,0.507,,,,n_books=6
-oddsapi,NBA,Alex Caruso,PTS,2026-05-10 22:45:48,6.5,0.6,0.4985,0.5015,,,,n_books=6
-oddsapi,NBA,Ajay Mitchell,PTS,2026-05-10 22:45:48,16.5,0.6,0.5157,0.4843,,,,n_books=6
-oddsapi,NBA,Cason Wallace,PTS,2026-05-10 22:45:48,6.5,0.6,0.5336,0.4664,,,,n_books=6
-oddsapi,NBA,Deandre Ayton,PTS,2026-05-10 22:45:48,9.5,0.6,0.4955,0.5045,,,,n_books=6
-oddsapi,NBA,Austin Reaves,PTS,2026-05-10 22:45:48,21.5,0.5,0.5194,0.4806,,,,n_books=5
-oddsapi,NBA,Marcus Smart,PTS,2026-05-10 22:45:48,10.5,0.5,0.5224,0.4776,,,,n_books=5
-oddsapi,NBA,Austin Reaves,PA,2026-05-10 22:45:48,28.5,0.3,0.4912,0.5088,,,,n_books=3
-oddsapi,NBA,Shai Gilgeous-Alexander,PA,2026-05-10 22:45:48,35.5,0.2,0.5102,0.4898,,,,n_books=2
-oddsapi,NBA,Isaiah Hartenstein,PA,2026-05-10 22:45:48,10.5,0.3,0.5434,0.4566,,,,n_books=3
-oddsapi,NBA,Ajay Mitchell,PA,2026-05-10 22:45:48,21.5,0.4,0.4906,0.5094,,,,n_books=4
-oddsapi,NBA,Chet Holmgren,PA,2026-05-10 22:45:48,19.5,0.4,0.4924,0.5076,,,,n_books=4
-oddsapi,NBA,LeBron James,PA,2026-05-10 22:45:48,29.5,0.3,0.4919,0.5081,,,,n_books=3
-oddsapi,NBA,Marcus Smart,PA,2026-05-10 22:45:48,15.5,0.3,0.4776,0.5224,,,,n_books=3
-oddsapi,NBA,Austin Reaves,PR,2026-05-10 22:45:48,26.5,0.3,0.4906,0.5094,,,,n_books=3
-oddsapi,NBA,Luke Kennard,PR,2026-05-10 22:45:48,12.5,0.2,0.4725,0.5275,,,,n_books=2
-oddsapi,NBA,Isaiah Hartenstein,PR,2026-05-10 22:45:48,17.5,0.3,0.4933,0.5067,,,,n_books=3
-oddsapi,NBA,Shai Gilgeous-Alexander,PR,2026-05-10 22:45:48,32.5,0.2,0.5249,0.4751,,,,n_books=2
-oddsapi,NBA,Marcus Smart,PR,2026-05-10 22:45:48,14.5,0.4,0.4894,0.5106,,,,n_books=4
-oddsapi,NBA,Chet Holmgren,PR,2026-05-10 22:45:48,27.5,0.3,0.4797,0.5203,,,,n_books=3
-oddsapi,NBA,Luguentz Dort,PR,2026-05-10 22:45:48,9.5,0.4,0.4914,0.5086,,,,n_books=4
-oddsapi,NBA,Rui Hachimura,PR,2026-05-10 22:45:48,18.5,0.4,0.4955,0.5045,,,,n_books=4
-oddsapi,NBA,Alex Caruso,PR,2026-05-10 22:45:48,9.5,0.2,0.5026,0.4974,,,,n_books=2
-oddsapi,NBA,Ajay Mitchell,PR,2026-05-10 22:45:48,20.5,0.4,0.486,0.514,,,,n_books=4
-oddsapi,NBA,Cason Wallace,PR,2026-05-10 22:45:48,9.5,0.2,0.5046,0.4954,,,,n_books=2
-oddsapi,NBA,Deandre Ayton,PR,2026-05-10 22:45:48,18.5,0.4,0.4878,0.5122,,,,n_books=4
-oddsapi,NBA,LeBron James,PR,2026-05-10 22:45:48,28.5,0.3,0.4898,0.5102,,,,n_books=3
-oddsapi,NBA,Austin Reaves,PRA,2026-05-10 22:45:48,32.5,0.5,0.5048,0.4952,,,,n_books=5
-oddsapi,NBA,Shai Gilgeous-Alexander,PRA,2026-05-10 22:45:48,40.5,0.3,0.485,0.515,,,,n_books=3
-oddsapi,NBA,Isaiah Hartenstein,PRA,2026-05-10 22:45:48,20.5,0.4,0.5025,0.4975,,,,n_books=4
-oddsapi,NBA,Ajay Mitchell,PRA,2026-05-10 22:45:48,24.5,0.4,0.5089,0.4911,,,,n_books=4
-oddsapi,NBA,Chet Holmgren,PRA,2026-05-10 22:45:48,28.5,0.4,0.502,0.498,,,,n_books=4
-oddsapi,NBA,LeBron James,PRA,2026-05-10 22:45:48,36.5,0.3,0.4929,0.5071,,,,n_books=3
-oddsapi,NBA,Marcus Smart,PRA,2026-05-10 22:45:48,18.5,0.5,0.4856,0.5144,,,,n_books=5
-oddsapi,NBA,Austin Reaves,REB,2026-05-10 22:45:48,4.5,0.6,0.461,0.539,,,,n_books=6
-oddsapi,NBA,Luke Kennard,REB,2026-05-10 22:45:48,2.5,0.5,0.53,0.47,,,,n_books=5
-oddsapi,NBA,Isaiah Hartenstein,REB,2026-05-10 22:45:48,8.5,0.6,0.526,0.474,,,,n_books=6
-oddsapi,NBA,Shai Gilgeous-Alexander,REB,2026-05-10 22:45:48,4.5,0.5,0.4119,0.5881,,,,n_books=5
-oddsapi,NBA,Chet Holmgren,REB,2026-05-10 22:45:48,9.5,0.5,0.4536,0.5464,,,,n_books=5
-oddsapi,NBA,Marcus Smart,REB,2026-05-10 22:45:48,3.5,0.6,0.4213,0.5787,,,,n_books=6
-oddsapi,NBA,Luguentz Dort,REB,2026-05-10 22:45:48,2.5,0.5,0.5459,0.4541,,,,n_books=5
-oddsapi,NBA,LeBron James,REB,2026-05-10 22:45:48,6.5,0.6,0.4887,0.5113,,,,n_books=6
-oddsapi,NBA,Rui Hachimura,REB,2026-05-10 22:45:48,3.5,0.6,0.5662,0.4338,,,,n_books=6
-oddsapi,NBA,Ajay Mitchell,REB,2026-05-10 22:45:48,3.5,0.7,0.4685,0.5315,,,,n_books=7
-oddsapi,NBA,Cason Wallace,REB,2026-05-10 22:45:48,2.5,0.5,0.5051,0.4949,,,,n_books=5
-oddsapi,NBA,Deandre Ayton,REB,2026-05-10 22:45:48,8.5,0.6,0.5196,0.4804,,,,n_books=6
-oddsapi,NBA,Isaiah Hartenstein,RA,2026-05-10 22:45:48,11.5,0.3,0.5182,0.4818,,,,n_books=3
-oddsapi,NBA,Shai Gilgeous-Alexander,RA,2026-05-10 22:45:48,10.5,0.4,0.5369,0.4631,,,,n_books=4
-oddsapi,NBA,Chet Holmgren,RA,2026-05-10 22:45:48,10.5,0.4,0.5264,0.4736,,,,n_books=4
-oddsapi,NBA,Ajay Mitchell,RA,2026-05-10 22:45:48,7.5,0.4,0.5411,0.4589,,,,n_books=4
-oddsapi,NBA,Austin Reaves,RA,2026-05-10 22:45:48,10.5,0.4,0.4986,0.5014,,,,n_books=4
-oddsapi,NBA,LeBron James,RA,2026-05-10 22:45:48,14.5,0.3,0.4682,0.5318,,,,n_books=3
-oddsapi,NBA,Marcus Smart,RA,2026-05-10 22:45:48,7.5,0.3,0.4374,0.5626,,,,n_books=3
-oddsapi,NBA,Shai Gilgeous-Alexander,STL,2026-05-10 22:45:48,1.5,0.2,0.3929,0.6071,,,,n_books=2
-oddsapi,NBA,Austin Reaves,STL,2026-05-10 22:45:48,0.5,0.2,0.607,0.393,,,,n_books=2
-oddsapi,NBA,LeBron James,STL,2026-05-10 22:45:48,1.5,0.1,0.3362,0.6638,,,,n_books=1
-oddsapi,NBA,Chet Holmgren,STL,2026-05-10 22:45:48,1.5,0.1,0.3362,0.6638,,,,n_books=1
-oddsapi,NBA,Marcus Smart,STL,2026-05-10 22:45:48,1.5,0.2,0.4583,0.5417,,,,n_books=2
-oddsapi,NBA,Luguentz Dort,STL,2026-05-10 22:45:48,0.5,0.2,0.6235,0.3765,,,,n_books=2
-oddsapi,NBA,Ajay Mitchell,STL,2026-05-10 22:45:48,1.5,0.2,0.3319,0.6681,,,,n_books=2
-oddsapi,NBA,Isaiah Hartenstein,STL,2026-05-10 22:45:48,0.5,0.2,0.6289,0.3711,,,,n_books=2
-oddsapi,NBA,Austin Reaves,FG3M,2026-05-10 22:45:48,2.5,0.5,0.3899,0.6101,,,,n_books=5
-oddsapi,NBA,Luke Kennard,FG3M,2026-05-10 22:45:48,1.5,0.6,0.4973,0.5027,,,,n_books=6
-oddsapi,NBA,Shai Gilgeous-Alexander,FG3M,2026-05-10 22:45:48,1.5,0.6,0.4174,0.5826,,,,n_books=6
-oddsapi,NBA,Chet Holmgren,FG3M,2026-05-10 22:45:48,1.5,0.6,0.42,0.58,,,,n_books=6
-oddsapi,NBA,Luguentz Dort,FG3M,2026-05-10 22:45:48,1.5,0.6,0.5096,0.4904,,,,n_books=6
-oddsapi,NBA,LeBron James,FG3M,2026-05-10 22:45:48,1.5,0.6,0.454,0.546,,,,n_books=6
-oddsapi,NBA,Rui Hachimura,FG3M,2026-05-10 22:45:48,2.5,0.6,0.41,0.59,,,,n_books=6
-oddsapi,NBA,Ajay Mitchell,FG3M,2026-05-10 22:45:48,1.5,0.7,0.4108,0.5892,,,,n_books=7
-oddsapi,NBA,Cason Wallace,FG3M,2026-05-10 22:45:48,1.5,0.5,0.3377,0.6623,,,,n_books=5
-oddsapi,NBA,Marcus Smart,FG3M,2026-05-10 22:45:48,1.5,0.6,0.5907,0.4093,,,,n_books=6
-oddsapi,NBA,Deandre Ayton,PRA,2026-05-10 22:45:48,19.5,0.3,0.4748,0.5252,,,,n_books=3
-oddsapi,NBA,Rui Hachimura,PRA,2026-05-10 22:45:48,20.5,0.3,0.4756,0.5244,,,,n_books=3
-oddsapi,NBA,Luguentz Dort,PRA,2026-05-10 22:45:48,10.5,0.4,0.5051,0.4949,,,,n_books=4
-oddsapi,NBA,Alex Caruso,REB,2026-05-10 22:45:48,2.5,0.4,0.5773,0.4227,,,,n_books=4
-oddsapi,NBA,Rui Hachimura,AST,2026-05-10 22:45:48,1.5,0.3,0.4362,0.5638,,,,n_books=3
-oddsapi,NBA,Luguentz Dort,AST,2026-05-10 22:45:48,1.5,0.2,0.3402,0.6598,,,,n_books=2
-oddsapi,NBA,Deandre Ayton,AST,2026-05-10 22:45:48,0.5,0.3,0.5501,0.4499,,,,n_books=3
-oddsapi,NBA,Shai Gilgeous-Alexander,BLK,2026-05-10 22:45:48,0.5,0.2,0.5261,0.4739,,,,n_books=2
-oddsapi,NBA,Austin Reaves,BLK,2026-05-10 22:45:48,0.5,0.2,0.4866,0.5134,,,,n_books=2
-oddsapi,NBA,Marcus Smart,BLK,2026-05-10 22:45:48,0.5,0.2,0.4672,0.5328,,,,n_books=2
-oddsapi,NBA,LeBron James,BLK,2026-05-10 22:45:48,0.5,0.2,0.4162,0.5838,,,,n_books=2
-oddsapi,NBA,Rui Hachimura,BLK,2026-05-10 22:45:48,0.5,0.2,0.3777,0.6223,,,,n_books=2
-oddsapi,NBA,Ajay Mitchell,BLK,2026-05-10 22:45:48,0.5,0.2,0.2436,0.7564,,,,n_books=2
-oddsapi,NBA,Chet Holmgren,BS,2026-05-10 22:45:48,2.5,0.1,0.5458,0.4542,,,,n_books=1
-oddsapi,NBA,Marcus Smart,BS,2026-05-10 22:45:48,1.5,0.1,0.6178,0.3822,,,,n_books=1
-oddsapi,NBA,Shai Gilgeous-Alexander,BS,2026-05-10 22:45:48,1.5,0.1,0.6002,0.3998,,,,n_books=1
-oddsapi,NBA,Isaiah Hartenstein,BS,2026-05-10 22:45:48,1.5,0.1,0.553,0.447,,,,n_books=1
-oddsapi,NBA,LeBron James,BS,2026-05-10 22:45:48,1.5,0.1,0.497,0.503,,,,n_books=1
-oddsapi,NBA,Austin Reaves,BS,2026-05-10 22:45:48,1.5,0.1,0.4601,0.5399,,,,n_books=1
-oddsapi,NBA,Deandre Ayton,BS,2026-05-10 22:45:48,1.5,0.1,0.4535,0.5465,,,,n_books=1
-oddsapi,NBA,Ajay Mitchell,BS,2026-05-10 22:45:48,1.5,0.1,0.4289,0.5711,,,,n_books=1
-oddsapi,NBA,Rui Hachimura,PA,2026-05-10 22:45:48,15.5,0.3,0.5125,0.4875,,,,n_books=3
-oddsapi,NBA,Deandre Ayton,PA,2026-05-10 22:45:48,9.5,0.2,0.5413,0.4587,,,,n_books=2
-oddsapi,NBA,Luguentz Dort,PA,2026-05-10 22:45:48,7.5,0.3,0.5214,0.4786,,,,n_books=3
-oddsapi,NBA,Deandre Ayton,RA,2026-05-10 22:45:48,9.5,0.3,0.4878,0.5122,,,,n_books=3
-oddsapi,NBA,Rui Hachimura,RA,2026-05-10 22:45:48,5.5,0.3,0.5008,0.4992,,,,n_books=3
-oddsapi,NBA,Rui Hachimura,STL,2026-05-10 22:45:48,0.5,0.1,0.5111,0.4889,,,,n_books=1
-oddsapi,NBA,Deandre Ayton,STL,2026-05-10 22:45:48,0.5,0.1,0.4295,0.5705,,,,n_books=1
-oddsapi,NBA,Luguentz Dort,BLK,2026-05-10 22:45:48,0.5,0.1,0.2744,0.7256,,,,n_books=1
-oddsapi,NBA,Jared McCain,PRA,2026-05-10 22:45:48,7.5,0.1,0.5,0.5,,,,n_books=1
-oddsapi,NBA,Jaylin Williams,PRA,2026-05-10 22:45:48,10.5,0.1,0.4899,0.5101,,,,n_books=1
-oddsapi,NBA,Isaiah Joe,PRA,2026-05-10 22:45:48,7.5,0.1,0.5,0.5,,,,n_books=1
-oddsapi,NBA,Cason Wallace,PRA,2026-05-10 22:45:48,12.5,0.1,0.4853,0.5147,,,,n_books=1
-oddsapi,NBA,Luke Kennard,PRA,2026-05-10 22:45:48,13.5,0.1,0.4899,0.5101,,,,n_books=1
-oddsapi,NBA,Jaxson Hayes,PRA,2026-05-10 22:45:48,8.5,0.1,0.5101,0.4899,,,,n_books=1
-oddsapi,NBA,Alex Caruso,PRA,2026-05-10 22:45:48,11.5,0.1,0.5203,0.4797,,,,n_books=1
-oddsapi,NBA,Luguentz Dort,RA,2026-05-10 22:45:48,3.5,0.1,0.4797,0.5203,,,,n_books=1
+bettingpros,NBA,LeBron James,PR,2026-05-11 12:03:13,24.8,1.0,0.27894811618462,0.72105188381538,1,5,6,side=under; rating=5; diff=-3.7; line=28.5; L10=4o/6u/10g; streak=2u; opp_rank=6
+bettingpros,NBA,Chet Holmgren,PR,2026-05-11 12:03:13,23.8,0.2,None,None,None,None,8,side=under; rating=0; diff=-3.7; line=27.5; L10=5o/5u/10g; streak=1u; opp_rank=8
+bettingpros,NBA,James Harden,PRA,2026-05-11 12:03:13,35.2,0.2,None,None,None,None,1,side=over; rating=0; diff=3.7; line=31.5; L10=5o/5u/10g; streak=2u; opp_rank=1
+bettingpros,NBA,Marcus Smart,PR,2026-05-11 12:03:13,11,0.2,None,None,None,None,6,side=under; rating=0; diff=-3.5; line=14.5; L10=6o/4u/10g; streak=1u; opp_rank=6
+bettingpros,NBA,Austin Reaves,PRA,2026-05-11 12:03:13,29,0.2,None,None,None,None,6,side=under; rating=0; diff=-3.5; line=32.5; L10=3o/7u/10g; streak=1u; opp_rank=6
+bettingpros,NBA,James Harden,PR,2026-05-11 12:03:13,27.9,0.2,None,None,None,None,3,side=over; rating=0; diff=3.4; line=24.5; L10=4o/6u/10g; streak=2u; opp_rank=3
+bettingpros,NBA,Chet Holmgren,PRA,2026-05-11 12:03:13,25.4,0.2,None,None,None,None,11,side=under; rating=0; diff=-3.1; line=28.5; L10=5o/5u/10g; streak=1u; opp_rank=11
+bettingpros,NBA,Austin Reaves,PR,2026-05-11 12:03:13,24,0.2,None,None,None,None,6,side=under; rating=0; diff=-2.5; line=26.5; L10=2o/8u/10g; streak=1u; opp_rank=6
+bettingpros,NBA,Evan Mobley,PTS,2026-05-11 12:03:13,17.9,0.2,None,None,None,None,3,side=over; rating=0; diff=2.4; line=15.5; L10=4o/6u/10g; streak=4u; opp_rank=3
+bettingpros,NBA,Luguentz Dort,PRA,2026-05-11 12:03:13,12.9,0.2,None,None,None,None,11,side=over; rating=0; diff=2.4; line=10.5; L10=4o/6u/10g; streak=1o; opp_rank=11
+bettingpros,NBA,Max Strus,PRA,2026-05-11 12:03:13,16.9,0.2,None,None,None,None,1,side=over; rating=0; diff=2.4; line=14.5; L10=4o/6u/10g; streak=2u; opp_rank=1
+bettingpros,NBA,Evan Mobley,PRA,2026-05-11 12:03:13,29.9,0.2,None,None,None,None,1,side=over; rating=0; diff=2.4; line=26.5; L10=6o/4u/10g; streak=2u; opp_rank=1
+bettingpros,NBA,Jarrett Allen,PA,2026-05-11 12:03:13,15.8,0.2,None,None,None,None,2,side=over; rating=0; diff=2.3; line=13.5; L10=4o/6u/10g; streak=2o; opp_rank=2
+bettingpros,NBA,Luke Kennard,PR,2026-05-11 12:03:13,10.2,0.2,None,None,None,None,6,side=under; rating=0; diff=-2.3; line=12.5; L10=4o/6u/10g; streak=1o; opp_rank=6
+bettingpros,NBA,Jaxson Hayes,PA,2026-05-11 12:03:13,7.7,0.2,None,None,None,None,3,side=over; rating=0; diff=2.2; line=5.5; L10=5o/5u/10g; streak=1u; opp_rank=3
+bettingpros,NBA,Evan Mobley,PR,2026-05-11 12:03:13,26.7,0.2,None,None,None,None,3,side=over; rating=0; diff=2.2; line=23.5; L10=4o/6u/10g; streak=4u; opp_rank=3
+bettingpros,NBA,Luguentz Dort,PA,2026-05-11 12:03:13,9.6,0.2,None,None,None,None,13,side=over; rating=0; diff=2.1; line=7.5; L10=5o/5u/10g; streak=1o; opp_rank=13
+bettingpros,NBA,Max Strus,PA,2026-05-11 12:03:13,12.6,0.2,None,None,None,None,2,side=over; rating=0; diff=2.1; line=10.5; L10=4o/6u/10g; streak=2u; opp_rank=2
+bettingpros,NBA,Luguentz Dort,PR,2026-05-11 12:03:13,11.6,0.2,None,None,None,None,8,side=over; rating=0; diff=2.1; line=9.5; L10=4o/6u/10g; streak=1o; opp_rank=8
+bettingpros,NBA,Austin Reaves,PTS,2026-05-11 12:03:13,19.5,0.2,None,None,None,None,2,side=under; rating=0; diff=-2; line=21.5; L10=4o/6u/10g; streak=1u; opp_rank=2
+bettingpros,NBA,Chet Holmgren,PA,2026-05-11 12:03:13,17.5,0.2,None,None,None,None,13,side=under; rating=0; diff=-2; line=19.5; L10=5o/5u/10g; streak=1u; opp_rank=13
+bettingpros,NBA,LeBron James,RA,2026-05-11 12:03:13,12.5,0.2,None,None,None,None,14,side=under; rating=0; diff=-2; line=14.5; L10=4o/6u/10g; streak=3u; opp_rank=14
+bettingpros,NBA,Deandre Ayton,PA,2026-05-11 12:03:13,12.4,0.2,None,None,None,None,3,side=over; rating=0; diff=1.9; line=10.5; L10=5o/5u/10g; streak=2u; opp_rank=3
+bettingpros,NBA,Jarrett Allen,PR,2026-05-11 12:03:13,22.4,0.2,None,None,None,None,3,side=over; rating=0; diff=1.9; line=20.5; L10=4o/6u/10g; streak=2o; opp_rank=3
+bettingpros,NBA,Luguentz Dort,PTS,2026-05-11 12:03:13,8.3,0.2,None,None,None,None,11,side=over; rating=0; diff=1.8; line=6.5; L10=4o/6u/10g; streak=1o; opp_rank=11
+bettingpros,NBA,Cason Wallace,PR,2026-05-11 12:03:13,11.3,0.2,None,None,None,None,8,side=over; rating=0; diff=1.8; line=9.5; L10=5o/5u/10g; streak=2o; opp_rank=8
+bettingpros,NBA,Max Strus,PR,2026-05-11 12:03:13,14.3,0.2,None,None,None,None,3,side=over; rating=0; diff=1.8; line=12.5; L10=4o/6u/10g; streak=2u; opp_rank=3
+bettingpros,NBA,Ausar Thompson,RA,2026-05-11 12:03:13,8.7,0.2,None,None,None,None,15,side=under; rating=0; diff=-1.8; line=10.5; L10=5o/5u/10g; streak=1o; opp_rank=15
+bettingpros,NBA,Chet Holmgren,PTS,2026-05-11 12:03:13,15.9,0.2,None,None,None,None,11,side=under; rating=0; diff=-1.6; line=17.5; L10=7o/3u/10g; streak=4o; opp_rank=11
+bettingpros,NBA,Luke Kennard,PA,2026-05-11 12:03:13,9.9,0.2,None,None,None,None,3,side=under; rating=0; diff=-1.6; line=11.5; L10=4o/6u/10g; streak=1o; opp_rank=3
+bettingpros,NBA,Evan Mobley,PA,2026-05-11 12:03:13,21.1,0.2,None,None,None,None,2,side=over; rating=0; diff=1.6; line=18.5; L10=6o/4u/10g; streak=2u; opp_rank=2
+bettingpros,NBA,Cade Cunningham,PR,2026-05-11 12:03:13,30.9,0.2,None,None,None,None,13,side=under; rating=0; diff=-1.6; line=32.5; L10=7o/3u/10g; streak=1o; opp_rank=13
+bettingpros,NBA,Max Strus,PTS,2026-05-11 12:03:13,10,0.2,None,None,None,None,3,side=over; rating=0; diff=1.5; line=8.5; L10=4o/6u/10g; streak=2u; opp_rank=3
+bettingpros,NBA,Cason Wallace,PA,2026-05-11 12:03:13,11,0.2,None,None,None,None,13,side=over; rating=0; diff=1.5; line=9; L10=4o/6u/10g; streak=2o; opp_rank=13
+bettingpros,NBA,Cade Cunningham,RA,2026-05-11 12:03:13,16,0.2,None,None,None,None,15,side=over; rating=0; diff=1.5; line=14.5; L10=3o/7u/10g; streak=1o; opp_rank=15
+bettingpros,NBA,Jarrett Allen,PRA,2026-05-11 12:03:13,24,0.2,None,None,None,None,1,side=over; rating=0; diff=1.5; line=21.5; L10=4o/6u/10g; streak=2o; opp_rank=1
+bettingpros,NBA,Cason Wallace,PRA,2026-05-11 12:03:13,13.9,0.2,None,None,None,None,11,side=over; rating=0; diff=1.4; line=11.5; L10=5o/5u/10g; streak=2o; opp_rank=11
+bettingpros,NBA,Cade Cunningham,PTS,2026-05-11 12:03:13,25.2,0.2,None,None,None,None,14,side=under; rating=0; diff=-1.3; line=27.5; L10=4o/6u/10g; streak=3u; opp_rank=14
+bettingpros,NBA,Dean Wade,PA,2026-05-11 12:03:13,6.8,0.2,None,None,None,None,2,side=over; rating=0; diff=1.3; line=5.5; L10=7o/3u/10g; streak=1u; opp_rank=2
+bettingpros,NBA,Isaiah Hartenstein,PA,2026-05-11 12:03:13,12.7,0.2,None,None,None,None,13,side=over; rating=0; diff=1.2; line=11.5; L10=4o/6u/10g; streak=1o; opp_rank=13
+bettingpros,NBA,Luke Kennard,PRA,2026-05-11 12:03:13,12.3,0.2,None,None,None,None,6,side=under; rating=0; diff=-1.2; line=14.5; L10=4o/6u/10g; streak=1o; opp_rank=6
+bettingpros,NBA,Cason Wallace,AST,2026-05-11 12:03:13,2.6,0.2,None,None,None,None,17,side=over; rating=0; diff=1.1; line=1.5; L10=7o/3u/10g; streak=1u; opp_rank=17
+bettingpros,NBA,Jared McCain,AST,2026-05-11 12:03:13,1.6,0.2,None,None,None,None,17,side=over; rating=0; diff=1.1; line=0.5; L10=5o/5u/10g; streak=1o; opp_rank=17
+bettingpros,NBA,Tobias Harris,AST,2026-05-11 12:03:13,2.6,0.2,None,None,None,None,16,side=over; rating=0; diff=1.1; line=1.5; L10=3o/7u/10g; streak=3u; opp_rank=16
+bettingpros,NBA,Donovan Mitchell,PA,2026-05-11 12:03:13,32.6,0.2,None,None,None,None,2,side=over; rating=0; diff=1.1; line=31.5; L10=4o/6u/10g; streak=2o; opp_rank=2
+bettingpros,NBA,Ausar Thompson,PR,2026-05-11 12:03:13,15.4,0.2,None,None,None,None,13,side=under; rating=0; diff=-1.1; line=16.5; L10=5o/5u/10g; streak=1u; opp_rank=13
+bettingpros,NBA,Donovan Mitchell,RA,2026-05-11 12:03:13,9.6,0.2,None,None,None,None,1,side=over; rating=0; diff=1.1; line=8.5; L10=4o/6u/10g; streak=2o; opp_rank=1
+bettingpros,NBA,LeBron James,AST,2026-05-11 12:03:13,6.5,0.2,None,None,None,None,7,side=under; rating=0; diff=-1; line=7.5; L10=4o/6u/10g; streak=1o; opp_rank=7
+bettingpros,NBA,Isaiah Hartenstein,AST,2026-05-11 12:03:13,3.5,0.2,None,None,None,None,17,side=over; rating=0; diff=1; line=2.5; L10=3o/7u/10g; streak=2u; opp_rank=17
+bettingpros,NBA,Dean Wade,PTS,2026-05-11 12:03:13,5.5,0.2,None,None,None,None,3,side=over; rating=0; diff=1; line=3.5; L10=8o/2u/10g; streak=1u; opp_rank=3
+bettingpros,NBA,Dennis Schroder,REB,2026-05-11 12:03:13,2.5,0.2,None,None,None,None,4,side=over; rating=0; diff=1; line=1.5; L10=2o/8u/10g; streak=1u; opp_rank=4
+bettingpros,NBA,Cade Cunningham,PA,2026-05-11 12:03:13,35.5,0.2,None,None,None,None,14,side=under; rating=0; diff=-1; line=36.5; L10=5o/5u/10g; streak=1o; opp_rank=14
+bettingpros,NBA,Austin Reaves,RA,2026-05-11 12:03:13,9.5,0.2,None,None,None,None,14,side=under; rating=0; diff=-1; line=10.5; L10=4o/6u/10g; streak=1o; opp_rank=14
+bettingpros,NBA,Chet Holmgren,RA,2026-05-11 12:03:13,9.5,0.2,None,None,None,None,7,side=under; rating=0; diff=-1; line=10.5; L10=4o/6u/10g; streak=1u; opp_rank=7
+bettingpros,NBA,Cason Wallace,RA,2026-05-11 12:03:13,5.5,0.2,None,None,None,None,7,side=over; rating=0; diff=1; line=4.5; L10=7o/3u/10g; streak=1u; opp_rank=7
+bettingpros,NBA,Ausar Thompson,PRA,2026-05-11 12:03:13,18.5,0.2,None,None,None,None,14,side=under; rating=0; diff=-1; line=19.5; L10=6o/4u/10g; streak=1o; opp_rank=14
+bettingpros,NBA,Ajay Mitchell,AST,2026-05-11 12:03:13,3.6,0.2,None,None,None,None,17,side=under; rating=0; diff=-0.9; line=4.5; L10=5o/5u/10g; streak=2o; opp_rank=17
+bettingpros,NBA,Cason Wallace,PTS,2026-05-11 12:03:13,8.4,0.2,None,None,None,None,11,side=over; rating=0; diff=0.9; line=6.5; L10=4o/6u/10g; streak=2o; opp_rank=11
+bettingpros,NBA,Alex Caruso,REB,2026-05-11 12:03:13,2.6,0.2,None,None,None,None,5,side=under; rating=0; diff=-0.9; line=3; L10=6o/4u/10g; streak=1u; opp_rank=5
+bettingpros,NBA,Duncan Robinson,STL,2026-05-11 12:03:13,0.6,0.2,None,None,None,None,19,side=under; rating=0; diff=-0.9; line=1.5; L10=5o/5u/10g; streak=4o; opp_rank=19
+bettingpros,NBA,Isaiah Hartenstein,PRA,2026-05-11 12:03:13,21.4,0.2,None,None,None,None,11,side=over; rating=0; diff=0.9; line=20.5; L10=5o/5u/10g; streak=1o; opp_rank=11
+bettingpros,NBA,Luguentz Dort,AST,2026-05-11 12:03:13,1.3,0.2,None,None,None,None,17,side=over; rating=0; diff=0.8; line=1; L10=4o/4u/10g; streak=1u; opp_rank=17
+bettingpros,NBA,Isaiah Joe,AST,2026-05-11 12:03:13,1.3,0.2,None,None,None,None,17,side=over; rating=0; diff=0.8; line=0.5; L10=6o/4u/10g; streak=3o; opp_rank=17
+bettingpros,NBA,James Harden,AST,2026-05-11 12:03:13,7.3,0.2,None,None,None,None,1,side=over; rating=0; diff=0.8; line=6.5; L10=5o/5u/10g; streak=1o; opp_rank=1
+bettingpros,NBA,Dean Wade,AST,2026-05-11 12:03:13,1.3,0.2,None,None,None,None,1,side=over; rating=0; diff=0.8; line=0.5; L10=5o/5u/10g; streak=2u; opp_rank=1
+bettingpros,NBA,Cade Cunningham,AST,2026-05-11 12:03:13,10.3,0.2,None,None,None,None,16,side=over; rating=0; diff=0.8; line=9.5; L10=4o/6u/10g; streak=2o; opp_rank=16
+bettingpros,NBA,Marcus Smart,REB,2026-05-11 12:03:13,2.7,0.2,None,None,None,None,20,side=under; rating=0; diff=-0.8; line=3.5; L10=5o/5u/10g; streak=1u; opp_rank=20
+bettingpros,NBA,Luguentz Dort,REB,2026-05-11 12:03:13,3.3,0.2,None,None,None,None,5,side=over; rating=0; diff=0.8; line=2.5; L10=4o/6u/10g; streak=1o; opp_rank=5
+bettingpros,NBA,Rui Hachimura,FG3M,2026-05-11 12:03:13,1.7,0.2,None,None,None,None,27,side=under; rating=0; diff=-0.8; line=2.5; L10=7o/3u/10g; streak=4o; opp_rank=27
+bettingpros,NBA,Max Strus,FG3M,2026-05-11 12:03:13,2.3,0.2,None,None,None,None,7,side=over; rating=0; diff=0.8; line=1.5; L10=6o/4u/10g; streak=2u; opp_rank=7
+bettingpros,NBA,Ajay Mitchell,RA,2026-05-11 12:03:13,6.7,0.2,None,None,None,None,7,side=under; rating=0; diff=-0.8; line=7.5; L10=6o/4u/10g; streak=2o; opp_rank=7
+bettingpros,NBA,Ausar Thompson,BLK,2026-05-11 12:03:13,0.8,0.2,None,None,None,None,8,side=under; rating=0; diff=-0.7; line=1.5; L10=6o/4u/10g; streak=1o; opp_rank=8
+bettingpros,NBA,Luke Kennard,PTS,2026-05-11 12:03:13,7.8,0.2,None,None,None,None,2,side=under; rating=0; diff=-0.7; line=9.5; L10=5o/5u/10g; streak=2o; opp_rank=2
+bettingpros,NBA,Isaiah Hartenstein,PTS,2026-05-11 12:03:13,9.2,0.2,None,None,None,None,11,side=over; rating=0; diff=0.7; line=8.5; L10=7o/3u/10g; streak=2o; opp_rank=11
+bettingpros,NBA,Jarrett Allen,PTS,2026-05-11 12:03:13,14.2,0.2,None,None,None,None,3,side=over; rating=0; diff=0.7; line=12.5; L10=4o/6u/10g; streak=2o; opp_rank=3
+bettingpros,NBA,Jaxson Hayes,REB,2026-05-11 12:03:13,4.2,0.2,None,None,None,None,20,side=over; rating=0; diff=0.7; line=3.5; L10=5o/5u/10g; streak=2u; opp_rank=20
+bettingpros,NBA,Jarrett Allen,REB,2026-05-11 12:03:13,8.2,0.2,None,None,None,None,4,side=over; rating=0; diff=0.7; line=7.5; L10=2o/8u/10g; streak=3u; opp_rank=4
+bettingpros,NBA,Cason Wallace,FG3M,2026-05-11 12:03:13,1.2,0.2,None,None,None,None,10,side=over; rating=0; diff=0.7; line=1; L10=5o/2u/10g; streak=4o; opp_rank=10
+bettingpros,NBA,Donovan Mitchell,FG3M,2026-05-11 12:03:13,3.2,0.2,None,None,None,None,7,side=over; rating=0; diff=0.7; line=2.5; L10=5o/5u/10g; streak=2u; opp_rank=7
+bettingpros,NBA,Daniss Jenkins,PA,2026-05-11 12:03:13,13.2,0.2,None,None,None,None,14,side=over; rating=0; diff=0.7; line=12.5; L10=3o/7u/10g; streak=1u; opp_rank=14
+bettingpros,NBA,Alex Caruso,PR,2026-05-11 12:03:13,8.8,0.2,None,None,None,None,8,side=under; rating=0; diff=-0.7; line=9.5; L10=2o/8u/10g; streak=3u; opp_rank=8
+bettingpros,NBA,Isaiah Hartenstein,RA,2026-05-11 12:03:13,12.2,0.2,None,None,None,None,7,side=over; rating=0; diff=0.7; line=11.5; L10=3o/7u/10g; streak=2u; opp_rank=7
+bettingpros,NBA,Dean Wade,RA,2026-05-11 12:03:13,5.2,0.2,None,None,None,None,1,side=over; rating=0; diff=0.7; line=4.5; L10=6o/4u/10g; streak=1u; opp_rank=1
+bettingpros,NBA,Daniss Jenkins,RA,2026-05-11 12:03:13,6.2,0.2,None,None,None,None,15,side=over; rating=0; diff=0.7; line=5.5; L10=4o/6u/10g; streak=1u; opp_rank=15
+bettingpros,NBA,Duncan Robinson,AST,2026-05-11 12:03:13,2.1,0.2,None,None,None,None,16,side=over; rating=0; diff=0.6; line=1.5; L10=8o/2u/10g; streak=5o; opp_rank=16
+bettingpros,NBA,Jalen Duren,AST,2026-05-11 12:03:13,2.1,0.2,None,None,None,None,16,side=over; rating=0; diff=0.6; line=2; L10=4o/5u/10g; streak=2u; opp_rank=16
+bettingpros,NBA,Ausar Thompson,AST,2026-05-11 12:03:13,3.1,0.2,None,None,None,None,16,side=over; rating=0; diff=0.6; line=2.5; L10=6o/4u/10g; streak=1o; opp_rank=16
+bettingpros,NBA,Evan Mobley,BLK,2026-05-11 12:03:13,2.1,0.2,None,None,None,None,30,side=over; rating=0; diff=0.6; line=1.5; L10=4o/6u/10g; streak=3o; opp_rank=30
+bettingpros,NBA,Duncan Robinson,PTS,2026-05-11 12:03:13,12.1,0.2,None,None,None,None,14,side=over; rating=0; diff=0.6; line=11.5; L10=5o/5u/10g; streak=3o; opp_rank=14
+bettingpros,NBA,Isaiah Hartenstein,STL,2026-05-11 12:03:13,1.1,0.2,None,None,None,None,26,side=over; rating=0; diff=0.6; line=0.5; L10=7o/3u/10g; streak=6o; opp_rank=26
+bettingpros,NBA,Dean Wade,FG3M,2026-05-11 12:03:13,1.1,0.2,None,None,None,None,7,side=over; rating=0; diff=0.6; line=0.5; L10=10o/0u/10g; streak=12o; opp_rank=7
+bettingpros,NBA,Shai Gilgeous-Alexander,PR,2026-05-11 12:03:13,32.9,0.2,None,None,None,None,8,side=under; rating=0; diff=-0.6; line=33.5; L10=2o/8u/10g; streak=4u; opp_rank=8
+bettingpros,NBA,Alex Caruso,PRA,2026-05-11 12:03:13,10.9,0.2,None,None,None,None,11,side=under; rating=0; diff=-0.6; line=11.5; L10=3o/7u/10g; streak=1u; opp_rank=11
+bettingpros,NBA,Jarrett Allen,BLK,2026-05-11 12:03:13,1,0.2,None,None,None,None,30,side=under; rating=0; diff=-0.5; line=1.5; L10=7o/3u/10g; streak=1o; opp_rank=30
+bettingpros,NBA,Shai Gilgeous-Alexander,PTS,2026-05-11 12:03:13,29,0.2,None,None,None,None,11,side=over; rating=0; diff=0.5; line=28.5; L10=3o/7u/10g; streak=3u; opp_rank=11
+bettingpros,NBA,LeBron James,REB,2026-05-11 12:03:13,6,0.2,None,None,None,None,20,side=under; rating=0; diff=-0.5; line=6.5; L10=4o/6u/10g; streak=3u; opp_rank=20
+bettingpros,NBA,Luguentz Dort,STL,2026-05-11 12:03:13,1,0.2,None,None,None,None,26,side=over; rating=0; diff=0.5; line=0.5; L10=6o/4u/10g; streak=2o; opp_rank=26
+bettingpros,NBA,Tobias Harris,STL,2026-05-11 12:03:13,1,0.2,None,None,None,None,19,side=under; rating=0; diff=-0.5; line=1.5; L10=6o/4u/10g; streak=1u; opp_rank=19
+bettingpros,NBA,Jarrett Allen,STL,2026-05-11 12:03:13,1,0.2,None,None,None,None,22,side=over; rating=0; diff=0.5; line=0.5; L10=8o/2u/10g; streak=2o; opp_rank=22
+bettingpros,NBA,Ausar Thompson,STL,2026-05-11 12:03:13,2,0.2,None,None,None,None,19,side=over; rating=0; diff=0.5; line=1.5; L10=6o/4u/10g; streak=1u; opp_rank=19
+bettingpros,NBA,Ajay Mitchell,FG3M,2026-05-11 12:03:13,1,0.2,None,None,None,None,10,side=under; rating=0; diff=-0.5; line=1.5; L10=3o/7u/10g; streak=1o; opp_rank=10
+bettingpros,NBA,James Harden,FG3M,2026-05-11 12:03:13,3,0.2,None,None,None,None,7,side=over; rating=0; diff=0.5; line=2.5; L10=5o/5u/10g; streak=1o; opp_rank=7
+bettingpros,NBA,Dennis Schroder,FG3M,2026-05-11 12:03:13,1,0.2,None,None,None,None,7,side=over; rating=0; diff=0.5; line=0.5; L10=4o/6u/10g; streak=1o; opp_rank=7
+bettingpros,NBA,Duncan Robinson,FG3M,2026-05-11 12:03:13,3,0.2,None,None,None,None,21,side=over; rating=0; diff=0.5; line=2.5; L10=8o/2u/10g; streak=3o; opp_rank=21
+bettingpros,NBA,Evan Mobley,FG3M,2026-05-11 12:03:13,1,0.2,None,None,None,None,7,side=over; rating=0; diff=0.5; line=0.5; L10=7o/3u/10g; streak=1u; opp_rank=7
+bettingpros,NBA,Deandre Ayton,RA,2026-05-11 12:03:13,9,0.2,None,None,None,None,14,side=over; rating=0; diff=0.5; line=8.5; L10=7o/3u/10g; streak=1u; opp_rank=14
+bettingpros,NBA,Tobias Harris,RA,2026-05-11 12:03:13,8,0.2,None,None,None,None,15,side=under; rating=0; diff=-0.5; line=8.5; L10=7o/3u/10g; streak=2u; opp_rank=15
+bettingpros,NBA,James Harden,RA,2026-05-11 12:03:13,12,0.2,None,None,None,None,1,side=over; rating=0; diff=0.5; line=11.5; L10=4o/6u/10g; streak=2u; opp_rank=1
+bettingpros,NBA,Evan Mobley,RA,2026-05-11 12:03:13,12,0.2,None,None,None,None,1,side=over; rating=0; diff=0.5; line=11.5; L10=5o/5u/10g; streak=1o; opp_rank=1
+bettingpros,NBA,Jalen Duren,RA,2026-05-11 12:03:13,13,0.2,None,None,None,None,15,side=over; rating=0; diff=0.5; line=12.5; L10=3o/7u/10g; streak=2u; opp_rank=15
+bettingpros,NBA,Donovan Mitchell,PRA,2026-05-11 12:03:13,37,0.2,None,None,None,None,1,side=over; rating=0; diff=0.5; line=35.5; L10=4o/6u/10g; streak=2o; opp_rank=1
+bettingpros,NBA,Luke Kennard,AST,2026-05-11 12:03:13,2.1,0.2,None,None,None,None,7,side=under; rating=0; diff=-0.4; line=2.5; L10=3o/7u/10g; streak=3u; opp_rank=7
+bettingpros,NBA,Alex Caruso,AST,2026-05-11 12:03:13,2.1,0.2,None,None,None,None,17,side=under; rating=0; diff=-0.4; line=2.5; L10=1o/9u/10g; streak=1u; opp_rank=17
+bettingpros,NBA,Daniss Jenkins,AST,2026-05-11 12:03:13,3.9,0.2,None,None,None,None,16,side=over; rating=0; diff=0.4; line=3.5; L10=3o/7u/10g; streak=1u; opp_rank=16
+bettingpros,NBA,Cason Wallace,REB,2026-05-11 12:03:13,2.9,0.2,None,None,None,None,5,side=over; rating=0; diff=0.4; line=2.5; L10=5o/5u/10g; streak=2u; opp_rank=5
+bettingpros,NBA,Ajay Mitchell,REB,2026-05-11 12:03:13,3.1,0.2,None,None,None,None,5,side=under; rating=0; diff=-0.4; line=3.5; L10=5o/5u/10g; streak=1o; opp_rank=5
+bettingpros,NBA,Dean Wade,REB,2026-05-11 12:03:13,3.9,0.2,None,None,None,None,4,side=over; rating=0; diff=0.4; line=3.5; L10=6o/4u/10g; streak=1u; opp_rank=4
+bettingpros,NBA,Jalen Duren,REB,2026-05-11 12:03:13,10.9,0.2,None,None,None,None,9,side=over; rating=0; diff=0.4; line=10.5; L10=2o/8u/10g; streak=2u; opp_rank=9
+bettingpros,NBA,Austin Reaves,STL,2026-05-11 12:03:13,0.9,0.2,None,None,None,None,4,side=over; rating=0; diff=0.4; line=0.5; L10=4o/6u/10g; streak=6u; opp_rank=4
+bettingpros,NBA,Evan Mobley,STL,2026-05-11 12:03:13,0.9,0.2,None,None,None,None,22,side=over; rating=0; diff=0.4; line=0.5; L10=5o/5u/10g; streak=1u; opp_rank=22
+bettingpros,NBA,Jalen Duren,STL,2026-05-11 12:03:13,0.9,0.2,None,None,None,None,19,side=over; rating=0; diff=0.4; line=0.5; L10=4o/6u/10g; streak=1o; opp_rank=19
+bettingpros,NBA,Daniss Jenkins,STL,2026-05-11 12:03:13,0.9,0.2,None,None,None,None,19,side=over; rating=0; diff=0.4; line=0.5; L10=2o/8u/10g; streak=2u; opp_rank=19
+bettingpros,NBA,Alex Caruso,FG3M,2026-05-11 12:03:13,0.9,0.2,None,None,None,None,10,side=over; rating=0; diff=0.4; line=0.5; L10=7o/3u/10g; streak=1u; opp_rank=10
+bettingpros,NBA,Ausar Thompson,FG3M,2026-05-11 12:03:13,0.1,0.2,None,None,None,None,21,side=under; rating=0; diff=-0.4; line=0.5; L10=0o/10u/10g; streak=39u; opp_rank=21
+bettingpros,NBA,Daniss Jenkins,FG3M,2026-05-11 12:03:13,1.1,0.2,None,None,None,None,21,side=under; rating=0; diff=-0.4; line=1.5; L10=2o/8u/10g; streak=1u; opp_rank=21
+bettingpros,NBA,Ausar Thompson,PA,2026-05-11 12:03:13,12.9,0.2,None,None,None,None,14,side=over; rating=0; diff=0.4; line=12.5; L10=3o/7u/10g; streak=1o; opp_rank=14
+bettingpros,NBA,Isaiah Hartenstein,PR,2026-05-11 12:03:13,17.9,0.2,None,None,None,None,8,side=over; rating=0; diff=0.4; line=17.5; L10=5o/5u/10g; streak=2o; opp_rank=8
+bettingpros,NBA,Deandre Ayton,AST,2026-05-11 12:03:13,0.8,0.2,None,None,None,None,7,side=over; rating=0; diff=0.3; line=0.5; L10=6o/4u/10g; streak=2u; opp_rank=7
+bettingpros,NBA,Jaxson Hayes,AST,2026-05-11 12:03:13,0.8,0.2,None,None,None,None,7,side=over; rating=0; diff=0.3; line=0.5; L10=6o/4u/10g; streak=1u; opp_rank=7
+bettingpros,NBA,Evan Mobley,AST,2026-05-11 12:03:13,3.2,0.2,None,None,None,None,1,side=under; rating=0; diff=-0.3; line=3.5; L10=6o/4u/10g; streak=4o; opp_rank=1
+bettingpros,NBA,Deandre Ayton,BLK,2026-05-11 12:03:13,0.8,0.2,None,None,None,None,5,side=over; rating=0; diff=0.3; line=0.5; L10=8o/2u/10g; streak=1o; opp_rank=5
+bettingpros,NBA,Ajay Mitchell,BLK,2026-05-11 12:03:13,0.2,0.2,None,None,None,None,1,side=under; rating=0; diff=-0.3; line=0.5; L10=0o/10u/10g; streak=11u; opp_rank=1
+bettingpros,NBA,Duncan Robinson,BLK,2026-05-11 12:03:13,0.2,0.2,None,None,None,None,8,side=under; rating=0; diff=-0.3; line=0.5; L10=3o/7u/10g; streak=1o; opp_rank=8
+bettingpros,NBA,Cade Cunningham,BLK,2026-05-11 12:03:13,0.8,0.2,None,None,None,None,8,side=over; rating=0; diff=0.3; line=0.5; L10=5o/5u/10g; streak=1u; opp_rank=8
+bettingpros,NBA,Jalen Duren,BLK,2026-05-11 12:03:13,0.8,0.2,None,None,None,None,8,side=over; rating=0; diff=0.3; line=0.5; L10=5o/5u/10g; streak=2u; opp_rank=8
+bettingpros,NBA,Alex Caruso,PTS,2026-05-11 12:03:13,6.2,0.2,None,None,None,None,11,side=under; rating=0; diff=-0.3; line=6.5; L10=3o/7u/10g; streak=3u; opp_rank=11
+bettingpros,NBA,Ausar Thompson,PTS,2026-05-11 12:03:13,9.8,0.2,None,None,None,None,14,side=over; rating=0; diff=0.3; line=9.5; L10=4o/6u/10g; streak=1u; opp_rank=14
+bettingpros,NBA,Deandre Ayton,REB,2026-05-11 12:03:13,8.2,0.2,None,None,None,None,20,side=under; rating=0; diff=-0.3; line=8.5; L10=7o/3u/10g; streak=1u; opp_rank=20
+bettingpros,NBA,Rui Hachimura,REB,2026-05-11 12:03:13,3.2,0.2,None,None,None,None,20,side=under; rating=0; diff=-0.3; line=3.5; L10=7o/3u/10g; streak=2o; opp_rank=20
+bettingpros,NBA,Max Strus,REB,2026-05-11 12:03:13,4.3,0.2,None,None,None,None,4,side=over; rating=0; diff=0.3; line=3.5; L10=7o/3u/10g; streak=1o; opp_rank=4
+bettingpros,NBA,Marcus Smart,STL,2026-05-11 12:03:13,1.2,0.2,None,None,None,None,4,side=under; rating=0; diff=-0.3; line=1.5; L10=5o/5u/10g; streak=2u; opp_rank=4
+bettingpros,NBA,Isaiah Joe,STL,2026-05-11 12:03:13,0.8,0.2,None,None,None,None,26,side=over; rating=0; diff=0.3; line=0.5; L10=6o/4u/10g; streak=1o; opp_rank=26
+bettingpros,NBA,Dennis Schroder,STL,2026-05-11 12:03:13,0.8,0.2,None,None,None,None,22,side=over; rating=0; diff=0.3; line=0.5; L10=2o/8u/10g; streak=4u; opp_rank=22
+bettingpros,NBA,Dean Wade,STL,2026-05-11 12:03:13,0.8,0.2,None,None,None,None,22,side=over; rating=0; diff=0.3; line=0.5; L10=7o/3u/10g; streak=2u; opp_rank=22
+bettingpros,NBA,Luguentz Dort,FG3M,2026-05-11 12:03:13,1.8,0.2,None,None,None,None,10,side=over; rating=0; diff=0.3; line=1.5; L10=7o/3u/10g; streak=1o; opp_rank=10
+bettingpros,NBA,Chet Holmgren,FG3M,2026-05-11 12:03:13,1.2,0.2,None,None,None,None,10,side=under; rating=0; diff=-0.3; line=1.5; L10=7o/3u/10g; streak=1u; opp_rank=10
+bettingpros,NBA,Cade Cunningham,FG3M,2026-05-11 12:03:13,2.2,0.2,None,None,None,None,21,side=under; rating=0; diff=-0.3; line=2.5; L10=6o/4u/10g; streak=1u; opp_rank=21
+bettingpros,NBA,Duncan Robinson,PA,2026-05-11 12:03:13,14.2,0.2,None,None,None,None,14,side=under; rating=0; diff=-0.3; line=14.5; L10=4o/6u/10g; streak=3o; opp_rank=14
+bettingpros,NBA,Donovan Mitchell,PR,2026-05-11 12:03:13,31.8,0.2,None,None,None,None,3,side=over; rating=0; diff=0.3; line=31.5; L10=4o/6u/10g; streak=2o; opp_rank=3
+bettingpros,NBA,Jarrett Allen,RA,2026-05-11 12:03:13,9.8,0.2,None,None,None,None,1,side=over; rating=0; diff=0.3; line=9.5; L10=3o/7u/10g; streak=1u; opp_rank=1
+bettingpros,NBA,Shai Gilgeous-Alexander,PRA,2026-05-11 12:03:13,39.2,0.2,None,None,None,None,11,side=under; rating=0; diff=-0.3; line=40.5; L10=3o/7u/10g; streak=3u; opp_rank=11
+bettingpros,NBA,Duncan Robinson,PRA,2026-05-11 12:03:13,16.8,0.2,None,None,None,None,14,side=over; rating=0; diff=0.3; line=16.5; L10=6o/4u/10g; streak=5o; opp_rank=14
+bettingpros,NBA,Cade Cunningham,PRA,2026-05-11 12:03:13,41.2,0.2,None,None,None,None,14,side=under; rating=0; diff=-0.3; line=42.5; L10=6o/4u/10g; streak=1o; opp_rank=14
+bettingpros,NBA,Shai Gilgeous-Alexander,AST,2026-05-11 12:03:13,6.3,0.2,None,None,None,None,17,side=under; rating=0; diff=-0.2; line=6.5; L10=8o/2u/10g; streak=1o; opp_rank=17
+bettingpros,NBA,Marcus Smart,BLK,2026-05-11 12:03:13,0.3,0.2,None,None,None,None,5,side=under; rating=0; diff=-0.2; line=0.5; L10=5o/5u/10g; streak=3u; opp_rank=5
+bettingpros,NBA,Jaxson Hayes,BLK,2026-05-11 12:03:13,0.7,0.2,None,None,None,None,5,side=over; rating=0; diff=0.2; line=0.5; L10=5o/5u/10g; streak=3u; opp_rank=5
+bettingpros,NBA,Rui Hachimura,BLK,2026-05-11 12:03:13,0.3,0.2,None,None,None,None,5,side=under; rating=0; diff=-0.2; line=0.5; L10=4o/6u/10g; streak=2u; opp_rank=5
+bettingpros,NBA,Luguentz Dort,BLK,2026-05-11 12:03:13,0.3,0.2,None,None,None,None,1,side=under; rating=0; diff=-0.2; line=0.5; L10=1o/9u/10g; streak=3u; opp_rank=1
+bettingpros,NBA,Daniss Jenkins,PTS,2026-05-11 12:03:13,9.3,0.2,None,None,None,None,14,side=under; rating=0; diff=-0.2; line=9.5; L10=3o/7u/10g; streak=1u; opp_rank=14
+bettingpros,NBA,Isaiah Hartenstein,REB,2026-05-11 12:03:13,8.7,0.2,None,None,None,None,5,side=over; rating=0; diff=0.2; line=8.5; L10=5o/5u/10g; streak=4o; opp_rank=5
+bettingpros,NBA,James Harden,REB,2026-05-11 12:03:13,4.7,0.2,None,None,None,None,4,side=over; rating=0; diff=0.2; line=4.5; L10=6o/4u/10g; streak=1u; opp_rank=4
+bettingpros,NBA,Cade Cunningham,REB,2026-05-11 12:03:13,5.7,0.2,None,None,None,None,9,side=over; rating=0; diff=0.2; line=5.5; L10=4o/6u/10g; streak=1o; opp_rank=9
+bettingpros,NBA,Daniss Jenkins,REB,2026-05-11 12:03:13,2.3,0.2,None,None,None,None,9,side=under; rating=0; diff=-0.2; line=2.5; L10=3o/7u/10g; streak=1u; opp_rank=9
+bettingpros,NBA,Chet Holmgren,STL,2026-05-11 12:03:13,0.7,0.2,None,None,None,None,26,side=over; rating=0; diff=0.2; line=0.5; L10=7o/3u/10g; streak=1u; opp_rank=26
+bettingpros,NBA,Ajay Mitchell,STL,2026-05-11 12:03:13,1.3,0.2,None,None,None,None,26,side=under; rating=0; diff=-0.2; line=1.5; L10=3o/7u/10g; streak=1o; opp_rank=26
+bettingpros,NBA,James Harden,STL,2026-05-11 12:03:13,1.3,0.2,None,None,None,None,22,side=under; rating=0; diff=-0.2; line=1.5; L10=5o/5u/10g; streak=3u; opp_rank=22
+bettingpros,NBA,Alex Caruso,PA,2026-05-11 12:03:13,8.3,0.2,None,None,None,None,13,side=under; rating=0; diff=-0.2; line=8.5; L10=3o/7u/10g; streak=1u; opp_rank=13
+bettingpros,NBA,Shai Gilgeous-Alexander,PA,2026-05-11 12:03:13,35.3,0.2,None,None,None,None,13,side=under; rating=0; diff=-0.2; line=35.5; L10=3o/7u/10g; streak=3u; opp_rank=13
+bettingpros,NBA,Duncan Robinson,PR,2026-05-11 12:03:13,14.7,0.2,None,None,None,None,13,side=over; rating=0; diff=0.2; line=14.5; L10=7o/3u/10g; streak=6o; opp_rank=13
+bettingpros,NBA,Alex Caruso,RA,2026-05-11 12:03:13,4.7,0.2,None,None,None,None,7,side=over; rating=0; diff=0.2; line=4.5; L10=4o/6u/10g; streak=1u; opp_rank=7
+bettingpros,NBA,Duncan Robinson,RA,2026-05-11 12:03:13,4.7,0.2,None,None,None,None,15,side=over; rating=0; diff=0.2; line=4.5; L10=5o/5u/10g; streak=2o; opp_rank=15
+bettingpros,NBA,Chet Holmgren,AST,2026-05-11 12:03:13,1.6,0.2,None,None,None,None,17,side=over; rating=0; diff=0.1; line=1.5; L10=4o/6u/10g; streak=1u; opp_rank=17
+bettingpros,NBA,Jarrett Allen,AST,2026-05-11 12:03:13,1.6,0.2,None,None,None,None,1,side=over; rating=0; diff=0.1; line=1.5; L10=2o/8u/10g; streak=1u; opp_rank=1
+bettingpros,NBA,Isaiah Hartenstein,BLK,2026-05-11 12:03:13,0.6,0.2,None,None,None,None,1,side=over; rating=0; diff=0.1; line=0.5; L10=7o/3u/10g; streak=1u; opp_rank=1
+bettingpros,NBA,Shai Gilgeous-Alexander,BLK,2026-05-11 12:03:13,0.6,0.2,None,None,None,None,1,side=over; rating=0; diff=0.1; line=0.5; L10=5o/5u/10g; streak=1o; opp_rank=1
+bettingpros,NBA,Tobias Harris,BLK,2026-05-11 12:03:13,0.4,0.2,None,None,None,None,8,side=under; rating=0; diff=-0.1; line=0.5; L10=5o/5u/10g; streak=1u; opp_rank=8
+bettingpros,NBA,James Harden,BLK,2026-05-11 12:03:13,0.6,0.2,None,None,None,None,30,side=over; rating=0; diff=0.1; line=0.5; L10=5o/5u/10g; streak=2u; opp_rank=30
+bettingpros,NBA,Donovan Mitchell,BLK,2026-05-11 12:03:13,0.4,0.2,None,None,None,None,30,side=under; rating=0; diff=-0.1; line=0.5; L10=2o/8u/10g; streak=4u; opp_rank=30
+bettingpros,NBA,Donovan Mitchell,PTS,2026-05-11 12:03:13,27.4,0.2,None,None,None,None,3,side=under; rating=0; diff=-0.1; line=27.5; L10=4o/6u/10g; streak=2o; opp_rank=3
+bettingpros,NBA,Luke Kennard,REB,2026-05-11 12:03:13,2.4,0.2,None,None,None,None,20,side=under; rating=0; diff=-0.1; line=2.5; L10=7o/3u/10g; streak=2u; opp_rank=20
+bettingpros,NBA,Shai Gilgeous-Alexander,REB,2026-05-11 12:03:13,3.9,0.2,None,None,None,None,5,side=under; rating=0; diff=-0.1; line=4.5; L10=1o/9u/10g; streak=5u; opp_rank=5
+bettingpros,NBA,Austin Reaves,REB,2026-05-11 12:03:13,4.6,0.2,None,None,None,None,20,side=over; rating=0; diff=0.1; line=4.5; L10=3o/7u/10g; streak=2u; opp_rank=20
+bettingpros,NBA,Donovan Mitchell,REB,2026-05-11 12:03:13,4.4,0.2,None,None,None,None,4,side=under; rating=0; diff=-0.1; line=4.5; L10=7o/3u/10g; streak=2o; opp_rank=4
+bettingpros,NBA,Duncan Robinson,REB,2026-05-11 12:03:13,2.6,0.2,None,None,None,None,9,side=over; rating=0; diff=0.1; line=2.5; L10=6o/4u/10g; streak=2o; opp_rank=9
+bettingpros,NBA,Luke Kennard,STL,2026-05-11 12:03:13,0.6,0.2,None,None,None,None,4,side=over; rating=0; diff=0.1; line=0.5; L10=5o/5u/10g; streak=1o; opp_rank=4
+bettingpros,NBA,Alex Caruso,STL,2026-05-11 12:03:13,1.4,0.2,None,None,None,None,26,side=under; rating=0; diff=-0.1; line=1.5; L10=3o/7u/10g; streak=2o; opp_rank=26
+bettingpros,NBA,Deandre Ayton,STL,2026-05-11 12:03:13,0.6,0.2,None,None,None,None,4,side=over; rating=0; diff=0.1; line=0.5; L10=2o/8u/10g; streak=1o; opp_rank=4
+bettingpros,NBA,Shai Gilgeous-Alexander,STL,2026-05-11 12:03:13,1.6,0.2,None,None,None,None,26,side=over; rating=0; diff=0.1; line=1.5; L10=1o/9u/10g; streak=8u; opp_rank=26
+bettingpros,NBA,Rui Hachimura,STL,2026-05-11 12:03:13,0.6,0.2,None,None,None,None,4,side=over; rating=0; diff=0.1; line=0.5; L10=8o/2u/10g; streak=3o; opp_rank=4
+bettingpros,NBA,Donovan Mitchell,STL,2026-05-11 12:03:13,1.6,0.2,None,None,None,None,22,side=over; rating=0; diff=0.1; line=1.5; L10=2o/8u/10g; streak=1u; opp_rank=22
+bettingpros,NBA,Max Strus,STL,2026-05-11 12:03:13,0.6,0.2,None,None,None,None,22,side=over; rating=0; diff=0.1; line=0.5; L10=5o/5u/10g; streak=1o; opp_rank=22
+bettingpros,NBA,Cade Cunningham,STL,2026-05-11 12:03:13,1.6,0.2,None,None,None,None,19,side=over; rating=0; diff=0.1; line=1.5; L10=2o/8u/10g; streak=2u; opp_rank=19
+bettingpros,NBA,LeBron James,FG3M,2026-05-11 12:03:13,1.4,0.2,None,None,None,None,27,side=under; rating=0; diff=-0.1; line=1.5; L10=5o/5u/10g; streak=1o; opp_rank=27
+bettingpros,NBA,Marcus Smart,FG3M,2026-05-11 12:03:13,1.6,0.2,None,None,None,None,27,side=over; rating=0; diff=0.1; line=1.5; L10=5o/5u/10g; streak=2u; opp_rank=27
+bettingpros,NBA,Luke Kennard,FG3M,2026-05-11 12:03:13,1.6,0.2,None,None,None,None,27,side=over; rating=0; diff=0.1; line=1.5; L10=4o/6u/10g; streak=2o; opp_rank=27
+bettingpros,NBA,Shai Gilgeous-Alexander,FG3M,2026-05-11 12:03:13,1.6,0.2,None,None,None,None,10,side=over; rating=0; diff=0.1; line=1.5; L10=6o/4u/10g; streak=1o; opp_rank=10
+bettingpros,NBA,Austin Reaves,FG3M,2026-05-11 12:03:13,2.4,0.2,None,None,None,None,27,side=under; rating=0; diff=-0.1; line=2.5; L10=2o/8u/10g; streak=1u; opp_rank=27
+bettingpros,NBA,Tobias Harris,FG3M,2026-05-11 12:03:13,1.4,0.2,None,None,None,None,21,side=under; rating=0; diff=-0.1; line=1.5; L10=5o/5u/10g; streak=2o; opp_rank=21
+bettingpros,NBA,Daniss Jenkins,PR,2026-05-11 12:03:13,11.6,0.2,None,None,None,None,13,side=over; rating=0; diff=0.1; line=11.5; L10=3o/7u/10g; streak=1u; opp_rank=13
+bettingpros,NBA,Luke Kennard,RA,2026-05-11 12:03:13,4.6,0.2,None,None,None,None,14,side=over; rating=0; diff=0.1; line=4.5; L10=7o/3u/10g; streak=2u; opp_rank=14
+bettingpros,NBA,Daniss Jenkins,PRA,2026-05-11 12:03:13,15.6,0.2,None,None,None,None,14,side=over; rating=0; diff=0.1; line=15.5; L10=3o/7u/10g; streak=1u; opp_rank=14
+oddsapi,NBA,Cade Cunningham,AST,2026-05-11 12:03:13,9.5,0.5,0.4507,0.5493,,,,n_books=5
+oddsapi,NBA,James Harden,AST,2026-05-11 12:03:13,6.5,0.7,0.5335,0.4665,,,,n_books=7
+oddsapi,NBA,Donovan Mitchell,AST,2026-05-11 12:03:13,4.5,0.5,0.4197,0.5803,,,,n_books=5
+oddsapi,NBA,Evan Mobley,AST,2026-05-11 12:03:13,3.5,0.6,0.4394,0.5606,,,,n_books=6
+oddsapi,NBA,Daniss Jenkins,AST,2026-05-11 12:03:13,3.5,0.5,0.4206,0.5794,,,,n_books=5
+oddsapi,NBA,Ausar Thompson,AST,2026-05-11 12:03:13,2.5,0.5,0.5925,0.4075,,,,n_books=5
+oddsapi,NBA,Dennis Schroder,AST,2026-05-11 12:03:13,2.5,0.5,0.5049,0.4951,,,,n_books=5
+oddsapi,NBA,Tobias Harris,AST,2026-05-11 12:03:13,1.5,0.4,0.5799,0.4201,,,,n_books=4
+oddsapi,NBA,Evan Mobley,BLK,2026-05-11 12:03:13,1.5,0.4,0.5171,0.4829,,,,n_books=4
+oddsapi,NBA,Jarrett Allen,BLK,2026-05-11 12:03:13,1.5,0.4,0.3926,0.6074,,,,n_books=4
+oddsapi,NBA,Ausar Thompson,BLK,2026-05-11 12:03:13,1.5,0.4,0.3739,0.6261,,,,n_books=4
+oddsapi,NBA,Ausar Thompson,BS,2026-05-11 12:03:13,3.5,0.1,0.4365,0.5635,,,,n_books=1
+oddsapi,NBA,Donovan Mitchell,PTS,2026-05-11 12:03:13,27.5,0.5,0.4847,0.5153,,,,n_books=5
+oddsapi,NBA,Cade Cunningham,PTS,2026-05-11 12:03:13,27.5,0.5,0.4851,0.5149,,,,n_books=5
+oddsapi,NBA,James Harden,PTS,2026-05-11 12:03:13,18.5,0.6,0.5256,0.4744,,,,n_books=6
+oddsapi,NBA,Tobias Harris,PTS,2026-05-11 12:03:13,18.5,0.6,0.4876,0.5124,,,,n_books=6
+oddsapi,NBA,Evan Mobley,PTS,2026-05-11 12:03:13,15.5,0.5,0.4778,0.5222,,,,n_books=5
+oddsapi,NBA,Jalen Duren,PTS,2026-05-11 12:03:13,13.5,0.6,0.5053,0.4947,,,,n_books=6
+oddsapi,NBA,Jarrett Allen,PTS,2026-05-11 12:03:13,12.5,0.5,0.4859,0.5141,,,,n_books=5
+oddsapi,NBA,Duncan Robinson,PTS,2026-05-11 12:03:13,11.5,0.6,0.4913,0.5087,,,,n_books=6
+oddsapi,NBA,Ausar Thompson,PTS,2026-05-11 12:03:13,9.5,0.5,0.4891,0.5109,,,,n_books=5
+oddsapi,NBA,Daniss Jenkins,PTS,2026-05-11 12:03:13,9.5,0.6,0.478,0.522,,,,n_books=6
+oddsapi,NBA,Max Strus,PTS,2026-05-11 12:03:13,8.5,0.6,0.4749,0.5251,,,,n_books=6
+oddsapi,NBA,Dennis Schroder,PTS,2026-05-11 12:03:13,6.5,0.6,0.5036,0.4964,,,,n_books=6
+oddsapi,NBA,Jaylon Tyson,PTS,2026-05-11 12:03:13,6.5,0.6,0.4957,0.5043,,,,n_books=6
+oddsapi,NBA,Dean Wade,PTS,2026-05-11 12:03:13,3.5,0.5,0.4961,0.5039,,,,n_books=5
+oddsapi,NBA,Isaiah Stewart II,PTS,2026-05-11 12:03:13,3.5,0.5,0.4811,0.5189,,,,n_books=5
+oddsapi,NBA,Cade Cunningham,PA,2026-05-11 12:03:13,36.5,0.4,0.4977,0.5023,,,,n_books=4
+oddsapi,NBA,Donovan Mitchell,PA,2026-05-11 12:03:13,31.5,0.4,0.5003,0.4997,,,,n_books=4
+oddsapi,NBA,James Harden,PA,2026-05-11 12:03:13,25.5,0.3,0.5141,0.4859,,,,n_books=3
+oddsapi,NBA,Tobias Harris,PA,2026-05-11 12:03:13,20.5,0.4,0.4883,0.5117,,,,n_books=4
+oddsapi,NBA,Evan Mobley,PA,2026-05-11 12:03:13,18.5,0.3,0.5067,0.4933,,,,n_books=3
+oddsapi,NBA,Jarrett Allen,PA,2026-05-11 12:03:13,13.5,0.4,0.5195,0.4805,,,,n_books=4
+oddsapi,NBA,Daniss Jenkins,PA,2026-05-11 12:03:13,12.5,0.3,0.5013,0.4987,,,,n_books=3
+oddsapi,NBA,Ausar Thompson,PA,2026-05-11 12:03:13,12.5,0.4,0.4867,0.5133,,,,n_books=4
+oddsapi,NBA,Dennis Schroder,PA,2026-05-11 12:03:13,9.5,0.3,0.4821,0.5179,,,,n_books=3
+oddsapi,NBA,Jaylon Tyson,PA,2026-05-11 12:03:13,7.5,0.2,0.5228,0.4772,,,,n_books=2
+oddsapi,NBA,Cade Cunningham,PR,2026-05-11 12:03:13,32.5,0.4,0.5005,0.4995,,,,n_books=4
+oddsapi,NBA,Donovan Mitchell,PR,2026-05-11 12:03:13,31.5,0.4,0.5081,0.4919,,,,n_books=4
+oddsapi,NBA,Jalen Duren,PR,2026-05-11 12:03:13,24.5,0.3,0.4923,0.5077,,,,n_books=3
+oddsapi,NBA,Tobias Harris,PR,2026-05-11 12:03:13,24.5,0.3,0.5119,0.4881,,,,n_books=3
+oddsapi,NBA,James Harden,PR,2026-05-11 12:03:13,24.5,0.3,0.4834,0.5166,,,,n_books=3
+oddsapi,NBA,Evan Mobley,PR,2026-05-11 12:03:13,23.5,0.3,0.4956,0.5044,,,,n_books=3
+oddsapi,NBA,Jarrett Allen,PR,2026-05-11 12:03:13,20.5,0.4,0.5008,0.4992,,,,n_books=4
+oddsapi,NBA,Ausar Thompson,PR,2026-05-11 12:03:13,16.5,0.4,0.5039,0.4961,,,,n_books=4
+oddsapi,NBA,Max Strus,PR,2026-05-11 12:03:13,12.5,0.3,0.4899,0.5101,,,,n_books=3
+oddsapi,NBA,Daniss Jenkins,PR,2026-05-11 12:03:13,11.5,0.3,0.5094,0.4906,,,,n_books=3
+oddsapi,NBA,Jaylon Tyson,PR,2026-05-11 12:03:13,9.5,0.3,0.5168,0.4832,,,,n_books=3
+oddsapi,NBA,Dennis Schroder,PR,2026-05-11 12:03:13,8.5,0.3,0.4735,0.5265,,,,n_books=3
+oddsapi,NBA,Dean Wade,PR,2026-05-11 12:03:13,7.5,0.3,0.4817,0.5183,,,,n_books=3
+oddsapi,NBA,Isaiah Stewart II,PR,2026-05-11 12:03:13,5.5,0.3,0.5257,0.4743,,,,n_books=3
+oddsapi,NBA,Cade Cunningham,PRA,2026-05-11 12:03:13,42.5,0.3,0.4885,0.5115,,,,n_books=3
+oddsapi,NBA,Donovan Mitchell,PRA,2026-05-11 12:03:13,36.5,0.3,0.4786,0.5214,,,,n_books=3
+oddsapi,NBA,James Harden,PRA,2026-05-11 12:03:13,31.5,0.4,0.4865,0.5135,,,,n_books=4
+oddsapi,NBA,Evan Mobley,PRA,2026-05-11 12:03:13,26.5,0.3,0.5189,0.4811,,,,n_books=3
+oddsapi,NBA,Jalen Duren,PRA,2026-05-11 12:03:13,26.5,0.5,0.4947,0.5053,,,,n_books=5
+oddsapi,NBA,Tobias Harris,PRA,2026-05-11 12:03:13,26.5,0.5,0.5048,0.4952,,,,n_books=5
+oddsapi,NBA,Jarrett Allen,PRA,2026-05-11 12:03:13,21.5,0.4,0.5196,0.4804,,,,n_books=4
+oddsapi,NBA,Ausar Thompson,PRA,2026-05-11 12:03:13,19.5,0.4,0.5079,0.4921,,,,n_books=4
+oddsapi,NBA,Duncan Robinson,PRA,2026-05-11 12:03:13,16.5,0.5,0.4978,0.5022,,,,n_books=5
+oddsapi,NBA,Daniss Jenkins,PRA,2026-05-11 12:03:13,15.5,0.4,0.4718,0.5282,,,,n_books=4
+oddsapi,NBA,Max Strus,PRA,2026-05-11 12:03:13,14.5,0.5,0.4966,0.5034,,,,n_books=5
+oddsapi,NBA,Jaylon Tyson,PRA,2026-05-11 12:03:13,11.5,0.3,0.4789,0.5211,,,,n_books=3
+oddsapi,NBA,Dennis Schroder,PRA,2026-05-11 12:03:13,10.5,0.4,0.5183,0.4817,,,,n_books=4
+oddsapi,NBA,Dean Wade,PRA,2026-05-11 12:03:13,8.5,0.3,0.4662,0.5338,,,,n_books=3
+oddsapi,NBA,Jalen Duren,REB,2026-05-11 12:03:13,10.5,0.6,0.4996,0.5004,,,,n_books=6
+oddsapi,NBA,Evan Mobley,REB,2026-05-11 12:03:13,7.5,0.5,0.5548,0.4452,,,,n_books=5
+oddsapi,NBA,Jarrett Allen,REB,2026-05-11 12:03:13,7.5,0.7,0.5387,0.4613,,,,n_books=7
+oddsapi,NBA,Ausar Thompson,REB,2026-05-11 12:03:13,7.5,0.6,0.4467,0.5533,,,,n_books=6
+oddsapi,NBA,Tobias Harris,REB,2026-05-11 12:03:13,6.5,0.5,0.4425,0.5575,,,,n_books=5
+oddsapi,NBA,Cade Cunningham,REB,2026-05-11 12:03:13,5.5,0.6,0.4587,0.5413,,,,n_books=6
+oddsapi,NBA,James Harden,REB,2026-05-11 12:03:13,4.5,0.4,0.5718,0.4282,,,,n_books=4
+oddsapi,NBA,Donovan Mitchell,REB,2026-05-11 12:03:13,4.5,0.6,0.461,0.539,,,,n_books=6
+oddsapi,NBA,Max Strus,REB,2026-05-11 12:03:13,3.5,0.6,0.5762,0.4238,,,,n_books=6
+oddsapi,NBA,Jaylon Tyson,REB,2026-05-11 12:03:13,3.5,0.4,0.4229,0.5771,,,,n_books=4
+oddsapi,NBA,Dean Wade,REB,2026-05-11 12:03:13,3.5,0.4,0.4138,0.5862,,,,n_books=4
+oddsapi,NBA,Duncan Robinson,REB,2026-05-11 12:03:13,2.5,0.5,0.4698,0.5302,,,,n_books=5
+oddsapi,NBA,Isaiah Stewart II,REB,2026-05-11 12:03:13,2.5,0.4,0.4693,0.5307,,,,n_books=4
+oddsapi,NBA,Daniss Jenkins,REB,2026-05-11 12:03:13,2.5,0.5,0.4379,0.5621,,,,n_books=5
+oddsapi,NBA,Cade Cunningham,RA,2026-05-11 12:03:13,14.5,0.4,0.5051,0.4949,,,,n_books=4
+oddsapi,NBA,James Harden,RA,2026-05-11 12:03:13,11.5,0.4,0.5377,0.4623,,,,n_books=4
+oddsapi,NBA,Evan Mobley,RA,2026-05-11 12:03:13,11.5,0.4,0.4909,0.5091,,,,n_books=4
+oddsapi,NBA,Ausar Thompson,RA,2026-05-11 12:03:13,10.5,0.4,0.4717,0.5283,,,,n_books=4
+oddsapi,NBA,Jarrett Allen,RA,2026-05-11 12:03:13,9.5,0.4,0.4768,0.5232,,,,n_books=4
+oddsapi,NBA,Donovan Mitchell,RA,2026-05-11 12:03:13,8.5,0.3,0.4929,0.5071,,,,n_books=3
+oddsapi,NBA,Tobias Harris,RA,2026-05-11 12:03:13,8.5,0.3,0.4509,0.5491,,,,n_books=3
+oddsapi,NBA,Daniss Jenkins,RA,2026-05-11 12:03:13,5.5,0.3,0.494,0.506,,,,n_books=3
+oddsapi,NBA,Jaylon Tyson,RA,2026-05-11 12:03:13,4.5,0.2,0.5,0.5,,,,n_books=2
+oddsapi,NBA,Dennis Schroder,RA,2026-05-11 12:03:13,4.5,0.3,0.4577,0.5423,,,,n_books=3
+oddsapi,NBA,Ausar Thompson,STL,2026-05-11 12:03:13,1.5,0.3,0.6099,0.3901,,,,n_books=3
+oddsapi,NBA,Cade Cunningham,STL,2026-05-11 12:03:13,1.5,0.3,0.3957,0.6043,,,,n_books=3
+oddsapi,NBA,Donovan Mitchell,STL,2026-05-11 12:03:13,1.5,0.3,0.381,0.619,,,,n_books=3
+oddsapi,NBA,Tobias Harris,STL,2026-05-11 12:03:13,1.5,0.3,0.3568,0.6432,,,,n_books=3
+oddsapi,NBA,James Harden,STL,2026-05-11 12:03:13,1.5,0.3,0.3508,0.6492,,,,n_books=3
+oddsapi,NBA,Duncan Robinson,FG3M,2026-05-11 12:03:13,2.5,0.6,0.5666,0.4334,,,,n_books=6
+oddsapi,NBA,Donovan Mitchell,FG3M,2026-05-11 12:03:13,2.5,0.7,0.5402,0.4598,,,,n_books=7
+oddsapi,NBA,James Harden,FG3M,2026-05-11 12:03:13,2.5,0.6,0.4501,0.5499,,,,n_books=6
+oddsapi,NBA,Cade Cunningham,FG3M,2026-05-11 12:03:13,2.5,0.5,0.3944,0.6056,,,,n_books=5
+oddsapi,NBA,Max Strus,FG3M,2026-05-11 12:03:13,1.5,0.6,0.5885,0.4115,,,,n_books=6
+oddsapi,NBA,Tobias Harris,FG3M,2026-05-11 12:03:13,1.5,0.6,0.4334,0.5666,,,,n_books=6
+oddsapi,NBA,Daniss Jenkins,FG3M,2026-05-11 12:03:13,1.5,0.5,0.345,0.655,,,,n_books=5
+oddsapi,NBA,Jaylon Tyson,FG3M,2026-05-11 12:03:13,0.5,0.5,0.6383,0.3617,,,,n_books=5
+oddsapi,NBA,Duncan Robinson,AST,2026-05-11 12:03:13,1.5,0.1,0.6113,0.3887,,,,n_books=1
+oddsapi,NBA,Jalen Duren,BLK,2026-05-11 12:03:13,0.5,0.1,0.6154,0.3846,,,,n_books=1
+oddsapi,NBA,Cade Cunningham,BLK,2026-05-11 12:03:13,0.5,0.1,0.5516,0.4484,,,,n_books=1
+oddsapi,NBA,Duncan Robinson,BLK,2026-05-11 12:03:13,0.5,0.1,0.3077,0.6923,,,,n_books=1
+oddsapi,NBA,Dean Wade,BLK,2026-05-11 12:03:13,0.5,0.1,0.2525,0.7475,,,,n_books=1
+oddsapi,NBA,Tobias Harris,BLK,2026-05-11 12:03:13,0.5,0.1,0.4393,0.5607,,,,n_books=1
+oddsapi,NBA,James Harden,BLK,2026-05-11 12:03:13,0.5,0.1,0.4615,0.5385,,,,n_books=1
+oddsapi,NBA,Donovan Mitchell,BLK,2026-05-11 12:03:13,0.5,0.1,0.3236,0.6764,,,,n_books=1
+oddsapi,NBA,Dean Wade,PA,2026-05-11 12:03:13,5.5,0.1,0.4653,0.5347,,,,n_books=1
+oddsapi,NBA,Duncan Robinson,PA,2026-05-11 12:03:13,14.5,0.1,0.4754,0.5246,,,,n_books=1
+oddsapi,NBA,Jalen Duren,PA,2026-05-11 12:03:13,15.5,0.1,0.4797,0.5203,,,,n_books=1
+oddsapi,NBA,Duncan Robinson,PR,2026-05-11 12:03:13,14.5,0.1,0.5082,0.4918,,,,n_books=1
+oddsapi,NBA,Jalen Duren,RA,2026-05-11 12:03:13,12.5,0.1,0.4797,0.5203,,,,n_books=1
+oddsapi,NBA,Duncan Robinson,RA,2026-05-11 12:03:13,4.5,0.1,0.5306,0.4694,,,,n_books=1
+oddsapi,NBA,Dean Wade,RA,2026-05-11 12:03:13,4.5,0.1,0.4518,0.5482,,,,n_books=1
+oddsapi,NBA,Jalen Duren,AST,2026-05-11 12:03:13,2.5,0.1,0.382,0.618,,,,n_books=1
+oddsapi,NBA,Dennis Schroder,REB,2026-05-11 12:03:13,1.5,0.1,0.5319,0.4681,,,,n_books=1
+oddsapi,NBA,Dean Wade,FG3M,2026-05-11 12:03:13,0.5,0.1,0.5993,0.4007,,,,n_books=1
+oddsapi,NBA,Evan Mobley,FG3M,2026-05-11 12:03:13,0.5,0.1,0.6269,0.3731,,,,n_books=1
+oddsapi,NBA,Dennis Schroder,FG3M,2026-05-11 12:03:13,0.5,0.1,0.4836,0.5164,,,,n_books=1
+oddsapi,NBA,Shai Gilgeous-Alexander,AST,2026-05-11 12:03:13,6.5,0.6,0.5458,0.4542,,,,n_books=6
+oddsapi,NBA,LeBron James,AST,2026-05-11 12:03:13,7.5,0.6,0.4939,0.5061,,,,n_books=6
+oddsapi,NBA,Ajay Mitchell,AST,2026-05-11 12:03:13,4.5,0.6,0.4776,0.5224,,,,n_books=6
+oddsapi,NBA,Chet Holmgren,AST,2026-05-11 12:03:13,1.5,0.4,0.5061,0.4939,,,,n_books=4
+oddsapi,NBA,Jaylin Williams,AST,2026-05-11 12:03:13,1.5,0.3,0.4566,0.5434,,,,n_books=3
+oddsapi,NBA,Austin Reaves,AST,2026-05-11 12:03:13,6.5,0.6,0.4531,0.5469,,,,n_books=6
+oddsapi,NBA,Marcus Smart,AST,2026-05-11 12:03:13,3.5,0.6,0.544,0.456,,,,n_books=6
+oddsapi,NBA,Isaiah Hartenstein,AST,2026-05-11 12:03:13,2.5,0.5,0.5451,0.4549,,,,n_books=5
+oddsapi,NBA,Luke Kennard,AST,2026-05-11 12:03:13,1.5,0.1,0.5977,0.4023,,,,n_books=1
+oddsapi,NBA,Chet Holmgren,BLK,2026-05-11 12:03:13,1.5,0.4,0.5454,0.4546,,,,n_books=4
+oddsapi,NBA,Luke Kennard,PTS,2026-05-11 12:03:13,9.5,0.6,0.4933,0.5067,,,,n_books=6
+oddsapi,NBA,Isaiah Hartenstein,PTS,2026-05-11 12:03:13,8.5,0.6,0.4597,0.5403,,,,n_books=6
+oddsapi,NBA,Shai Gilgeous-Alexander,PTS,2026-05-11 12:03:13,28.5,0.6,0.511,0.489,,,,n_books=6
+oddsapi,NBA,Chet Holmgren,PTS,2026-05-11 12:03:13,17.5,0.5,0.5243,0.4757,,,,n_books=5
+oddsapi,NBA,Luguentz Dort,PTS,2026-05-11 12:03:13,6.5,0.6,0.4665,0.5335,,,,n_books=6
+oddsapi,NBA,LeBron James,PTS,2026-05-11 12:03:13,22.5,0.5,0.4886,0.5114,,,,n_books=5
+oddsapi,NBA,Rui Hachimura,PTS,2026-05-11 12:03:13,14.5,0.6,0.4925,0.5075,,,,n_books=6
+oddsapi,NBA,Alex Caruso,PTS,2026-05-11 12:03:13,6.5,0.6,0.4919,0.5081,,,,n_books=6
+oddsapi,NBA,Ajay Mitchell,PTS,2026-05-11 12:03:13,16.5,0.4,0.5307,0.4693,,,,n_books=4
+oddsapi,NBA,Cason Wallace,PTS,2026-05-11 12:03:13,6.5,0.5,0.5351,0.4649,,,,n_books=5
+oddsapi,NBA,Deandre Ayton,PTS,2026-05-11 12:03:13,8.5,0.5,0.5157,0.4843,,,,n_books=5
+oddsapi,NBA,Austin Reaves,PTS,2026-05-11 12:03:13,21.5,0.6,0.5092,0.4908,,,,n_books=6
+oddsapi,NBA,Jaxson Hayes,PTS,2026-05-11 12:03:13,3.5,0.4,0.548,0.452,,,,n_books=4
+oddsapi,NBA,Isaiah Joe,PTS,2026-05-11 12:03:13,5.5,0.4,0.5187,0.4813,,,,n_books=4
+oddsapi,NBA,Marcus Smart,PTS,2026-05-11 12:03:13,10.5,0.5,0.5299,0.4701,,,,n_books=5
+oddsapi,NBA,Jaylin Williams,PTS,2026-05-11 12:03:13,3.5,0.5,0.5085,0.4915,,,,n_books=5
+oddsapi,NBA,Austin Reaves,PA,2026-05-11 12:03:13,28.5,0.3,0.4872,0.5128,,,,n_books=3
+oddsapi,NBA,Shai Gilgeous-Alexander,PA,2026-05-11 12:03:13,35.5,0.4,0.5069,0.4931,,,,n_books=4
+oddsapi,NBA,Luke Kennard,PA,2026-05-11 12:03:13,11.5,0.1,0.512,0.488,,,,n_books=1
+oddsapi,NBA,Isaiah Hartenstein,PA,2026-05-11 12:03:13,11.5,0.4,0.4663,0.5337,,,,n_books=4
+oddsapi,NBA,Alex Caruso,PA,2026-05-11 12:03:13,8.5,0.1,0.4939,0.5061,,,,n_books=1
+oddsapi,NBA,Ajay Mitchell,PA,2026-05-11 12:03:13,21.5,0.4,0.4977,0.5023,,,,n_books=4
+oddsapi,NBA,Chet Holmgren,PA,2026-05-11 12:03:13,19.5,0.4,0.5033,0.4967,,,,n_books=4
+oddsapi,NBA,Jaylin Williams,PA,2026-05-11 12:03:13,5.5,0.1,0.4808,0.5192,,,,n_books=1
+oddsapi,NBA,LeBron James,PA,2026-05-11 12:03:13,30.5,0.3,0.4766,0.5234,,,,n_books=3
+oddsapi,NBA,Marcus Smart,PA,2026-05-11 12:03:13,15.5,0.3,0.4814,0.5186,,,,n_books=3
+oddsapi,NBA,Austin Reaves,PR,2026-05-11 12:03:13,26.5,0.3,0.4892,0.5108,,,,n_books=3
+oddsapi,NBA,Luke Kennard,PR,2026-05-11 12:03:13,12.5,0.3,0.4757,0.5243,,,,n_books=3
+oddsapi,NBA,Isaiah Hartenstein,PR,2026-05-11 12:03:13,17.5,0.4,0.4902,0.5098,,,,n_books=4
+oddsapi,NBA,Shai Gilgeous-Alexander,PR,2026-05-11 12:03:13,33.5,0.3,0.4824,0.5176,,,,n_books=3
+oddsapi,NBA,Marcus Smart,PR,2026-05-11 12:03:13,14.5,0.4,0.4871,0.5129,,,,n_books=4
+oddsapi,NBA,Chet Holmgren,PR,2026-05-11 12:03:13,27.5,0.4,0.4823,0.5177,,,,n_books=4
+oddsapi,NBA,Luguentz Dort,PR,2026-05-11 12:03:13,9.5,0.4,0.495,0.505,,,,n_books=4
+oddsapi,NBA,Rui Hachimura,PR,2026-05-11 12:03:13,18.5,0.4,0.5025,0.4975,,,,n_books=4
+oddsapi,NBA,Alex Caruso,PR,2026-05-11 12:03:13,9.5,0.3,0.5004,0.4996,,,,n_books=3
+oddsapi,NBA,Ajay Mitchell,PR,2026-05-11 12:03:13,20.5,0.3,0.4942,0.5058,,,,n_books=3
+oddsapi,NBA,Cason Wallace,PR,2026-05-11 12:03:13,9.5,0.3,0.5094,0.4906,,,,n_books=3
+oddsapi,NBA,Deandre Ayton,PR,2026-05-11 12:03:13,17.5,0.3,0.4838,0.5162,,,,n_books=3
+oddsapi,NBA,Jaxson Hayes,PR,2026-05-11 12:03:13,6.5,0.2,0.5647,0.4353,,,,n_books=2
+oddsapi,NBA,LeBron James,PR,2026-05-11 12:03:13,29.5,0.3,0.4804,0.5196,,,,n_books=3
+oddsapi,NBA,Jaylin Williams,PR,2026-05-11 12:03:13,7.5,0.3,0.4899,0.5101,,,,n_books=3
+oddsapi,NBA,Austin Reaves,PRA,2026-05-11 12:03:13,32.5,0.5,0.503,0.497,,,,n_books=5
+oddsapi,NBA,Shai Gilgeous-Alexander,PRA,2026-05-11 12:03:13,40.5,0.4,0.4888,0.5112,,,,n_books=4
+oddsapi,NBA,Isaiah Hartenstein,PRA,2026-05-11 12:03:13,20.5,0.5,0.4805,0.5195,,,,n_books=5
+oddsapi,NBA,Ajay Mitchell,PRA,2026-05-11 12:03:13,24.5,0.3,0.5162,0.4838,,,,n_books=3
+oddsapi,NBA,Chet Holmgren,PRA,2026-05-11 12:03:13,28.5,0.5,0.5152,0.4848,,,,n_books=5
+oddsapi,NBA,Alex Caruso,PRA,2026-05-11 12:03:13,11.5,0.3,0.5065,0.4935,,,,n_books=3
+oddsapi,NBA,Jaylin Williams,PRA,2026-05-11 12:03:13,9.5,0.3,0.4638,0.5362,,,,n_books=3
+oddsapi,NBA,LeBron James,PRA,2026-05-11 12:03:13,36.5,0.4,0.5031,0.4969,,,,n_books=4
+oddsapi,NBA,Marcus Smart,PRA,2026-05-11 12:03:13,18.5,0.4,0.4988,0.5012,,,,n_books=4
+oddsapi,NBA,Luke Kennard,PRA,2026-05-11 12:03:13,14.5,0.2,0.4985,0.5015,,,,n_books=2
+oddsapi,NBA,Cason Wallace,PRA,2026-05-11 12:03:13,11.5,0.4,0.5066,0.4934,,,,n_books=4
+oddsapi,NBA,Austin Reaves,REB,2026-05-11 12:03:13,4.5,0.6,0.4572,0.5428,,,,n_books=6
+oddsapi,NBA,Luke Kennard,REB,2026-05-11 12:03:13,2.5,0.5,0.5152,0.4848,,,,n_books=5
+oddsapi,NBA,Isaiah Hartenstein,REB,2026-05-11 12:03:13,8.5,0.6,0.5306,0.4694,,,,n_books=6
+oddsapi,NBA,Shai Gilgeous-Alexander,REB,2026-05-11 12:03:13,4.5,0.6,0.4399,0.5601,,,,n_books=6
+oddsapi,NBA,Chet Holmgren,REB,2026-05-11 12:03:13,9.5,0.5,0.4527,0.5473,,,,n_books=5
+oddsapi,NBA,Marcus Smart,REB,2026-05-11 12:03:13,3.5,0.6,0.4229,0.5771,,,,n_books=6
+oddsapi,NBA,Luguentz Dort,REB,2026-05-11 12:03:13,2.5,0.5,0.5479,0.4521,,,,n_books=5
+oddsapi,NBA,LeBron James,REB,2026-05-11 12:03:13,6.5,0.6,0.4884,0.5116,,,,n_books=6
+oddsapi,NBA,Rui Hachimura,REB,2026-05-11 12:03:13,3.5,0.6,0.5668,0.4332,,,,n_books=6
+oddsapi,NBA,Ajay Mitchell,REB,2026-05-11 12:03:13,3.5,0.7,0.468,0.532,,,,n_books=7
+oddsapi,NBA,Cason Wallace,REB,2026-05-11 12:03:13,2.5,0.5,0.5093,0.4907,,,,n_books=5
+oddsapi,NBA,Deandre Ayton,REB,2026-05-11 12:03:13,8.5,0.6,0.4614,0.5386,,,,n_books=6
+oddsapi,NBA,Jaylin Williams,REB,2026-05-11 12:03:13,3.5,0.6,0.4452,0.5548,,,,n_books=6
+oddsapi,NBA,Isaiah Hartenstein,RA,2026-05-11 12:03:13,11.5,0.4,0.5229,0.4771,,,,n_books=4
+oddsapi,NBA,Shai Gilgeous-Alexander,RA,2026-05-11 12:03:13,11.5,0.3,0.4692,0.5308,,,,n_books=3
+oddsapi,NBA,Luke Kennard,RA,2026-05-11 12:03:13,4.5,0.1,0.5192,0.4808,,,,n_books=1
+oddsapi,NBA,Chet Holmgren,RA,2026-05-11 12:03:13,10.5,0.4,0.5319,0.4681,,,,n_books=4
+oddsapi,NBA,Alex Caruso,RA,2026-05-11 12:03:13,4.5,0.1,0.567,0.433,,,,n_books=1
+oddsapi,NBA,Ajay Mitchell,RA,2026-05-11 12:03:13,7.5,0.4,0.5428,0.4572,,,,n_books=4
+oddsapi,NBA,Jaylin Williams,RA,2026-05-11 12:03:13,4.5,0.3,0.5267,0.4733,,,,n_books=3
+oddsapi,NBA,Austin Reaves,RA,2026-05-11 12:03:13,10.5,0.4,0.5074,0.4926,,,,n_books=4
+oddsapi,NBA,LeBron James,RA,2026-05-11 12:03:13,14.5,0.4,0.4706,0.5294,,,,n_books=4
+oddsapi,NBA,Marcus Smart,RA,2026-05-11 12:03:13,7.5,0.3,0.4467,0.5533,,,,n_books=3
+oddsapi,NBA,Shai Gilgeous-Alexander,STL,2026-05-11 12:03:13,1.5,0.3,0.3957,0.6043,,,,n_books=3
+oddsapi,NBA,Austin Reaves,STL,2026-05-11 12:03:13,0.5,0.3,0.6058,0.3942,,,,n_books=3
+oddsapi,NBA,LeBron James,STL,2026-05-11 12:03:13,1.5,0.2,0.3168,0.6832,,,,n_books=2
+oddsapi,NBA,Chet Holmgren,STL,2026-05-11 12:03:13,0.5,0.2,0.6565,0.3435,,,,n_books=2
+oddsapi,NBA,Marcus Smart,STL,2026-05-11 12:03:13,1.5,0.3,0.462,0.538,,,,n_books=3
+oddsapi,NBA,Ajay Mitchell,STL,2026-05-11 12:03:13,1.5,0.3,0.3449,0.6551,,,,n_books=3
+oddsapi,NBA,Austin Reaves,FG3M,2026-05-11 12:03:13,2.5,0.5,0.374,0.626,,,,n_books=5
+oddsapi,NBA,Luke Kennard,FG3M,2026-05-11 12:03:13,1.5,0.6,0.5163,0.4837,,,,n_books=6
+oddsapi,NBA,Shai Gilgeous-Alexander,FG3M,2026-05-11 12:03:13,1.5,0.6,0.4419,0.5581,,,,n_books=6
+oddsapi,NBA,Chet Holmgren,FG3M,2026-05-11 12:03:13,1.5,0.6,0.4448,0.5552,,,,n_books=6
+oddsapi,NBA,Luguentz Dort,FG3M,2026-05-11 12:03:13,1.5,0.6,0.511,0.489,,,,n_books=6
+oddsapi,NBA,LeBron James,FG3M,2026-05-11 12:03:13,1.5,0.6,0.4872,0.5128,,,,n_books=6
+oddsapi,NBA,Rui Hachimura,FG3M,2026-05-11 12:03:13,2.5,0.6,0.4411,0.5589,,,,n_books=6
+oddsapi,NBA,Ajay Mitchell,FG3M,2026-05-11 12:03:13,1.5,0.7,0.4129,0.5871,,,,n_books=7
+oddsapi,NBA,Cason Wallace,FG3M,2026-05-11 12:03:13,1.5,0.3,0.3282,0.6718,,,,n_books=3
+oddsapi,NBA,Marcus Smart,FG3M,2026-05-11 12:03:13,1.5,0.6,0.5891,0.4109,,,,n_books=6
+oddsapi,NBA,Rui Hachimura,PRA,2026-05-11 12:03:13,20.5,0.3,0.4888,0.5112,,,,n_books=3
+oddsapi,NBA,Luguentz Dort,PRA,2026-05-11 12:03:13,10.5,0.4,0.5147,0.4853,,,,n_books=4
+oddsapi,NBA,Deandre Ayton,PRA,2026-05-11 12:03:13,17.5,0.3,0.5234,0.4766,,,,n_books=3
+oddsapi,NBA,Alex Caruso,REB,2026-05-11 12:03:13,2.5,0.3,0.5747,0.4253,,,,n_books=3
+oddsapi,NBA,Jaxson Hayes,REB,2026-05-11 12:03:13,3.5,0.5,0.4324,0.5676,,,,n_books=5
+oddsapi,NBA,Isaiah Joe,REB,2026-05-11 12:03:13,1.5,0.3,0.4345,0.5655,,,,n_books=3
+oddsapi,NBA,Isaiah Joe,FG3M,2026-05-11 12:03:13,1.5,0.4,0.4575,0.5425,,,,n_books=4
+oddsapi,NBA,Alex Caruso,FG3M,2026-05-11 12:03:13,0.5,0.3,0.6546,0.3454,,,,n_books=3
+oddsapi,NBA,Cason Wallace,AST,2026-05-11 12:03:13,1.5,0.2,0.5649,0.4351,,,,n_books=2
+oddsapi,NBA,Rui Hachimura,AST,2026-05-11 12:03:13,1.5,0.3,0.4499,0.5501,,,,n_books=3
+oddsapi,NBA,Luguentz Dort,AST,2026-05-11 12:03:13,0.5,0.3,0.6536,0.3464,,,,n_books=3
+oddsapi,NBA,Deandre Ayton,AST,2026-05-11 12:03:13,0.5,0.3,0.5145,0.4855,,,,n_books=3
+oddsapi,NBA,Deandre Ayton,BLK,2026-05-11 12:03:13,0.5,0.3,0.592,0.408,,,,n_books=3
+oddsapi,NBA,Isaiah Hartenstein,BLK,2026-05-11 12:03:13,0.5,0.3,0.5665,0.4335,,,,n_books=3
+oddsapi,NBA,Shai Gilgeous-Alexander,BLK,2026-05-11 12:03:13,0.5,0.3,0.5185,0.4815,,,,n_books=3
+oddsapi,NBA,Austin Reaves,BLK,2026-05-11 12:03:13,0.5,0.3,0.4861,0.5139,,,,n_books=3
+oddsapi,NBA,Marcus Smart,BLK,2026-05-11 12:03:13,0.5,0.3,0.458,0.542,,,,n_books=3
+oddsapi,NBA,LeBron James,BLK,2026-05-11 12:03:13,0.5,0.3,0.4169,0.5831,,,,n_books=3
+oddsapi,NBA,Rui Hachimura,BLK,2026-05-11 12:03:13,0.5,0.3,0.371,0.629,,,,n_books=3
+oddsapi,NBA,Ajay Mitchell,BLK,2026-05-11 12:03:13,0.5,0.3,0.2494,0.7506,,,,n_books=3
+oddsapi,NBA,Chet Holmgren,BS,2026-05-11 12:03:13,2.5,0.1,0.5477,0.4523,,,,n_books=1
+oddsapi,NBA,Marcus Smart,BS,2026-05-11 12:03:13,1.5,0.1,0.6114,0.3886,,,,n_books=1
+oddsapi,NBA,Shai Gilgeous-Alexander,BS,2026-05-11 12:03:13,1.5,0.1,0.6017,0.3983,,,,n_books=1
+oddsapi,NBA,Isaiah Hartenstein,BS,2026-05-11 12:03:13,1.5,0.1,0.5548,0.4452,,,,n_books=1
+oddsapi,NBA,LeBron James,BS,2026-05-11 12:03:13,1.5,0.1,0.4919,0.5081,,,,n_books=1
+oddsapi,NBA,Austin Reaves,BS,2026-05-11 12:03:13,1.5,0.1,0.4739,0.5261,,,,n_books=1
+oddsapi,NBA,Ajay Mitchell,BS,2026-05-11 12:03:13,1.5,0.1,0.4372,0.5628,,,,n_books=1
+oddsapi,NBA,Deandre Ayton,BS,2026-05-11 12:03:13,1.5,0.1,0.4289,0.5711,,,,n_books=1
+oddsapi,NBA,Rui Hachimura,BS,2026-05-11 12:03:13,1.5,0.1,0.3341,0.6659,,,,n_books=1
+oddsapi,NBA,Rui Hachimura,PA,2026-05-11 12:03:13,16.5,0.2,0.4817,0.5183,,,,n_books=2
+oddsapi,NBA,Deandre Ayton,PA,2026-05-11 12:03:13,9.5,0.2,0.5,0.5,,,,n_books=2
+oddsapi,NBA,Cason Wallace,PA,2026-05-11 12:03:13,8.5,0.2,0.5321,0.4679,,,,n_books=2
+oddsapi,NBA,Luguentz Dort,PA,2026-05-11 12:03:13,7.5,0.3,0.5173,0.4827,,,,n_books=3
+oddsapi,NBA,Deandre Ayton,RA,2026-05-11 12:03:13,8.5,0.2,0.529,0.471,,,,n_books=2
+oddsapi,NBA,Rui Hachimura,RA,2026-05-11 12:03:13,5.5,0.3,0.5069,0.4931,,,,n_books=3
+oddsapi,NBA,Cason Wallace,RA,2026-05-11 12:03:13,4.5,0.2,0.501,0.499,,,,n_books=2
+oddsapi,NBA,Luguentz Dort,RA,2026-05-11 12:03:13,4.5,0.2,0.4165,0.5835,,,,n_books=2
+oddsapi,NBA,Isaiah Hartenstein,STL,2026-05-11 12:03:13,0.5,0.2,0.6252,0.3748,,,,n_books=2
+oddsapi,NBA,Luguentz Dort,STL,2026-05-11 12:03:13,0.5,0.2,0.6154,0.3846,,,,n_books=2
+oddsapi,NBA,Rui Hachimura,STL,2026-05-11 12:03:13,0.5,0.2,0.5106,0.4894,,,,n_books=2
+oddsapi,NBA,Deandre Ayton,STL,2026-05-11 12:03:13,0.5,0.2,0.424,0.576,,,,n_books=2
+oddsapi,NBA,Luguentz Dort,BLK,2026-05-11 12:03:13,0.5,0.1,0.2744,0.7256,,,,n_books=1
+oddsapi,NBA,Jared McCain,PRA,2026-05-11 12:03:13,7.5,0.1,0.4797,0.5203,,,,n_books=1
+oddsapi,NBA,Isaiah Joe,PRA,2026-05-11 12:03:13,7.5,0.1,0.5082,0.4918,,,,n_books=1
+oddsapi,NBA,Jaxson Hayes,PRA,2026-05-11 12:03:13,8.5,0.1,0.5101,0.4899,,,,n_books=1
+oddsapi,NBA,Stephon Castle,AST,2026-05-11 12:03:13,6.5,0.5,0.5502,0.4498,,,,n_books=5
+oddsapi,NBA,De'Aaron Fox,AST,2026-05-11 12:03:13,5.5,0.5,0.5071,0.4929,,,,n_books=5
+oddsapi,NBA,Anthony Edwards,AST,2026-05-11 12:03:13,4.5,0.5,0.4571,0.5429,,,,n_books=5
+oddsapi,NBA,Julius Randle,AST,2026-05-11 12:03:13,3.5,0.5,0.5469,0.4531,,,,n_books=5
+oddsapi,NBA,Ayo Dosunmu,AST,2026-05-11 12:03:13,3.5,0.5,0.4942,0.5058,,,,n_books=5
+oddsapi,NBA,Victor Wembanyama,AST,2026-05-11 12:03:13,3.5,0.5,0.4286,0.5714,,,,n_books=5
+oddsapi,NBA,Dylan Harper,AST,2026-05-11 12:03:13,2.5,0.4,0.5758,0.4242,,,,n_books=4
+oddsapi,NBA,Jaden McDaniels,AST,2026-05-11 12:03:13,2.5,0.4,0.5263,0.4737,,,,n_books=4
+oddsapi,NBA,Devin Vassell,AST,2026-05-11 12:03:13,2.5,0.4,0.4931,0.5069,,,,n_books=4
+oddsapi,NBA,Rudy Gobert,AST,2026-05-11 12:03:13,1.5,0.4,0.5966,0.4034,,,,n_books=4
+oddsapi,NBA,Julian Champagnie,AST,2026-05-11 12:03:13,1.5,0.4,0.4106,0.5894,,,,n_books=4
+oddsapi,NBA,Victor Wembanyama,BLK,2026-05-11 12:03:13,3.5,0.2,0.5394,0.4606,,,,n_books=2
+oddsapi,NBA,Rudy Gobert,BLK,2026-05-11 12:03:13,1.5,0.2,0.3971,0.6029,,,,n_books=2
+oddsapi,NBA,Victor Wembanyama,BS,2026-05-11 12:03:13,5.5,0.1,0.4248,0.5752,,,,n_books=1
+oddsapi,NBA,Anthony Edwards,PTS,2026-05-11 12:03:13,27.5,0.3,0.5074,0.4926,,,,n_books=3
+oddsapi,NBA,Victor Wembanyama,PTS,2026-05-11 12:03:13,27.5,0.4,0.4903,0.5097,,,,n_books=4
+oddsapi,NBA,Julius Randle,PTS,2026-05-11 12:03:13,17.5,0.3,0.494,0.506,,,,n_books=3
+oddsapi,NBA,De'Aaron Fox,PTS,2026-05-11 12:03:13,17.5,0.5,0.484,0.516,,,,n_books=5
+oddsapi,NBA,Stephon Castle,PTS,2026-05-11 12:03:13,16.5,0.4,0.5224,0.4776,,,,n_books=4
+oddsapi,NBA,Jaden McDaniels,PTS,2026-05-11 12:03:13,15.5,0.5,0.4877,0.5123,,,,n_books=5
+oddsapi,NBA,Ayo Dosunmu,PTS,2026-05-11 12:03:13,12.5,0.4,0.5226,0.4774,,,,n_books=4
+oddsapi,NBA,Devin Vassell,PTS,2026-05-11 12:03:13,12.5,0.5,0.4987,0.5013,,,,n_books=5
+oddsapi,NBA,Naz Reid,PTS,2026-05-11 12:03:13,11.5,0.6,0.493,0.507,,,,n_books=6
+oddsapi,NBA,Dylan Harper,PTS,2026-05-11 12:03:13,10.5,0.4,0.512,0.488,,,,n_books=4
+oddsapi,NBA,Julian Champagnie,PTS,2026-05-11 12:03:13,8.5,0.4,0.4785,0.5215,,,,n_books=4
+oddsapi,NBA,Keldon Johnson,PTS,2026-05-11 12:03:13,8.5,0.3,0.4738,0.5262,,,,n_books=3
+oddsapi,NBA,Rudy Gobert,PTS,2026-05-11 12:03:13,7.5,0.4,0.5038,0.4962,,,,n_books=4
+oddsapi,NBA,Anthony Edwards,PA,2026-05-11 12:03:13,32.5,0.2,0.5005,0.4995,,,,n_books=2
+oddsapi,NBA,Victor Wembanyama,PA,2026-05-11 12:03:13,30.5,0.3,0.4943,0.5057,,,,n_books=3
+oddsapi,NBA,Stephon Castle,PA,2026-05-11 12:03:13,24.5,0.2,0.4817,0.5183,,,,n_books=2
+oddsapi,NBA,De'Aaron Fox,PA,2026-05-11 12:03:13,23.5,0.2,0.4782,0.5218,,,,n_books=2
+oddsapi,NBA,Julius Randle,PA,2026-05-11 12:03:13,21.5,0.2,0.502,0.498,,,,n_books=2
+oddsapi,NBA,Jaden McDaniels,PA,2026-05-11 12:03:13,18.5,0.2,0.499,0.501,,,,n_books=2
+oddsapi,NBA,Ayo Dosunmu,PA,2026-05-11 12:03:13,17.5,0.2,0.4776,0.5224,,,,n_books=2
+oddsapi,NBA,Devin Vassell,PA,2026-05-11 12:03:13,14.5,0.2,0.5294,0.4706,,,,n_books=2
+oddsapi,NBA,Dylan Harper,PA,2026-05-11 12:03:13,13.5,0.3,0.5152,0.4848,,,,n_books=3
+oddsapi,NBA,Rudy Gobert,PA,2026-05-11 12:03:13,10.5,0.2,0.4772,0.5228,,,,n_books=2
+oddsapi,NBA,Julian Champagnie,PA,2026-05-11 12:03:13,9.5,0.3,0.4906,0.5094,,,,n_books=3
+oddsapi,NBA,Victor Wembanyama,PR,2026-05-11 12:03:13,40.5,0.3,0.4788,0.5212,,,,n_books=3
+oddsapi,NBA,Anthony Edwards,PR,2026-05-11 12:03:13,34.5,0.2,0.4924,0.5076,,,,n_books=2
+oddsapi,NBA,Julius Randle,PR,2026-05-11 12:03:13,24.5,0.2,0.4878,0.5122,,,,n_books=2
+oddsapi,NBA,Stephon Castle,PR,2026-05-11 12:03:13,22.5,0.3,0.4895,0.5105,,,,n_books=3
+oddsapi,NBA,De'Aaron Fox,PR,2026-05-11 12:03:13,20.5,0.3,0.5074,0.4926,,,,n_books=3
+oddsapi,NBA,Jaden McDaniels,PR,2026-05-11 12:03:13,20.5,0.3,0.492,0.508,,,,n_books=3
+oddsapi,NBA,Rudy Gobert,PR,2026-05-11 12:03:13,18.5,0.3,0.5072,0.4928,,,,n_books=3
+oddsapi,NBA,Naz Reid,PR,2026-05-11 12:03:13,18.5,0.3,0.4983,0.5017,,,,n_books=3
+oddsapi,NBA,Ayo Dosunmu,PR,2026-05-11 12:03:13,17.5,0.2,0.4772,0.5228,,,,n_books=2
+oddsapi,NBA,Devin Vassell,PR,2026-05-11 12:03:13,16.5,0.3,0.5097,0.4903,,,,n_books=3
+oddsapi,NBA,Dylan Harper,PR,2026-05-11 12:03:13,14.5,0.3,0.491,0.509,,,,n_books=3
+oddsapi,NBA,Julian Champagnie,PR,2026-05-11 12:03:13,13.5,0.3,0.4764,0.5236,,,,n_books=3
+oddsapi,NBA,Keldon Johnson,PR,2026-05-11 12:03:13,11.5,0.3,0.5135,0.4865,,,,n_books=3
+oddsapi,NBA,Victor Wembanyama,PRA,2026-05-11 12:03:13,43.5,0.3,0.4973,0.5027,,,,n_books=3
+oddsapi,NBA,Anthony Edwards,PRA,2026-05-11 12:03:13,38.5,0.3,0.5001,0.4999,,,,n_books=3
+oddsapi,NBA,Stephon Castle,PRA,2026-05-11 12:03:13,29.5,0.3,0.4899,0.5101,,,,n_books=3
+oddsapi,NBA,Julius Randle,PRA,2026-05-11 12:03:13,28.5,0.2,0.4807,0.5193,,,,n_books=2
+oddsapi,NBA,De'Aaron Fox,PRA,2026-05-11 12:03:13,26.5,0.3,0.4916,0.5084,,,,n_books=3
+oddsapi,NBA,Jaden McDaniels,PRA,2026-05-11 12:03:13,23.5,0.2,0.5,0.5,,,,n_books=2
+oddsapi,NBA,Rudy Gobert,PRA,2026-05-11 12:03:13,20.5,0.3,0.5112,0.4888,,,,n_books=3
+oddsapi,NBA,Ayo Dosunmu,PRA,2026-05-11 12:03:13,20.5,0.3,0.5027,0.4973,,,,n_books=3
+oddsapi,NBA,Naz Reid,PRA,2026-05-11 12:03:13,20.5,0.3,0.4929,0.5071,,,,n_books=3
+oddsapi,NBA,Devin Vassell,PRA,2026-05-11 12:03:13,19.5,0.3,0.4889,0.5111,,,,n_books=3
+oddsapi,NBA,Dylan Harper,PRA,2026-05-11 12:03:13,17.5,0.3,0.4972,0.5028,,,,n_books=3
+oddsapi,NBA,Julian Champagnie,PRA,2026-05-11 12:03:13,14.5,0.3,0.5017,0.4983,,,,n_books=3
+oddsapi,NBA,Victor Wembanyama,REB,2026-05-11 12:03:13,12.5,0.6,0.5132,0.4868,,,,n_books=6
+oddsapi,NBA,Rudy Gobert,REB,2026-05-11 12:03:13,10.5,0.5,0.5053,0.4947,,,,n_books=5
+oddsapi,NBA,Naz Reid,REB,2026-05-11 12:03:13,6.5,0.5,0.5149,0.4851,,,,n_books=5
+oddsapi,NBA,Julius Randle,REB,2026-05-11 12:03:13,6.5,0.5,0.465,0.535,,,,n_books=5
+oddsapi,NBA,Anthony Edwards,REB,2026-05-11 12:03:13,6.5,0.3,0.4355,0.5645,,,,n_books=3
+oddsapi,NBA,Stephon Castle,REB,2026-05-11 12:03:13,5.5,0.4,0.4328,0.5672,,,,n_books=4
+oddsapi,NBA,Julian Champagnie,REB,2026-05-11 12:03:13,4.5,0.4,0.5726,0.4274,,,,n_books=4
+oddsapi,NBA,Jaden McDaniels,REB,2026-05-11 12:03:13,4.5,0.5,0.5584,0.4416,,,,n_books=5
+oddsapi,NBA,Devin Vassell,REB,2026-05-11 12:03:13,4.5,0.5,0.4226,0.5774,,,,n_books=5
+oddsapi,NBA,Ayo Dosunmu,REB,2026-05-11 12:03:13,3.5,0.5,0.4998,0.5002,,,,n_books=5
+oddsapi,NBA,Dylan Harper,REB,2026-05-11 12:03:13,3.5,0.5,0.4857,0.5143,,,,n_books=5
+oddsapi,NBA,Keldon Johnson,REB,2026-05-11 12:03:13,3.5,0.3,0.4862,0.5138,,,,n_books=3
+oddsapi,NBA,De'Aaron Fox,REB,2026-05-11 12:03:13,3.5,0.5,0.449,0.551,,,,n_books=5
+oddsapi,NBA,Victor Wembanyama,RA,2026-05-11 12:03:13,16.5,0.3,0.4642,0.5358,,,,n_books=3
+oddsapi,NBA,Rudy Gobert,RA,2026-05-11 12:03:13,12.5,0.3,0.5176,0.4824,,,,n_books=3
+oddsapi,NBA,Stephon Castle,RA,2026-05-11 12:03:13,12.5,0.3,0.455,0.545,,,,n_books=3
+oddsapi,NBA,Anthony Edwards,RA,2026-05-11 12:03:13,10.5,0.3,0.5017,0.4983,,,,n_books=3
+oddsapi,NBA,Julius Randle,RA,2026-05-11 12:03:13,10.5,0.3,0.4782,0.5218,,,,n_books=3
+oddsapi,NBA,De'Aaron Fox,RA,2026-05-11 12:03:13,8.5,0.3,0.5481,0.4519,,,,n_books=3
+oddsapi,NBA,Jaden McDaniels,RA,2026-05-11 12:03:13,7.5,0.3,0.5254,0.4746,,,,n_books=3
+oddsapi,NBA,Ayo Dosunmu,RA,2026-05-11 12:03:13,7.5,0.3,0.4649,0.5351,,,,n_books=3
+oddsapi,NBA,Devin Vassell,RA,2026-05-11 12:03:13,6.5,0.3,0.5209,0.4791,,,,n_books=3
+oddsapi,NBA,Dylan Harper,RA,2026-05-11 12:03:13,6.5,0.3,0.4964,0.5036,,,,n_books=3
+oddsapi,NBA,Julian Champagnie,RA,2026-05-11 12:03:13,6.5,0.3,0.4801,0.5199,,,,n_books=3
+oddsapi,NBA,De'Aaron Fox,STL,2026-05-11 12:03:13,1.5,0.2,0.4193,0.5807,,,,n_books=2
+oddsapi,NBA,Victor Wembanyama,STL,2026-05-11 12:03:13,1.5,0.2,0.3615,0.6385,,,,n_books=2
+oddsapi,NBA,Anthony Edwards,FG3M,2026-05-11 12:03:13,3.5,0.4,0.4244,0.5756,,,,n_books=4
+oddsapi,NBA,Victor Wembanyama,FG3M,2026-05-11 12:03:13,2.5,0.5,0.4054,0.5946,,,,n_books=5
+oddsapi,NBA,Devin Vassell,FG3M,2026-05-11 12:03:13,1.5,0.4,0.6102,0.3898,,,,n_books=4
+oddsapi,NBA,Naz Reid,FG3M,2026-05-11 12:03:13,1.5,0.5,0.5551,0.4449,,,,n_books=5
+oddsapi,NBA,Ayo Dosunmu,FG3M,2026-05-11 12:03:13,1.5,0.5,0.5005,0.4995,,,,n_books=5
+oddsapi,NBA,De'Aaron Fox,FG3M,2026-05-11 12:03:13,1.5,0.5,0.4881,0.5119,,,,n_books=5
+oddsapi,NBA,Jaden McDaniels,FG3M,2026-05-11 12:03:13,1.5,0.5,0.4132,0.5868,,,,n_books=5
+oddsapi,NBA,Stephon Castle,FG3M,2026-05-11 12:03:13,1.5,0.4,0.3883,0.6117,,,,n_books=4
+oddsapi,NBA,Julius Randle,FG3M,2026-05-11 12:03:13,1.5,0.5,0.3668,0.6332,,,,n_books=5
+oddsapi,NBA,Naz Reid,RA,2026-05-11 12:03:13,8.5,0.1,0.5241,0.4759,,,,n_books=1
+oddsapi,NBA,Stephon Castle,STL,2026-05-11 12:03:13,1.5,0.1,0.3769,0.6231,,,,n_books=1
+oddsapi,NBA,Anthony Edwards,STL,2026-05-11 12:03:13,1.5,0.1,0.3362,0.6638,,,,n_books=1
+oddsapi,NBA,Julian Champagnie,FG3M,2026-05-11 12:03:13,1.5,0.2,0.5603,0.4397,,,,n_books=2
+oddsapi,NBA,Dylan Harper,FG3M,2026-05-11 12:03:13,0.5,0.1,0.5575,0.4425,,,,n_books=1
