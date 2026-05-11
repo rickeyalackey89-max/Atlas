@@ -922,7 +922,7 @@ def main() -> None:
     p_role = _to_series(scored.get("p_role", p_adj), errors="coerce").fillna(p_adj).clip(0, 1)
 
     # BLOWOUT TAIL BYPASS (2026-05-10)
-    # Validated by tools/k4_blowout_bypass_loso.py.
+    # Validated by scripts/experiments/k4_blowout_bypass_loso.py.
     # At q_blowout < q_lo OR q_blowout >= q_hi, revert p_adj to p_role
     # (skip blowout adjustment because it over-corrects at the tails).
     # keep band [0.15, 0.50): LOSO -0.36 mB, 0/9 regress.
@@ -968,7 +968,7 @@ def main() -> None:
             scored["high_prob_shrink_applied"] = 0
 
     # SUBSET LOGIT SHIFTS (2026-05-10)
-    # Validated by tools/loso_subset_shift.py — only LOSO-passing shifts wired in.
+    # Validated by scripts/experiments/loso_subset_shift.py — only LOSO-passing shifts wired in.
     # Currently active: UNDER subset (delta=-0.1651, LOSO -0.08 mB, 0/9 regress).
     _shifts_cfg = cfg.get("kernel_subset_shifts", []) or []
     if _shifts_cfg:
@@ -1008,7 +1008,7 @@ def main() -> None:
             scored["subset_shift_applied"] = ",".join(_applied_names) if _applied_names else ""
 
     # PROBABILITY FLOORS (2026-05-10)
-    # Validated by tools/k1_goblin_floor_fixed_loso.py.
+    # Validated by scripts/experiments/k1_goblin_floor_fixed_loso.py.
     # Currently active: GOBLIN OVER floor=0.40 (LOSO -8.52 mB, 0/9 regress).
     _floors_cfg = cfg.get("kernel_prob_floors", []) or []
     if _floors_cfg:
@@ -1045,7 +1045,7 @@ def main() -> None:
             scored["prob_floor_applied"] = ",".join(_floor_applied)
 
     # SUBSET LOGIT SHRINKS TOWARD 0.5 (2026-05-10) — variance inflation.
-    # Validated by tools/k2_combo_shrink_loso.py.
+    # Validated by scripts/experiments/k2_combo_shrink_loso.py.
     # Currently active: combo stats (RA/PA/PRA/PR) k=0.90 (LOSO -0.59 mB, 0/9 regress).
     _shrinks_cfg = cfg.get("kernel_logit_shrinks", []) or []
     if _shrinks_cfg:

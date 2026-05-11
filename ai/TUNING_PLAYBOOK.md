@@ -220,7 +220,7 @@ type logs\replay_v5cD_corpus_<tag>_summary.csv
 python tools/catboost_playoff_v5cD_full_corpus.py
 
 # Step 5: Run runtime smoke
-python tools/smoke_v5cD_runtime.py
+python scripts/validation/smoke_v5cD_runtime.py
 ```
 
 Promotion requires updating `config.yaml -> catboost_playoff_calibrator.model_path/meta_path` if paths change, then updating `ai/CURRENT_STATE_2026-05-10.md` or a new current-state doc.

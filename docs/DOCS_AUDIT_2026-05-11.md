@@ -69,6 +69,6 @@ Removed from docs root:
   - `tools/gbm_v19_train.py`
   - `tools/catboost_playoff_v5cD_full_corpus.py`
   - `tools/replay_v5cD_corpus.py`
-  - `tools/slip_eval_v5cD_corpus.py`
+  - `scripts/audits/slip_eval_v5cD_corpus.py`
   - leg trainers under `tools/leg_trainer_*`
 - Whether each trainer reads/writes the current CatBoost v5cD probability surface correctly.
