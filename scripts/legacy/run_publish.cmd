@@ -27,7 +27,7 @@ REM ============================================================================
 echo [%date% %time%] RUN_MODEL_START>>"%LOG%"
 
 REM Use Python Launcher (works even when python is not on PATH)
-py -3 run_today.py >>"%LOG%" 2>&1
+py -3 "%~dp0run_today.py" >>"%LOG%" 2>&1
 set "RC=!ERRORLEVEL!"
 
 echo [%date% %time%] RUN_MODEL_DONE rc=!RC!>>"%LOG%"
