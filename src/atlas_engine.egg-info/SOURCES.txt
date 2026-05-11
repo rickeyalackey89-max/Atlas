@@ -1,4 +1,5 @@
 pyproject.toml
+docs/README.md
 src/Atlas/__init__.py
 src/Atlas/cli.py
 src/Atlas/rebuild_today_from_any_raw.py
@@ -23,6 +24,7 @@ src/Atlas/engine/__init__.py
 src/Atlas/engine/api.py
 src/Atlas/engine/calibration.py
 src/Atlas/engine/calibration_map.py
+src/Atlas/engine/catboost_calibrator.py
 src/Atlas/engine/gbm_ensemble.py
 src/Atlas/engine/main.py
 src/Atlas/engine/new_engine.py
@@ -54,6 +56,7 @@ src/Atlas/stages/optimize/build_slips_today.py
 src/Atlas/stages/prep_for_optimizer/prep_for_optimizer.py
 src/Atlas/stages/publish/__init__.py
 src/Atlas/stages/publish/build_cloudflare_payload.py
+src/Atlas/stages/publish/discord_notify.py
 src/Atlas/stages/publish/publish_run_outputs.py
 src/Atlas/stages/rebuild/__init__.py
 src/Atlas/stages/rebuild/rebuild_today.py
@@ -63,6 +66,7 @@ src/Atlas/stages/score/score_today.py
 src/atlas_engine.egg-info/PKG-INFO
 src/atlas_engine.egg-info/SOURCES.txt
 src/atlas_engine.egg-info/dependency_links.txt
+src/atlas_engine.egg-info/entry_points.txt
 src/atlas_engine.egg-info/requires.txt
 src/atlas_engine.egg-info/top_level.txt
 tests/test_bundle_role_metrics_pins.py
