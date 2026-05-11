@@ -44,13 +44,11 @@ def _compute_performance_stats(repo_root: Path) -> dict:
     live_runs_dir = repo_root / "data" / "telemetry" / "live_runs"
     if not live_runs_dir.exists():
         return {}
-    today = datetime.now(timezone.utc).date()
-    cutoff_7d = today - timedelta(days=7)
-    cutoff_30d = today - timedelta(days=30)
 
     seen: set = set()
     rows: list = []
-    for fpath in sorted(live_runs_dir.rglob("eval_legs.csv"), key=lambda p: p.stat().st_mtime, reverse=True):
+    eval_files = sorted(live_runs_dir.rglob("eval_legs.csv"), key=lambda p: p.stat().st_mtime, reverse=True)
+    for fpath in eval_files:
         try:
             with open(fpath, newline="", encoding="utf-8", errors="replace") as f:
                 reader = _csv_module.DictReader(f)
@@ -59,7 +57,13 @@ def _compute_performance_stats(repo_root: Path) -> dict:
                     if hit_val not in ("0", "1", "0.0", "1.0"):
                         continue
                     game_date = (row.get("game_date") or "")[:10]
-                    key = (game_date, row.get("player",""), row.get("stat",""), row.get("line",""), row.get("direction",""))
+                    key = (
+                        game_date,
+                        (row.get("player") or "").strip(),
+                        (row.get("stat") or "").strip(),
+                        str(row.get("line") or "").strip(),
+                        (row.get("direction") or "").strip().upper(),
+                    )
                     if key in seen:
                         continue
                     seen.add(key)
@@ -68,7 +72,9 @@ def _compute_performance_stats(repo_root: Path) -> dict:
                     except Exception:
                         continue
                     try:
-                        p_cal = float(row.get("p_cal") or 0)
+                        p_cal = float(row.get("p_cal") or "")
+                        if not math.isfinite(p_cal):
+                            p_cal = 0.5
                     except (ValueError, TypeError):
                         p_cal = 0.5
                     rows.append({
@@ -83,13 +89,17 @@ def _compute_performance_stats(repo_root: Path) -> dict:
     if not rows:
         return {}
 
+    latest_game_date = max(r["game_date"] for r in rows)
+    cutoff_7d = latest_game_date - timedelta(days=6)
+    cutoff_30d = latest_game_date - timedelta(days=29)
+
     def _stats(subset: list) -> dict:
         if not subset:
-            return {"n": 0, "hit_rate": None, "brier": None}
+            return {"n": 0, "hits": 0, "hit_rate": None, "brier": None}
         n = len(subset)
         hits = sum(r["hit"] for r in subset)
         brier = round(sum((r["p_cal"] - r["hit"]) ** 2 for r in subset) / n, 4)
-        return {"n": n, "hit_rate": round(hits / n, 4), "brier": brier}
+        return {"n": n, "hits": hits, "hit_rate": round(hits / n, 4), "brier": brier}
 
     rows_7d = [r for r in rows if r["game_date"] >= cutoff_7d]
     rows_30d = [r for r in rows if r["game_date"] >= cutoff_30d]
@@ -97,6 +107,15 @@ def _compute_performance_stats(repo_root: Path) -> dict:
     result: dict = {
         "overall": {"last_7d": _stats(rows_7d), "last_30d": _stats(rows_30d)},
         "by_tier": {},
+        "meta": {
+            "source": "data/telemetry/live_runs/**/eval_legs.csv",
+            "updated_at": datetime.now(timezone.utc).isoformat(),
+            "latest_game_date": latest_game_date.isoformat(),
+            "window_7d": {"start": cutoff_7d.isoformat(), "end": latest_game_date.isoformat()},
+            "window_30d": {"start": cutoff_30d.isoformat(), "end": latest_game_date.isoformat()},
+            "eval_files": len(eval_files),
+            "unique_scored_legs": len(rows),
+        },
     }
     for tier in ("GOBLIN", "STANDARD", "DEMON"):
         result["by_tier"][tier] = {
@@ -465,6 +484,21 @@ def _preserve_yesterday_slips(out_dir: Path) -> dict:
     return {}
 
 
+def _preserve_performance_stats(out_dir: Path) -> dict:
+    """Read existing leg-performance stats so live runs leave 6AM eval windows intact."""
+    try:
+        existing = out_dir / "cloudflare_payload.json"
+        if not existing.exists():
+            return {}
+        data = json.loads(existing.read_text(encoding="utf-8"))
+        perf = data.get("performance", {})
+        if isinstance(perf, dict):
+            return {k: v for k, v in perf.items() if k != "yesterday_slips"}
+    except Exception:
+        pass
+    return {}
+
+
 def build_cloudflare_payload(
     run_dir: Path,
     out_dir: Path,
@@ -480,7 +514,7 @@ def build_cloudflare_payload(
         out_dir: Where to write cloudflare_payload.json (usually data/output/dashboard/)
         marketed_slips: Optional list of marketed slip dicts to include in payload
         include_yesterday_slips: Only the 6am eval run should pass True.
-            Defaults to False — live runs MUST NOT recompute this field.
+            Defaults to False — live runs preserve 6am performance/results fields.
 
     Returns:
         Path to the written payload file.
@@ -499,6 +533,10 @@ def build_cloudflare_payload(
         except Exception:
             gamelogs_df = None
 
+    performance_stats = _compute_performance_stats(_repo_root()) if include_yesterday_slips else _preserve_performance_stats(out_dir)
+    if not performance_stats:
+        performance_stats = _compute_performance_stats(_repo_root())
+
     payload = {
         "generated_at": datetime.now(LOCAL_TZ).isoformat(),
         "run_id": run_dir.name,
@@ -511,7 +549,7 @@ def build_cloudflare_payload(
         "marketed_slips": [],
         "top_hit_list": [],
         "performance": {
-            **_compute_performance_stats(_repo_root()),
+            **performance_stats,
             **({"yesterday_slips": _compute_yesterday_slip_record(_repo_root())} if include_yesterday_slips else _preserve_yesterday_slips(out_dir)),
         },
         "injury_context": _load_injury_context(_repo_root()),
