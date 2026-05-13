@@ -9,9 +9,12 @@ import json
 import math
 import re
 import unicodedata
+import csv as _csv_module
 from datetime import datetime
 from pathlib import Path
 from typing import Optional
+
+import pandas as pd
 
 
 def _norm_name(name: str) -> str:
@@ -33,10 +36,6 @@ def _sanitize(obj):
     if isinstance(obj, list):
         return [_sanitize(v) for v in obj]
     return obj
-
-import csv as _csv_module
-import pandas as pd
-
 
 def _compute_performance_stats(repo_root: Path) -> dict:
     """Aggregate hit rates from recent eval_legs across live_runs telemetry."""
@@ -231,9 +230,9 @@ def _compute_yesterday_slip_record(repo_root: Path) -> dict:
                     slips.setdefault(sn, []).append(row)
             for legs in slips.values():
                 leg_keys = [
-                    (l.get("player", "").strip(), l.get("stat", "").strip(),
-                     l.get("line", "").strip(), (l.get("direction") or "").upper())
-                    for l in legs
+                    (leg.get("player", "").strip(), leg.get("stat", "").strip(),
+                     leg.get("line", "").strip(), (leg.get("direction") or "").upper())
+                    for leg in legs
                 ]
                 result = _score_legs(leg_keys)
                 if result == "void":
@@ -253,9 +252,9 @@ def _compute_yesterday_slip_record(repo_root: Path) -> dict:
         return (m.group(1).strip(), m.group(3).strip(), m.group(4).strip(), m.group(2).upper())
 
     def _score_family_dir(family_dir: Path) -> dict:
-        """Score all 3 recommended slip files (3/4/5-leg) for one family directory."""
+        """Score recommended slip files for one family directory."""
         wins, total = 0, 0
-        for n in [3, 4, 5]:
+        for n in [2, 3, 4, 5]:
             csv_path = family_dir / f"recommended_{n}leg.csv"
             if not csv_path.exists():
                 continue
@@ -403,7 +402,7 @@ def _load_top_slip(csv_path: Path, product: str) -> Optional[dict]:
         df = df.sort_values("ev_mult", ascending=False).head(1)
         row = df.iloc[0]
         legs_raw = str(row.get("legs", ""))
-        legs_list = [_parse_leg(l) for l in legs_raw.split(" | ")]
+        legs_list = [_parse_leg(leg_text) for leg_text in legs_raw.split(" | ")]
         return {
             "product": product,
             "n_legs": int(row.get("n_legs", len(legs_list))),
@@ -555,42 +554,42 @@ def build_cloudflare_payload(
         "injury_context": _load_injury_context(_repo_root()),
     }
     
-    # System: top 3-leg, 4-leg, 5-leg (EV-based)
-    for n in [3, 4, 5]:
+    # System: top available leg counts.
+    for n in [2, 3, 4, 5]:
         slip = _load_top_slip(run_dir / "System" / f"recommended_{n}leg.csv", "System")
         if slip:
             payload["system"].append(slip)
     
-    # System winprob: top 3-leg, 4-leg, 5-leg (win probability based)
-    for n in [3, 4, 5]:
+    # System winprob: top available leg counts.
+    for n in [2, 3, 4, 5]:
         slip = _load_top_slip(run_dir / "System" / f"recommended_{n}leg_winprob.csv", "System WinProb")
         if slip:
             payload["system_winprob"].append(slip)
     
-    # Windfall: top 3-leg, 4-leg, 5-leg (EV-based)
-    for n in [3, 4, 5]:
+    # Windfall: top available leg counts.
+    for n in [2, 3, 4, 5]:
         slip = _load_top_slip(run_dir / "Windfall" / f"recommended_{n}leg.csv", "Windfall")
         if slip:
             payload["windfall"].append(slip)
     
-    # Windfall winprob: top 3-leg, 4-leg, 5-leg (win probability based)
-    for n in [3, 4, 5]:
+    # Windfall winprob: top available leg counts.
+    for n in [2, 3, 4, 5]:
         slip = _load_top_slip(run_dir / "Windfall" / f"recommended_{n}leg_winprob.csv", "Windfall WinProb")
         if slip:
             payload["windfall_winprob"].append(slip)
     
-    # Demonhunter: top 3-leg, 4-leg, 5-leg from single CSV
+    # Demonhunter: top available leg counts from single CSV.
     demon_csv = run_dir / "demonhunter.csv"
     if demon_csv.exists():
         try:
             df = pd.read_csv(demon_csv)
-            for n in [3, 4, 5]:
+            for n in [2, 3, 4, 5]:
                 subset = df[df["n_legs"] == n]
                 if not subset.empty:
                     subset = subset.sort_values("ev_mult", ascending=False).head(1)
                     row = subset.iloc[0]
                     legs_raw = str(row.get("legs", ""))
-                    legs_list = [_parse_leg(l) for l in legs_raw.split(" | ")]
+                    legs_list = [_parse_leg(leg_text) for leg_text in legs_raw.split(" | ")]
                     payload["demonhunter"].append({
                         "product": "Demonhunter",
                         "n_legs": n,
@@ -654,6 +653,8 @@ def build_cloudflare_payload(
                             "team": leg.get("team", ""),
                             "opp": leg.get("opp", ""),
                             "p_cal": leg.get("p_cal") or leg.get("p_cal_marketed"),
+                            "is_questionable": int(float(leg.get("is_questionable", 0) or 0)),
+                            "q_out_frac": float(leg.get("q_out_frac", 0.0) or 0.0),
                             "l10_hr": l10_hr,
                             "l10_n": l10_n,
                         })
@@ -696,12 +697,20 @@ def build_cloudflare_payload(
             _KEEP = [
                 "player", "team", "opp", "stat", "line", "direction", "tier",
                 "p_cal", "fragility", "q_blowout", "l20_edge", "role_ctx_mult",
-                "role_ctx_reason", "p_for_cal",
+                "role_ctx_reason", "p_for_cal", "p_adj", "payout_modifier", "ev_mult",
+                "usage_dep", "usage_burden_ratio", "minutes_cv", "volatility_minutes_cv",
+                "min_mean", "min_std", "modeled_minutes", "minute_risk_score",
             ]
             al_df = pd.read_csv(scored_csv, usecols=lambda c: c in set(_KEEP))
             al_df = al_df.drop_duplicates(subset=["player", "stat", "direction", "line"])
             al_df = al_df.sort_values("p_cal", ascending=False)
             all_legs_out = []
+            def _f(value):
+                try:
+                    return float(value) if pd.notna(value) else None
+                except Exception:
+                    return None
+
             for _, row in al_df.iterrows():
                 p_cal = row.get("p_cal")
                 frag  = row.get("fragility")
@@ -716,6 +725,18 @@ def build_cloudflare_payload(
                 except Exception:
                     line_f = 0.0
                 odds = _odds_lookup.get((player_norm, stat, line_f)) or {}
+                tier = str(row.get("tier", "")).upper()
+                tier_mod_default = {"STANDARD": 1.0, "GOBLIN": 0.9, "DEMON": 1.1}.get(tier, 1.0)
+                try:
+                    payout_modifier = float(row.get("payout_modifier")) if pd.notna(row.get("payout_modifier")) else tier_mod_default
+                except Exception:
+                    payout_modifier = tier_mod_default
+                try:
+                    atlas_ev = float(row.get("ev_mult")) if pd.notna(row.get("ev_mult")) else None
+                except Exception:
+                    atlas_ev = None
+                if atlas_ev is None:
+                    atlas_ev = float(p_cal) * payout_modifier if pd.notna(p_cal) else None
                 all_legs_out.append({
                     "player":      str(row.get("player", "")),
                     "team":        str(row.get("team", "")),
@@ -723,13 +744,28 @@ def build_cloudflare_payload(
                     "stat":        stat,
                     "line":        line_f if line_f else None,
                     "dir":         str(row.get("direction", "")),
-                    "tier":        str(row.get("tier", "")),
+                    "tier":        tier,
                     "p_cal":       float(p_cal) if pd.notna(p_cal) else None,
+                    "p_for_cal":   float(row.get("p_for_cal")) if pd.notna(row.get("p_for_cal")) else None,
+                    "p_adj":       float(row.get("p_adj")) if pd.notna(row.get("p_adj")) else None,
+                    "payout_modifier": payout_modifier,
+                    "atlas_ev":    atlas_ev,
+                    "ev_mult":     atlas_ev,
+                    "atlas_edge":  (atlas_ev - 0.5) if atlas_ev is not None else None,
                     "fragility":   float(frag)  if pd.notna(frag)  else None,
                     "q_blowout":   float(qbow)  if pd.notna(qbow)  else None,
                     "l20_edge":    float(edge)  if pd.notna(edge)  else None,
                     "role_mult":   float(role)  if pd.notna(role)  else None,
                     "role_reason": str(row.get("role_ctx_reason", "")) or None,
+                    "usage_score": _f(row.get("usage_dep")),
+                    "usage_dep": _f(row.get("usage_dep")),
+                    "usage_burden_ratio": _f(row.get("usage_burden_ratio")),
+                    "minutes_cv": _f(row.get("minutes_cv")),
+                    "minute_volatility": _f(row.get("volatility_minutes_cv", row.get("minutes_cv"))),
+                    "modeled_minutes": _f(row.get("modeled_minutes", row.get("min_mean"))),
+                    "min_mean": _f(row.get("min_mean")),
+                    "min_std": _f(row.get("min_std")),
+                    "minute_risk_score": _f(row.get("minute_risk_score")),
                     # Market odds (None when not available)
                     "dk_over":     odds.get("dk_over"),
                     "dk_under":    odds.get("dk_under"),
@@ -781,7 +817,7 @@ def build_cloudflare_payload(
             remaining.append(leg)
     # Ordered: guaranteed tier picks first, then fill from remaining up to 50
     guaranteed = [tier_picks[t] for t in _TIERS if t in tier_picks]
-    filler = [l for l in remaining if l not in guaranteed]
+    filler = [leg for leg in remaining if leg not in guaranteed]
     picks_list = guaranteed + filler[:max(0, 50 - len(guaranteed))]
     picks_payload = {
         "generated_at": payload.get("generated_at", ""),
