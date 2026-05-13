@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 """
 Slip builders (SYSTEM/WINDFALL) extracted from LegacyEngine.main during Phase 7B.
 
@@ -8,6 +6,8 @@ Non-negotiables:
 - Preserve tier/direction/line identity (no collapsing).
 - Preserve POWER payout logic + optional PP kernel adjustment.
 """
+
+from __future__ import annotations
 
 import ast
 import os
@@ -19,6 +19,14 @@ import numpy as np
 import pandas as pd
 
 from .payout_tables import FLEX_3, FLEX_4, FLEX_5, POWER_MULT
+from .minute_risk_guard import apply_minute_risk_guard
+from .single_game_script import (
+    apply_single_game_script_annotations,
+    apply_single_game_selection_surface,
+    is_single_game_slate,
+    single_game_slip_rule_status,
+)
+from .slip_family_diversity import prop_key_from_mapping
 from .slip_scoring import _score_slip
 
 
@@ -80,6 +88,18 @@ def _clip01(s: pd.Series) -> pd.Series:
     arr = np.asarray(s.to_numpy(copy=True), dtype="float64")  # writable
     np.clip(arr, 0.0, 1.0, out=arr)
     return pd.Series(arr, index=s.index)
+
+
+def _single_game_soft_exposure_mask(df: pd.DataFrame, cfg: dict[str, Any] | None) -> pd.Series:
+    sg = (cfg or {}).get("single_game_mode", {}) if isinstance(cfg, dict) else {}
+    if not isinstance(sg, dict) or not bool(sg.get("soft_injury_exposure_not_hard_exclude", False)):
+        return pd.Series(False, index=df.index)
+    if not is_single_game_slate(df, cfg):
+        return pd.Series(False, index=df.index)
+    if "role_ctx_outs" not in df.columns:
+        return pd.Series(False, index=df.index)
+    role_outs = df["role_ctx_outs"].map(lambda x: "" if x is None else str(x).strip().lower())
+    return role_outs.ne("") & role_outs.ne("[]") & role_outs.ne("nan")
 
 
 def _pick_best_prob_column(df: pd.DataFrame, *, prefer_calibrated_prob: bool = False) -> str:
@@ -274,6 +294,8 @@ def build_slips_by_tier_buckets(
     else:
         df["p_eff"] = pd.Series(np.full(len(df), 0.50, dtype="float64"), index=df.index)
 
+    df = apply_single_game_script_annotations(df, cfg)
+
     role_on_mask = pd.Series(np.zeros(len(df), dtype=bool), index=df.index)
     if (not legacy_selector_scoring) and "role_ctx_outs_used" in df.columns:
         role_on_mask = pd.to_numeric(df["role_ctx_outs_used"], errors="coerce").fillna(0.0) > 0.0
@@ -345,6 +367,11 @@ def build_slips_by_tier_buckets(
         if (os.getenv("ATLAS_DEBUG_BUILDER") or "").strip() == "1":
             print(f"[BUILDER][DEBUG] max_leg_prob={max_leg_prob:.3f} clamp applied")
 
+    # Selection-only minutes risk guard. p_eff_raw remains the calibrated model
+    # probability used for hit_prob; p_eff/p_select is lowered for fragile legs.
+    df = apply_minute_risk_guard(df, cfg, section="slip_build", score_col="p_eff")
+    df = apply_single_game_selection_surface(df, cfg, score_col="p_eff", clip_score=True)
+
     # edge_score fallback = p_eff - 0.5 (keep exact math)
     edge_cap = (max_leg_prob - 0.5) if max_leg_prob > 0.0 else None
     if "edge_score" in df.columns:
@@ -357,6 +384,10 @@ def build_slips_by_tier_buckets(
         pe_arr = np.asarray(df["p_eff"].to_numpy(copy=False), dtype="float64")
         mask = np.isnan(es_arr)
         es_arr[mask] = pe_arr[mask] - 0.5
+        if "minute_risk_penalty" in df.columns:
+            pen_arr = np.asarray(pd.to_numeric(df["minute_risk_penalty"], errors="coerce").to_numpy(copy=True), dtype="float64")
+            pen_arr[np.isnan(pen_arr)] = 0.0
+            es_arr = es_arr - pen_arr
         if edge_cap is not None:
             np.clip(es_arr, None, edge_cap, out=es_arr)
         df["edge_score"] = pd.Series(es_arr, index=df.index)
@@ -474,6 +505,26 @@ def build_slips_by_tier_buckets(
         df = df[~drop_mask].reset_index(drop=True)
         if (os.getenv("ATLAS_DEBUG_BUILDER") or "").strip() == "1":
             print(f"[BUILDER][DEBUG] UNDER window [{min_under_prob:.2f}, {max_under_prob:.2f}] filter: {before_len} -> {len(df)} legs (dropped {before_len - len(df)} UNDER legs)")
+        if df.empty:
+            return pd.DataFrame(columns=_EMPTY_SLIPS_COLS)
+
+    # --- Injury uncertainty filter: premium slips should not carry Q/out-frac legs ---
+    exclude_questionable = bool(sb.get("exclude_questionable", False))
+    has_q_out_threshold = isinstance(sb, dict) and "exclude_q_out_frac_gt" in sb
+    if exclude_questionable or has_q_out_threshold:
+        before_len = len(df)
+        drop_mask = pd.Series(False, index=df.index)
+        soft_exposure_mask = _single_game_soft_exposure_mask(df, cfg)
+        if exclude_questionable and "is_questionable" in df.columns:
+            q_vals = pd.to_numeric(df["is_questionable"], errors="coerce").fillna(0.0)
+            drop_mask = drop_mask | ((q_vals > 0.0) & ~soft_exposure_mask)
+        if has_q_out_threshold and "q_out_frac" in df.columns:
+            threshold = float(sb.get("exclude_q_out_frac_gt", 0.0) or 0.0)
+            q_out_vals = pd.to_numeric(df["q_out_frac"], errors="coerce").fillna(0.0)
+            drop_mask = drop_mask | ((q_out_vals > threshold) & ~soft_exposure_mask)
+        df = df[~drop_mask].reset_index(drop=True)
+        if (os.getenv("ATLAS_DEBUG_BUILDER") or "").strip() == "1":
+            print(f"[BUILDER][DEBUG] injury uncertainty filter: {before_len} -> {len(df)} legs")
         if df.empty:
             return pd.DataFrame(columns=_EMPTY_SLIPS_COLS)
 
@@ -631,6 +682,7 @@ def build_slips_by_tier_buckets(
             pass
 
     no_same_game_within_slip = bool(sb.get("no_same_game_within_slip", False))
+    reserved_prop_keys = {str(x) for x in (sb.get("_reserved_prop_keys") or []) if str(x)}
 
     # Clamp to safe ranges (prevents config typos from breaking sampling).
     if phase1_frac < 0.05:
@@ -772,6 +824,10 @@ def build_slips_by_tier_buckets(
             if len(set(players)) != len(players):
                 continue
 
+            if reserved_prop_keys:
+                if any(prop_key_from_mapping(r) in reserved_prop_keys for r in chosen):
+                    continue
+
             # Optional hard constraint: max N players from the same team within a slip.
             if max_players_per_team > 0:
                 chosen_teams: list[str] = []
@@ -835,6 +891,10 @@ def build_slips_by_tier_buckets(
                         break
                 if not dir_ok:
                     continue
+
+            sg_ok, sg_reasons, sg_metrics = single_game_slip_rule_status(chosen, cfg, n_legs=n_legs)
+            if not sg_ok:
+                continue
 
             scored = _score_slip(
                 chosen,
@@ -945,7 +1005,20 @@ def build_slips_by_tier_buckets(
                 if over > 0.0:
                     pen_role_ctx = role_ctx_share_w * float(over ** role_ctx_share_power)
 
-            pen_total = pen_team + pen_family + pen_frag + pen_min_std + pen_role_ctx
+            pen_minute_risk = 0.0
+            if chosen and any("minute_risk_penalty" in rec.index for rec in chosen):
+                vals = []
+                for rec in chosen:
+                    try:
+                        v = float(rec.get("minute_risk_penalty", 0.0))
+                    except Exception:
+                        v = 0.0
+                    if v == v:
+                        vals.append(v)
+                if vals:
+                    pen_minute_risk = sum(vals) / float(len(vals))
+
+            pen_total = pen_team + pen_family + pen_frag + pen_min_std + pen_role_ctx + pen_minute_risk
 
             # Compute base score for this candidate (depends on sort_mode)
             hit_prob = float(scored.get("hit_prob", 0.0) or 0.0)
@@ -969,10 +1042,17 @@ def build_slips_by_tier_buckets(
             scored["pen_frag"] = pen_frag
             scored["pen_min_std"] = pen_min_std
             scored["pen_role_ctx"] = pen_role_ctx
+            scored["pen_minute_risk"] = pen_minute_risk
             scored["pen_total"] = pen_total
+            scored["minute_risk_legs"] = int(
+                sum(1 for rec in chosen if float(rec.get("minute_risk_penalty", 0.0) or 0.0) > 0.0)
+            )
             scored["role_ctx_bonus"] = role_bonus_total
             scored["role_ctx_on_legs"] = int(role_on_count)
             scored["role_ctx_on_share"] = float(role_on_count / len(chosen)) if chosen else 0.0
+            if sg_metrics:
+                scored.update(sg_metrics)
+                scored["single_game_rule_reasons"] = ",".join(sg_reasons)
             role_share_bonus_w = 0.15
             if isinstance(cfg, dict):
                 role_share_bonus_w = float(((cfg.get("slip_rank", {}) or {}).get("role_ctx_share_bonus_w", 0.15)) or 0.0)

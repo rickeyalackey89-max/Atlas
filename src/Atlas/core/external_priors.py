@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 """
 External priors (projection-first, CSV only)
 
@@ -23,6 +21,9 @@ Config (config.yaml) under optimizer.external_priors:
     enabled: true
   path: "data/input/external_priors_today.csv"   # optional; csv only
   cap: 0.03          # max abs probability nudge applied to p_adj per leg
+  cap_by_direction:  # optional; direction-specific override of cap
+    OVER: 0.03
+    UNDER: 0.00
   scale: 3.0         # points scale for tanh(edge/scale) mapping (larger = gentler)
   p_floor: 0.01
   p_ceil: 0.99
@@ -36,6 +37,7 @@ Outputs
     external_prior_n          int   number of contributing sources (for this leg, after gating)
     external_prior_sources    str   comma-separated unique sources used
     external_prior_epsilon    float legacy field (kept for compatibility; equals cap)
+    external_prior_cap_applied float cap used for this row after direction override
 
 - If df has 'p_adj', we apply the bounded nudge directly to p_adj.
   (If p_adj is missing but 'p' exists, we nudge 'p'. Otherwise we only emit audit columns.)
@@ -50,12 +52,12 @@ Behavior
 - If the CSV is missing, unreadable, empty, or configured with a non-CSV path, we emit audit columns only and apply no prior nudge.
 """
 
+from __future__ import annotations
+
 import os
 from pathlib import Path
 from Atlas.runtime.paths import find_repo_root
 from typing import Any, Dict, Optional
-
-import sys
 
 import numpy as np
 import pandas as pd
@@ -206,6 +208,25 @@ def _source_weight_map(pri_cfg: dict[str, Any]) -> Dict[str, float]:
     return weights
 
 
+def _direction_cap_map(pri_cfg: dict[str, Any], default_cap: float) -> Dict[str, float]:
+    raw = pri_cfg.get("cap_by_direction", {})
+    if not isinstance(raw, dict):
+        raw = pri_cfg.get("direction_caps", {})
+    if not isinstance(raw, dict):
+        return {}
+
+    out: Dict[str, float] = {}
+    for key, value in raw.items():
+        direction = str(key).strip().upper()
+        if direction not in {"OVER", "UNDER"}:
+            continue
+        cap_value = _safe_float(value, None)
+        if cap_value is None:
+            continue
+        out[direction] = max(0.0, abs(float(cap_value)))
+    return out
+
+
 def apply_external_priors(
     df: pd.DataFrame,
     cfg: dict[str, Any],
@@ -228,6 +249,9 @@ def apply_external_priors(
     out["external_prior_n"] = 0
     out["external_prior_sources"] = ""
     out["external_prior_epsilon"] = cap  # legacy field; equals cap
+    out["external_prior_cap_applied"] = 0.0
+    out["external_prior_delta_p"] = 0.0
+    out["external_prior_probability_applied"] = False
 
     if (not enabled) or (len(out) == 0):
         return out
@@ -325,7 +349,14 @@ def apply_external_priors(
 
         # ── Signal 1: Projection edge score (existing) ──────────────
         x = merged["edge_at_pp_line"] / safe_scale
-        proj_score = np.tanh(x).astype(float)
+        # Direction-normalized projection edge:
+        #   OVER is supported when projection > PP line.
+        #   UNDER is supported when projection < PP line.
+        # The prior is already direction-gated below, but the score itself must
+        # be positive for either supported direction. Without this sign flip,
+        # valid UNDER priors were incorrectly lowering UNDER probabilities.
+        direction_sign = np.where(merged["_ep_dir"] == "UNDER", -1.0, 1.0)
+        proj_score = (np.tanh(x).astype(float) * direction_sign).astype(float)
         proj_score = pd.to_numeric(proj_score, errors="coerce").fillna(0.0).clip(-1.0, 1.0)
 
         # ── Signal 2: Market probability divergence (new) ───────────
@@ -378,17 +409,27 @@ def apply_external_priors(
             merged["apply_prior"].astype(int) * merged["n_sources"].fillna(0).astype(int)
         )
         merged["external_prior_sources"] = merged["sources"].fillna("").astype(str)
+        merged.loc[merged["external_prior_n"] <= 0, "external_prior_sources"] = ""
 
         # Apply bounded nudge only when the caller wants the prior to affect the
         # probability surface. The scored surface can still carry audit columns
         # without being directly rewritten.
         target_col: Optional[str] = "p_adj" if "p_adj" in merged.columns else ("p" if "p" in merged.columns else None)
         if target_col is not None and apply_probability:
-            merged["delta_p"] = (cap * merged["external_prior_score"]).clip(-abs(cap), abs(cap))
+            direction_caps = _direction_cap_map(pri_cfg, cap)
+            row_cap = merged["_ep_dir"].map(lambda d: direction_caps.get(str(d).upper(), abs(cap))).astype(float)
+            row_cap = row_cap.fillna(abs(cap)).clip(lower=0.0)
+            merged["external_prior_cap_applied"] = row_cap
+            merged["delta_p"] = (row_cap * merged["external_prior_score"]).clip(-row_cap, row_cap)
+            # Avoid audit pollution from floating-point dust when the prior edge
+            # is mathematically zero. These rows should remain prior-covered but
+            # not be counted as probability-applied.
+            merged.loc[merged["delta_p"].abs() <= 1e-12, "delta_p"] = 0.0
             merged[target_col] = (
                 pd.to_numeric(merged[target_col], errors="coerce") + merged["delta_p"]
             ).clip(p_floor, p_ceil)
         else:
+            merged["external_prior_cap_applied"] = 0.0
             merged["delta_p"] = 0.0
 
         # Debug rows
@@ -403,6 +444,7 @@ def apply_external_priors(
             "implied_direction",
             "apply_prior",
             "external_prior_score",
+            "external_prior_cap_applied",
             "bp_market_prob",
             "bp_market_divergence",
             "external_prior_n",
@@ -426,6 +468,13 @@ def apply_external_priors(
         out["external_prior_score"] = merged["external_prior_score"].values
         out["external_prior_n"] = merged["external_prior_n"].values
         out["external_prior_sources"] = merged["external_prior_sources"].values
+        out["external_prior_cap_applied"] = merged["external_prior_cap_applied"].values
+        out["external_prior_delta_p"] = merged["delta_p"].values
+        if bool(apply_probability) and target_col is not None:
+            probability_applied = pd.to_numeric(merged["delta_p"], errors="coerce").fillna(0.0).abs() > 1e-12
+        else:
+            probability_applied = pd.Series(False, index=merged.index)
+        out["external_prior_probability_applied"] = probability_applied.values
 
         if "p_adj" in out.columns and "p_adj" in merged.columns:
             out["p_adj"] = merged["p_adj"].values

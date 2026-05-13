@@ -918,6 +918,12 @@ def main() -> None:
         scored["role_ctx_outs_used"] = 0
     scored["role_ctx_outs_used"] = pd.to_numeric(scored["role_ctx_outs_used"], errors="coerce").fillna(0).astype(int)
 
+    # IAEL SOFT RISK (QUESTIONABLE) must be available before CAT so live and
+    # bundle replay use the same pre-builder probability surface.
+    from Atlas.core.iael_soft_risk import apply_iael_soft_risk
+
+    scored = apply_iael_soft_risk(scored, iael_df)
+
     p_adj = _to_series(scored.get("p_adj", scored.get("p", 0.5)), errors="coerce").fillna(0.5).clip(0, 1)
     p_role = _to_series(scored.get("p_role", p_adj), errors="coerce").fillna(p_adj).clip(0, 1)
 
@@ -1080,6 +1086,30 @@ def main() -> None:
                 _shrink_applied.append(f"{_name}({int(_m_arr.sum())})")
         if _shrink_applied:
             scored["logit_shrink_applied"] = ",".join(_shrink_applied)
+
+    # EXTERNAL PRIORS (pre-CAT)
+    # v5cD was trained from scored_legs_deduped.p_adj, and that surface carried
+    # external-prior nudges/features. Apply them before p_for_cal so CAT sees
+    # the same feature/probability contract live that it saw in the cache.
+    try:
+        from Atlas.core.external_priors import apply_external_priors
+
+        scored = apply_external_priors(scored, cfg, apply_probability=True)
+        _prior_applied = int(
+            pd.to_numeric(
+                scored.get("external_prior_probability_applied", pd.Series(False, index=scored.index)),
+                errors="coerce",
+            ).fillna(0).astype(bool).sum()
+        )
+        _prior_n = int(
+            (pd.to_numeric(scored.get("external_prior_n", pd.Series(0, index=scored.index)), errors="coerce").fillna(0) > 0).sum()
+        )
+        if _prior_n:
+            print(f"[EXTERNAL_PRIORS] Pre-CAT attached: prior_rows={_prior_n}, nudged_rows={_prior_applied}")
+        p_adj = _to_series(scored.get("p_adj", scored.get("p", 0.5)), errors="coerce").fillna(0.5).clip(0, 1)
+    except Exception as _prior_err:
+        print(f"[EXTERNAL_PRIORS] Pre-CAT skipped: {_prior_err!r}")
+
     # use_role retained for downstream post-cal blend logic that segments by role context.
     use_role = scored["role_ctx_outs_used"] > 0
 
@@ -1095,6 +1125,15 @@ def main() -> None:
     scored["p_cal"] = scored["p_for_cal"]
 
     scored["p_for_cal_src"] = scored["p_cal_src"]
+
+    # RAW SLATE FRAGILITY GUARD
+    # Narrow pre-CAT protection for thin, injury-fragile slates where raw p_for_cal
+    # overstates high-confidence legs before CAT sees the feature surface.
+    try:
+        from Atlas.core.raw_slate_fragility_guard import apply_raw_slate_fragility_guard
+        scored = apply_raw_slate_fragility_guard(scored, cfg)
+    except Exception as _raw_guard_err:
+        print(f"[RAW_SLATE_GUARD] Skipped: {_raw_guard_err!r}")
 
     telemetry_cfg = (cfg.get("telemetry", {}) or {})
     post_calibration_cfg = (telemetry_cfg.get("post_calibration", {}) or {})
@@ -1260,6 +1299,19 @@ def main() -> None:
         if _n_flip_dropped:
             scored_for_optimizer = scored_for_optimizer[~scored_for_optimizer["_zero_dnp_flip"]].copy()
             print(f"[ZERO_DNP] Dropped {_n_flip_dropped} direction-corrected legs from optimizer pool")
+
+    # Report-only risk telemetry for live/replay parity. Selection penalties are
+    # applied inside the builders; these columns make the run artifacts auditable.
+    from Atlas.core.minute_risk_guard import apply_minute_risk_guard
+    from Atlas.core.single_game_script import apply_single_game_script_annotations
+    from Atlas.core.volatility_guard import apply_volatility_telemetry
+
+    scored = apply_minute_risk_guard(scored, cfg, score_col=None)
+    scored_for_optimizer = apply_minute_risk_guard(scored_for_optimizer, cfg, score_col=None)
+    scored = apply_volatility_telemetry(scored, cfg)
+    scored_for_optimizer = apply_volatility_telemetry(scored_for_optimizer, cfg)
+    scored = apply_single_game_script_annotations(scored, cfg)
+    scored_for_optimizer = apply_single_game_script_annotations(scored_for_optimizer, cfg)
 
     optimizer_cfg = (cfg.get("optimizer", {}) or {})
     top_n = int(optimizer_cfg.get("top_n_slips", 10))

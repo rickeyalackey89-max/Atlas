@@ -1,6 +1,6 @@
 # Atlas Known Uncertainties
 
-> **Last updated:** 2026-05-10
+> **Last updated:** 2026-05-12
 > **Purpose:** Honest catalog of the model's known blind spots, structural limitations, and unresolved questions. Read this before making any model or config change.
 
 ---
@@ -54,7 +54,32 @@ When no share matrix match is found: `role_ctx_outs_used = 0`, role context stay
 
 ---
 
-## 4 — External Priors Are Direction-Gated but Not Always Aligned
+## 4 — Late Injury State Has Two Different Risks
+
+**Status:** Policy defined, still operationally fragile near tip.
+
+Atlas now separates late injury handling into:
+
+- **Direct-player risk:** the prop player's own availability is uncertain.
+- **Beneficiary uncertainty:** a teammate's availability may change the prop player's role.
+
+Current policy:
+
+- Direct `OUT`/`DOUBTFUL` players are removed by IAEL hard filter.
+- Direct `QUESTIONABLE` players are excluded from premium slips by default.
+- Questionable-teammate beneficiary exposure is tagged with `is_questionable` / `q_out_frac`; on normal slates it is excluded, but on single-game slates it may remain as penalized soft exposure if `role_ctx_outs` is present.
+
+Remaining uncertainty:
+
+- A player can be ruled in/out minutes before tip. The model cannot correct a stale run unless IAEL is refreshed and Atlas is rerun.
+- Beneficiary boosts from a questionable teammate are conditional. If the teammate plays, the boost may be wrong.
+- Single-game slates intentionally accept some beneficiary uncertainty to avoid wiping the entire output pool.
+
+Canonical policy: `docs/LATE_INJURY_HANDLING.md`.
+
+---
+
+## 5 — External Priors Are Direction-Gated but Not Always Aligned
 
 **Status:** Known, managed via `cap` and `scale` config.
 
@@ -70,7 +95,7 @@ Uncertainties:
 
 ---
 
-## 5 — Gamelog Window Is Fixed, Not Dynamic
+## 6 — Gamelog Window Is Fixed, Not Dynamic
 
 **Status:** Known design choice with known failure modes.
 
@@ -82,7 +107,7 @@ The gamelog window is a rolling fixed window (configurable, default ~20 games). 
 
 ---
 
-## 6 — Blowout Curve Is a Single-Parameter Family
+## 7 — Blowout Curve Is a Single-Parameter Family
 
 **Status:** Known simplification.
 
@@ -100,7 +125,7 @@ The `blowout.spread_sd` parameter (currently 11.0) controls the sensitivity. The
 
 ---
 
-## 7 — Thin Window Shrinkage Is Coarse
+## 8 — Thin Window Shrinkage Is Coarse
 
 **Status:** Known, low priority.
 
@@ -110,7 +135,7 @@ Consequence: A star player returning from injury with 5 games logged gets shrunk
 
 ---
 
-## 8 — Role Metrics Are a Weak Prior, Not a Strong Signal
+## 9 — Role Metrics Are a Weak Prior, Not a Strong Signal
 
 **Status:** By design, but worth stating explicitly.
 
@@ -123,7 +148,7 @@ This is intentional: role metrics are noisy and the model should not over-rely o
 
 ---
 
-## 9 — Combo Stats Are Structurally Overconfident
+## 10 — Combo Stats Are Structurally Overconfident
 
 **Status:** Partially corrected by combo logit shrink and CatBoost v5cD, not fully resolved.
 
@@ -133,7 +158,7 @@ Empirically, combo legs are structurally overconfident because the covariance am
 
 ---
 
-## 10 — `p_cal_marketed` Is Not a Probability Estimate
+## 11 — `p_cal_marketed` Is Not a Probability Estimate
 
 **Status:** Design note.
 
@@ -145,7 +170,7 @@ Empirically, combo legs are structurally overconfident because the covariance am
 
 ---
 
-## 11 — Current CatBoost Replay Is Not True Out-of-Sample
+## 12 — Current CatBoost Replay Is Not True Out-of-Sample
 
 **Status:** Methodological note.
 
@@ -159,7 +184,7 @@ True out-of-sample performance on future slates may differ, particularly:
 
 ---
 
-## 12 — Slip Win Rates Are Sensitive to Sample Size
+## 13 — Slip Win Rates Are Sensitive to Sample Size
 
 **Status:** Statistical caution.
 

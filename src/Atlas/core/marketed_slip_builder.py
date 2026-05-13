@@ -18,7 +18,15 @@ from typing import Any, Dict, List, Optional, Tuple
 from pathlib import Path
 import json
 
-from .slip_scoring import _score_slip, _prod
+from .minute_risk_guard import apply_minute_risk_guard
+from .single_game_script import (
+    apply_single_game_script_annotations,
+    apply_single_game_selection_surface,
+    is_single_game_slate,
+    single_game_slip_rule_status,
+)
+from .slip_family_diversity import prop_key_from_mapping
+from .slip_scoring import _prod
 
 
 class MarketedSlipBuilder:
@@ -28,17 +36,20 @@ class MarketedSlipBuilder:
     """
     
     def __init__(self, config: Dict[str, Any]):
+        self.full_config = config
         self.config = config.get("marketed_slips", {})
         self.slip_config = config.get("slip_build", {})
         
         # Load stat-specific calibration adjustments
         self.stat_calibration = self._load_stat_calibration()
         
-        # Templates: locked tier compositions
+        # Templates: locked tier compositions.
+        # Build conservative marketed slips first. The builder intentionally uses
+        # a global player set across templates, so order changes allocation.
         self.templates = [
-            {"label": "5-leg", "goblin": 2, "standard": 2, "demon": 1},
-            {"label": "4-leg", "goblin": 2, "standard": 2, "demon": 0},
             {"label": "3-leg", "goblin": 1, "standard": 2, "demon": 0},
+            {"label": "4-leg", "goblin": 2, "standard": 2, "demon": 0},
+            {"label": "5-leg", "goblin": 2, "standard": 2, "demon": 1},
         ]
         
     def _load_stat_calibration(self) -> Dict[str, Dict[str, float]]:
@@ -85,15 +96,8 @@ class MarketedSlipBuilder:
         # Tier-specific selection score (fully vectorized with np.where)
         p_cal   = pd.to_numeric(df["p_cal"],   errors="coerce").fillna(0.5)
         l20     = pd.to_numeric(df.get("l20_edge",   pd.Series(0.0, index=df.index)), errors="coerce").fillna(0.0).clip(0, 1)
-        dir_te  = pd.to_numeric(df.get("player_dir_te", pd.Series(0.0, index=df.index)), errors="coerce").fillna(0.0)
 
         goblin_score   = (p_cal * l20).values
-        # When zero-DNP fired, player_dir_te reflects backup-role history and
-        # incorrectly scores UNDER legs very high. Neutralize it so STANDARD
-        # legs score on p_cal_marketed instead of biased historical hit rate.
-        zdnp_mult = pd.to_numeric(df.get("zero_dnp_mult", pd.Series(1.0, index=df.index)), errors="coerce").fillna(1.0)
-        zdnp_thresh = 1.40
-        dir_te_eff = np.where(zdnp_mult.values >= zdnp_thresh, 0.0, dir_te.values)
 
         # Playoff regime fix: player_dir_te for STANDARD legs is trained on regular-season
         # data. In playoffs, TE is near-zero for OVERs (mean ~-0.002) and inflated for
@@ -109,6 +113,9 @@ class MarketedSlipBuilder:
             tier_arr == "STANDARD", standard_score,
             np.where(tier_arr == "DEMON", demon_score, goblin_score)
         )
+        df = apply_minute_risk_guard(df, self.full_config, section="marketed_slips", score_col="marketed_score")
+        df = apply_single_game_script_annotations(df, self.full_config)
+        df = apply_single_game_selection_surface(df, self.full_config, score_col="marketed_score", clip_score=False)
 
         return df
     
@@ -167,19 +174,53 @@ class MarketedSlipBuilder:
         else:
             under_prob_mask = pd.Series(True, index=df.index)
 
-        pool = df[stat_mask & thresh_mask & raw_thresh_mask & dir_mask & under_prob_mask].copy()
+        injury_mask = self._questionable_mask(df)
+
+        pool = df[stat_mask & thresh_mask & raw_thresh_mask & dir_mask & under_prob_mask & injury_mask].copy()
 
         if pool.empty:
             return pd.DataFrame()
 
         # Best leg per (player, tier) using tier-specific selection score
+        sort_cols = [
+            col for col in ("marketed_score", "p_cal_marketed", "p_cal")
+            if col in pool.columns
+        ]
         pool = (
-            pool.sort_values("marketed_score", ascending=False)
+            pool.sort_values(sort_cols, ascending=[False] * len(sort_cols))
             .groupby(["player", "tier"], as_index=False)
             .first()
         )
 
         return pool
+
+    def _questionable_mask(self, df: pd.DataFrame) -> pd.Series:
+        """Return False for injury-questionable legs when configured."""
+
+        keep_mask = pd.Series(True, index=df.index)
+        soft_exposure_mask = self._single_game_soft_exposure_mask(df)
+        exclude_questionable = bool(self.config.get("exclude_questionable", False))
+        if exclude_questionable and "is_questionable" in df.columns:
+            q_vals = pd.to_numeric(df["is_questionable"], errors="coerce").fillna(0.0)
+            keep_mask &= (q_vals <= 0.0) | soft_exposure_mask
+
+        if "exclude_q_out_frac_gt" in self.config and "q_out_frac" in df.columns:
+            threshold = float(self.config.get("exclude_q_out_frac_gt", 0.0) or 0.0)
+            q_out_vals = pd.to_numeric(df["q_out_frac"], errors="coerce").fillna(0.0)
+            keep_mask &= (q_out_vals <= threshold) | soft_exposure_mask
+
+        return keep_mask
+
+    def _single_game_soft_exposure_mask(self, df: pd.DataFrame) -> pd.Series:
+        sg = self.full_config.get("single_game_mode", {}) if isinstance(self.full_config, dict) else {}
+        if not isinstance(sg, dict) or not bool(sg.get("soft_injury_exposure_not_hard_exclude", False)):
+            return pd.Series(False, index=df.index)
+        if not is_single_game_slate(df, self.full_config):
+            return pd.Series(False, index=df.index)
+        if "role_ctx_outs" not in df.columns:
+            return pd.Series(False, index=df.index)
+        role_outs = df["role_ctx_outs"].map(lambda x: "" if x is None else str(x).strip().lower())
+        return role_outs.ne("") & role_outs.ne("[]") & role_outs.ne("nan")
     
     def _calculate_correlation_adjusted_probability(self, legs: List[pd.Series]) -> float:
         """
@@ -226,8 +267,9 @@ class MarketedSlipBuilder:
         return float(base_prob * max(corr_mult, 0.3))  # Floor at 30% of base
     
     def _build_single_slip(self, pool: pd.DataFrame, template: Dict[str, Any],
-                          used_players: set, used_teams: set,
-                          single_game_slate: bool = False) -> Optional[Dict[str, Any]]:
+                           used_players: set, used_teams: set,
+                           single_game_slate: bool = False,
+                           used_prop_keys: set[str] | None = None) -> Optional[Dict[str, Any]]:
         """Build a single slip following the template constraints."""
 
         selected_legs = []
@@ -246,6 +288,30 @@ class MarketedSlipBuilder:
         # Track what we're adding to used sets (for rollback on failure)
         new_players = set()
         new_teams = set()
+        new_prop_keys: set[str] = set()
+        used_prop_keys = used_prop_keys if used_prop_keys is not None else set()
+        template_label = template["label"]
+
+        sg_rules = (
+            self.full_config.get("single_game_mode", {}).get("slip_rules", {})
+            if isinstance(self.full_config, dict)
+            else {}
+        )
+        enforce_sg_rules = bool(self.config.get("enforce_single_game_slip_rules", True))
+        apply_sg_incremental_caps = single_game_slate and enforce_sg_rules and isinstance(sg_rules, dict)
+
+        def _flag(leg: pd.Series, key: str) -> int:
+            try:
+                return int(float(leg.get(key, 0) or 0) > 0)
+            except Exception:
+                return 0
+
+        def _cap_exceeded(leg: pd.Series, rule_key: str, flag_key: str) -> bool:
+            if not apply_sg_incremental_caps or rule_key not in sg_rules:
+                return False
+            cap = int(sg_rules.get(rule_key, 0) or 0)
+            current = sum(_flag(existing, flag_key) for existing in selected_legs)
+            return current + _flag(leg, flag_key) > cap
 
         try:
             for tier, count in [("GOBLIN", template["goblin"]),
@@ -255,7 +321,14 @@ class MarketedSlipBuilder:
                     continue
 
                 tier_pool = pool[pool["tier"] == tier].copy()
-                tier_pool = tier_pool.sort_values("marketed_score", ascending=False)
+                sort_cols = [
+                    col for col in ("marketed_score", "p_cal_marketed", "p_cal")
+                    if col in tier_pool.columns
+                ]
+                tier_pool = tier_pool.sort_values(
+                    sort_cols,
+                    ascending=[False] * len(sort_cols),
+                )
 
                 selected = 0
                 for _, leg in tier_pool.iterrows():
@@ -264,6 +337,9 @@ class MarketedSlipBuilder:
 
                     # Player uniqueness always enforced
                     if player in used_players or player in new_players:
+                        continue
+                    prop_key = prop_key_from_mapping(leg)
+                    if prop_key and (prop_key in used_prop_keys or prop_key in new_prop_keys):
                         continue
 
                     # Team constraint:
@@ -276,6 +352,12 @@ class MarketedSlipBuilder:
                         max_per_team = int(self.config.get("max_players_per_team", 4 if single_game_slate else 2))
                     if slip_team_counts.get(team, 0) >= max_per_team:
                         continue
+                    if _cap_exceeded(leg, "max_role_shooter_overs", "single_game_role_shooter_over_flag"):
+                        continue
+                    if _cap_exceeded(leg, "max_fg3m_overs", "single_game_fg3m_over_flag"):
+                        continue
+                    if _cap_exceeded(leg, "max_low_minute_bench_overs", "single_game_low_minute_bench_over_flag"):
+                        continue
 
                     # Add to slip
                     selected_legs.append(leg)
@@ -283,6 +365,8 @@ class MarketedSlipBuilder:
                     slip_team_counts[team] = slip_team_counts.get(team, 0) + 1
                     new_players.add(player)
                     new_teams.add(team)
+                    if prop_key:
+                        new_prop_keys.add(prop_key)
                     selected += 1
                     
                     if selected == count:
@@ -291,13 +375,7 @@ class MarketedSlipBuilder:
                 # Check if we got enough for this tier
                 if selected < count:
                     return None  # Not enough qualifying legs for this tier
-                else:
-                    template_label = template["label"]
-            
-            # Commit the new players/teams to used sets
-            used_players.update(new_players)
-            used_teams.update(new_teams)
-            
+
             # Calculate correlation-adjusted probability
             hit_prob = self._calculate_correlation_adjusted_probability(selected_legs)
             
@@ -305,12 +383,22 @@ class MarketedSlipBuilder:
             payout_mult = self._calculate_payout(selected_legs)
             
             n_legs = len(selected_legs)
+            sg_ok, sg_reasons, sg_metrics = single_game_slip_rule_status(selected_legs, self.full_config, n_legs=n_legs)
+            if not sg_ok and bool(self.config.get("enforce_single_game_slip_rules", True)):
+                return None
+
+            # Commit reservations only after the slip fully passes validation.
+            # A rejected 4-leg must not consume props and starve later templates.
+            used_players.update(new_players)
+            used_teams.update(new_teams)
+            used_prop_keys.update(new_prop_keys)
+
             # Apply empirical calibration so displayed probability matches actual win rate
             cal_factors = self.config.get("hit_prob_calibration", {})
             scale = cal_factors.get(n_legs) or cal_factors.get(str(n_legs)) or 1.0
             hit_prob_display = min(float(hit_prob) * float(scale), 0.99)
 
-            return {
+            slip = {
                 "label": template_label,
                 "legs": [leg.to_dict() for leg in selected_legs],
                 "hit_prob": hit_prob_display,
@@ -319,6 +407,10 @@ class MarketedSlipBuilder:
                 "ev": hit_prob_display * payout_mult,
                 "n_legs": n_legs
             }
+            if sg_metrics:
+                slip.update(sg_metrics)
+                slip["single_game_rule_reasons"] = ",".join(sg_reasons)
+            return slip
             
         except Exception:
             # Rollback on any error
@@ -361,18 +453,33 @@ class MarketedSlipBuilder:
             unique_games.add(teams)
         single_game_slate = (len(unique_games) == 1)
         if single_game_slate:
-            print("[MARKETED] Single-game slate detected — team diversity restrictions bypassed (max 4 per team)")
+            print("[MARKETED] Single-game slate detected - using per-leg team caps")
 
-        # Build slips following templates — each template is independent
-        # (subscriber picks one slip; the same player can appear across templates)
+        # Build slips following templates. Order matters because the 3-leg is
+        # the primary marketed product and should get first construction pass.
         hc_thresholds = self.config.get("high_confidence_thresholds", {})
 
-        # Shared across all templates: once a player is in one slip they can't appear in another
+        reserve_players_across_templates = bool(self.config.get("reserve_players_across_templates", False))
+        reserve_props_across_templates = bool(self.config.get("reserve_player_props_across_templates", True))
         used_players_global: set = set()
+        used_prop_keys_global: set[str] = set()
         slips = []
         for template in self.templates:
-            slip = self._build_single_slip(pool, template, used_players_global, set(), single_game_slate=single_game_slate)
+            used_players = used_players_global if reserve_players_across_templates else set()
+            used_prop_keys = used_prop_keys_global if reserve_props_across_templates else set()
+            slip = self._build_single_slip(
+                pool,
+                template,
+                used_players,
+                set(),
+                single_game_slate=single_game_slate,
+                used_prop_keys=used_prop_keys,
+            )
             if slip:
+                if reserve_players_across_templates:
+                    used_players_global = used_players
+                if reserve_props_across_templates:
+                    used_prop_keys_global = used_prop_keys
                 n = slip.get("n_legs", 0)
                 bar = hc_thresholds.get(n) or hc_thresholds.get(str(n))
                 # hit_prob is already calibrated (empirical scale applied in _build_single_slip)

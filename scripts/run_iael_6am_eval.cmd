@@ -28,49 +28,21 @@ if errorlevel 1 (
 echo [OK] Gamelogs refreshed >> %LOG%
 
 REM (2) Build eval legs for yesterday's live runs in data/telemetry/live_runs/
-REM     Find yesterday's date tag (YYYYMMDD)
+REM     Find yesterday's date tag (YYYYMMDD) and ISO date.
 for /f "delims=" %%y in ('%PY% -c "from datetime import date,timedelta;print((date.today()-timedelta(days=1)).strftime('%%Y%%m%%d'))"') do set YESTERDAY=%%y
-echo [EVAL] Looking for live runs from %YESTERDAY% >> %LOG%
-
-set FOUND_RUNS=0
-for /f "delims=" %%n in ('dir /b /ad "%ATLAS_ROOT%\data\telemetry\live_runs\%YESTERDAY%_*" 2^>nul') do (
-  set RUN_DIR=%ATLAS_ROOT%\data\telemetry\live_runs\%%n
-  if exist "!RUN_DIR!\scored_legs_deduped.csv" (
-    if exist "!RUN_DIR!\eval_legs.csv" (
-      echo [EVAL] Skipping !RUN_DIR! (eval_legs.csv already exists) >> %LOG%
-    ) else (
-      echo [EVAL] Writing eval_legs for !RUN_DIR! >> %LOG%
-      %PY% tools\create_eval_leg_backtestv2.py --run-dir "!RUN_DIR!" --gamelogs-path "%GAMELOGS%" >> %LOG% 2>&1
-      if errorlevel 1 (
-        echo [WARN] eval_legs failed for !RUN_DIR! >> %LOG%
-      ) else (
-        set /a FOUND_RUNS+=1
-      )
-    )
-  )
-)
-
-REM (3) Also write eval legs for any runs still in data/output/runs/ from yesterday
-for /f "delims=" %%n in ('dir /b /ad "%ATLAS_ROOT%\data\output\runs\%YESTERDAY%_*" 2^>nul') do (
-  set RUN_DIR=%ATLAS_ROOT%\data\output\runs\%%n
-  if exist "!RUN_DIR!\scored_legs_deduped.csv" (
-    if exist "!RUN_DIR!\eval_legs.csv" (
-      echo [EVAL] Skipping !RUN_DIR! (eval_legs.csv already exists) >> %LOG%
-    ) else (
-      echo [EVAL] Writing eval_legs for output run !RUN_DIR! >> %LOG%
-      %PY% tools\create_eval_leg_backtestv2.py --run-dir "!RUN_DIR!" --gamelogs-path "%GAMELOGS%" >> %LOG% 2>&1
-      if errorlevel 1 (
-        echo [WARN] eval_legs failed for !RUN_DIR! >> %LOG%
-      ) else (
-        set /a FOUND_RUNS+=1
-      )
-    )
-  )
-)
-
-echo [EVAL] Processed %FOUND_RUNS% run(s) with eval legs >> %LOG%
-
 set YESTERDAY_ISO=%YESTERDAY:~0,4%-%YESTERDAY:~4,2%-%YESTERDAY:~6,2%
+echo [EVAL] Looking for live runs from %YESTERDAY% >> %LOG%
+%PY% tools\run_6am_eval_backfill.py --date %YESTERDAY_ISO% --atlas-root "%ATLAS_ROOT%" --gamelogs-path "%GAMELOGS%" >> %LOG% 2>&1
+set EVAL_BACKFILL_RC=%ERRORLEVEL%
+if "%EVAL_BACKFILL_RC%"=="0" (
+  echo [OK] Eval backfill completed for %YESTERDAY_ISO% >> %LOG%
+) else if "%EVAL_BACKFILL_RC%"=="2" (
+  echo [WARN] Eval backfill found no eligible runs for %YESTERDAY_ISO% >> %LOG%
+) else (
+  echo [WARN] Eval backfill reported failures for %YESTERDAY_ISO% rc=%EVAL_BACKFILL_RC% >> %LOG%
+)
+
+REM (3) Select the canonical prior-day report run.
 set REPORT_RUN=
 for /f "delims=" %%r in ('%PY% tools\select_eval_report_run.py --date %YESTERDAY_ISO% --runs-dir "%ATLAS_ROOT%\data\output\runs" --require-eval') do set REPORT_RUN=%%r
 if defined REPORT_RUN (
@@ -79,20 +51,31 @@ if defined REPORT_RUN (
   echo [WARN] No canonical report run with eval_legs.csv found for %YESTERDAY_ISO% >> %LOG%
 )
 
-REM (4) Post yesterday's results to Discord #results channel
-echo [DISCORD] Posting yesterday's slip results to Discord >> %LOG%
-if defined REPORT_RUN (
-  %PY% tools\discord_post.py --date %YESTERDAY_ISO% --run-dir "!REPORT_RUN!" >> %LOG% 2>&1
-  if errorlevel 1 (
-    echo [WARN] Discord results post failed (non-fatal) >> %LOG%
-  ) else (
-    echo [OK] Discord results posted >> %LOG%
-  )
+REM (4) Daily slip-selection health diagnostic
+set SLIP_DIAG_OUT=%ATLAS_ROOT%\logs\slip_failure_diag_%YESTERDAY%.json
+echo [DIAG] Running slip selection diagnostic for %YESTERDAY_ISO% >> %LOG%
+%PY% scripts\audits\slip_failure_diagnostic.py --dates %YESTERDAY_ISO% --json-out "%SLIP_DIAG_OUT%" >> %LOG% 2>&1
+if errorlevel 1 (
+  echo [WARN] Slip selection diagnostic failed (non-fatal) >> %LOG%
 ) else (
-  echo [WARN] Discord results skipped because no canonical report run was selected >> %LOG%
+  echo [OK] Slip selection diagnostic written to %SLIP_DIAG_OUT% >> %LOG%
 )
 
-REM (5) Rebuild dashboard payload + publish (captures fresh yesterday_slips record)
+REM (5) Post yesterday's results to Discord #results channel
+echo [DISCORD] Posting yesterday's slip results to Discord >> %LOG%
+if not defined REPORT_RUN (
+  echo [WARN] Discord results skipped because no canonical report run was selected >> %LOG%
+  goto :after_discord
+)
+%PY% tools\discord_post.py --date %YESTERDAY_ISO% --run-dir "!REPORT_RUN!" >> %LOG% 2>&1
+if errorlevel 1 (
+  echo [WARN] Discord results post failed (non-fatal) >> %LOG%
+) else (
+  echo [OK] Discord results posted >> %LOG%
+)
+:after_discord
+
+REM (6) Rebuild dashboard payload + publish (captures fresh yesterday_slips record)
 set VENV_PY=%ATLAS_ROOT%\.venv314\Scripts\python.exe
 for /f "delims=" %%r in ('%PY% -c "import os,sys; d=r\"%ATLAS_ROOT%\data\output\runs\"; runs=sorted([x for x in os.listdir(d) if len(x)==15 and x[8]==\"_\"], reverse=True); print(os.path.join(d,runs[0])) if runs else sys.exit(1)"') do set LATEST_RUN=%%r
 if not defined LATEST_RUN (

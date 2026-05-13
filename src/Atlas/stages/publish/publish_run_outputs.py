@@ -4,13 +4,11 @@ import json
 import shutil
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Optional, Callable
+from typing import Callable, Optional
 
 import pandas as pd
-import yaml
 
 from Atlas.core.fingerprint import (
-    config_fingerprint,
     read_ensemble_meta,
     build_manifest,
     _sanitize_keys,
@@ -61,6 +59,276 @@ def write_run_manifest(
     out_path = run_dir / "run_manifest.json"
     out_path.write_text(
         json.dumps(manifest, indent=2, sort_keys=False, default=str),
+        encoding="utf-8",
+    )
+    return out_path
+
+
+def write_post_run_audit_manifests(run_dir: Path) -> list[Path]:
+    """Write non-blocking post-run audit manifests into the run folder."""
+
+    written: list[Path] = []
+
+    audits: list[tuple[str, str, Callable[[Path], dict]]] = []
+    try:
+        from scripts.audits.pipeline_contract_audit import audit_run as contract_audit
+
+        audits.append(("pipeline_contract_audit", "pipeline_contract_audit.json", contract_audit))
+    except Exception as exc:
+        print(f"[POST_RUN_AUDIT][WARN] pipeline contract audit unavailable: {exc}")
+
+    try:
+        from scripts.audits.live_pipeline_surface_audit import audit_run as surface_audit
+
+        audits.append(("live_pipeline_surface_audit", "live_pipeline_surface_audit.json", surface_audit))
+    except Exception as exc:
+        print(f"[POST_RUN_AUDIT][WARN] live surface audit unavailable: {exc}")
+
+    try:
+        from scripts.audits.hard_pipeline_audit import audit_run as hard_audit
+
+        audits.append(("hard_pipeline_audit", "hard_pipeline_audit.json", hard_audit))
+    except Exception as exc:
+        print(f"[POST_RUN_AUDIT][WARN] hard pipeline audit unavailable: {exc}")
+
+    for label, filename, audit_fn in audits:
+        try:
+            result = audit_fn(run_dir)
+            out_path = run_dir / filename
+            out_path.write_text(json.dumps(result, indent=2, sort_keys=False, default=str), encoding="utf-8")
+            written.append(out_path)
+            verdict = str(result.get("verdict", "UNKNOWN"))
+            failures = len(result.get("failures", []) or [])
+            warnings = len(result.get("warnings", []) or [])
+            print(f"[POST_RUN_AUDIT] {label}: {verdict} failures={failures} warnings={warnings} -> {out_path}")
+        except Exception as exc:
+            print(f"[POST_RUN_AUDIT][WARN] {label} failed: {exc}")
+
+    return written
+
+
+def write_catboost_scale_policy_manifest(
+    run_dir: Path,
+    OUT_DIR: Path,
+    scored: pd.DataFrame,
+) -> Optional[Path]:
+    """Write a small operational manifest for the CAT residual-scale policy."""
+
+    if scored is None or scored.empty or "catboost_residual_scale" not in scored.columns:
+        return None
+
+    first = scored.iloc[0]
+
+    def _first_bool(col: str) -> bool:
+        if col not in scored.columns:
+            return False
+        return bool(first.get(col, False))
+
+    def _first_float(col: str) -> float | None:
+        if col not in scored.columns:
+            return None
+        try:
+            value = float(first.get(col))
+            return value if value == value else None
+        except Exception:
+            return None
+
+    reasons_raw = str(first.get("catboost_scale_policy_reasons", "") or "")
+    reasons = [x for x in reasons_raw.split(",") if x]
+    triggered = _first_bool("catboost_scale_policy_triggered")
+    status = "defensive" if triggered else "normal"
+
+    payload = {
+        "generated_at_utc": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "status": status,
+        "harmful_slate_indicator": triggered,
+        "message": (
+            "CAT defensive residual scale active; slate has pregame risk profile that previously amplified CAT tail loss."
+            if triggered
+            else "CAT aggressive residual scale active; slate did not match defensive-risk trigger."
+        ),
+        "catboost": {
+            "model_version": str(first.get("catboost_model_version", "")),
+            "residual_scale": _first_float("catboost_residual_scale"),
+            "policy_enabled": _first_bool("catboost_scale_policy_enabled"),
+            "policy_triggered": triggered,
+            "policy_reasons": reasons,
+        },
+        "slate_metrics": {
+            "games": _first_float("catboost_scale_games"),
+            "q_out_frac_mean": _first_float("catboost_scale_q_out_frac_mean"),
+            "q_blowout_p90": _first_float("catboost_scale_q_blowout_p90"),
+            "role_ctx_outs_used_share_gt0": _first_float("catboost_scale_role_ctx_outs_used_share_gt0"),
+            "bp_has_mean": _first_float("catboost_scale_bp_has_mean"),
+        },
+    }
+
+    out_path = run_dir / "catboost_scale_policy_manifest.json"
+    out_path.write_text(json.dumps(payload, indent=2, sort_keys=True, default=str), encoding="utf-8")
+
+    latest_dir = OUT_DIR / "dashboard"
+    latest_dir.mkdir(parents=True, exist_ok=True)
+    (latest_dir / "catboost_scale_policy_latest.json").write_text(
+        json.dumps(payload, indent=2, sort_keys=True, default=str),
+        encoding="utf-8",
+    )
+    return out_path
+
+
+def write_raw_slate_fragility_guard_manifest(
+    run_dir: Path,
+    OUT_DIR: Path,
+    scored: pd.DataFrame,
+) -> Optional[Path]:
+    """Write an operational manifest for the pre-CAT raw slate guard."""
+
+    if scored is None or scored.empty or "raw_slate_fragility_guard_enabled" not in scored.columns:
+        return None
+
+    first = scored.iloc[0]
+
+    def _first_bool(col: str) -> bool:
+        if col not in scored.columns:
+            return False
+        return bool(first.get(col, False))
+
+    def _first_float(col: str) -> float | None:
+        if col not in scored.columns:
+            return None
+        try:
+            value = float(first.get(col))
+            return value if value == value else None
+        except Exception:
+            return None
+
+    reasons_raw = str(first.get("raw_slate_fragility_guard_reasons", "") or "")
+    reasons = [x for x in reasons_raw.split(",") if x]
+    triggered = _first_bool("raw_slate_fragility_guard_triggered")
+    shifted_count = _first_float("raw_slate_fragility_guard_shifted_count")
+
+    payload = {
+        "generated_at_utc": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "status": "active" if triggered else "inactive",
+        "harmful_raw_slate_indicator": triggered,
+        "message": (
+            "Pre-CAT raw slate fragility guard active; p_for_cal was direction-aware logit-shifted for q-out/high-confidence legs."
+            if triggered
+            else "Pre-CAT raw slate fragility guard inactive; slate did not match thin q-out/blowout trigger."
+        ),
+        "guard": {
+            "enabled": _first_bool("raw_slate_fragility_guard_enabled"),
+            "triggered": triggered,
+            "reasons": reasons,
+            "logit_shift": _first_float("raw_slate_fragility_guard_logit_shift"),
+            "over_logit_shift": _first_float("raw_slate_fragility_guard_over_logit_shift"),
+            "under_logit_shift": _first_float("raw_slate_fragility_guard_under_logit_shift"),
+            "shifted_legs": shifted_count,
+            "over_shifted_legs": _first_float("raw_slate_fragility_guard_over_shifted_count"),
+            "under_shifted_legs": _first_float("raw_slate_fragility_guard_under_shifted_count"),
+        },
+        "slate_metrics": {
+            "games": _first_float("raw_slate_fragility_guard_games"),
+            "q_out_frac_mean": _first_float("raw_slate_fragility_guard_q_out_frac_mean"),
+            "q_blowout_p90": _first_float("raw_slate_fragility_guard_q_blowout_p90"),
+        },
+    }
+
+    out_path = run_dir / "raw_slate_fragility_guard_manifest.json"
+    out_path.write_text(json.dumps(payload, indent=2, sort_keys=True, default=str), encoding="utf-8")
+
+    latest_dir = OUT_DIR / "dashboard"
+    latest_dir.mkdir(parents=True, exist_ok=True)
+    (latest_dir / "raw_slate_fragility_guard_latest.json").write_text(
+        json.dumps(payload, indent=2, sort_keys=True, default=str),
+        encoding="utf-8",
+    )
+    return out_path
+
+
+def write_single_game_mode_manifest(
+    run_dir: Path,
+    OUT_DIR: Path,
+    scored: pd.DataFrame,
+) -> Optional[Path]:
+    """Write an operational manifest for single-game script mode."""
+
+    if scored is None or scored.empty or "single_game_slate" not in scored.columns:
+        return None
+
+    first = scored.iloc[0]
+
+    def _first_bool(col: str) -> bool:
+        if col not in scored.columns:
+            return False
+        return bool(first.get(col, False))
+
+    def _first_str(col: str) -> str:
+        if col not in scored.columns:
+            return ""
+        return str(first.get(col, "") or "")
+
+    def _first_float(col: str) -> float | None:
+        if col not in scored.columns:
+            return None
+        try:
+            value = float(first.get(col))
+            return value if value == value else None
+        except Exception:
+            return None
+
+    def _sum_flag(col: str) -> int:
+        if col not in scored.columns:
+            return 0
+        vals = pd.to_numeric(scored[col], errors="coerce")
+        if not isinstance(vals, pd.Series):
+            vals = pd.Series(vals, index=scored.index)
+        return int((vals.fillna(0.0) > 0.0).sum())
+
+    fit_mean = None
+    if "single_game_script_fit" in scored.columns:
+        vals = pd.to_numeric(scored["single_game_script_fit"], errors="coerce")
+        if isinstance(vals, pd.Series):
+            fit_mean = float(vals.dropna().mean()) if not vals.dropna().empty else None
+
+    active = _first_bool("single_game_slate")
+    payload = {
+        "generated_at_utc": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "status": "active" if active else "inactive",
+        "single_game_slate": active,
+        "message": (
+            "Single-game script mode active; Atlas should treat 3-leg as primary but may build 4/5 if quality passes."
+            if active
+            else "Single-game script mode inactive."
+        ),
+        "mode": {
+            "enabled": _first_bool("single_game_mode_enabled"),
+            "profile_active": _first_bool("single_game_profile_active"),
+            "games": _first_float("single_game_games"),
+            "script_label": _first_str("single_game_script_label"),
+            "branch_label": _first_str("single_game_branch_label"),
+            "fox_state": _first_str("single_game_fox_state"),
+            "harper_state": _first_str("single_game_harper_state"),
+            "mean_script_fit": fit_mean,
+        },
+        "leg_counts": {
+            "total_legs": int(len(scored)),
+            "stable_anchor_legs": _sum_flag("single_game_anchor_flag"),
+            "min_glass_legs": _sum_flag("single_game_min_glass_flag"),
+            "sas_core_legs": _sum_flag("single_game_sas_core_flag"),
+            "role_shooter_over_legs": _sum_flag("single_game_role_shooter_over_flag"),
+            "fg3m_over_legs": _sum_flag("single_game_fg3m_over_flag"),
+            "non_shooting_volume_legs": _sum_flag("single_game_non_shooting_volume_flag"),
+            "low_minute_bench_over_legs": _sum_flag("single_game_low_minute_bench_over_flag"),
+        },
+    }
+
+    out_path = run_dir / "single_game_mode_manifest.json"
+    out_path.write_text(json.dumps(payload, indent=2, sort_keys=True, default=str), encoding="utf-8")
+
+    latest_dir = OUT_DIR / "dashboard"
+    latest_dir.mkdir(parents=True, exist_ok=True)
+    (latest_dir / "single_game_mode_latest.json").write_text(
+        json.dumps(payload, indent=2, sort_keys=True, default=str),
         encoding="utf-8",
     )
     return out_path
@@ -118,6 +386,9 @@ def run_publish_stage(
 
     w(scored, run_dir / "scored_legs.csv")
     w(scored_for_optimizer, run_dir / "scored_legs_deduped.csv")
+    cat_policy_manifest_path = write_catboost_scale_policy_manifest(run_dir, OUT_DIR, scored)
+    raw_guard_manifest_path = write_raw_slate_fragility_guard_manifest(run_dir, OUT_DIR, scored)
+    single_game_manifest_path = write_single_game_mode_manifest(run_dir, OUT_DIR, scored)
 
     # SYSTEM (default / kernel EV)
     w(sys3, system_dir / "recommended_3leg.csv")
@@ -237,12 +508,23 @@ def run_publish_stage(
     if sys5_winprob is not None:
         w(sys5_winprob, run_dir / "recommended_5leg_winprob.csv")
 
+    post_run_audit_paths = write_post_run_audit_manifests(run_dir)
+
     print("Model run complete.")
     print(f"Outputs folder: {OUT_DIR}")
     print(f"Run folder: {run_dir}")
     print("Wrote:")
     print(f" - {run_dir / 'scored_legs.csv'}")
     print(f" - {run_dir / 'scored_legs_deduped.csv'}")
+    if cat_policy_manifest_path is not None:
+        print(f" - {cat_policy_manifest_path} (CAT scale policy manifest)")
+        print(f" - {OUT_DIR / 'dashboard' / 'catboost_scale_policy_latest.json'} (CAT scale policy latest)")
+    if raw_guard_manifest_path is not None:
+        print(f" - {raw_guard_manifest_path} (raw slate fragility guard manifest)")
+        print(f" - {OUT_DIR / 'dashboard' / 'raw_slate_fragility_guard_latest.json'} (raw slate guard latest)")
+    if single_game_manifest_path is not None:
+        print(f" - {single_game_manifest_path} (single-game mode manifest)")
+        print(f" - {OUT_DIR / 'dashboard' / 'single_game_mode_latest.json'} (single-game mode latest)")
     print(f" - {system_dir / 'recommended_3leg.csv'} (SYSTEM)")
     print(f" - {system_dir / 'recommended_4leg.csv'} (SYSTEM)")
     print(f" - {system_dir / 'recommended_5leg.csv'} (SYSTEM)")
@@ -275,5 +557,7 @@ def run_publish_stage(
         print(f" - {dashboard_dir / 'injury_invalidations_latest.json'} (IAEL snapshot)")
         print(f" - {dashboard_dir / 'status_latest.json'} (IAEL snapshot)")
         print(f" - {dashboard_dir / 'injury_snapshot_manifest.json'} (IAEL snapshot manifest)")
+    for audit_path in post_run_audit_paths:
+        print(f" - {audit_path} (POST-RUN AUDIT)")
 
     return run_dir

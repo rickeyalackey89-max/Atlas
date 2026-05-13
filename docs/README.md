@@ -9,6 +9,7 @@ This folder is the durable engineering documentation for Atlas. The `ai/` folder
 - [Current State](CURRENT_STATE_2026-05-10.md) — active NBA runtime truth: CatBoost playoff v5cD, May 10 kernel transforms, replay metrics.
 - [Model Context](ATLAS_MODEL_CONTEXT.md) — model architecture, active probability chain, config knobs, and debugging flow.
 - [Pipeline Reference](PIPELINE_REFERENCE.md) — live run file-to-file trace, publishing, Discord, and evaluation artifacts.
+- [Late Injury Handling](LATE_INJURY_HANDLING.md) — direct-player risk vs beneficiary uncertainty rules.
 - [Website To-Do](WEBSITE_TODO.md) — dashboard, 6AM eval, canonical report run, and Discord posting requirements.
 - [Known Uncertainties](KNOWN_UNCERTAINTIES.md) — current blind spots and areas not to overfit.
 - [Tuning Playbook](TUNING_PLAYBOOK.md) — diagnostic workflow before changing model or slip-builder behavior.

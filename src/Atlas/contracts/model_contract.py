@@ -24,9 +24,9 @@ from __future__ import annotations
 
 import json
 import sys
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
+from typing import List, Optional, Tuple
 
 
 # ──────────────────────────────────────────────────────────────
@@ -44,6 +44,11 @@ class ModelContract:
     n_rounds: int = 200
     feature_count: int = 33
     cat_features: Tuple[str, ...] = ("stat_cat", "tier_cat")
+
+    # CatBoost residual overlay. This intentionally uses a smaller feature set
+    # than the 33-feature GBM basis because playoff ablations favored it.
+    catboost_feature_count: int = 19
+    catboost_cat_features: Tuple[str, ...] = ("tier_cat", "use_role")
 
     # OVER GBM (slim: fewer leaves for enriched q_blowout)
     over_max_depth: int = 8
@@ -144,18 +149,56 @@ def validate_config(config: dict, contract: ModelContract = CONTRACT) -> List[Co
     return violations
 
 
-def _check_catboost_meta(repo_root: Path) -> Optional[str]:
-    """Return active CatBoost calibrator version string, or None if not present/enabled."""
-    cat_meta_path = repo_root / "data" / "model" / "catboost_playoff_ensemble_meta.json"
-    if not cat_meta_path.exists():
-        return None
-    try:
-        meta = json.loads(cat_meta_path.read_text(encoding="utf-8"))
-        if meta.get("verdict") == "PROMOTE":
-            return str(meta.get("version", "catboost_playoff_v1"))
-    except Exception:
-        pass
+def _read_catboost_meta(repo_root: Path) -> Optional[dict]:
+    """Return active CatBoost calibrator metadata, or None if not present/enabled."""
+    meta_paths = [
+        repo_root / "data" / "model" / "catboost_playoff" / "catboost_v5cD_full_corpus.meta.json",
+        repo_root / "data" / "model" / "catboost_playoff_ensemble_meta.json",
+    ]
+    for cat_meta_path in meta_paths:
+        if not cat_meta_path.exists():
+            continue
+        try:
+            meta = json.loads(cat_meta_path.read_text(encoding="utf-8"))
+            if meta.get("version"):
+                return meta
+            if meta.get("verdict") == "PROMOTE":
+                meta["version"] = str(meta.get("version", "catboost_playoff_v1"))
+                return meta
+        except Exception:
+            pass
     return None
+
+
+def validate_catboost_meta(repo_root: Path, contract: ModelContract = CONTRACT) -> List[ContractViolation]:
+    """Validate the promoted CatBoost residual overlay contract."""
+    violations: List[ContractViolation] = []
+    meta = _read_catboost_meta(repo_root)
+    if not meta:
+        return violations
+
+    features = list(meta.get("features") or [])
+    cat_features = list(meta.get("cat_features") or [])
+    declared_n_features = meta.get("n_features")
+
+    checks = [
+        ("catboost.n_features", contract.catboost_feature_count, declared_n_features),
+        ("catboost.feature_count", contract.catboost_feature_count, len(features)),
+        ("catboost.cat_features", list(contract.catboost_cat_features), cat_features),
+    ]
+    for field_name, expected, actual in checks:
+        if actual != expected:
+            violations.append(ContractViolation(field_name, expected, actual))
+
+    missing_cat_features = [c for c in cat_features if c not in features]
+    if missing_cat_features:
+        violations.append(ContractViolation(
+            "catboost.cat_features_in_feature_list",
+            "all categorical features present",
+            missing_cat_features,
+        ))
+
+    return violations
 
 
 def enforce_contract(
@@ -171,15 +214,22 @@ def enforce_contract(
     """
     meta_path = repo_root / "data" / "model" / "ensemble" / "ensemble_meta.json"
     violations = validate_ensemble_meta(meta_path)
+    violations.extend(validate_catboost_meta(repo_root))
 
     if config:
         violations.extend(validate_config(config))
 
     if not violations:
-        cat_version = _check_catboost_meta(repo_root)
-        if cat_version:
-            print(f"[CONTRACT] {cat_version} — {CONTRACT.feature_count} features (v18 basis), "
-                  f"T={CONTRACT.temperature}, {len(CONTRACT.seeds)} GBM seeds retained. All clear.")
+        cat_meta = _read_catboost_meta(repo_root)
+        if cat_meta:
+            cat_version = str(cat_meta.get("version", "catboost_playoff_unknown"))
+            cat_features = int(cat_meta.get("n_features") or len(cat_meta.get("features") or []))
+            residual_scale = cat_meta.get("residual_scale")
+            policy = bool((cat_meta.get("residual_scale_policy") or {}).get("enabled"))
+            print(f"[CONTRACT] GBM {CONTRACT.version} basis={CONTRACT.feature_count} features, "
+                  f"T={CONTRACT.temperature}, {len(CONTRACT.seeds)} GBM seeds retained.")
+            print(f"[CONTRACT] CatBoost {cat_version} — {cat_features} runtime features, "
+                  f"residual_scale={residual_scale}, scale_policy={policy}. All clear.")
         else:
             print(f"[CONTRACT] {CONTRACT.version} model contract validated — {CONTRACT.feature_count} features, "
                   f"T={CONTRACT.temperature}, {len(CONTRACT.seeds)} seeds. All clear.")
@@ -190,8 +240,8 @@ def enforce_contract(
     print("⚠️  MODEL CONTRACT VIOLATION DETECTED", file=sys.stderr)
     print("=" * 72, file=sys.stderr)
     print(f"Contract version: {CONTRACT.version}", file=sys.stderr)
-    print(f"Reference: src/Atlas/contracts/model_contract.py", file=sys.stderr)
-    print(f"Baseline doc: src/Atlas/contracts/model_contract.py", file=sys.stderr)
+    print("Reference: src/Atlas/contracts/model_contract.py", file=sys.stderr)
+    print("Baseline doc: src/Atlas/contracts/model_contract.py", file=sys.stderr)
     print("", file=sys.stderr)
     print("Violations:", file=sys.stderr)
     for v in violations:

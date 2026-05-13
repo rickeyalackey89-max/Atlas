@@ -36,6 +36,7 @@ For model/runtime work, read these first:
 | `ai/CONFIG_REFERENCE.md` | Meaning of `config.yaml` parameters |
 | `ai/TUNING_PLAYBOOK.md` | Diagnostics, replay workflows, retrain criteria |
 | `ai/KNOWN_UNCERTAINTIES.md` | Known blind spots and areas not to overfit |
+| `docs/LATE_INJURY_HANDLING.md` | Direct-player injury risk vs beneficiary uncertainty policy |
 | `ai/ATLAS_ROADMAP.md` | MLB/NFL/mobile roadmap and future sport plans |
 | `ai/AtlasSportsAI.md` | Product goal, subscriber experience, tiers, brand context |
 
@@ -131,6 +132,13 @@ Expected checks:
 5. Check logs for fetch errors, empty boards, stale IAEL/Rotowire data, or publish failures.
 6. Check config fingerprint and active model paths against `ai/CURRENT_STATE_2026-05-10.md`.
 7. After eval data is available, compare hit/Brier behavior against recent baseline before changing any tuning.
+
+Late injury policy:
+
+- Direct-player `OUT`/`DOUBTFUL` is a hard removal.
+- Direct-player `QUESTIONABLE` is excluded from premium slips by default.
+- Beneficiary uncertainty from a questionable teammate is not the same as direct-player risk. On one-game slates it may remain as penalized soft exposure if role context is present.
+- See `docs/LATE_INJURY_HANDLING.md` before changing IAEL, share-matrix, or single-game injury behavior.
 
 Daily goal:
 

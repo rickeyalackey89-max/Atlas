@@ -1,7 +1,7 @@
-"""Build playoff resim cache from cat_corpus_* replay runs.
+"""Build playoff resim cache from replay corpus directories.
 
 Mirrors build_resim_cache.py + gbm_v12_train.py feature engineering exactly.
-Scans data/telemetry/replay_runs/cat_corpus_YYYYMMDD dirs, merges hit labels,
+Scans data/telemetry/replay_runs/atlas_replay_postkernel_20260510_130246_YYYYMMDD dirs, merges hit labels,
 computes the full 33-feature GBM feature set, and saves a pickle cache that
 catboost_playoff_lodo.py can read identically to how GBM reads its resim cache.
 
@@ -12,6 +12,7 @@ Usage:
     python tools/build_playoff_resim_cache.py
     python tools/build_playoff_resim_cache.py --force     # overwrite existing
     python tools/build_playoff_resim_cache.py --dry-run   # plan only
+    python tools/build_playoff_resim_cache.py --cache-out data/model/candidate.pkl
 """
 from __future__ import annotations
 
@@ -35,8 +36,10 @@ REPLAY_RUNS = ROOT / "data" / "telemetry" / "replay_runs"
 MODEL_OUT    = ROOT / "data" / "model"
 CACHE_NAME   = "_v1_playoff_resim_cache.pkl"
 
-# Scan prefix for playoff replay dirs (overridable via --prefix)
-CORPUS_PREFIX = "cat_corpus_"
+# Scan prefix for the active v5cD playoff replay corpus (overridable via --prefix).
+# This must match the corpus_source recorded in _v1_playoff_resim_cache.pkl and
+# catboost_v5cD_full_corpus.meta.json. Older cat_corpus_* folders are stale.
+CORPUS_PREFIX = "atlas_replay_postkernel_20260510_130246_"
 
 # ---------------------------------------------------------------------------
 # Constants (must match gbm_v12_train.py exactly)
@@ -564,14 +567,21 @@ def main() -> int:
     ap = argparse.ArgumentParser(description="Build playoff v1 resim cache")
     ap.add_argument("--force",   action="store_true", help="Overwrite existing cache")
     ap.add_argument("--dry-run", action="store_true", help="Plan only, no output")
-    ap.add_argument("--prefix",  default=CORPUS_PREFIX, help="Corpus dir name prefix (default: cat_corpus_)")
+    ap.add_argument("--prefix",  default=CORPUS_PREFIX, help=f"Corpus dir name prefix (default: {CORPUS_PREFIX})")
+    ap.add_argument(
+        "--cache-out",
+        default=None,
+        help=f"Output cache path (default: data/model/{CACHE_NAME})",
+    )
     args = ap.parse_args()
     prefix = args.prefix
 
-    cache_path = MODEL_OUT / CACHE_NAME
+    cache_path = Path(args.cache_out) if args.cache_out else MODEL_OUT / CACHE_NAME
+    if not cache_path.is_absolute():
+        cache_path = ROOT / cache_path
 
     print("=" * 70)
-    print(f"Playoff Resim Cache Builder -- v1")
+    print("Playoff Resim Cache Builder -- v1")
     print("=" * 70)
     print(f"  Corpus prefix: {prefix}*")
     print(f"  Output:        {cache_path.name}")
@@ -585,7 +595,7 @@ def main() -> int:
             print(f"  ERROR: Cache already exists: {cache_path.name}")
             print(f"    {len(old.get('dates', []))} dates, {len(old.get('cv', []))} legs, "
                   f"raw Brier={old.get('raw_brier', '?')}")
-            print(f"    Use --force to overwrite.")
+            print("    Use --force to overwrite.")
             return 1
         except Exception:
             pass
@@ -662,14 +672,14 @@ def main() -> int:
     raw_brier_final = float(np.mean((cv["p_new"].values - hit_arr) ** 2))
 
     # Feature coverage summary
-    print(f"\nFeature summary:")
+    print("\nFeature summary:")
     for f in BASE_FEATS:
         vals = pd.to_numeric(cv[f], errors="coerce")
         nz   = (vals.fillna(0) != 0).mean()
         print(f"  {f:25s}  nonzero={nz:.1%}  mean={vals.mean():+.4f}")
 
     # Build cache dict (same structure as GBM resim cache)
-    MODEL_OUT.mkdir(parents=True, exist_ok=True)
+    cache_path.parent.mkdir(parents=True, exist_ok=True)
     cache = {
         "cv":           cv,
         "dates":        dates,

@@ -232,6 +232,39 @@ def _team_abbr_from_tokens(tokens: List[str]) -> str:
     return abbr if abbr in VALID_TEAM_ABBRS else ""
 
 
+TEAM_NAME_FIRST_TOKENS = {
+    "ATLANTA",
+    "BOSTON",
+    "BROOKLYN",
+    "CHARLOTTE",
+    "CHICAGO",
+    "CLEVELAND",
+    "DALLAS",
+    "DENVER",
+    "DETROIT",
+    "GOLDEN",
+    "HOUSTON",
+    "INDIANA",
+    "LA",
+    "LOS",
+    "MEMPHIS",
+    "MIAMI",
+    "MILWAUKEE",
+    "MINNESOTA",
+    "NEW",
+    "OKLAHOMA",
+    "ORLANDO",
+    "PHILADELPHIA",
+    "PHOENIX",
+    "PORTLAND",
+    "SACRAMENTO",
+    "SAN",
+    "TORONTO",
+    "UTAH",
+    "WASHINGTON",
+}
+
+
 def parse_txt_rows_text(txt_path: Path) -> List[Dict[str, str]]:
     out_rows: List[Dict[str, str]] = []
     ctx: Dict[str, str] = {"game_date": "", "game_time": "", "matchup": "", "team": ""}
@@ -274,9 +307,9 @@ def parse_txt_rows_text(txt_path: Path) -> List[Dict[str, str]]:
             and len(tokens[0]) == 3
             and tokens[0].isalpha()
             and tokens[0].upper() not in VALID_TEAM_ABBRS
+            and tokens[0].upper() not in TEAM_NAME_FIRST_TOKENS
             and any("," in t for t in tokens[1:5])
         ):
-            tokens = tokens[1:]
             tokens = tokens[1:]
         # PENDING PLAYER: status/reason line arrives after a split player-line (pdftotext layout wrap)
         if pending_player is not None and tokens and tokens[0].upper() in _STATUS_WORDS:

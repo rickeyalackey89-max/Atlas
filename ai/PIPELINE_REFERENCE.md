@@ -1,6 +1,6 @@
 # Atlas Pipeline Reference
 
-> **Last updated:** 2026-05-10 — full file-to-file trace of the live pipeline.
+> **Last updated:** 2026-05-12 — full file-to-file trace of the live pipeline.
 > **Current runtime:** CatBoost playoff v5cD active; v18 LightGBM and telemetry isotonic disabled.
 
 ---
@@ -183,12 +183,21 @@ p (raw Monte Carlo 10K sim)
   -> p_role       (share matrix role adjustment)
   -> p_adj_pre_under_relief
   -> p_adj        (blowout/fragility + under-relief)
-  -> p_adj        (after May 10 kernel transforms)
+  -> p_adj        (after May 10 kernel transforms + external priors)
   -> p_for_cal    (currently p_adj universally)
+  -> p_for_cal    (optional raw slate fragility guard shift)
   -> p_catboost   (CatBoost v5cD residual calibrator)
   -> p_cal        (production calibrated probability)
+  -> p_select     (builder-only selection surface; minute/game-script penalties)
   -> p_cal_marketed (marketed_calibration.json haircut)
 ```
+
+**Late injury split:**
+
+- Direct-player `OUT`/`DOUBTFUL` legs are removed by IAEL hard filtering.
+- Direct-player `QUESTIONABLE` legs are tagged and excluded from premium slips by default.
+- Beneficiary exposure from a questionable teammate is tagged separately. On normal slates it is excluded from premium slips; on single-game slates it may remain as a penalized soft exposure if `role_ctx_outs` is non-empty and `single_game_mode.soft_injury_exposure_not_hard_exclude` is enabled.
+- Canonical policy: `docs/LATE_INJURY_HANDLING.md`.
 
 **Writes — `data/output/runs/YYYYMMDD_HHMMSS/`:**
 | File | Description |
@@ -211,6 +220,12 @@ p (raw Monte Carlo 10K sim)
 | `demonhunter.csv` | Best 3/4/5-leg all-DEMON slips |
 | `marketed_slips.json` | Marketed subscriber slips (structured JSON with legs + metadata) |
 | `marketed_slips.csv` | CSV companion (one row per leg across all marketed slips) |
+| `catboost_scale_policy_manifest.json` | CAT residual-scale policy manifest and harmful-slate indicator |
+| `raw_slate_fragility_guard_manifest.json` | Pre-CAT raw slate guard manifest |
+| `single_game_mode_manifest.json` | Single-game mode/script manifest |
+| `pipeline_contract_audit.json` | Post-run model/probability contract audit |
+| `live_pipeline_surface_audit.json` | Post-run surface and selected-slip audit |
+| `hard_pipeline_audit.json` | Strict post-run audit for math lineage, source order, duplicate transforms, artifacts, and slip lookup |
 | `recommended_3leg.csv` | Legacy mirror of System 3-leg |
 | `recommended_4leg.csv` | Legacy mirror of System 4-leg |
 | `recommended_5leg.csv` | Legacy mirror of System 5-leg |

@@ -58,7 +58,7 @@ def export(html_path: pathlib.Path, out_path: pathlib.Path):
         img = Image.open(out_path)
         cropped = img.crop((0, 0, WIDTH, HEIGHT))
         cropped.save(out_path, format="PNG", optimize=False)
-        print(f"✓ Exported {out_path.stat().st_size // 1024}KB PNG ({WIDTH}×{HEIGHT})")
+        print(f"Exported {out_path.stat().st_size // 1024}KB PNG ({WIDTH}x{HEIGHT})")
     else:
         print("Export may have failed. Chrome stderr:")
         print(result.stderr[-2000:] if result.stderr else "(no stderr)")

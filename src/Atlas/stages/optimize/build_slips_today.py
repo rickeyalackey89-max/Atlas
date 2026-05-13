@@ -1,9 +1,11 @@
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Any, Optional
 
 import pandas as pd
+
+from Atlas.core.slip_family_diversity import prop_keys_from_slip_row
 
 
 @dataclass(frozen=True)
@@ -93,6 +95,52 @@ def _cfg_for_n_legs(cfg: dict[str, Any], n_legs: int, default_top_n: int, sort_m
     return out_cfg, top_n
 
 
+def _prop_diversity_cfg(cfg: dict[str, Any]) -> dict[str, Any]:
+    if not isinstance(cfg, dict):
+        return {}
+    section = cfg.get("slip_family_prop_diversity", {}) or {}
+    return section if isinstance(section, dict) else {}
+
+
+def _candidate_top_n(top_n: int, cfg: dict[str, Any]) -> int:
+    div_cfg = _prop_diversity_cfg(cfg)
+    if not bool(div_cfg.get("enabled", False)):
+        return int(top_n)
+    mult = int(div_cfg.get("candidate_multiplier", 1) or 1)
+    floor = int(div_cfg.get("min_candidate_rows", 1) or 1)
+    return max(int(top_n), int(top_n) * max(mult, 1), floor)
+
+
+def _diversify_frames(frames: list[pd.DataFrame], limits: list[int], cfg: dict[str, Any]) -> list[pd.DataFrame]:
+    div_cfg = _prop_diversity_cfg(cfg)
+    if not bool(div_cfg.get("enabled", False)):
+        return [frame.head(limit).reset_index(drop=True) if frame is not None else frame for frame, limit in zip(frames, limits)]
+
+    from Atlas.core.slip_family_diversity import enforce_prop_diversity_across_frames
+
+    max_repeats = int(div_cfg.get("max_repeats_per_family", 1) or 1)
+    return enforce_prop_diversity_across_frames(frames, limits=limits, max_repeats=max_repeats)
+
+
+def _frame_prop_keys(frame: pd.DataFrame | None) -> set[str]:
+    keys: set[str] = set()
+    if frame is None or frame.empty:
+        return keys
+    for _, row in frame.iterrows():
+        keys.update(prop_keys_from_slip_row(row))
+    return keys
+
+
+def _cfg_with_reserved_prop_keys(cfg: dict[str, Any], keys: set[str]) -> dict[str, Any]:
+    if not keys:
+        return cfg
+    out = dict(cfg)
+    sb = dict(out.get("slip_build") or {})
+    sb["_reserved_prop_keys"] = sorted(keys)
+    out["slip_build"] = sb
+    return out
+
+
 def run_build_slips(
     scored_for_optimizer: pd.DataFrame,
     top_n: int,
@@ -119,15 +167,23 @@ def run_build_slips(
     cfg5, top_n5 = _cfg_for_n_legs(cfg, 5, top_n, sort_mode)
 
     # SYSTEM
-    sys3 = expand_legs(
-        build_system_slips(scored_for_optimizer, 3, top_n3, seed, pricing_engine=pricing_engine, cfg=cfg3, sort_mode=sort_mode), 3
+    cand_top_n3 = _candidate_top_n(top_n3, cfg)
+    cand_top_n4 = _candidate_top_n(top_n4, cfg)
+    cand_top_n5 = _candidate_top_n(top_n5, cfg)
+
+    sys_reserved: set[str] = set()
+    sys3_raw = expand_legs(
+        build_system_slips(scored_for_optimizer, 3, cand_top_n3, seed, pricing_engine=pricing_engine, cfg=cfg3, sort_mode=sort_mode), 3
     )
-    sys4 = expand_legs(
-        build_system_slips(scored_for_optimizer, 4, top_n4, seed, pricing_engine=pricing_engine, cfg=cfg4, sort_mode=sort_mode), 4
+    sys_reserved.update(_frame_prop_keys(sys3_raw))
+    sys4_raw = expand_legs(
+        build_system_slips(scored_for_optimizer, 4, cand_top_n4, seed, pricing_engine=pricing_engine, cfg=_cfg_with_reserved_prop_keys(cfg4, sys_reserved), sort_mode=sort_mode), 4
     )
-    sys5 = expand_legs(
-        build_system_slips(scored_for_optimizer, 5, top_n5, seed, pricing_engine=pricing_engine, cfg=cfg5, sort_mode=sort_mode), 5
+    sys_reserved.update(_frame_prop_keys(sys4_raw))
+    sys5_raw = expand_legs(
+        build_system_slips(scored_for_optimizer, 5, cand_top_n5, seed, pricing_engine=pricing_engine, cfg=_cfg_with_reserved_prop_keys(cfg5, sys_reserved), sort_mode=sort_mode), 5
     )
+    sys3, sys4, sys5 = _diversify_frames([sys3_raw, sys4_raw, sys5_raw], [top_n3, top_n4, top_n5], cfg)
 
     # WINDFALL — strip System-specific exclusions that starve DEMON-tier legs
     def _windfall_cfg(resolved: dict) -> dict:
@@ -141,19 +197,25 @@ def run_build_slips(
     wcfg3 = _windfall_cfg(cfg3)
     wcfg4 = _windfall_cfg(cfg4)
     wcfg5 = _windfall_cfg(cfg5)
-    wind3 = expand_legs(
-        build_windfall_slips(scored_for_optimizer, 3, top_n3, seed, pricing_engine=pricing_engine, cfg=wcfg3, sort_mode=sort_mode), 3
+    wind_reserved: set[str] = set()
+    wind3_raw = expand_legs(
+        build_windfall_slips(scored_for_optimizer, 3, cand_top_n3, seed, pricing_engine=pricing_engine, cfg=wcfg3, sort_mode=sort_mode), 3
     )
-    wind4 = expand_legs(
-        build_windfall_slips(scored_for_optimizer, 4, top_n4, seed, pricing_engine=pricing_engine, cfg=wcfg4, sort_mode=sort_mode), 4
+    wind_reserved.update(_frame_prop_keys(wind3_raw))
+    wind4_raw = expand_legs(
+        build_windfall_slips(scored_for_optimizer, 4, cand_top_n4, seed, pricing_engine=pricing_engine, cfg=_cfg_with_reserved_prop_keys(wcfg4, wind_reserved), sort_mode=sort_mode), 4
     )
-    wind5 = expand_legs(
-        build_windfall_slips(scored_for_optimizer, 5, top_n5, seed, pricing_engine=pricing_engine, cfg=wcfg5, sort_mode=sort_mode), 5
+    wind_reserved.update(_frame_prop_keys(wind4_raw))
+    wind5_raw = expand_legs(
+        build_windfall_slips(scored_for_optimizer, 5, cand_top_n5, seed, pricing_engine=pricing_engine, cfg=_cfg_with_reserved_prop_keys(wcfg5, wind_reserved), sort_mode=sort_mode), 5
     )
+    wind3, wind4, wind5 = _diversify_frames([wind3_raw, wind4_raw, wind5_raw], [top_n3, top_n4, top_n5], cfg)
 
     # DEMONHUNTER – best single all-DEMON slip at each leg count
     demonhunter = build_demonhunter_slips(
         scored_for_optimizer, seed, pricing_engine=pricing_engine, sort_mode=sort_mode, cfg=cfg,
     )
+    if demonhunter is not None and not demonhunter.empty:
+        demonhunter = _diversify_frames([demonhunter], [len(demonhunter)], cfg)[0]
 
     return BuiltSlips(sys3=sys3, sys4=sys4, sys5=sys5, wind3=wind3, wind4=wind4, wind5=wind5, demonhunter=demonhunter)

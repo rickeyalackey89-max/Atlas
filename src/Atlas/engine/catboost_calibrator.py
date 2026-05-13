@@ -16,7 +16,9 @@ Supports two model kinds, switched by meta.json["model_kind"] (or cfg "kind"):
 
 Feature columns are pulled directly from the scored DataFrame (the same
 columns the resim cache captures from scored_legs_deduped).  No
-gbm_ensemble.compute_features() pass is required for the regressor path.
+gbm_ensemble.compute_features() pass is required for the legacy classifier
+path. The promoted regressor path rebuilds the GBM feature surface and slices
+the 19-feature CatBoost residual contract from it.
 
 Wire-in point: called from main.py after the GBM ensemble block.
 Config key: catboost_playoff_calibrator.enabled
@@ -54,6 +56,20 @@ N_BASE = len(BASE_FEATS)  # 33
 # Module-level singleton -- loaded once per process
 _model_cache: dict[str, Any] = {}
 _meta_cache: dict[str, dict[str, Any]] = {}
+
+
+DEFAULT_RESIDUAL_SCALE_POLICY = {
+    "enabled": False,
+    "aggressive_residual_scale": 0.55,
+    "defensive_residual_scale": 0.10,
+    "thin_slate_games_max": 2,
+    "thin_slate_q_out_frac_mean_min": 0.05,
+    "thin_slate_q_blowout_p90_min": 0.45,
+    "blowout_q_p90_min": 0.55,
+    "blowout_role_ctx_share_max": 0.30,
+    "no_role_ctx_share_max": 0.01,
+    "low_external_prior_bp_has_mean_max": 0.10,
+}
 
 
 # ---------------------------------------------------------------------------
@@ -133,53 +149,223 @@ def _build_feature_df_classifier(
     for cat_col in CAT_FEATURES_CLF:
         X_df[cat_col] = X_df[cat_col].astype(int).astype(str)
 
-    p_for_cal = pd.to_numeric(
-        scored.get("p_for_cal", pd.Series(0.5, index=scored.index)),
-        errors="coerce",
-    ).fillna(0.5).clip(P_LO_CLF, P_HI_CLF)
-    X_df["p_for_cal"] = p_for_cal.values
+    p_for_cal = _coerce_numeric_series(
+        scored["p_for_cal"] if "p_for_cal" in scored.columns else 0.5,
+        scored.index,
+        default=0.5,
+    ).clip(P_LO_CLF, P_HI_CLF)
+    X_df["p_for_cal"] = p_for_cal.to_numpy(dtype="float64")
     return X_df
 
 
 def _build_feature_df_regressor(
-    scored: pd.DataFrame, features: list[str], cat_features: list[str]
-) -> pd.DataFrame:
+    scored: pd.DataFrame,
+    logs: pd.DataFrame,
+    features: list[str],
+    cat_features: list[str],
+    ensemble_dir: Path,
+) -> tuple[pd.DataFrame, dict[str, Any]]:
     """Build feature DataFrame for the regressor path (v5cD).
 
-    Pulls columns directly from `scored`. The resim cache that v5cD trained
-    on captured these columns from scored_legs_deduped, so the same columns
-    must exist at runtime. Numeric features get NaN -> 0.0; cat features
-    get NaN -> 0 then cast to string.
+    Builds the same GBM feature surface used by the resim cache/trainer, then
+    slices it to the CatBoost residual model's feature contract.
 
     Special handling: `use_role` is derived from `role_ctx_outs_used > 0` if
-    the column is missing (matches trainer behavior).
+    needed (matches trainer behavior).
     `p_for_cal` is taken from scored (set by GBM stage); falls back to p_adj.
     """
+    from Atlas.engine.gbm_ensemble import (  # type: ignore[import]
+        _ALL_FEATURE_NAMES,
+        _enrich_te_columns,
+        compute_features,
+    )
+
+    enriched = _enrich_te_columns(scored, ensemble_dir)
+    X_full, _ = compute_features(enriched, logs)
+    if X_full.shape[1] != len(_ALL_FEATURE_NAMES):
+        raise RuntimeError(
+            "[CATBOOST_CAL] GBM feature surface shape mismatch: "
+            f"got {X_full.shape[1]} columns, expected {len(_ALL_FEATURE_NAMES)}"
+        )
+
+    gbm_features = pd.DataFrame(X_full, columns=_ALL_FEATURE_NAMES, index=scored.index)
     out = pd.DataFrame(index=scored.index)
     cat_set = set(cat_features)
+    defaulted_features: list[str] = []
 
     for col in features:
-        if col == "use_role" and col not in scored.columns:
-            outs = pd.to_numeric(
-                scored.get("role_ctx_outs_used", pd.Series(0, index=scored.index)),
-                errors="coerce",
-            ).fillna(0).astype(int)
+        if col == "use_role":
+            outs = _coerce_numeric_series(
+                scored["role_ctx_outs_used"] if "role_ctx_outs_used" in scored.columns else 0,
+                scored.index,
+                default=0.0,
+            ).astype(int)
             out[col] = (outs > 0).astype(int)
-        elif col == "p_for_cal" and col not in scored.columns:
-            out[col] = pd.to_numeric(
-                scored.get("p_adj", pd.Series(0.5, index=scored.index)),
-                errors="coerce",
-            ).fillna(0.5).clip(0.0, 1.0)
+        elif col == "p_for_cal":
+            p_adj_source = scored["p_adj"] if "p_adj" in scored.columns else 0.5
+            out[col] = _coerce_numeric_series(
+                p_adj_source,
+                scored.index,
+                default=0.5,
+            ).clip(0.0, 1.0)
+            if "p_for_cal" in scored.columns:
+                raw_p_for_cal = pd.to_numeric(scored[col], errors="coerce")
+                if not isinstance(raw_p_for_cal, pd.Series):
+                    raw_p_for_cal = pd.Series(raw_p_for_cal, index=scored.index)
+                out[col] = raw_p_for_cal.reindex(scored.index).fillna(out[col]).clip(0.0, 1.0)
+        elif col in gbm_features.columns:
+            out[col] = _coerce_numeric_series(gbm_features[col], scored.index, default=0.0)
+        elif col in scored.columns:
+            out[col] = _coerce_numeric_series(scored[col], scored.index, default=0.0)
         else:
-            s = scored.get(col, pd.Series(0.0, index=scored.index))
-            out[col] = pd.to_numeric(s, errors="coerce")
+            defaulted_features.append(col)
+            out[col] = pd.Series(0.0, index=scored.index)
 
         if col in cat_set:
             out[col] = out[col].fillna(0).astype(int).astype(str)
         else:
             out[col] = out[col].fillna(0.0).astype(float)
 
-    return out[features]
+    if defaulted_features:
+        raise RuntimeError(
+            "[CATBOOST_CAL] Regressor feature contract missing runtime features: "
+            + ", ".join(defaulted_features)
+        )
+
+    diagnostics = {
+        "feature_source": "gbm_compute_features",
+        "feature_count": len(features),
+        "defaulted_features": defaulted_features,
+    }
+    return out[features], diagnostics
+
+
+def _numeric_series(scored: pd.DataFrame, col: str, default: float = 0.0) -> pd.Series:
+    if col not in scored.columns:
+        return pd.Series(np.full(len(scored), default, dtype="float64"), index=scored.index)
+    values = pd.to_numeric(scored[col], errors="coerce")
+    if not isinstance(values, pd.Series):
+        values = pd.Series(values, index=scored.index)
+    return values.fillna(default)
+
+
+def _coerce_numeric_series(values: Any, index: pd.Index, default: float) -> pd.Series:
+    """Convert scalar/array/Series input into a float Series on the target index."""
+    if values is None:
+        raw = pd.Series(np.full(len(index), default, dtype="float64"), index=index)
+    elif isinstance(values, pd.Series):
+        raw = values.reindex(index)
+    elif np.isscalar(values):
+        raw = pd.Series(np.full(len(index), float(values), dtype="float64"), index=index)
+    else:
+        raw = pd.Series(values, index=index)
+
+    numeric = pd.to_numeric(raw, errors="coerce")
+    if not isinstance(numeric, pd.Series):
+        numeric = pd.Series(numeric, index=index)
+    return numeric.fillna(default).astype(float)
+
+
+def _probability_array(values: Any, index: pd.Index, default: float = 0.5) -> np.ndarray:
+    """Return a clipped float64 probability array for CatBoost arithmetic."""
+    return (
+        _coerce_numeric_series(values, index, default)
+        .clip(0.0, 1.0)
+        .to_numpy(dtype="float64")
+    )
+
+
+def _merge_residual_scale_policy(cat_cfg: dict[str, Any], meta: dict[str, Any]) -> dict[str, Any]:
+    policy = dict(DEFAULT_RESIDUAL_SCALE_POLICY)
+
+    meta_policy = meta.get("residual_scale_policy")
+    if isinstance(meta_policy, dict):
+        policy.update(meta_policy)
+
+    cfg_policy = cat_cfg.get("residual_scale_policy")
+    if isinstance(cfg_policy, dict):
+        policy.update(cfg_policy)
+
+    for key in [
+        "aggressive_residual_scale",
+        "defensive_residual_scale",
+        "thin_slate_q_out_frac_mean_min",
+        "thin_slate_q_blowout_p90_min",
+        "blowout_q_p90_min",
+        "blowout_role_ctx_share_max",
+        "no_role_ctx_share_max",
+        "low_external_prior_bp_has_mean_max",
+    ]:
+        if key in policy:
+            policy[key] = float(policy[key])
+    if "thin_slate_games_max" in policy:
+        policy["thin_slate_games_max"] = int(policy["thin_slate_games_max"])
+    policy["enabled"] = bool(policy.get("enabled", False))
+    return policy
+
+
+def resolve_residual_scale(
+    scored: pd.DataFrame,
+    cat_cfg: dict[str, Any],
+    meta: dict[str, Any],
+    *,
+    fallback_scale: float,
+) -> tuple[float, dict[str, Any]]:
+    """Resolve runtime residual scale from pregame slate metrics only."""
+
+    policy = _merge_residual_scale_policy(cat_cfg, meta)
+    metrics: dict[str, Any] = {
+        "policy_enabled": bool(policy.get("enabled", False)),
+        "policy_triggered": False,
+        "policy_reasons": [],
+    }
+    if scored.empty or not policy.get("enabled", False):
+        return fallback_scale, metrics
+
+    games = int(scored["game_id"].nunique()) if "game_id" in scored.columns else 0
+    q_out_frac = _numeric_series(scored, "q_out_frac", default=0.0)
+    q_blowout = _numeric_series(scored, "q_blowout", default=0.0)
+    role_outs = _numeric_series(scored, "role_ctx_outs_used", default=0.0)
+    if "bp_has" in scored.columns:
+        bp_has = _numeric_series(scored, "bp_has", default=0.0)
+    elif "external_prior_n" in scored.columns:
+        bp_has = (_numeric_series(scored, "external_prior_n", default=0.0) > 0.0).astype(float)
+    else:
+        bp_has = pd.Series(np.zeros(len(scored), dtype="float64"), index=scored.index)
+
+    q_out_frac_mean = float(q_out_frac.mean())
+    q_blowout_p90 = float(q_blowout.quantile(0.90))
+    role_ctx_share = float((role_outs > 0.0).mean())
+    bp_has_mean = float(bp_has.mean())
+
+    metrics.update(
+        {
+            "games": games,
+            "q_out_frac_mean": q_out_frac_mean,
+            "q_blowout_p90": q_blowout_p90,
+            "role_ctx_outs_used_share_gt0": role_ctx_share,
+            "bp_has_mean": bp_has_mean,
+        }
+    )
+
+    reasons: list[str] = []
+    if (
+        games <= int(policy["thin_slate_games_max"])
+        and q_out_frac_mean >= float(policy["thin_slate_q_out_frac_mean_min"])
+        and q_blowout_p90 >= float(policy["thin_slate_q_blowout_p90_min"])
+    ):
+        reasons.append("thin_injury_uncertainty")
+    if q_blowout_p90 >= float(policy["blowout_q_p90_min"]) and role_ctx_share <= float(policy["blowout_role_ctx_share_max"]):
+        reasons.append("high_blowout_limited_role_context")
+    if role_ctx_share <= float(policy["no_role_ctx_share_max"]) and bp_has_mean <= float(policy["low_external_prior_bp_has_mean_max"]):
+        reasons.append("no_role_low_external_prior")
+
+    triggered = bool(reasons)
+    metrics["policy_triggered"] = triggered
+    metrics["policy_reasons"] = reasons
+    if triggered:
+        return float(policy["defensive_residual_scale"]), metrics
+    return float(policy["aggressive_residual_scale"]), metrics
 
 
 # ---------------------------------------------------------------------------
@@ -247,36 +433,82 @@ def apply_catboost_calibrator(
                     f"[CATBOOST_CAL] Regressor meta missing 'features': {meta_path}"
                 )
 
-            scale = float(meta.get("residual_scale", 0.50))
+            scale_default = float(cat_cfg.get("residual_scale", meta.get("residual_scale", 0.50)))
             rclip = float(meta.get("residual_clip", 0.20))
             p_lo = float(meta.get("p_lo", 1e-4))
             p_hi = float(meta.get("p_hi", 1.0 - 1e-4))
+            scale, scale_metrics = resolve_residual_scale(
+                scored,
+                cat_cfg,
+                meta,
+                fallback_scale=scale_default,
+            )
 
-            X_df = _build_feature_df_regressor(scored, features, cat_features)
+            ens_dir_str = (
+                cat_cfg.get("ensemble_dir")
+                or (cfg.get("posthoc_calibrator", {}) or {}).get(
+                    "ensemble_dir", "data/model/ensemble"
+                )
+            )
+            ensemble_dir = Path(ens_dir_str)
+            if not ensemble_dir.is_absolute():
+                ensemble_dir = repo_root / ensemble_dir
+
+            X_df, feature_diagnostics = _build_feature_df_regressor(
+                scored,
+                logs,
+                features,
+                cat_features,
+                ensemble_dir,
+            )
 
             from catboost import Pool  # type: ignore[import]
             pool = Pool(X_df, cat_features=cat_features) if cat_features else Pool(X_df)
             residual = np.asarray(model.predict(pool), dtype=float)
             residual_clipped = np.clip(residual, -rclip, rclip)
 
-            p_for_cal = pd.to_numeric(
-                scored.get("p_for_cal", scored.get("p_adj", 0.5)),
-                errors="coerce",
-            ).fillna(0.5).clip(0.0, 1.0).values
+            p_source: Any
+            if "p_for_cal" in scored.columns:
+                p_source = scored["p_for_cal"]
+            elif "p_adj" in scored.columns:
+                p_source = scored["p_adj"]
+            else:
+                p_source = 0.5
+            p_for_cal = _probability_array(p_source, scored.index, default=0.5)
 
-            p_new = np.clip(p_for_cal + scale * residual_clipped, p_lo, p_hi)
+            p_new = np.clip(p_for_cal + (scale * residual_clipped), p_lo, p_hi)
 
             scored = scored.copy()
             scored["p_catboost_residual"] = residual
             scored["p_catboost"] = p_new
+            scored["catboost_model_version"] = str(meta.get("version", ""))
+            scored["catboost_residual_scale"] = scale
+            scored["catboost_scale_policy_enabled"] = bool(scale_metrics.get("policy_enabled", False))
+            scored["catboost_scale_policy_triggered"] = bool(scale_metrics.get("policy_triggered", False))
+            scored["catboost_scale_policy_reasons"] = ",".join(scale_metrics.get("policy_reasons", []) or [])
+            scored["catboost_feature_source"] = str(feature_diagnostics.get("feature_source", ""))
+            scored["catboost_feature_count"] = int(feature_diagnostics.get("feature_count", len(features)))
+            scored["catboost_defaulted_features"] = ",".join(feature_diagnostics.get("defaulted_features", []) or [])
+            for key in [
+                "games",
+                "q_out_frac_mean",
+                "q_blowout_p90",
+                "role_ctx_outs_used_share_gt0",
+                "bp_has_mean",
+            ]:
+                if key in scale_metrics:
+                    scored[f"catboost_scale_{key}"] = scale_metrics[key]
 
             mode = str(cat_cfg.get("mode", "replace")).strip().lower()
             if mode == "blend":
                 alpha = float(cat_cfg.get("blend_alpha", 0.5))
-                p_prev = pd.to_numeric(
-                    scored.get("p_cal", scored.get("p_for_cal", 0.5)),
-                    errors="coerce",
-                ).fillna(0.5).values
+                if "p_cal" in scored.columns:
+                    prev_source = scored["p_cal"]
+                elif "p_for_cal" in scored.columns:
+                    prev_source = scored["p_for_cal"]
+                else:
+                    prev_source = 0.5
+                p_prev = _probability_array(prev_source, scored.index, default=0.5)
                 scored["p_cal"] = np.clip(
                     alpha * p_new + (1.0 - alpha) * p_prev, p_lo, p_hi
                 )
@@ -286,10 +518,35 @@ def apply_catboost_calibrator(
             print(
                 f"[CATBOOST_CAL] regressor/{mode} -- "
                 f"residual mean={residual.mean():+.4f} std={residual.std():.4f}, "
+                f"scale={scale:.2f}, "
+                f"scale_policy={scale_metrics.get('policy_triggered', False)}"
+                f"({','.join(scale_metrics.get('policy_reasons', []) or [])}), "
+                f"features={feature_diagnostics.get('feature_source', '?')}:{feature_diagnostics.get('feature_count', len(features))}, "
                 f"p_for_cal mean={p_for_cal.mean():.4f}, "
                 f"p_cal mean={float(scored['p_cal'].mean()):.4f}, "
                 f"n={len(scored)}, version={meta.get('version', '?')}"
             )
+            if scale_metrics.get("policy_triggered", False):
+                print(
+                    "[CATBOOST_DEFENSE] ACTIVE -- "
+                    f"residual_scale={scale:.2f}, "
+                    f"reasons={','.join(scale_metrics.get('policy_reasons', []) or [])}, "
+                    f"games={scale_metrics.get('games')}, "
+                    f"q_out_frac_mean={scale_metrics.get('q_out_frac_mean'):.4f}, "
+                    f"q_blowout_p90={scale_metrics.get('q_blowout_p90'):.4f}, "
+                    f"role_ctx_share={scale_metrics.get('role_ctx_outs_used_share_gt0'):.4f}, "
+                    f"bp_has_mean={scale_metrics.get('bp_has_mean'):.4f}"
+                )
+            elif scale_metrics.get("policy_enabled", False):
+                print(
+                    "[CATBOOST_DEFENSE] inactive -- "
+                    f"residual_scale={scale:.2f}, "
+                    f"games={scale_metrics.get('games')}, "
+                    f"q_out_frac_mean={scale_metrics.get('q_out_frac_mean'):.4f}, "
+                    f"q_blowout_p90={scale_metrics.get('q_blowout_p90'):.4f}, "
+                    f"role_ctx_share={scale_metrics.get('role_ctx_outs_used_share_gt0'):.4f}, "
+                    f"bp_has_mean={scale_metrics.get('bp_has_mean'):.4f}"
+                )
 
         else:
             # Legacy classifier path
@@ -316,10 +573,13 @@ def apply_catboost_calibrator(
             mode = str(cat_cfg.get("mode", "replace")).strip().lower()
             if mode == "blend":
                 alpha = float(cat_cfg.get("blend_alpha", 0.5))
-                p_cal_arr = pd.to_numeric(
-                    scored.get("p_cal", scored.get("p_for_cal", 0.5)),
-                    errors="coerce",
-                ).fillna(0.5).values
+                if "p_cal" in scored.columns:
+                    prev_source = scored["p_cal"]
+                elif "p_for_cal" in scored.columns:
+                    prev_source = scored["p_for_cal"]
+                else:
+                    prev_source = 0.5
+                p_cal_arr = _probability_array(prev_source, scored.index, default=0.5)
                 scored["p_cal"] = np.clip(
                     alpha * p_cat + (1.0 - alpha) * p_cal_arr, P_LO_CLF, P_HI_CLF
                 )

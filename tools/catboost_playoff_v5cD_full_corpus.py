@@ -15,6 +15,7 @@ import pathlib
 import pickle
 import time
 import warnings
+import argparse
 from datetime import datetime
 
 import numpy as np
@@ -65,12 +66,31 @@ def prep_X(df, features):
     return X, cat_in
 
 
-def apply_residual(p, r):
-    return np.clip(p + RESIDUAL_SCALE * np.clip(r, -RESIDUAL_CLIP, RESIDUAL_CLIP),
+def apply_residual(p, r, *, residual_scale: float = RESIDUAL_SCALE):
+    return np.clip(p + residual_scale * np.clip(r, -RESIDUAL_CLIP, RESIDUAL_CLIP),
                    P_LO, P_HI)
 
 
 def main() -> int:
+    ap = argparse.ArgumentParser(description="Train v5cD full-corpus CatBoost residual regressor.")
+    ap.add_argument("--cache-path", default=str(CACHE_PATH), help="Input cache pickle path.")
+    ap.add_argument("--model-out", default=str(MODEL_OUT), help="Output CatBoost model path.")
+    ap.add_argument("--meta-out", default=str(META_OUT), help="Output metadata JSON path.")
+    ap.add_argument("--version", default="catboost_playoff_v5cD", help="Version string written to metadata.")
+    ap.add_argument("--residual-scale", type=float, default=RESIDUAL_SCALE, help="Default runtime residual scale.")
+    ap.add_argument("--policy-defensive-scale", type=float, default=None, help="Optional slate-policy defensive residual scale.")
+    args = ap.parse_args()
+
+    cache_path = pathlib.Path(args.cache_path)
+    if not cache_path.is_absolute():
+        cache_path = ROOT / cache_path
+    model_out = pathlib.Path(args.model_out)
+    if not model_out.is_absolute():
+        model_out = ROOT / model_out
+    meta_out = pathlib.Path(args.meta_out)
+    if not meta_out.is_absolute():
+        meta_out = ROOT / meta_out
+
     print("=" * 80, flush=True)
     print("v5cD FULL-CORPUS Trainer (residual regressor, 19 features)", flush=True)
     print("=" * 80, flush=True)
@@ -83,8 +103,8 @@ def main() -> int:
     print(flush=True)
 
     # Load cache
-    print("Loading cache...", flush=True)
-    with open(CACHE_PATH, "rb") as f:
+    print(f"Loading cache: {cache_path}", flush=True)
+    with open(cache_path, "rb") as f:
         cache = pickle.load(f)
     cv = cache["cv"].copy()
     cv = cv.dropna(subset=["hit"]).reset_index(drop=True)
@@ -115,7 +135,7 @@ def main() -> int:
     print(flush=True)
 
     # Train on full corpus
-    print(f"Training full-corpus model (no holdout)...", flush=True)
+    print("Training full-corpus model (no holdout)...", flush=True)
     print(f"  iter={PARAMS['iterations']}  depth={PARAMS['depth']}  "
           f"lr={PARAMS['learning_rate']}  l2={PARAMS['l2_leaf_reg']}", flush=True)
     print("-" * 80, flush=True)
@@ -132,31 +152,31 @@ def main() -> int:
 
     # In-sample sanity check (NOT a generalization metric)
     pred_resid = model.predict(pool)
-    p_after = apply_residual(p_in, pred_resid)
+    p_after = apply_residual(p_in, pred_resid, residual_scale=args.residual_scale)
     b_after = brier(hit, p_after)
     print(f"In-sample Brier after calibration: {b_after:.6f}  "
           f"({(b_after - b_baseline) * 1000:+.2f} mB vs baseline)", flush=True)
-    print(f"  (LODO is the real generalization metric -- this is just a fit check)", flush=True)
+    print("  (LODO is the real generalization metric -- this is just a fit check)", flush=True)
 
     # Feature importance
     importances = dict(zip(features, model.get_feature_importance().tolist()))
-    print(f"\nFeature importances:", flush=True)
+    print("\nFeature importances:", flush=True)
     for f, imp in sorted(importances.items(), key=lambda x: x[1], reverse=True):
         print(f"  {f:<25s}  {imp:>8.2f}", flush=True)
 
     # Save model
-    OUT_DIR.mkdir(parents=True, exist_ok=True)
-    model.save_model(str(MODEL_OUT))
-    print(f"\nSaved model: {MODEL_OUT}", flush=True)
+    model_out.parent.mkdir(parents=True, exist_ok=True)
+    model.save_model(str(model_out))
+    print(f"\nSaved model: {model_out}", flush=True)
 
     # Save meta — runtime applier reads this
     meta = {
-        "version": "catboost_playoff_v5cD",
+        "version": args.version,
         "trained_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         "model_kind": "CatBoostRegressor",
         "target": "hit - p_for_cal",
         "applier": "p + RESIDUAL_SCALE * clip(residual, -RESIDUAL_CLIP, RESIDUAL_CLIP)",
-        "residual_scale": RESIDUAL_SCALE,
+        "residual_scale": args.residual_scale,
         "residual_clip":  RESIDUAL_CLIP,
         "p_lo": P_LO,
         "p_hi": P_HI,
@@ -165,7 +185,7 @@ def main() -> int:
         "n_features":   len(features),
         "params":       {k: (str(v) if not isinstance(v, (int, float, str, bool)) else v)
                          for k, v in PARAMS.items()},
-        "cache_path":   str(CACHE_PATH),
+        "cache_path":   str(cache_path),
         "n_legs":       int(len(cv)),
         "n_dates":      len(dates),
         "dates":        dates,
@@ -175,9 +195,23 @@ def main() -> int:
         "tree_count": int(model.tree_count_),
         "elapsed_sec": round(elapsed, 1),
     }
-    with open(META_OUT, "w") as f:
+    if args.policy_defensive_scale is not None:
+        meta["residual_scale_policy"] = {
+            "enabled": True,
+            "aggressive_residual_scale": args.residual_scale,
+            "defensive_residual_scale": args.policy_defensive_scale,
+            "thin_slate_games_max": 2,
+            "thin_slate_q_out_frac_mean_min": 0.05,
+            "blowout_q_p90_min": 0.55,
+            "blowout_role_ctx_share_max": 0.30,
+            "no_role_ctx_share_max": 0.01,
+            "low_external_prior_bp_has_mean_max": 0.10,
+            "source_audit": "logs/cat_residual_policy_trigger_audit_20260512/summary.json",
+        }
+    meta_out.parent.mkdir(parents=True, exist_ok=True)
+    with open(meta_out, "w") as f:
         json.dump(meta, f, indent=2)
-    print(f"Saved meta:  {META_OUT}", flush=True)
+    print(f"Saved meta:  {meta_out}", flush=True)
     return 0
 
 

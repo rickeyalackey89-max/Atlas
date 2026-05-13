@@ -166,13 +166,120 @@ posthoc_calibrator:
   ensemble_dir: data/model/ensemble
   mode: replace
 
+raw_slate_fragility_guard:
+  # Narrow pre-CAT guard promoted 2026-05-12 after May 11 raw-p failure audit.
+  # Trigger is pregame-only: thin slate + meaningful q-out density + high blowout tail.
+  # q_out_frac is created before CAT in the shared live/replay engine path.
+  # 12-date audit: direction-aware qout/highp improved May 11 raw Brier -6.08 mB
+  # and CAT Brier -6.37 mB with no other date touched by the trigger.
+  enabled: true
+  max_games: 2
+  min_q_out_frac_mean: 0.10
+  min_q_blowout_p90: 0.50
+  high_prob_threshold: 0.55
+  logit_shift: -0.10
+  over_logit_shift: -0.15
+  under_logit_shift: 0.10
+
+single_game_mode:
+  # Single-game slates keep 3-leg as the primary product, but Atlas still
+  # attempts 4-leg/5-leg when the board produces script-compatible quality.
+  enabled: auto
+  trigger_max_games: 1
+  primary_script: close_spurs_efficiency_wolves_glass
+  build_slip_sizes: [3, 4, 5]
+  primary_slip_size: 3
+  do_not_block_slip_sizes: true
+  do_not_force_output: true
+  # In single-game slates, IAEL soft exposure from an out teammate should be
+  # scored/penalized, not used as a hard injury exclusion that wipes a team.
+  soft_injury_exposure_not_hard_exclude: true
+  selection_surface:
+    enabled: true
+    script_fit_weight: 1.0
+  slip_rules:
+    enabled: true
+    max_role_shooter_overs: 1
+    max_fg3m_overs: 1
+    max_low_minute_bench_overs: 0
+    require_non_shooting_volume_min_legs: 4
+    require_one_stable_anchor: true
+    require_one_min_glass_or_counterweight: false
+    require_one_sas_core: false
+    min_avg_script_fit_by_legs:
+      3: -0.02
+      4: -0.01
+      5: 0.00
+  profile:
+    required_teams: [MIN, SAS]
+    fox_player: De'Aaron Fox
+    harper_player: Dylan Harper
+    stable_anchors:
+      - Anthony Edwards
+      - Victor Wembanyama
+      - Stephon Castle
+      - Rudy Gobert
+      - Julius Randle
+      - Naz Reid
+    min_glass_team: MIN
+    min_glass_stats: [REB, RA, PR, PRA]
+    min_glass_players:
+      - Rudy Gobert
+      - Naz Reid
+      - Julius Randle
+      - Jaden McDaniels
+      - Anthony Edwards
+    sas_core_team: SAS
+    sas_core_stats: [PTS, PA, PRA, PR, REB, BLK]
+    sas_core_players:
+      - Victor Wembanyama
+      - Stephon Castle
+      - De'Aaron Fox
+      - Dylan Harper
+      - Devin Vassell
+      - Julian Champagnie
+    min_ra_rebound_led_players:
+      - Rudy Gobert
+      - Naz Reid
+      - Julius Randle
+      - Jaden McDaniels
+      - Anthony Edwards
+    non_shooting_volume_stats: [REB, PR, PRA, PA, RA]
+    anchor_minutes: 28.0
+    low_minutes: 18.0
+    min_glass_score: 0.08
+    reb_led_ra_score: 0.04
+    assist_led_ra_penalty: 0.04
+    sas_core_score: 0.05
+    anchor_minutes_score: 0.05
+    low_minutes_penalty: 0.12
+    role_shooter_score: 0.02
+    fox_uncertain_player_penalty: 0.08
+    harper_uncertain_player_penalty: 0.07
+    fox_uncertain_castle_creation_boost: 0.04
+    fox_uncertain_wemby_touch_boost: 0.03
+    sas_double_guard_uncertainty_support_penalty: 0.03
+
 catboost_playoff_calibrator:
-  # v5cD residual regressor -- 19 features, iter=600, scale=0.50, clip=0.20
-  # LODO clean-6 (excludes 5/01,5/02,5/04,5/06): agg -9.38 mB, worst -4.29 mB, PROMOTE
+  # v5cD 12-date residual regressor -- 19 features, iter=600, clip=0.20.
+  # Runtime scale policy: default 0.55, defensive 0.10 on fragile pregame slates.
+  # 12-date policy audit: agg -5.83 mB, clean -5.30 mB, worst +2.51 mB, PROMOTE.
   enabled: true
   kind: regressor  # "regressor" (v5cD) or "classifier" (legacy v1)
   model_path: data/model/catboost_playoff/catboost_v5cD_full_corpus.cbm
   meta_path: data/model/catboost_playoff/catboost_v5cD_full_corpus.meta.json
+  residual_scale: 0.55
+  residual_scale_policy:
+    enabled: true
+    aggressive_residual_scale: 0.55
+    defensive_residual_scale: 0.10
+    thin_slate_games_max: 2
+    thin_slate_q_out_frac_mean_min: 0.05
+    thin_slate_q_blowout_p90_min: 0.45
+    blowout_q_p90_min: 0.55
+    blowout_role_ctx_share_max: 0.30
+    no_role_ctx_share_max: 0.01
+    low_external_prior_bp_has_mean_max: 0.10
   mode: replace  # "replace" writes p_catboost -> p_cal; "blend" uses blend_alpha
   # blend_alpha: 0.5  # only used when mode: blend
 
@@ -384,6 +491,8 @@ slip_build:
   - FTA_over
   - FTA_under
   require_healthy_data: true
+  exclude_questionable: true
+  exclude_q_out_frac_gt: 0.0
   min_nba_games: 10
   max_same_stat: 2
   stat_family_mode: coarse
@@ -566,8 +675,11 @@ optimizer:
   external_priors:
     enabled: true
     path: data/input/external_priors_today.csv
-    cap: 0.05
-    scale: 1.5
+    cap: 0.03
+    cap_by_direction:
+      OVER: 0.03
+      UNDER: 0.0
+    scale: 6.0
     p_floor: 0.02
     p_ceil: 0.98
     sources:
@@ -614,9 +726,70 @@ demonhunter:
         team_w: 0.05
         family_w: 0.05
         frag_w: 0.05
+minute_risk_guard:
+  enabled: true
+  # Selection-only guard. This lowers p_select/marketed_score, but does not
+  # rewrite p_cal/CAT probability or slip hit_prob.
+  min_modeled_minutes: 16.0
+  bench_minutes_threshold: 18.0
+  max_minutes_cv: 0.35
+  low_modeled_minutes_penalty: 0.10
+  bench_under_18_min_penalty: 0.10
+  minutes_cv_penalty: 0.08
+  injury_uncertainty_penalty: 0.12
+  max_total_penalty: 0.25
+volatility_guard:
+  enabled: false
+  report_only: true
+  # Telemetry-only until a replay audit proves a p_select penalty improves
+  # selected-leg Brier without suppressing good low-line playoff legs.
+  max_minutes_cv: 0.35
+  max_rate_cv: 0.95
+  low_line_fg3m_threshold: 1.5
+  low_line_thresholds:
+    FG3M: 1.5
+    PTS: 5.5
+    REB: 2.5
+    AST: 2.5
+    PR: 7.5
+    PA: 7.5
+    RA: 7.5
+    PRA: 9.5
+excess_fragility_guard:
+  enabled: false
+  report_only: true
+  # Candidate denied on canonical 12-date audit: only 2 selected legs triggered,
+  # so there is not enough evidence to penalize live p_select.
+  max_total_penalty: 0.04
+  min_excess_zero_rate: 0.12
+  min_zero_rate: 0.35
+  low_line_pts_threshold: 6.5
+  low_line_fg3m_threshold: 0.5
+  require_low_attempt_volume: true
+  apply_to_p_select_only: true
+fragility_exposure:
+  enabled: false
+  report_only: true
+  # Candidate denied on canonical 12-date audit. FG3M-over stacking had a bad
+  # signal, but only 3 violating slips, which is too thin for a hard cap.
+  max_low_line_fragile_legs_per_slip: 1
+  max_fg3m_overs_per_slip: 1
+slip_family_prop_diversity:
+  # Portfolio guard: within each output family (System, Windfall, DemonHunter),
+  # do not repeat the exact same player/direction/stat/line prop across 3/4/5.
+  # A player can still appear again on a different prop or line.
+  enabled: true
+  max_repeats_per_family: 1
+  candidate_multiplier: 1
+  min_candidate_rows: 1
 marketed_slips:
   enabled: true
   calibration_path: data/model/marketed_calibration.json
+  # Build each marketed slip size independently. 3-leg is built first, but 4/5
+  # should not be starved just because the 3-leg claimed strong players.
+  reserve_players_across_templates: false
+  reserve_player_props_across_templates: true
+  enforce_single_game_slip_rules: true
   max_players_per_team: 2
   # Single-game slate cap overrides (2026-05-10): when only 1 game is on the board,
   # use per-leg-count caps. 3-leg stays tight at 2 to force cross-team diversification;
@@ -630,6 +803,8 @@ marketed_slips:
   - STL
   - TO
   - FTA  # disabled until GBM retrained on playoff data
+  exclude_questionable: true
+  exclude_q_out_frac_gt: 0.0
   # Post-haircut floor DISABLED (2026-05-10) — v5cD CatBoost calibrator is well-calibrated
   # across the full 0.10-0.85 p_cal range, so we trust the model and gate only on raw p_cal.
   min_thresholds:

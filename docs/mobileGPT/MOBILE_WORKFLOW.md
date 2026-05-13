@@ -33,6 +33,7 @@ Relationship:
 - Codex: repo-aware implementation, audits, tests, commits, PR preparation.
 - GitHub: source of truth for branches, PRs, issues, Actions, and review history.
 - VS Code desktop: primary workspace for deep development and local validation.
+- Atlas CLI listener: local bridge for allowlisted mobile-to-desktop operational tasks.
 
 ---
 
@@ -68,6 +69,7 @@ Allowed from mobile:
 - Draft issues, PR descriptions, and task plans.
 - Update small Markdown files.
 - Check whether scheduled runs completed.
+- Queue allowlisted listener tasks when desktop validation is expected.
 - Ask for status summaries of model/runtime artifacts.
 - Making small edits and refactors.
 
@@ -179,6 +181,12 @@ Codex task:
 Create a scoped Codex task for <goal>. Include context files, constraints, expected outputs, validation steps, and what should not be touched.
 ```
 
+CLI listener task:
+
+```text
+Create an Atlas CLI listener JSON task for <goal>. Use only supported actions from docs/CLI_LISTENER.md. Include requested_by, reason, dry_run when appropriate, and avoid secrets.
+```
+
 ---
 
 ## 6. Recovery Workflow
@@ -200,6 +208,7 @@ Operational recovery checklist:
 - Confirm active model version.
 - Confirm latest live run and dashboard payload.
 - Confirm whether any scheduled task failed.
+- Check `data/automation/cli_listener/status.json` if listener automation was used.
 - Decide whether work belongs in `Atlas` or `atlas-dashboard`.
 
 ---
