@@ -371,6 +371,114 @@ def _load_injury_context(repo_root: Path) -> dict:
     return out
 
 
+def _build_stat_hub_payload(all_legs: list[dict], gamelogs_df: Optional["pd.DataFrame"]) -> dict:
+    """Build dashboard-ready team/player average blocks for today's slate."""
+    out = {
+        "teams": [],
+        "playoff_active": False,
+        "playoff_start": "2026-04-30",
+        "slate_date": None,
+        "source": "data/gamelogs/nba_gamelogs.csv",
+    }
+    if gamelogs_df is None or gamelogs_df.empty or not all_legs:
+        return out
+
+    slate_rows: dict[tuple[str, str], dict] = {}
+    slate_dates: list[pd.Timestamp] = []
+    for leg in all_legs:
+        player = str(leg.get("player") or "").strip()
+        team = str(leg.get("team") or "").strip().upper()
+        if not player or not team:
+            continue
+        opp = str(leg.get("opp") or "").strip().upper()
+        slate_rows.setdefault((team, _norm_name(player).lower()), {
+            "player": player,
+            "team": team,
+            "opp": opp,
+        })
+        gd = pd.to_datetime(leg.get("game_date"), errors="coerce")
+        if pd.notna(gd):
+            slate_dates.append(gd)
+
+    if not slate_rows:
+        return out
+
+    slate_date = max(slate_dates).normalize() if slate_dates else None
+    if slate_date is not None:
+        out["slate_date"] = slate_date.date().isoformat()
+
+    playoff_start = pd.Timestamp(out["playoff_start"])
+    playoff_active = bool(slate_date is not None and slate_date >= playoff_start)
+    out["playoff_active"] = playoff_active
+
+    logs = gamelogs_df.copy()
+    if "game_date" not in logs.columns or "player" not in logs.columns:
+        return out
+    logs["game_date_dt"] = pd.to_datetime(logs["game_date"], errors="coerce")
+    logs = logs[logs["game_date_dt"].notna()].copy()
+    if logs.empty:
+        return out
+    if slate_date is not None:
+        logs = logs[logs["game_date_dt"] < slate_date].copy()
+    if logs.empty:
+        return out
+
+    logs["player_norm"] = logs["player"].astype(str).map(lambda x: _norm_name(x).lower())
+    if "team" in logs.columns:
+        logs["team_norm"] = logs["team"].astype(str).str.upper().str.strip()
+    else:
+        logs["team_norm"] = ""
+    if "opp" in logs.columns:
+        logs["opp_norm"] = logs["opp"].astype(str).str.upper().str.strip()
+    else:
+        logs["opp_norm"] = ""
+
+    avg_cols = ["minutes", "pts", "reb", "ast", "fg3m"]
+
+    def _avg_block(frame: "pd.DataFrame") -> dict | None:
+        if frame.empty:
+            return None
+        block: dict = {"gp": int(len(frame))}
+        for col in avg_cols:
+            if col not in frame.columns:
+                block["min" if col == "minutes" else col] = None
+                continue
+            val = pd.to_numeric(frame[col], errors="coerce").mean()
+            block["min" if col == "minutes" else col] = round(float(val), 1) if pd.notna(val) else None
+        return block
+
+    team_map: dict[str, dict] = {}
+    for (team, player_norm), meta in slate_rows.items():
+        player_logs = logs[(logs["player_norm"] == player_norm) & (logs["team_norm"] == team)]
+        if player_logs.empty:
+            player_logs = logs[logs["player_norm"] == player_norm]
+
+        playoff_logs = player_logs[player_logs["game_date_dt"] >= playoff_start] if playoff_active else player_logs.iloc[0:0]
+        opp = str(meta.get("opp") or "").upper().strip()
+        series_logs = playoff_logs[playoff_logs["opp_norm"] == opp] if playoff_active and opp else playoff_logs.iloc[0:0]
+
+        team_entry = team_map.setdefault(team, {"team": team, "opponents": set(), "players": []})
+        if opp:
+            team_entry["opponents"].add(opp)
+        team_entry["players"].append({
+            "player": meta["player"],
+            "season": _avg_block(player_logs),
+            "playoffs": _avg_block(playoff_logs) if playoff_active else None,
+            "series": _avg_block(series_logs) if playoff_active else None,
+        })
+
+    teams = []
+    for team, entry in sorted(team_map.items()):
+        players = sorted(entry["players"], key=lambda p: str(p.get("player", "")))
+        teams.append({
+            "team": team,
+            "opponents": sorted(entry["opponents"]),
+            "players": players,
+        })
+    out["teams"] = teams
+    return out
+
+
 def _parse_leg(raw: str) -> dict:
     """Parse a leg string like 'LeBron James OVER PTS 23.5 (DEMON) [id:10991881]'"""
     m = re.match(
@@ -521,12 +629,15 @@ def build_cloudflare_payload(
     from zoneinfo import ZoneInfo
     LOCAL_TZ = ZoneInfo("America/Chicago")
 
-    # Load gamelogs once for l10 hit-rate computation
+    # Load gamelogs once for l10 hit-rate computation and stat hub averages.
     gamelogs_df: Optional["pd.DataFrame"] = None
+    if gamelogs_path is None:
+        default_logs = _repo_root() / "data" / "gamelogs" / "nba_gamelogs.csv"
+        gamelogs_path = default_logs if default_logs.exists() else None
     if gamelogs_path is not None and Path(gamelogs_path).exists():
         try:
             gamelogs_df = pd.read_csv(gamelogs_path, usecols=lambda c: c in {
-                "game_date", "player", "pts", "reb", "ast", "fg3m",
+                "game_date", "player", "team", "opp", "minutes", "pts", "reb", "ast", "fg3m",
                 "fga", "fta", "tov", "blk", "stl",
             })
         except Exception:
@@ -695,7 +806,7 @@ def build_cloudflare_payload(
     if scored_csv.exists():
         try:
             _KEEP = [
-                "player", "team", "opp", "stat", "line", "direction", "tier",
+                "game_date", "player", "team", "opp", "stat", "line", "direction", "tier",
                 "p_cal", "fragility", "q_blowout", "l20_edge", "role_ctx_mult",
                 "role_ctx_reason", "p_for_cal", "p_adj", "payout_modifier", "ev_mult",
                 "usage_dep", "usage_burden_ratio", "minutes_cv", "volatility_minutes_cv",
@@ -738,6 +849,7 @@ def build_cloudflare_payload(
                 if atlas_ev is None:
                     atlas_ev = float(p_cal) * payout_modifier if pd.notna(p_cal) else None
                 all_legs_out.append({
+                    "game_date":   str(row.get("game_date", "")) or None,
                     "player":      str(row.get("player", "")),
                     "team":        str(row.get("team", "")),
                     "opp":         str(row.get("opp", "")),
@@ -795,6 +907,8 @@ def build_cloudflare_payload(
             payload["all_legs"] = []
     else:
         payload["all_legs"] = []
+
+    payload["stat_hub"] = _build_stat_hub_payload(payload.get("all_legs", []), gamelogs_df)
 
     out_dir.mkdir(parents=True, exist_ok=True)
     out_path = out_dir / "cloudflare_payload.json"
