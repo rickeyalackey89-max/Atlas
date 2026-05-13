@@ -371,7 +371,59 @@ def _load_injury_context(repo_root: Path) -> dict:
     return out
 
 
-def _build_stat_hub_payload(all_legs: list[dict], gamelogs_df: Optional["pd.DataFrame"]) -> dict:
+def _load_prizepicks_visual_assets(repo_root: Path, slate_date: str | None) -> dict:
+    """Load player headshots and team logos from the matching PrizePicks raw board."""
+    assets = {"players": {}, "teams": {}}
+    raw_dir = repo_root / "data" / "raw"
+    if not raw_dir.exists():
+        return assets
+
+    date_key = str(slate_date or "").replace("-", "")
+    candidates = sorted(raw_dir.glob(f"prizepicks_{date_key}_*.json")) if date_key else []
+    if not candidates:
+        candidates = sorted(raw_dir.glob("prizepicks_*.json"), key=lambda p: p.stat().st_mtime)
+    if not candidates:
+        return assets
+
+    try:
+        data = json.loads(candidates[-1].read_text(encoding="utf-8"))
+    except Exception:
+        return assets
+
+    for item in data.get("included", []):
+        item_type = item.get("type")
+        attrs = item.get("attributes") or {}
+        if item_type == "team":
+            abbr = str(attrs.get("abbreviation") or "").upper().strip()
+            if not abbr or "/" in abbr:
+                continue
+            assets["teams"][abbr] = {
+                "logo_url": attrs.get("logo"),
+                "team_name": attrs.get("name"),
+                "market": attrs.get("market"),
+                "primary_color": attrs.get("primary_color"),
+                "secondary_color": attrs.get("secondary_color"),
+            }
+        elif item_type == "new_player":
+            if attrs.get("combo"):
+                continue
+            name = str(attrs.get("display_name") or attrs.get("name") or "").strip()
+            team = str(attrs.get("team") or "").upper().strip()
+            if not name:
+                continue
+            payload = {
+                "image_url": attrs.get("image_url"),
+                "jersey_number": attrs.get("jersey_number"),
+                "position": attrs.get("position"),
+                "pp_player_id": item.get("id"),
+            }
+            norm = _norm_name(name).lower()
+            assets["players"][(team, norm)] = payload
+            assets["players"].setdefault(("", norm), payload)
+    return assets
+
+
+def _build_stat_hub_payload(all_legs: list[dict], gamelogs_df: Optional["pd.DataFrame"], repo_root: Path) -> dict:
     """Build dashboard-ready team/player average blocks for today's slate."""
     out = {
         "teams": [],
@@ -410,6 +462,7 @@ def _build_stat_hub_payload(all_legs: list[dict], gamelogs_df: Optional["pd.Data
     playoff_start = pd.Timestamp(out["playoff_start"])
     playoff_active = bool(slate_date is not None and slate_date >= playoff_start)
     out["playoff_active"] = playoff_active
+    visual_assets = _load_prizepicks_visual_assets(repo_root, out["slate_date"])
 
     logs = gamelogs_df.copy()
     if "game_date" not in logs.columns or "player" not in logs.columns:
@@ -460,8 +513,16 @@ def _build_stat_hub_payload(all_legs: list[dict], gamelogs_df: Optional["pd.Data
         team_entry = team_map.setdefault(team, {"team": team, "opponents": set(), "players": []})
         if opp:
             team_entry["opponents"].add(opp)
+        player_visual = (
+            visual_assets["players"].get((team, player_norm))
+            or visual_assets["players"].get(("", player_norm))
+            or {}
+        )
         team_entry["players"].append({
             "player": meta["player"],
+            "image_url": player_visual.get("image_url"),
+            "jersey_number": player_visual.get("jersey_number"),
+            "position": player_visual.get("position"),
             "season": _avg_block(player_logs),
             "playoffs": _avg_block(playoff_logs) if playoff_active else None,
             "series": _avg_block(series_logs) if playoff_active else None,
@@ -470,8 +531,12 @@ def _build_stat_hub_payload(all_legs: list[dict], gamelogs_df: Optional["pd.Data
     teams = []
     for team, entry in sorted(team_map.items()):
         players = sorted(entry["players"], key=lambda p: str(p.get("player", "")))
+        team_visual = visual_assets["teams"].get(team, {})
         teams.append({
             "team": team,
+            "team_name": team_visual.get("team_name"),
+            "market": team_visual.get("market"),
+            "logo_url": team_visual.get("logo_url"),
             "opponents": sorted(entry["opponents"]),
             "players": players,
         })
@@ -908,7 +973,7 @@ def build_cloudflare_payload(
     else:
         payload["all_legs"] = []
 
-    payload["stat_hub"] = _build_stat_hub_payload(payload.get("all_legs", []), gamelogs_df)
+    payload["stat_hub"] = _build_stat_hub_payload(payload.get("all_legs", []), gamelogs_df, _repo_root())
 
     out_dir.mkdir(parents=True, exist_ok=True)
     out_path = out_dir / "cloudflare_payload.json"
