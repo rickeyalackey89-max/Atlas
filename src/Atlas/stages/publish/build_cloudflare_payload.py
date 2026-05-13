@@ -10,6 +10,8 @@ import math
 import re
 import unicodedata
 import csv as _csv_module
+import os as _os
+import urllib.request
 from datetime import datetime
 from pathlib import Path
 from typing import Optional
@@ -423,6 +425,120 @@ def _load_prizepicks_visual_assets(repo_root: Path, slate_date: str | None) -> d
     return assets
 
 
+def _quote_prizepicks_payout(legs: list[dict], amount_bet_cents: int = 2500) -> dict | None:
+    """Quote real PrizePicks adjusted payouts for a final slip via game_types."""
+    picks = []
+    for leg in legs:
+        projection_id = (
+            leg.get("source_projection_id")
+            or leg.get("projection_id")
+            or leg.get("id")
+        )
+        if projection_id is None:
+            return None
+        projection_id_s = str(projection_id).strip()
+        if "|" in projection_id_s:
+            projection_id_s = projection_id_s.split("|", 1)[0]
+        wager_type = str(leg.get("direction") or leg.get("dir") or leg.get("wager_type") or "").lower().strip()
+        if wager_type not in {"over", "under"}:
+            return None
+        picks.append({"projection_id": projection_id_s, "wager_type": wager_type})
+
+    if len(picks) < 2:
+        return None
+
+    try:
+        lat = float(_os.environ.get("ATLAS_PP_LAT", "38.5777"))
+        lng = float(_os.environ.get("ATLAS_PP_LNG", "-90.25122"))
+    except Exception:
+        lat, lng = 38.5777, -90.25122
+
+    body = {
+        "game_mode": _os.environ.get("ATLAS_PP_GAME_MODE", "prizepools"),
+        "lat": lat,
+        "lng": lng,
+        "new_wager": {
+            "amount_bet_cents": int(amount_bet_cents),
+            "pick_protection": False,
+            "picks": picks,
+        },
+    }
+    request = urllib.request.Request(
+        "https://api.prizepicks.com/game_types",
+        data=json.dumps(body).encode("utf-8"),
+        headers={
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "User-Agent": "Mozilla/5.0",
+        },
+        method="POST",
+    )
+    try:
+        with urllib.request.urlopen(request, timeout=10) as response:
+            response_data = json.loads(response.read().decode("utf-8"))
+    except Exception:
+        return None
+
+    n = str(len(picks))
+    quote: dict = {
+        "source": "prizepicks_game_types",
+        "game_mode": body["game_mode"],
+        "amount_bet_cents": int(amount_bet_cents),
+        "n_legs": len(picks),
+        "picks": picks,
+        "raw": response_data,
+    }
+    for item in response_data.get("data", []):
+        attrs = item.get("attributes") or {}
+        name = str(attrs.get("name") or "").lower()
+        payouts = attrs.get("payouts") or {}
+        all_correct = None
+        try:
+            all_correct = float((payouts.get(n) or {}).get(n))
+        except Exception:
+            all_correct = None
+        if "power" in name:
+            quote["power"] = {
+                "all_correct": all_correct,
+                "payouts": payouts,
+                "is_adjusted": bool(payouts.get("is_adjusted", False)),
+            }
+        elif "flex" in name:
+            quote["flex"] = {
+                "all_correct": all_correct,
+                "payouts": payouts,
+                "is_adjusted": bool(payouts.get("is_adjusted", False)),
+            }
+    return quote
+
+
+def _apply_prizepicks_quote_to_slip(slip: dict, legs: list[dict]) -> dict:
+    quote = _quote_prizepicks_payout(legs)
+    if not quote:
+        slip["pp_quote_ok"] = False
+        return slip
+
+    power_mult = ((quote.get("power") or {}).get("all_correct"))
+    flex_mult = ((quote.get("flex") or {}).get("all_correct"))
+    chosen_mult = power_mult if power_mult is not None else flex_mult
+    slip["pp_quote_ok"] = True
+    slip["pp_payout_quote"] = quote
+    slip["pp_power_payout_mult"] = power_mult
+    slip["pp_flex_payout_mult"] = flex_mult
+    if chosen_mult is not None:
+        slip["payout_mult_fallback"] = slip.get("payout_mult")
+        slip["payout_mult"] = float(chosen_mult)
+        hit_prob = slip.get("hit_prob")
+        try:
+            hit_prob_f = float(hit_prob)
+            ev = hit_prob_f * float(chosen_mult)
+            slip["ev"] = ev
+            slip["ev_mult"] = ev
+        except Exception:
+            pass
+    return slip
+
+
 def _build_stat_hub_payload(all_legs: list[dict], gamelogs_df: Optional["pd.DataFrame"], repo_root: Path) -> dict:
     """Build dashboard-ready team/player average blocks for today's slate."""
     out = {
@@ -734,24 +850,28 @@ def build_cloudflare_payload(
     for n in [2, 3, 4, 5]:
         slip = _load_top_slip(run_dir / "System" / f"recommended_{n}leg.csv", "System")
         if slip:
+            slip = _apply_prizepicks_quote_to_slip(slip, slip.get("legs_detail", []))
             payload["system"].append(slip)
     
     # System winprob: top available leg counts.
     for n in [2, 3, 4, 5]:
         slip = _load_top_slip(run_dir / "System" / f"recommended_{n}leg_winprob.csv", "System WinProb")
         if slip:
+            slip = _apply_prizepicks_quote_to_slip(slip, slip.get("legs_detail", []))
             payload["system_winprob"].append(slip)
     
     # Windfall: top available leg counts.
     for n in [2, 3, 4, 5]:
         slip = _load_top_slip(run_dir / "Windfall" / f"recommended_{n}leg.csv", "Windfall")
         if slip:
+            slip = _apply_prizepicks_quote_to_slip(slip, slip.get("legs_detail", []))
             payload["windfall"].append(slip)
     
     # Windfall winprob: top available leg counts.
     for n in [2, 3, 4, 5]:
         slip = _load_top_slip(run_dir / "Windfall" / f"recommended_{n}leg_winprob.csv", "Windfall WinProb")
         if slip:
+            slip = _apply_prizepicks_quote_to_slip(slip, slip.get("legs_detail", []))
             payload["windfall_winprob"].append(slip)
     
     # Demonhunter: top available leg counts from single CSV.
@@ -766,7 +886,7 @@ def build_cloudflare_payload(
                     row = subset.iloc[0]
                     legs_raw = str(row.get("legs", ""))
                     legs_list = [_parse_leg(leg_text) for leg_text in legs_raw.split(" | ")]
-                    payload["demonhunter"].append({
+                    demon_slip = {
                         "product": "Demonhunter",
                         "n_legs": n,
                         "legs": legs_raw,
@@ -775,7 +895,9 @@ def build_cloudflare_payload(
                         "ev_mult": float(row.get("ev_mult", 0)),
                         "payout_mult": float(row.get("payout_mult", 0)),
                         "avg_fragility": float(row.get("avg_fragility", 0)),
-                    })
+                    }
+                    demon_slip = _apply_prizepicks_quote_to_slip(demon_slip, legs_list)
+                    payload["demonhunter"].append(demon_slip)
         except Exception:
             pass
     
@@ -821,6 +943,8 @@ def build_cloudflare_payload(
                             _seen_l10[key] = (l10_hr, l10_n)
                         l10_hr, l10_n = _seen_l10[key]
                         clean_legs.append({
+                            "projection_id": leg.get("projection_id"),
+                            "source_projection_id": leg.get("source_projection_id"),
                             "player": player,
                             "dir": direction,
                             "stat": stat,
@@ -835,7 +959,7 @@ def build_cloudflare_payload(
                             "l10_n": l10_n,
                         })
 
-            payload["marketed_slips"].append({
+            marketed_payload = {
                 "label": slip.get("label", f"{n_legs}-leg"),
                 "n_legs": n_legs,
                 "hit_prob": hit_prob,
@@ -843,7 +967,9 @@ def build_cloudflare_payload(
                 "ev": ev,
                 "high_confidence": high_conf,
                 "legs": clean_legs,
-            })
+            }
+            marketed_payload = _apply_prizepicks_quote_to_slip(marketed_payload, clean_legs)
+            payload["marketed_slips"].append(marketed_payload)
 
         # Build top_hit_list from unique legs with enough sample
         top_hit_list = [
