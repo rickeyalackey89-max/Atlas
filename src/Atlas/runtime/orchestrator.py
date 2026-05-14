@@ -1050,7 +1050,7 @@ def run_today(
     scheduled: bool = False,
     authority: str = "production",
     raw_path: Optional[str | Path] = None,
-) -> None:
+) -> str:
     import json
 
     ctx = create_run_context(authority=authority)
@@ -1079,7 +1079,7 @@ def run_today(
         _banner("NO SLATE DETECTED")
         print("PrizePicks returned 0 projections (fetch_board.csv has no data rows). Exiting cleanly.")
         emit_event(ctx, "run_end", status="no_slate")
-        return
+        return "no_slate"
 
     _artifact_fingerprint(ctx, "fetch_board.csv", board_path)
 
@@ -1187,7 +1187,7 @@ def run_today(
         _banner("GUARDRAIL STOP")
         print(f"Legacy engine indicated guardrail stop (pattern: {guardrail_pattern}). Exiting cleanly.")
         emit_event(ctx, "run_end", status="guardrail", pattern=guardrail_pattern, returncode=engine_res.returncode)
-        return
+        return "guardrail"
 
     if engine_res.returncode != 0:
         emit_event(ctx, "run_end", status="fail", returncode=engine_res.returncode)
@@ -1270,3 +1270,4 @@ def run_today(
     _banner("DONE")
     print("Atlas run complete. latest/{all,early,main,late} updated.")
     emit_event(ctx, "run_end", status="ok")
+    return "ok"

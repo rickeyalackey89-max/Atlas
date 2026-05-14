@@ -26,6 +26,19 @@ SUPPORTED_STATS = {
 }
 
 
+class NoSlateTodayError(RuntimeError):
+    """Raised when live PrizePicks has NBA projections, but none for today."""
+
+    def __init__(self, *, today: date, available_dates: list[date]) -> None:
+        self.today = today
+        self.available_dates = available_dates
+        available = ",".join(d.isoformat() for d in available_dates[:5]) or "none"
+        super().__init__(
+            f"NO NBA SLATE TODAY: {today.isoformat()} "
+            f"(PrizePicks available slate dates: {available})"
+        )
+
+
 # ---------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------
@@ -156,16 +169,21 @@ def run_fetch(*, payload: dict[str, Any], is_replay: bool) -> pd.DataFrame:
     now_ct = now_utc.astimezone(TZ_CT)
     today_ct = now_ct.date()
 
+    game_dates: set[date] = set()
+    for gattr in games_by_id.values():
+        st = _parse_iso_datetime(gattr.get("start_time"))
+        if st:
+            game_dates.add(st.astimezone(TZ_CT).date())
+
     # In replay mode, if the board was captured the evening before the slate,
     # derive today_ct from the earliest game start instead of the payload timestamp.
-    if is_replay:
-        game_dates: set[date] = set()
-        for gattr in games_by_id.values():
-            st = _parse_iso_datetime(gattr.get("start_time"))
-            if st:
-                game_dates.add(st.astimezone(TZ_CT).date())
-        if game_dates and today_ct not in game_dates:
+    # In live mode, never roll forward to tomorrow's PrizePicks slate. A no-game
+    # day must stay explicit so the live pipeline does not publish premature slips.
+    if game_dates and today_ct not in game_dates:
+        if is_replay:
             today_ct = min(game_dates)
+        else:
+            raise NoSlateTodayError(today=today_ct, available_dates=sorted(game_dates))
 
     kept_today_upcoming = 0
     dropped_no_start = 0

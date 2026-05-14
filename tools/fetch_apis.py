@@ -13,7 +13,7 @@ import pandas as pd
 import requests
 
 from Atlas.stages.common.paths import find_repo_root
-from Atlas.stages.fetch.fetch_prizepicks_today import run_fetch
+from Atlas.stages.fetch.fetch_prizepicks_today import NoSlateTodayError, run_fetch
 
 # ---------------------------------------------------------------
 # Paths
@@ -24,6 +24,20 @@ PROJECT_ROOT = find_repo_root(Path(__file__))
 OUT_PATH = PROJECT_ROOT / "data" / "board" / "fetch_board.csv"
 RAW_DIR = PROJECT_ROOT / "data" / "raw"
 SNAP_DIR = PROJECT_ROOT / "data" / "board" / "snapshots"
+
+BOARD_COLUMNS = [
+    "projection_id",
+    "player",
+    "stat",
+    "line",
+    "tag",
+    "team",
+    "opp",
+    "home",
+    "game_date",
+    "direction",
+]
+REQUIRED_COLUMNS = ["player", "stat", "line", "team", "opp", "home", "game_date", "direction"]
 
 # ---------------------------------------------------------------
 # Endpoint
@@ -120,6 +134,47 @@ def _get_payload(url: str, raw_path: Optional[str]) -> tuple[dict[str, Any], boo
         return _load_json_from_disk(p), True
 
     return _fetch_json_live(url), False
+
+
+def _write_no_slate_artifacts(
+    *,
+    exc: NoSlateTodayError,
+    raw_path: Path,
+    is_replay: bool,
+    payload: dict[str, Any],
+    ts: str,
+) -> None:
+    OUT_PATH.parent.mkdir(parents=True, exist_ok=True)
+    empty = pd.DataFrame(columns=BOARD_COLUMNS)
+    empty.to_csv(OUT_PATH, index=False)
+
+    available_dates = [d.isoformat() for d in exc.available_dates]
+    report = {
+        "status": "no_slate",
+        "rows": 0,
+        "today": exc.today.isoformat(),
+        "available_slate_dates": available_dates,
+        "raw_path": str(raw_path),
+        "is_replay": bool(is_replay),
+        "payload_projection_count": len(payload.get("data", []) or []),
+        "payload_included_count": len(payload.get("included", []) or []),
+        "message": str(exc),
+        "created_at": datetime.now(timezone.utc).isoformat(),
+        "dtypes": {c: "object" for c in BOARD_COLUMNS},
+    }
+    (PROJECT_ROOT / "data" / "board" / "fetch_contract_report.json").write_text(
+        json.dumps(report, indent=2),
+        encoding="utf-8",
+    )
+    (PROJECT_ROOT / "data" / "board" / "no_slate_today.json").write_text(
+        json.dumps(report, indent=2),
+        encoding="utf-8",
+    )
+
+    print(f"[FETCH] {exc}")
+    print(f"[FETCH] Wrote headers-only board: {OUT_PATH}")
+    print(f"[FETCH] No-slate manifest: {PROJECT_ROOT / 'data' / 'board' / 'no_slate_today.json'}")
+    print(f"[FETCH] Live pipeline should stop before rebuild/publish. ts={ts}")
 
 
 # ---------------------------------------------------------------
@@ -337,11 +392,20 @@ def main() -> None:
     raw_path.write_text(json.dumps(payload), encoding="utf-8")
 
     # --- Phase 6: core logic moved into stage module (no behavior change) ---
-    final_df = run_fetch(payload=payload, is_replay=is_replay)
+    try:
+        final_df = run_fetch(payload=payload, is_replay=is_replay)
+    except NoSlateTodayError as exc:
+        _write_no_slate_artifacts(
+            exc=exc,
+            raw_path=raw_path,
+            is_replay=is_replay,
+            payload=payload,
+            ts=ts,
+        )
+        return
 
     # --- FETCH CONTRACT GATE (fail-fast) ---
-    REQUIRED = ["player", "stat", "line", "team", "opp", "home", "game_date", "direction"]
-    missing = [c for c in REQUIRED if c not in final_df.columns]
+    missing = [c for c in REQUIRED_COLUMNS if c not in final_df.columns]
     if missing:
         raise ValueError(f"FETCH CONTRACT FAIL: missing columns: {missing}")
 

@@ -607,7 +607,10 @@ def main(argv: Optional[list[str]] = None) -> None:
         # Phase 8: LIVE must be a single smooth run that produces all expected outputs.
         # The engine run updates data/output/runs + data/output/latest; publishing creates
         # normalized IAEL snapshots + any additional "latest" JSON artifacts.
-        run_today(authority="production")
+        run_status = run_today(authority="production")
+        if run_status != "ok":
+            print(f"[LIVE] run_status={run_status}; skipping post-run bundle, latest publish, telemetry archive, and dashboard publish.")
+            return
         print("[BUNDLE] attempting post-run bundle")
         runs_dir = repo_root / "data" / "output" / "runs"
         run_dirs = [p for p in runs_dir.iterdir() if p.is_dir()]
