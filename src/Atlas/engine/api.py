@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 """Engine API seam for legacy retirement.
 
 This module introduces a narrow, stable interface that both the legacy engine
@@ -13,6 +11,8 @@ IMPORTANT (Phase 6):
 Replay comparator tools can call this API to compute in-memory outputs and
 write comparisons to archives only.
 """
+
+from __future__ import annotations
 
 from dataclasses import dataclass
 from typing import Any, Optional
@@ -32,9 +32,11 @@ class EngineOutputs:
     scored_for_optimizer: pd.DataFrame
 
     # Product outputs (DataFrames in current staged pipeline)
+    sys2: pd.DataFrame
     sys3: pd.DataFrame
     sys4: pd.DataFrame
     sys5: pd.DataFrame
+    wind2: pd.DataFrame
     wind3: pd.DataFrame
     wind4: pd.DataFrame
     wind5: pd.DataFrame

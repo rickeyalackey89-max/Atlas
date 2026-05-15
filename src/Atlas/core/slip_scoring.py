@@ -1,8 +1,8 @@
-from typing import Any, Iterable, Hashable, Sequence, List, Dict
+from typing import Any, Iterable, Hashable
 
-import pandas as pd
 import re
 import numpy as np
+import pandas as pd
 
 """
 Slip scoring helpers (extracted from LegacyEngine.optimize during Phase 7B).
@@ -11,11 +11,6 @@ Purpose
 - Provide the exact legacy slip scoring behavior used by the slip builders.
 - Keep pricing_engine behavior (atlas vs pp_kernel) unchanged.
 """
-
-from typing import Any
-
-import pandas as pd
-import re
 
 def _as_float(x: Any, default: float | None = None) -> float | None:
     try:
@@ -234,6 +229,10 @@ def _score_slip(
 
     avg_p = sum(ps) / len(ps) if ps else 0.0
     avg_frag = float(_ensure_series([r.get("fragility", 0.3) for r in rows]).astype(float).mean())
+    min_p = min(ps) if ps else 0.0
+    max_p = max(ps) if ps else 0.0
+    min_p_raw = min(ps_raw) if ps_raw else min_p
+    max_p_raw = max(ps_raw) if ps_raw else max_p
 
     return {
         "n_legs": int(n_legs),
@@ -253,6 +252,10 @@ def _score_slip(
         "pricing_engine": pe,
 
         "avg_p": float(avg_p),
+        "min_p": float(min_p),
+        "max_p": float(max_p),
+        "min_p_raw": float(min_p_raw),
+        "max_p_raw": float(max_p_raw),
         "avg_fragility": float(avg_frag),
         "slip_key": _slip_key(rows),
     }

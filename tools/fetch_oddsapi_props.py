@@ -60,6 +60,38 @@ def _default_market_json_path() -> Path:
     return _repo_root() / "data" / "input" / "odds_market_today.json"
 
 
+def _default_token_path() -> Path:
+    return _repo_root().parent / "OddAPItoken.txt"
+
+
+def _load_api_key() -> tuple[str, str]:
+    """Load OddsAPI key without relying on stale shell environment values.
+
+    The live operator workflow keeps the current token outside the repo in
+    OddAPItoken.txt. Prefer that file when present so an already-open terminal
+    cannot accidentally keep using an old ODDSAPI_KEY.
+    """
+    explicit_path = os.environ.get("ODDSAPI_KEY_FILE", "").strip()
+    candidates = [Path(explicit_path)] if explicit_path else []
+    candidates.append(_default_token_path())
+
+    for path in candidates:
+        try:
+            if path.exists() and path.is_file():
+                token = path.read_text(encoding="utf-8").strip()
+                if token:
+                    return token, f"file:{path.name}"
+        except OSError:
+            continue
+
+    for name in ("ODDSAPI_KEY", "ODDS_API_KEY"):
+        token = os.environ.get(name, "").strip()
+        if token:
+            return token, f"env:{name}"
+
+    return "", "missing"
+
+
 # ---------------------------------------------------------------------------
 # OddsAPI market key → Atlas stat name
 # ---------------------------------------------------------------------------
@@ -114,7 +146,7 @@ def fetch_events(api_key: str) -> List[Dict[str, Any]]:
     """GET /v4/sports/basketball_nba/events (FREE — no quota cost)."""
     url = f"{BASE_URL}/sports/basketball_nba/events"
     r = requests.get(url, params={"apiKey": api_key}, timeout=15)
-    r.raise_for_status()
+    _raise_for_status_redacted(r, "events")
     remaining = r.headers.get("x-requests-remaining", "?")
     events = r.json()
     print(f"[OddsAPI] {len(events)} NBA events found  (credits remaining: {remaining})")
@@ -139,13 +171,26 @@ def fetch_event_props(
         },
         timeout=20,
     )
-    r.raise_for_status()
+    _raise_for_status_redacted(r, f"event odds {event_id[:12]}...")
     last_cost = r.headers.get("x-requests-last", "?")
     remaining = r.headers.get("x-requests-remaining", "?")
     data = r.json()
     n_bm = len(data.get("bookmakers", []))
     print(f"  event {event_id[:12]}...  {n_bm} bookmakers  cost={last_cost}  remaining={remaining}")
     return data
+
+
+def _raise_for_status_redacted(response: requests.Response, context: str) -> None:
+    """Raise an HTTP error without leaking apiKey in the request URL."""
+    if response.status_code < 400:
+        return
+
+    detail = response.text.strip().replace("\r", " ").replace("\n", " ")
+    if len(detail) > 240:
+        detail = detail[:237] + "..."
+    if not detail:
+        detail = response.reason or "request failed"
+    raise RuntimeError(f"OddsAPI {context} failed HTTP {response.status_code}: {detail}")
 
 
 # ---------------------------------------------------------------------------
@@ -340,9 +385,12 @@ def _archive_snapshot(csv_path: Path, game_date: str, archive_dir: Path) -> None
 # ---------------------------------------------------------------------------
 
 def main() -> None:
-    api_key = os.environ.get("ODDSAPI_KEY", "").strip()
+    api_key, api_key_source = _load_api_key()
     if not api_key:
-        print("[OddsAPI] ERROR: ODDSAPI_KEY env var not set. Skipping.", file=sys.stderr)
+        print(
+            "[OddsAPI] ERROR: no OddsAPI key found. Expected OddAPItoken.txt or ODDSAPI_KEY.",
+            file=sys.stderr,
+        )
         sys.exit(1)
 
     game_date = os.environ.get("ODDSAPI_GAME_DATE", "").strip()
@@ -358,6 +406,7 @@ def main() -> None:
 
     asof = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S")
     print(f"[OddsAPI] Fetching NBA player props for {game_date}  markets={markets}  regions={regions}")
+    print(f"[OddsAPI] API key source: {api_key_source}  length={len(api_key)}")
 
     # Step 1: Get events (free)
     events = fetch_events(api_key)

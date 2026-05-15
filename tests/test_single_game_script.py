@@ -14,16 +14,17 @@ def _cfg() -> dict:
         "single_game_mode": {
             "enabled": "auto",
             "trigger_max_games": 1,
-            "primary_script": "close_spurs_efficiency_wolves_glass",
-            "selection_surface": {"enabled": True, "script_fit_weight": 1.0},
+            "selection_surface": {"enabled": True, "robustness_weight": 1.0},
             "slip_rules": {
                 "enabled": True,
                 "max_role_shooter_overs": 1,
                 "max_fg3m_overs": 1,
                 "max_low_minute_bench_overs": 0,
-                "require_non_shooting_volume_min_legs": 4,
+                "max_low_line_noise_legs_by_legs": {2: 0, 3: 1, 4: 1},
+                "min_non_shooting_volume_legs_by_legs": {2: 1, 3: 1, 4: 2},
                 "require_one_stable_anchor": True,
-                "min_avg_script_fit_by_legs": {5: 0.0},
+                "min_multi_script_survival_legs_by_legs": {2: 1, 3: 1, 4: 2},
+                "min_avg_robustness_by_legs": {2: -0.01, 3: -0.02, 4: -0.01},
             },
         }
     }
@@ -35,146 +36,170 @@ def _rows() -> pd.DataFrame:
             {
                 "projection_id": "1",
                 "game_id": "g1",
-                "player": "Julius Randle",
+                "player": "Core Rebounder",
                 "team": "MIN",
                 "opp": "SAS",
                 "stat": "REB",
                 "direction": "OVER",
+                "line": 7.5,
                 "modeled_minutes": 34.0,
                 "p_eff": 0.66,
             },
             {
                 "projection_id": "2",
                 "game_id": "g1",
-                "player": "Naz Reid",
+                "player": "Core Creator",
                 "team": "MIN",
                 "opp": "SAS",
-                "stat": "PR",
+                "stat": "PA",
                 "direction": "OVER",
-                "modeled_minutes": 29.0,
+                "line": 19.5,
+                "modeled_minutes": 31.0,
                 "p_eff": 0.64,
             },
             {
                 "projection_id": "3",
                 "game_id": "g1",
-                "player": "Dylan Harper",
+                "player": "Bench Shooter",
                 "team": "SAS",
                 "opp": "MIN",
-                "stat": "REB",
+                "stat": "FG3M",
                 "direction": "OVER",
-                "modeled_minutes": 25.0,
+                "line": 0.5,
+                "modeled_minutes": 16.0,
                 "p_eff": 0.63,
             },
             {
                 "projection_id": "4",
                 "game_id": "g1",
-                "player": "Julian Champagnie",
+                "player": "Core Scorer",
                 "team": "SAS",
                 "opp": "MIN",
-                "stat": "PRA",
+                "stat": "PTS",
                 "direction": "OVER",
-                "modeled_minutes": 28.5,
+                "line": 18.5,
+                "modeled_minutes": 32.0,
                 "p_eff": 0.62,
             },
             {
                 "projection_id": "5",
                 "game_id": "g1",
-                "player": "Terrence Shannon",
+                "player": "Low Line Scorer",
                 "team": "MIN",
                 "opp": "SAS",
-                "stat": "PA",
+                "stat": "PTS",
                 "direction": "OVER",
-                "modeled_minutes": 26.0,
+                "line": 5.5,
+                "modeled_minutes": 22.0,
                 "p_eff": 0.61,
             },
         ]
     )
 
 
-def test_single_game_annotations_score_script_fit() -> None:
+def test_single_game_annotations_score_generic_robustness() -> None:
     out = apply_single_game_script_annotations(_rows(), _cfg())
 
     assert bool(out["single_game_slate"].iloc[0]) is True
+    assert str(out["single_game_script_label"].iloc[0]) == "single_game_robust_mode"
 
-    randle = out[out["player"] == "Julius Randle"].iloc[0]
-    assert randle["single_game_anchor_flag"] == 1
-    assert randle["single_game_min_glass_flag"] == 1
-    assert round(float(randle["single_game_script_fit"]), 2) == 0.13
+    core = out[out["player"] == "Core Rebounder"].iloc[0]
+    assert core["single_game_anchor_flag"] == 1
+    assert core["single_game_multi_script_survival_flag"] == 1
+    assert "multi_script_survival" in str(core["single_game_script_reasons"])
+    assert round(float(core["single_game_script_fit"]), 2) == 0.07
 
-    harper = out[out["player"] == "Dylan Harper"].iloc[0]
-    assert harper["single_game_sas_core_flag"] == 1
-    assert round(float(harper["single_game_script_fit"]), 2) == 0.05
+    shooter = out[out["player"] == "Bench Shooter"].iloc[0]
+    assert shooter["single_game_role_shooter_over_flag"] == 1
+    assert shooter["single_game_fg3m_over_flag"] == 1
+    assert shooter["single_game_low_minute_bench_over_flag"] == 1
+    assert shooter["single_game_low_line_noise_flag"] == 1
+    assert float(shooter["single_game_script_fit"]) < 0
 
 
-def test_single_game_ra_uses_rebound_led_profile_when_share_missing() -> None:
+def test_single_game_robustness_has_no_team_specific_script_reasons() -> None:
+    out = apply_single_game_script_annotations(_rows(), _cfg())
+    reasons = ";".join(out["single_game_script_reasons"].astype(str).tolist())
+
+    assert "min_glass_counterpunch" not in reasons
+    assert "sas_core_efficiency" not in reasons
+    assert "fox_" not in reasons
+    assert "harper_" not in reasons
+
+
+def test_low_line_noise_applies_to_overs_only() -> None:
     df = _rows()
-    df.loc[0, "stat"] = "RA"
+    df.loc[df["player"] == "Low Line Scorer", "direction"] = "UNDER"
 
     out = apply_single_game_script_annotations(df, _cfg())
-    randle = out[out["player"] == "Julius Randle"].iloc[0]
+    low_line = out[out["player"] == "Low Line Scorer"].iloc[0]
 
-    assert "rebound_led_ra_profile" in str(randle["single_game_script_reasons"])
-    assert round(float(randle["single_game_script_fit"]), 2) == 0.17
-
-
-def test_script_volume_flags_apply_to_overs_only() -> None:
-    df = _rows()
-    df.loc[0, ["stat", "direction"]] = ["RA", "UNDER"]
-
-    out = apply_single_game_script_annotations(df, _cfg())
-    randle = out[out["player"] == "Julius Randle"].iloc[0]
-
-    assert int(randle["single_game_min_glass_flag"]) == 0
-    assert int(randle["single_game_non_shooting_volume_flag"]) == 0
-    assert "min_glass_counterpunch" not in str(randle["single_game_script_reasons"])
+    assert int(low_line["single_game_low_line_noise_flag"]) == 0
+    assert "low_line_noise" not in str(low_line["single_game_script_reasons"])
 
 
-def test_single_game_injury_branch_penalizes_uncertain_guard_and_boosts_creation() -> None:
+def test_injury_uncertainty_penalizes_selection_only() -> None:
     df = pd.DataFrame(
         [
-            {"game_id": "g1", "player": "De'Aaron Fox", "team": "SAS", "opp": "MIN", "stat": "PR", "direction": "OVER", "modeled_minutes": 32.0, "is_questionable": 1},
-            {"game_id": "g1", "player": "Stephon Castle", "team": "SAS", "opp": "MIN", "stat": "PA", "direction": "OVER", "modeled_minutes": 33.0, "is_questionable": 0},
-            {"game_id": "g1", "player": "Victor Wembanyama", "team": "SAS", "opp": "MIN", "stat": "PRA", "direction": "OVER", "modeled_minutes": 35.0, "is_questionable": 0},
+            {
+                "game_id": "g1",
+                "player": "Questionable Core",
+                "team": "SAS",
+                "opp": "MIN",
+                "stat": "PA",
+                "direction": "OVER",
+                "line": 19.5,
+                "modeled_minutes": 33.0,
+                "p_eff": 0.70,
+                "is_questionable": 1,
+            },
+            {
+                "game_id": "g1",
+                "player": "Clean Core",
+                "team": "MIN",
+                "opp": "SAS",
+                "stat": "PA",
+                "direction": "OVER",
+                "line": 19.5,
+                "modeled_minutes": 33.0,
+                "p_eff": 0.70,
+                "is_questionable": 0,
+            },
         ]
     )
 
     out = apply_single_game_script_annotations(df, _cfg())
 
-    assert str(out["single_game_branch_label"].iloc[0]) == "fox_uncertain"
-    fox = out[out["player"] == "De'Aaron Fox"].iloc[0]
-    castle = out[out["player"] == "Stephon Castle"].iloc[0]
-    wemby = out[out["player"] == "Victor Wembanyama"].iloc[0]
-
-    assert "fox_questionable_penalty" in str(fox["single_game_script_reasons"])
-    assert "fox_questionable_castle_creation" in str(castle["single_game_script_reasons"])
-    assert "fox_questionable_wemby_touch" in str(wemby["single_game_script_reasons"])
-    assert float(castle["single_game_script_fit"]) > float(fox["single_game_script_fit"])
+    questionable = out[out["player"] == "Questionable Core"].iloc[0]
+    clean = out[out["player"] == "Clean Core"].iloc[0]
+    assert "injury_uncertainty" in str(questionable["single_game_script_reasons"])
+    assert float(questionable["single_game_script_fit"]) < float(clean["single_game_script_fit"])
 
 
 def test_single_game_selection_surface_adjusts_selection_only_score() -> None:
     out = apply_single_game_selection_surface(_rows(), _cfg(), score_col="p_eff", clip_score=True)
 
-    randle = out[out["player"] == "Julius Randle"].iloc[0]
-    assert round(float(randle["p_eff_pre_single_game"]), 2) == 0.66
-    assert round(float(randle["single_game_selection_delta"]), 2) == 0.13
-    assert round(float(randle["p_eff"]), 2) == 0.79
+    core = out[out["player"] == "Core Rebounder"].iloc[0]
+    assert round(float(core["p_eff_pre_single_game"]), 2) == 0.66
+    assert round(float(core["single_game_selection_delta"]), 2) == 0.07
+    assert round(float(core["p_eff"]), 2) == 0.73
 
 
-def test_single_game_rules_do_not_block_five_leg_by_size() -> None:
+def test_single_game_rules_reject_low_minute_fragility_not_size() -> None:
     out = apply_single_game_script_annotations(_rows(), _cfg())
     rows = [r for _, r in out.iterrows()]
 
     ok, reasons, metrics = single_game_slip_rule_status(rows, _cfg(), n_legs=5)
 
-    assert ok is True
-    assert reasons == []
+    assert ok is False
+    assert "max_low_minute_bench_overs_exceeded" in reasons
     assert metrics["single_game_anchor_legs"] >= 1
 
 
-def test_single_game_rules_reject_shooter_stacks_not_slip_size() -> None:
+def test_single_game_rules_reject_shooter_stacks() -> None:
     df = _rows()
-    df.loc[0, ["player", "stat"]] = ["Ayo Dosunmu", "FG3M"]
-    df.loc[1, ["player", "stat"]] = ["Jaden McDaniels", "FG3M"]
+    df.loc[0, ["player", "stat", "modeled_minutes", "line"]] = ["Shooter One", "FG3M", 20.0, 0.5]
+    df.loc[1, ["player", "stat", "modeled_minutes", "line"]] = ["Shooter Two", "FG3M", 21.0, 0.5]
     out = apply_single_game_script_annotations(df, _cfg())
     rows = [r for _, r in out.iterrows()]
 
@@ -182,16 +207,16 @@ def test_single_game_rules_reject_shooter_stacks_not_slip_size() -> None:
 
     assert ok is False
     assert "max_fg3m_overs_exceeded" in reasons
-    assert metrics["single_game_fg3m_overs"] == 2
+    assert metrics["single_game_fg3m_overs"] == 3
 
 
 def test_single_game_rules_require_non_shooting_volume_for_larger_slips() -> None:
     df = pd.DataFrame(
         [
-            {"game_id": "g1", "player": "Anthony Edwards", "team": "MIN", "opp": "SAS", "stat": "PTS", "direction": "OVER", "modeled_minutes": 34.0},
-            {"game_id": "g1", "player": "Victor Wembanyama", "team": "SAS", "opp": "MIN", "stat": "PTS", "direction": "OVER", "modeled_minutes": 35.0},
-            {"game_id": "g1", "player": "Stephon Castle", "team": "SAS", "opp": "MIN", "stat": "AST", "direction": "OVER", "modeled_minutes": 33.0},
-            {"game_id": "g1", "player": "Devin Vassell", "team": "SAS", "opp": "MIN", "stat": "PTS", "direction": "OVER", "modeled_minutes": 30.0},
+            {"game_id": "g1", "player": "Alpha", "team": "MIN", "opp": "SAS", "stat": "PTS", "direction": "OVER", "line": 14.5, "modeled_minutes": 34.0},
+            {"game_id": "g1", "player": "Beta", "team": "SAS", "opp": "MIN", "stat": "PTS", "direction": "OVER", "line": 16.5, "modeled_minutes": 35.0},
+            {"game_id": "g1", "player": "Gamma", "team": "SAS", "opp": "MIN", "stat": "PTS", "direction": "OVER", "line": 12.5, "modeled_minutes": 33.0},
+            {"game_id": "g1", "player": "Delta", "team": "MIN", "opp": "SAS", "stat": "PTS", "direction": "OVER", "line": 10.5, "modeled_minutes": 30.0},
         ]
     )
     out = apply_single_game_script_annotations(df, _cfg())
@@ -204,7 +229,7 @@ def test_single_game_rules_require_non_shooting_volume_for_larger_slips() -> Non
     assert metrics["single_game_non_shooting_volume_legs"] == 0
 
 
-def test_profile_specific_rules_do_not_fire_for_other_single_game() -> None:
+def test_rules_apply_to_any_single_game_matchup() -> None:
     df = _rows()
     df["team"] = ["BOS", "BOS", "NYK", "NYK", "BOS"]
     df["opp"] = ["NYK", "NYK", "BOS", "BOS", "NYK"]
@@ -214,7 +239,7 @@ def test_profile_specific_rules_do_not_fire_for_other_single_game() -> None:
     ok, reasons, metrics = single_game_slip_rule_status(rows, _cfg(), n_legs=5)
 
     assert bool(out["single_game_slate"].iloc[0]) is True
-    assert bool(out["single_game_profile_active"].iloc[0]) is False
-    assert ok is True
-    assert reasons == []
-    assert metrics == {}
+    assert bool(out["single_game_profile_active"].iloc[0]) is True
+    assert ok is False
+    assert "max_low_minute_bench_overs_exceeded" in reasons
+    assert metrics["single_game_anchor_legs"] >= 1

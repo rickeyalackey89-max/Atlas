@@ -1,66 +1,35 @@
 from __future__ import annotations
 
-from collections.abc import Iterable
 from typing import Any
 
 import numpy as np
 import pandas as pd
 
 
-DEFAULT_PROFILE: dict[str, Any] = {
-    "name": "close_spurs_efficiency_wolves_glass",
-    "required_teams": ["MIN", "SAS"],
-    "fox_player": "De'Aaron Fox",
-    "harper_player": "Dylan Harper",
-    "stable_anchors": [
-        "Anthony Edwards",
-        "Victor Wembanyama",
-        "Stephon Castle",
-        "Rudy Gobert",
-        "Julius Randle",
-        "Naz Reid",
-    ],
-    "min_glass_team": "MIN",
-    "min_glass_stats": ["REB", "RA", "PR", "PRA"],
-    "min_glass_players": [
-        "Rudy Gobert",
-        "Naz Reid",
-        "Julius Randle",
-        "Jaden McDaniels",
-        "Anthony Edwards",
-    ],
-    "sas_core_team": "SAS",
-    "sas_core_stats": ["PTS", "PA", "PRA", "PR", "REB", "BLK"],
-    "sas_core_players": [
-        "Victor Wembanyama",
-        "Stephon Castle",
-        "De'Aaron Fox",
-        "Dylan Harper",
-        "Devin Vassell",
-        "Julian Champagnie",
-    ],
-    "min_ra_rebound_led_players": [
-        "Rudy Gobert",
-        "Naz Reid",
-        "Julius Randle",
-        "Jaden McDaniels",
-        "Anthony Edwards",
-    ],
-    "non_shooting_volume_stats": ["REB", "PR", "PRA", "PA", "RA"],
-    "anchor_minutes": 28.0,
+DEFAULT_ROBUSTNESS: dict[str, Any] = {
+    "name": "single_game_robust_mode",
+    "core_minutes": 28.0,
     "low_minutes": 18.0,
-    "min_glass_score": 0.08,
-    "reb_led_ra_score": 0.04,
-    "assist_led_ra_penalty": 0.04,
-    "sas_core_score": 0.05,
-    "anchor_minutes_score": 0.05,
-    "low_minutes_penalty": 0.12,
-    "role_shooter_score": 0.02,
-    "fox_uncertain_player_penalty": 0.08,
-    "harper_uncertain_player_penalty": 0.07,
-    "fox_uncertain_castle_creation_boost": 0.04,
-    "fox_uncertain_wemby_touch_boost": 0.03,
-    "sas_double_guard_uncertainty_support_penalty": 0.03,
+    "low_line_pts_threshold": 6.5,
+    "low_line_fg3m_threshold": 0.5,
+    "low_line_ast_threshold": 2.5,
+    "low_line_reb_threshold": 3.5,
+    "q_out_frac_threshold": 0.10,
+    "high_volatility_threshold": 0.70,
+    "high_fragility_threshold": 0.35,
+    "core_minutes_stability_bonus": 0.02,
+    "multi_script_survival_bonus": 0.03,
+    "non_shooting_volume_bonus": 0.02,
+    "fragile_shooter_over_penalty": 0.05,
+    "low_minutes_role_penalty": 0.08,
+    "low_line_noise_penalty": 0.03,
+    "injury_uncertainty_penalty": 0.06,
+    "high_volatility_penalty": 0.03,
+    "high_fragility_penalty": 0.03,
+    "max_abs_selection_delta": 0.12,
+    "role_shooter_stats": ["FG3M", "3PM", "3PTM", "PTS"],
+    "fg3m_stats": ["FG3M", "3PM", "3PTM", "3PT MADE", "THREES"],
+    "non_shooting_volume_stats": ["REB", "AST", "RA", "PA", "PR", "PRA"],
 }
 
 
@@ -76,15 +45,15 @@ def _enabled(cfg: dict[str, Any] | None) -> bool:
     return enabled in {"1", "true", "yes", "on", "auto"}
 
 
-def _profile(cfg: dict[str, Any] | None) -> dict[str, Any]:
+def _robustness_cfg(cfg: dict[str, Any] | None) -> dict[str, Any]:
     sg = _section(cfg)
-    profile = dict(DEFAULT_PROFILE)
-    overrides = sg.get("profile", {}) or {}
+    out = dict(DEFAULT_ROBUSTNESS)
+    overrides = sg.get("robustness", {}) or {}
     if isinstance(overrides, dict):
-        profile.update(overrides)
-    if sg.get("primary_script"):
-        profile["name"] = str(sg.get("primary_script"))
-    return profile
+        out.update(overrides)
+    if sg.get("name"):
+        out["name"] = str(sg.get("name"))
+    return out
 
 
 def _norm(value: Any) -> str:
@@ -101,10 +70,6 @@ def _upper(value: Any) -> str:
         return ""
     text = str(value).strip().upper()
     return "" if text in {"", "NAN", "NONE"} else text
-
-
-def _set(values: Iterable[Any] | None) -> set[str]:
-    return {_norm(v) for v in (values or []) if _norm(v)}
 
 
 def _num_col(df: pd.DataFrame, col: str, default: float = 0.0) -> pd.Series:
@@ -159,48 +124,6 @@ def count_games(df: pd.DataFrame) -> int:
     return 0
 
 
-def _teams_present(df: pd.DataFrame) -> set[str]:
-    teams: set[str] = set()
-    for col in ("team", "opp"):
-        if col not in df.columns:
-            continue
-        teams.update({_upper(v) for v in df[col] if _upper(v)})
-    return teams
-
-
-def _player_state(df: pd.DataFrame, players: pd.Series, player_name: str) -> str:
-    player_key = _norm(player_name)
-    if not player_key:
-        return "clear"
-
-    player_mask = players == player_key
-    status = _status_text(df)
-
-    out_terms = ("out", "inactive", "will not play")
-    q_terms = ("questionable", "game time", "game-time", "doubtful", "limited", "soreness")
-
-    role_out_text = ""
-    if "role_ctx_outs" in df.columns:
-        role_out_text = " ".join(_str_col(df, "role_ctx_outs").map(_norm).tolist())
-    if player_key in role_out_text:
-        return "out_context"
-
-    if player_mask.any():
-        player_status = status[player_mask]
-        if any(any(term in s for term in out_terms) for s in player_status):
-            return "out_context"
-
-        if "is_questionable" in df.columns:
-            q_vals = pd.to_numeric(df.loc[player_mask, "is_questionable"], errors="coerce")
-            if isinstance(q_vals, pd.Series) and bool((q_vals.fillna(0.0) > 0.0).any()):
-                return "questionable"
-
-        if any(any(term in s for term in q_terms) for s in player_status):
-            return "questionable"
-
-    return "clear"
-
-
 def is_single_game_slate(df: pd.DataFrame, cfg: dict[str, Any] | None = None) -> bool:
     if not _enabled(cfg):
         return False
@@ -213,10 +136,11 @@ def apply_single_game_script_annotations(
     df: pd.DataFrame,
     cfg: dict[str, Any] | None,
 ) -> pd.DataFrame:
-    """Add reportable single-game script-fit columns.
+    """Add generic single-game robustness columns.
 
-    This is intentionally selection-only/reporting metadata. It does not remove
-    legs or block slip sizes by itself.
+    The public function name is kept for compatibility with the pipeline, but
+    this no longer encodes a team/player-specific game script. It applies a
+    broad, selection-only robustness layer for one-game slates.
     """
 
     if df is None or len(df) == 0:
@@ -224,168 +148,152 @@ def apply_single_game_script_annotations(
 
     out = df.copy()
     sg = _section(cfg)
-    profile = _profile(cfg)
+    robust = _robustness_cfg(cfg)
     games = count_games(out)
     active = _enabled(cfg) and games > 0 and games <= int(sg.get("trigger_max_games", 1) or 1)
-    required_teams = {_upper(x) for x in profile.get("required_teams", []) if _upper(x)}
-    teams_present = _teams_present(out)
-    profile_active = active and (not required_teams or required_teams.issubset(teams_present))
 
     out["single_game_mode_enabled"] = bool(_enabled(cfg))
     out["single_game_slate"] = bool(active)
-    out["single_game_profile_active"] = bool(profile_active)
+    # Backward-compatible alias. In robust mode there is no profile gate; if the
+    # slate is active, the generic profile is active.
+    out["single_game_profile_active"] = bool(active)
     out["single_game_games"] = int(games)
-    out["single_game_script_label"] = str(profile.get("name", ""))
+    out["single_game_script_label"] = str(robust.get("name", "single_game_robust_mode"))
 
     fit = np.zeros(len(out.index), dtype="float64")
+    dependency = np.zeros(len(out.index), dtype="float64")
     reasons: list[list[str]] = [[] for _ in range(len(out.index))]
 
-    players = _str_col(out, "player").map(_norm)
-    teams = _str_col(out, "team").map(_upper)
     stats = _str_col(out, "stat").map(_upper)
     directions = _str_col(out, "direction").map(_upper)
+    lines = _num_col(out, "line", default=np.nan)
     minutes = _num_col(out, "modeled_minutes", default=np.nan)
     if np.isnan(minutes.to_numpy(copy=False)).all():
-        minutes = _num_col(out, "min_mean", default=0.0)
+        minutes = _num_col(out, "min_mean", default=np.nan)
+    if np.isnan(minutes.to_numpy(copy=False)).all():
+        minutes = pd.Series(np.zeros(len(out.index), dtype="float64"), index=out.index)
 
-    anchors = _set(profile.get("stable_anchors"))
-    min_glass_players = _set(profile.get("min_glass_players"))
-    sas_core_players = _set(profile.get("sas_core_players"))
-    min_ra_rebound_led_players = _set(profile.get("min_ra_rebound_led_players"))
-    min_glass_team = _upper(profile.get("min_glass_team", "MIN"))
-    sas_core_team = _upper(profile.get("sas_core_team", "SAS"))
-    min_glass_stats = {_upper(x) for x in profile.get("min_glass_stats", [])}
-    sas_core_stats = {_upper(x) for x in profile.get("sas_core_stats", [])}
-    non_shooting_volume_stats = {_upper(x) for x in profile.get("non_shooting_volume_stats", [])}
+    core_minutes = float(robust.get("core_minutes", 28.0) or 28.0)
+    low_minutes = float(robust.get("low_minutes", 18.0) or 18.0)
+    fg3m_stats = {_upper(x) for x in robust.get("fg3m_stats", DEFAULT_ROBUSTNESS["fg3m_stats"])}
+    role_shooter_stats = {_upper(x) for x in robust.get("role_shooter_stats", DEFAULT_ROBUSTNESS["role_shooter_stats"])}
+    non_shooting_volume_stats = {
+        _upper(x) for x in robust.get("non_shooting_volume_stats", DEFAULT_ROBUSTNESS["non_shooting_volume_stats"])
+    }
 
-    anchor_flag = players.map(lambda p: p in anchors).to_numpy(dtype=bool)
-    min_glass_flag = (
-        (teams == min_glass_team)
-        & (directions == "OVER")
-        & stats.isin(min_glass_stats)
-        & players.map(lambda p: p in min_glass_players)
-    ).to_numpy(dtype=bool)
-    sas_core_flag = (
-        (teams == sas_core_team)
-        & (directions == "OVER")
-        & stats.isin(sas_core_stats)
-        & players.map(lambda p: p in sas_core_players)
-    ).to_numpy(dtype=bool)
-
-    role_shooter_stats = {_upper(x) for x in sg.get("role_shooter_stats", ["FG3M", "3PM", "3PTM", "PTS"])}
-    fg3m_stats = {"FG3M", "3PM", "3PTM", "3PT MADE", "THREES"}
     fg3m_over_flag = (directions == "OVER") & stats.isin(fg3m_stats)
+    stable_anchor_flag = minutes >= core_minutes
     role_shooter_flag = (
         (directions == "OVER")
         & stats.isin(role_shooter_stats)
-        & (~pd.Series(anchor_flag, index=out.index))
-        & (minutes < float(profile.get("anchor_minutes", 28.0) or 28.0))
+        & (~stable_anchor_flag)
+        & (minutes < core_minutes)
     )
     non_shooting_volume_flag = (directions == "OVER") & stats.isin(non_shooting_volume_stats) & (~fg3m_over_flag)
+    low_minute_bench_flag = (directions == "OVER") & (minutes < low_minutes)
+    low_line_noise_flag = _low_line_noise(stats, directions, lines, robust)
+    injury_uncertain_flag = _injury_uncertainty(out, robust)
+    high_volatility_flag = _threshold_flag(out, "volatility_score", robust, "high_volatility_threshold")
+    high_fragility_flag = _threshold_flag(out, "fragility_score", robust, "high_fragility_threshold")
+    multi_script_survival_flag = stable_anchor_flag & (~low_line_noise_flag) & (~low_minute_bench_flag)
+    slate_severity_score, slate_severity_label = _slate_severity(
+        active=active,
+        low_line_noise_flag=low_line_noise_flag,
+        low_minute_bench_flag=low_minute_bench_flag,
+        role_shooter_flag=role_shooter_flag,
+        injury_uncertain_flag=injury_uncertain_flag,
+        stable_anchor_flag=stable_anchor_flag,
+    )
 
-    low_min = float(profile.get("low_minutes", 18.0) or 18.0)
-    low_minute_bench_flag = (directions == "OVER") & (minutes < low_min)
-
-    fox_state = _player_state(out, players, str(profile.get("fox_player", "De'Aaron Fox")))
-    harper_state = _player_state(out, players, str(profile.get("harper_player", "Dylan Harper")))
-    fox_uncertain = fox_state != "clear"
-    harper_uncertain = harper_state != "clear"
-    if fox_uncertain and harper_uncertain:
-        branch_label = "fox_harper_uncertain"
-    elif fox_uncertain:
-        branch_label = "fox_uncertain"
-    elif harper_uncertain:
-        branch_label = "harper_uncertain"
-    else:
-        branch_label = "base"
-
-    def _add(mask: np.ndarray, amount: float, reason: str) -> None:
-        fit[mask] += float(amount)
-        for idx in np.flatnonzero(mask):
+    def _add(mask: pd.Series | np.ndarray, amount: float, reason: str, *, dependency_amount: float = 0.0) -> None:
+        if float(amount) == 0.0 and float(dependency_amount) == 0.0:
+            return
+        mask_arr = np.asarray(mask, dtype=bool)
+        fit[mask_arr] += float(amount)
+        if dependency_amount:
+            dependency[mask_arr] += float(dependency_amount)
+        for idx in np.flatnonzero(mask_arr):
             reasons[int(idx)].append(reason)
 
-    if profile_active:
-        _add(min_glass_flag, float(profile.get("min_glass_score", 0.08)), "min_glass_counterpunch")
-        _add(sas_core_flag, float(profile.get("sas_core_score", 0.05)), "sas_core_efficiency")
+    if active:
+        _add(stable_anchor_flag, float(robust.get("core_minutes_stability_bonus", 0.02)), "core_minutes_stability")
+        _add(
+            multi_script_survival_flag,
+            float(robust.get("multi_script_survival_bonus", 0.03)),
+            "multi_script_survival",
+        )
+        _add(
+            non_shooting_volume_flag,
+            float(robust.get("non_shooting_volume_bonus", 0.02)),
+            "non_shooting_volume_floor",
+        )
+        _add(
+            role_shooter_flag,
+            -float(robust.get("fragile_shooter_over_penalty", 0.05)),
+            "fragile_shooter_over",
+            dependency_amount=float(robust.get("fragile_shooter_over_penalty", 0.05)),
+        )
+        _add(
+            low_minute_bench_flag,
+            -float(robust.get("low_minutes_role_penalty", 0.08)),
+            "low_minutes_role",
+            dependency_amount=float(robust.get("low_minutes_role_penalty", 0.08)),
+        )
+        _add(
+            low_line_noise_flag,
+            -float(robust.get("low_line_noise_penalty", 0.03)),
+            "low_line_noise",
+            dependency_amount=float(robust.get("low_line_noise_penalty", 0.03)),
+        )
+        _add(
+            injury_uncertain_flag,
+            -float(robust.get("injury_uncertainty_penalty", 0.06)),
+            "injury_uncertainty",
+            dependency_amount=float(robust.get("injury_uncertainty_penalty", 0.06)),
+        )
+        _add(
+            high_volatility_flag,
+            -float(robust.get("high_volatility_penalty", 0.03)),
+            "high_volatility",
+            dependency_amount=float(robust.get("high_volatility_penalty", 0.03)),
+        )
+        _add(
+            high_fragility_flag,
+            -float(robust.get("high_fragility_penalty", 0.03)),
+            "high_fragility",
+            dependency_amount=float(robust.get("high_fragility_penalty", 0.03)),
+        )
 
-        ra_min = (teams == min_glass_team) & (directions == "OVER") & (stats == "RA")
-        if "reb_share_of_ra" in out.columns:
-            reb_share = _num_col(out, "reb_share_of_ra", default=np.nan)
-            reb_led = (ra_min & (reb_share >= 0.65)).to_numpy(dtype=bool)
-            assist_led = (ra_min & (reb_share < 0.65)).to_numpy(dtype=bool)
-            _add(reb_led, float(profile.get("reb_led_ra_score", 0.04)), "rebound_led_ra")
-            _add(assist_led, -float(profile.get("assist_led_ra_penalty", 0.04)), "assist_led_ra")
-        else:
-            reb_led = (ra_min & players.map(lambda p: p in min_ra_rebound_led_players)).to_numpy(dtype=bool)
-            assist_led = (ra_min & ~players.map(lambda p: p in min_ra_rebound_led_players)).to_numpy(dtype=bool)
-            _add(reb_led, float(profile.get("reb_led_ra_score", 0.04)), "rebound_led_ra_profile")
-            _add(assist_led, -float(profile.get("assist_led_ra_penalty", 0.04)), "assist_led_ra_profile")
+    max_delta = float(robust.get("max_abs_selection_delta", 0.12) or 0.12)
+    if max_delta > 0.0:
+        fit = np.clip(fit, -max_delta, max_delta)
 
-        anchor_minutes = float(profile.get("anchor_minutes", 28.0) or 28.0)
-        _add((minutes >= anchor_minutes).to_numpy(dtype=bool), float(profile.get("anchor_minutes_score", 0.05)), "close_game_minutes")
-        _add((minutes < low_min).to_numpy(dtype=bool), -float(profile.get("low_minutes_penalty", 0.12)), "low_minutes_risk")
-        _add(role_shooter_flag.to_numpy(dtype=bool), float(profile.get("role_shooter_score", 0.02)), "role_shooter_one_allowed")
-
-        fox_player = _norm(profile.get("fox_player", "De'Aaron Fox"))
-        harper_player = _norm(profile.get("harper_player", "Dylan Harper"))
-        if fox_uncertain:
-            _add(
-                (players == fox_player).to_numpy(dtype=bool),
-                -float(profile.get("fox_uncertain_player_penalty", 0.08)),
-                f"fox_{fox_state}_penalty",
-            )
-            castle_creation = (
-                (teams == sas_core_team)
-                & (players == _norm("Stephon Castle"))
-                & stats.isin({"AST", "PA", "PRA", "PR"})
-            ).to_numpy(dtype=bool)
-            _add(
-                castle_creation,
-                float(profile.get("fox_uncertain_castle_creation_boost", 0.04)),
-                f"fox_{fox_state}_castle_creation",
-            )
-            wemby_touch = (
-                (teams == sas_core_team)
-                & (players == _norm("Victor Wembanyama"))
-                & stats.isin({"PTS", "PA", "PRA", "PR", "REB", "BLK"})
-            ).to_numpy(dtype=bool)
-            _add(
-                wemby_touch,
-                float(profile.get("fox_uncertain_wemby_touch_boost", 0.03)),
-                f"fox_{fox_state}_wemby_touch",
-            )
-        if harper_uncertain:
-            _add(
-                (players == harper_player).to_numpy(dtype=bool),
-                -float(profile.get("harper_uncertain_player_penalty", 0.07)),
-                f"harper_{harper_state}_penalty",
-            )
-        if fox_uncertain and harper_uncertain:
-            sas_support = (
-                (teams == sas_core_team)
-                & (directions == "OVER")
-                & (~players.isin({_norm("Victor Wembanyama"), _norm("Stephon Castle")}))
-            ).to_numpy(dtype=bool)
-            _add(
-                sas_support,
-                -float(profile.get("sas_double_guard_uncertainty_support_penalty", 0.03)),
-                "sas_double_guard_uncertainty_support",
-            )
+    robustness_score = np.clip(0.50 + fit - dependency, 0.0, 1.0)
 
     out["single_game_script_fit"] = fit
     out["single_game_script_reasons"] = [";".join(x) for x in reasons]
-    out["single_game_branch_label"] = branch_label if profile_active else ""
-    out["single_game_fox_state"] = fox_state if profile_active else ""
-    out["single_game_harper_state"] = harper_state if profile_active else ""
-    out["single_game_fox_uncertain"] = int(profile_active and fox_uncertain)
-    out["single_game_harper_uncertain"] = int(profile_active and harper_uncertain)
-    out["single_game_anchor_flag"] = anchor_flag.astype(int)
-    out["single_game_min_glass_flag"] = min_glass_flag.astype(int)
-    out["single_game_sas_core_flag"] = sas_core_flag.astype(int)
+    out["single_game_branch_label"] = "robust_mode" if active else ""
+    out["single_game_fox_state"] = ""
+    out["single_game_harper_state"] = ""
+    out["single_game_fox_uncertain"] = 0
+    out["single_game_harper_uncertain"] = 0
+    out["single_game_robustness_score"] = robustness_score
+    out["single_game_script_dependency_score"] = dependency
+    out["single_game_slate_severity_score"] = float(slate_severity_score)
+    out["single_game_slate_severity_label"] = slate_severity_label
+    out["single_game_robustness_reasons"] = out["single_game_script_reasons"]
+    out["single_game_anchor_flag"] = stable_anchor_flag.astype(int)
+    # Backward-compatible aliases. These no longer mean team-specific MIN/SAS
+    # branches; consumers should prefer the explicit robustness columns.
+    out["single_game_min_glass_flag"] = 0
+    out["single_game_sas_core_flag"] = 0
     out["single_game_role_shooter_over_flag"] = role_shooter_flag.astype(int)
     out["single_game_fg3m_over_flag"] = fg3m_over_flag.astype(int)
     out["single_game_non_shooting_volume_flag"] = non_shooting_volume_flag.astype(int)
     out["single_game_low_minute_bench_over_flag"] = low_minute_bench_flag.astype(int)
+    out["single_game_low_line_noise_flag"] = low_line_noise_flag.astype(int)
+    out["single_game_multi_script_survival_flag"] = multi_script_survival_flag.astype(int)
+    out["single_game_injury_uncertainty_flag"] = injury_uncertain_flag.astype(int)
     return out
 
 
@@ -409,7 +317,7 @@ def apply_single_game_selection_surface(
         out["single_game_selection_delta"] = 0.0
         return out
 
-    weight = float(surface.get("script_fit_weight", 1.0) or 0.0)
+    weight = float(surface.get("robustness_weight", surface.get("script_fit_weight", 1.0)) or 0.0)
     delta = pd.to_numeric(out["single_game_script_fit"], errors="coerce").fillna(0.0) * weight
     base = pd.to_numeric(out[score_col], errors="coerce").fillna(0.0)
     out[f"{score_col}_pre_single_game"] = base
@@ -434,7 +342,7 @@ def single_game_slip_rule_status(
     if not rows:
         return True, [], {}
 
-    single_game = any(bool(r.get("single_game_profile_active", False)) for r in rows)
+    single_game = any(bool(r.get("single_game_profile_active", False)) or bool(r.get("single_game_slate", False)) for r in rows)
     if not single_game:
         return True, [], {}
 
@@ -447,14 +355,16 @@ def single_game_slip_rule_status(
                 pass
         return total
 
-    fits: list[float] = []
-    for r in rows:
-        try:
-            v = float(r.get("single_game_script_fit", 0.0) or 0.0)
-            if v == v:
-                fits.append(v)
-        except Exception:
-            pass
+    def _avg(name: str) -> float:
+        vals: list[float] = []
+        for r in rows:
+            try:
+                value = float(r.get(name, 0.0) or 0.0)
+                if value == value:
+                    vals.append(value)
+            except Exception:
+                pass
+        return float(sum(vals) / len(vals)) if vals else 0.0
 
     metrics = {
         "single_game_anchor_legs": _count_flag("single_game_anchor_flag"),
@@ -462,38 +372,140 @@ def single_game_slip_rule_status(
         "single_game_sas_core_legs": _count_flag("single_game_sas_core_flag"),
         "single_game_role_shooter_overs": _count_flag("single_game_role_shooter_over_flag"),
         "single_game_fg3m_overs": _count_flag("single_game_fg3m_over_flag"),
+        "single_game_under_legs": sum(
+            1 for r in rows if str(r.get("direction", "")).strip().upper() == "UNDER"
+        ),
         "single_game_non_shooting_volume_legs": _count_flag("single_game_non_shooting_volume_flag"),
         "single_game_low_minute_bench_overs": _count_flag("single_game_low_minute_bench_over_flag"),
-        "single_game_avg_script_fit": float(sum(fits) / len(fits)) if fits else 0.0,
+        "single_game_low_line_noise_legs": _count_flag("single_game_low_line_noise_flag"),
+        "single_game_multi_script_survival_legs": _count_flag("single_game_multi_script_survival_flag"),
+        "single_game_avg_script_fit": _avg("single_game_script_fit"),
+        "single_game_avg_robustness_score": _avg("single_game_robustness_score"),
+        "single_game_avg_script_dependency_score": _avg("single_game_script_dependency_score"),
+        "single_game_slate_severity_score": _avg("single_game_slate_severity_score"),
     }
 
     reasons: list[str] = []
 
+    def _rule_value(key: str, default: Any = None) -> Any:
+        by_legs = rules.get(f"{key}_by_legs")
+        if isinstance(by_legs, dict):
+            if int(n_legs) in by_legs:
+                return by_legs[int(n_legs)]
+            str_key = str(int(n_legs))
+            if str_key in by_legs:
+                return by_legs[str_key]
+        return rules.get(key, default)
+
     def _max_rule(key: str, metric: str) -> None:
-        if key in rules:
-            cap = int(rules.get(key, 0) or 0)
-            if int(metrics.get(metric, 0)) > cap:
-                reasons.append(f"{key}_exceeded")
+        raw_cap = _rule_value(key)
+        if raw_cap is None:
+            return
+        cap = int(raw_cap or 0)
+        if int(metrics.get(metric, 0)) > cap:
+            reasons.append(f"{key}_exceeded")
 
     _max_rule("max_role_shooter_overs", "single_game_role_shooter_overs")
     _max_rule("max_fg3m_overs", "single_game_fg3m_overs")
+    _max_rule("max_under_legs", "single_game_under_legs")
     _max_rule("max_low_minute_bench_overs", "single_game_low_minute_bench_overs")
+    _max_rule("max_low_line_noise_legs", "single_game_low_line_noise_legs")
 
-    if bool(rules.get("require_one_stable_anchor", False)) and int(metrics["single_game_anchor_legs"]) <= 0:
+    min_anchor = _rule_value("min_stable_anchor_legs")
+    if min_anchor is not None:
+        if int(metrics["single_game_anchor_legs"]) < int(min_anchor or 0):
+            reasons.append("missing_stable_anchor")
+    elif bool(rules.get("require_one_stable_anchor", False)) and int(metrics["single_game_anchor_legs"]) <= 0:
         reasons.append("missing_stable_anchor")
-    if bool(rules.get("require_one_min_glass_or_counterweight", False)) and int(metrics["single_game_min_glass_legs"]) <= 0:
-        reasons.append("missing_min_glass_counterweight")
-    if bool(rules.get("require_one_sas_core", False)) and int(metrics["single_game_sas_core_legs"]) <= 0:
-        reasons.append("missing_sas_core")
 
-    require_volume_min_legs = int(rules.get("require_non_shooting_volume_min_legs", 0) or 0)
-    if require_volume_min_legs > 0 and int(n_legs) >= require_volume_min_legs:
-        if int(metrics["single_game_non_shooting_volume_legs"]) <= 0:
+    min_volume = _rule_value("min_non_shooting_volume_legs")
+    if min_volume is not None:
+        if int(metrics["single_game_non_shooting_volume_legs"]) < int(min_volume or 0):
             reasons.append("missing_non_shooting_volume_leg")
+    else:
+        require_volume_min_legs = int(rules.get("require_non_shooting_volume_min_legs", 0) or 0)
+        if require_volume_min_legs > 0 and int(n_legs) >= require_volume_min_legs:
+            if int(metrics["single_game_non_shooting_volume_legs"]) <= 0:
+                reasons.append("missing_non_shooting_volume_leg")
 
-    min_avg_by_legs = rules.get("min_avg_script_fit_by_legs", {}) or {}
+    min_survival = int(_rule_value("min_multi_script_survival_legs", 0) or 0)
+    if min_survival > 0 and int(metrics["single_game_multi_script_survival_legs"]) < min_survival:
+        reasons.append("missing_multi_script_survival")
+
+    min_avg_by_legs = rules.get("min_avg_robustness_by_legs", rules.get("min_avg_script_fit_by_legs", {})) or {}
     min_avg = min_avg_by_legs.get(int(n_legs), min_avg_by_legs.get(str(n_legs)))
     if min_avg is not None and float(metrics["single_game_avg_script_fit"]) < float(min_avg):
-        reasons.append("script_fit_below_floor")
+        reasons.append("robustness_fit_below_floor")
 
     return len(reasons) == 0, reasons, metrics
+
+
+def _low_line_noise(stats: pd.Series, directions: pd.Series, lines: pd.Series, robust: dict[str, Any]) -> pd.Series:
+    over = directions == "OVER"
+    pts = stats == "PTS"
+    fg3m = stats.isin({_upper(x) for x in robust.get("fg3m_stats", DEFAULT_ROBUSTNESS["fg3m_stats"])})
+    ast = stats == "AST"
+    reb = stats == "REB"
+    return (
+        over
+        & (
+            (pts & (lines <= float(robust.get("low_line_pts_threshold", 6.5) or 6.5)))
+            | (fg3m & (lines <= float(robust.get("low_line_fg3m_threshold", 0.5) or 0.5)))
+            | (ast & (lines <= float(robust.get("low_line_ast_threshold", 2.5) or 2.5)))
+            | (reb & (lines <= float(robust.get("low_line_reb_threshold", 3.5) or 3.5)))
+        )
+    )
+
+
+def _injury_uncertainty(df: pd.DataFrame, robust: dict[str, Any]) -> pd.Series:
+    out = pd.Series(False, index=df.index)
+    status = _status_text(df)
+    if len(status):
+        terms = ("questionable", "game time", "game-time", "doubtful", "limited", "soreness")
+        out = out | status.map(lambda s: any(term in s for term in terms))
+    if "is_questionable" in df.columns:
+        out = out | (_num_col(df, "is_questionable", default=0.0) > 0.0)
+    if "q_out_frac" in df.columns:
+        threshold = float(robust.get("q_out_frac_threshold", 0.10) or 0.10)
+        out = out | (_num_col(df, "q_out_frac", default=0.0) > threshold)
+    return out
+
+
+def _threshold_flag(df: pd.DataFrame, column: str, robust: dict[str, Any], config_key: str) -> pd.Series:
+    if column not in df.columns:
+        return pd.Series(False, index=df.index)
+    threshold = float(robust.get(config_key, 0.0) or 0.0)
+    if threshold <= 0.0:
+        return pd.Series(False, index=df.index)
+    return _num_col(df, column, default=0.0) >= threshold
+
+
+def _slate_severity(
+    *,
+    active: bool,
+    low_line_noise_flag: pd.Series,
+    low_minute_bench_flag: pd.Series,
+    role_shooter_flag: pd.Series,
+    injury_uncertain_flag: pd.Series,
+    stable_anchor_flag: pd.Series,
+) -> tuple[float, str]:
+    if not active or len(stable_anchor_flag) == 0:
+        return 0.0, "inactive"
+
+    def _share(flag: pd.Series) -> float:
+        arr = np.asarray(flag, dtype=bool)
+        return float(arr.mean()) if len(arr) else 0.0
+
+    score = (
+        0.25 * _share(low_line_noise_flag)
+        + 0.30 * _share(low_minute_bench_flag)
+        + 0.25 * _share(role_shooter_flag)
+        + 0.20 * _share(injury_uncertain_flag)
+        - 0.10 * _share(stable_anchor_flag)
+    )
+    score = float(max(0.0, min(1.0, score)))
+    if score >= 0.18:
+        return score, "extreme"
+    if score >= 0.10:
+        return score, "fragile"
+    return score, "normal"

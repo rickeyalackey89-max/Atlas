@@ -11,12 +11,14 @@ class SubmitArgs:
         task_id: str | None = None,
         slot: str | None = None,
         prompt: str | None = None,
+        target_repo: str | None = None,
         dry_run: bool = False,
     ) -> None:
         self.action = action
         self.id = task_id
         self.slot = slot
         self.prompt = prompt
+        self.target_repo = target_repo
         self.requested_by = "pytest"
         self.reason = "test"
         self.dry_run = dry_run
@@ -63,3 +65,48 @@ def test_listener_codex_handoff_writes_prompt(tmp_path):
     handoff_path = paths.codex_handoffs / "handoff.md"
     assert handoff_path.exists()
     assert "Review the latest run." in handoff_path.read_text(encoding="utf-8")
+
+
+def test_listener_dashboard_handoff_targets_dashboard_repo(tmp_path):
+    atlas_root = tmp_path / "Atlas"
+    dashboard_root = tmp_path / "atlas-dashboard"
+    atlas_root.mkdir()
+    dashboard_root.mkdir()
+    paths = ListenerPaths.from_root(atlas_root)
+    submit_task(
+        SubmitArgs(
+            "codex_handoff",
+            task_id="dashboard_handoff",
+            prompt="Review the checkout page.",
+            target_repo="atlas-dashboard",
+        ),
+        paths,
+    )
+
+    results = process_once(paths)
+
+    assert len(results) == 1
+    assert results[0]["status"] == "completed"
+    assert results[0]["target_repo"] == "atlas-dashboard"
+    handoff_path = dashboard_root / ".codex_handoffs" / "dashboard_handoff.md"
+    assert handoff_path.exists()
+    assert "Review the checkout page." in handoff_path.read_text(encoding="utf-8")
+
+
+def test_listener_dashboard_status_reports_repo(tmp_path):
+    atlas_root = tmp_path / "Atlas"
+    dashboard_root = tmp_path / "atlas-dashboard"
+    atlas_root.mkdir()
+    (dashboard_root / "public" / "data").mkdir(parents=True)
+    (dashboard_root / "publish-atlas.ps1").write_text("# publish", encoding="utf-8")
+    paths = ListenerPaths.from_root(atlas_root)
+    task_path = paths.inbox / "dashboard_status.json"
+    paths.ensure()
+    task_path.write_text(json.dumps({"id": "dashboard_status", "action": "dashboard_status"}), encoding="utf-8")
+
+    results = process_once(paths)
+
+    assert len(results) == 1
+    assert results[0]["status"] == "completed"
+    assert results[0]["dashboard"]["exists"] is True
+    assert results[0]["dashboard"]["publish_script_exists"] is True

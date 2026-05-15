@@ -1,13 +1,13 @@
 {
   "dead_period": false,
-  "generated_at": "2026-05-11T08:00:32",
+  "generated_at": "2026-05-15T06:26:59",
   "notes": "IAEL completed. Injury rows parsed via text (table extraction unreliable).",
-  "pdf_sha1": "3907f38bb7ad4bc218bb8c0ae9a428ae1ee1461d",
+  "pdf_sha1": "01370888542498f5f263208a7fdc35fce407c005",
   "post_iael": true,
   "post_line_recon": false,
-  "pulled_at_local": "2026-05-11T08:00:30-05:00",
-  "report_date": "2026-05-11",
-  "report_datetime_local": "2026-05-11 08:45AM",
+  "pulled_at_local": "2026-05-15T06:26:57-05:00",
+  "report_date": "2026-05-15",
+  "report_datetime_local": "2026-05-15 07:15AM",
   "source": "NBA injury report PDF (latest-of-day via season page scrape)",
-  "source_url": "https://ak-static.cms.nba.com/referee/injury/Injury-Report_2026-05-11_08_45AM.pdf"
+  "source_url": "https://ak-static.cms.nba.com/referee/injury/Injury-Report_2026-05-15_07_15AM.pdf"
 }

@@ -1,63 +1,63 @@
 {
-  "report_date": "2026-05-11",
-  "report_label": "08:45AM",
-  "source_url": "https://ak-static.cms.nba.com/referee/injury/Injury-Report_2026-05-11_08_45AM.pdf",
-  "pulled_at_local": "2026-05-11T08:00:30-05:00",
-  "pdf_sha1": "3907f38bb7ad4bc218bb8c0ae9a428ae1ee1461d",
+  "report_date": "2026-05-15",
+  "report_label": "07:15AM",
+  "source_url": "https://ak-static.cms.nba.com/referee/injury/Injury-Report_2026-05-15_07_15AM.pdf",
+  "pulled_at_local": "2026-05-15T06:26:57-05:00",
+  "pdf_sha1": "01370888542498f5f263208a7fdc35fce407c005",
   "rows": [
     {
-      "report_date": "2026-05-11",
-      "report_label": "08:45AM",
+      "report_date": "2026-05-15",
+      "report_label": "07:15AM",
       "team": "DET",
       "player": "Huerter, Kevin",
       "status": "QUESTIONABLE",
       "reason": "Injury/Illness - Left Adductor; Strain",
-      "game_date": "05/11/2026",
+      "game_date": "05/15/2026",
       "hard_invalid": false,
       "tag_probable": false,
       "out_frac": 0.0
     },
     {
-      "report_date": "2026-05-11",
-      "report_label": "08:45AM",
+      "report_date": "2026-05-15",
+      "report_label": "07:15AM",
       "team": "DET",
       "player": "LeVert, Caris",
       "status": "QUESTIONABLE",
-      "reason": "Injury/Illness - Right Heel; Contusion Injury/Illness - Right ACL; Surgical",
-      "game_date": "05/11/2026",
+      "reason": "Injury/Illness - Right Heel; Contusion",
+      "game_date": "05/15/2026",
       "hard_invalid": false,
       "tag_probable": false,
       "out_frac": 0.0
     },
     {
-      "report_date": "2026-05-11",
-      "report_label": "08:45AM",
-      "team": "OKC",
-      "player": "Sorber, Thomas",
-      "status": "OUT",
-      "reason": "Recovery",
-      "game_date": "05/11/2026",
-      "hard_invalid": true,
+      "report_date": "2026-05-15",
+      "report_label": "07:15AM",
+      "team": "DET",
+      "player": "Robinson, Duncan",
+      "status": "QUESTIONABLE",
+      "reason": "Injury/Illness - Low Back; Soreness Injury/Illness - Right Achilles Tendon;",
+      "game_date": "05/15/2026",
+      "hard_invalid": false,
       "tag_probable": false,
-      "out_frac": 0.12
+      "out_frac": 0.0
     },
     {
-      "report_date": "2026-05-11",
-      "report_label": "08:45AM",
-      "team": "OKC",
-      "player": "Williams, Jalen",
+      "report_date": "2026-05-15",
+      "report_label": "07:15AM",
+      "team": "MIN",
+      "player": "DiVincenzo, Donte",
       "status": "OUT",
-      "reason": "Injury/Illness - Left Hamstring; Strain",
-      "game_date": "05/11/2026",
+      "reason": "Repair",
+      "game_date": "05/15/2026",
       "hard_invalid": true,
       "tag_probable": false,
       "out_frac": 0.12
     }
   ],
   "schema": "atlas.iael_normalized.v1",
-  "generated_at": "2026-05-11T08:02:50-05:00",
+  "generated_at": "2026-05-15T06:31:08-05:00",
   "_atlas_publish": {
-    "published_from": "2026-05-11_08_45AM.json",
-    "published_at": "2026-05-11T08:02:50-05:00"
+    "published_from": "2026-05-15_07_15AM.json",
+    "published_at": "2026-05-15T06:31:08-05:00"
   }
 }

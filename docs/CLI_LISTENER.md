@@ -49,11 +49,26 @@ Create a Codex handoff:
 .\scripts\automation\atlas_cli_listener.ps1 submit codex_handoff --prompt "Review the latest run and summarize slip risk."
 ```
 
+Create a dashboard/website Codex handoff:
+
+```powershell
+.\scripts\automation\atlas_cli_listener.ps1 submit codex_handoff --target-repo atlas-dashboard --prompt "Review the premium checkout page and propose a mobile fix."
+```
+
+Check dashboard repo status:
+
+```powershell
+.\scripts\automation\atlas_cli_listener.ps1 submit dashboard_status --reason "mobile dashboard check"
+.\scripts\automation\atlas_cli_listener.ps1 once
+```
+
 ## Supported Actions
 
 - `status`
 - `latest_run`
 - `git_status`
+- `dashboard_status`
+- `dashboard_git_status`
 - `run_6am_eval`
 - `run_live`
 - `publish_dashboard`
@@ -80,6 +95,7 @@ Create a Codex handoff:
 - Secrets are redacted in task result JSON.
 - Failed or rejected tasks are retained in `failed/`.
 - Long-running command output is streamed to the listener terminal and written to `logs/`.
+- Dashboard handoffs are written to `..\atlas-dashboard\.codex_handoffs`.
 
 ## Mobile Workflow
 

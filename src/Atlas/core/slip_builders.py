@@ -18,7 +18,7 @@ from typing import Any
 import numpy as np
 import pandas as pd
 
-from .payout_tables import FLEX_3, FLEX_4, FLEX_5, POWER_MULT
+from .payout_tables import FLEX_2, FLEX_3, FLEX_4, FLEX_5, POWER_MULT
 from .minute_risk_guard import apply_minute_risk_guard
 from .single_game_script import (
     apply_single_game_script_annotations,
@@ -176,6 +176,8 @@ def _tier_counts_from_legs(x: Any) -> dict[str, int]:
 
 def _windfall_mix_ok(n_legs: int, legs: Any) -> bool:
     c = _tier_counts_from_legs(legs)
+    if n_legs == 2:
+        return c["GOBLIN"] == 1 and c["STANDARD"] == 0 and c["DEMON"] == 1
     if n_legs == 3:
         return c["GOBLIN"] == 1 and c["STANDARD"] == 1 and c["DEMON"] == 1
     if n_legs == 4:
@@ -185,8 +187,21 @@ def _windfall_mix_ok(n_legs: int, legs: Any) -> bool:
     return True
 
 
+def _single_game_windfall_mix_ok(n_legs: int, legs: Any) -> bool:
+    c = _tier_counts_from_legs(legs)
+    if n_legs == 2:
+        return c["GOBLIN"] == 2 and c["STANDARD"] == 0 and c["DEMON"] == 0
+    if n_legs == 3:
+        return c["GOBLIN"] == 2 and c["STANDARD"] == 1 and c["DEMON"] == 0
+    if n_legs == 4:
+        return c["GOBLIN"] == 3 and c["STANDARD"] == 1 and c["DEMON"] == 0
+    return _windfall_mix_ok(n_legs, legs)
+
+
 def _system_mix_ok(n_legs: int, legs: Any) -> bool:
     c = _tier_counts_from_legs(legs)
+    if n_legs == 2:
+        return c["GOBLIN"] == 1 and c["STANDARD"] == 1 and c["DEMON"] == 0
     if n_legs == 3:
         return c["GOBLIN"] == 1 and c["STANDARD"] == 2 and c["DEMON"] == 0
     if n_legs == 4:
@@ -508,9 +523,13 @@ def build_slips_by_tier_buckets(
         if df.empty:
             return pd.DataFrame(columns=_EMPTY_SLIPS_COLS)
 
-    # --- Injury uncertainty filter: premium slips should not carry Q/out-frac legs ---
+    # --- Injury uncertainty filter: optional hard exclusion.
+    # QUESTIONABLE/q_out is normally report-only. OUT/DOUBTFUL is handled upstream
+    # by IAEL hard invalidation, so these toggles should remain off unless an
+    # explicit audit says soft injury uncertainty should block public output.
     exclude_questionable = bool(sb.get("exclude_questionable", False))
-    has_q_out_threshold = isinstance(sb, dict) and "exclude_q_out_frac_gt" in sb
+    q_out_threshold_raw = sb.get("exclude_q_out_frac_gt") if isinstance(sb, dict) else None
+    has_q_out_threshold = q_out_threshold_raw not in (None, "")
     if exclude_questionable or has_q_out_threshold:
         before_len = len(df)
         drop_mask = pd.Series(False, index=df.index)
@@ -519,7 +538,7 @@ def build_slips_by_tier_buckets(
             q_vals = pd.to_numeric(df["is_questionable"], errors="coerce").fillna(0.0)
             drop_mask = drop_mask | ((q_vals > 0.0) & ~soft_exposure_mask)
         if has_q_out_threshold and "q_out_frac" in df.columns:
-            threshold = float(sb.get("exclude_q_out_frac_gt", 0.0) or 0.0)
+            threshold = float(q_out_threshold_raw)
             q_out_vals = pd.to_numeric(df["q_out_frac"], errors="coerce").fillna(0.0)
             drop_mask = drop_mask | ((q_out_vals > threshold) & ~soft_exposure_mask)
         df = df[~drop_mask].reset_index(drop=True)
@@ -1620,17 +1639,34 @@ def build_windfall_slips(
     cfg: dict[str, Any],
     max_attempts: int = 400000,
 ) -> pd.DataFrame:
-    mixes = {
-        3: {"GOBLIN": 1, "STANDARD": 1, "DEMON": 1},
-        4: {"GOBLIN": 1, "STANDARD": 2, "DEMON": 1},
-        5: {"GOBLIN": 2, "STANDARD": 2, "DEMON": 1},
-    }
+    single_game_active = False
+    if "single_game_slate" in legs_df.columns:
+        try:
+            single_game_active = bool(pd.Series(legs_df["single_game_slate"]).map(bool).any())
+        except Exception:
+            single_game_active = False
+    if single_game_active:
+        mixes = {
+            2: {"GOBLIN": 2},
+            3: {"GOBLIN": 2, "STANDARD": 1},
+            4: {"GOBLIN": 3, "STANDARD": 1},
+        }
+        mix_ok_fn = _single_game_windfall_mix_ok
+    else:
+        mixes = {
+            2: {"GOBLIN": 1, "DEMON": 1},
+            3: {"GOBLIN": 1, "STANDARD": 1, "DEMON": 1},
+            4: {"GOBLIN": 1, "STANDARD": 2, "DEMON": 1},
+            5: {"GOBLIN": 2, "STANDARD": 2, "DEMON": 1},
+        }
+        mix_ok_fn = _windfall_mix_ok
+    flex_by_legs = {2: FLEX_2, 3: FLEX_3, 4: FLEX_4, 5: FLEX_5}
     return build_slips_by_tier_buckets(
         legs_df=legs_df,
         n_legs=n_legs,
         top_n=top_n,
         payout_power_mult=POWER_MULT[n_legs],
-        payout_flex={3: FLEX_3, 4: FLEX_4, 5: FLEX_5}[n_legs],
+        payout_flex=flex_by_legs[n_legs],
         pricing_engine=pricing_engine,
         cfg=cfg,
         seed=seed,
@@ -1638,8 +1674,8 @@ def build_windfall_slips(
         max_attempts=max_attempts,
         sort_mode=sort_mode,
         mixes=mixes,
-        required_tiers=["GOBLIN", "STANDARD", "DEMON"],
-        mix_ok_fn=_windfall_mix_ok,
+        required_tiers=list(mixes[n_legs].keys()),
+        mix_ok_fn=mix_ok_fn,
     )
 
 
@@ -1655,6 +1691,7 @@ def build_system_slips(
     max_attempts: int = 500000,
 ) -> pd.DataFrame:
     mixes = {
+        2: {"GOBLIN": 1, "STANDARD": 1},
         3: {"GOBLIN": 1, "STANDARD": 2},
         4: {"GOBLIN": 2, "STANDARD": 2},
         5: {"GOBLIN": 3, "STANDARD": 2},
@@ -1670,12 +1707,13 @@ def build_system_slips(
 
     df = df[df["tier"].isin(["GOBLIN", "STANDARD"])].reset_index(drop=True)
 
+    flex_by_legs = {2: FLEX_2, 3: FLEX_3, 4: FLEX_4, 5: FLEX_5}
     out = build_slips_by_tier_buckets(
         legs_df=df,
         n_legs=n_legs,
         top_n=top_n,
         payout_power_mult=POWER_MULT[n_legs],
-        payout_flex={3: FLEX_3, 4: FLEX_4, 5: FLEX_5}[n_legs],
+        payout_flex=flex_by_legs[n_legs],
         pricing_engine=pricing_engine,
         cfg=cfg,
         seed=seed,
@@ -1683,7 +1721,7 @@ def build_system_slips(
         max_attempts=max_attempts,
         sort_mode=sort_mode,
         mixes=mixes,
-        required_tiers=["GOBLIN", "STANDARD"],
+        required_tiers=list(mixes[n_legs].keys()),
         mix_ok_fn=_system_mix_ok,
     )
     out["beam_selected"] = 1
@@ -1708,7 +1746,7 @@ def build_demonhunter_slips(
     sort_mode: str = "hit",
     cfg: dict[str, Any],
 ) -> pd.DataFrame:
-    """Return a single CSV-ready DataFrame with the best 3-leg, 4-leg, and 5-leg
+    """Return a single CSV-ready DataFrame with the best all-DEMON slips.
     all-DEMON slips (3 rows total).  Sorted by hit_prob so the best chance to
     actually cash is ranked first within each leg count.
     """
@@ -1716,12 +1754,25 @@ def build_demonhunter_slips(
     demon_by_legs = demon_cfg.get("by_legs") or {}
     demon_default_per_tier = int(demon_cfg.get("per_tier", 400))
 
+    single_game_active = False
+    if "single_game_slate" in legs_df.columns:
+        try:
+            single_game_active = bool(pd.Series(legs_df["single_game_slate"]).map(bool).any())
+        except Exception:
+            single_game_active = False
+    # Single-game slates should expose a smaller DemonHunter menu. The 4-leg
+    # all-DEMON variant is too fragile for one-game boards and was not useful
+    # in the dry-run audit; keep 2/3 available for upside shots.
+    leg_counts = (2, 3) if single_game_active else (3, 4, 5)
+    flex_by_legs = {2: FLEX_2, 3: FLEX_3, 4: FLEX_4, 5: FLEX_5}
+
     frames: list[pd.DataFrame] = []
-    for n_legs in (3, 4, 5):
+    for n_legs in leg_counts:
         # Merge demonhunter per-leg overrides into slip_build
         leg_override_raw = demon_by_legs.get(str(n_legs)) or demon_by_legs.get(n_legs) or {}
         leg_override = dict(leg_override_raw)  # copy to avoid mutating config
         leg_per_tier = int(leg_override.pop("per_tier", demon_default_per_tier))
+        leg_max_attempts = int(leg_override.pop("max_attempts", demon_cfg.get("max_attempts", 200000)) or 200000)
         if leg_override:
             merged_cfg = dict(cfg)
             sb = dict(merged_cfg.get("slip_build") or {})
@@ -1742,12 +1793,12 @@ def build_demonhunter_slips(
             n_legs=n_legs,
             top_n=1,
             payout_power_mult=POWER_MULT[n_legs],
-            payout_flex={3: FLEX_3, 4: FLEX_4, 5: FLEX_5}[n_legs],
+            payout_flex=flex_by_legs[n_legs],
             pricing_engine=pricing_engine,
             cfg=merged_cfg,
             seed=seed,
             per_tier=leg_per_tier,
-            max_attempts=200000,
+            max_attempts=leg_max_attempts,
             sort_mode=sort_mode,
             mixes=mixes,
             required_tiers=["DEMON"],

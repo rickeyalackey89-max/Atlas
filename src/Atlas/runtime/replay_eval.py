@@ -5,6 +5,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+from Atlas.runtime.slip_eval import write_eval_slips_for_run
+
 
 def _normalize_gamelog_candidates(gamelogs_path: Path | list[Path] | tuple[Path, ...]) -> list[Path]:
     if isinstance(gamelogs_path, Path):
@@ -67,6 +69,7 @@ def backfill_eval_legs_for_run(
 ) -> Path:
     eval_path = run_dir / "eval_legs.csv"
     if eval_path.is_file() and _eval_has_matched_rows(run_dir):
+        write_eval_slips_for_run(run_dir)
         return eval_path.resolve()
 
     scored_path = run_dir / "scored_legs_deduped.csv"
@@ -105,6 +108,7 @@ def backfill_eval_legs_for_run(
             failures.append(f"{candidate}: {detail}")
             continue
         if eval_path.is_file() and _eval_has_matched_rows(run_dir):
+            write_eval_slips_for_run(run_dir)
             return eval_path.resolve()
         failures.append(f"{candidate}: reconstruction wrote no matched eval rows")
 

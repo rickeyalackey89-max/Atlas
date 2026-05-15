@@ -26,6 +26,7 @@ from .single_game_script import (
     single_game_slip_rule_status,
 )
 from .slip_family_diversity import prop_key_from_mapping
+from .slip_quality_gate import filter_marketed_slips
 from .slip_scoring import _prod
 
 
@@ -50,6 +51,10 @@ class MarketedSlipBuilder:
             {"label": "3-leg", "goblin": 1, "standard": 2, "demon": 0},
             {"label": "4-leg", "goblin": 2, "standard": 2, "demon": 0},
             {"label": "5-leg", "goblin": 2, "standard": 2, "demon": 1},
+        ]
+        self.single_game_templates = [
+            {"label": "2-leg", "goblin": 2, "standard": 0, "demon": 0},
+            {"label": "3-leg", "goblin": 2, "standard": 1, "demon": 0},
         ]
         
     def _load_stat_calibration(self) -> Dict[str, Dict[str, float]]:
@@ -195,7 +200,11 @@ class MarketedSlipBuilder:
         return pool
 
     def _questionable_mask(self, df: pd.DataFrame) -> pd.Series:
-        """Return False for injury-questionable legs when configured."""
+        """Return False for soft injury-risk legs only when explicitly configured.
+
+        QUESTIONABLE/q_out is report-only by default. True OUT/DOUBTFUL removal
+        belongs to the upstream IAEL hard invalidation path.
+        """
 
         keep_mask = pd.Series(True, index=df.index)
         soft_exposure_mask = self._single_game_soft_exposure_mask(df)
@@ -204,8 +213,9 @@ class MarketedSlipBuilder:
             q_vals = pd.to_numeric(df["is_questionable"], errors="coerce").fillna(0.0)
             keep_mask &= (q_vals <= 0.0) | soft_exposure_mask
 
-        if "exclude_q_out_frac_gt" in self.config and "q_out_frac" in df.columns:
-            threshold = float(self.config.get("exclude_q_out_frac_gt", 0.0) or 0.0)
+        q_out_threshold_raw = self.config.get("exclude_q_out_frac_gt")
+        if q_out_threshold_raw not in (None, "") and "q_out_frac" in df.columns:
+            threshold = float(q_out_threshold_raw)
             q_out_vals = pd.to_numeric(df["q_out_frac"], errors="coerce").fillna(0.0)
             keep_mask &= (q_out_vals <= threshold) | soft_exposure_mask
 
@@ -307,9 +317,17 @@ class MarketedSlipBuilder:
                 return 0
 
         def _cap_exceeded(leg: pd.Series, rule_key: str, flag_key: str) -> bool:
-            if not apply_sg_incremental_caps or rule_key not in sg_rules:
+            if not apply_sg_incremental_caps:
                 return False
-            cap = int(sg_rules.get(rule_key, 0) or 0)
+            raw_cap = None
+            by_legs = sg_rules.get(f"{rule_key}_by_legs")
+            if isinstance(by_legs, dict):
+                raw_cap = by_legs.get(template_n_legs, by_legs.get(str(template_n_legs)))
+            if raw_cap is None:
+                raw_cap = sg_rules.get(rule_key)
+            if raw_cap is None:
+                return False
+            cap = int(raw_cap or 0)
             current = sum(_flag(existing, flag_key) for existing in selected_legs)
             return current + _flag(leg, flag_key) > cap
 
@@ -357,6 +375,8 @@ class MarketedSlipBuilder:
                     if _cap_exceeded(leg, "max_fg3m_overs", "single_game_fg3m_over_flag"):
                         continue
                     if _cap_exceeded(leg, "max_low_minute_bench_overs", "single_game_low_minute_bench_over_flag"):
+                        continue
+                    if _cap_exceeded(leg, "max_low_line_noise_legs", "single_game_low_line_noise_flag"):
                         continue
 
                     # Add to slip
@@ -453,7 +473,8 @@ class MarketedSlipBuilder:
             unique_games.add(teams)
         single_game_slate = (len(unique_games) == 1)
         if single_game_slate:
-            print("[MARKETED] Single-game slate detected - using per-leg team caps")
+            labels = "/".join(str(t.get("label", "")).replace("-leg", "") for t in self.single_game_templates)
+            print(f"[MARKETED] Single-game slate detected - using {labels}-leg templates and per-leg team caps")
 
         # Build slips following templates. Order matters because the 3-leg is
         # the primary marketed product and should get first construction pass.
@@ -464,7 +485,8 @@ class MarketedSlipBuilder:
         used_players_global: set = set()
         used_prop_keys_global: set[str] = set()
         slips = []
-        for template in self.templates:
+        templates = self.single_game_templates if single_game_slate else self.templates
+        for template in templates:
             used_players = used_players_global if reserve_players_across_templates else set()
             used_prop_keys = used_prop_keys_global if reserve_props_across_templates else set()
             slip = self._build_single_slip(
@@ -488,7 +510,7 @@ class MarketedSlipBuilder:
                 )
                 slips.append(slip)
         
-        return slips
+        return filter_marketed_slips(slips, self.full_config, family="Marketed")
 
 
 def build_marketed_slips(

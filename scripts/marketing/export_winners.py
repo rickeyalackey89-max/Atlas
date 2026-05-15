@@ -1,688 +1,663 @@
-"""
-export_winners.py — Daily winner graphic generator for Atlas.
+#!/usr/bin/env python3
+"""Daily winner graphic generator for Atlas.
 
-Reads marketed_slips.csv + eval_legs.csv from the previous day's production runs,
-identifies winning slips, builds an HTML graphic, and exports it to PNG via headless Chrome.
+Preferred source:
+    eval_slips.csv generated during previous-day eval.
 
 Usage:
-    python scripts/marketing/export_winners.py                    # auto: yesterday's best winning slip
-    python scripts/marketing/export_winners.py --date 20260507   # specific date
-    python scripts/marketing/export_winners.py --run data/output/runs/20260507_143551  # specific run dir
-    python scripts/marketing/export_winners.py --no-export       # HTML only, skip PNG render
-
-Outputs (in scripts/marketing/):
-    winners_YYYYMMDD.html
-    winners_YYYYMMDD.png
+    python scripts/marketing/export_winners.py --date 20260512 --run data/output/runs/20260512_185101
+    python scripts/marketing/export_winners.py --eval-slips path/to/eval_slips.csv --date 20260512
+    python scripts/marketing/export_winners.py --date 20260512 --no-export
 """
+
+from __future__ import annotations
+
 import argparse
-import io
-import os
-import pathlib
+import html
+import json
+import re
 import shutil
 import subprocess
 import sys
 from datetime import date, timedelta
-
-# Ensure UTF-8 output on Windows (avoids cp1252 errors for → ✓ etc.)
-if hasattr(sys.stdout, "reconfigure"):
-    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+from pathlib import Path
+from typing import Any
 
 import pandas as pd
 
-SCRIPT_DIR = pathlib.Path(__file__).parent
-WORKSPACE = SCRIPT_DIR.parent.parent          # Atlas root
-RUNS_DIR  = WORKSPACE / "data" / "output" / "runs"
-LOGO_REL  = "../../data/output/graphics/AtlasLogo.jpg"
+
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+
+
+SCRIPT_DIR = Path(__file__).resolve().parent
+WORKSPACE = SCRIPT_DIR.parents[1]
+RUNS_DIR = WORKSPACE / "data" / "output" / "runs"
+WIDTH, HEIGHT = 1080, 1080
 
 CHROME_PATHS = [
     r"C:\Program Files\Google\Chrome\Application\chrome.exe",
     r"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe",
     r"C:\Users\13142\AppData\Local\Google\Chrome\Application\chrome.exe",
 ]
-WIDTH, HEIGHT = 1080, 1080
 
-# Stat code → display label
 STAT_LABELS = {
     "PTS": "Points",
     "REB": "Rebounds",
     "AST": "Assists",
     "PRA": "Pts + Reb + Ast",
-    "PR":  "Points + Rebounds",
-    "PA":  "Points + Assists",
-    "RA":  "Rebounds + Assists",
+    "PR": "Points + Rebounds",
+    "PA": "Points + Assists",
+    "RA": "Rebounds + Assists",
     "FTA": "Free Throw Attempts",
     "STL": "Steals",
     "BLK": "Blocks",
     "TOV": "Turnovers",
     "3PM": "3-Pointers Made",
+    "FG3M": "3-Pointers Made",
     "BLST": "Blocks + Steals",
 }
 
+FAMILY_ORDER = {
+    "Marketed": 0,
+    "Windfall": 1,
+    "System": 2,
+    "DemonHunter": 3,
+}
 
-# ─────────────────────────────────────────────
-# Helpers
-# ─────────────────────────────────────────────
 
-def find_chrome():
-    for p in CHROME_PATHS:
-        if pathlib.Path(p).exists():
-            return p
+def find_chrome() -> str:
+    for path in CHROME_PATHS:
+        if Path(path).exists():
+            return path
     found = shutil.which("chrome") or shutil.which("google-chrome")
     if found:
         return found
     raise FileNotFoundError("Chrome not found. Check CHROME_PATHS in this script.")
 
 
-def stat_label(code: str) -> str:
-    return STAT_LABELS.get(code.upper(), code)
+def resolve_path(value: str | Path) -> Path:
+    path = Path(value)
+    if path.is_absolute():
+        return path
+    return WORKSPACE / path
 
 
-def find_runs_for_date(date_str: str) -> list[pathlib.Path]:
-    """Return all production run dirs for a given YYYYMMDD date, sorted by time."""
-    dirs = sorted(
-        [d for d in RUNS_DIR.iterdir() if d.name.startswith(date_str) and "test" not in d.name.lower()],
-        key=lambda d: d.name,
+def find_runs_for_date(date_str: str) -> list[Path]:
+    if not RUNS_DIR.is_dir():
+        return []
+    return sorted(
+        [run for run in RUNS_DIR.iterdir() if run.is_dir() and run.name.startswith(date_str)],
+        key=lambda run: run.name,
     )
-    return dirs
 
 
-def check_slip_wins(run_dir: pathlib.Path):
-    """
-    Returns dict keyed by slip-size label ('3-leg', '4-leg', '5-leg') ->
-    {'legs': [...leg dicts...], 'all_hit': bool, 'n_hit': int, 'hit_prob': float, 'payout_mult': float, 'ev': float}
-    Returns None if data missing.
-    """
-    ef = run_dir / "eval_legs.csv"
-    sf = run_dir / "marketed_slips.csv"
-    if not ef.exists() or not sf.exists():
-        return None
-
-    ev = pd.read_csv(ef)
-    sl = pd.read_csv(sf)
-    if "hit" not in ev.columns:
-        return None
-
-    ev["_key"] = ev["player"].str.strip() + "|" + ev["stat"].str.strip() + "|" + ev["direction"].str.strip() + "|" + ev["line"].astype(str)
-    hit_map = dict(zip(ev["_key"], ev["hit"]))
-
-    results = {}
-    for slip_name, grp in sl.groupby("slip"):
-        grp = grp.copy()
-        grp["_key"] = grp["player"].str.strip() + "|" + grp["stat"].str.strip() + "|" + grp["direction"].str.strip() + "|" + grp["line"].astype(str)
-        grp["leg_hit"] = grp["_key"].map(hit_map)
-        all_hit = bool(grp["leg_hit"].fillna(0).astype(bool).all())
-        n_hit = int(grp["leg_hit"].fillna(0).sum())
-        legs = []
-        for _, row in grp.iterrows():
-            legs.append({
-                "player":    row["player"],
-                "stat":      row["stat"],
-                "direction": row["direction"],
-                "line":      row["line"],
-                "tier":      row["tier"],
-                "p_cal":     row.get("p_cal", None),
-                "hit":       row["leg_hit"],
-            })
-        results[slip_name] = {
-            "legs":       legs,
-            "all_hit":    all_hit,
-            "n_hit":      n_hit,
-            "hit_prob":   float(grp["hit_prob"].iloc[0]) if "hit_prob" in grp.columns else None,
-            "payout_mult":float(grp["payout_mult"].iloc[0]) if "payout_mult" in grp.columns else None,
-            "ev":         float(grp["ev"].iloc[0]) if "ev" in grp.columns else None,
-        }
-    return results
+def pretty_date(date_str: str) -> str:
+    try:
+        d = date(int(date_str[:4]), int(date_str[4:6]), int(date_str[6:8]))
+        if sys.platform == "win32":
+            return d.strftime("%B %#d, %Y")
+        return d.strftime("%B %-d, %Y")
+    except Exception:
+        return date_str
 
 
-def pick_best_winning_slip(all_runs: list[pathlib.Path]):
-    """
-    Find the best (largest winning) slip from the given run dirs.
-    Preference: 4-leg win > 3-leg win > 5-leg win (more credible to post).
-    Returns (run_dir, slip_name, slip_data) or None.
-    """
-    preference = ["4-leg", "5-leg", "3-leg"]
-    for size in preference:
-        # Prefer the latest run that has a win for this size
-        for run_dir in reversed(all_runs):
-            wins = check_slip_wins(run_dir)
-            if wins and size in wins and wins[size]["all_hit"]:
-                return run_dir, size, wins[size]
-    return None
+def stat_label(code: Any) -> str:
+    text = str(code or "").upper()
+    return STAT_LABELS.get(text, text)
 
 
-def featured_player(slip_data: dict) -> dict:
-    """Return the featured leg — first GOBLIN, else first leg."""
-    legs = slip_data["legs"]
-    for lg in legs:
-        if str(lg["tier"]).upper() == "GOBLIN":
-            return lg
-    return legs[0]
+def fmt_line(value: Any) -> str:
+    try:
+        num = float(value)
+    except Exception:
+        return str(value or "")
+    return f"{num:g}"
 
 
-def find_player_image(player_name: str) -> str | None:
-    """Look for a local jpg/png matching the player name in marketing dir."""
-    name_slug = player_name.lower().replace(" ", "_")
-    for ext in (".jpg", ".jpeg", ".png"):
-        p = SCRIPT_DIR / (name_slug + ext)
-        if p.exists():
-            return f"./{p.name}"
-    return None
+def fmt_prob(value: Any) -> str:
+    try:
+        return f"{float(value) * 100:.1f}%"
+    except Exception:
+        return "--"
 
 
-def avg_confidence(slip_data: dict) -> float | None:
-    vals = [lg["p_cal"] for lg in slip_data["legs"] if lg["p_cal"] is not None and not pd.isna(lg["p_cal"])]
-    return round(sum(vals) / len(vals) * 100, 1) if vals else None
+def fmt_mult(value: Any) -> str:
+    try:
+        num = float(value)
+    except Exception:
+        return "--"
+    if abs(num - round(num)) < 0.001:
+        return f"{int(round(num))}x"
+    return f"{num:.2f}x"
 
 
-def tier_css(tier: str) -> str:
-    t = str(tier).upper()
-    if t == "GOBLIN":
+def tier_css(tier: Any) -> str:
+    text = str(tier or "").upper()
+    if text == "GOBLIN":
         return "tier-goblin"
-    if t == "DEMON":
+    if text == "DEMON":
         return "tier-demon"
     return "tier-standard"
 
 
-def dir_css(direction: str) -> str:
-    return "leg-over" if direction.upper() == "OVER" else "leg-under"
+def direction_css(direction: Any) -> str:
+    return "dir-under" if str(direction or "").upper() == "UNDER" else "dir-over"
 
 
-def dir_class(direction: str) -> str:
-    return "over" if direction.upper() == "OVER" else "under"
+def find_player_image(player_name: str) -> str | None:
+    slug = re.sub(r"[^a-z0-9]+", "_", player_name.lower()).strip("_")
+    for ext in (".jpg", ".jpeg", ".png", ".webp"):
+        path = SCRIPT_DIR / f"{slug}{ext}"
+        if path.is_file():
+            return f"./{path.name}"
+    return None
 
 
-# ─────────────────────────────────────────────
-# HTML builder
-# ─────────────────────────────────────────────
+def load_winners_from_eval_slips(eval_slips_path: Path) -> list[dict[str, Any]]:
+    df = pd.read_csv(eval_slips_path)
+    if df.empty:
+        return []
+    required = {"status", "legs_json", "family", "slip_label"}
+    missing = required - set(df.columns)
+    if missing:
+        raise ValueError(f"{eval_slips_path} missing columns: {sorted(missing)}")
 
-def build_html(slip_name: str, slip_data: dict, game_date: str, player_img: str | None, fallback_num: str = "#31") -> str:
-    feat = featured_player(slip_data)
-    feat_name = feat["player"]
-    feat_parts = feat_name.split()
-    feat_first = feat_parts[0] if feat_parts else ""
-    feat_last  = " ".join(feat_parts[1:]) if len(feat_parts) > 1 else ""
+    winners: list[dict[str, Any]] = []
+    for _, row in df[df["status"].astype(str).str.lower() == "win"].iterrows():
+        legs = json.loads(str(row.get("legs_json", "[]") or "[]"))
+        winners.append(
+            {
+                "family": str(row.get("family", "")),
+                "slip_label": str(row.get("slip_label", "")),
+                "n_legs": int(float(row.get("n_legs", len(legs)) or len(legs))),
+                "hit_count": int(float(row.get("hit_count", len(legs)) or len(legs))),
+                "truth_legs": int(float(row.get("truth_legs", len(legs)) or len(legs))),
+                "hit_prob": row.get("hit_prob"),
+                "payout_mult": row.get("payout_mult"),
+                "ev_mult": row.get("ev_mult"),
+                "source_file": str(row.get("source_file", "")),
+                "legs": legs,
+            }
+        )
 
-    img_html = ""
+    winners.sort(key=lambda slip: (FAMILY_ORDER.get(slip["family"], 99), -int(slip["n_legs"])))
+    return winners
+
+
+def resolve_eval_slips(args: argparse.Namespace, game_date: str) -> Path:
+    if args.eval_slips:
+        path = resolve_path(args.eval_slips)
+        if not path.is_file():
+            raise FileNotFoundError(path)
+        return path
+
+    if args.run:
+        run_dir = resolve_path(args.run)
+        path = run_dir / "eval_slips.csv"
+        if not path.is_file():
+            raise FileNotFoundError(f"Missing eval_slips.csv in {run_dir}")
+        return path
+
+    for run_dir in reversed(find_runs_for_date(game_date)):
+        path = run_dir / "eval_slips.csv"
+        if path.is_file():
+            return path
+    raise FileNotFoundError(f"No eval_slips.csv found for {game_date}")
+
+
+def featured_player(winners: list[dict[str, Any]]) -> str:
+    for slip in winners:
+        for leg in slip["legs"]:
+            player = str(leg.get("player", "") or "").strip()
+            if player:
+                return player
+    return "Atlas"
+
+
+def render_leg(leg: dict[str, Any]) -> str:
+    player = html.escape(str(leg.get("player", "") or ""))
+    stat = html.escape(str(leg.get("stat", "") or "").upper())
+    direction = html.escape(str(leg.get("direction", "") or "").upper())
+    line = html.escape(fmt_line(leg.get("line")))
+    tier = html.escape(str(leg.get("tier", "") or "").upper())
+    actual = html.escape(fmt_line(leg.get("actual")))
+    return f"""
+      <div class="leg">
+        <div class="check">HIT</div>
+        <div class="leg-main">
+          <div class="leg-player">{player}</div>
+          <div class="leg-meta"><span>{stat}</span>{html.escape(stat_label(stat))}</div>
+        </div>
+        <div class="pick {direction_css(direction)}">
+          <span>{direction}</span>
+          <strong>{line}</strong>
+        </div>
+        <div class="actual">ACTUAL<br><strong>{actual}</strong></div>
+        <div class="tier {tier_css(tier)}">{tier}</div>
+      </div>
+    """
+
+
+def render_slip(slip: dict[str, Any]) -> str:
+    family = html.escape(slip["family"])
+    label = html.escape(slip["slip_label"])
+    hit_prob = fmt_prob(slip.get("hit_prob"))
+    payout = fmt_mult(slip.get("payout_mult"))
+    ev = fmt_mult(slip.get("ev_mult"))
+    legs_html = "\n".join(render_leg(leg) for leg in slip["legs"])
+    return f"""
+    <section class="slip-card">
+      <div class="slip-head">
+        <div>
+          <div class="slip-family">{family}</div>
+          <div class="slip-label">{label} Winner</div>
+        </div>
+        <div class="hit-pill">{slip["hit_count"]}/{slip["truth_legs"]} HIT</div>
+      </div>
+      <div class="legs">
+        {legs_html}
+      </div>
+      <div class="slip-stats">
+        <div><strong>{payout}</strong><span>Payout</span></div>
+        <div><strong>{hit_prob}</strong><span>Model Hit Prob</span></div>
+        <div><strong>{ev}</strong><span>EV Mult</span></div>
+      </div>
+    </section>
+    """
+
+
+def build_html(winners: list[dict[str, Any]], game_date: str, player_img: str | None) -> str:
+    date_text = pretty_date(game_date)
+    hero = featured_player(winners)
+    hero_name = html.escape(hero.upper())
+    image_html = ""
     if player_img:
-        img_html = f'<img src="{player_img}" onerror="this.style.display=\'none\'; document.getElementById(\'fb\').style.display=\'flex\';" alt="{feat_name}" />'
-    else:
-        img_html = '<img src="" onerror="this.style.display=\'none\'; document.getElementById(\'fb\').style.display=\'flex\';" alt="" />'
+        image_html = f'<img src="{html.escape(player_img)}" alt="{html.escape(hero)}" />'
 
-    legs_html = ""
-    for i, lg in enumerate(slip_data["legs"], 1):
-        d_css  = dir_css(lg["direction"])
-        d_cls  = dir_class(lg["direction"])
-        t_css  = tier_css(lg["tier"])
-        line_v = lg["line"]
-        slab   = stat_label(lg["stat"])
-        name   = lg["player"]
-        tier   = str(lg["tier"]).upper()
-        direction = lg["direction"].upper()
-        legs_html += f"""
-      <div class="leg-row {d_css}">
-        <span class="leg-check">✅</span>
-        <div class="leg-player">
-          <div class="leg-name">{name}</div>
-          <div class="leg-stat-line">{lg['stat']} — {slab}</div>
-        </div>
-        <div class="leg-pick">
-          <span class="leg-direction {d_cls}">{direction}</span>
-          <span class="leg-line">{line_v}</span>
-        </div>
-        <span class="leg-tier {t_css}">{tier}</span>
-      </div>"""
+    slip_cards = "\n".join(render_slip(slip) for slip in winners)
+    total_slips = len(winners)
+    total_legs = sum(int(slip["truth_legs"]) for slip in winners)
+    hit_legs = sum(int(slip["hit_count"]) for slip in winners)
 
-    n_legs   = len(slip_data["legs"])
-    n_hit    = slip_data["n_hit"]
-    # PrizePicks standard Power Play payouts by leg count
-    PP_PAYOUTS = {3: "3×", 4: "10×", 5: "20×"}
-    payout = PP_PAYOUTS.get(n_legs, f"{slip_data['payout_mult']:.1f}×" if slip_data["payout_mult"] else "—")
-    avg_conf = avg_confidence(slip_data)
-    avg_conf_str = f"{avg_conf:.0f}%" if avg_conf else "—"
-    ev_str   = f"{slip_data['ev']:.2f}×" if slip_data["ev"] else "—"
-
-    # Pretty date: 20260507 -> MAY 7, 2026
-    try:
-        d = date(int(game_date[:4]), int(game_date[4:6]), int(game_date[6:8]))
-        pretty_date = d.strftime("%B %-d, %Y") if sys.platform != "win32" else d.strftime("%B %#d, %Y")
-    except Exception:
-        pretty_date = game_date
-
-    return f"""<!DOCTYPE html>
+    return f"""<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
+<meta charset="utf-8" />
 <meta name="viewport" content="width=1080" />
-<title>Atlas — WINNERS · {pretty_date}</title>
+<title>Atlas Winners - {html.escape(date_text)}</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;900&family=Space+Grotesk:wght@400;500;600;700&display=swap');
-
-  * {{ margin: 0; padding: 0; box-sizing: border-box; }}
-
+  @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;900&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+  * {{ box-sizing: border-box; }}
   body {{
     width: 1080px;
     height: 1080px;
-    background: #000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: 'Space Grotesk', sans-serif;
+    margin: 0;
     overflow: hidden;
+    background: #020403;
+    color: #fff;
+    font-family: "Space Grotesk", Arial, sans-serif;
   }}
-
   .card {{
     width: 1080px;
     height: 1080px;
     position: relative;
     overflow: hidden;
-    background: #000000;
+    background:
+      linear-gradient(rgba(0, 230, 118, 0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 212, 255, 0.030) 1px, transparent 1px),
+      radial-gradient(circle at 78% 10%, rgba(0, 230, 118, 0.18), transparent 32%),
+      radial-gradient(circle at 8% 95%, rgba(0, 212, 255, 0.13), transparent 30%),
+      #020403;
+    background-size: 72px 72px, 72px 72px, auto, auto, auto;
   }}
-
-  .grid-bg {{
+  .hero {{
     position: absolute;
-    inset: 0;
-    background-image:
-      linear-gradient(rgba(0,212,255,0.022) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(0,212,255,0.022) 1px, transparent 1px);
-    background-size: 80px 80px;
-    pointer-events: none;
-    z-index: 0;
-  }}
-
-  .glow-tr {{
-    position: absolute;
-    top: -200px; right: -200px;
-    width: 650px; height: 650px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(0,230,118,0.10) 0%, transparent 65%);
-    pointer-events: none;
-    z-index: 0;
-  }}
-  .glow-bl {{
-    position: absolute;
-    bottom: -150px; left: -150px;
-    width: 500px; height: 500px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(0,212,255,0.08) 0%, transparent 65%);
-    pointer-events: none;
-    z-index: 0;
-  }}
-
-  .okc-bar {{
-    position: absolute;
-    left: 0; top: 0; bottom: 0;
-    width: 4px;
-    background: linear-gradient(180deg, #00e676 0%, rgba(0,230,118,0.3) 60%, transparent 100%);
-    z-index: 20;
-  }}
-
-  .top-bar {{
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 70px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 48px;
-    border-bottom: 1px solid rgba(0,230,118,0.15);
-    z-index: 30;
-    background: rgba(0,0,0,0.88);
-    backdrop-filter: blur(10px);
-  }}
-  .logo .a {{ color: #fff; font-family: 'Barlow Condensed', sans-serif; font-size: 22px; font-weight: 900; letter-spacing: 0.06em; text-transform: uppercase; }}
-  .logo .p {{ color: #00d4ff; font-family: 'Barlow Condensed', sans-serif; font-size: 22px; font-weight: 900; letter-spacing: 0.06em; text-transform: uppercase; }}
-
-  .winners-badge {{
-    display: flex;
-    align-items: center;
-    gap: 9px;
-    background: rgba(0,230,118,0.10);
-    border: 1px solid rgba(0,230,118,0.40);
-    border-radius: 100px;
-    padding: 7px 22px;
-  }}
-  .badge-text {{
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 0.20em;
-    text-transform: uppercase;
-    color: #00e676;
-  }}
-  .top-date {{
-    font-size: 13px;
-    font-weight: 500;
-    color: rgba(255,255,255,0.38);
-    letter-spacing: 0.07em;
-  }}
-
-  .photo-hero {{
-    position: absolute;
-    top: 70px; left: 0; right: 0;
-    height: 475px;
-    z-index: 1;
+    inset: 0 0 auto 0;
+    height: 370px;
     overflow: hidden;
+    border-bottom: 1px solid rgba(0, 230, 118, 0.22);
   }}
-  .photo-hero img {{
+  .hero img {{
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: center 15%;
-    filter: saturate(1.05) contrast(1.05);
+    object-position: center 14%;
+    filter: saturate(1.08) contrast(1.04);
   }}
-  .photo-hero::after {{
-    content: '';
+  .hero::after {{
+    content: "";
     position: absolute;
     inset: 0;
-    background: linear-gradient(180deg,
-      transparent 0%, transparent 30%,
-      rgba(0,0,0,0.55) 60%, rgba(0,0,0,0.92) 85%, #000000 100%
-    );
+    background: linear-gradient(180deg, rgba(0,0,0,0.20), rgba(0,0,0,0.92)),
+      linear-gradient(90deg, rgba(0,0,0,0.80), transparent 55%, rgba(0,0,0,0.35));
   }}
-  .photo-hero::before {{
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(90deg,
-      rgba(0,0,0,0.45) 0%, transparent 20%,
-      transparent 80%, rgba(0,0,0,0.45) 100%
-    );
-    z-index: 1;
-  }}
-  .photo-fallback {{
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(160deg, #001020 0%, #001830 40%, #000000 100%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }}
-  .fallback-number {{
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 280px;
-    font-weight: 900;
-    color: rgba(0,212,255,0.10);
-    line-height: 1;
-    user-select: none;
-  }}
-
-  .player-overlay {{
-    position: absolute;
-    top: 70px; left: 0; right: 0;
-    height: 475px;
-    z-index: 5;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    padding: 0 52px 28px 52px;
-    pointer-events: none;
-  }}
-  .hero-eyebrow {{
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-    color: #00e676;
-    margin-bottom: 6px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }}
-  .hero-eyebrow::before {{
-    content: '';
-    display: block;
-    width: 22px; height: 2px;
-    background: #00e676;
-    border-radius: 1px;
-  }}
-  .hero-name {{
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 72px;
-    font-weight: 900;
-    line-height: 0.88;
-    color: #fff;
-    letter-spacing: -0.01em;
-    text-transform: uppercase;
-    text-shadow: 0 2px 20px rgba(0,0,0,0.8);
-    margin-bottom: 10px;
-  }}
-  .hero-sub {{
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: rgba(255,255,255,0.38);
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }}
-  .hero-sub .dot {{
-    width: 5px; height: 5px;
-    border-radius: 50%;
-    background: #00e676;
-  }}
-
-  .content {{
-    position: absolute;
-    left: 0; right: 0;
-    top: 550px;
-    bottom: 78px;
-    padding: 16px 52px 14px 52px;
-    display: flex;
-    flex-direction: column;
-    z-index: 10;
-  }}
-
-  .winners-headline {{
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 52px;
-    font-weight: 900;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    color: #00e676;
-    line-height: 1;
-    margin-bottom: 6px;
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    text-shadow: 0 0 40px rgba(0,230,118,0.35);
-  }}
-  .winners-sub {{
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.20em;
-    text-transform: uppercase;
-    color: rgba(255,255,255,0.28);
-    margin-bottom: 20px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }}
-  .winners-sub::after {{
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: rgba(0,230,118,0.15);
-  }}
-
-  .section-title {{
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-    color: rgba(255,255,255,0.28);
-    margin-bottom: 10px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }}
-  .section-title::after {{
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: rgba(255,255,255,0.07);
-  }}
-
-  .legs {{
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    margin-bottom: 18px;
-  }}
-  .leg-row {{
-    background: rgba(0,230,118,0.05);
-    border: 1px solid rgba(0,230,118,0.20);
-    border-radius: 13px;
-    padding: 11px 16px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
+  .top {{
     position: relative;
-    overflow: hidden;
-  }}
-  .leg-row::before {{
-    content: '';
-    position: absolute;
-    left: 0; top: 0; bottom: 0;
-    width: 3px;
-    border-radius: 13px 0 0 13px;
-  }}
-  .leg-row.leg-over::before  {{ background: #00e676; }}
-  .leg-row.leg-under::before {{ background: #f87171; }}
-
-  .leg-check {{ font-size: 16px; line-height: 1; min-width: 20px; text-align: center; }}
-  .leg-player {{ flex: 1; }}
-  .leg-name {{ font-size: 14px; font-weight: 700; color: #fff; line-height: 1.1; margin-bottom: 2px; }}
-  .leg-stat-line {{ font-size: 11px; color: rgba(255,255,255,0.35); font-weight: 500; }}
-  .leg-pick {{ display: flex; align-items: center; gap: 7px; }}
-  .leg-direction {{ font-family: 'Barlow Condensed', sans-serif; font-size: 18px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.04em; }}
-  .leg-direction.over  {{ color: #00e676; }}
-  .leg-direction.under {{ color: #f87171; }}
-  .leg-line {{ font-family: 'Barlow Condensed', sans-serif; font-size: 22px; font-weight: 900; color: #fff; line-height: 1; }}
-  .leg-tier {{ padding: 3px 9px; border-radius: 100px; font-size: 9px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; white-space: nowrap; }}
-  .tier-goblin   {{ background: rgba(74,222,128,0.08);  color: #4ade80; border: 1px solid rgba(74,222,128,0.35); }}
-  .tier-standard {{ background: rgba(96,165,250,0.08);  color: #60a5fa; border: 1px solid rgba(96,165,250,0.35); }}
-  .tier-demon    {{ background: rgba(248,113,113,0.08); color: #f87171; border: 1px solid rgba(248,113,113,0.35); }}
-
-  .stats-bar-wrap {{
-    display: flex;
-    gap: 10px;
-    margin-top: auto;
-  }}
-  .stat-block {{
-    flex: 1;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.07);
-    border-radius: 13px;
-    padding: 8px 10px;
+    z-index: 4;
+    height: 370px;
+    padding: 42px 54px 32px;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    gap: 3px;
+    justify-content: space-between;
   }}
-  .stat-block.hl {{ border-color: rgba(0,230,118,0.22); background: rgba(0,230,118,0.05); }}
-  .stat-num {{ font-family: 'Barlow Condensed', sans-serif; font-size: 28px; font-weight: 900; line-height: 1; color: #00e676; }}
-  .stat-num.gold {{ color: #f5a623; }}
-  .stat-label {{ font-size: 9px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(255,255,255,0.65); text-align: center; }}
-
-  .footer {{
-    position: absolute;
-    bottom: 0; left: 0; right: 0;
-    height: 60px;
+  .brand-row, .summary-row {{
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 48px;
-    border-top: 1px solid rgba(0,230,118,0.09);
-    z-index: 30;
-    background: rgba(0,0,0,0.92);
-    backdrop-filter: blur(10px);
   }}
-  .footer-brand {{ font-family: 'Barlow Condensed', sans-serif; font-size: 17px; font-weight: 900; letter-spacing: 0.07em; text-transform: uppercase; color: rgba(255,255,255,0.45); }}
-  .footer-handle {{ font-size: 14px; font-weight: 700; color: #00d4ff; letter-spacing: 0.04em; }}
-  .footer-disc {{ font-size: 10px; color: rgba(255,255,255,0.18); letter-spacing: 0.04em; }}
+  .brand {{
+    font-family: "Barlow Condensed", sans-serif;
+    font-size: 27px;
+    font-weight: 900;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+  }}
+  .brand span {{ color: #f5a623; }}
+  .date {{
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.56);
+  }}
+  .eyebrow {{
+    color: #00e676;
+    font-size: 13px;
+    font-weight: 900;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    margin-bottom: 9px;
+  }}
+  .headline {{
+    font-family: "Barlow Condensed", sans-serif;
+    font-size: 86px;
+    line-height: 0.86;
+    font-weight: 900;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    text-shadow: 0 8px 28px rgba(0,0,0,0.72);
+  }}
+  .hero-player {{
+    margin-top: 10px;
+    color: rgba(255,255,255,0.58);
+    font-size: 16px;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+  }}
+  .summary-pill {{
+    min-width: 146px;
+    padding: 12px 16px;
+    border: 1px solid rgba(0,230,118,0.35);
+    background: rgba(0,230,118,0.09);
+    text-align: center;
+  }}
+  .summary-pill strong {{
+    display: block;
+    color: #00e676;
+    font-family: "Barlow Condensed", sans-serif;
+    font-size: 38px;
+    line-height: 1;
+  }}
+  .summary-pill span {{
+    display: block;
+    margin-top: 4px;
+    color: rgba(255,255,255,0.58);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }}
+  .content {{
+    position: relative;
+    z-index: 5;
+    height: 710px;
+    padding: 26px 54px 34px;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    gap: 18px;
+  }}
+  .content-title {{
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    padding-bottom: 15px;
+  }}
+  .content-title h2 {{
+    margin: 0;
+    font-family: "Barlow Condensed", sans-serif;
+    font-size: 45px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }}
+  .content-title p {{
+    margin: 0;
+    color: rgba(255,255,255,0.45);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }}
+  .slips {{
+    display: grid;
+    grid-template-columns: repeat({min(total_slips, 2)}, 1fr);
+    gap: 18px;
+    min-height: 0;
+  }}
+  .slip-card {{
+    border: 1px solid rgba(0,230,118,0.20);
+    background: rgba(2, 10, 8, 0.84);
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }}
+  .slip-head {{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 14px;
+  }}
+  .slip-family {{
+    color: #f5a623;
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }}
+  .slip-label {{
+    margin-top: 3px;
+    font-family: "Barlow Condensed", sans-serif;
+    font-size: 34px;
+    line-height: 1;
+    font-weight: 900;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }}
+  .hit-pill {{
+    color: #00e676;
+    border: 1px solid rgba(0,230,118,0.35);
+    background: rgba(0,230,118,0.08);
+    padding: 8px 10px;
+    font-size: 12px;
+    font-weight: 900;
+    white-space: nowrap;
+  }}
+  .legs {{
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+  }}
+  .leg {{
+    min-height: 76px;
+    display: grid;
+    grid-template-columns: 42px minmax(0, 1fr) 78px 62px 72px;
+    gap: 10px;
+    align-items: center;
+    border: 1px solid rgba(255,255,255,0.08);
+    background: rgba(255,255,255,0.035);
+    padding: 10px;
+  }}
+  .check {{
+    width: 38px;
+    height: 38px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: #00e676;
+    color: #00170a;
+    font-size: 10px;
+    font-weight: 900;
+  }}
+  .leg-player {{
+    font-size: 15px;
+    font-weight: 800;
+    line-height: 1.08;
+  }}
+  .leg-meta {{
+    margin-top: 6px;
+    color: rgba(255,255,255,0.42);
+    font-size: 9px;
+    font-weight: 700;
+    line-height: 1.15;
+  }}
+  .leg-meta span {{
+    display: inline-block;
+    margin-right: 7px;
+    color: #f5a623;
+    font-size: 9px;
+    font-weight: 900;
+    letter-spacing: 0.12em;
+  }}
+  .pick span {{
+    display: block;
+    font-family: "Space Grotesk", Arial, sans-serif;
+    font-size: 12px;
+    line-height: 1.05;
+    font-weight: 800;
+    letter-spacing: 0.10em;
+  }}
+  .pick strong {{
+    display: block;
+    margin-top: 4px;
+    font-family: "Space Grotesk", Arial, sans-serif;
+    font-size: 24px;
+    line-height: 0.95;
+    font-weight: 800;
+    letter-spacing: 0;
+  }}
+  .dir-over {{ color: #00e676; }}
+  .dir-under {{ color: #ff5f6d; }}
+  .actual {{
+    color: rgba(255,255,255,0.46);
+    text-align: center;
+    font-size: 9px;
+    font-weight: 900;
+    letter-spacing: 0.10em;
+  }}
+  .actual strong {{
+    color: #fff;
+    font-family: "Space Grotesk", Arial, sans-serif;
+    font-size: 23px;
+    line-height: 1.05;
+    font-weight: 800;
+  }}
+  .tier {{
+    justify-self: end;
+    padding: 6px 8px;
+    font-size: 9px;
+    font-weight: 900;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    border: 1px solid rgba(255,255,255,0.14);
+  }}
+  .tier-goblin {{ color: #4ade80; border-color: rgba(74,222,128,0.38); background: rgba(74,222,128,0.06); }}
+  .tier-standard {{ color: #60a5fa; border-color: rgba(96,165,250,0.38); background: rgba(96,165,250,0.06); }}
+  .tier-demon {{ color: #f87171; border-color: rgba(248,113,113,0.38); background: rgba(248,113,113,0.06); }}
+  .slip-stats {{
+    margin-top: auto;
+    padding-top: 14px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }}
+  .slip-stats div {{
+    border: 1px solid rgba(255,255,255,0.07);
+    background: rgba(255,255,255,0.03);
+    padding: 9px 6px;
+    text-align: center;
+  }}
+  .slip-stats strong {{
+    display: block;
+    color: #00e676;
+    font-family: "Barlow Condensed", sans-serif;
+    font-size: 25px;
+    line-height: 1;
+  }}
+  .slip-stats span {{
+    display: block;
+    margin-top: 4px;
+    color: rgba(255,255,255,0.42);
+    font-size: 8px;
+    font-weight: 900;
+    letter-spacing: 0.11em;
+    text-transform: uppercase;
+  }}
+  .footer {{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: rgba(255,255,255,0.38);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+  }}
+  .footer strong {{ color: #00d4ff; }}
 </style>
 </head>
 <body>
-<div class="card">
-
-  <div class="grid-bg"></div>
-  <div class="glow-tr"></div>
-  <div class="glow-bl"></div>
-  <div class="okc-bar"></div>
-
-  <div class="top-bar">
-    <div class="logo"><span class="a">AtlasSports</span><span class="p">.Ai</span></div>
-    <div class="winners-badge">
-      <span class="badge-text">✅ Winners</span>
-    </div>
-    <div class="top-date">{pretty_date.upper()}</div>
-  </div>
-
-  <div class="photo-hero">
-    {img_html}
-    <div id="fb" class="photo-fallback" style="display:none;">
-      <div class="fallback-number">{fallback_num}</div>
-    </div>
-  </div>
-
-  <div class="player-overlay">
-    <div class="hero-eyebrow">{n_legs}-Leg System — All Hit</div>
-    <div class="hero-name">{feat_first}<br>{feat_last}</div>
-    <div class="hero-sub">
-      <div class="dot"></div>
-      Featured Leg
-    </div>
-  </div>
-
-  <div class="content">
-
-    <div class="winners-headline">✅ Winner</div>
-    <div class="winners-sub">{n_legs}-Leg <span style="color:#f5a623;font-weight:700;">Premium</span> Slip · {pretty_date}</div>
-
-    <div class="section-title">All Legs Hit</div>
-    <div class="legs">
-{legs_html}
-    </div>
-
-    <div class="stats-bar-wrap">
-      <div class="stat-block hl">
-        <span class="stat-num">{n_hit} / {n_legs}</span>
-        <span class="stat-label">Legs Hit</span>
+  <div class="card">
+    <div class="hero">{image_html}</div>
+    <div class="top">
+      <div class="brand-row">
+        <div class="brand">Atlas <span>Sports AI</span></div>
+        <div class="date">{html.escape(date_text).upper()}</div>
       </div>
-      <div class="stat-block hl">
-        <span class="stat-num gold">{payout}</span>
-        <span class="stat-label">Payout</span>
+      <div>
+        <div class="eyebrow">Confirmed Results</div>
+        <div class="headline">Yesterday's<br>Winners</div>
+        <div class="hero-player">FEATURED: {hero_name}</div>
       </div>
-      <div class="stat-block hl">
-        <span class="stat-num">{avg_conf_str}</span>
-        <span class="stat-label">Avg Confidence</span>
-      </div>
-      <div class="stat-block">
-        <span class="stat-num gold">{ev_str}</span>
-        <span class="stat-label">EV Mult</span>
+      <div class="summary-row">
+        <div class="summary-pill"><strong>{total_slips}</strong><span>Winning Slips</span></div>
+        <div class="summary-pill"><strong>{hit_legs}/{total_legs}</strong><span>Winner Legs</span></div>
       </div>
     </div>
-
+    <main class="content">
+      <div class="content-title">
+        <h2>All Legs Cashed</h2>
+        <p>Only full winners shown</p>
+      </div>
+      <div class="slips">
+        {slip_cards}
+      </div>
+      <div class="footer">
+        <div>Atlas Props</div>
+        <strong>@AtlasSportsAI</strong>
+        <div>Entertainment only</div>
+      </div>
+    </main>
   </div>
-
-  <div class="footer">
-    <div class="footer-brand">Atlas Props</div>
-    <div class="footer-handle">@AtlasSportsAI</div>
-    <div class="footer-disc">For entertainment only · Not financial advice</div>
-  </div>
-
-</div>
 </body>
-</html>"""
+</html>
+"""
 
 
-# ─────────────────────────────────────────────
-# Export PNG
-# ─────────────────────────────────────────────
-
-def export_png(html_path: pathlib.Path, out_path: pathlib.Path):
+def export_png(html_path: Path, out_path: Path) -> bool:
     chrome = find_chrome()
-    file_url = html_path.resolve().as_uri()
     cmd = [
         chrome,
         "--headless=new",
@@ -692,101 +667,58 @@ def export_png(html_path: pathlib.Path, out_path: pathlib.Path):
         f"--screenshot={out_path.resolve()}",
         "--hide-scrollbars",
         "--force-device-scale-factor=1",
-        file_url,
+        html_path.resolve().as_uri(),
     ]
-    print(f"Rendering: {html_path.name}")
-    result = subprocess.run(cmd, capture_output=True, text=True, timeout=30)
+    print(f"[winners] Rendering {html_path.name}")
+    result = subprocess.run(cmd, capture_output=True, text=True, timeout=45)
     if out_path.exists() and out_path.stat().st_size > 10_000:
-        print(f"✓ Exported {out_path.stat().st_size // 1024}KB → {out_path}")
+        print(f"[winners] PNG -> {out_path} ({out_path.stat().st_size // 1024}KB)")
         return True
-    print("Export may have failed. Chrome stderr:")
-    print(result.stderr[-2000:] if result.stderr else "(no stderr)")
+    print("[winners] Chrome render failed")
+    print((result.stderr or result.stdout or "")[-2000:])
     return False
 
 
-# ─────────────────────────────────────────────
-# Main
-# ─────────────────────────────────────────────
-
-def main():
-    parser = argparse.ArgumentParser(description="Generate daily winners graphic")
-    parser.add_argument("--date", default=None, help="YYYYMMDD date (default: yesterday)")
-    parser.add_argument("--run",  default=None, help="Specific run dir path (overrides --date)")
-    parser.add_argument("--slip", default=None, help="Slip size to use: 3-leg / 4-leg / 5-leg (default: auto-pick)")
-    parser.add_argument("--player-img", default=None, help="Path to player image (default: auto-detect from marketing dir)")
-    parser.add_argument("--no-export", action="store_true", help="Skip PNG render (HTML only)")
+def main() -> int:
+    parser = argparse.ArgumentParser(description="Generate Atlas winner graphic from eval_slips.csv")
+    parser.add_argument("--date", default=None, help="YYYYMMDD date for output naming and display")
+    parser.add_argument("--run", default=None, help="Run directory containing eval_slips.csv")
+    parser.add_argument("--eval-slips", default=None, help="Direct path to eval_slips.csv")
+    parser.add_argument("--player-img", default=None, help="Optional hero image path")
+    parser.add_argument("--no-export", action="store_true", help="Write HTML only")
     args = parser.parse_args()
 
-    # Determine date
-    if args.date:
-        game_date = args.date
-    else:
-        yesterday = date.today() - timedelta(days=1)
-        game_date = yesterday.strftime("%Y%m%d")
+    game_date = args.date or (date.today() - timedelta(days=1)).strftime("%Y%m%d")
+    eval_slips_path = resolve_eval_slips(args, game_date)
+    winners = load_winners_from_eval_slips(eval_slips_path)
+    if not winners:
+        print(f"[winners] No full winning slips in {eval_slips_path}")
+        return 1
 
-    print(f"[winners] Game date: {game_date}")
-
-    # Find runs
-    if args.run:
-        run_dirs = [pathlib.Path(args.run)]
-    else:
-        run_dirs = find_runs_for_date(game_date)
-        if not run_dirs:
-            print(f"[ERROR] No run dirs found for {game_date} in {RUNS_DIR}")
-            sys.exit(1)
-        print(f"[winners] Found {len(run_dirs)} run(s): {[d.name for d in run_dirs]}")
-
-    # Find best winning slip
-    if args.slip:
-        # User specified a slip size — just grab the first run that has a win for it
-        result = None
-        for run_dir in reversed(run_dirs):
-            wins = check_slip_wins(run_dir)
-            if wins and args.slip in wins and wins[args.slip]["all_hit"]:
-                result = (run_dir, args.slip, wins[args.slip])
-                break
-        if not result:
-            print(f"[WARN] No winning {args.slip} found. Searching for any winner...")
-            result = pick_best_winning_slip(run_dirs)
-    else:
-        result = pick_best_winning_slip(run_dirs)
-
-    if not result:
-        print(f"[ERROR] No winning slips found for {game_date}. Cannot generate graphic.")
-        sys.exit(1)
-
-    run_dir, slip_name, slip_data = result
-    print(f"[winners] Using: {slip_name} WIN from {run_dir.name} ({slip_data['n_hit']}/{len(slip_data['legs'])} hit)")
-
-    # Player image
-    feat = featured_player(slip_data)
+    hero = featured_player(winners)
     if args.player_img:
-        player_img = args.player_img
+        player_img = str(resolve_path(args.player_img).resolve().as_uri())
     else:
-        player_img = find_player_image(feat["player"])
+        player_img = find_player_image(hero)
         if player_img:
             print(f"[winners] Player image: {player_img}")
         else:
-            print(f"[WARN] No image found for {feat['player']} in {SCRIPT_DIR}")
-            print(f"       Drop a file named {feat['player'].lower().replace(' ', '_')}.jpg there to use it.")
+            print(f"[winners] No local hero image found for {hero}; rendering without photo.")
 
-    # Build HTML
-    html_content = build_html(slip_name, slip_data, game_date, player_img)
+    html_text = build_html(winners, game_date, player_img)
     html_path = SCRIPT_DIR / f"winners_{game_date}.html"
-    html_path.write_text(html_content, encoding="utf-8")
-    print(f"[winners] HTML → {html_path}")
+    png_path = SCRIPT_DIR / f"winners_{game_date}.png"
+    html_path.write_text(html_text, encoding="utf-8")
+    print(f"[winners] Source -> {eval_slips_path}")
+    print(f"[winners] HTML -> {html_path}")
+    print(f"[winners] Winners -> {len(winners)} slips")
+    for slip in winners:
+        print(f"[winners] {slip['family']} {slip['slip_label']} {slip['hit_count']}/{slip['truth_legs']} hit")
 
-    # Export PNG
-    if not args.no_export:
-        png_path = SCRIPT_DIR / f"winners_{game_date}.png"
-        ok = export_png(html_path, png_path)
-        if not ok:
-            sys.exit(1)
-    else:
-        print("[winners] Skipping PNG render (--no-export)")
-
-    print("\n[winners] Done.")
+    if not args.no_export and not export_png(html_path, png_path):
+        return 1
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

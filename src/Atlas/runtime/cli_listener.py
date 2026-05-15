@@ -257,6 +257,29 @@ def git_status(root: Path) -> dict[str, Any]:
     }
 
 
+def dashboard_root(root: Path) -> Path:
+    return root.parent / "atlas-dashboard"
+
+
+def dashboard_status(root: Path) -> dict[str, Any]:
+    dashboard = dashboard_root(root)
+    public_data = dashboard / "public" / "data"
+    expected_files = [
+        "cloudflare_payload.json",
+        "picks_today.json",
+        "status_latest.json",
+        "injury_invalidations_latest.json",
+    ]
+    return {
+        "dashboard_root": str(dashboard),
+        "exists": dashboard.exists(),
+        "git_status": git_status(dashboard) if dashboard.exists() else None,
+        "publish_script": str(dashboard / "publish-atlas.ps1"),
+        "publish_script_exists": (dashboard / "publish-atlas.ps1").exists(),
+        "public_data_files": {name: (public_data / name).exists() for name in expected_files},
+    }
+
+
 def read_log_tail(path: Path, max_lines: int = 80) -> list[str]:
     if not path.exists():
         return []
@@ -272,6 +295,7 @@ def run_status(task: Mapping[str, Any], paths: ListenerPaths) -> dict[str, Any]:
     payload: dict[str, Any] = {
         "status": "completed",
         "latest_run": latest_run_summary(paths.root),
+        "dashboard": dashboard_status(paths.root),
         "iael_log_tail": read_log_tail(paths.root / "data" / "telemetry" / "iael_runs.log"),
     }
     if include_git:
@@ -316,7 +340,16 @@ def run_codex_handoff(task: Mapping[str, Any], paths: ListenerPaths, task_id: st
         raise ValueError("codex_handoff requires a non-empty 'prompt' or 'message'")
     requested_by = str(task.get("requested_by") or "unknown")
     reason = str(task.get("reason") or "")
-    handoff_path = paths.codex_handoffs / f"{task_id}.md"
+    target_repo = str(task.get("target_repo") or task.get("repo") or "atlas").strip().lower()
+    if target_repo in {"atlas", "nba", "model"}:
+        handoff_dir = paths.codex_handoffs
+        resolved_target = "atlas"
+    elif target_repo in {"dashboard", "atlas-dashboard", "website", "site"}:
+        handoff_dir = dashboard_root(paths.root) / ".codex_handoffs"
+        resolved_target = "atlas-dashboard"
+    else:
+        raise ValueError("codex_handoff target_repo must be 'atlas' or 'atlas-dashboard'")
+    handoff_path = handoff_dir / f"{task_id}.md"
     if not bool(task.get("dry_run", False)):
         handoff_path.parent.mkdir(parents=True, exist_ok=True)
         handoff_path.write_text(
@@ -326,6 +359,7 @@ def run_codex_handoff(task: Mapping[str, Any], paths: ListenerPaths, task_id: st
                     "",
                     f"- requested_by: {requested_by}",
                     f"- created_at: {utc_now()}",
+                    f"- target_repo: {resolved_target}",
                     f"- reason: {reason}",
                     "",
                     "## Prompt",
@@ -339,6 +373,7 @@ def run_codex_handoff(task: Mapping[str, Any], paths: ListenerPaths, task_id: st
         )
     return {
         "status": "dry_run" if bool(task.get("dry_run", False)) else "completed",
+        "target_repo": resolved_target,
         "handoff_path": str(handoff_path),
     }
 
@@ -356,6 +391,13 @@ def execute_task(task: Mapping[str, Any], paths: ListenerPaths, task_id: str) ->
         return {"status": "completed", "latest_run": latest_run_summary(paths.root)}
     if action == "git_status":
         return {"status": "completed", "git_status": git_status(paths.root)}
+    if action == "dashboard_status":
+        return {"status": "completed", "dashboard": dashboard_status(paths.root)}
+    if action == "dashboard_git_status":
+        root = dashboard_root(paths.root)
+        if not root.exists():
+            raise FileNotFoundError(f"dashboard repo not found: {root}")
+        return {"status": "completed", "dashboard_git_status": git_status(root)}
     if action == "run_6am_eval":
         return run_known_command(
             task,
@@ -369,7 +411,7 @@ def execute_task(task: Mapping[str, Any], paths: ListenerPaths, task_id: str) ->
             raise ValueError("run_live requires a 'slot' value")
         return run_known_command(task, paths, command_for_live_slot(paths.root, slot), task_id)
     if action == "publish_dashboard":
-        dashboard_script = paths.root.parent / "atlas-dashboard" / "publish-atlas.ps1"
+        dashboard_script = dashboard_root(paths.root) / "publish-atlas.ps1"
         command = [
             "powershell.exe",
             "-NoProfile",
@@ -473,7 +515,11 @@ def listen(paths: ListenerPaths, *, poll_seconds: float = DEFAULT_POLL_SECONDS) 
     paths.ensure()
     print(f"[ATLAS_LISTENER] root={paths.root}", flush=True)
     print(f"[ATLAS_LISTENER] inbox={paths.inbox}", flush=True)
-    print("[ATLAS_LISTENER] actions=status, latest_run, git_status, run_6am_eval, run_live, publish_dashboard, codex_handoff", flush=True)
+    print(
+        "[ATLAS_LISTENER] actions=status, latest_run, git_status, dashboard_status, dashboard_git_status, "
+        "run_6am_eval, run_live, publish_dashboard, codex_handoff",
+        flush=True,
+    )
     while True:
         results = process_once(paths)
         for result in results:
@@ -497,6 +543,10 @@ def submit_task(args: argparse.Namespace, paths: ListenerPaths) -> Path:
         task["slot"] = args.slot
     if args.prompt:
         task["prompt"] = args.prompt
+    if args.target_repo:
+        task["target_repo"] = args.target_repo
+    if args.target_repo:
+        task["target_repo"] = args.target_repo
     if args.dry_run:
         task["dry_run"] = True
     if args.timeout_seconds is not None:
@@ -523,6 +573,8 @@ def build_parser() -> argparse.ArgumentParser:
     submit.add_argument("--id", default=None)
     submit.add_argument("--slot", default=None, help="Live run slot for run_live")
     submit.add_argument("--prompt", default=None, help="Prompt/message for codex_handoff")
+    submit.add_argument("--target-repo", default=None, help="Target repo for codex_handoff: atlas or atlas-dashboard")
+    submit.add_argument("--target-repo", default=None, help="Target repo for codex_handoff: atlas or atlas-dashboard")
     submit.add_argument("--requested-by", default="local_cli")
     submit.add_argument("--reason", default="")
     submit.add_argument("--dry-run", action="store_true")

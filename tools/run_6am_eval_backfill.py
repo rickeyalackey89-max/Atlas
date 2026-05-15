@@ -24,6 +24,7 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 from tools.create_eval_leg_backtestv2 import load_gamelogs, process_run  # noqa: E402
+from Atlas.runtime.slip_eval import write_eval_slips_for_run  # noqa: E402
 
 
 @dataclass(frozen=True)
@@ -36,6 +37,10 @@ class EvalBackfillItem:
     unmatched_rows: int | None = None
     output_path: str | None = None
     report_path: str | None = None
+    eval_slips_csv: str | None = None
+    eval_slips_json: str | None = None
+    slip_eval_status: str | None = None
+    slip_eval_reason: str | None = None
     reason: str | None = None
 
 
@@ -86,6 +91,7 @@ def backfill_eval_legs(
             )
             continue
         if eval_path.exists() and not force:
+            slip_eval_status, eval_slips_csv, eval_slips_json, slip_eval_reason = _write_eval_slips(run_dir, dry_run=dry_run)
             items.append(
                 EvalBackfillItem(
                     run_dir=str(run_dir),
@@ -93,12 +99,20 @@ def backfill_eval_legs(
                     status="skipped",
                     reason="eval_exists",
                     output_path=str(eval_path),
+                    eval_slips_csv=eval_slips_csv,
+                    eval_slips_json=eval_slips_json,
+                    slip_eval_status=slip_eval_status,
+                    slip_eval_reason=slip_eval_reason,
                 )
             )
             continue
 
         try:
             result = process_run(run_dir, gamelogs, write=not dry_run, output_name="eval_legs.csv")
+            slip_eval_status, eval_slips_csv, eval_slips_json, slip_eval_reason = _write_eval_slips(
+                run_dir,
+                dry_run=dry_run,
+            )
             items.append(
                 EvalBackfillItem(
                     run_dir=result.run_dir,
@@ -109,6 +123,10 @@ def backfill_eval_legs(
                     unmatched_rows=result.unmatched_rows,
                     output_path=result.output_path,
                     report_path=result.report_path,
+                    eval_slips_csv=eval_slips_csv,
+                    eval_slips_json=eval_slips_json,
+                    slip_eval_status=slip_eval_status,
+                    slip_eval_reason=slip_eval_reason,
                 )
             )
         except Exception as exc:  # Keep processing other runs; report failures explicitly.
@@ -124,6 +142,7 @@ def backfill_eval_legs(
     rows_total = sum(item.rows or 0 for item in items if item.status in {"written", "dry_run"})
     matched_total = sum(item.matched_rows or 0 for item in items if item.status in {"written", "dry_run"})
     failed = [item for item in items if item.status == "failed"]
+    slip_eval_failed = [item for item in items if item.slip_eval_status == "failed"]
     payload = {
         "date": game_date.isoformat(),
         "date_tag": game_date.strftime("%Y%m%d"),
@@ -136,12 +155,23 @@ def backfill_eval_legs(
         "dry_run_count": sum(1 for item in items if item.status == "dry_run"),
         "skipped_count": sum(1 for item in items if item.status == "skipped"),
         "failed_count": len(failed),
+        "slip_eval_failed_count": len(slip_eval_failed),
         "rows_total": rows_total,
         "matched_rows_total": matched_total,
         "match_rate_total": float(matched_total / rows_total) if rows_total else None,
         "items": [asdict(item) for item in items],
     }
     return payload
+
+
+def _write_eval_slips(run_dir: Path, *, dry_run: bool) -> tuple[str | None, str | None, str | None, str | None]:
+    if dry_run:
+        return "skipped", None, None, "dry_run"
+    try:
+        csv_path, json_path = write_eval_slips_for_run(run_dir)
+        return "written", str(csv_path), str(json_path), None
+    except Exception as exc:
+        return "failed", None, None, str(exc)
 
 
 def _default_game_date() -> date:
@@ -159,7 +189,7 @@ def _print_human_summary(payload: dict) -> None:
         "[6AM_EVAL] "
         f"date={payload['date']} discovered={payload['discovered_count']} "
         f"written={payload['written_count']} skipped={payload['skipped_count']} "
-        f"failed={payload['failed_count']} rows={payload['rows_total']} "
+        f"failed={payload['failed_count']} slip_eval_failed={payload['slip_eval_failed_count']} rows={payload['rows_total']} "
         f"match_rate={payload['match_rate_total']}"
     )
     for item in payload["items"]:
@@ -168,7 +198,11 @@ def _print_human_summary(payload: dict) -> None:
         suffix = f" reason={reason}" if reason else ""
         rows = item.get("rows")
         rows_text = f" rows={rows}" if rows is not None else ""
-        print(f"[6AM_EVAL] {status}: {item['run_dir']}{rows_text}{suffix}")
+        slip_status = item.get("slip_eval_status")
+        slip_text = f" slip_eval={slip_status}" if slip_status else ""
+        slip_reason = item.get("slip_eval_reason")
+        slip_reason_text = f" slip_reason={slip_reason}" if slip_reason else ""
+        print(f"[6AM_EVAL] {status}: {item['run_dir']}{rows_text}{suffix}{slip_text}{slip_reason_text}")
 
 
 def main(argv: Iterable[str] | None = None) -> int:
@@ -197,7 +231,7 @@ def main(argv: Iterable[str] | None = None) -> int:
     else:
         _print_human_summary(payload)
 
-    if payload["failed_count"]:
+    if payload["failed_count"] or payload["slip_eval_failed_count"]:
         return 1
     if payload["discovered_count"] == 0:
         return 2

@@ -677,21 +677,44 @@ def fetch_oddsapi_props(*, game_date: str, raw_path: Optional[str | Path] = None
         _banner("REPLAY ODDSAPI (skipped, using pinned priors)")
         return
 
-    api_key = (os.environ.get("ODDSAPI_KEY") or "").strip()
+    api_key, api_key_source = _load_oddsapi_key()
     if not api_key:
-        logger.info("ODDSAPI_KEY not set; skipping OddsAPI fetch.")
+        logger.info("OddsAPI key not found; skipping OddsAPI fetch.")
         return
 
     extra_env = {
         "ODDSAPI_KEY": api_key,
         "ODDSAPI_GAME_DATE": game_date,
     }
+    logger.info("OddsAPI key source: %s length=%s", api_key_source, len(api_key))
 
     try:
         _run([_py(), str(script)], "FETCH ODDSAPI (player props)", extra_env=extra_env)
     except Exception as e:
         logger.warning("OddsAPI fetch failed (non-fatal): %s", e)
         print(f"⚠️ OddsAPI fetch failed (non-fatal): {e}", file=sys.stderr)
+
+
+def _load_oddsapi_key() -> tuple[str, str]:
+    explicit_path = (os.environ.get("ODDSAPI_KEY_FILE") or "").strip()
+    candidates = [Path(explicit_path)] if explicit_path else []
+    candidates.append(PROJECT_ROOT.parent / "OddAPItoken.txt")
+
+    for path in candidates:
+        try:
+            if path.exists() and path.is_file():
+                token = path.read_text(encoding="utf-8").strip()
+                if token:
+                    return token, f"file:{path.name}"
+        except OSError:
+            continue
+
+    for name in ("ODDSAPI_KEY", "ODDS_API_KEY"):
+        token = (os.environ.get(name) or "").strip()
+        if token:
+            return token, f"env:{name}"
+
+    return "", "missing"
 
 
 def _resolve_role_metrics_source() -> tuple[str, str, str]:

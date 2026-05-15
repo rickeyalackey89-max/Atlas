@@ -250,7 +250,7 @@ def write_single_game_mode_manifest(
     OUT_DIR: Path,
     scored: pd.DataFrame,
 ) -> Optional[Path]:
-    """Write an operational manifest for single-game script mode."""
+    """Write an operational manifest for single-game robustness mode."""
 
     if scored is None or scored.empty or "single_game_slate" not in scored.columns:
         return None
@@ -289,6 +289,22 @@ def write_single_game_mode_manifest(
         vals = pd.to_numeric(scored["single_game_script_fit"], errors="coerce")
         if isinstance(vals, pd.Series):
             fit_mean = float(vals.dropna().mean()) if not vals.dropna().empty else None
+    robustness_mean = None
+    if "single_game_robustness_score" in scored.columns:
+        vals = pd.to_numeric(scored["single_game_robustness_score"], errors="coerce")
+        if isinstance(vals, pd.Series):
+            robustness_mean = float(vals.dropna().mean()) if not vals.dropna().empty else None
+    dependency_mean = None
+    if "single_game_script_dependency_score" in scored.columns:
+        vals = pd.to_numeric(scored["single_game_script_dependency_score"], errors="coerce")
+        if isinstance(vals, pd.Series):
+            dependency_mean = float(vals.dropna().mean()) if not vals.dropna().empty else None
+    severity_mean = None
+    if "single_game_slate_severity_score" in scored.columns:
+        vals = pd.to_numeric(scored["single_game_slate_severity_score"], errors="coerce")
+        if isinstance(vals, pd.Series):
+            severity_mean = float(vals.dropna().mean()) if not vals.dropna().empty else None
+    severity_label = _first_str("single_game_slate_severity_label")
 
     active = _first_bool("single_game_slate")
     payload = {
@@ -296,9 +312,9 @@ def write_single_game_mode_manifest(
         "status": "active" if active else "inactive",
         "single_game_slate": active,
         "message": (
-            "Single-game script mode active; Atlas should treat 3-leg as primary but may build 4/5 if quality passes."
+            "Single-game robustness mode active; Atlas should favor multi-script legs and avoid narrow game-script exposure."
             if active
-            else "Single-game script mode inactive."
+            else "Single-game robustness mode inactive."
         ),
         "mode": {
             "enabled": _first_bool("single_game_mode_enabled"),
@@ -309,16 +325,21 @@ def write_single_game_mode_manifest(
             "fox_state": _first_str("single_game_fox_state"),
             "harper_state": _first_str("single_game_harper_state"),
             "mean_script_fit": fit_mean,
+            "mean_robustness_score": robustness_mean,
+            "mean_script_dependency_score": dependency_mean,
+            "slate_severity_score": severity_mean,
+            "slate_severity_label": severity_label,
         },
         "leg_counts": {
             "total_legs": int(len(scored)),
             "stable_anchor_legs": _sum_flag("single_game_anchor_flag"),
-            "min_glass_legs": _sum_flag("single_game_min_glass_flag"),
-            "sas_core_legs": _sum_flag("single_game_sas_core_flag"),
             "role_shooter_over_legs": _sum_flag("single_game_role_shooter_over_flag"),
             "fg3m_over_legs": _sum_flag("single_game_fg3m_over_flag"),
             "non_shooting_volume_legs": _sum_flag("single_game_non_shooting_volume_flag"),
             "low_minute_bench_over_legs": _sum_flag("single_game_low_minute_bench_over_flag"),
+            "low_line_noise_legs": _sum_flag("single_game_low_line_noise_flag"),
+            "multi_script_survival_legs": _sum_flag("single_game_multi_script_survival_flag"),
+            "injury_uncertainty_legs": _sum_flag("single_game_injury_uncertainty_flag"),
         },
     }
 
@@ -346,14 +367,19 @@ def run_publish_stage(
     wind3: pd.DataFrame,
     wind4: pd.DataFrame,
     wind5: pd.DataFrame,
+    sys2: Optional[pd.DataFrame] = None,
+    wind2: Optional[pd.DataFrame] = None,
     demonhunter: Optional[pd.DataFrame] = None,
+    sys2_winprob: Optional[pd.DataFrame] = None,
     sys3_winprob: Optional[pd.DataFrame] = None,
     sys4_winprob: Optional[pd.DataFrame] = None,
     sys5_winprob: Optional[pd.DataFrame] = None,
+    wind2_winprob: Optional[pd.DataFrame] = None,
     wind3_winprob: Optional[pd.DataFrame] = None,
     wind4_winprob: Optional[pd.DataFrame] = None,
     wind5_winprob: Optional[pd.DataFrame] = None,
     marketed_slips: Optional[list] = None,
+    public_slip_quality_manifest: Optional[dict] = None,
     iael_invalidations_path: Optional[Path] = None,
     iael_status_path: Optional[Path] = None,
     write_csv_clean: Optional[Callable[[pd.DataFrame, Path], Path]] = None,
@@ -389,13 +415,24 @@ def run_publish_stage(
     cat_policy_manifest_path = write_catboost_scale_policy_manifest(run_dir, OUT_DIR, scored)
     raw_guard_manifest_path = write_raw_slate_fragility_guard_manifest(run_dir, OUT_DIR, scored)
     single_game_manifest_path = write_single_game_mode_manifest(run_dir, OUT_DIR, scored)
+    public_quality_manifest_path: Optional[Path] = None
+    if public_slip_quality_manifest is not None:
+        public_quality_manifest_path = run_dir / "public_slip_quality_manifest.json"
+        public_quality_manifest_path.write_text(
+            json.dumps(public_slip_quality_manifest, indent=2, sort_keys=True, default=str),
+            encoding="utf-8",
+        )
 
     # SYSTEM (default / kernel EV)
+    if sys2 is not None:
+        w(sys2, system_dir / "recommended_2leg.csv")
     w(sys3, system_dir / "recommended_3leg.csv")
     w(sys4, system_dir / "recommended_4leg.csv")
     w(sys5, system_dir / "recommended_5leg.csv")
 
     # SYSTEM (secondary / no-kernel win-prob)
+    if sys2_winprob is not None:
+        w(sys2_winprob, system_dir / "recommended_2leg_winprob.csv")
     if sys3_winprob is not None:
         w(sys3_winprob, system_dir / "recommended_3leg_winprob.csv")
     if sys4_winprob is not None:
@@ -404,11 +441,15 @@ def run_publish_stage(
         w(sys5_winprob, system_dir / "recommended_5leg_winprob.csv")
 
     # WINDFALL (default / kernel EV)
+    if wind2 is not None:
+        w(wind2, windfall_dir / "recommended_2leg.csv")
     w(wind3, windfall_dir / "recommended_3leg.csv")
     w(wind4, windfall_dir / "recommended_4leg.csv")
     w(wind5, windfall_dir / "recommended_5leg.csv")
 
     # WINDFALL (secondary / no-kernel win-prob)
+    if wind2_winprob is not None:
+        w(wind2_winprob, windfall_dir / "recommended_2leg_winprob.csv")
     if wind3_winprob is not None:
         w(wind3_winprob, windfall_dir / "recommended_3leg_winprob.csv")
     if wind4_winprob is not None:
@@ -420,8 +461,10 @@ def run_publish_stage(
     if demonhunter is not None and len(demonhunter) > 0:
         w(demonhunter, run_dir / "demonhunter.csv")
 
-    # MARKETED SLIPS – JSON + CSV output for subscriber product
-    if marketed_slips is not None and len(marketed_slips) > 0:
+    # MARKETED SLIPS – JSON + CSV output for subscriber product.
+    # Always write the artifacts when the builder ran, even when quality gates
+    # reject every slip. Missing files should indicate publisher failure.
+    if marketed_slips is not None:
         marketed_path = run_dir / "marketed_slips.json"
         with open(marketed_path, 'w') as f:
             json.dump({
@@ -431,7 +474,7 @@ def run_publish_stage(
                     "builder": "marketed_slip_builder",
                     "correlation_adjusted": True,
                     "stat_calibrated": True,
-                    "templates": ["3-leg: 1G+2S", "4-leg: 2G+2S", "5-leg: 2G+2S+1D"]
+                    "templates": [slip.get("label", "") for slip in marketed_slips]
                 }
             }, f, indent=2)
 
@@ -454,9 +497,42 @@ def run_publish_stage(
                     "tier": leg.get("tier"),
                     "line": leg.get("line"),
                     "p_cal": round(float(leg.get("p_cal", 0.0)), 4) if leg.get("p_cal") is not None else None,
+                    "is_questionable": int(float(leg.get("is_questionable", 0) or 0)),
+                    "q_out_frac": round(float(leg.get("q_out_frac", 0.0) or 0.0), 4),
+                    "public_survival_score": round(float(slip.get("public_survival_score", 0.0)), 4),
+                    "public_quality_pass": slip.get("public_quality_pass", True),
+                    "public_quality_reasons": slip.get("public_quality_reasons", ""),
+                    "slip_consensus_legs": slip.get("slip_consensus_legs", 0),
+                    "slip_consensus_share": round(float(slip.get("slip_consensus_share", 0.0)), 4),
+                    "public_portfolio_status": slip.get("public_portfolio_status", ""),
+                    "public_portfolio_reason": slip.get("public_portfolio_reason", ""),
                 })
         marketed_csv_path = run_dir / "marketed_slips.csv"
-        _pd.DataFrame(csv_rows).to_csv(marketed_csv_path, index=False)
+        marketed_columns = [
+            "slip",
+            "high_confidence",
+            "hit_prob",
+            "payout_mult",
+            "ev",
+            "player",
+            "team",
+            "opp",
+            "stat",
+            "direction",
+            "tier",
+            "line",
+            "p_cal",
+            "is_questionable",
+            "q_out_frac",
+            "public_survival_score",
+            "public_quality_pass",
+            "public_quality_reasons",
+            "slip_consensus_legs",
+            "slip_consensus_share",
+            "public_portfolio_status",
+            "public_portfolio_reason",
+        ]
+        _pd.DataFrame(csv_rows, columns=marketed_columns).to_csv(marketed_csv_path, index=False)
 
         # Copy to latest if configured
         if cfg and cfg.get("marketed_slips", {}).get("publish_to_latest", False):
@@ -496,11 +572,15 @@ def run_publish_stage(
         )
 
     # Legacy mirrors SYSTEM (default)
+    if sys2 is not None:
+        w(sys2, run_dir / "recommended_2leg.csv")
     w(sys3, run_dir / "recommended_3leg.csv")
     w(sys4, run_dir / "recommended_4leg.csv")
     w(sys5, run_dir / "recommended_5leg.csv")
 
     # Legacy mirrors SYSTEM (secondary / no-kernel win-prob)
+    if sys2_winprob is not None:
+        w(sys2_winprob, run_dir / "recommended_2leg_winprob.csv")
     if sys3_winprob is not None:
         w(sys3_winprob, run_dir / "recommended_3leg_winprob.csv")
     if sys4_winprob is not None:
@@ -525,13 +605,21 @@ def run_publish_stage(
     if single_game_manifest_path is not None:
         print(f" - {single_game_manifest_path} (single-game mode manifest)")
         print(f" - {OUT_DIR / 'dashboard' / 'single_game_mode_latest.json'} (single-game mode latest)")
+    if public_quality_manifest_path is not None:
+        print(f" - {public_quality_manifest_path} (public slip quality manifest)")
+    if sys2 is not None:
+        print(f" - {system_dir / 'recommended_2leg.csv'} (SYSTEM)")
     print(f" - {system_dir / 'recommended_3leg.csv'} (SYSTEM)")
     print(f" - {system_dir / 'recommended_4leg.csv'} (SYSTEM)")
     print(f" - {system_dir / 'recommended_5leg.csv'} (SYSTEM)")
+    if wind2 is not None:
+        print(f" - {windfall_dir / 'recommended_2leg.csv'} (WINDFALL)")
     print(f" - {windfall_dir / 'recommended_3leg.csv'} (WINDFALL)")
     print(f" - {windfall_dir / 'recommended_4leg.csv'} (WINDFALL)")
     print(f" - {windfall_dir / 'recommended_5leg.csv'} (WINDFALL)")
 
+    if sys2_winprob is not None:
+        print(f" - {system_dir / 'recommended_2leg_winprob.csv'} (SYSTEM winprob)")
     if sys3_winprob is not None:
         print(f" - {system_dir / 'recommended_3leg_winprob.csv'} (SYSTEM winprob)")
     if sys4_winprob is not None:
@@ -539,6 +627,8 @@ def run_publish_stage(
     if sys5_winprob is not None:
         print(f" - {system_dir / 'recommended_5leg_winprob.csv'} (SYSTEM winprob)")
 
+    if wind2_winprob is not None:
+        print(f" - {windfall_dir / 'recommended_2leg_winprob.csv'} (WINDFALL winprob)")
     if wind3_winprob is not None:
         print(f" - {windfall_dir / 'recommended_3leg_winprob.csv'} (WINDFALL winprob)")
     if wind4_winprob is not None:
@@ -546,7 +636,7 @@ def run_publish_stage(
     if wind5_winprob is not None:
         print(f" - {windfall_dir / 'recommended_5leg_winprob.csv'} (WINDFALL winprob)")
 
-    if marketed_slips is not None and len(marketed_slips) > 0:
+    if marketed_slips is not None:
         print(f" - {run_dir / 'marketed_slips.json'} (MARKETED SLIPS - {len(marketed_slips)} slips)")
         print(f" - {run_dir / 'marketed_slips.csv'} (MARKETED SLIPS CSV)")
         if cfg and cfg.get("marketed_slips", {}).get("publish_to_latest", False):

@@ -1334,8 +1334,8 @@ def main() -> None:
         sort_mode=primary_sort_mode,
     )
 
-    sys3, sys4, sys5 = slips.sys3, slips.sys4, slips.sys5
-    wind3, wind4, wind5 = slips.wind3, slips.wind4, slips.wind5
+    sys2, sys3, sys4, sys5 = slips.sys2, slips.sys3, slips.sys4, slips.sys5
+    wind2, wind3, wind4, wind5 = slips.wind2, slips.wind3, slips.wind4, slips.wind5
     demonhunter = slips.demonhunter
 
     from Atlas.core.iael_filter import normalize_person_name
@@ -1400,9 +1400,11 @@ def main() -> None:
         return out
 
     # Apply annotation to EV-sorted slips
+    sys2 = _annotate_q_slips(sys2)
     sys3 = _annotate_q_slips(sys3)
     sys4 = _annotate_q_slips(sys4)
     sys5 = _annotate_q_slips(sys5)
+    wind2 = _annotate_q_slips(wind2)
     wind3 = _annotate_q_slips(wind3)
     wind4 = _annotate_q_slips(wind4)
     wind5 = _annotate_q_slips(wind5)
@@ -1420,15 +1422,17 @@ def main() -> None:
             pricing_engine="atlas",
             sort_mode="hit",
         )
+        sys2_win = _annotate_q_slips(slips_winprob.sys2)
         sys3_win = _annotate_q_slips(slips_winprob.sys3)
         sys4_win = _annotate_q_slips(slips_winprob.sys4)
         sys5_win = _annotate_q_slips(slips_winprob.sys5)
+        wind2_win = _annotate_q_slips(slips_winprob.wind2)
         wind3_win = _annotate_q_slips(slips_winprob.wind3)
         wind4_win = _annotate_q_slips(slips_winprob.wind4)
         wind5_win = _annotate_q_slips(slips_winprob.wind5)
     else:
-        sys3_win = sys4_win = sys5_win = None
-        wind3_win = wind4_win = wind5_win = None
+        sys2_win = sys3_win = sys4_win = sys5_win = None
+        wind2_win = wind3_win = wind4_win = wind5_win = None
 
     # --- Marketed Slips (subscriber product) ---
     marketed_slips = []
@@ -1443,6 +1447,40 @@ def main() -> None:
             print(f"Marketed slips builder failed: {e}")
             marketed_slips = []
 
+    from Atlas.core.slip_quality_gate import apply_public_portfolio_exposure
+
+    portfolio_quality = apply_public_portfolio_exposure(
+        {
+            "System_2leg": sys2,
+            "System_3leg": sys3,
+            "System_4leg": sys4,
+            "System_5leg": sys5,
+            "Windfall_2leg": wind2,
+            "Windfall_3leg": wind3,
+            "Windfall_4leg": wind4,
+            "Windfall_5leg": wind5,
+            "DemonHunter": demonhunter,
+        },
+        marketed_slips,
+        cfg,
+    )
+    sys2 = portfolio_quality.frames.get("System_2leg", sys2)
+    sys3 = portfolio_quality.frames.get("System_3leg", sys3)
+    sys4 = portfolio_quality.frames.get("System_4leg", sys4)
+    sys5 = portfolio_quality.frames.get("System_5leg", sys5)
+    wind2 = portfolio_quality.frames.get("Windfall_2leg", wind2)
+    wind3 = portfolio_quality.frames.get("Windfall_3leg", wind3)
+    wind4 = portfolio_quality.frames.get("Windfall_4leg", wind4)
+    wind5 = portfolio_quality.frames.get("Windfall_5leg", wind5)
+    demonhunter = portfolio_quality.frames.get("DemonHunter", demonhunter)
+    marketed_slips = portfolio_quality.marketed_slips
+    if portfolio_quality.manifest.get("enabled"):
+        print(
+            "[PUBLIC_SLIP_QUALITY] "
+            f"kept={portfolio_quality.manifest.get('kept_counts', {})} "
+            f"dropped={portfolio_quality.manifest.get('dropped_count', 0)}"
+        )
+
     from Atlas.stages.publish.publish_run_outputs import run_publish_stage
     from Atlas.stages.publish.build_cloudflare_payload import build_cloudflare_payload
 
@@ -1451,22 +1489,27 @@ def main() -> None:
         OUT_DIR=OUT_DIR,
         scored=scored,
         scored_for_optimizer=scored_for_optimizer,
+        sys2=sys2,
         sys3=sys3,
         sys4=sys4,
         sys5=sys5,
+        wind2=wind2,
         wind3=wind3,
         wind4=wind4,
         wind5=wind5,
         demonhunter=demonhunter,
         
+        sys2_winprob=sys2_win,
         sys3_winprob=sys3_win,
         sys4_winprob=sys4_win,
         sys5_winprob=sys5_win,
+        wind2_winprob=wind2_win,
         wind3_winprob=wind3_win,
         wind4_winprob=wind4_win,
         wind5_winprob=wind5_win,
         
         marketed_slips=marketed_slips,
+        public_slip_quality_manifest=portfolio_quality.manifest,
         
         iael_invalidations_path=IAEL_INVALIDATIONS_PATH,
         iael_status_path=IAEL_STATUS_PATH,

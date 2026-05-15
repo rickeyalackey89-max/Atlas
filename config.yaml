@@ -174,7 +174,9 @@ raw_slate_fragility_guard:
   # and CAT Brier -6.37 mB with no other date touched by the trigger.
   enabled: true
   max_games: 2
-  min_q_out_frac_mean: 0.10
+  # QUESTIONABLE/q_out soft-risk is report-only. Keep this trigger disabled
+  # unless a future audit proves soft injury uncertainty should move pre-CAT p.
+  min_q_out_frac_mean: 1.01
   min_q_blowout_p90: 0.50
   high_prob_threshold: 0.55
   logit_shift: -0.10
@@ -182,83 +184,89 @@ raw_slate_fragility_guard:
   under_logit_shift: 0.10
 
 single_game_mode:
-  # Single-game slates keep 3-leg as the primary product, but Atlas still
-  # attempts 4-leg/5-leg when the board produces script-compatible quality.
+  # Single-game slates use generic robustness mode, not a game-specific script.
+  # Atlas uses 2/3 customer-facing output and disables 4/5-leg exposure.
   enabled: auto
   trigger_max_games: 1
-  primary_script: close_spurs_efficiency_wolves_glass
-  build_slip_sizes: [3, 4, 5]
-  primary_slip_size: 3
+  sort_mode: hit
+  build_slip_sizes: [2, 3]
+  primary_slip_size: 2
+  disable_5leg_customer_output: true
+  allow_5leg_research_only: false
   do_not_block_slip_sizes: true
   do_not_force_output: true
   # In single-game slates, IAEL soft exposure from an out teammate should be
   # scored/penalized, not used as a hard injury exclusion that wipes a team.
   soft_injury_exposure_not_hard_exclude: true
+  slip_build_overrides:
+    # Single-game customer slips should be hit-probability first. Keep the FTA
+    # exclusion, but do not inherit hit-mode 4-leg REB/AST exclusions or UNDER
+    # exposure from multi-game configs.
+    min_leg_prob: 0.45
+    min_edge: 0.0
+    max_leg_prob: 0.0
+    max_direction_per_slip:
+      under: 0
+    exclude_stat_directions:
+      - FTA_over
+      - FTA_under
   selection_surface:
     enabled: true
-    script_fit_weight: 1.0
+    robustness_weight: 1.0
   slip_rules:
     enabled: true
     max_role_shooter_overs: 1
     max_fg3m_overs: 1
     max_low_minute_bench_overs: 0
-    require_non_shooting_volume_min_legs: 4
+    max_under_legs_by_legs:
+      2: 0
+      3: 0
+      4: 0
+    max_low_line_noise_legs_by_legs:
+      2: 0
+      3: 0
+      4: 0
+    min_non_shooting_volume_legs_by_legs:
+      2: 1
+      3: 2
+      4: 2
     require_one_stable_anchor: true
-    require_one_min_glass_or_counterweight: false
-    require_one_sas_core: false
-    min_avg_script_fit_by_legs:
+    min_stable_anchor_legs_by_legs:
+      2: 1
+      3: 1
+      4: 2
+    min_multi_script_survival_legs_by_legs:
+      2: 1
+      3: 1
+      4: 2
+    min_avg_robustness_by_legs:
+      2: -0.01
       3: -0.02
       4: -0.01
-      5: 0.00
-  profile:
-    required_teams: [MIN, SAS]
-    fox_player: De'Aaron Fox
-    harper_player: Dylan Harper
-    stable_anchors:
-      - Anthony Edwards
-      - Victor Wembanyama
-      - Stephon Castle
-      - Rudy Gobert
-      - Julius Randle
-      - Naz Reid
-    min_glass_team: MIN
-    min_glass_stats: [REB, RA, PR, PRA]
-    min_glass_players:
-      - Rudy Gobert
-      - Naz Reid
-      - Julius Randle
-      - Jaden McDaniels
-      - Anthony Edwards
-    sas_core_team: SAS
-    sas_core_stats: [PTS, PA, PRA, PR, REB, BLK]
-    sas_core_players:
-      - Victor Wembanyama
-      - Stephon Castle
-      - De'Aaron Fox
-      - Dylan Harper
-      - Devin Vassell
-      - Julian Champagnie
-    min_ra_rebound_led_players:
-      - Rudy Gobert
-      - Naz Reid
-      - Julius Randle
-      - Jaden McDaniels
-      - Anthony Edwards
-    non_shooting_volume_stats: [REB, PR, PRA, PA, RA]
-    anchor_minutes: 28.0
+  robustness:
+    name: single_game_robust_mode
+    core_minutes: 28.0
     low_minutes: 18.0
-    min_glass_score: 0.08
-    reb_led_ra_score: 0.04
-    assist_led_ra_penalty: 0.04
-    sas_core_score: 0.05
-    anchor_minutes_score: 0.05
-    low_minutes_penalty: 0.12
-    role_shooter_score: 0.02
-    fox_uncertain_player_penalty: 0.08
-    harper_uncertain_player_penalty: 0.07
-    fox_uncertain_castle_creation_boost: 0.04
-    fox_uncertain_wemby_touch_boost: 0.03
-    sas_double_guard_uncertainty_support_penalty: 0.03
+    low_line_pts_threshold: 6.5
+    low_line_fg3m_threshold: 0.5
+    low_line_ast_threshold: 2.5
+    low_line_reb_threshold: 3.5
+    q_out_frac_threshold: 0.10
+    high_volatility_threshold: 0.70
+    high_fragility_threshold: 0.35
+    core_minutes_stability_bonus: 0.02
+    multi_script_survival_bonus: 0.03
+    non_shooting_volume_bonus: 0.02
+    fragile_shooter_over_penalty: 0.05
+    low_minutes_role_penalty: 0.08
+    low_line_noise_penalty: 0.03
+    injury_uncertainty_penalty: 0.0
+    high_volatility_penalty: 0.03
+    high_fragility_penalty: 0.03
+    max_abs_selection_delta: 0.12
+    role_shooter_stats: [FG3M, 3PM, 3PTM, PTS]
+    fg3m_stats: [FG3M, 3PM, 3PTM, 3PT MADE, THREES]
+    non_shooting_volume_stats: [REB, AST, RA, PA, PR, PRA]
 
 catboost_playoff_calibrator:
   # v5cD 12-date residual regressor -- 19 features, iter=600, clip=0.20.
@@ -274,7 +282,9 @@ catboost_playoff_calibrator:
     aggressive_residual_scale: 0.55
     defensive_residual_scale: 0.10
     thin_slate_games_max: 2
-    thin_slate_q_out_frac_mean_min: 0.05
+    # QUESTIONABLE/q_out soft-risk is report-only; do not downscale CAT solely
+    # because unresolved Q tags exist before first tip.
+    thin_slate_q_out_frac_mean_min: 1.01
     thin_slate_q_blowout_p90_min: 0.45
     blowout_q_p90_min: 0.55
     blowout_role_ctx_share_max: 0.30
@@ -470,6 +480,7 @@ slip_build:
   # use per-leg-count caps. 3-leg stays tight at 2 to force cross-team diversification;
   # 4-leg/5-leg relax to 3 since there are only 2 teams to draw from.
   single_game_caps_by_legs:
+    2: 1
     3: 2
     4: 3
     5: 3
@@ -480,6 +491,10 @@ slip_build:
   phase1_frac: 0.1
   phase1_pool_frac: 0.5
   beam_width: 250
+  single_game_max_attempts_by_legs:
+    2: 8000
+    3: 12000
+    4: 16000
   min_leg_prob: 0.65
   max_leg_prob: 0.0
   # UNDER cap DISABLED (2026-05-10) — v5cD calibrator is honest about UNDER probabilities.
@@ -491,8 +506,10 @@ slip_build:
   - FTA_over
   - FTA_under
   require_healthy_data: true
-  exclude_questionable: true
-  exclude_q_out_frac_gt: 0.0
+  # QUESTIONABLE/q_out is report-only for builders. OUT/DOUBTFUL remains handled
+  # upstream by IAEL hard invalidation.
+  exclude_questionable: false
+  exclude_q_out_frac_gt:
   min_nba_games: 10
   max_same_stat: 2
   stat_family_mode: coarse
@@ -522,6 +539,21 @@ slip_build:
     min_standard_player_dir_te: 0.02
     min_goblin_l20_edge: 0.05
   by_legs:
+    '2':
+      max_direction_per_slip:
+        under: 1
+      min_edge: 0.02
+      max_same_stat: 1
+      min_leg_prob: 0.65
+      stat_family_mode: coarse
+      beam_window_growth: 2.0
+      beam_width: 400
+      phase1_frac: 0.35
+      target_pool_mult: 500
+      penalty:
+        team_w: 0.02
+        family_w: 0.0
+        frag_w: 0.0
     '3':
       max_direction_per_slip:
         under: 1
@@ -567,6 +599,18 @@ slip_build:
       by_legs:
         # EV floors raised 2026-05-10 — v5cD is honest, 0.52 legs were earning their dismal hit rate.
         # Cap removed: trust the model, let high-prob legs in. Penalties handle correlation defense.
+        '2':
+          min_leg_prob: 0.62
+          max_leg_prob: 0.0
+          beam_window_growth: 1.5
+          stat_family_mode: coarse
+          beam_width: 200
+          phase1_frac: 0.15
+          target_pool_mult: 200
+          penalty:
+            team_w: 0.08
+            family_w: 0.05
+            frag_w: 0.08
         '3':
           min_leg_prob: 0.62
           max_leg_prob: 0.0
@@ -606,6 +650,20 @@ slip_build:
       # Use v5cD calibrated probability for winprob boards (2026-05-10) — p_cal beats p_adj.
       prefer_calibrated_prob: true
       by_legs:
+        '2':
+          min_leg_prob: 0.5
+          max_leg_prob: 0.75
+          max_players_per_team: 1
+          beam_window_growth: 2.0
+          stat_family_mode: coarse
+          min_edge: 0.01
+          beam_width: 250
+          phase1_frac: 0.3
+          target_pool_mult: 150
+          penalty:
+            team_w: 0.1
+            family_w: 0.05
+            frag_w: 0.05
         '3':
           min_leg_prob: 0.5
           max_leg_prob: 0.75
@@ -662,11 +720,13 @@ slip_build:
 optimizer:
   top_n_slips: 1
   top_n_slips_by_legs:
+    '2': 1
     '3': 1
     '4': 1
     '5': 1
   top_n_slips_by_legs_by_sort_mode:
     hit:
+      '2': 1
       '3': 1
       '4': 1
       '5': 1
@@ -691,12 +751,27 @@ optimizer:
         weight: 1.0
 demonhunter:
   by_legs:
+    '2':
+      min_leg_prob: 0.56
+      allowed_stats: [PRA, PTS, FTA, RA, PR, PA]
+      max_same_stat: 0
+      max_players_per_team: 1
+      per_tier: 600
+      max_attempts: 8000
+      beam_width: 500
+      target_pool_mult: 500
+      phase1_frac: 0.5
+      penalty:
+        team_w: 0.05
+        family_w: 0.05
+        frag_w: 0.05
     '3':
       min_leg_prob: 0.56
       allowed_stats: [PRA, PTS, FTA, RA, PR, PA]
       max_same_stat: 0
       max_players_per_team: 2
       per_tier: 800
+      max_attempts: 12000
       beam_width: 600
       target_pool_mult: 600
       phase1_frac: 0.5
@@ -710,6 +785,7 @@ demonhunter:
       max_same_stat: 3
       max_players_per_team: 2
       per_tier: 200
+      max_attempts: 16000
       phase1_frac: 0.1
       penalty:
         team_w: 0.0
@@ -736,7 +812,7 @@ minute_risk_guard:
   low_modeled_minutes_penalty: 0.10
   bench_under_18_min_penalty: 0.10
   minutes_cv_penalty: 0.08
-  injury_uncertainty_penalty: 0.12
+  injury_uncertainty_penalty: 0.0
   max_total_penalty: 0.25
 volatility_guard:
   enabled: false
@@ -782,6 +858,43 @@ slip_family_prop_diversity:
   max_repeats_per_family: 1
   candidate_multiplier: 1
   min_candidate_rows: 1
+public_slip_quality:
+  # Final public-output guard. This does not rewrite leg probabilities or tiers.
+  # It scores whole slips for survival, allows fewer outputs when quality fails,
+  # and caps exact prop exposure across Marketed/System/Windfall/DemonHunter.
+  enabled: true
+  do_not_force_output: true
+  include_demonhunter: true
+  score:
+    consensus_bonus_per_leg: 0.025
+    avg_fragility_penalty_w: 0.35
+    pen_total_w: 0.30
+    minute_risk_penalty: 0.05
+    q_leg_penalty: 0.0
+    single_game_robustness_w: 0.08
+    single_game_dependency_w: 0.10
+  min_survival_score_by_legs:
+    2: 0.54
+    3: 0.55
+    4: 0.55
+    5: 0.54
+  single_game_min_survival_score_by_legs:
+    2: 0.56
+    3: 0.58
+  single_game_min_hit_prob_by_legs:
+    2: 0.42
+    3: 0.36
+  max_minute_risk_legs_by_legs:
+    2: 0
+    3: 0
+    4: 1
+    5: 1
+  # Q tags are surfaced for operator/public context, not used to block slips.
+  max_q_legs_by_legs: {}
+  exposure:
+    enabled: true
+    max_exact_prop_repeats_across_public: 1
+    priority: [Marketed, Windfall, System, DemonHunter]
 marketed_slips:
   enabled: true
   calibration_path: data/model/marketed_calibration.json
@@ -795,6 +908,7 @@ marketed_slips:
   # use per-leg-count caps. 3-leg stays tight at 2 to force cross-team diversification;
   # 4-leg/5-leg relax to 3 since there are only 2 teams to draw from.
   single_game_caps_by_legs:
+    2: 1
     3: 2
     4: 3
     5: 3
@@ -803,8 +917,10 @@ marketed_slips:
   - STL
   - TO
   - FTA  # disabled until GBM retrained on playoff data
-  exclude_questionable: true
-  exclude_q_out_frac_gt: 0.0
+  # QUESTIONABLE/q_out is report-only for marketed slips. OUT/DOUBTFUL remains
+  # handled upstream by IAEL hard invalidation.
+  exclude_questionable: false
+  exclude_q_out_frac_gt:
   # Post-haircut floor DISABLED (2026-05-10) — v5cD CatBoost calibrator is well-calibrated
   # across the full 0.10-0.85 p_cal range, so we trust the model and gate only on raw p_cal.
   min_thresholds:
@@ -833,6 +949,7 @@ marketed_slips:
   # Observed (actual / claimed) ratios: 3L=0.70/0.51=1.37, 4L=0.40/0.30=1.33, 5L=0.20/0.149=1.34.
   # Previous values (1.67/1.33/1.53) were derived against the old overconfident model.
   hit_prob_calibration:
+    2: 1.0
     3: 1.37
     4: 1.33
     5: 1.34
@@ -843,6 +960,7 @@ marketed_slips:
   # to ~observed mean win rate so the label actually filters to genuinely confident slips.
   # 3-leg: 0.65 (observed 70%)  |  4-leg: 0.40 (observed 40%)  |  5-leg: 0.20 (observed 20%)
   high_confidence_thresholds:
+    2: 0.72
     3: 0.65
     4: 0.40
     5: 0.20

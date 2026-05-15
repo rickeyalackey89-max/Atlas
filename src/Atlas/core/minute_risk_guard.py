@@ -60,6 +60,16 @@ def _numeric_col(df: pd.DataFrame, col: str, default: float = np.nan) -> np.ndar
     return arr
 
 
+def _float_cfg(config: dict[str, Any], key: str, default: float) -> float:
+    value = config.get(key, default)
+    if value is None:
+        return float(default)
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return float(default)
+
+
 def _first_available_modeled_minutes(df: pd.DataFrame) -> np.ndarray:
     modeled = np.full(len(df.index), np.nan, dtype="float64")
     for col in _MODELED_MINUTE_COLUMNS:
@@ -101,11 +111,11 @@ def compute_minute_risk_guard(
     bench_threshold = float(guard.get("bench_minutes_threshold", 18.0) or 18.0)
     max_cv = float(guard.get("max_minutes_cv", 0.35) or 0.35)
 
-    bench_penalty = float(guard.get("bench_under_18_min_penalty", 0.10) or 0.10)
-    low_min_penalty = float(guard.get("low_modeled_minutes_penalty", bench_penalty) or bench_penalty)
-    cv_penalty = float(guard.get("minutes_cv_penalty", 0.08) or 0.08)
-    injury_penalty = float(guard.get("injury_uncertainty_penalty", 0.12) or 0.12)
-    max_total = float(guard.get("max_total_penalty", 0.25) or 0.25)
+    bench_penalty = _float_cfg(guard, "bench_under_18_min_penalty", 0.10)
+    low_min_penalty = _float_cfg(guard, "low_modeled_minutes_penalty", bench_penalty)
+    cv_penalty = _float_cfg(guard, "minutes_cv_penalty", 0.08)
+    injury_penalty = _float_cfg(guard, "injury_uncertainty_penalty", 0.12)
+    max_total = _float_cfg(guard, "max_total_penalty", 0.25)
 
     valid_min = np.isfinite(modeled) & (modeled > 0.0)
     low_min_mask = valid_min & (modeled < min_modeled)

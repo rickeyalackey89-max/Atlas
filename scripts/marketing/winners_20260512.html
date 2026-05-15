@@ -1,0 +1,468 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=1080" />
+<title>Atlas Winners - May 12, 2026</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;900&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+  * { box-sizing: border-box; }
+  body {
+    width: 1080px;
+    height: 1080px;
+    margin: 0;
+    overflow: hidden;
+    background: #020403;
+    color: #fff;
+    font-family: "Space Grotesk", Arial, sans-serif;
+  }
+  .card {
+    width: 1080px;
+    height: 1080px;
+    position: relative;
+    overflow: hidden;
+    background:
+      linear-gradient(rgba(0, 230, 118, 0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 212, 255, 0.030) 1px, transparent 1px),
+      radial-gradient(circle at 78% 10%, rgba(0, 230, 118, 0.18), transparent 32%),
+      radial-gradient(circle at 8% 95%, rgba(0, 212, 255, 0.13), transparent 30%),
+      #020403;
+    background-size: 72px 72px, 72px 72px, auto, auto, auto;
+  }
+  .hero {
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 370px;
+    overflow: hidden;
+    border-bottom: 1px solid rgba(0, 230, 118, 0.22);
+  }
+  .hero img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 14%;
+    filter: saturate(1.08) contrast(1.04);
+  }
+  .hero::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(0,0,0,0.20), rgba(0,0,0,0.92)),
+      linear-gradient(90deg, rgba(0,0,0,0.80), transparent 55%, rgba(0,0,0,0.35));
+  }
+  .top {
+    position: relative;
+    z-index: 4;
+    height: 370px;
+    padding: 42px 54px 32px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .brand-row, .summary-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .brand {
+    font-family: "Barlow Condensed", sans-serif;
+    font-size: 27px;
+    font-weight: 900;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+  }
+  .brand span { color: #f5a623; }
+  .date {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.56);
+  }
+  .eyebrow {
+    color: #00e676;
+    font-size: 13px;
+    font-weight: 900;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    margin-bottom: 9px;
+  }
+  .headline {
+    font-family: "Barlow Condensed", sans-serif;
+    font-size: 86px;
+    line-height: 0.86;
+    font-weight: 900;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    text-shadow: 0 8px 28px rgba(0,0,0,0.72);
+  }
+  .hero-player {
+    margin-top: 10px;
+    color: rgba(255,255,255,0.58);
+    font-size: 16px;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+  }
+  .summary-pill {
+    min-width: 146px;
+    padding: 12px 16px;
+    border: 1px solid rgba(0,230,118,0.35);
+    background: rgba(0,230,118,0.09);
+    text-align: center;
+  }
+  .summary-pill strong {
+    display: block;
+    color: #00e676;
+    font-family: "Barlow Condensed", sans-serif;
+    font-size: 38px;
+    line-height: 1;
+  }
+  .summary-pill span {
+    display: block;
+    margin-top: 4px;
+    color: rgba(255,255,255,0.58);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+  .content {
+    position: relative;
+    z-index: 5;
+    height: 710px;
+    padding: 26px 54px 34px;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    gap: 18px;
+  }
+  .content-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    padding-bottom: 15px;
+  }
+  .content-title h2 {
+    margin: 0;
+    font-family: "Barlow Condensed", sans-serif;
+    font-size: 45px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .content-title p {
+    margin: 0;
+    color: rgba(255,255,255,0.45);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+  .slips {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+    min-height: 0;
+  }
+  .slip-card {
+    border: 1px solid rgba(0,230,118,0.20);
+    background: rgba(2, 10, 8, 0.84);
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+  .slip-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 14px;
+  }
+  .slip-family {
+    color: #f5a623;
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+  .slip-label {
+    margin-top: 3px;
+    font-family: "Barlow Condensed", sans-serif;
+    font-size: 34px;
+    line-height: 1;
+    font-weight: 900;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .hit-pill {
+    color: #00e676;
+    border: 1px solid rgba(0,230,118,0.35);
+    background: rgba(0,230,118,0.08);
+    padding: 8px 10px;
+    font-size: 12px;
+    font-weight: 900;
+    white-space: nowrap;
+  }
+  .legs {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+  }
+  .leg {
+    min-height: 76px;
+    display: grid;
+    grid-template-columns: 42px minmax(0, 1fr) 78px 62px 72px;
+    gap: 10px;
+    align-items: center;
+    border: 1px solid rgba(255,255,255,0.08);
+    background: rgba(255,255,255,0.035);
+    padding: 10px;
+  }
+  .check {
+    width: 38px;
+    height: 38px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: #00e676;
+    color: #00170a;
+    font-size: 10px;
+    font-weight: 900;
+  }
+  .leg-player {
+    font-size: 15px;
+    font-weight: 800;
+    line-height: 1.08;
+  }
+  .leg-meta {
+    margin-top: 6px;
+    color: rgba(255,255,255,0.42);
+    font-size: 9px;
+    font-weight: 700;
+    line-height: 1.15;
+  }
+  .leg-meta span {
+    display: inline-block;
+    margin-right: 7px;
+    color: #f5a623;
+    font-size: 9px;
+    font-weight: 900;
+    letter-spacing: 0.12em;
+  }
+  .pick span {
+    display: block;
+    font-family: "Space Grotesk", Arial, sans-serif;
+    font-size: 12px;
+    line-height: 1.05;
+    font-weight: 800;
+    letter-spacing: 0.10em;
+  }
+  .pick strong {
+    display: block;
+    margin-top: 4px;
+    font-family: "Space Grotesk", Arial, sans-serif;
+    font-size: 24px;
+    line-height: 0.95;
+    font-weight: 800;
+    letter-spacing: 0;
+  }
+  .dir-over { color: #00e676; }
+  .dir-under { color: #ff5f6d; }
+  .actual {
+    color: rgba(255,255,255,0.46);
+    text-align: center;
+    font-size: 9px;
+    font-weight: 900;
+    letter-spacing: 0.10em;
+  }
+  .actual strong {
+    color: #fff;
+    font-family: "Space Grotesk", Arial, sans-serif;
+    font-size: 23px;
+    line-height: 1.05;
+    font-weight: 800;
+  }
+  .tier {
+    justify-self: end;
+    padding: 6px 8px;
+    font-size: 9px;
+    font-weight: 900;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    border: 1px solid rgba(255,255,255,0.14);
+  }
+  .tier-goblin { color: #4ade80; border-color: rgba(74,222,128,0.38); background: rgba(74,222,128,0.06); }
+  .tier-standard { color: #60a5fa; border-color: rgba(96,165,250,0.38); background: rgba(96,165,250,0.06); }
+  .tier-demon { color: #f87171; border-color: rgba(248,113,113,0.38); background: rgba(248,113,113,0.06); }
+  .slip-stats {
+    margin-top: auto;
+    padding-top: 14px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+  .slip-stats div {
+    border: 1px solid rgba(255,255,255,0.07);
+    background: rgba(255,255,255,0.03);
+    padding: 9px 6px;
+    text-align: center;
+  }
+  .slip-stats strong {
+    display: block;
+    color: #00e676;
+    font-family: "Barlow Condensed", sans-serif;
+    font-size: 25px;
+    line-height: 1;
+  }
+  .slip-stats span {
+    display: block;
+    margin-top: 4px;
+    color: rgba(255,255,255,0.42);
+    font-size: 8px;
+    font-weight: 900;
+    letter-spacing: 0.11em;
+    text-transform: uppercase;
+  }
+  .footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: rgba(255,255,255,0.38);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+  }
+  .footer strong { color: #00d4ff; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="hero"><img src="./devin_vassell.jpg" alt="Devin Vassell" /></div>
+    <div class="top">
+      <div class="brand-row">
+        <div class="brand">Atlas <span>Sports AI</span></div>
+        <div class="date">MAY 12, 2026</div>
+      </div>
+      <div>
+        <div class="eyebrow">Confirmed Results</div>
+        <div class="headline">Yesterday's<br>Winners</div>
+        <div class="hero-player">FEATURED: DEVIN VASSELL</div>
+      </div>
+      <div class="summary-row">
+        <div class="summary-pill"><strong>2</strong><span>Winning Slips</span></div>
+        <div class="summary-pill"><strong>4/4</strong><span>Winner Legs</span></div>
+      </div>
+    </div>
+    <main class="content">
+      <div class="content-title">
+        <h2>All Legs Cashed</h2>
+        <p>Only full winners shown</p>
+      </div>
+      <div class="slips">
+        
+    <section class="slip-card">
+      <div class="slip-head">
+        <div>
+          <div class="slip-family">Marketed</div>
+          <div class="slip-label">2-leg Winner</div>
+        </div>
+        <div class="hit-pill">2/2 HIT</div>
+      </div>
+      <div class="legs">
+        
+      <div class="leg">
+        <div class="check">HIT</div>
+        <div class="leg-main">
+          <div class="leg-player">Devin Vassell</div>
+          <div class="leg-meta"><span>PRA</span>Pts + Reb + Ast</div>
+        </div>
+        <div class="pick dir-over">
+          <span>OVER</span>
+          <strong>14.5</strong>
+        </div>
+        <div class="actual">ACTUAL<br><strong>17</strong></div>
+        <div class="tier tier-goblin">GOBLIN</div>
+      </div>
+    
+
+      <div class="leg">
+        <div class="check">HIT</div>
+        <div class="leg-main">
+          <div class="leg-player">Jaden McDaniels</div>
+          <div class="leg-meta"><span>PR</span>Points + Rebounds</div>
+        </div>
+        <div class="pick dir-over">
+          <span>OVER</span>
+          <strong>14.5</strong>
+        </div>
+        <div class="actual">ACTUAL<br><strong>23</strong></div>
+        <div class="tier tier-goblin">GOBLIN</div>
+      </div>
+    
+      </div>
+      <div class="slip-stats">
+        <div><strong>1.80x</strong><span>Payout</span></div>
+        <div><strong>64.8%</strong><span>Model Hit Prob</span></div>
+        <div><strong>1.17x</strong><span>EV Mult</span></div>
+      </div>
+    </section>
+    
+
+    <section class="slip-card">
+      <div class="slip-head">
+        <div>
+          <div class="slip-family">Windfall</div>
+          <div class="slip-label">2-leg Winner</div>
+        </div>
+        <div class="hit-pill">2/2 HIT</div>
+      </div>
+      <div class="legs">
+        
+      <div class="leg">
+        <div class="check">HIT</div>
+        <div class="leg-main">
+          <div class="leg-player">Devin Vassell</div>
+          <div class="leg-meta"><span>PRA</span>Pts + Reb + Ast</div>
+        </div>
+        <div class="pick dir-over">
+          <span>OVER</span>
+          <strong>14.5</strong>
+        </div>
+        <div class="actual">ACTUAL<br><strong>17</strong></div>
+        <div class="tier tier-goblin">GOBLIN</div>
+      </div>
+    
+
+      <div class="leg">
+        <div class="check">HIT</div>
+        <div class="leg-main">
+          <div class="leg-player">Terrence Shannon</div>
+          <div class="leg-meta"><span>RA</span>Rebounds + Assists</div>
+        </div>
+        <div class="pick dir-over">
+          <span>OVER</span>
+          <strong>2.5</strong>
+        </div>
+        <div class="actual">ACTUAL<br><strong>4</strong></div>
+        <div class="tier tier-goblin">GOBLIN</div>
+      </div>
+    
+      </div>
+      <div class="slip-stats">
+        <div><strong>3x</strong><span>Payout</span></div>
+        <div><strong>71.8%</strong><span>Model Hit Prob</span></div>
+        <div><strong>0.95x</strong><span>EV Mult</span></div>
+      </div>
+    </section>
+    
+      </div>
+      <div class="footer">
+        <div>Atlas Props</div>
+        <strong>@AtlasSportsAI</strong>
+        <div>Entertainment only</div>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

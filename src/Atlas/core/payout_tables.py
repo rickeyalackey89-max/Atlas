@@ -17,6 +17,10 @@ POWER_MULT = {
 }
 
 # Flex Play payout tables
+FLEX_2 = PayoutTable({
+    (2, 2): 3.0,
+})
+
 FLEX_3 = PayoutTable({
     (3, 3): 3.0,
     (2, 3): 1.0,

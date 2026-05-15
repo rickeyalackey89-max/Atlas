@@ -146,7 +146,8 @@ def _under_eligible_summary(scored: pd.DataFrame, manifest: dict[str, Any]) -> d
         for item in marketed_cfg.get("exclude_stat_directions", [])
         if str(item).lower().endswith("_under")
     }
-    exclude_q = float(marketed_cfg.get("exclude_q_out_frac_gt", 0.0) or 0.0)
+    exclude_q_raw = marketed_cfg.get("exclude_q_out_frac_gt")
+    exclude_q = float(exclude_q_raw) if exclude_q_raw not in (None, "") else None
     exclude_questionable = bool(marketed_cfg.get("exclude_questionable", False))
 
     eligible_mask = (direction == "UNDER") & (tier == "STANDARD")
@@ -154,7 +155,9 @@ def _under_eligible_summary(scored: pd.DataFrame, manifest: dict[str, Any]) -> d
         eligible_mask &= work["p_cal"] >= standard_floor
     if marketed_excluded:
         eligible_mask &= ~stat.isin(marketed_excluded)
-    if exclude_questionable or exclude_q >= 0.0:
+    if exclude_questionable:
+        eligible_mask &= work["q_out_frac"] <= 0.0
+    if exclude_q is not None:
         eligible_mask &= work["q_out_frac"] <= exclude_q
 
     system_floor = float(slip_cfg.get("min_leg_prob", 0.0) or 0.0) if isinstance(slip_cfg, dict) else 0.0
