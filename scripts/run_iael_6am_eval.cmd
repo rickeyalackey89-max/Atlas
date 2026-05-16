@@ -77,7 +77,7 @@ if errorlevel 1 (
 
 REM (6) Rebuild dashboard payload + publish (captures fresh yesterday_slips record)
 set VENV_PY=%ATLAS_ROOT%\.venv314\Scripts\python.exe
-for /f "delims=" %%r in ('%PY% -c "import os,sys; d=r\"%ATLAS_ROOT%\data\output\runs\"; runs=sorted([x for x in os.listdir(d) if len(x)==15 and x[8]==\"_\"], reverse=True); print(os.path.join(d,runs[0])) if runs else sys.exit(1)"') do set LATEST_RUN=%%r
+for /f "delims=" %%r in ('%PY% -c "import pathlib,re,sys; d=pathlib.Path(r\"%ATLAS_ROOT%\data\output\runs\"); runs=[p for p in d.iterdir() if p.is_dir() and re.match(r\"^\d{8}_\d{6}\", p.name) and (p/\"scored_legs_deduped.csv\").exists()]; runs.sort(key=lambda p:(p.name[:15], p.stat().st_mtime), reverse=True); print(str(runs[0])) if runs else sys.exit(1)"') do set LATEST_RUN=%%r
 if not defined LATEST_RUN (
   echo [WARN] No run dir found, skipping payload rebuild >> %LOG%
   goto :end

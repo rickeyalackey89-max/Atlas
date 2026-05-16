@@ -440,6 +440,7 @@ def main() -> None:
         raise ValueError(f"FETCH CONTRACT FAIL: multi_team_team_rows={multi_team_rows}")
 
     report = {
+        "status": "ok",
         "rows": int(rows),
         "opp_blank": float(opp_blank),
         "date_blank": float(date_blank),
@@ -449,6 +450,9 @@ def main() -> None:
     }
     Path("data/board").mkdir(parents=True, exist_ok=True)
     Path("data/board/fetch_contract_report.json").write_text(json.dumps(report, indent=2), encoding="utf-8")
+    no_slate_path = PROJECT_ROOT / "data" / "board" / "no_slate_today.json"
+    if no_slate_path.exists():
+        no_slate_path.unlink()
     # --- END FETCH CONTRACT GATE ---
 
     # --- STICKY-UNION ROSTER MAP (after contract validation) ---

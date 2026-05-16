@@ -48,6 +48,12 @@ if errorlevel 1 (
   exit /b 1
 )
 
+%PY% -c "import json,pathlib,sys; from datetime import date; p=pathlib.Path(r'%ATLAS_ROOT%\data\board\no_slate_today.json'); data=json.loads(p.read_text(encoding='utf-8')) if p.exists() else {}; sys.exit(0 if data.get('status')=='no_slate' and data.get('today')==date.today().isoformat() else 1)"
+if "%ERRORLEVEL%"=="0" (
+  echo [LIVE] No NBA slate today; skipping dashboard publish and telemetry archive >> %LOG%
+  goto :end
+)
+
 REM (2) Dashboard publish
 cd /d %DASH_ROOT%
 powershell -NoProfile -ExecutionPolicy Bypass -File publish-atlas.ps1 "%ATLAS_ROOT%" >> %LOG% 2>&1
@@ -85,5 +91,6 @@ if errorlevel 1 (
   echo [WARN] Winner graphic generation failed - non-fatal >> %LOG%
 )
 
+:end
 echo ===== %date% %time% 8AM LIVE RUN END =====>> %LOG%
 exit /b 0
