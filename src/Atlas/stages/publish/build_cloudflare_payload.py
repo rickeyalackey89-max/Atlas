@@ -147,9 +147,9 @@ def _compute_yesterday_slip_record(repo_root: Path) -> dict:
     runs_dir = repo_root / "data" / "output" / "runs"
     if not runs_dir.exists():
         return {}
+    run_name_re = _re.compile(r"^(\d{8})_(\d{6})")
     run_dirs = sorted(
-        [d for d in runs_dir.iterdir()
-         if d.is_dir() and d.name.startswith(prefix) and len(d.name) == 15 and d.name[8] == "_"],
+        [d for d in runs_dir.iterdir() if d.is_dir() and d.name.startswith(prefix) and run_name_re.match(d.name)],
         key=lambda d: d.name,
     )
     if not run_dirs:
@@ -157,7 +157,10 @@ def _compute_yesterday_slip_record(repo_root: Path) -> dict:
 
     def _run_seconds(run_dir: Path) -> int | None:
         try:
-            hhmmss = run_dir.name[9:]
+            m = run_name_re.match(run_dir.name)
+            if not m:
+                return None
+            hhmmss = m.group(2)
             return int(hhmmss[:2]) * 3600 + int(hhmmss[2:4]) * 60 + int(hhmmss[4:6])
         except Exception:
             return None
@@ -166,14 +169,50 @@ def _compute_yesterday_slip_record(repo_root: Path) -> dict:
         # Saturday/Sunday: 2:30 PM report. Monday-Friday: 5:30 PM report.
         return (14 * 3600 + 30 * 60) if game_date.weekday() >= 5 else (17 * 3600 + 30 * 60)
 
-    report_run: Path | None = None
-    configured_report_run = _os.environ.get("ATLAS_YESTERDAY_REPORT_RUN", "").strip()
-    if configured_report_run:
-        candidate = Path(configured_report_run)
+    def _resolve_run_ref(ref: str) -> Path | None:
+        """Resolve a published/env run id to a concrete run directory.
+
+        Dashboard payloads often store the base timestamp (YYYYMMDD_HHMMSS)
+        while the actual folder may carry an operational suffix such as
+        *_single_slate. Prefer exact folders, then unique timestamp-prefix
+        matches with eval output.
+        """
+        ref = str(ref or "").strip()
+        if not ref:
+            return None
+        candidate = Path(ref)
         if not candidate.is_absolute():
-            candidate = runs_dir / configured_report_run
+            candidate = runs_dir / ref
         if candidate.is_dir() and candidate.name.startswith(prefix) and _run_seconds(candidate) is not None:
-            report_run = candidate
+            return candidate
+
+        ref_name = Path(ref).name
+        matches = [
+            d for d in run_dirs
+            if d.name == ref_name or d.name.startswith(ref_name) or ref_name.startswith(d.name[:15])
+        ]
+        if not matches:
+            return None
+        matches.sort(key=lambda d: ((d / "eval_slips.csv").exists(), (d / "eval_legs.csv").exists(), d.stat().st_mtime), reverse=True)
+        return matches[0]
+
+    def _published_report_run() -> Path | None:
+        payload_path = repo_root / "data" / "output" / "dashboard" / "cloudflare_payload.json"
+        if not payload_path.exists():
+            return None
+        try:
+            payload = json.loads(payload_path.read_text(encoding="utf-8"))
+        except Exception:
+            return None
+        published_id = str(payload.get("run_id") or "").strip()
+        if not published_id.startswith(prefix):
+            return None
+        return _resolve_run_ref(published_id)
+
+    report_run: Path | None = _published_report_run()
+    configured_report_run = _os.environ.get("ATLAS_YESTERDAY_REPORT_RUN", "").strip()
+    if report_run is None and configured_report_run:
+        report_run = _resolve_run_ref(configured_report_run)
 
     if report_run is None:
         target = _target_seconds(yesterday)
@@ -185,6 +224,64 @@ def _compute_yesterday_slip_record(repo_root: Path) -> dict:
                 _run_seconds(d) or 0,
             ),
         )
+
+    def _score_eval_slips() -> dict | None:
+        """Use the explicit slip eval artifact when present.
+
+        This is the authoritative source because it matches the run's actual
+        generated slip files, family labels, void handling, and evaluated leg
+        truth. Manual rescoring remains below as a fallback for older runs.
+        """
+        ep = report_run / "eval_slips.csv"
+        if not ep.exists():
+            return None
+        family_map = {
+            "market": "market",
+            "marketed": "market",
+            "system": "system",
+            "windfall": "windfall",
+        }
+        buckets = {
+            "market": {"wins": 0, "total": 0},
+            "system": {"wins": 0, "total": 0},
+            "windfall": {"wins": 0, "total": 0},
+        }
+        try:
+            with open(ep, newline="", encoding="utf-8", errors="replace") as f:
+                for row in _csv_module.DictReader(f):
+                    family_key = family_map.get(str(row.get("family") or "").strip().lower())
+                    if family_key is None:
+                        continue
+                    status = str(row.get("status") or "").strip().lower()
+                    if status in {"void", "dnp", "no_truth", "pending", ""}:
+                        continue
+                    if status not in {"win", "loss"}:
+                        all_hit = str(row.get("all_hit") or "").strip().lower()
+                        status = "win" if all_hit in {"1", "1.0", "true", "yes"} else "loss"
+                    buckets[family_key]["total"] += 1
+                    if status == "win":
+                        buckets[family_key]["wins"] += 1
+        except Exception:
+            return None
+
+        agg_wins = sum(v["wins"] for v in buckets.values())
+        agg_total = sum(v["total"] for v in buckets.values())
+        if agg_total == 0:
+            return None
+        return {
+            "date": yesterday_str,
+            "run_id": report_run.name,
+            "wins": agg_wins,
+            "total": agg_total,
+            "pct": round(agg_wins / agg_total, 4),
+            "market": {**buckets["market"], "pct": round(buckets["market"]["wins"] / buckets["market"]["total"], 4) if buckets["market"]["total"] else 0},
+            "system": {**buckets["system"], "pct": round(buckets["system"]["wins"] / buckets["system"]["total"], 4) if buckets["system"]["total"] else 0},
+            "windfall": {**buckets["windfall"], "pct": round(buckets["windfall"]["wins"] / buckets["windfall"]["total"], 4) if buckets["windfall"]["total"] else 0},
+        }
+
+    eval_slips_record = _score_eval_slips()
+    if eval_slips_record is not None:
+        return eval_slips_record
 
     # Build hit lookup from eval_legs of that run only
     # key: (player, stat, line, direction) -> 0 or 1

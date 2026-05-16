@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import sys
 from datetime import date, datetime, time
 from pathlib import Path
@@ -21,10 +22,11 @@ DEFAULT_RUNS_DIR = PROJECT_ROOT / "data" / "output" / "runs"
 
 def _parse_run_time(run_dir: Path) -> time | None:
     name = run_dir.name
-    if len(name) != 15 or name[8] != "_":
+    m = re.match(r"^\d{8}_(\d{6})", name)
+    if not m:
         return None
     try:
-        return datetime.strptime(name[9:], "%H%M%S").time()
+        return datetime.strptime(m.group(1), "%H%M%S").time()
     except ValueError:
         return None
 
