@@ -12,6 +12,16 @@ body:
 
         Use this for production-sensitive Atlas work, model/runtime changes, replay analysis, publishing behavior, or anything that needs the main Codex operator.
   - type: dropdown
+    id: codex_lane
+    attributes:
+      label: Codex Lane
+      description: This form defaults to the primary lane; labels are the routing source of truth.
+      options:
+        - Primary Codex
+        - 5.3 Spark
+    validations:
+      required: true
+  - type: dropdown
     id: area
     attributes:
       label: Area

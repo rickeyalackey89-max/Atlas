@@ -13,6 +13,7 @@ Ask Chat:
 
 ```text
 Create a GitHub issue in rickeyalackey89-max/Atlas titled "[Codex Spark]: Fix X".
+Set Codex Lane to 5.3 Spark.
 Use labels codex, codex:5.3-spark, assigned:codex-spark, needs-triage.
 Assign it to rickeyalackey89-max.
 Body: problem, reproduction steps, expected behavior, acceptance criteria.
@@ -22,6 +23,7 @@ For primary Codex:
 
 ```text
 Create a GitHub issue in rickeyalackey89-max/Atlas titled "[Codex Primary]: Investigate X".
+Set Codex Lane to Primary Codex.
 Use labels codex, codex:primary, assigned:codex-primary, needs-triage.
 Assign it to rickeyalackey89-max.
 ```
@@ -34,7 +36,8 @@ Every issue should include:
 - Reproduction steps or relevant files
 - Expected behavior
 - Acceptance criteria
-- Target lane: `codex:primary` or `codex:5.3-spark`
+- Codex Lane: `Primary Codex` or `5.3 Spark`
+- Target label lane: `codex:primary` or `codex:5.3-spark`
 - GitHub assignee, when a human owner should be notified
 
 Do not use this routing for MLB work from this repo setup.
