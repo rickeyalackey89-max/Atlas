@@ -1,0 +1,62 @@
+name: Codex Task - Primary Lane
+description: Route a scoped Atlas repo task to the primary Codex lane.
+title: "[Codex Primary]: "
+labels: ["codex", "codex:primary", "assigned:codex-primary", "needs-triage"]
+assignees:
+  - rickeyalackey89-max
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Target lane: `codex:primary`
+
+        Use this for production-sensitive Atlas work, model/runtime changes, replay analysis, publishing behavior, or anything that needs the main Codex operator.
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - production-runtime
+        - model-replay
+        - website-publishing
+        - data-pipeline
+        - documentation
+        - other
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What is wrong or what needs to be built?
+      placeholder: Describe the issue, including exact paths, URLs, logs, screenshots, or user reports when available.
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance Criteria
+      description: What should be true when Codex is done?
+      placeholder: "- Fix is implemented\n- Tests or validation are run\n- Result is summarized in the issue"
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Context
+      description: Add any relevant branches, files, prior decisions, or constraints.
+  - type: input
+    id: requested_assignee
+    attributes:
+      label: Requested GitHub Assignee
+      description: Optional human GitHub username to assign or notify. Codex lane assignment is controlled by labels.
+      placeholder: rickeyalackey89-max
+  - type: checkboxes
+    id: routing
+    attributes:
+      label: Routing Confirmation
+      options:
+        - label: This should be handled by the primary Codex lane, not the 5.3 Spark lane.
+          required: true
+        - label: The work is scoped to this repository unless the issue explicitly says otherwise.
+          required: true
