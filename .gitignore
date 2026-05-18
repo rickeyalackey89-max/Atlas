@@ -17,13 +17,29 @@ Thumbs.db
 # =========================
 # Runtime / Generated Data
 # =========================
+data/raw/
+data/import/
+data/archives/
+data/output/
+data/telemetry/
+data/bundles/
+logs/
 data/board/snapshots/
+data/board/archive/
+data/board/*.csv
+data/board/*.json
+data/input/bettingpros_props_today.csv
+data/input/bettingpros_signals_today.csv
+data/input/Bettingpros_props.json
+data/input/external_priors_today.csv
+data/input/external_priors_today.yaml
+data/input/odds_market_today.json
+data/input/oddsapi_props_today.csv
+data/input/rotowire_lines.json
+data/input/rotowire_lines_last_good.json
+data/input/rotowire_spreads_today.csv
+data/input/slate.csv
 data/output.zip
-
-# Keep canonical board files
-!data/board/today.csv
-!data/board/fetch_board.csv
-!data/board/archive/
 
 # Logs
 *.log
@@ -40,32 +56,23 @@ daily to-dos/
 data/board/prizepicks_raw.json
 data/board/*.orig_backup
 
-# =========================
-# Exclude only true ephemeral outputs
-# =========================
-data/output/debug/
-data/output/runs/*/debug/
-
 # Large intermediate zips — not needed in git
-data/bundles/
 archives/bundles/
 docs.zip
 
 # Local transcripts / trainer scratch output
 READ.txt
 catboost_info/
+scripts/marketing/*.html
+scripts/marketing/*.png
+scripts/marketing/*.jpg
+scripts/marketing/*.jpeg
 
-# Large binary caches — exceed GitHub 100 MB limit, rebuild with build_v16_cache.py
-data/model/_v16_resim_cache.pkl
-data/model/_*_resim_cache.pkl
-
-# ============================================================
-# EVERYTHING BELOW IS INTENTIONALLY TRACKED
-# These are costly/irreplaceable assets. DO NOT gitignore them.
-# ============================================================
-# data/raw/             -> PrizePicks raw JSON snapshots (needed for replay/resim)
-# data/gamelogs/        -> ESPN box scores, season-long (needed for GBM features)
-# data/model/           -> ALL model artifacts: ensemble, pkl, json, txt, csv
-# data/telemetry/       -> corpus, live run history, eval legs
-# data/archives/        -> OddsAPI cache (paid per pull), IAEL snapshots
-# data/input/           -> rotowire, external priors, roster map
+# Model training scratch and old local candidates. Keep promoted live artifacts tracked.
+data/model/_*.pkl
+data/model/candidates/
+data/model/catboost_playoff/backups/
+data/model/catboost_playoff/catboost_fold_*.cbm
+data/model/catboost_playoff/catboost_full_corpus.cbm
+data/model/*.log
+data/model/*_run.log

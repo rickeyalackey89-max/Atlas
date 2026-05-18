@@ -695,6 +695,21 @@ def fetch_oddsapi_props(*, game_date: str, raw_path: Optional[str | Path] = None
         print(f"⚠️ OddsAPI fetch failed (non-fatal): {e}", file=sys.stderr)
 
 
+def _market_odds_provider() -> str:
+    """Return the live market odds provider.
+
+    BettingPros is the default because it feeds both external priors and the
+    website market-odds package without ODDSAPI credits. Set
+    ATLAS_MARKET_ODDS_PROVIDER=oddsapi or both to re-enable OddsAPI.
+    """
+    provider = (
+        os.environ.get("ATLAS_MARKET_ODDS_PROVIDER")
+        or os.environ.get("ATLAS_ODDS_PROVIDER")
+        or "bettingpros"
+    )
+    return provider.strip().lower()
+
+
 def _load_oddsapi_key() -> tuple[str, str]:
     explicit_path = (os.environ.get("ODDSAPI_KEY_FILE") or "").strip()
     candidates = [Path(explicit_path)] if explicit_path else []
@@ -1157,12 +1172,18 @@ def run_today(
     with StageTimer(ctx, "fetch_bettingpros_props"):
         fetch_bettingpros_props(game_date=game_date, raw_path=raw_path)
 
-    # 2c-oddsapi) Fetch OddsAPI player props → merge into external_priors_today.csv
+    # 2c-oddsapi) Optional legacy OddsAPI overlay. BettingPros is now the
+    # default market odds provider and writes odds_market_today.json itself.
+    odds_provider = _market_odds_provider()
     with StageTimer(ctx, "fetch_oddsapi_props"):
-        fetch_oddsapi_props(game_date=game_date, raw_path=raw_path)
+        if odds_provider in {"oddsapi", "theoddsapi", "both", "all"}:
+            fetch_oddsapi_props(game_date=game_date, raw_path=raw_path)
+        else:
+            _banner(f"FETCH ODDSAPI (skipped, provider={odds_provider})")
 
     bp_priors_path = DATA_DIR / "input" / "external_priors_today.csv"
     _artifact_fingerprint(ctx, "external_priors_today.csv", bp_priors_path)
+    _artifact_fingerprint(ctx, "odds_market_today.json", DATA_DIR / "input" / "odds_market_today.json")
 
     # Extra safety: fresh-but-wrong-slate is still wrong
     try:

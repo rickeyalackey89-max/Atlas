@@ -14,11 +14,13 @@ set DASH_ROOT=C:\Users\13142\Atlas\atlas-dashboard
 set PY=%ATLAS_ROOT%\.venv314\Scripts\python.exe
 set LOG=%ATLAS_ROOT%\data\telemetry\iael_runs.log
 
-REM Load OddsAPI key from user registry, overwriting stale process values from open shells.
-REM Required for Task Scheduler processes that may not inherit the interactive session env.
-for /f "delims=" %%A in ('powershell -NoProfile -Command "[System.Environment]::GetEnvironmentVariable(\"ODDSAPI_KEY\",\"User\")"') do set ODDSAPI_KEY=%%A
-if not defined ODDSAPI_KEY (
-  echo [WARN] ODDSAPI_KEY not set; OddsAPI fetch will be skipped >> %LOG%
+REM BettingPros is the default market odds provider. OddsAPI is optional legacy overlay.
+set ATLAS_MARKET_ODDS_PROVIDER=bettingpros
+if /I not "%ATLAS_MARKET_ODDS_PROVIDER%"=="bettingpros" (
+  for /f "delims=" %%A in ('powershell -NoProfile -Command "[System.Environment]::GetEnvironmentVariable(\"ODDSAPI_KEY\",\"User\")"') do set ODDSAPI_KEY=%%A
+  if not defined ODDSAPI_KEY (
+    echo [WARN] ODDSAPI_KEY not set; optional OddsAPI overlay will be skipped >> %LOG%
+  )
 )
 
 REM 11AM updates the website, but does not post premium picks to Discord.

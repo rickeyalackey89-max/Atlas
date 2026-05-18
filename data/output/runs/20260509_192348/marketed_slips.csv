@@ -1,8 +1,0 @@
-slip,high_confidence,hit_prob,payout_mult,ev,player,team,opp,stat,direction,tier,line,p_cal
-4-leg,True,0.4351,1.897,0.8256,Austin Reaves,LAL,OKC,AST,OVER,GOBLIN,4.5,0.7143
-4-leg,True,0.4351,1.897,0.8256,Chet Holmgren,OKC,LAL,PA,OVER,GOBLIN,14.5,0.7717
-4-leg,True,0.4351,1.897,0.8256,Jaxson Hayes,LAL,OKC,PTS,OVER,STANDARD,5.0,0.9309
-4-leg,True,0.4351,1.897,0.8256,Isaiah Joe,OKC,LAL,PTS,OVER,STANDARD,3.5,0.8857
-3-leg,True,0.5338,1.931,1.0308,Deandre Ayton,LAL,OKC,REB,OVER,GOBLIN,5.5,0.7977
-3-leg,True,0.5338,1.931,1.0308,Jaylin Williams,OKC,LAL,PA,OVER,STANDARD,5.5,0.7574
-3-leg,True,0.5338,1.931,1.0308,Rui Hachimura,LAL,OKC,PRA,OVER,STANDARD,18.5,0.7564

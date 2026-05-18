@@ -1,9 +1,0 @@
-{
-  "report_date": "2026-02-17",
-  "report_label": "N/A",
-  "pulled_at_local": "2026-02-17T19:03:48-06:00",
-  "invalidated_players_count": 0,
-  "invalidated_players": [],
-  "policy": "Remove OUT/DOUBTFUL/QUESTIONABLE from eligibility. PROBABLE allowed but tagged.",
-  "notes": "Empty invalidations emitted due to failure: No PDF links found for date 2026-02-17 AND no last-known IAEL available."
-}

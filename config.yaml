@@ -858,6 +858,19 @@ slip_family_prop_diversity:
   max_repeats_per_family: 1
   candidate_multiplier: 1
   min_candidate_rows: 1
+builder_openai_review:
+  # Report-only operator review after deterministic builders and public gates.
+  # This must never mutate probabilities, slip outputs, tiers, or live publish.
+  enabled: true
+  call_openai: true
+  model: gpt-4.1-mini
+  temperature: 0.1
+  timeout_seconds: 20
+  max_output_tokens: 1200
+  max_prompt_slips: 24
+  key_path_env: ATLAS_OPENAI_API_KEY_PATH
+  # Local machine fallback approved 2026-05-15. The file itself is not tracked.
+  key_path: ../Atlas-MLB-dev/OpenAI.txt
 public_slip_quality:
   # Final public-output guard. This does not rewrite leg probabilities or tiers.
   # It scores whole slips for survival, allows fewer outputs when quality fails,
@@ -865,6 +878,11 @@ public_slip_quality:
   enabled: true
   do_not_force_output: true
   include_demonhunter: true
+  include_demonhunter_by_slate_games:
+    # Two-game replay audit 2026-05-15: DemonHunter was 0/6 strict and 0/6
+    # flex-style cash while Marketed/System/Windfall carried the usable output.
+    # Keep DemonHunter available elsewhere, but do not publish it on 2-game slates.
+    2: false
   score:
     consensus_bonus_per_leg: 0.025
     avg_fragility_penalty_w: 0.35
@@ -891,10 +909,31 @@ public_slip_quality:
     5: 1
   # Q tags are surfaced for operator/public context, not used to block slips.
   max_q_legs_by_legs: {}
+  two_game_4_5_composition:
+    # Two-game replay correlation audit 2026-05-15:
+    # selected 4/5-leg PRA hit 30%, FG3M hit 37.5%, while every strict
+    # winning 4/5 slip avoided both stat families. This is a composition
+    # guard only; it does not rewrite probability, tiers, or single-game logic.
+    enabled: true
+    apply_to_slate_games: 2
+    apply_to_legs: [4, 5]
+    max_stat_counts_by_legs:
+      4:
+        PRA: 0
+        FG3M: 0
+      5:
+        PRA: 0
+        FG3M: 0
+    max_same_stat_by_legs:
+      4: 2
+      5: 2
   exposure:
     enabled: true
-    max_exact_prop_repeats_across_public: 1
-    priority: [Marketed, Windfall, System, DemonHunter]
+    # Cross-family exposure cap. Per-family diversity still prevents the same
+    # exact prop from repeating inside a family; this cap allows Marketed plus
+    # one fallback family to share a strong exact prop without flooding outputs.
+    max_exact_prop_repeats_across_public: 2
+    priority: [Marketed, System, Windfall, DemonHunter]
 marketed_slips:
   enabled: true
   calibration_path: data/model/marketed_calibration.json

@@ -25,6 +25,10 @@ from .single_game_script import (
     is_single_game_slate,
     single_game_slip_rule_status,
 )
+from .slip_composition_policy import (
+    composition_drop_reason_for_legs,
+    infer_slate_game_count,
+)
 from .slip_family_diversity import prop_key_from_mapping
 from .slip_quality_gate import filter_marketed_slips
 from .slip_scoring import _prod
@@ -279,7 +283,8 @@ class MarketedSlipBuilder:
     def _build_single_slip(self, pool: pd.DataFrame, template: Dict[str, Any],
                            used_players: set, used_teams: set,
                            single_game_slate: bool = False,
-                           used_prop_keys: set[str] | None = None) -> Optional[Dict[str, Any]]:
+                           used_prop_keys: set[str] | None = None,
+                           slate_games: int | None = None) -> Optional[Dict[str, Any]]:
         """Build a single slip following the template constraints."""
 
         selected_legs = []
@@ -378,6 +383,13 @@ class MarketedSlipBuilder:
                         continue
                     if _cap_exceeded(leg, "max_low_line_noise_legs", "single_game_low_line_noise_flag"):
                         continue
+                    if composition_drop_reason_for_legs(
+                        [*selected_legs, leg],
+                        self.full_config,
+                        slate_games=slate_games,
+                        n_legs=template_n_legs,
+                    ):
+                        continue
 
                     # Add to slip
                     selected_legs.append(leg)
@@ -405,6 +417,13 @@ class MarketedSlipBuilder:
             n_legs = len(selected_legs)
             sg_ok, sg_reasons, sg_metrics = single_game_slip_rule_status(selected_legs, self.full_config, n_legs=n_legs)
             if not sg_ok and bool(self.config.get("enforce_single_game_slip_rules", True)):
+                return None
+            if composition_drop_reason_for_legs(
+                selected_legs,
+                self.full_config,
+                slate_games=slate_games,
+                n_legs=n_legs,
+            ):
                 return None
 
             # Commit reservations only after the slip fully passes validation.
@@ -472,6 +491,7 @@ class MarketedSlipBuilder:
             teams = tuple(sorted([str(row.get("team", "")), str(row.get("opp", ""))]))
             unique_games.add(teams)
         single_game_slate = (len(unique_games) == 1)
+        slate_games = infer_slate_game_count(df) or len(unique_games)
         if single_game_slate:
             labels = "/".join(str(t.get("label", "")).replace("-leg", "") for t in self.single_game_templates)
             print(f"[MARKETED] Single-game slate detected - using {labels}-leg templates and per-leg team caps")
@@ -496,6 +516,7 @@ class MarketedSlipBuilder:
                 set(),
                 single_game_slate=single_game_slate,
                 used_prop_keys=used_prop_keys,
+                slate_games=slate_games,
             )
             if slip:
                 if reserve_players_across_templates:

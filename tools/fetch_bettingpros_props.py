@@ -17,6 +17,7 @@ ENV:
 Outputs:
   data/input/bettingpros_props_today.csv          (latest fetch, overwritten each run)
   data/input/external_priors_today.csv             (merged: rotowire + bettingpros rows)
+  data/input/odds_market_today.json                (DraftKings/FanDuel market odds package)
   data/archives/bettingpros/bettingpros_props_<date>.csv  (immutable per-date archive)
 """
 
@@ -27,6 +28,7 @@ import json
 import os
 import shutil
 import sys
+import unicodedata
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List, Optional
@@ -51,6 +53,10 @@ def _default_merged_path() -> Path:
 
 def _default_archive_dir() -> Path:
     return _repo_root() / "data" / "archives" / "bettingpros"
+
+
+def _default_market_json_path() -> Path:
+    return _repo_root() / "data" / "input" / "odds_market_today.json"
 
 
 def _debug_dir() -> Path:
@@ -82,6 +88,11 @@ MARKET_ID_TO_STAT: Dict[int, str] = {
 MARKET_IDS = sorted(MARKET_ID_TO_STAT.keys())
 
 BASE_URL = "https://api.bettingpros.com/v3/props"
+
+BOOK_ID_TO_MARKET_PREFIX = {
+    12: "dk",  # DraftKings
+    10: "fd",  # FanDuel
+}
 
 # Request parameters (derived from the cached JSON)
 DEFAULT_PARAMS: Dict[str, Any] = {
@@ -119,52 +130,64 @@ HEADERS = {
 # Fetch helpers
 # ---------------------------------------------------------------------------
 
-def _fetch_page(session: requests.Session, page: int, timeout: int) -> dict:
-    params = {**DEFAULT_PARAMS, "page": str(page)}
+def _fetch_page(
+    session: requests.Session,
+    page: int,
+    timeout: int,
+    param_overrides: Optional[Dict[str, Any]] = None,
+) -> dict:
+    params = {**DEFAULT_PARAMS, **(param_overrides or {}), "page": str(page)}
     base = os.getenv("BETTINGPROS_BASE_URL", BASE_URL).strip()
     resp = session.get(base, params=params, headers=HEADERS, timeout=timeout)
     resp.raise_for_status()
     return resp.json()
 
 
-def _fetch_all_props(timeout: int = 20, max_pages: int = 20) -> List[dict]:
+def _fetch_all_props(
+    timeout: int = 20,
+    max_pages: int = 20,
+    param_overrides: Optional[Dict[str, Any]] = None,
+    label: str = "BP",
+) -> List[dict]:
     """Paginate through all BettingPros NBA props. Returns list of raw prop dicts."""
     session = requests.Session()
     all_props: List[dict] = []
 
     # First page to determine pagination
-    data = _fetch_page(session, page=1, timeout=timeout)
+    data = _fetch_page(session, page=1, timeout=timeout, param_overrides=param_overrides)
     pagination = data.get("_pagination", {})
     total_pages = min(pagination.get("total_pages", 1), max_pages)
     total_items = pagination.get("total_items", 0)
     props = data.get("props", [])
     all_props.extend(props)
 
-    print(f"[BP] Page 1/{total_pages} fetched ({len(props)} props, {total_items} total)")
+    print(f"[{label}] Page 1/{total_pages} fetched ({len(props)} props, {total_items} total)")
 
-    # Save debug page
-    try:
-        (_debug_dir() / "bettingpros_page_1.json").write_text(
-            json.dumps(data, indent=2), encoding="utf-8"
-        )
-    except Exception:
-        pass
+    if label == "BP":
+        # Save debug page for the primary all-books fetch.
+        try:
+            (_debug_dir() / "bettingpros_page_1.json").write_text(
+                json.dumps(data, indent=2), encoding="utf-8"
+            )
+        except Exception:
+            pass
 
     for page in range(2, total_pages + 1):
         try:
-            data = _fetch_page(session, page=page, timeout=timeout)
+            data = _fetch_page(session, page=page, timeout=timeout, param_overrides=param_overrides)
             props = data.get("props", [])
             all_props.extend(props)
-            print(f"[BP] Page {page}/{total_pages} fetched ({len(props)} props)")
+            print(f"[{label}] Page {page}/{total_pages} fetched ({len(props)} props)")
 
-            try:
-                (_debug_dir() / f"bettingpros_page_{page}.json").write_text(
-                    json.dumps(data, indent=2), encoding="utf-8"
-                )
-            except Exception:
-                pass
+            if label == "BP":
+                try:
+                    (_debug_dir() / f"bettingpros_page_{page}.json").write_text(
+                        json.dumps(data, indent=2), encoding="utf-8"
+                    )
+                except Exception:
+                    pass
         except Exception as e:
-            print(f"[BP] Page {page} failed: {e}", file=sys.stderr)
+            print(f"[{label}] Page {page} failed: {e}", file=sys.stderr)
             break
 
     return all_props
@@ -173,6 +196,24 @@ def _fetch_all_props(timeout: int = 20, max_pages: int = 20) -> List[dict]:
 # ---------------------------------------------------------------------------
 # Transform to external_priors CSV format
 # ---------------------------------------------------------------------------
+
+def _norm_name(name: str) -> str:
+    return unicodedata.normalize("NFKD", name).encode("ascii", "ignore").decode("ascii").strip().lower()
+
+
+def _american_to_implied(price: float) -> float:
+    if price >= 100:
+        return 100.0 / (price + 100.0)
+    return abs(price) / (abs(price) + 100.0)
+
+
+def _devig_over_under(over_price: float, under_price: float) -> tuple[float, float]:
+    imp_over = _american_to_implied(over_price)
+    imp_under = _american_to_implied(under_price)
+    total = imp_over + imp_under
+    if total <= 0:
+        return 0.5, 0.5
+    return imp_over / total, imp_under / total
 
 def _prop_to_row(prop: dict, asof_ts: str) -> Optional[Dict[str, str]]:
     """Convert a single BettingPros prop JSON to an external_priors CSV row."""
@@ -267,6 +308,102 @@ def _props_to_csv_rows(props: List[dict], asof_ts: str) -> List[Dict[str, str]]:
     return rows
 
 
+def _prop_to_market_row(prop: dict, book_prefix: str) -> Optional[Dict[str, Any]]:
+    market_id = prop.get("market_id")
+    stat = MARKET_ID_TO_STAT.get(int(market_id)) if market_id is not None else None
+    if not stat:
+        return None
+
+    participant = prop.get("participant", {})
+    player_name = str(participant.get("name") or "").strip()
+    if not player_name:
+        return None
+
+    over_info = prop.get("over") or {}
+    under_info = prop.get("under") or {}
+    line = over_info.get("line")
+    if line is None:
+        line = over_info.get("consensus_line")
+    if line is None:
+        line = under_info.get("line")
+    if line is None:
+        line = under_info.get("consensus_line")
+
+    over_odds = over_info.get("odds")
+    under_odds = under_info.get("odds")
+    if line is None or over_odds is None or under_odds is None:
+        return None
+
+    try:
+        line_f = float(line)
+        over_price = float(over_odds)
+        under_price = float(under_odds)
+    except (TypeError, ValueError):
+        return None
+
+    imp_over, _ = _devig_over_under(over_price, under_price)
+    row: Dict[str, Any] = {
+        "player": player_name,
+        "player_norm": _norm_name(player_name),
+        "stat": stat,
+        "line": line_f,
+        "dk_over": None,
+        "dk_under": None,
+        "fd_over": None,
+        "fd_under": None,
+        "dk_imp_over": None,
+        "fd_imp_over": None,
+    }
+    row[f"{book_prefix}_over"] = int(round(over_price))
+    row[f"{book_prefix}_under"] = int(round(under_price))
+    row[f"{book_prefix}_imp_over"] = round(imp_over, 4)
+    return row
+
+
+def _merge_market_rows(book_rows: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    merged: Dict[tuple, Dict[str, Any]] = {}
+    for row in book_rows:
+        key = (row["player_norm"], row["stat"], row["line"])
+        if key not in merged:
+            merged[key] = {
+                "player": row["player"],
+                "player_norm": row["player_norm"],
+                "stat": row["stat"],
+                "line": row["line"],
+                "dk_over": None,
+                "dk_under": None,
+                "fd_over": None,
+                "fd_under": None,
+                "dk_imp_over": None,
+                "fd_imp_over": None,
+            }
+        target = merged[key]
+        for field in ("dk_over", "dk_under", "fd_over", "fd_under", "dk_imp_over", "fd_imp_over"):
+            if row.get(field) is not None:
+                target[field] = row[field]
+    return list(merged.values())
+
+
+def _fetch_market_rows(timeout: int, max_pages: int) -> List[Dict[str, Any]]:
+    rows: List[Dict[str, Any]] = []
+    for book_id, prefix in BOOK_ID_TO_MARKET_PREFIX.items():
+        label = f"BP-{prefix.upper()}"
+        props = _fetch_all_props(
+            timeout=timeout,
+            max_pages=max_pages,
+            param_overrides={
+                "book_id": str(book_id),
+                "ev_threshold": "false",
+            },
+            label=label,
+        )
+        for prop in props:
+            row = _prop_to_market_row(prop, prefix)
+            if row is not None:
+                rows.append(row)
+    return _merge_market_rows(rows)
+
+
 # ---------------------------------------------------------------------------
 # Write / merge
 # ---------------------------------------------------------------------------
@@ -284,14 +421,25 @@ def _write_bp_csv(rows: List[Dict[str, str]], path: Path) -> None:
 
 
 def _merge_into_external_priors(bp_rows: List[Dict[str, str]], merged_path: Path) -> None:
-    """Merge bettingpros rows into external_priors_today.csv, replacing old BP rows."""
+    """Merge bettingpros rows into external_priors_today.csv.
+
+    A BettingPros live fetch is now the primary odds source. Purge stale
+    OddsAPI rows by default so an expired or skipped ODDSAPI fetch cannot leave
+    yesterday's market priors in the model input. If OddsAPI is explicitly
+    enabled, the orchestrator runs that tool after this one and adds fresh rows.
+    """
+    stale_sources = {"bettingpros"}
+    keep_oddsapi = os.getenv("BETTINGPROS_KEEP_ODDSAPI_PRIORS", "").strip().lower() in {"1", "true", "yes", "y"}
+    if not keep_oddsapi:
+        stale_sources.add("oddsapi")
+
     existing_rows: List[Dict[str, str]] = []
     if merged_path.exists():
         try:
             with merged_path.open("r", encoding="utf-8") as f:
                 reader = csv.DictReader(f)
                 for row in reader:
-                    if row.get("source", "").strip().lower() != "bettingpros":
+                    if row.get("source", "").strip().lower() not in stale_sources:
                         existing_rows.append(row)
         except Exception as e:
             print(f"[BP] Warning: could not read existing external priors: {e}", file=sys.stderr)
@@ -317,6 +465,12 @@ def _archive_snapshot(bp_csv_path: Path, game_date: str, archive_dir: Path) -> N
     print(f"[BP] Archived -> {dest}")
 
 
+def _write_market_json(rows: List[Dict[str, Any]], path: Path) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(rows, indent=2), encoding="utf-8")
+    print(f"[BP] Market JSON -> {path}  ({len(rows)} entries)")
+
+
 # ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
@@ -331,6 +485,7 @@ def main() -> int:
     out_path = Path(os.getenv("BETTINGPROS_OUT_PATH", "").strip() or str(_default_out_path()))
     merged_path = Path(os.getenv("BETTINGPROS_MERGED_PATH", "").strip() or str(_default_merged_path()))
     archive_dir = Path(os.getenv("BETTINGPROS_ARCHIVE_DIR", "").strip() or str(_default_archive_dir()))
+    market_json_path = Path(os.getenv("BETTINGPROS_MARKET_JSON_PATH", "").strip() or str(_default_market_json_path()))
 
     print(f"[BP] Fetching BettingPros NBA props for {game_date} ...")
 
@@ -338,11 +493,15 @@ def main() -> int:
         all_props = _fetch_all_props(timeout=timeout, max_pages=max_pages)
     except Exception as e:
         print(f"[BP] Fetch FAILED: {e}", file=sys.stderr)
-        print("[BP] Continuing without BettingPros data (non-fatal).")
+        print("[BP] Clearing stale BettingPros/OddsAPI rows and continuing without BettingPros data (non-fatal).")
+        _merge_into_external_priors([], merged_path)
+        _write_market_json([], market_json_path)
         return 0  # non-fatal: model can run without external priors
 
     if not all_props:
         print("[BP] No props returned (0 items). Skipping.")
+        _merge_into_external_priors([], merged_path)
+        _write_market_json([], market_json_path)
         return 0
 
     asof_ts = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S")
@@ -351,6 +510,8 @@ def main() -> int:
 
     if not rows:
         print("[BP] 0 usable rows after conversion. Skipping.")
+        _merge_into_external_priors([], merged_path)
+        _write_market_json([], market_json_path)
         return 0
 
     # Write standalone BP CSV
@@ -361,6 +522,15 @@ def main() -> int:
 
     # Archive for replay
     _archive_snapshot(out_path, game_date, archive_dir)
+
+    # Write the market odds package consumed by the website/API payload. This
+    # replaces the old OddsAPI-only source and keeps the downstream contract.
+    try:
+        market_rows = _fetch_market_rows(timeout=timeout, max_pages=max_pages)
+        _write_market_json(market_rows, market_json_path)
+    except Exception as e:
+        print(f"[BP] Market JSON fetch failed: {e}", file=sys.stderr)
+        _write_market_json([], market_json_path)
 
     # Write summary
     stat_counts = {}

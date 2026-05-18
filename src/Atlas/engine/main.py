@@ -1463,6 +1463,7 @@ def main() -> None:
         },
         marketed_slips,
         cfg,
+        scored_for_optimizer,
     )
     sys2 = portfolio_quality.frames.get("System_2leg", sys2)
     sys3 = portfolio_quality.frames.get("System_3leg", sys3)
@@ -1518,6 +1519,20 @@ def main() -> None:
         cfg=cfg,
         ensemble_dir=cfg.get("posthoc_calibrator", {}).get("ensemble_dir"),
     )
+
+    # Report-only OpenAI builder review. This is downstream of deterministic
+    # selection and quality gates, and must never change or fail live outputs.
+    try:
+        from Atlas.core.builder_openai_review import write_builder_openai_review
+
+        review_paths = write_builder_openai_review(run_dir, cfg)
+        if review_paths:
+            for label, path in review_paths.items():
+                print(f" - {path} ({label})")
+    except Exception as e:
+        import sys as _sys
+
+        print(f"Warning: failed to write OpenAI builder review: {e}", file=_sys.stderr)
 
     # Build dashboard payload from slip CSVs
     try:

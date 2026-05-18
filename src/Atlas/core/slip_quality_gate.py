@@ -6,6 +6,12 @@ from typing import Any, Iterable, Mapping
 
 import pandas as pd
 
+from Atlas.core.slip_composition_policy import (
+    composition_drop_reason_for_item,
+    infer_slate_game_count,
+    leg_parts_from_marketed_slip,
+    leg_parts_from_slip_row,
+)
 from Atlas.core.slip_family_diversity import (
     prop_keys_from_marketed_slip,
     prop_keys_from_slip_row,
@@ -140,6 +146,7 @@ def apply_public_portfolio_exposure(
     frames: Mapping[str, pd.DataFrame | None],
     marketed_slips: list[dict[str, Any]] | None,
     cfg: Mapping[str, Any] | None,
+    slate_source: pd.DataFrame | None = None,
 ) -> PortfolioQualityResult:
     """Hard cap exact prop exposure across public outputs.
 
@@ -152,7 +159,8 @@ def apply_public_portfolio_exposure(
     exposure = section.get("exposure", {}) if isinstance(section.get("exposure"), dict) else {}
     enabled = public_slip_quality_enabled(cfg) and bool(exposure.get("enabled", True))
     max_repeats = int(exposure.get("max_exact_prop_repeats_across_public", 1) or 1)
-    priority = [str(x) for x in exposure.get("priority", ["Marketed", "Windfall", "System", "DemonHunter"])]
+    priority = [str(x) for x in exposure.get("priority", ["Marketed", "System", "Windfall", "DemonHunter"])]
+    slate_games = infer_slate_game_count(slate_source)
 
     kept_frames = {name: _ensure_quality_columns(frame) for name, frame in frames.items()}
     kept_marketed = annotate_marketed_slips(marketed_slips, cfg, family="Marketed")
@@ -162,7 +170,9 @@ def apply_public_portfolio_exposure(
         return PortfolioQualityResult(kept_frames, kept_marketed, manifest)
 
     items: list[dict[str, Any]] = []
+    pre_drops: list[dict[str, Any]] = []
     for slip_index, slip in enumerate(kept_marketed):
+        leg_parts = leg_parts_from_marketed_slip(slip)
         items.append(
             {
                 "kind": "marketed",
@@ -170,6 +180,8 @@ def apply_public_portfolio_exposure(
                 "name": "Marketed",
                 "index": slip_index,
                 "keys": prop_keys_from_marketed_slip(slip),
+                "n_legs": int(_float(slip.get("n_legs"), len(leg_parts)) or len(leg_parts)),
+                "leg_parts": leg_parts,
                 "quality_pass": bool(slip.get("public_quality_pass", True)),
                 "survival_score": _float(slip.get("public_survival_score"), 0.0),
             }
@@ -179,7 +191,24 @@ def apply_public_portfolio_exposure(
         family = _family_from_name(name)
         if frame is None or frame.empty:
             continue
+        if not _family_enabled_for_slate(family, section, exposure, slate_games):
+            for idx, row in frame.iterrows():
+                pre_drops.append(
+                    _drop_record(
+                        {
+                            "kind": "frame",
+                            "family": family,
+                            "name": name,
+                            "index": idx,
+                            "survival_score": _float(row.get("public_survival_score"), 0.0),
+                        },
+                        "family_disabled_for_slate",
+                        prop_keys_from_slip_row(row),
+                    )
+                )
+            continue
         for idx, row in frame.iterrows():
+            leg_parts = leg_parts_from_slip_row(row)
             items.append(
                 {
                     "kind": "frame",
@@ -187,6 +216,8 @@ def apply_public_portfolio_exposure(
                     "name": name,
                     "index": idx,
                     "keys": prop_keys_from_slip_row(row),
+                    "n_legs": int(_float(row.get("n_legs"), len(leg_parts)) or len(leg_parts)),
+                    "leg_parts": leg_parts,
                     "quality_pass": bool(row.get("public_quality_pass", True)),
                     "survival_score": _float(row.get("public_survival_score"), 0.0),
                 }
@@ -204,11 +235,15 @@ def apply_public_portfolio_exposure(
 
     counts: dict[str, int] = {}
     kept_item_ids: set[tuple[str, str, int]] = set()
-    drops: list[dict[str, Any]] = []
+    drops: list[dict[str, Any]] = list(pre_drops)
 
     for item in items:
         item_id = (str(item["kind"]), str(item["name"]), int(item["index"]))
         keys = {key for key in item.get("keys", set()) if key}
+        composition_reason = composition_drop_reason_for_item(item, section, slate_games)
+        if composition_reason:
+            drops.append(_drop_record(item, composition_reason, keys))
+            continue
         if not item.get("quality_pass", True):
             drops.append(_drop_record(item, "quality_gate_failed", keys))
             continue
@@ -246,6 +281,8 @@ def apply_public_portfolio_exposure(
     manifest = _manifest(enabled=True, kept_frames=final_frames, kept_marketed=final_marketed, drops=drops)
     manifest["max_exact_prop_repeats_across_public"] = max_repeats
     manifest["priority"] = priority
+    manifest["slate_games"] = slate_games
+    manifest["two_game_4_5_composition"] = section.get("two_game_4_5_composition", {})
     return PortfolioQualityResult(final_frames, final_marketed, manifest)
 
 
@@ -493,6 +530,27 @@ def _family_from_name(name: str) -> str:
     if text.lower().startswith("marketed"):
         return "Marketed"
     return text.split("_", 1)[0]
+
+
+def _family_enabled_for_slate(
+    family: str,
+    section: Mapping[str, Any],
+    exposure: Mapping[str, Any],
+    slate_games: int | None,
+) -> bool:
+    if family != "DemonHunter":
+        return True
+    enabled = bool(section.get("include_demonhunter", True))
+    by_games = section.get("include_demonhunter_by_slate_games")
+    if not isinstance(by_games, Mapping):
+        by_games = exposure.get("include_demonhunter_by_slate_games")
+    if slate_games is not None and isinstance(by_games, Mapping):
+        override = _by_legs(by_games, int(slate_games))
+        if override is None:
+            override = by_games.get("default")
+        if override is not None:
+            enabled = bool(override)
+    return enabled
 
 
 def _is_single_game_row(row: pd.Series) -> bool:

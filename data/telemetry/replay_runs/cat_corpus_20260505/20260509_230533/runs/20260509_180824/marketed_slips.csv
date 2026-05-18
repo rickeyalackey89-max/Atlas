@@ -1,8 +1,0 @@
-slip,high_confidence,hit_prob,payout_mult,ev,player,team,opp,stat,direction,tier,line,p_cal
-4-leg,False,0.2395,1.897,0.4544,Ajay Mitchell,OKC,LAL,FG3M,OVER,GOBLIN,0.5,0.7689
-4-leg,False,0.2395,1.897,0.4544,Alex Caruso,OKC,LAL,PR,OVER,GOBLIN,8.5,0.7543
-4-leg,False,0.2395,1.897,0.4544,Tobias Harris,DET,CLE,PTS,OVER,STANDARD,16.5,0.6676
-4-leg,False,0.2395,1.897,0.4544,Austin Reaves,LAL,OKC,PTS,UNDER,STANDARD,20.5,0.6477
-3-leg,True,0.52,1.931,1.0041,Ausar Thompson,DET,CLE,RA,OVER,GOBLIN,7.5,0.7623
-3-leg,True,0.52,1.931,1.0041,Isaiah Joe,OKC,LAL,PTS,OVER,STANDARD,6.5,0.7726
-3-leg,True,0.52,1.931,1.0041,Jaylin Williams,OKC,LAL,PA,OVER,STANDARD,5.5,0.6768

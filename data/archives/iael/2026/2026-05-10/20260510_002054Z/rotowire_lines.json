@@ -1,1 +1,0 @@
-{"sport": "NBA", "source": "rotowire.com/betting/nba/tables/nba-games-by-market.php", "date": "2026-05-09", "events": [{"gameID": "2977862", "eventTime": 1778373000, "game_date": "2026-05-09", "homeTeam": "LAL", "awayTeam": "OKC", "spread": {"home": 9.5, "away": -9.5}, "ml": {"home": 290, "away": -375}, "ou": 210.5, "source": "mgm"}], "fetched_at": "2026-05-10T00:20:54Z"}

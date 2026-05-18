@@ -31,7 +31,7 @@ def _cfg() -> dict:
             "exposure": {
                 "enabled": True,
                 "max_exact_prop_repeats_across_public": 1,
-                "priority": ["Marketed", "Windfall", "System", "DemonHunter"],
+                "priority": ["Marketed", "System", "Windfall", "DemonHunter"],
             },
         }
     }
@@ -114,6 +114,161 @@ def test_portfolio_exposure_prefers_marketed_then_drops_duplicate_frame_slip() -
     assert result.frames["System_2leg"].empty
     assert result.manifest["dropped_count"] == 1
     assert result.manifest["drops"][0]["reason"] == "exact_prop_exposure_cap"
+
+
+def test_portfolio_exposure_prefers_system_before_windfall_duplicate() -> None:
+    cfg = _cfg()
+    system = pd.DataFrame(
+        [
+            {
+                "n_legs": 2,
+                "legs": "Player A OVER PTS 10.5 (GOBLIN) [id:1] | Player B OVER REB 5.5 (STANDARD) [id:2]",
+                "hit_prob": 0.46,
+                "avg_p": 0.68,
+                "min_p": 0.66,
+                "public_quality_pass": True,
+                "public_survival_score": 0.62,
+            }
+        ]
+    )
+    windfall = pd.DataFrame(
+        [
+            {
+                "n_legs": 2,
+                "legs": "Player A OVER PTS 10.5 (GOBLIN) [id:1] | Player C OVER AST 4.5 (STANDARD) [id:3]",
+                "hit_prob": 0.46,
+                "avg_p": 0.70,
+                "min_p": 0.68,
+                "public_quality_pass": True,
+                "public_survival_score": 0.80,
+            }
+        ]
+    )
+
+    result = apply_public_portfolio_exposure(
+        {"System_2leg": system, "Windfall_2leg": windfall},
+        marketed_slips=[],
+        cfg=cfg,
+    )
+
+    assert len(result.frames["System_2leg"]) == 1
+    assert result.frames["Windfall_2leg"].empty
+    assert result.manifest["drops"][0]["family"] == "Windfall"
+    assert result.manifest["priority"] == ["Marketed", "System", "Windfall", "DemonHunter"]
+
+
+def test_portfolio_exposure_can_disable_demonhunter_by_slate_games() -> None:
+    cfg = _cfg()
+    cfg["public_slip_quality"]["include_demonhunter_by_slate_games"] = {2: False}
+    demonhunter = pd.DataFrame(
+        [
+            {
+                "n_legs": 3,
+                "legs": "Player A OVER PTS 10.5 (DEMON) [id:1] | Player B OVER REB 5.5 (DEMON) [id:2]",
+                "hit_prob": 0.46,
+                "avg_p": 0.68,
+                "min_p": 0.66,
+                "public_quality_pass": True,
+                "public_survival_score": 0.66,
+            }
+        ]
+    )
+    slate_source = pd.DataFrame({"single_game_games": [2, 2, 2]})
+
+    result = apply_public_portfolio_exposure(
+        {"DemonHunter": demonhunter},
+        marketed_slips=[],
+        cfg=cfg,
+        slate_source=slate_source,
+    )
+
+    assert result.frames["DemonHunter"].empty
+    assert result.manifest["slate_games"] == 2
+    assert result.manifest["drops"][0]["reason"] == "family_disabled_for_slate"
+
+
+def test_two_game_composition_gate_drops_fragile_4_and_5_leg_stats_only() -> None:
+    cfg = _cfg()
+    cfg["public_slip_quality"]["two_game_4_5_composition"] = {
+        "enabled": True,
+        "apply_to_slate_games": 2,
+        "apply_to_legs": [4, 5],
+        "max_stat_counts_by_legs": {
+            4: {"PRA": 0, "FG3M": 0},
+            5: {"PRA": 0, "FG3M": 0},
+        },
+        "max_same_stat_by_legs": {4: 2, 5: 2},
+    }
+    fragile_4 = pd.DataFrame(
+        [
+            {
+                "n_legs": 4,
+                "legs": (
+                    "Player A OVER PTS 10.5 (GOBLIN) [id:1] | "
+                    "Player B OVER PRA 20.5 (STANDARD) [id:2] | "
+                    "Player C OVER REB 5.5 (GOBLIN) [id:3] | "
+                    "Player D OVER PR 15.5 (STANDARD) [id:4]"
+                ),
+                "hit_prob": 0.35,
+                "avg_p": 0.72,
+                "min_p": 0.68,
+                "public_quality_pass": True,
+                "public_survival_score": 0.70,
+            }
+        ]
+    )
+    clean_4 = pd.DataFrame(
+        [
+            {
+                "n_legs": 4,
+                "legs": (
+                    "Player E OVER PTS 10.5 (GOBLIN) [id:5] | "
+                    "Player F OVER RA 7.5 (STANDARD) [id:6] | "
+                    "Player G OVER REB 5.5 (GOBLIN) [id:7] | "
+                    "Player H OVER PR 15.5 (STANDARD) [id:8]"
+                ),
+                "hit_prob": 0.35,
+                "avg_p": 0.72,
+                "min_p": 0.68,
+                "public_quality_pass": True,
+                "public_survival_score": 0.70,
+            }
+        ]
+    )
+    three_leg_is_untouched = pd.DataFrame(
+        [
+            {
+                "n_legs": 3,
+                "legs": (
+                    "Player I OVER PTS 10.5 (GOBLIN) [id:9] | "
+                    "Player J OVER PRA 20.5 (STANDARD) [id:10] | "
+                    "Player K OVER REB 5.5 (GOBLIN) [id:11]"
+                ),
+                "hit_prob": 0.35,
+                "avg_p": 0.72,
+                "min_p": 0.68,
+                "public_quality_pass": True,
+                "public_survival_score": 0.70,
+            }
+        ]
+    )
+    slate_source = pd.DataFrame({"game_id": ["A", "A", "B", "B"]})
+
+    result = apply_public_portfolio_exposure(
+        {
+            "System_4leg_fragile": fragile_4,
+            "System_4leg_clean": clean_4,
+            "System_3leg": three_leg_is_untouched,
+        },
+        marketed_slips=[],
+        cfg=cfg,
+        slate_source=slate_source,
+    )
+
+    assert result.frames["System_4leg_fragile"].empty
+    assert len(result.frames["System_4leg_clean"]) == 1
+    assert len(result.frames["System_3leg"]) == 1
+    assert result.manifest["drops"][0]["reason"] == "two_game_composition_pra_count_gt_0"
 
 
 def test_filter_marketed_slips_respects_single_game_quality_floor() -> None:

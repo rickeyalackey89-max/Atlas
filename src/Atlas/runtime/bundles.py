@@ -178,6 +178,7 @@ def write_bundle_zip(
         data_dir / "input" / "external_priors_today.yaml",
         data_dir / "input" / "external_priors_today.csv",
         data_dir / "input" / "bettingpros_props_today.csv",
+        data_dir / "input" / "odds_market_today.json",
         data_dir / "input" / "rotowire_lines.json",
     ):
         if p.exists() and p.is_file():

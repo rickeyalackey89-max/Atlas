@@ -26,6 +26,10 @@ from .single_game_script import (
     is_single_game_slate,
     single_game_slip_rule_status,
 )
+from .slip_composition_policy import (
+    composition_drop_reason_for_legs,
+    infer_slate_game_count,
+)
 from .slip_family_diversity import prop_key_from_mapping
 from .slip_scoring import _score_slip
 
@@ -247,6 +251,7 @@ def build_slips_by_tier_buckets(
     if n_legs not in mixes:
         return pd.DataFrame(columns=_EMPTY_SLIPS_COLS)
     mix = mixes[n_legs]
+    slate_games = infer_slate_game_count(legs_df)
 
     df = legs_df.copy().reset_index(drop=True)
     sb = cfg.get("slip_build", {}) if isinstance(cfg, dict) else {}
@@ -738,8 +743,10 @@ def build_slips_by_tier_buckets(
         buckets_p1[t] = full[:n_p1]
         buckets_p2[t] = full  # phase 2 = full per_tier slice
 
+    rej_composition = 0
+
     def _run_phase(phase_buckets: dict[str, list[pd.Series]], phase_target: int) -> None:
-        nonlocal attempts, slips, seen
+        nonlocal attempts, slips, seen, rej_composition
 
         # penalty knobs (Step 3)
         sb = cfg.get("slip_build", {}) if isinstance(cfg, dict) else {}
@@ -913,6 +920,16 @@ def build_slips_by_tier_buckets(
 
             sg_ok, sg_reasons, sg_metrics = single_game_slip_rule_status(chosen, cfg, n_legs=n_legs)
             if not sg_ok:
+                continue
+
+            composition_reason = composition_drop_reason_for_legs(
+                chosen,
+                cfg,
+                slate_games=slate_games,
+                n_legs=n_legs,
+            )
+            if composition_reason:
+                rej_composition += 1
                 continue
 
             scored = _score_slip(
@@ -1193,6 +1210,11 @@ def build_slips_by_tier_buckets(
         role_dbg_nz = int((role_dbg_arr > 0).sum())
         role_dbg_max = float(role_dbg_arr.max()) if len(role_dbg_arr) else 0.0
         print(f"[BUILDER][DEBUG] candidate_pool rows={len(candidate_pool)} role_nz={role_dbg_nz} role_max={role_dbg_max}")
+        if rej_composition:
+            print(
+                "[BUILDER][DEBUG] composition rejected candidate slips="
+                f"{rej_composition} slate_games={slate_games} n_legs={n_legs}"
+            )
 
     # -----------------------------
     # Step 4: Beam selection (C3) with portfolio exposure caps
@@ -1565,6 +1587,7 @@ def build_slips_by_tier_buckets(
             f"selected={len(out)} requested={int(top_n)} "
             f"beam_window_size={beam_window_size} "
             f"rej_exposure_cap={rej_exposure_cap} rej_missing_players={rej_missing_players} "
+            f"rej_composition={rej_composition} "
             f"window_mult={window_mult} window_bumps={window_bumps}",
             stacklevel=2,
         )
@@ -1614,7 +1637,8 @@ def build_slips_by_tier_buckets(
             f"max_exposure={max_exposure} | "
             f"top5_exposure={top5_str} | "
             f"rej_exposure_cap={rej_exposure_cap} | "
-            f"rej_missing_players={rej_missing_players}"
+            f"rej_missing_players={rej_missing_players} | "
+            f"rej_composition={rej_composition}"
         )
     if debug_builder:
         try:

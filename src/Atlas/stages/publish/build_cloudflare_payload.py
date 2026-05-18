@@ -531,12 +531,21 @@ def _apply_prizepicks_quote_to_slip(slip: dict, legs: list[dict]) -> dict:
     quote = _quote_prizepicks_payout(legs)
     if not quote:
         slip["pp_quote_ok"] = False
+        slip["pp_quote_status"] = "unquoted"
+        slip["pp_payout_is_exact"] = False
         return slip
 
     power_mult = ((quote.get("power") or {}).get("all_correct"))
     flex_mult = ((quote.get("flex") or {}).get("all_correct"))
-    chosen_mult = power_mult if power_mult is not None else flex_mult
-    slip["pp_quote_ok"] = True
+    chosen = quote.get("chosen") or {}
+    chosen_mult = chosen.get("all_correct")
+    if chosen_mult is None:
+        chosen_mult = power_mult if power_mult is not None else flex_mult
+    payout_is_exact = bool(chosen.get("payout_is_exact"))
+    slip["pp_quote_ok"] = payout_is_exact
+    slip["pp_quote_status"] = quote.get("quote_status") or ""
+    slip["pp_payout_is_exact"] = payout_is_exact
+    slip["pp_payout_quote_key"] = quote.get("quote_key") or ""
     slip["pp_payout_quote"] = quote
     slip["pp_power_payout_mult"] = power_mult
     slip["pp_flex_payout_mult"] = flex_mult

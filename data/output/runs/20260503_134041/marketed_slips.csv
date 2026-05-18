@@ -1,8 +1,0 @@
-slip,high_confidence,hit_prob,payout_mult,ev,player,team,opp,stat,direction,tier,line,p_cal
-3-leg,True,0.7192,1.931,1.3888,Jarrett Allen,CLE,TOR,PTS,OVER,GOBLIN,8.5,0.9013
-3-leg,True,0.7192,1.931,1.3888,Anthony Black,ORL,DET,PR,UNDER,STANDARD,15.5,0.8179
-3-leg,True,0.7192,1.931,1.3888,Jamal Shead,TOR,CLE,PR,UNDER,STANDARD,10.5,0.7699
-4-leg,True,0.3633,1.897,0.6893,Jarrett Allen,CLE,TOR,PTS,OVER,GOBLIN,8.5,0.9013
-4-leg,True,0.3633,1.897,0.6893,Goga Bitadze,ORL,DET,PRA,OVER,GOBLIN,4.5,0.7804
-4-leg,True,0.3633,1.897,0.6893,Jamal Shead,TOR,CLE,PR,UNDER,STANDARD,10.5,0.7699
-4-leg,True,0.3633,1.897,0.6893,Isaiah Stewart,DET,ORL,PRA,UNDER,STANDARD,8.5,0.7236
