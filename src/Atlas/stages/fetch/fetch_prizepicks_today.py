@@ -20,6 +20,8 @@ from typing import Any, Optional
 
 import pandas as pd
 
+from Atlas.core.team_aliases import normalize_team_abbr
+
 SUPPORTED_STATS = {
     "PTS", "REB", "AST", "FG3M",
     "PR", "PA", "RA", "PRA",
@@ -231,7 +233,7 @@ def run_fetch(*, payload: dict[str, Any], is_replay: bool) -> pd.DataFrame:
         )
         pinfo = players_by_id.get(player_id, {})
         player_name = _clean_str(pinfo.get("name"))
-        team = _clean_str(pinfo.get("team"))
+        team = normalize_team_abbr(pinfo.get("team"))
         
         if not player_name:
             continue
@@ -276,8 +278,8 @@ def run_fetch(*, payload: dict[str, Any], is_replay: bool) -> pd.DataFrame:
 
         # Derive opponent + home via game metadata teams
         md = (gattr.get("metadata") or {}).get("game_info", {}).get("teams", {})
-        home_abbr = (md.get("home") or {}).get("abbreviation")
-        away_abbr = (md.get("away") or {}).get("abbreviation")
+        home_abbr = normalize_team_abbr((md.get("home") or {}).get("abbreviation"))
+        away_abbr = normalize_team_abbr((md.get("away") or {}).get("abbreviation"))
 
         opp = "UNK"
         home = 0

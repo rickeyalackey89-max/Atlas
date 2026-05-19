@@ -36,6 +36,7 @@ import pandas as pd
 from Atlas.core.features import summarize_stat, get_player_window, compute_recent_form, compute_opp_defense_factor, compute_pace_factor
 from Atlas.core.minutes import adjust_probability_for_blowout, minutes_sensitivity
 from Atlas.core.share_name_key import share_name_key
+from Atlas.core.team_aliases import normalize_team_abbr
 
 # -------------------------------------------------------------------
 # Share matrix cache
@@ -87,7 +88,7 @@ def _load_share_matrix() -> pd.DataFrame:
                 _SHARE_MATRIX[c] = _SHARE_MATRIX[c].astype(str)
 
         if "team" in _SHARE_MATRIX.columns:
-            _SHARE_MATRIX["team_u"] = _SHARE_MATRIX["team"].astype(str).str.upper().str.strip()
+            _SHARE_MATRIX["team_u"] = _SHARE_MATRIX["team"].map(normalize_team_abbr)
         if "stat" in _SHARE_MATRIX.columns:
             _SHARE_MATRIX["stat_u"] = _SHARE_MATRIX["stat"].astype(str).str.upper().str.strip()
         if "out_player" in _SHARE_MATRIX.columns:
@@ -970,53 +971,8 @@ def _fragility_root_inputs(
     return float(minutes_s), usage_debug
 
 
-# --- IAEL team normalization -------------------------------------------------
-_TEAM_NAME_TO_ABBR = {
-    "AtlantaHawks": "ATL",
-    "BostonCeltics": "BOS",
-    "BrooklynNets": "BKN",
-    "CharlotteHornets": "CHA",
-    "ChicagoBulls": "CHI",
-    "ClevelandCavaliers": "CLE",
-    "DallasMavericks": "DAL",
-    "DenverNuggets": "DEN",
-    "DetroitPistons": "DET",
-    "GoldenStateWarriors": "GSW",
-    "HoustonRockets": "HOU",
-    "IndianaPacers": "IND",
-    "LACLippers": "LAC",
-    "LosAngelesClippers": "LAC",
-    "LALakers": "LAL",
-    "LosAngelesLakers": "LAL",
-    "MemphisGrizzlies": "MEM",
-    "MiamiHeat": "MIA",
-    "MilwaukeeBucks": "MIL",
-    "MinnesotaTimberwolves": "MIN",
-    "NewOrleansPelicans": "NOP",
-    "NewYorkKnicks": "NYK",
-    "OklahomaCityThunder": "OKC",
-    "OrlandoMagic": "ORL",
-    "Philadelphia76ers": "PHI",
-    "PhoenixSuns": "PHX",
-    "PortlandTrailBlazers": "POR",
-    "SacramentoKings": "SAC",
-    "SanAntonioSpurs": "SAS",
-    "TorontoRaptors": "TOR",
-    "UtahJazz": "UTA",
-    "WashingtonWizards": "WAS",
-}
-
-
 def _team_to_abbr(team: Any) -> str:
-    s = str(team or "").strip()
-    if not s:
-        return ""
-    if len(s) == 3 and s.isalpha():
-        return s.upper()
-    s2 = re.sub(r"[^A-Za-z0-9]", "", s)
-    if s2 in _TEAM_NAME_TO_ABBR:
-        return _TEAM_NAME_TO_ABBR[s2]
-    return s2[:3].upper()
+    return normalize_team_abbr(team)
 
 
 def _load_iael_status_latest() -> pd.DataFrame:
@@ -1194,7 +1150,7 @@ def compute_role_multiplier(
       - For each OUT teammate, accumulate 'weight' where this player is beneficiary.
       - role_mult_raw = 1 + union(weight bumps)
     """
-    team_u = str(team).upper().strip()
+    team_u = normalize_team_abbr(team)
     stat_u = str(stat).upper().strip()
     stat_u = {
         "3PM": "FG3M",
@@ -1523,6 +1479,9 @@ def _build_blowout_team_stats(gamelogs: pd.DataFrame, threshold: float = 15.5, l
         return {}
 
     # Aggregate to game-team level
+    gl["team"] = gl["team"].map(normalize_team_abbr)
+    gl["opp"] = gl["opp"].map(normalize_team_abbr)
+
     game_team = gl.groupby(["game_date", "team", "opp"]).agg(
         team_pts=("pts", "sum"),
     ).reset_index()
@@ -1614,8 +1573,8 @@ def compute_enriched_blowout_q(
     team_rates = blowout_team_stats.get("team_blowout_rate", {})
     matchup_rates = blowout_team_stats.get("matchup_blowout_rate", {})
 
-    team_u = str(team).upper().strip()
-    opp_u = str(opp).upper().strip()
+    team_u = normalize_team_abbr(team)
+    opp_u = normalize_team_abbr(opp)
 
     # Team-level adjustment: average both teams' blowout propensity relative to league
     team_rate = team_rates.get(team_u)
@@ -2372,7 +2331,7 @@ def simulate_leg_probability_new(
     _zero_dnp_mult = 1.0
     _zero_dnp_debug = "not_triggered"
     if role_enabled and isinstance(iael_eff, pd.DataFrame) and not iael_eff.empty and team:
-        _outs_for_dnp = _extract_team_outs(iael_eff, str(team).upper().strip())
+        _outs_for_dnp = _extract_team_outs(iael_eff, normalize_team_abbr(team))
         _player_min_mean_for_dnp = float(s.get("min_mean", 0.0) or 0.0)
         _zero_dnp_mult, _zero_dnp_debug = _zero_dnp_minutes_mult(
             _outs_for_dnp, _player_min_mean_for_dnp, gamelogs, cfg=cfg

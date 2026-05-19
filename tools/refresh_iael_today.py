@@ -110,17 +110,11 @@ def _assert_no_team_mismatches(root: Path, latest_norm: Path) -> None:
                             opp_col = rdr.fieldnames[cols.index(cand)]
                             break
 
-                    home_col = None
-                    for cand in ("home",):
-                        if cand in cols and rdr.fieldnames is not None:
-                            home_col = rdr.fieldnames[cols.index(cand)]
-                            break
-
                     for r in rdr:
-                        for col in (team_col, opp_col, home_col):
+                        for col in (team_col, opp_col):
                             if not col:
                                 continue
-                            v = (r.get(col) or "").strip().upper()
+                            v = _team_to_abbr((r.get(col) or "").strip())
                             if len(v) == 3 and v.isalpha():
                                 active_teams.add(v)
 

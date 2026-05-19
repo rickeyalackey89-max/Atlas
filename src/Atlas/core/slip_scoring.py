@@ -4,6 +4,8 @@ import re
 import numpy as np
 import pandas as pd
 
+from Atlas.core.team_aliases import normalize_team_abbr
+
 """
 Slip scoring helpers (extracted from LegacyEngine.optimize during Phase 7B).
 
@@ -187,10 +189,10 @@ def _score_slip(
         hedge_bonus = float(corr_cfg.get("hedge_bonus", 0.01) or 0.01)
         corr_mult = 1.0
         for i in range(len(rows)):
-            ti = str(rows[i].get("team", rows[i].get("team_abbrev", ""))).strip().upper()
+            ti = normalize_team_abbr(rows[i].get("team", rows[i].get("team_abbrev", "")))
             di = str(rows[i].get("direction", "")).strip().upper()
             for j in range(i + 1, len(rows)):
-                tj = str(rows[j].get("team", rows[j].get("team_abbrev", ""))).strip().upper()
+                tj = normalize_team_abbr(rows[j].get("team", rows[j].get("team_abbrev", "")))
                 dj = str(rows[j].get("direction", "")).strip().upper()
                 if not ti or not tj:
                     continue

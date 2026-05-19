@@ -21,6 +21,7 @@ from typing import Any
 import pandas as pd
 
 from Atlas.core.share_name_key import share_name_key
+from Atlas.core.team_aliases import normalize_team_abbr
 
 
 
@@ -177,7 +178,7 @@ def _build_player_map(payload: dict) -> dict[str, dict[str, str]]:
         pid = _clean_str(inc.get("id"))
         attr = inc.get("attributes", {}) or {}
         name = _clean_str(attr.get("name"))
-        team = _clean_str(attr.get("team"))
+        team = normalize_team_abbr(attr.get("team"))
         if pid:
             mp[pid] = {"name": name, "team": team}
     return mp
@@ -286,7 +287,7 @@ def run_rebuild(*, payload: dict[str, Any], is_replay: bool) -> pd.DataFrame:
 
         p = players.get(player_id, {}) if player_id else {}
         player_name = _clean_str(p.get("name"))
-        team = _clean_str(p.get("team"))
+        team = normalize_team_abbr(p.get("team"))
 
         if not player_name:
             player_name = _clean_str(attr.get("description") or attr.get("player_name") or attr.get("name"))
@@ -342,8 +343,8 @@ def run_rebuild(*, payload: dict[str, Any], is_replay: bool) -> pd.DataFrame:
         if game_id and game_id in games:
             gi = games.get(game_id) or {}
             teams = (((gi.get("metadata") or {}).get("game_info") or {}).get("teams") or {})
-            home_abbrev = _clean_str(((teams.get("home") or {}).get("abbreviation")))
-            away_abbrev = _clean_str(((teams.get("away") or {}).get("abbreviation")))
+            home_abbrev = normalize_team_abbr(((teams.get("home") or {}).get("abbreviation")))
+            away_abbrev = normalize_team_abbr(((teams.get("away") or {}).get("abbreviation")))
             if home_abbrev and away_abbrev:
                 if team == home_abbrev:
                     home = 1

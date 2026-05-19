@@ -10,44 +10,12 @@ from typing import Any, Iterable
 import numpy as np
 import pandas as pd
 
+from Atlas.core.team_aliases import normalize_team_abbr
 from Atlas.core.share_name_key import share_name_key
 from Atlas.model.share_matrix_contract import REQUIRED_COLUMNS
 
 
 STAT_FAMILIES = ("PTS", "REB", "AST")
-
-_TEAM_NAME_TO_ABBR = {
-    "ATLANTAHAWKS": "ATL",
-    "BOSTONCELTICS": "BOS",
-    "BROOKLYNNETS": "BKN",
-    "CHARLOTTEHORNETS": "CHA",
-    "CHICAGOBULLS": "CHI",
-    "CLEVELANDCAVALIERS": "CLE",
-    "DALLASMAVERICKS": "DAL",
-    "DENVERNUGGETS": "DEN",
-    "DETROITPISTONS": "DET",
-    "GOLDENSTATEWARRIORS": "GSW",
-    "HOUSTONROCKETS": "HOU",
-    "INDIANAPACERS": "IND",
-    "LACLIPPERS": "LAC",
-    "LALAKERS": "LAL",
-    "MEMPHISGRIZZLIES": "MEM",
-    "MIAMIHEAT": "MIA",
-    "MILWAUKEEBUCKS": "MIL",
-    "MINNESOTATIMBERWOLVES": "MIN",
-    "NEWORLEANSPELICANS": "NOP",
-    "NEWYORKKNICKS": "NYK",
-    "OKLAHOMACITYTHUNDER": "OKC",
-    "ORLANDOMAGIC": "ORL",
-    "PHILADELPHIA76ERS": "PHI",
-    "PHOENIXSUNS": "PHX",
-    "PORTLANDTRAILBLAZERS": "POR",
-    "SACRAMENTOKINGS": "SAC",
-    "SANANTONIOSPURRS": "SAS",
-    "TORONTORAPTORS": "TOR",
-    "UTAHJAZZ": "UTA",
-    "WASHINGTONWIZARDS": "WAS",
-}
 
 
 @dataclass(frozen=True)
@@ -74,16 +42,7 @@ def _safe_float(value: Any, default: float = 0.0) -> float:
 
 
 def _norm_team(value: Any) -> str:
-    raw = str(value or "").strip()
-    if not raw:
-        return ""
-    up = raw.upper()
-    if len(up) == 3 and up.isalpha():
-        return up
-    key = re.sub(r"[^A-Z]", "", up)
-    if key in _TEAM_NAME_TO_ABBR:
-        return _TEAM_NAME_TO_ABBR[key]
-    return up[:3] if len(up) >= 3 else up
+    return normalize_team_abbr(value)
 
 
 def _stat_alias(stat: str) -> str:

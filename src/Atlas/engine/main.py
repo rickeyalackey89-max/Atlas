@@ -15,6 +15,7 @@ from zoneinfo import ZoneInfo
 
 from ..core.matchup_enricher import enrich_with_matchups
 from Atlas.core.share_name_key import share_name_key
+from Atlas.core.team_aliases import normalize_team_abbr
 
 
 def _to_series(val: Any, **kwargs: Any) -> pd.Series:
@@ -617,7 +618,7 @@ def _player_key(name: Any) -> str:
 
 
 def normalize_team_token(team: Any) -> str:
-    return ("" if team is None else str(team)).strip().upper()
+    return normalize_team_abbr(team)
 
 
 def load_iael_invalidations(

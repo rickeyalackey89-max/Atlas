@@ -14,6 +14,7 @@ import requests
 
 from Atlas.stages.common.paths import find_repo_root
 from Atlas.stages.fetch.fetch_prizepicks_today import NoSlateTodayError, run_fetch
+from Atlas.core.team_aliases import CANONICAL_NBA_TEAMS, normalize_team_abbr
 
 # ---------------------------------------------------------------
 # Paths
@@ -185,7 +186,7 @@ _PERSON_SUFFIX_RE = re.compile(r"\b(jr|sr|ii|iii|iv|v)\b\.?", re.IGNORECASE)
 
 def _is_valid_team_abbr(team: str) -> bool:
     """Check if team is a valid 3-letter uppercase NBA abbreviation."""
-    return isinstance(team, str) and len(team) == 3 and team.isupper() and team.isalpha()
+    return normalize_team_abbr(team) in CANONICAL_NBA_TEAMS
 
 
 def _normalize_person_key(name: Any) -> str:
@@ -213,7 +214,7 @@ def _load_live_roster_map() -> pd.DataFrame:
     except Exception:
         return pd.DataFrame(columns=["player", "team", "player_norm"])
 
-    team_id_to_abbr = {t["id"]: t["abbreviation"] for t in nba_teams.get_teams()}
+    team_id_to_abbr = {t["id"]: normalize_team_abbr(t["abbreviation"]) for t in nba_teams.get_teams()}
 
     try:
         cap = CommonAllPlayers(is_only_current_season=1)
@@ -226,7 +227,7 @@ def _load_live_roster_map() -> pd.DataFrame:
 
     roster_df = df.copy()
     roster_df["player"] = roster_df["DISPLAY_FIRST_LAST"].astype(str).str.strip()
-    roster_df["team"] = roster_df["TEAM_ID"].map(team_id_to_abbr).fillna("").astype(str).str.strip()
+    roster_df["team"] = roster_df["TEAM_ID"].map(team_id_to_abbr).fillna("").map(normalize_team_abbr)
     roster_df["player_norm"] = roster_df["player"].apply(_normalize_person_key)
     roster_df = roster_df.loc[
         roster_df["player"].ne("")

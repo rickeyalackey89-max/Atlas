@@ -19,6 +19,7 @@ import numpy as np
 import pandas as pd
 
 from .payout_tables import FLEX_2, FLEX_3, FLEX_4, FLEX_5, POWER_MULT
+from .team_aliases import normalize_team_abbr
 from .minute_risk_guard import apply_minute_risk_guard
 from .single_game_script import (
     apply_single_game_script_annotations,
@@ -763,7 +764,7 @@ def build_slips_by_tier_buckets(
                 if k in r.index:
                     v = str(r[k]).strip()
                     if v and v.lower() != "nan":
-                        return v
+                        return normalize_team_abbr(v)
             return ""
 
         _stat_family_mode = str(sb.get("stat_family_mode", "coarse") or "coarse").strip().lower()

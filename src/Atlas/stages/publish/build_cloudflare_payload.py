@@ -17,6 +17,7 @@ from typing import Optional
 import pandas as pd
 
 from Atlas.core.prizepicks_quote import quote_prizepicks_payout
+from Atlas.core.team_aliases import normalize_team_abbr
 
 
 def _norm_name(name: str) -> str:
@@ -415,7 +416,8 @@ def _load_today_slate_teams(repo_root: Path) -> set:
         teams: set = set()
         for col in ("team", "opp"):
             if col in df.columns:
-                teams.update(df[col].dropna().astype(str).str.upper().str.strip().tolist())
+                teams.update(df[col].dropna().map(normalize_team_abbr).tolist())
+        teams.discard("")
         return teams
     except Exception:
         return set()
@@ -454,7 +456,7 @@ def _load_injury_context(repo_root: Path) -> dict:
             with open(normalized_path, "r", encoding="utf-8") as f:
                 norm = json.load(f)
             for row in norm.get("rows", []):
-                team_u = str(row.get("team", "")).upper().strip()
+                team_u = normalize_team_abbr(row.get("team", ""))
                 if slate_teams and team_u not in slate_teams:
                     continue
                 if (row.get("status", "").upper() == "QUESTIONABLE"
@@ -843,6 +845,52 @@ def _write_performance_cache(out_dir: Path, performance: dict) -> None:
         pass
 
 
+def _fallback_role_context_for_leg(leg: dict, share_matrix, iael_df) -> tuple[float | None, str | None]:
+    try:
+        if share_matrix is None or getattr(share_matrix, "empty", True):
+            return None, None
+        if iael_df is None or getattr(iael_df, "empty", True):
+            return None, None
+
+        from Atlas.engine.new_probability import compute_role_multiplier
+
+        stat = str(leg.get("stat") or "").upper().strip()
+        components = {
+            "FG3M": ["PTS"],
+            "3PM": ["PTS"],
+            "PR": ["PTS", "REB"],
+            "PA": ["PTS", "AST"],
+            "RA": ["REB", "AST"],
+            "PRA": ["PTS", "REB", "AST"],
+        }.get(stat, [stat])
+
+        mults: list[float] = []
+        reasons: list[str] = []
+        for comp in components:
+            mult, debug = compute_role_multiplier(
+                share_matrix,
+                iael_df,
+                player=str(leg.get("player") or ""),
+                team=str(leg.get("team") or ""),
+                stat=comp,
+            )
+            try:
+                mult_f = float(mult)
+            except (TypeError, ValueError):
+                continue
+            if mult_f > 1.005:
+                mults.append(mult_f)
+                reasons.append(str((debug or {}).get("reason") or "ok"))
+
+        if not mults:
+            return None, None
+        if len(mults) == 1:
+            return mults[0], reasons[0] if reasons else "ok"
+        return 1.0 + (sum(m - 1.0 for m in mults) / len(mults)), "ok_combo"
+    except Exception:
+        return None, None
+
+
 def build_cloudflare_payload(
     run_dir: Path,
     out_dir: Path,
@@ -1138,14 +1186,36 @@ def build_cloudflare_payload(
             payload["all_legs"] = all_legs_out
             # Extract role-boosted legs for the injury tab
             no_effect_reasons = {"no_outs", "none", "combo_no_effect", "no_share_matrix", "stat_unmapped", ""}
+            share_matrix_for_display = None
+            iael_for_display = None
+            try:
+                from Atlas.engine.new_probability import _load_share_matrix
+                from Atlas.model.team_share_allocator_v2 import load_iael_snapshot
+
+                share_matrix_for_display = _load_share_matrix()
+                iael_for_display = load_iael_snapshot(
+                    invalidations_path=_repo_root() / "data" / "output" / "dashboard" / "injury_invalidations_latest.json",
+                )
+            except Exception:
+                share_matrix_for_display = None
+                iael_for_display = None
+
             role_boosted = []
             for leg in all_legs_out:
                 reason = str(leg.get("role_reason") or "").strip()
-                if reason.lower() in no_effect_reasons:
-                    continue
                 role_mult = leg.get("role_mult")
                 if role_mult is None:
-                    continue
+                    role_mult, reason = _fallback_role_context_for_leg(leg, share_matrix_for_display, iael_for_display)
+                    if role_mult is not None:
+                        leg["role_mult"] = role_mult
+                        leg["role_reason"] = reason
+                elif reason.lower() in no_effect_reasons:
+                    fallback_mult, fallback_reason = _fallback_role_context_for_leg(leg, share_matrix_for_display, iael_for_display)
+                    if fallback_mult is None:
+                        continue
+                    role_mult, reason = fallback_mult, fallback_reason or "ok"
+                    leg["role_mult"] = role_mult
+                    leg["role_reason"] = reason
                 try:
                     role_delta = abs(float(role_mult) - 1.0)
                 except (TypeError, ValueError):

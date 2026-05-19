@@ -13,6 +13,8 @@ import re
 
 import pandas as pd
 
+from Atlas.core.team_aliases import normalize_team_abbr
+
 
 _SUFFIX_RE = re.compile(r"\b(jr|sr|ii|iii|iv|v)\b\.?", re.IGNORECASE)
 
@@ -47,7 +49,7 @@ def normalize_person_name(name: Any) -> str:
 
 
 def normalize_team_token(team: Any) -> str:
-    return ("" if team is None else str(team)).strip().upper()
+    return normalize_team_abbr(team)
 
 
 def apply_iael_hard_filter(

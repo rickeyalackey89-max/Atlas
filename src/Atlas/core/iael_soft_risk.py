@@ -6,6 +6,8 @@ from typing import Any
 
 import pandas as pd
 
+from Atlas.core.team_aliases import normalize_team_abbr
+
 
 def apply_iael_soft_risk(scored: pd.DataFrame, iael_df: pd.DataFrame) -> pd.DataFrame:
     """Tag QUESTIONABLE exposure as soft risk without dropping or changing math."""
@@ -31,7 +33,7 @@ def apply_iael_soft_risk(scored: pd.DataFrame, iael_df: pd.DataFrame) -> pd.Data
         if "player" in _q.columns:
             team_col = "team_norm" if "team_norm" in _q.columns else ("team" if "team" in _q.columns else "")
             if team_col:
-                _q["_team_u"] = _q[team_col].astype(str).str.upper().str.strip()
+                _q["_team_u"] = _q[team_col].map(normalize_team_abbr)
                 for pn, teams in _q.groupby(_q["player"].apply(_norm_name).astype(str))["_team_u"]:
                     q_player_teams[str(pn)] = {str(team).upper().strip() for team in teams if str(team).strip()}
 
@@ -57,7 +59,7 @@ def apply_iael_soft_risk(scored: pd.DataFrame, iael_df: pd.DataFrame) -> pd.Data
             if not names and candidate_col != "player":
                 names = _parse_name_list(row.get("player"))
 
-            row_team = str(row.get("team", "")).upper().strip()
+            row_team = normalize_team_abbr(row.get("team", ""))
             matched = [
                 _norm_name(name)
                 for name in names
@@ -110,7 +112,7 @@ def _questionable_beneficiary_keys(q_players: set[str], norm_name) -> set[tuple[
         if share_matrix.empty or not {"team", "out_player", "beneficiary_player", "stat"}.issubset(share_matrix.columns):
             return q_beneficiary_keys
         sm = share_matrix.copy()
-        sm["team_u"] = sm["team"].astype(str).str.upper().str.strip()
+        sm["team_u"] = sm["team"].map(normalize_team_abbr)
         sm["out_canon"] = sm["out_player"].apply(norm_name)
         sm["ben_canon"] = sm["beneficiary_player"].apply(norm_name)
         sm["stat_u"] = sm["stat"].astype(str).str.upper().str.strip()

@@ -12,6 +12,8 @@ from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 import urllib.request
 
+from Atlas.core.team_aliases import normalize_team_abbr
+
 try:
     from zoneinfo import ZoneInfo  # py3.9+
 except Exception:
@@ -286,8 +288,8 @@ def espn_game_player_rows(event_id: str, target: date, timeout_sec: int, retries
             rows.append({
                 "game_date": date_str,
                 "player": player_name,
-                "team": team_abbr,
-                "opp": opp_abbr,
+                "team": normalize_team_abbr(team_abbr),
+                "opp": normalize_team_abbr(opp_abbr),
                 "minutes": minutes,
                 "pts": pts,
                 "reb": reb,

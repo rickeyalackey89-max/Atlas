@@ -8,6 +8,7 @@ from datetime import datetime, timezone, timedelta
 
 import pandas as pd
 from Atlas.core.share_name_key import share_name_key
+from Atlas.core.team_aliases import normalize_team_abbr
 
 
 # -----------------------------
@@ -269,8 +270,8 @@ def attach_rotowire_game_spreads(df: pd.DataFrame, rotowire_path: str) -> pd.Dat
             out["spread_source"] = "rotowire"
             return out
 
-    team_s = out["team"].astype(str).str.strip()
-    opp_s = out["opp"].astype(str).str.strip()
+    team_s = out["team"].map(normalize_team_abbr)
+    opp_s = out["opp"].map(normalize_team_abbr)
     date_s = out["game_date"].astype(str).map(_norm_date_str).fillna("")
 
     # Load Rotowire JSON
@@ -306,8 +307,8 @@ def attach_rotowire_game_spreads(df: pd.DataFrame, rotowire_path: str) -> pd.Dat
     lookup: Dict[Tuple[str, str, str], Tuple[float, float]] = {}
     for ev in events:
         try:
-            home = _clean_str(ev.get("homeTeam", ""))
-            away = _clean_str(ev.get("awayTeam", ""))
+            home = normalize_team_abbr(ev.get("homeTeam", ""))
+            away = normalize_team_abbr(ev.get("awayTeam", ""))
             et = ev.get("eventTime", None)
             gd = _norm_date_str(ev.get("game_date", ""))
             sp = ev.get("spread", {}) or {}
@@ -348,8 +349,8 @@ def attach_rotowire_game_spreads(df: pd.DataFrame, rotowire_path: str) -> pd.Dat
         team_index.setdefault((d, away), []).append((home, away, hs, aws))
 
     def _row_attach(team: str, opp: str, d: str):
-        team = _clean_str(team)
-        opp = _clean_str(opp)
+        team = normalize_team_abbr(team)
+        opp = normalize_team_abbr(opp)
         d = _clean_str(d)
 
         if not team or not d:
@@ -460,8 +461,8 @@ def enrich_with_matchups(
             df[c] = ""
     # Clean strings
     df["player"] = df["player"].apply(_clean_str)
-    df["team"] = df["team"].apply(_clean_str)
-    df["opp"] = df["opp"].apply(_clean_str)
+    df["team"] = df["team"].map(normalize_team_abbr)
+    df["opp"] = df["opp"].map(normalize_team_abbr)
 
     # Normalize date fields
     default_iso = _norm_date_str(default_game_date)
@@ -480,7 +481,7 @@ def enrich_with_matchups(
         raise ValueError("roster_map.csv must contain columns: player, team")
 
     roster["player"] = roster["player"].apply(_clean_str)
-    roster["team"] = roster["team"].apply(_clean_str)
+    roster["team"] = roster["team"].map(normalize_team_abbr)
 
     exact_team_map = dict(zip(roster["player"], roster["team"]))
 
@@ -508,8 +509,8 @@ def enrich_with_matchups(
         need_cols = {"game_date", "home_team", "away_team"}
         if need_cols.issubset(set(slate.columns)):
             slate["game_date"] = slate["game_date"].apply(_norm_date_str)
-            slate["home_team"] = slate["home_team"].apply(_clean_str)
-            slate["away_team"] = slate["away_team"].apply(_clean_str)
+            slate["home_team"] = slate["home_team"].map(normalize_team_abbr)
+            slate["away_team"] = slate["away_team"].map(normalize_team_abbr)
 
             slate_day = slate[slate["game_date"] == default_iso].copy()
 
