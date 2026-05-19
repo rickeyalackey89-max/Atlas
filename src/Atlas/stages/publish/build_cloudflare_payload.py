@@ -40,6 +40,72 @@ def _sanitize(obj):
         return [_sanitize(v) for v in obj]
     return obj
 
+
+def _run_date_from_name(run_name: str) -> str | None:
+    match = re.match(r"^(\d{4})(\d{2})(\d{2})_", str(run_name or ""))
+    if not match:
+        return None
+    return f"{match.group(1)}-{match.group(2)}-{match.group(3)}"
+
+
+def _run_timestamp_from_name(run_name: str, local_tz) -> datetime | None:
+    match = re.match(r"^(\d{8})_(\d{6})", str(run_name or ""))
+    if not match:
+        return None
+    try:
+        naive = datetime.strptime("".join(match.groups()), "%Y%m%d%H%M%S")
+        return naive.replace(tzinfo=local_tz)
+    except Exception:
+        return None
+
+
+def _parse_event_time(value) -> datetime | None:
+    raw = str(value or "").strip()
+    if not raw:
+        return None
+    try:
+        return datetime.fromisoformat(raw.replace("Z", "+00:00"))
+    except Exception:
+        return None
+
+
+def _public_slip_publish_guard(legs: list[dict], run_dir: Path, local_tz) -> tuple[bool, list[str]]:
+    """Reject public slips from stale, mixed-date, or already-started slate data."""
+    if not legs:
+        return True, []
+
+    reasons: list[str] = []
+    run_date = _run_date_from_name(run_dir.name)
+    run_ts = _run_timestamp_from_name(run_dir.name, local_tz)
+    game_dates = sorted({
+        str(leg.get("game_date") or "")[:10]
+        for leg in legs
+        if str(leg.get("game_date") or "").strip()
+    })
+    if len(game_dates) > 1:
+        reasons.append(f"mixed_game_dates:{','.join(game_dates)}")
+    if run_date and any(game_date != run_date for game_date in game_dates):
+        reasons.append(f"non_run_date:{','.join(game_dates)}!=run:{run_date}")
+
+    if run_ts is not None:
+        started: list[str] = []
+        for leg in legs:
+            start_ts = _parse_event_time(
+                leg.get("start_time")
+                or leg.get("start_time_utc")
+                or leg.get("commence_time")
+            )
+            if start_ts is None:
+                continue
+            if start_ts.tzinfo is None:
+                start_ts = start_ts.replace(tzinfo=local_tz)
+            if start_ts <= run_ts:
+                started.append(start_ts.isoformat())
+        if started:
+            reasons.append(f"started_before_run:{','.join(sorted(set(started)))}")
+
+    return not reasons, reasons
+
 def _compute_performance_stats(repo_root: Path) -> dict:
     """Aggregate hit rates from recent eval_legs across live_runs telemetry."""
     from datetime import timedelta, timezone
@@ -1037,6 +1103,9 @@ def build_cloudflare_payload(
         "gamescript": [],
         "marketed_slips": [],
         "top_hit_list": [],
+        "publish_guard": {
+            "skipped_public_slips": [],
+        },
         "performance": {
             **performance_stats,
             **({"yesterday_slips": _compute_yesterday_slip_record(_repo_root())} if include_yesterday_slips else _preserve_yesterday_slips(out_dir)),
@@ -1143,6 +1212,9 @@ def build_cloudflare_payload(
                         clean_legs.append({
                             "projection_id": leg.get("projection_id"),
                             "source_projection_id": leg.get("source_projection_id"),
+                            "game_date": leg.get("game_date"),
+                            "start_time": leg.get("start_time") or leg.get("start_time_utc"),
+                            "game_id": leg.get("game_id"),
                             "player": player,
                             "dir": direction,
                             "stat": stat,
@@ -1156,6 +1228,16 @@ def build_cloudflare_payload(
                             "l10_hr": l10_hr,
                             "l10_n": l10_n,
                         })
+
+            guard_ok, guard_reasons = _public_slip_publish_guard(clean_legs, run_dir, LOCAL_TZ)
+            if not guard_ok:
+                payload["publish_guard"]["skipped_public_slips"].append({
+                    "family": "marketed",
+                    "label": slip.get("label", f"{n_legs}-leg"),
+                    "n_legs": n_legs,
+                    "reasons": guard_reasons,
+                })
+                continue
 
             marketed_payload = {
                 "label": slip.get("label", f"{n_legs}-leg"),

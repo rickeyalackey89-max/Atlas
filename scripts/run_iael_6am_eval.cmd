@@ -84,16 +84,13 @@ if errorlevel 1 (
 
 REM (6) Rebuild dashboard payload + publish (captures fresh yesterday_slips record)
 set VENV_PY=%PY%
-for /f "delims=" %%r in ('%PY% -c "import pathlib,re,sys; d=pathlib.Path(r\"%ATLAS_ROOT%\data\output\runs\"); runs=[p for p in d.iterdir() if p.is_dir() and re.match(r\"^\d{8}_\d{6}\", p.name) and (p/\"scored_legs_deduped.csv\").exists()]; runs.sort(key=lambda p:(p.name[:15], p.stat().st_mtime), reverse=True); print(str(runs[0])) if runs else sys.exit(1)"') do set LATEST_RUN=%%r
-if not defined LATEST_RUN (
-  echo [WARN] No run dir found, skipping payload rebuild >> %LOG%
+if not defined REPORT_RUN (
+  echo [WARN] No canonical report run selected, skipping payload rebuild to avoid publishing stale/live-mixed slips >> %LOG%
   goto :end
 )
-if defined REPORT_RUN (
-  set ATLAS_YESTERDAY_REPORT_RUN=!REPORT_RUN!
-)
-echo [PUBLISH] Rebuilding dashboard payload for %LATEST_RUN% using report run !REPORT_RUN! >> %LOG%
-%VENV_PY% src\Atlas\stages\publish\build_cloudflare_payload.py "%LATEST_RUN%" >> %LOG% 2>&1
+set ATLAS_YESTERDAY_REPORT_RUN=!REPORT_RUN!
+echo [PUBLISH] Rebuilding dashboard payload for !REPORT_RUN! using report run !REPORT_RUN! >> %LOG%
+%VENV_PY% src\Atlas\stages\publish\build_cloudflare_payload.py "!REPORT_RUN!" >> %LOG% 2>&1
 set PAYLOAD_RC=%ERRORLEVEL%
 set ATLAS_YESTERDAY_REPORT_RUN=
 if not "%PAYLOAD_RC%"=="0" (
