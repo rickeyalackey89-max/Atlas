@@ -1422,23 +1422,49 @@ def build_cloudflare_payload(
     out_path.write_text(json.dumps(_sanitize(payload), indent=2), encoding="utf-8")
     _write_performance_cache(out_dir, payload.get("performance") or {})
 
-    # Write lightweight picks file for homepage
-    # Guarantee 1 top pick per tier (GOBLIN, STANDARD, DEMON) then fill to 50
+    # Write lightweight picks file for homepage.
+    # Guarantee 1 top pick per tier, but avoid showing alternate lines for the
+    # same player across all three public cards.
     picks_fields = ["player", "team", "opp", "stat", "line", "dir", "tier", "p_cal"]
     all_legs_list = payload.get("all_legs") or []
     _TIERS = ["GOBLIN", "STANDARD", "DEMON"]
-    tier_picks = {}
-    remaining = []
+    selected: list[dict] = []
+    used_players: set[str] = set()
+
+    def _player_key(leg: dict) -> str:
+        return str(leg.get("player") or "").strip().lower()
+
+    for tier in _TIERS:
+        tier_rows = [leg for leg in all_legs_list if (leg.get("tier") or "").upper() == tier]
+        pick = next((leg for leg in tier_rows if _player_key(leg) and _player_key(leg) not in used_players), None)
+        if pick is None and tier_rows:
+            pick = tier_rows[0]
+        if pick is not None:
+            selected.append(pick)
+            player_key = _player_key(pick)
+            if player_key:
+                used_players.add(player_key)
+
+    selected_ids = {id(leg) for leg in selected}
     for leg in all_legs_list:
-        t = (leg.get("tier") or "").upper()
-        if t in _TIERS and t not in tier_picks:
-            tier_picks[t] = leg
-        else:
-            remaining.append(leg)
-    # Ordered: guaranteed tier picks first, then fill from remaining up to 50
-    guaranteed = [tier_picks[t] for t in _TIERS if t in tier_picks]
-    filler = [leg for leg in remaining if leg not in guaranteed]
-    picks_list = guaranteed + filler[:max(0, 50 - len(guaranteed))]
+        if len(selected) >= 50:
+            break
+        if id(leg) in selected_ids:
+            continue
+        player_key = _player_key(leg)
+        if player_key and player_key in used_players:
+            continue
+        selected.append(leg)
+        selected_ids.add(id(leg))
+        if player_key:
+            used_players.add(player_key)
+    for leg in all_legs_list:
+        if len(selected) >= 50:
+            break
+        if id(leg) not in selected_ids:
+            selected.append(leg)
+            selected_ids.add(id(leg))
+    picks_list = selected
     picks_payload = {
         "generated_at": payload.get("generated_at", ""),
         "picks": [{k: leg.get(k) for k in picks_fields} for leg in picks_list],

@@ -270,7 +270,11 @@ def _archive_run_to_telemetry(repo_root: Path, run_id: str) -> None:
 
 
 def _publish_to_cloudflare_dashboard(repo_root: Path) -> None:
-    """Copy payload to AtlasDashboard repo and git push to trigger Cloudflare deploy."""
+    """Publish dashboard data and git push to trigger Cloudflare deploy.
+
+    The dashboard repo owns the public/data contract. Use its publish script so
+    derived files such as picks_today.json stay in sync with cloudflare_payload.
+    """
     try:
         dashboard_repo = Path("C:/Users/13142/Atlas/atlas-dashboard")
         if not dashboard_repo.exists():
@@ -284,40 +288,45 @@ def _publish_to_cloudflare_dashboard(repo_root: Path) -> None:
             print("[DASH] No cloudflare_payload.json to publish", file=sys.stderr)
             return
 
+        import subprocess
+        publish_script = dashboard_repo / "publish-atlas.ps1"
+        if publish_script.exists():
+            result = subprocess.run(
+                [
+                    "powershell.exe",
+                    "-ExecutionPolicy",
+                    "RemoteSigned",
+                    "-File",
+                    str(publish_script),
+                    "-AtlasRoot",
+                    str(repo_root),
+                ],
+                cwd=str(dashboard_repo),
+                text=True,
+                capture_output=True,
+            )
+            if result.stdout:
+                print(result.stdout.rstrip())
+            if result.returncode != 0:
+                if result.stderr:
+                    print(result.stderr.rstrip(), file=sys.stderr)
+                raise RuntimeError(f"dashboard publish script failed with exit code {result.returncode}")
+            print("[DASH] Published to Cloudflare dashboard")
+            return
+
+        # Legacy fallback: copy only the canonical payload when the dashboard
+        # publish script is absent. This path does not build homepage picks.
         dst_payload.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(src_payload, dst_payload)
-
-        # Git add, commit, push
-        import subprocess
         ts = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        subprocess.run(
-            ["git", "add", "public/data/cloudflare_payload.json"],
-            cwd=str(dashboard_repo),
-            check=True,
-            capture_output=True,
-        )
-        # Check if there are changes to commit
-        result = subprocess.run(
-            ["git", "diff", "--cached", "--quiet"],
-            cwd=str(dashboard_repo),
-            capture_output=True,
-        )
-        if result.returncode != 0:  # There are staged changes
-            subprocess.run(
-                ["git", "commit", "-m", f"Publish data ({ts})"],
-                cwd=str(dashboard_repo),
-                check=True,
-                capture_output=True,
-            )
-            subprocess.run(
-                ["git", "push"],
-                cwd=str(dashboard_repo),
-                check=True,
-                capture_output=True,
-            )
-            print(f"[DASH] Published to Cloudflare dashboard")
+        subprocess.run(["git", "add", "public/data/cloudflare_payload.json"], cwd=str(dashboard_repo), check=True)
+        result = subprocess.run(["git", "diff", "--cached", "--quiet"], cwd=str(dashboard_repo))
+        if result.returncode != 0:
+            subprocess.run(["git", "commit", "-m", f"Publish data ({ts})"], cwd=str(dashboard_repo), check=True)
+            subprocess.run(["git", "push"], cwd=str(dashboard_repo), check=True)
+            print("[DASH] Published payload-only fallback to Cloudflare dashboard")
         else:
-            print(f"[DASH] No payload changes to publish")
+            print("[DASH] No payload changes to publish")
     except Exception as e:
         print(f"[DASH] Publish failed (non-fatal): {e}", file=sys.stderr)
 
