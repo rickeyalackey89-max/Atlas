@@ -11,13 +11,20 @@ REM This is the truth-backfill step that makes Brier scoring work.
 REM ================================================================
 
 set ATLAS_ROOT=C:\Users\13142\Atlas\Atlas
-set PY=%ATLAS_ROOT%\.venv314\Scripts\python.exe
+set PY=%ATLAS_ROOT%\.venv\Scripts\python.exe
+if not exist "%PY%" set PY=%ATLAS_ROOT%\.venv314\Scripts\python.exe
 set LOG=%ATLAS_ROOT%\data\telemetry\iael_runs.log
 set GAMELOGS=%ATLAS_ROOT%\data\gamelogs\nba_gamelogs.csv
 
 cd /d %ATLAS_ROOT%
 echo.>> %LOG%
 echo ===== %date% %time% 6AM EVAL BACKFILL START =====>> %LOG%
+if not exist "%PY%" (
+  echo [FAIL] Python executable not found. Checked .venv and .venv314 >> %LOG%
+  exit /b 1
+)
+if not exist "%ATLAS_ROOT%\logs" mkdir "%ATLAS_ROOT%\logs"
+echo [PY] %PY% >> %LOG%
 
 REM (1) Refresh gamelogs (pulls yesterday's box scores from NBA API)
 %PY% tools\refresh_nba_gamelogs.py >> %LOG% 2>&1
@@ -76,7 +83,7 @@ if errorlevel 1 (
 :after_discord
 
 REM (6) Rebuild dashboard payload + publish (captures fresh yesterday_slips record)
-set VENV_PY=%ATLAS_ROOT%\.venv314\Scripts\python.exe
+set VENV_PY=%PY%
 for /f "delims=" %%r in ('%PY% -c "import pathlib,re,sys; d=pathlib.Path(r\"%ATLAS_ROOT%\data\output\runs\"); runs=[p for p in d.iterdir() if p.is_dir() and re.match(r\"^\d{8}_\d{6}\", p.name) and (p/\"scored_legs_deduped.csv\").exists()]; runs.sort(key=lambda p:(p.name[:15], p.stat().st_mtime), reverse=True); print(str(runs[0])) if runs else sys.exit(1)"') do set LATEST_RUN=%%r
 if not defined LATEST_RUN (
   echo [WARN] No run dir found, skipping payload rebuild >> %LOG%

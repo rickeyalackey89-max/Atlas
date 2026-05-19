@@ -210,10 +210,10 @@ def _compute_yesterday_slip_record(repo_root: Path) -> dict:
             return None
         return _resolve_run_ref(published_id)
 
-    report_run: Path | None = _published_report_run()
     configured_report_run = _os.environ.get("ATLAS_YESTERDAY_REPORT_RUN", "").strip()
-    if report_run is None and configured_report_run:
-        report_run = _resolve_run_ref(configured_report_run)
+    report_run: Path | None = _resolve_run_ref(configured_report_run) if configured_report_run else None
+    if report_run is None:
+        report_run = _published_report_run()
 
     if report_run is None:
         target = _target_seconds(yesterday)
@@ -811,6 +811,13 @@ def _performance_from_payload(path: Path) -> dict:
         return {}
 
 
+def _performance_history_size(perf: dict) -> int:
+    try:
+        return int(perf.get("meta", {}).get("unique_scored_legs") or 0)
+    except Exception:
+        return 0
+
+
 def _preserve_performance_stats(out_dir: Path) -> dict:
     """Read existing leg-performance stats so live runs leave 6AM eval windows intact."""
     candidates = [
@@ -827,11 +834,91 @@ def _preserve_performance_stats(out_dir: Path) -> dict:
         dashboard_public / "data_stage" / "cloudflare_payload.json",
     ])
 
+    best: dict = {}
     for candidate in candidates:
         perf = _performance_from_payload(candidate)
-        if perf:
-            return perf
-    return {}
+        if perf and _performance_history_size(perf) > _performance_history_size(best):
+            best = perf
+    return best
+
+
+def _date_from_perf(perf: dict) -> str:
+    try:
+        return str(perf.get("meta", {}).get("latest_game_date") or "")
+    except Exception:
+        return ""
+
+
+def _combine_window_stats(previous: dict, current: dict) -> dict:
+    prev_n = int(previous.get("n") or 0)
+    cur_n = int(current.get("n") or 0)
+    n = prev_n + cur_n
+    hits = int(previous.get("hits") or 0) + int(current.get("hits") or 0)
+    if n <= 0:
+        return {"n": 0, "hits": 0, "hit_rate": None, "brier": None}
+
+    prev_brier = previous.get("brier")
+    cur_brier = current.get("brier")
+    brier_parts = []
+    if prev_brier is not None and prev_n:
+        brier_parts.append(float(prev_brier) * prev_n)
+    if cur_brier is not None and cur_n:
+        brier_parts.append(float(cur_brier) * cur_n)
+    brier = round(sum(brier_parts) / n, 4) if brier_parts else None
+    return {"n": n, "hits": hits, "hit_rate": round(hits / n, 4), "brier": brier}
+
+
+def _merge_performance_continuity(previous: dict, current: dict) -> dict:
+    """Use the published aggregate as continuity when local telemetry was trimmed."""
+    if not previous:
+        return current
+    if not current:
+        return previous
+
+    previous_date = _date_from_perf(previous)
+    current_date = _date_from_perf(current)
+    if previous_date >= current_date:
+        return previous if _performance_history_size(previous) >= _performance_history_size(current) else current
+    if _performance_history_size(current) >= _performance_history_size(previous):
+        return current
+
+    merged = {
+        "overall": {
+            "last_7d": _combine_window_stats(
+                previous.get("overall", {}).get("last_7d", {}),
+                current.get("overall", {}).get("last_7d", {}),
+            ),
+            "last_30d": _combine_window_stats(
+                previous.get("overall", {}).get("last_30d", {}),
+                current.get("overall", {}).get("last_30d", {}),
+            ),
+        },
+        "by_tier": {},
+        "meta": dict(current.get("meta", {})),
+    }
+    for tier in ("GOBLIN", "STANDARD", "DEMON"):
+        merged["by_tier"][tier] = {
+            "last_7d": _combine_window_stats(
+                previous.get("by_tier", {}).get(tier, {}).get("last_7d", {}),
+                current.get("by_tier", {}).get(tier, {}).get("last_7d", {}),
+            ),
+            "last_30d": _combine_window_stats(
+                previous.get("by_tier", {}).get(tier, {}).get("last_30d", {}),
+                current.get("by_tier", {}).get(tier, {}).get("last_30d", {}),
+            ),
+        }
+
+    prev_meta = previous.get("meta", {})
+    cur_meta = current.get("meta", {})
+    merged["meta"].update({
+        "source": "published_dashboard_performance + current telemetry eval",
+        "latest_game_date": current_date,
+        "previous_latest_game_date": previous_date,
+        "eval_files": int(prev_meta.get("eval_files") or 0) + int(cur_meta.get("eval_files") or 0),
+        "unique_scored_legs": _performance_history_size(previous) + _performance_history_size(current),
+        "continuity_mode": "summary_merge_after_local_telemetry_cleanup",
+    })
+    return merged
 
 
 def _write_performance_cache(out_dir: Path, performance: dict) -> None:
@@ -928,9 +1015,14 @@ def build_cloudflare_payload(
         except Exception:
             gamelogs_df = None
 
-    performance_stats = _compute_performance_stats(_repo_root()) if include_yesterday_slips else _preserve_performance_stats(out_dir)
-    if not performance_stats:
-        performance_stats = _preserve_performance_stats(out_dir)
+    preserved_performance_stats = _preserve_performance_stats(out_dir)
+    if include_yesterday_slips:
+        performance_stats = _merge_performance_continuity(
+            preserved_performance_stats,
+            _compute_performance_stats(_repo_root()),
+        )
+    else:
+        performance_stats = preserved_performance_stats
     if not performance_stats:
         performance_stats = _compute_performance_stats(_repo_root())
 
