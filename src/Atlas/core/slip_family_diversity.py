@@ -25,6 +25,10 @@ def prop_key_from_values(player: Any, direction: Any, stat: Any, line: Any) -> s
     return f"{player_s}|{direction_s}|{stat_s}|{line_s}"
 
 
+def player_key_from_value(player: Any) -> str:
+    return " ".join(str(player or "").strip().lower().split())
+
+
 def prop_key_from_leg_text(text: Any) -> str:
     match = _LEG_RE.match(str(text or "").strip())
     if not match:
@@ -71,6 +75,38 @@ def prop_keys_from_marketed_slip(slip: dict[str, Any]) -> set[str]:
         if key:
             keys.add(key)
     return keys
+
+
+def player_keys_from_slip_row(row: pd.Series) -> set[str]:
+    players: set[str] = set()
+    legs = str(row.get("legs", "") or "")
+    if legs:
+        for part in legs.split(" | "):
+            match = _LEG_RE.match(str(part or "").strip())
+            if match:
+                player = player_key_from_value(match.group("player"))
+                if player:
+                    players.add(player)
+    if players:
+        return players
+    for i in range(1, 6):
+        text = row.get(f"leg_{i}", "")
+        match = _LEG_RE.match(str(text or "").strip())
+        if match:
+            player = player_key_from_value(match.group("player"))
+            if player:
+                players.add(player)
+    return players
+
+
+def player_keys_from_marketed_slip(slip: dict[str, Any]) -> set[str]:
+    players: set[str] = set()
+    for leg in slip.get("legs", []) or []:
+        getter = leg.get if hasattr(leg, "get") else lambda _key, _default=None: _default
+        player = player_key_from_value(getter("player", ""))
+        if player:
+            players.add(player)
+    return players
 
 
 def enforce_prop_diversity_across_frames(

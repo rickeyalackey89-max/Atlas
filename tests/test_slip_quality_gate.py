@@ -31,6 +31,7 @@ def _cfg() -> dict:
             "exposure": {
                 "enabled": True,
                 "max_exact_prop_repeats_across_public": 1,
+                "max_player_repeats_across_public": 1,
                 "priority": ["Marketed", "System", "Windfall", "DemonHunter"],
             },
         }
@@ -114,6 +115,41 @@ def test_portfolio_exposure_prefers_marketed_then_drops_duplicate_frame_slip() -
     assert result.frames["System_2leg"].empty
     assert result.manifest["dropped_count"] == 1
     assert result.manifest["drops"][0]["reason"] == "exact_prop_exposure_cap"
+
+
+def test_portfolio_exposure_drops_same_player_different_prop() -> None:
+    cfg = _cfg()
+    system = pd.DataFrame(
+        [
+            {
+                "n_legs": 2,
+                "legs": "Player A OVER PR 16.5 (STANDARD) [id:1] | Player B OVER REB 5.5 (STANDARD) [id:2]",
+                "hit_prob": 0.46,
+                "avg_p": 0.68,
+                "min_p": 0.66,
+                "public_quality_pass": True,
+                "public_survival_score": 0.66,
+            }
+        ]
+    )
+    marketed = [
+        {
+            "label": "2-leg",
+            "n_legs": 2,
+            "hit_prob": 0.46,
+            "legs": [
+                {"player": "Player A", "direction": "OVER", "stat": "PTS", "line": 10.5, "tier": "GOBLIN", "p_cal": 0.70},
+                {"player": "Player C", "direction": "OVER", "stat": "AST", "line": 4.5, "tier": "STANDARD", "p_cal": 0.68},
+            ],
+        }
+    ]
+
+    result = apply_public_portfolio_exposure({"System_2leg": system}, marketed, cfg)
+
+    assert len(result.marketed_slips) == 1
+    assert result.frames["System_2leg"].empty
+    assert result.manifest["drops"][0]["reason"] == "player_exposure_cap"
+    assert result.manifest["drops"][0]["player_keys"] == ["player a", "player b"]
 
 
 def test_portfolio_exposure_prefers_system_before_windfall_duplicate() -> None:

@@ -929,10 +929,10 @@ public_slip_quality:
       5: 2
   exposure:
     enabled: true
-    # Cross-family exposure cap. Per-family diversity still prevents the same
-    # exact prop from repeating inside a family; this cap allows Marketed plus
-    # one fallback family to share a strong exact prop without flooding outputs.
-    max_exact_prop_repeats_across_public: 2
+    # Cross-family exposure caps. The public card set must not be able to lean
+    # on one player through different lines/markets and tank every output.
+    max_exact_prop_repeats_across_public: 1
+    max_player_repeats_across_public: 1
     priority: [Marketed, System, Windfall, DemonHunter]
 marketed_slips:
   enabled: true
