@@ -32,6 +32,7 @@ def _cfg() -> dict:
                 "enabled": True,
                 "max_exact_prop_repeats_across_public": 1,
                 "max_player_repeats_across_public": 1,
+                "max_rows_per_public_output": 1,
                 "priority": ["Marketed", "System", "Windfall", "DemonHunter"],
             },
         }
@@ -150,6 +151,97 @@ def test_portfolio_exposure_drops_same_player_different_prop() -> None:
     assert result.frames["System_2leg"].empty
     assert result.manifest["drops"][0]["reason"] == "player_exposure_cap"
     assert result.manifest["drops"][0]["player_keys"] == ["player a", "player b"]
+
+
+def test_portfolio_exposure_uses_alternate_candidate_for_filled_output() -> None:
+    cfg = _cfg()
+    system = pd.DataFrame(
+        [
+            {
+                "n_legs": 2,
+                "legs": "Player A OVER PR 16.5 (STANDARD) [id:1] | Player B OVER REB 5.5 (STANDARD) [id:2]",
+                "hit_prob": 0.46,
+                "avg_p": 0.68,
+                "min_p": 0.66,
+                "public_quality_pass": True,
+                "public_survival_score": 0.90,
+            },
+            {
+                "n_legs": 2,
+                "legs": "Player D OVER PTS 10.5 (GOBLIN) [id:3] | Player E OVER AST 4.5 (STANDARD) [id:4]",
+                "hit_prob": 0.44,
+                "avg_p": 0.66,
+                "min_p": 0.64,
+                "public_quality_pass": True,
+                "public_survival_score": 0.70,
+            },
+            {
+                "n_legs": 2,
+                "legs": "Player F OVER PTS 10.5 (GOBLIN) [id:5] | Player G OVER AST 4.5 (STANDARD) [id:6]",
+                "hit_prob": 0.43,
+                "avg_p": 0.65,
+                "min_p": 0.63,
+                "public_quality_pass": True,
+                "public_survival_score": 0.69,
+            },
+        ]
+    )
+    marketed = [
+        {
+            "label": "2-leg",
+            "n_legs": 2,
+            "hit_prob": 0.46,
+            "legs": [
+                {"player": "Player A", "direction": "OVER", "stat": "PTS", "line": 10.5, "tier": "GOBLIN", "p_cal": 0.70},
+                {"player": "Player C", "direction": "OVER", "stat": "AST", "line": 4.5, "tier": "STANDARD", "p_cal": 0.68},
+            ],
+        }
+    ]
+
+    result = apply_public_portfolio_exposure({"System_2leg": system}, marketed, cfg)
+
+    assert len(result.marketed_slips) == 1
+    assert len(result.frames["System_2leg"]) == 1
+    assert "Player D" in result.frames["System_2leg"].loc[0, "legs"]
+    reasons = [drop["reason"] for drop in result.manifest["drops"]]
+    assert "player_exposure_cap" in reasons
+    assert "public_output_slot_filled" in reasons
+
+
+def test_portfolio_exposure_uses_single_game_player_cap_override() -> None:
+    cfg = _cfg()
+    cfg["public_slip_quality"]["exposure"]["max_player_repeats_across_public_by_slate_games"] = {1: 2}
+    system = pd.DataFrame(
+        [
+            {
+                "n_legs": 2,
+                "legs": "Player A OVER PR 16.5 (STANDARD) [id:1] | Player B OVER REB 5.5 (STANDARD) [id:2]",
+                "hit_prob": 0.46,
+                "avg_p": 0.68,
+                "min_p": 0.66,
+                "public_quality_pass": True,
+                "public_survival_score": 0.66,
+            }
+        ]
+    )
+    marketed = [
+        {
+            "label": "2-leg",
+            "n_legs": 2,
+            "hit_prob": 0.46,
+            "legs": [
+                {"player": "Player A", "direction": "OVER", "stat": "PTS", "line": 10.5, "tier": "GOBLIN", "p_cal": 0.70},
+                {"player": "Player C", "direction": "OVER", "stat": "AST", "line": 4.5, "tier": "STANDARD", "p_cal": 0.68},
+            ],
+        }
+    ]
+    slate_source = pd.DataFrame({"single_game_games": [1, 1]})
+
+    result = apply_public_portfolio_exposure({"System_2leg": system}, marketed, cfg, slate_source=slate_source)
+
+    assert len(result.marketed_slips) == 1
+    assert len(result.frames["System_2leg"]) == 1
+    assert result.manifest["max_player_repeats_across_public"] == 2
 
 
 def test_portfolio_exposure_prefers_system_before_windfall_duplicate() -> None:

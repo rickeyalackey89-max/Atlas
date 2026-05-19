@@ -350,7 +350,7 @@ def run_build_slips(
         sys_raw_by_legs[n_legs] = raw
         sys_reserved.update(_frame_prop_keys(raw))
     sys_frames = [sys_raw_by_legs[n] for n in build_sizes]
-    sys_limits = [top_n_by_legs[n] for n in build_sizes]
+    sys_limits = [cand_top_n_by_legs[n] for n in build_sizes]
     sys_diversified = _diversify_frames(sys_frames, sys_limits, cfg)
     sys_by_legs = {n: frame for n, frame in zip(build_sizes, sys_diversified)}
 
@@ -381,7 +381,7 @@ def run_build_slips(
         wind_raw_by_legs[n_legs] = raw
         wind_reserved.update(_frame_prop_keys(raw))
     wind_frames = [wind_raw_by_legs[n] for n in build_sizes]
-    wind_limits = [top_n_by_legs[n] for n in build_sizes]
+    wind_limits = [cand_top_n_by_legs[n] for n in build_sizes]
     wind_diversified = _diversify_frames(wind_frames, wind_limits, cfg)
     wind_by_legs = {n: frame for n, frame in zip(build_sizes, wind_diversified)}
 

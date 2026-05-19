@@ -856,8 +856,8 @@ slip_family_prop_diversity:
   # A player can still appear again on a different prop or line.
   enabled: true
   max_repeats_per_family: 1
-  candidate_multiplier: 1
-  min_candidate_rows: 1
+  candidate_multiplier: 12
+  min_candidate_rows: 8
 builder_openai_review:
   # Report-only operator review after deterministic builders and public gates.
   # This must never mutate probabilities, slip outputs, tiers, or live publish.
@@ -933,6 +933,12 @@ public_slip_quality:
     # on one player through different lines/markets and tank every output.
     max_exact_prop_repeats_across_public: 1
     max_player_repeats_across_public: 1
+    max_player_repeats_across_public_by_slate_games:
+      # One-game slates need a small relaxation or Marketed consumes the whole
+      # player pool. Exact prop repeats remain capped at 1.
+      1: 2
+      default: 1
+    max_rows_per_public_output: 1
     priority: [Marketed, System, Windfall, DemonHunter]
 marketed_slips:
   enabled: true

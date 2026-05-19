@@ -161,9 +161,15 @@ def apply_public_portfolio_exposure(
     exposure = section.get("exposure", {}) if isinstance(section.get("exposure"), dict) else {}
     enabled = public_slip_quality_enabled(cfg) and bool(exposure.get("enabled", True))
     max_repeats = int(exposure.get("max_exact_prop_repeats_across_public", 1) or 1)
-    max_player_repeats = int(exposure.get("max_player_repeats_across_public", 1) or 0)
+    max_rows_per_output = int(exposure.get("max_rows_per_public_output", 1) or 1)
     priority = [str(x) for x in exposure.get("priority", ["Marketed", "System", "Windfall", "DemonHunter"])]
     slate_games = infer_slate_game_count(slate_source)
+    max_player_repeats = _resolve_exposure_cap(
+        exposure,
+        "max_player_repeats_across_public",
+        slate_games=slate_games,
+        default=1,
+    )
 
     kept_frames = {name: _ensure_quality_columns(frame) for name, frame in frames.items()}
     kept_marketed = annotate_marketed_slips(marketed_slips, cfg, family="Marketed")
@@ -176,11 +182,12 @@ def apply_public_portfolio_exposure(
     pre_drops: list[dict[str, Any]] = []
     for slip_index, slip in enumerate(kept_marketed):
         leg_parts = leg_parts_from_marketed_slip(slip)
+        marketed_name = _marketed_item_name(slip)
         items.append(
             {
                 "kind": "marketed",
                 "family": "Marketed",
-                "name": "Marketed",
+                "name": marketed_name,
                 "index": slip_index,
                 "keys": prop_keys_from_marketed_slip(slip),
                 "player_keys": player_keys_from_marketed_slip(slip),
@@ -241,6 +248,7 @@ def apply_public_portfolio_exposure(
 
     counts: dict[str, int] = {}
     player_counts: dict[str, int] = {}
+    output_counts: dict[str, int] = {}
     kept_item_ids: set[tuple[str, str, int]] = set()
     drops: list[dict[str, Any]] = list(pre_drops)
 
@@ -261,7 +269,13 @@ def apply_public_portfolio_exposure(
         if max_player_repeats > 0 and player_keys and any(player_counts.get(key, 0) >= max_player_repeats for key in player_keys):
             drops.append(_drop_record(item, "player_exposure_cap", keys))
             continue
+        output_name = str(item.get("name", ""))
+        if output_name and output_counts.get(output_name, 0) >= max_rows_per_output:
+            drops.append(_drop_record(item, "public_output_slot_filled", keys))
+            continue
         kept_item_ids.add(item_id)
+        if output_name:
+            output_counts[output_name] = output_counts.get(output_name, 0) + 1
         for key in keys:
             counts[key] = counts.get(key, 0) + 1
         for key in player_keys:
@@ -269,7 +283,7 @@ def apply_public_portfolio_exposure(
 
     final_marketed: list[dict[str, Any]] = []
     for idx, slip in enumerate(kept_marketed):
-        item_id = ("marketed", "Marketed", idx)
+        item_id = ("marketed", _marketed_item_name(slip), idx)
         if item_id in kept_item_ids:
             out = dict(slip)
             out["public_portfolio_status"] = "kept"
@@ -294,6 +308,7 @@ def apply_public_portfolio_exposure(
     manifest = _manifest(enabled=True, kept_frames=final_frames, kept_marketed=final_marketed, drops=drops)
     manifest["max_exact_prop_repeats_across_public"] = max_repeats
     manifest["max_player_repeats_across_public"] = max_player_repeats
+    manifest["max_rows_per_public_output"] = max_rows_per_output
     manifest["priority"] = priority
     manifest["slate_games"] = slate_games
     manifest["two_game_4_5_composition"] = section.get("two_game_4_5_composition", {})
@@ -547,6 +562,13 @@ def _family_from_name(name: str) -> str:
     return text.split("_", 1)[0]
 
 
+def _marketed_item_name(slip: Mapping[str, Any]) -> str:
+    label = str(slip.get("label") or slip.get("slip") or "").strip()
+    if not label:
+        return "Marketed"
+    return f"Marketed_{label}"
+
+
 def _family_enabled_for_slate(
     family: str,
     section: Mapping[str, Any],
@@ -585,6 +607,27 @@ def _by_legs(mapping: Any, n_legs: int) -> Any:
         return mapping[n_legs]
     key = str(int(n_legs))
     return mapping.get(key)
+
+
+def _resolve_exposure_cap(
+    exposure: Mapping[str, Any],
+    key: str,
+    *,
+    slate_games: int | None,
+    default: int,
+) -> int:
+    raw = exposure.get(key, default)
+    by_slate = exposure.get(f"{key}_by_slate_games")
+    if slate_games is not None and isinstance(by_slate, Mapping):
+        override = _by_legs(by_slate, int(slate_games))
+        if override is None:
+            override = by_slate.get("default")
+        if override is not None:
+            raw = override
+    try:
+        return int(raw or 0)
+    except (TypeError, ValueError):
+        return int(default)
 
 
 def _float(value: Any, default: float = 0.0) -> float:
