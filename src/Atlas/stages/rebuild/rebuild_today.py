@@ -276,6 +276,19 @@ def run_rebuild(*, payload: dict[str, Any], is_replay: bool) -> pd.DataFrame:
 
     # dropped counters retained for wrapper to optionally print later;
     # stage returns data only (wrapper can recompute counters if needed later).
+    replay_slate_date = None
+    if is_replay:
+        replay_dates = []
+        for game in (games or {}).values():
+            start_dt = _parse_iso_datetime(_clean_str((game or {}).get("start_time")))
+            if start_dt is not None:
+                replay_dates.append(start_dt.astimezone(TZ_CT).date())
+        if replay_dates:
+            # Replay keeps the historical pregame board, but it is still a
+            # single-slate replay. PrizePicks raw payloads can include tomorrow's
+            # popular board; keep the earliest represented slate date.
+            replay_slate_date = min(replay_dates)
+
     for item in payload.get("data", []) or []:
         if item.get("type") != "projection":
             continue
@@ -330,8 +343,9 @@ def run_rebuild(*, payload: dict[str, Any], is_replay: bool) -> pd.DataFrame:
                 continue
         else:
             # Replay mode: rebuild the board represented by the raw payload.
-            # Do not apply any "current time" filter here.
-            pass
+            # Do not apply any "current time" filter, but keep one slate date.
+            if replay_slate_date is not None and start_ct.date() != replay_slate_date:
+                continue
 
 
         # derive matchup context (required for team share + role_ctx joins)
