@@ -796,19 +796,51 @@ def _preserve_yesterday_slips(out_dir: Path) -> dict:
     return {}
 
 
+def _performance_from_payload(path: Path) -> dict:
+    try:
+        if not path.exists():
+            return {}
+        data = json.loads(path.read_text(encoding="utf-8"))
+        perf = data.get("performance", data) if isinstance(data, dict) else {}
+        if not isinstance(perf, dict) or not perf.get("overall"):
+            return {}
+        return {k: v for k, v in perf.items() if k != "yesterday_slips"}
+    except Exception:
+        return {}
+
+
 def _preserve_performance_stats(out_dir: Path) -> dict:
     """Read existing leg-performance stats so live runs leave 6AM eval windows intact."""
+    candidates = [
+        out_dir / "performance_latest.json",
+        out_dir / "cloudflare_payload.json",
+    ]
+
+    # Local dashboard publish copies may be the only surviving performance source
+    # after trimming Atlas runtime telemetry. Use them as a seed, then cache back
+    # into Atlas/data/output/dashboard for future runs.
+    dashboard_public = _repo_root().parent / "atlas-dashboard" / "public"
+    candidates.extend([
+        dashboard_public / "data" / "cloudflare_payload.json",
+        dashboard_public / "data_stage" / "cloudflare_payload.json",
+    ])
+
+    for candidate in candidates:
+        perf = _performance_from_payload(candidate)
+        if perf:
+            return perf
+    return {}
+
+
+def _write_performance_cache(out_dir: Path, performance: dict) -> None:
+    if not isinstance(performance, dict) or not performance.get("overall"):
+        return
     try:
-        existing = out_dir / "cloudflare_payload.json"
-        if not existing.exists():
-            return {}
-        data = json.loads(existing.read_text(encoding="utf-8"))
-        perf = data.get("performance", {})
-        if isinstance(perf, dict):
-            return {k: v for k, v in perf.items() if k != "yesterday_slips"}
+        out_dir.mkdir(parents=True, exist_ok=True)
+        cache_path = out_dir / "performance_latest.json"
+        cache_path.write_text(json.dumps(_sanitize(performance), indent=2), encoding="utf-8")
     except Exception:
         pass
-    return {}
 
 
 def build_cloudflare_payload(
@@ -849,6 +881,8 @@ def build_cloudflare_payload(
             gamelogs_df = None
 
     performance_stats = _compute_performance_stats(_repo_root()) if include_yesterday_slips else _preserve_performance_stats(out_dir)
+    if not performance_stats:
+        performance_stats = _preserve_performance_stats(out_dir)
     if not performance_stats:
         performance_stats = _compute_performance_stats(_repo_root())
 
@@ -1103,8 +1137,22 @@ def build_cloudflare_payload(
                 })
             payload["all_legs"] = all_legs_out
             # Extract role-boosted legs for the injury tab
-            payload["injury_context"]["role_boosted"] = [
-                {
+            no_effect_reasons = {"no_outs", "none", "combo_no_effect", "no_share_matrix", "stat_unmapped", ""}
+            role_boosted = []
+            for leg in all_legs_out:
+                reason = str(leg.get("role_reason") or "").strip()
+                if reason.lower() in no_effect_reasons:
+                    continue
+                role_mult = leg.get("role_mult")
+                if role_mult is None:
+                    continue
+                try:
+                    role_delta = abs(float(role_mult) - 1.0)
+                except (TypeError, ValueError):
+                    continue
+                if role_delta < 0.005:
+                    continue
+                role_boosted.append({
                     "player": leg.get("player"),
                     "team": leg.get("team"),
                     "stat": leg.get("stat"),
@@ -1112,12 +1160,10 @@ def build_cloudflare_payload(
                     "dir": leg.get("dir"),
                     "tier": leg.get("tier"),
                     "p_cal": leg.get("p_cal"),
-                    "role_mult": leg.get("role_mult"),
-                    "role_reason": leg.get("role_reason"),
-                }
-                for leg in all_legs_out
-                if leg.get("role_reason") and leg.get("role_reason") not in ("no_outs", "None", "", None)
-            ]
+                    "role_mult": role_mult,
+                    "role_reason": reason,
+                })
+            payload["injury_context"]["role_boosted"] = role_boosted
         except Exception:
             payload["all_legs"] = []
     else:
@@ -1130,6 +1176,7 @@ def build_cloudflare_payload(
     # Inject total_slips into main payload so landing page can read it
     payload["total_slips"] = len(payload.get("system") or []) + len(payload.get("windfall") or []) + len(payload.get("demonhunter") or []) + len(payload.get("marketed_slips") or [])
     out_path.write_text(json.dumps(_sanitize(payload), indent=2), encoding="utf-8")
+    _write_performance_cache(out_dir, payload.get("performance") or {})
 
     # Write lightweight picks file for homepage
     # Guarantee 1 top pick per tier (GOBLIN, STANDARD, DEMON) then fill to 50
