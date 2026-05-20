@@ -24,6 +24,7 @@ OpenAI.txt
 *.key
 MLBtxts/
 Wind/
+docs/MLB_info_DO_NOT_DELETE/
 *.pdf
 
 # Local logs and scratch output
