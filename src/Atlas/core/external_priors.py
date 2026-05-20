@@ -38,6 +38,9 @@ Outputs
     external_prior_sources    str   comma-separated unique sources used
     external_prior_epsilon    float legacy field (kept for compatibility; equals cap)
     external_prior_cap_applied float cap used for this row after direction override
+    external_prior_market_prob float exact/projection market probability for row direction
+    external_prior_market_divergence float market probability minus Atlas probability
+    external_prior_exact_market bool true when an exact line market row matched
 
 - If df has 'p_adj', we apply the bounded nudge directly to p_adj.
   (If p_adj is missing but 'p' exists, we nudge 'p'. Otherwise we only emit audit columns.)
@@ -255,6 +258,9 @@ def apply_external_priors(
     out["external_prior_cap_applied"] = 0.0
     out["external_prior_delta_p"] = 0.0
     out["external_prior_probability_applied"] = False
+    out["external_prior_market_prob"] = np.nan
+    out["external_prior_market_divergence"] = np.nan
+    out["external_prior_exact_market"] = False
 
     if (not enabled) or (len(out) == 0):
         return out
@@ -605,6 +611,9 @@ def apply_external_priors(
         out["external_prior_sources"] = merged["external_prior_sources"].values
         out["external_prior_cap_applied"] = merged["external_prior_cap_applied"].values
         out["external_prior_delta_p"] = merged["delta_p"].values
+        out["external_prior_market_prob"] = merged["bp_market_prob"].values
+        out["external_prior_market_divergence"] = merged["bp_market_divergence"].values
+        out["external_prior_exact_market"] = merged["exact_market_apply_prior"].values
         if bool(apply_probability) and target_col is not None:
             probability_applied = pd.to_numeric(merged["delta_p"], errors="coerce").fillna(0.0).abs() > 1e-12
         else:

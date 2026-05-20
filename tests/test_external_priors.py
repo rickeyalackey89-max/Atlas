@@ -277,6 +277,9 @@ class ExternalPriorTest(unittest.TestCase):
         self.assertEqual(int(pd.to_numeric(result["external_prior_n"], errors="coerce").iloc[0]), 1)
         self.assertEqual(int(pd.to_numeric(result["external_prior_n"], errors="coerce").iloc[1]), 0)
         self.assertGreater(float(pd.to_numeric(result["p_adj"], errors="coerce").iloc[0]), 0.50)
+        self.assertAlmostEqual(float(pd.to_numeric(result["external_prior_market_prob"], errors="coerce").iloc[0]), 0.62, places=12)
+        self.assertTrue(bool(result["external_prior_exact_market"].iloc[0]))
+        self.assertFalse(bool(result["external_prior_exact_market"].iloc[1]))
         self.assertAlmostEqual(float(pd.to_numeric(result["p_adj"], errors="coerce").iloc[1]), 0.50, places=12)
 
     def test_exact_market_prior_can_nudge_under_even_when_projection_under_cap_is_zero(self) -> None:

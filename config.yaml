@@ -501,6 +501,21 @@ slip_build:
   # If model says UNDER@0.85, take it. Builders pick best legs PERIOD.
   min_under_prob: 0.0
   max_under_prob: 0.0
+  # Selection-only UNDER visibility gate. The model may score all STANDARD
+  # unders, but builders only see unders that have exact market support and
+  # clean availability/minute context. This prevents Atlas-only UNDER coin flips
+  # from competing with market-supported OVERs.
+  under_visibility:
+    enabled: true
+    standard_only: true
+    require_exact_market: true
+    min_market_prob: 0.515
+    min_model_prob: 0.56
+    max_model_prob: 0.68
+    max_q_out_frac: 0.0
+    max_minute_risk_score: 0.35
+    excluded_stats:
+    - FTA
   # FTA disabled until GBM retrained on playoff data
   exclude_stat_directions:
   - FTA_over
@@ -996,6 +1011,17 @@ marketed_slips:
   # probabilities. If model says UNDER@0.85, take it. Builder picks best legs PERIOD.
   min_under_prob: 0.0
   max_under_prob: 0.0
+  under_visibility:
+    enabled: true
+    standard_only: true
+    require_exact_market: true
+    min_market_prob: 0.515
+    min_model_prob: 0.56
+    max_model_prob: 0.68
+    max_q_out_frac: 0.0
+    max_minute_risk_score: 0.35
+    excluded_stats:
+    - FTA
   # Recomputed 2026-05-10 against v5cD slip-level eval (10-date corpus, 30 slips).
   # Observed (actual / claimed) ratios: 3L=0.70/0.51=1.37, 4L=0.40/0.30=1.33, 5L=0.20/0.149=1.34.
   # Previous values (1.67/1.33/1.53) were derived against the old overconfident model.

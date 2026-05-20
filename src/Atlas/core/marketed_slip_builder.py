@@ -32,6 +32,7 @@ from .slip_composition_policy import (
 from .slip_family_diversity import prop_key_from_mapping
 from .slip_quality_gate import filter_marketed_slips
 from .slip_scoring import _prod
+from .under_visibility_gate import apply_under_visibility_gate
 
 
 class MarketedSlipBuilder:
@@ -125,6 +126,7 @@ class MarketedSlipBuilder:
         df = apply_minute_risk_guard(df, self.full_config, section="marketed_slips", score_col="marketed_score")
         df = apply_single_game_script_annotations(df, self.full_config)
         df = apply_single_game_selection_surface(df, self.full_config, score_col="marketed_score", clip_score=False)
+        df = apply_under_visibility_gate(df, self.full_config, section="marketed_slips", probability_col="p_cal")
 
         return df
     

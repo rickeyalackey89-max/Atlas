@@ -33,6 +33,7 @@ from .slip_composition_policy import (
 )
 from .slip_family_diversity import prop_key_from_mapping
 from .slip_scoring import _score_slip
+from .under_visibility_gate import apply_under_visibility_gate
 
 
 # -----------------------------
@@ -392,6 +393,9 @@ def build_slips_by_tier_buckets(
     # probability used for hit_prob; p_eff/p_select is lowered for fragile legs.
     df = apply_minute_risk_guard(df, cfg, section="slip_build", score_col="p_eff")
     df = apply_single_game_selection_surface(df, cfg, score_col="p_eff", clip_score=True)
+    df = apply_under_visibility_gate(df, cfg, section="slip_build", probability_col="p_eff")
+    if df.empty:
+        return pd.DataFrame(columns=_EMPTY_SLIPS_COLS)
 
     # edge_score fallback = p_eff - 0.5 (keep exact math)
     edge_cap = (max_leg_prob - 0.5) if max_leg_prob > 0.0 else None
