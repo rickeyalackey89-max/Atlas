@@ -4,10 +4,13 @@
     Run this in its own terminal window and leave it overnight.
 #>
 
-$PYTHON   = "C:\Users\13142\Atlas\Atlas\.venv314\Scripts\python.exe"
-$TOOLS    = "C:\Users\13142\Atlas\Atlas\tools"
-$SENTINEL = "C:\Users\13142\Atlas\Atlas\tools\leg_trainer_results_v5_windfall.yaml"
-$SYSLOG   = "C:\Users\13142\Atlas\Atlas\system_run1.log"
+$PYTHON   = "C:\Users\13142\Atlas\NBA\.venv\Scripts\python.exe"
+if (-not (Test-Path $PYTHON)) {
+    $PYTHON = "C:\Users\13142\Atlas\NBA\.venv314\Scripts\python.exe"
+}
+$TOOLS    = "C:\Users\13142\Atlas\NBA\tools"
+$SENTINEL = "C:\Users\13142\Atlas\NBA\tools\leg_trainer_results_v5_windfall.yaml"
+$SYSLOG   = "C:\Users\13142\Atlas\NBA\system_run1.log"
 
 $env:PYTHONIOENCODING = 'utf-8'
 
@@ -44,5 +47,5 @@ Write-Host "=== Launching System trainer at $(Get-Date) ===" -ForegroundColor Cy
 
 Write-Host ""
 Write-Host "=== System trainer FINISHED at $(Get-Date) ===" -ForegroundColor Green
-Write-Host "Results: C:\Users\13142\Atlas\Atlas\tools\leg_trainer_results_v5_system.yaml"
+Write-Host "Results: C:\Users\13142\Atlas\NBA\tools\leg_trainer_results_v5_system.yaml"
 Write-Host "Log:     $SYSLOG"

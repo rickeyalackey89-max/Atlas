@@ -31,7 +31,7 @@ C:\Users\13142\Atlas
 Core repo:
 
 ```text
-C:\Users\13142\Atlas\Atlas
+C:\Users\13142\Atlas\NBA
 ```
 
 Dashboard repo:
@@ -58,7 +58,7 @@ For mobile-to-desktop operational handoff, use [../CLI_LISTENER.md](../CLI_LISTE
 The listener inbox is:
 
 ```text
-C:\Users\13142\Atlas\Atlas\data\automation\cli_listener\inbox
+C:\Users\13142\Atlas\NBA\data\automation\cli_listener\inbox
 ```
 
 Use it for scoped, allowlisted operations such as status checks, 6AM eval triggers, live run triggers, dashboard publish requests, and Codex handoffs.
@@ -68,3 +68,4 @@ Use it for scoped, allowlisted operations such as status checks, 6AM eval trigge
 Mobile is for review, triage, planning, prompts, and lightweight docs.
 
 Desktop/VS Code is for heavy edits, model runs, environment debugging, and production changes.
+

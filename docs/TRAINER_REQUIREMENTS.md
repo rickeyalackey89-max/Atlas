@@ -442,20 +442,19 @@ When the corpus expands, ALL trainers must have their `RUN_DATES` lists updated 
 
 ## Working Directory Rule — CRITICAL
 
-**ALL trainers and tools must be run from `C:\Users\13142\Atlas` (the workspace root), NOT from `C:\Users\13142\Atlas\Atlas` (the inner repo folder).**
+**ALL NBA trainers and tools must be run from `C:\Users\13142\Atlas\NBA` (the production repo root).**
 
 ```powershell
-# CORRECT — workspace root
-cd C:\Users\13142\Atlas
+# CORRECT — NBA production root
+cd C:\Users\13142\Atlas\NBA
 $env:PYTHONIOENCODING='utf-8'
-py Atlas\tools\marketed_slip_trainer_v2.py
+py tools\marketed_slip_trainer_v2.py
 
-# WRONG — inner folder, calibration JSONs and relative paths will not resolve
-cd C:\Users\13142\Atlas\Atlas
-py tools\marketed_slip_trainer_v2.py   # <-- DO NOT RUN FROM HERE
+# LEGACY COMPATIBILITY ONLY
+cd C:\Users\13142\Atlas\Atlas   # junction to Atlas\NBA
 ```
 
-**Why:** Multiple tools (including `marketed_slip_builder.py`) resolve calibration files and config paths relative to the working directory. When run from `Atlas\Atlas`, the path `data/model/marketed_calibration.json` resolves to `C:\Users\13142\Atlas\Atlas\data\model\...` which may or may not exist depending on what's installed. Running from `Atlas\` ensures all relative paths are consistent with how the live pipeline sees them.
+**Why:** Multiple tools (including `marketed_slip_builder.py`) resolve calibration files and config paths relative to the working directory. Running from `Atlas\NBA` makes `data/model/marketed_calibration.json`, `config.yaml`, telemetry, and dashboard artifacts resolve exactly the same way scheduled production runs resolve them.
 
 **Symptom of wrong CWD:** `marketed_calibration.json` not found → builder falls back to hardcoded multipliers → baseline slip win rate reads ~26% instead of the correct ~39.5%.
 
@@ -492,7 +491,7 @@ Select-String "GOBLIN|STANDARD|DEMON" Atlas\tools\marketed_slip_trainer_v2.py | 
 
 Before launching any trainer:
 
-- [ ] **CWD is correct:** Running from `C:\Users\13142\Atlas` (workspace root), not `Atlas\Atlas`
+- [ ] **CWD is correct:** Running from `C:\Users\13142\Atlas\NBA` (NBA production root)
 - [ ] **BASE_CONFIG matches production:** Trainer thresholds match `config.yaml` marketed_slips section
 - [ ] **Cache exists:** `data/model/_v{N}_resim_cache.pkl` with expected date count
 - [ ] **Gamelogs current:** `data/gamelogs/nba_gamelogs.csv` covers all replay dates
@@ -515,3 +514,4 @@ Before launching any trainer:
 | demonhunter_v4          | v13_corpus (44 dates)            | Results YAML                 | 2–4 hrs   | slip_wins ↑ |
 | slip_builder_trainer    | D-drive replay corpus (44 dates) | Best 3-leg configs (console) | 30–60 min | slip_wins ↑ |
 | external_priors_trainer | Resim cache (v18)                | Results YAML                 | 5–10 min  | Brier ↓     |
+

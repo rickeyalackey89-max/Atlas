@@ -5,7 +5,7 @@ import sys
 from pathlib import Path
 
 # Setup path like gbm_v12_train.py
-sys.path.insert(0, str(Path(r"C:/Users/13142/Atlas/Atlas/src")))
+sys.path.insert(0, str(Path(r"C:/Users/13142/Atlas/NBA/src")))
 
 import pickle
 import pandas as pd
@@ -14,7 +14,7 @@ def main():
     print("=== GBM v17 Cache Loading Test ===")
     
     # Test cache path
-    cache_path = Path(r"C:/Users/13142/Atlas/Atlas/data/model/_v17_resim_cache.pkl")
+    cache_path = Path(r"C:/Users/13142/Atlas/NBA/data/model/_v17_resim_cache.pkl")
     print(f"Loading cache: {cache_path}")
     
     if not cache_path.exists():

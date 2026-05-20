@@ -55,7 +55,7 @@ from Atlas.core.slip_builders import build_system_slips, build_windfall_slips
 from Atlas.stages.optimize.build_slips_today import _cfg_for_n_legs
 
 # ── corpus ───────────────────────────────────────────────────────────
-BASE = Path(r"C:\Users\13142\Atlas\Atlas\data\telemetry\v18_corpus")
+BASE = Path(r"C:\Users\13142\Atlas\NBA\data\telemetry\v18_corpus")
 
 
 def _load_run_dates() -> list[str]:
@@ -846,3 +846,4 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+

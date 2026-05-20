@@ -9,7 +9,7 @@ param(
 $ErrorActionPreference = "Stop"
 
 # Configuration
-$AtlasRoot = "C:\Users\13142\Atlas\Atlas"
+$AtlasRoot = "C:\Users\13142\Atlas\NBA"
 $LogFile = "$AtlasRoot\data\output\logs\daily_graphics_$(Get-Date -Format 'yyyyMMdd').log"
 
 function Write-Log {

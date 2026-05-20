@@ -17,7 +17,7 @@ py -m Atlas.cli live                          # live run
 py Atlas\tools\marketed_slip_trainer_v2.py    # trainer
 
 # WRONG — inner folder breaks relative path resolution for calibration JSONs
-cd C:\Users\13142\Atlas\Atlas
+cd C:\Users\13142\Atlas\NBA
 py tools\marketed_slip_trainer_v2.py          # DO NOT DO THIS
 ```
 
@@ -519,3 +519,4 @@ data/telemetry/
 | `data/telemetry/live_runs/{id}/eval_legs.csv` | 6 AM backfill | All evaluation tools (corpus reader, Brier, AUC) |
 | `data/model/_v18_resim_cache.pkl` | v18 GBM training workflow | Historical LightGBM baseline |
 | `data/model/_v1_playoff_resim_cache.pkl` | `build_playoff_resim_cache.py` | Active CatBoost v5cD training |
+

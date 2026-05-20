@@ -1,13 +1,13 @@
 import pandas as pd, yaml, sys
-sys.path.insert(0, "C:/Users/13142/Atlas/Atlas/src")
+sys.path.insert(0, "C:/Users/13142/Atlas/NBA/src")
 from Atlas.core.slip_scoring import _format_leg, _score_slip
 from Atlas.core.slip_builders import _tier_counts_from_legs, _windfall_mix_ok
 from Atlas.core.payout_tables import POWER_MULT
 
-cfg = yaml.safe_load(open("C:/Users/13142/Atlas/Atlas/config.yaml", encoding="utf-8"))
+cfg = yaml.safe_load(open("C:/Users/13142/Atlas/NBA/config.yaml", encoding="utf-8"))
 cfg["slip_build"]["min_leg_prob"] = 0.0
 
-df = pd.read_csv("C:/Users/13142/Atlas/Atlas/data/telemetry/v18_corpus/20260225/scored_legs_deduped.csv", low_memory=False)
+df = pd.read_csv("C:/Users/13142/Atlas/NBA/data/telemetry/v18_corpus/20260225/scored_legs_deduped.csv", low_memory=False)
 
 g = df[df["tier"]=="GOBLIN"].iloc[10]
 s = df[df["tier"]=="STANDARD"].iloc[10]
@@ -29,3 +29,4 @@ legs_str = scored.get("legs", "")
 print("legs_str:", legs_str)
 print("mix_ok:", _windfall_mix_ok(3, legs_str))
 print("tier_counts:", _tier_counts_from_legs(legs_str))
+

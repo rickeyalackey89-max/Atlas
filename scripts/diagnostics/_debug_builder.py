@@ -1,7 +1,7 @@
 """Diagnose why build_system_slips exhausts all attempts on corpus data."""
 import sys, os, time, copy, yaml
-sys.path.insert(0, r'C:\Users\13142\Atlas\Atlas\src')
-sys.path.insert(0, r'C:\Users\13142\Atlas\Atlas\tools')
+sys.path.insert(0, r'C:\Users\13142\Atlas\NBA\src')
+sys.path.insert(0, r'C:\Users\13142\Atlas\NBA\tools')
 os.environ['ATLAS_DEBUG_BUILDER'] = '1'
 
 from slip_builder_trainer import load_all_dates, _cfg_for_n_legs
@@ -18,7 +18,7 @@ if 'p_cal' in scored_df.columns:
     print(f"GOBLIN p_cal>=0.55: {(scored_df.loc[g, 'p_cal'] >= 0.55).sum()} of {g.sum()}")
     print(f"STANDARD p_cal>=0.55: {(scored_df.loc[s, 'p_cal'] >= 0.55).sum()} of {s.sum()}")
 
-with open(r'C:\Users\13142\Atlas\Atlas\config.yaml') as f:
+with open(r'C:\Users\13142\Atlas\NBA\config.yaml') as f:
     base_cfg = yaml.safe_load(f)
 base_cfg.get('slip_build', {}).pop('by_legs', None)
 base_cfg.get('slip_build', {}).pop('by_sort_mode', None)
@@ -44,3 +44,4 @@ print(f"top_n=5 -> target_pool={5 * resolved_cfg['slip_build'].get('target_pool_
 t0 = time.time()
 result = build_system_slips(scored_df, n_legs=3, top_n=5, seed=42, sort_mode='ev', pricing_engine='atlas', cfg=resolved_cfg)
 print(f"Done in {time.time()-t0:.2f}s  rows={len(result)}")
+

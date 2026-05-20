@@ -30,9 +30,9 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from Atlas.core.marketed_slip_builder import build_marketed_slips
 
 # ── Paths ────────────────────────────────────────────────────────────
-CACHE_PATH = Path(r"C:\Users\13142\Atlas\Atlas\data\model\_v17_resim_cache.pkl")
-BASE = Path(r"C:\Users\13142\Atlas\Atlas\data\telemetry\v18_corpus")
-CONFIG_PATH = Path(r"C:\Users\13142\Atlas\Atlas\config.yaml")
+CACHE_PATH = Path(r"C:\Users\13142\Atlas\NBA\data\model\_v17_resim_cache.pkl")
+BASE = Path(r"C:\Users\13142\Atlas\NBA\data\telemetry\v18_corpus")
+CONFIG_PATH = Path(r"C:\Users\13142\Atlas\NBA\config.yaml")
 
 # ── Fixed templates ──────────────────────────────────────────────────
 FIXED_TEMPLATES = [

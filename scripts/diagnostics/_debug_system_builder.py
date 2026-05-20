@@ -3,7 +3,7 @@ import pandas as pd, yaml, sys, os, random, warnings
 from collections import Counter
 warnings.filterwarnings('ignore')
 os.environ['ATLAS_DEBUG_BUILDER'] = '0'
-sys.path.insert(0, 'C:/Users/13142/Atlas/Atlas/src')
+sys.path.insert(0, 'C:/Users/13142/Atlas/NBA/src')
 
 import Atlas.core.slip_builders as sb_mod
 import Atlas.core.slip_scoring as ss_mod
@@ -36,12 +36,12 @@ def _instrumented_build(**kwargs):
     result = _orig_build(**kwargs)
     return result
 
-cfg = yaml.safe_load(open('C:/Users/13142/Atlas/Atlas/config.yaml', encoding='utf-8'))
+cfg = yaml.safe_load(open('C:/Users/13142/Atlas/NBA/config.yaml', encoding='utf-8'))
 cfg['slip_build']['min_leg_prob'] = 0.0
 cfg['slip_build'].pop('leg_quality_filters', None)
 
 df = pd.read_csv(
-    'C:/Users/13142/Atlas/Atlas/data/telemetry/v18_corpus/20260225/scored_legs_deduped.csv',
+    'C:/Users/13142/Atlas/NBA/data/telemetry/v18_corpus/20260225/scored_legs_deduped.csv',
     low_memory=False
 )
 
@@ -189,3 +189,4 @@ for _ in range(3):
     print(f'  tier_counts: {_tier_counts_from_legs(legs_str)}')
     print(f'  mix_ok: {_system_mix_ok(n_legs, legs_str)}')
     print()
+

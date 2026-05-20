@@ -1,17 +1,17 @@
 """Debug: count exactly which check rejects candidates in the system builder loop."""
 import pandas as pd, yaml, sys, random, os
 from collections import Counter
-sys.path.insert(0, "C:/Users/13142/Atlas/Atlas/src")
+sys.path.insert(0, "C:/Users/13142/Atlas/NBA/src")
 from Atlas.core.slip_scoring import _format_leg, _slip_key, _score_slip
 from Atlas.core.slip_builders import _tier_counts_from_legs
 from Atlas.core.payout_tables import POWER_MULT
 
-cfg = yaml.safe_load(open("C:/Users/13142/Atlas/Atlas/config.yaml", encoding="utf-8"))
+cfg = yaml.safe_load(open("C:/Users/13142/Atlas/NBA/config.yaml", encoding="utf-8"))
 cfg["slip_build"]["min_leg_prob"] = 0.0
 cfg["slip_build"].pop("leg_quality_filters", None)
 
 df = pd.read_csv(
-    "C:/Users/13142/Atlas/Atlas/data/telemetry/v18_corpus/20260225/scored_legs_deduped.csv",
+    "C:/Users/13142/Atlas/NBA/data/telemetry/v18_corpus/20260225/scored_legs_deduped.csv",
     low_memory=False
 )
 
@@ -117,3 +117,4 @@ print(f"\nAttempts={ATTEMPTS}, total={total}")
 for k, v in rejects.most_common():
     pct = 100.0 * v / total if total else 0
     print(f"  {k}: {v} ({pct:.1f}%)")
+

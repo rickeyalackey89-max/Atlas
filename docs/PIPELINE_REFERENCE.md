@@ -7,21 +7,20 @@
 
 ## Working Directory — CRITICAL
 
-**All Atlas commands and tools must run from `C:\Users\13142\Atlas` (workspace root).**
+**All Atlas NBA commands and tools must run from `C:\Users\13142\Atlas\NBA` (production repo root).**
 
 ```powershell
 # CORRECT
-cd C:\Users\13142\Atlas
+cd C:\Users\13142\Atlas\NBA
 $env:PYTHONIOENCODING='utf-8'
 py -m Atlas.cli live                          # live run
-py Atlas\tools\marketed_slip_trainer_v2.py    # trainer
+py tools\marketed_slip_trainer_v2.py          # trainer
 
-# WRONG — inner folder breaks relative path resolution for calibration JSONs
-cd C:\Users\13142\Atlas\Atlas
-py tools\marketed_slip_trainer_v2.py          # DO NOT DO THIS
+# LEGACY COMPATIBILITY ONLY
+cd C:\Users\13142\Atlas\Atlas                 # junction to Atlas\NBA
 ```
 
-Relative paths like `data/model/marketed_calibration.json` resolve against CWD. Running from the inner `Atlas\Atlas` directory causes calibration files to silently fall back to hardcoded values, producing wrong results.
+Relative paths like `data/model/marketed_calibration.json` resolve against CWD. `C:\Users\13142\Atlas\NBA` is now the canonical production output root; `C:\Users\13142\Atlas\Atlas` is only a compatibility junction.
 
 ---
 
@@ -519,3 +518,4 @@ data/telemetry/
 | `data/telemetry/live_runs/{id}/eval_legs.csv` | 6 AM backfill | All evaluation tools (corpus reader, Brier, AUC) |
 | `data/model/_v18_resim_cache.pkl` | v18 GBM training workflow | Historical LightGBM baseline |
 | `data/model/_v1_playoff_resim_cache.pkl` | `build_playoff_resim_cache.py` | Active CatBoost v5cD training |
+

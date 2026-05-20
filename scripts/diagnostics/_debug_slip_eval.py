@@ -1,18 +1,18 @@
 """Quick diagnostic — build one windfall slip and verify projection_id fix."""
 import sys, yaml, pandas as pd
 from pathlib import Path
-sys.path.insert(0, str(Path("C:/Users/13142/Atlas/Atlas/src")))
+sys.path.insert(0, str(Path("C:/Users/13142/Atlas/NBA/src")))
 
 from Atlas.core.slip_builders import build_windfall_slips
 
-cfg = yaml.safe_load(open("C:/Users/13142/Atlas/Atlas/config.yaml", encoding="utf-8"))
+cfg = yaml.safe_load(open("C:/Users/13142/Atlas/NBA/config.yaml", encoding="utf-8"))
 
 scored = pd.read_csv(
-    "C:/Users/13142/Atlas/Atlas/data/telemetry/v18_corpus/20260322/scored_legs_deduped.csv",
+    "C:/Users/13142/Atlas/NBA/data/telemetry/v18_corpus/20260322/scored_legs_deduped.csv",
     low_memory=False
 )
 eval_df = pd.read_csv(
-    "C:/Users/13142/Atlas/Atlas/data/telemetry/v18_corpus/20260322/eval_legs.csv",
+    "C:/Users/13142/Atlas/NBA/data/telemetry/v18_corpus/20260322/eval_legs.csv",
     low_memory=False
 )
 
@@ -76,3 +76,4 @@ else:
             print(f"    in truth: {key in truth}")
         else:
             print(f"    SKIP: <4 tokens")
+

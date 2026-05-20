@@ -1,7 +1,7 @@
 """Minimal worker test: 1 worker, 1 task, 1 date — does it complete?"""
 import sys, os, time, multiprocessing as mp
-sys.path.insert(0, r'C:\Users\13142\Atlas\Atlas\src')
-sys.path.insert(0, r'C:\Users\13142\Atlas\Atlas\tools')
+sys.path.insert(0, r'C:\Users\13142\Atlas\NBA\src')
+sys.path.insert(0, r'C:\Users\13142\Atlas\NBA\tools')
 
 import pickle, tempfile
 
@@ -18,7 +18,7 @@ def worker_task(args):
     from slip_builder_trainer import score_config, SEEDS
     import yaml, copy
     data = _DATA[:n_dates]
-    with open(r'C:\Users\13142\Atlas\Atlas\config.yaml') as f:
+    with open(r'C:\Users\13142\Atlas\NBA\config.yaml') as f:
         base_cfg = yaml.safe_load(f)
     base_cfg.get('slip_build', {}).pop('by_legs', None)
     base_cfg.get('slip_build', {}).pop('by_sort_mode', None)
@@ -52,3 +52,4 @@ if __name__ == "__main__":
 
     os.unlink(tmp.name)
     print("DONE")
+

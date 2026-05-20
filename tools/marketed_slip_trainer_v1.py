@@ -33,8 +33,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from Atlas.core.marketed_slip_builder import MarketedSlipBuilder
 
 # ── Data paths ──────────────────────────────────────────────────────
-BASE = Path(r"C:\Users\13142\Atlas\Atlas\data\telemetry\v18_corpus")
-CACHE_PATH = Path(r"C:\Users\13142\Atlas\Atlas\data\model\_v17_resim_cache.pkl")
+BASE = Path(r"C:\Users\13142\Atlas\NBA\data\telemetry\v18_corpus")
+CACHE_PATH = Path(r"C:\Users\13142\Atlas\NBA\data\model\_v17_resim_cache.pkl")
 
 def _load_run_dates() -> list[str]:
     """Load dates from corpus_manifest.json if available, else hardcoded fallback."""

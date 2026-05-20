@@ -36,8 +36,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from Atlas.core.marketed_slip_builder import MarketedSlipBuilder
 
 # ── Paths ────────────────────────────────────────────────────────────
-CACHE_PATH = Path(r"C:\Users\13142\Atlas\Atlas\data\model\_v17_resim_cache.pkl")
-BASE = Path(r"C:\Users\13142\Atlas\Atlas\data\telemetry\v18_corpus")
+CACHE_PATH = Path(r"C:\Users\13142\Atlas\NBA\data\model\_v17_resim_cache.pkl")
+BASE = Path(r"C:\Users\13142\Atlas\NBA\data\telemetry\v18_corpus")
 
 # ── Fixed templates — DO NOT SWEEP ───────────────────────────────────
 FIXED_TEMPLATES = [
@@ -545,3 +545,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

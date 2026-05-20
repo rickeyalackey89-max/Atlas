@@ -6,8 +6,8 @@ Write-Host "🎯 Setting up daily Atlas graphics automation..."
 try {
     # Task details
     $TaskName = "Atlas Daily Graphics Generation"
-    $ScriptPath = "C:\Users\13142\Atlas\Atlas\scripts\task_8am_graphics.ps1"
-    $WorkingDir = "C:\Users\13142\Atlas\Atlas"
+    $ScriptPath = "C:\Users\13142\Atlas\NBA\scripts\task_8am_graphics.ps1"
+    $WorkingDir = "C:\Users\13142\Atlas\NBA"
     
     # Create task components
     $Action = New-ScheduledTaskAction -Execute 'powershell.exe' -Argument "-ExecutionPolicy Bypass -File `"$ScriptPath`"" -WorkingDirectory $WorkingDir
@@ -35,7 +35,7 @@ try {
     Start-ScheduledTask -TaskName $TaskName
     
     Write-Host "`n✅ Setup complete! Your daily graphics will be generated automatically at 8:00 AM."
-    Write-Host "🎨 Graphics will be saved to: C:\Users\13142\Atlas\Atlas\data\output\graphics\"
+    Write-Host "🎨 Graphics will be saved to: C:\Users\13142\Atlas\NBA\data\output\graphics\"
     
     # Show task details
     Write-Host "`n📋 Task Details:"

@@ -9,9 +9,10 @@ REM Full Atlas live pipeline with updated injury/line data.
 REM Same as 11am but captures afternoon line movements.
 REM ================================================================
 
-set ATLAS_ROOT=C:\Users\13142\Atlas\Atlas
+set ATLAS_ROOT=C:\Users\13142\Atlas\NBA
 set DASH_ROOT=C:\Users\13142\Atlas\atlas-dashboard
-set PY=%ATLAS_ROOT%\.venv314\Scripts\python.exe
+set PY=%ATLAS_ROOT%\.venv\Scripts\python.exe
+if not exist "%PY%" set PY=%ATLAS_ROOT%\.venv314\Scripts\python.exe
 set LOG=%ATLAS_ROOT%\data\telemetry\iael_runs.log
 
 REM BettingPros is the default market odds provider. OddsAPI is optional legacy overlay.
@@ -89,3 +90,4 @@ if defined LATEST_BUNDLE (
 :end
 echo ===== %date% %time% 230PM LIVE RUN END =====>> %LOG%
 exit /b 0
+

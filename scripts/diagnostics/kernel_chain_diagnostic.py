@@ -26,7 +26,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-REPO = Path(r"C:\Users\13142\Atlas\Atlas")
+REPO = Path(r"C:\Users\13142\Atlas\NBA")
 CACHE = REPO / "data/model/_v1_playoff_resim_cache.pkl"
 OUT_JSON = REPO / "data/model/kernel_chain_diagnostic.json"
 
@@ -271,3 +271,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

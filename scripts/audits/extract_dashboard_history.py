@@ -6,7 +6,7 @@ import subprocess, json, csv
 from pathlib import Path
 
 REPO = r"c:\Users\13142\Atlas\atlas-dashboard"
-OUT = Path(r"c:\Users\13142\Atlas\Atlas\data\archives\dashboard_pick_history.csv")
+OUT = Path(r"c:\Users\13142\Atlas\NBA\data\archives\dashboard_pick_history.csv")
 OUT.parent.mkdir(parents=True, exist_ok=True)
 
 result = subprocess.run(

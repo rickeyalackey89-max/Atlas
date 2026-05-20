@@ -41,7 +41,7 @@ The replay output folder is where the scored CSVs, replay diagnostics, replay da
 Use the direct raw replay entrypoint:
 
 ```powershell
-python -m Atlas.cli replay --raw C:\Users\13142\Atlas\Atlas\data\raw\prizepicks_YYYYMMDD_HHMMSS.json
+python -m Atlas.cli replay --raw C:\Users\13142\Atlas\NBA\data\raw\prizepicks_YYYYMMDD_HHMMSS.json
 ```
 
 That is the preferred replay path for testing. A bundle is not required when the pinned raw file and matching archive artifacts are already available.
@@ -61,12 +61,12 @@ If the pinned artifact set is incomplete, strict replay should stop and report t
 ## Where The Replay Inputs Live
 
 Use these locations during replay setup:
-1. Raw PrizePicks JSON files: `C:\Users\13142\Atlas\Atlas\data\raw`
-2. IAEL archive snapshots by date and timestamp: `C:\Users\13142\Atlas\Atlas\data\archives\iael\2026`
-3. Historical normalized injury snapshots: `C:\Users\13142\Atlas\Atlas\data\output\injury\normalized`
-4. Pinned dashboard role-metrics artifacts: `C:\Users\13142\Atlas\Atlas\data\output\dashboard`
-5. Replay output root: `C:\Users\13142\Atlas\Atlas\data\telemetry\replay_runs`
-6. Replay truth source: `C:\Users\13142\Atlas\Atlas\data\gamelogs\nba_gamelogs.csv`
+1. Raw PrizePicks JSON files: `C:\Users\13142\Atlas\NBA\data\raw`
+2. IAEL archive snapshots by date and timestamp: `C:\Users\13142\Atlas\NBA\data\archives\iael\2026`
+3. Historical normalized injury snapshots: `C:\Users\13142\Atlas\NBA\data\output\injury\normalized`
+4. Pinned dashboard role-metrics artifacts: `C:\Users\13142\Atlas\NBA\data\output\dashboard`
+5. Replay output root: `C:\Users\13142\Atlas\NBA\data\telemetry\replay_runs`
+6. Replay truth source: `C:\Users\13142\Atlas\NBA\data\gamelogs\nba_gamelogs.csv`
 
 The dashboard folder is also the default fallback location for pinned role metrics in replay when explicit role-metrics env paths are not supplied.
 
@@ -76,18 +76,18 @@ Strict replay should use pinned environment paths for the non-live inputs:
 
 ```powershell
 $env:ATLAS_STRICT_REPLAY = "1"
-$env:ATLAS_IAEL_INVALIDATIONS_PATH = "C:\Users\13142\Atlas\Atlas\data\archives\iael\2026\<date>\<timestamp>\injury_invalidations.json"
-$env:ATLAS_IAEL_STATUS_PATH = "C:\Users\13142\Atlas\Atlas\data\archives\iael\2026\<date>\<timestamp>\status.json"
-$env:ATLAS_IAEL_NORMALIZED_PATH = "C:\Users\13142\Atlas\Atlas\data\output\injury\normalized\<timestamp>.json"
-$env:ATLAS_ROTOWIRE_LINES_PATH = "C:\Users\13142\Atlas\Atlas\data\archives\iael\2026\<date>\<timestamp>\rotowire_lines.json"
+$env:ATLAS_IAEL_INVALIDATIONS_PATH = "C:\Users\13142\Atlas\NBA\data\archives\iael\2026\<date>\<timestamp>\injury_invalidations.json"
+$env:ATLAS_IAEL_STATUS_PATH = "C:\Users\13142\Atlas\NBA\data\archives\iael\2026\<date>\<timestamp>\status.json"
+$env:ATLAS_IAEL_NORMALIZED_PATH = "C:\Users\13142\Atlas\NBA\data\output\injury\normalized\<timestamp>.json"
+$env:ATLAS_ROTOWIRE_LINES_PATH = "C:\Users\13142\Atlas\NBA\data\archives\iael\2026\<date>\<timestamp>\rotowire_lines.json"
 ```
 
 Optional explicit role-metrics pins:
 
 ```powershell
-$env:ATLAS_ROLE_METRICS_PATH = "C:\Users\13142\Atlas\Atlas\data\output\dashboard\role_metrics_latest.json"
-$env:ATLAS_ROLE_METRICS_HTML_PATH = "C:\Users\13142\Atlas\Atlas\data\output\dashboard\role_metrics_latest.html"
-$env:ATLAS_ROLE_METRICS_MANIFEST_PATH = "C:\Users\13142\Atlas\Atlas\data\output\dashboard\role_metrics_snapshot_manifest.json"
+$env:ATLAS_ROLE_METRICS_PATH = "C:\Users\13142\Atlas\NBA\data\output\dashboard\role_metrics_latest.json"
+$env:ATLAS_ROLE_METRICS_HTML_PATH = "C:\Users\13142\Atlas\NBA\data\output\dashboard\role_metrics_latest.html"
+$env:ATLAS_ROLE_METRICS_MANIFEST_PATH = "C:\Users\13142\Atlas\NBA\data\output\dashboard\role_metrics_snapshot_manifest.json"
 ```
 
 If those role-metrics env vars are not provided, strict replay should fall back to the pinned dashboard artifacts above. Replay should not skip role metrics and should not fetch them from a live URL during strict replay.
@@ -268,3 +268,4 @@ A local copy is also written to `data/telemetry/v13_corpus/<YYYYMMDD>/` on C dri
 The GBM trainer does not modify `config.yaml`, but the leg trainer workflow (when auto-applied) can inadvertently clobber the `demonhunter:` section at the bottom of config.yaml. After any trainer-driven config change, verify the `demonhunter:` block still exists in `config.yaml`.
 
 The canonical DemonHunter trainer results are saved in `tools/demonhunter_trainer_results_v4.yaml`. If the config section is missing, reapply from that file.
+

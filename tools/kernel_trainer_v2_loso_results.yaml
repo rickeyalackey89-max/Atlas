@@ -1,5 +1,5 @@
 version: kernel_trainer_v2_loso
-cache: C:\Users\13142\Atlas\Atlas\data\model\_v1_playoff_resim_cache.pkl
+cache: C:\Users\13142\Atlas\NBA\data\model\_v1_playoff_resim_cache.pkl
 phase2:
   winner_params:
     thin_window_games: 20.0
@@ -54,3 +54,4 @@ phase2:
     delta_mB: -0.6310939690225836
     n: 1465
   elapsed_s: 2279.6369183063507
+

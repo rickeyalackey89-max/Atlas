@@ -46,8 +46,8 @@ def _find_corpus_base() -> Path:
     Add newer corpus dirs to the top of candidates as they are created.
     """
     candidates = [
-        Path(r"C:\Users\13142\Atlas\Atlas\data\telemetry\v18_corpus"),  # next corpus
-        Path(r"C:\Users\13142\Atlas\Atlas\data\telemetry\v18_corpus"),  # current
+        Path(r"C:\Users\13142\Atlas\NBA\data\telemetry\v18_corpus"),  # next corpus
+        Path(r"C:\Users\13142\Atlas\NBA\data\telemetry\v18_corpus"),  # current
     ]
     for c in candidates:
         try:
@@ -848,3 +848,4 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+

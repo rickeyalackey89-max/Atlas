@@ -5,7 +5,10 @@ param(
 
 $ErrorActionPreference = "Stop"
 $AtlasRoot = (Resolve-Path (Join-Path $PSScriptRoot "..\..")).Path
-$Python = Join-Path $AtlasRoot ".venv314\Scripts\python.exe"
+$Python = Join-Path $AtlasRoot ".venv\Scripts\python.exe"
+if (-not (Test-Path $Python)) {
+  $Python = Join-Path $AtlasRoot ".venv314\Scripts\python.exe"
+}
 
 if (-not (Test-Path $Python)) {
   $Python = "python"

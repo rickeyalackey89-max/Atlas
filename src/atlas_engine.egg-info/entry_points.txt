@@ -1,2 +1,3 @@
 [console_scripts]
 atlas = Atlas.cli:main
+atlas-listener = Atlas.runtime.cli_listener:main

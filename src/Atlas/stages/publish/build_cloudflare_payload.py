@@ -16,6 +16,10 @@ from typing import Optional
 
 import pandas as pd
 
+from Atlas.core.prizepicks_payout_formula import (
+    payout_formula_audit_row,
+    write_payout_formula_audit,
+)
 from Atlas.core.prizepicks_quote import quote_prizepicks_payout
 from Atlas.core.team_aliases import normalize_team_abbr
 
@@ -595,13 +599,29 @@ def _quote_prizepicks_payout(legs: list[dict], amount_bet_cents: int = 2500) -> 
     return quote_prizepicks_payout(legs, amount_bet_cents=amount_bet_cents)
 
 
-def _apply_prizepicks_quote_to_slip(slip: dict, legs: list[dict]) -> dict:
+def _apply_prizepicks_quote_to_slip(
+    slip: dict,
+    legs: list[dict],
+    *,
+    family: str = "",
+    label: str = "",
+    formula_audit_rows: list[dict] | None = None,
+) -> dict:
     quote = _quote_prizepicks_payout(legs)
     if not quote:
         slip["pp_quote_ok"] = False
         slip["pp_quote_status"] = "unquoted"
         slip["pp_payout_is_exact"] = False
+        audit_row = payout_formula_audit_row(legs=legs, family=family, label=label, quote={}, sport="nba")
+        _attach_payout_formula_to_slip(slip, audit_row)
+        if formula_audit_rows is not None:
+            formula_audit_rows.append(audit_row)
         return slip
+
+    audit_row = payout_formula_audit_row(legs=legs, family=family, label=label, quote=quote, sport="nba")
+    _attach_payout_formula_to_slip(slip, audit_row)
+    if formula_audit_rows is not None:
+        formula_audit_rows.append(audit_row)
 
     power_mult = ((quote.get("power") or {}).get("all_correct"))
     flex_mult = ((quote.get("flex") or {}).get("all_correct"))
@@ -629,6 +649,15 @@ def _apply_prizepicks_quote_to_slip(slip: dict, legs: list[dict]) -> dict:
         except Exception:
             pass
     return slip
+
+
+def _attach_payout_formula_to_slip(slip: dict, audit_row: dict) -> None:
+    slip["pp_formula_payout_mult"] = audit_row.get("formula_payout_mult")
+    slip["pp_formula_source"] = audit_row.get("formula_source")
+    slip["pp_formula_model_version"] = audit_row.get("formula_model_version")
+    slip["pp_formula_tier_counts"] = audit_row.get("tier_counts")
+    slip["pp_formula_abs_error"] = audit_row.get("abs_error")
+    slip["pp_formula_pct_error"] = audit_row.get("pct_error")
 
 
 def _build_stat_hub_payload(all_legs: list[dict], gamelogs_df: Optional["pd.DataFrame"], repo_root: Path) -> dict:
@@ -1112,33 +1141,58 @@ def build_cloudflare_payload(
         },
         "injury_context": _load_injury_context(_repo_root()),
     }
+    payout_formula_rows: list[dict] = []
     
     # System: top available leg counts.
     for n in [2, 3, 4, 5]:
         slip = _load_top_slip(run_dir / "System" / f"recommended_{n}leg.csv", "System")
         if slip:
-            slip = _apply_prizepicks_quote_to_slip(slip, slip.get("legs_detail", []))
+            slip = _apply_prizepicks_quote_to_slip(
+                slip,
+                slip.get("legs_detail", []),
+                family="System",
+                label=f"{n}leg",
+                formula_audit_rows=payout_formula_rows,
+            )
             payload["system"].append(slip)
     
     # System winprob: top available leg counts.
     for n in [2, 3, 4, 5]:
         slip = _load_top_slip(run_dir / "System" / f"recommended_{n}leg_winprob.csv", "System WinProb")
         if slip:
-            slip = _apply_prizepicks_quote_to_slip(slip, slip.get("legs_detail", []))
+            slip = _apply_prizepicks_quote_to_slip(
+                slip,
+                slip.get("legs_detail", []),
+                family="System WinProb",
+                label=f"{n}leg",
+                formula_audit_rows=payout_formula_rows,
+            )
             payload["system_winprob"].append(slip)
     
     # Windfall: top available leg counts.
     for n in [2, 3, 4, 5]:
         slip = _load_top_slip(run_dir / "Windfall" / f"recommended_{n}leg.csv", "Windfall")
         if slip:
-            slip = _apply_prizepicks_quote_to_slip(slip, slip.get("legs_detail", []))
+            slip = _apply_prizepicks_quote_to_slip(
+                slip,
+                slip.get("legs_detail", []),
+                family="Windfall",
+                label=f"{n}leg",
+                formula_audit_rows=payout_formula_rows,
+            )
             payload["windfall"].append(slip)
     
     # Windfall winprob: top available leg counts.
     for n in [2, 3, 4, 5]:
         slip = _load_top_slip(run_dir / "Windfall" / f"recommended_{n}leg_winprob.csv", "Windfall WinProb")
         if slip:
-            slip = _apply_prizepicks_quote_to_slip(slip, slip.get("legs_detail", []))
+            slip = _apply_prizepicks_quote_to_slip(
+                slip,
+                slip.get("legs_detail", []),
+                family="Windfall WinProb",
+                label=f"{n}leg",
+                formula_audit_rows=payout_formula_rows,
+            )
             payload["windfall_winprob"].append(slip)
     
     # Demonhunter: top available leg counts from single CSV.
@@ -1163,7 +1217,13 @@ def build_cloudflare_payload(
                         "payout_mult": float(row.get("payout_mult", 0)),
                         "avg_fragility": float(row.get("avg_fragility", 0)),
                     }
-                    demon_slip = _apply_prizepicks_quote_to_slip(demon_slip, legs_list)
+                    demon_slip = _apply_prizepicks_quote_to_slip(
+                        demon_slip,
+                        legs_list,
+                        family="DemonHunter",
+                        label=f"{n}leg",
+                        formula_audit_rows=payout_formula_rows,
+                    )
                     payload["demonhunter"].append(demon_slip)
         except Exception:
             pass
@@ -1248,7 +1308,13 @@ def build_cloudflare_payload(
                 "high_confidence": high_conf,
                 "legs": clean_legs,
             }
-            marketed_payload = _apply_prizepicks_quote_to_slip(marketed_payload, clean_legs)
+            marketed_payload = _apply_prizepicks_quote_to_slip(
+                marketed_payload,
+                clean_legs,
+                family="Marketed",
+                label=str(marketed_payload.get("label") or f"{n_legs}leg"),
+                formula_audit_rows=payout_formula_rows,
+            )
             payload["marketed_slips"].append(marketed_payload)
 
         # Build top_hit_list from unique legs with enough sample
@@ -1414,6 +1480,22 @@ def build_cloudflare_payload(
         payload["all_legs"] = []
 
     payload["stat_hub"] = _build_stat_hub_payload(payload.get("all_legs", []), gamelogs_df, _repo_root())
+    payout_formula_path = out_dir / "payout_formula_audit_latest.json"
+    payout_formula_audit = write_payout_formula_audit(
+        payout_formula_path,
+        rows=payout_formula_rows,
+        run_id=run_dir.name,
+        run_mode="live",
+        sport="nba",
+    )
+    payload["payout_formula_audit"] = {
+        "path": str(payout_formula_path),
+        "schema_version": payout_formula_audit.get("schema_version"),
+        "tool_version": payout_formula_audit.get("tool_version"),
+        "row_count": payout_formula_audit.get("row_count"),
+        "exact_compare_count": payout_formula_audit.get("exact_compare_count"),
+        "summary": payout_formula_audit.get("summary"),
+    }
 
     out_dir.mkdir(parents=True, exist_ok=True)
     out_path = out_dir / "cloudflare_payload.json"

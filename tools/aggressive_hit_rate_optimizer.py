@@ -82,7 +82,7 @@ AGGRESSIVE_CONFIGS = [
 
 def load_data():
     """Load the same data as the trainer"""
-    cache_path = Path(r"C:\Users\13142\Atlas\Atlas\data\model\_v17_resim_cache.pkl")
+    cache_path = Path(r"C:\Users\13142\Atlas\NBA\data\model\_v17_resim_cache.pkl")
     
     import pickle
     with open(cache_path, "rb") as f:
@@ -92,7 +92,7 @@ def load_data():
     dates = sorted(cv["game_date"].unique())
     
     # Match trainer corpus 
-    corpus_path = Path(r"C:\Users\13142\Atlas\Atlas\data\telemetry\v18_corpus\corpus_manifest.json")
+    corpus_path = Path(r"C:\Users\13142\Atlas\NBA\data\telemetry\v18_corpus\corpus_manifest.json")
     if corpus_path.exists():
         with open(corpus_path) as f:
             manifest = json.load(f)

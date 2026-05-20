@@ -1,5 +1,5 @@
 import pickle, numpy as np
-cv = pickle.load(open(r'C:\Users\13142\Atlas\Atlas\data\model\_v1_playoff_resim_cache.pkl','rb'))['cv']
+cv = pickle.load(open(r'C:\Users\13142\Atlas\NBA\data\model\_v1_playoff_resim_cache.pkl','rb'))['cv']
 y = cv['hit'].astype(float).to_numpy()
 
 def br(p):
@@ -73,3 +73,4 @@ for dr, sd in cv.groupby('direction'):
     bcur = br_arr(sd['p_for_cal'].values, yd)
     bfix = br_arr(sd['p_adj'].values, yd)
     print(f'  {dr:<10} n={len(sd):>5}  cur={bcur:.4f}  fix={bfix:.4f}  Delta={(bfix-bcur)*1000:+6.2f}mB')
+

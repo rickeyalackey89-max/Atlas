@@ -41,7 +41,7 @@ Relationship:
 
 Atlas core repository:
 
-- Local: `C:\Users\13142\Atlas\Atlas`
+- Local: `C:\Users\13142\Atlas\NBA`
 - Responsibility: NBA model runtime, data pipeline, configs, evals, scripts, trainers, docs.
 - Default Codex working directory for model, pipeline, and docs tasks.
 
@@ -361,3 +361,4 @@ Validation before deployment:
 - Verify generated payloads when dashboard behavior changes.
 - Check live site/data URLs after publish.
 - Confirm `git status` is clean or explain remaining generated files.
+

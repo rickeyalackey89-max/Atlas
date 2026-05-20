@@ -10,7 +10,7 @@ REM eval_legs.csv for every live run from the previous day.
 REM This is the truth-backfill step that makes Brier scoring work.
 REM ================================================================
 
-set ATLAS_ROOT=C:\Users\13142\Atlas\Atlas
+set ATLAS_ROOT=C:\Users\13142\Atlas\NBA
 set PY=%ATLAS_ROOT%\.venv\Scripts\python.exe
 if not exist "%PY%" set PY=%ATLAS_ROOT%\.venv314\Scripts\python.exe
 set LOG=%ATLAS_ROOT%\data\telemetry\iael_runs.log
@@ -89,8 +89,16 @@ if not defined REPORT_RUN (
   goto :end
 )
 set ATLAS_YESTERDAY_REPORT_RUN=!REPORT_RUN!
-echo [PUBLISH] Rebuilding dashboard payload for !REPORT_RUN! using report run !REPORT_RUN! >> %LOG%
-%VENV_PY% src\Atlas\stages\publish\build_cloudflare_payload.py "!REPORT_RUN!" >> %LOG% 2>&1
+
+REM If this eval is re-run after today's live run, preserve today's board and
+REM only refresh the performance/yesterday_slips block. At normal 6AM runtime
+REM there is usually no same-day live run yet, so REPORT_RUN remains the source.
+set TODAY_ISO=
+for /f "delims=" %%t in ('%PY% -c "from datetime import date;print(date.today().isoformat())"') do set TODAY_ISO=%%t
+set PUBLISH_RUN=!REPORT_RUN!
+for /f "delims=" %%r in ('%PY% tools\select_eval_report_run.py --date !TODAY_ISO! --runs-dir "%ATLAS_ROOT%\data\output\runs" 2^>nul') do set PUBLISH_RUN=%%r
+echo [PUBLISH] Rebuilding dashboard payload for !PUBLISH_RUN! using report run !REPORT_RUN! >> %LOG%
+%VENV_PY% src\Atlas\stages\publish\build_cloudflare_payload.py "!PUBLISH_RUN!" >> %LOG% 2>&1
 set PAYLOAD_RC=%ERRORLEVEL%
 set ATLAS_YESTERDAY_REPORT_RUN=
 if not "%PAYLOAD_RC%"=="0" (
@@ -108,3 +116,4 @@ if errorlevel 1 (
 :end
 echo ===== %date% %time% 6AM EVAL BACKFILL END =====>> %LOG%
 exit /b 0
+

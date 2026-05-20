@@ -9,7 +9,7 @@ import numpy as np
 import pandas as pd
 from pathlib import Path
 
-ROOT = Path(r"C:\Users\13142\Atlas\Atlas")
+ROOT = Path(r"C:\Users\13142\Atlas\NBA")
 CACHE_PATH = ROOT / "data/model/_v18_resim_cache.pkl"
 CAL_PATH = ROOT / "data/model/telemetry_calibration.v18_post_gbm.json"
 
@@ -127,3 +127,4 @@ print(f"  Regressed dates (>+0.002): {n_regress} / {len(per_date)}")
 print(f"  Mean per-date delta: {per_date['delta'].mean():+.6f}")
 print(f"  Worst regression:    {per_date['delta'].max():+.6f} ({per_date.loc[per_date['delta'].idxmax(),'game_date']})")
 print(f"  Best improvement:    {per_date['delta'].min():+.6f} ({per_date.loc[per_date['delta'].idxmin(),'game_date']})")
+

@@ -1,0 +1,70 @@
+{
+  "clamp": [
+    1.0,
+    100.0
+  ],
+  "coefficients": {
+    "demon_count": 0.0680780122,
+    "family_demonhunter": 0.6161905865,
+    "family_marketed": -0.1668433479,
+    "family_system": -0.3473667095,
+    "family_windfall": -0.101980529,
+    "goblin_count": -0.0247794884,
+    "intercept": 0.4677723189,
+    "label_2leg": -0.0539808097,
+    "label_3_leg": -0.0988843054,
+    "label_3leg": 0.0654580279,
+    "label_4_leg": -0.1972869272,
+    "label_4leg": 0.1596421458,
+    "label_5_leg": 0.1293278846,
+    "label_5leg": -0.004276016,
+    "leg_count_2": -0.0539808097,
+    "leg_count_3": -0.0334262775,
+    "leg_count_4": -0.0376447814,
+    "leg_count_5": 0.1250518686,
+    "leg_count_6": 0.0,
+    "n_legs": 0.2664397656,
+    "standard_count": 0.2231412418
+  },
+  "feature_names": [
+    "intercept",
+    "n_legs",
+    "goblin_count",
+    "standard_count",
+    "demon_count",
+    "leg_count_2",
+    "leg_count_3",
+    "leg_count_4",
+    "leg_count_5",
+    "leg_count_6",
+    "family_demonhunter",
+    "family_marketed",
+    "family_system",
+    "family_windfall",
+    "label_2leg",
+    "label_3_leg",
+    "label_3leg",
+    "label_4_leg",
+    "label_4leg",
+    "label_5_leg",
+    "label_5leg"
+  ],
+  "generated_at_utc": "2026-05-19T16:03:43Z",
+  "model_type": "log_linear_ridge",
+  "model_version": "pp_payout_formula_log_linear_v1",
+  "ridge_alpha": 0.35,
+  "schema_version": "atlas_prizepicks_payout_formula_model_v1",
+  "source": {
+    "exact_quote_count": 101,
+    "note": "Uses exact live PrizePicks quote rows from slip JSON artifacts; no replay fallback quotes are used.",
+    "root": "C:\\Users\\13142\\Atlas\\Atlas-MLB-dev",
+    "source_glob": "data/mlb/live_runs/**/slips/*.json"
+  },
+  "target": "log(prizepicks_all_correct_multiplier)",
+  "tool_version": "build_prizepicks_payout_formula_v1",
+  "train_metrics": {
+    "mae": 2.601265,
+    "mape": 0.493811,
+    "max_abs_error": 68.233269
+  }
+}
