@@ -32,6 +32,14 @@ if ($args.Count -eq 0) {
 $here = Split-Path -Parent $MyInvocation.MyCommand.Path
 Set-Location $here
 
+# Keep the src-layout importable even after folder renames or machine restores.
+$srcPath = Join-Path $here "src"
+if ($env:PYTHONPATH) {
+    $env:PYTHONPATH = "$srcPath;$env:PYTHONPATH"
+} else {
+    $env:PYTHONPATH = $srcPath
+}
+
 # Canonical invocation (single source of truth)
 & py -m Atlas.cli $mode @rest
 
