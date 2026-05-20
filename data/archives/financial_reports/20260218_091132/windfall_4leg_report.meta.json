@@ -1,9 +1,0 @@
-{
-  "product": "windfall",
-  "n_legs": 4,
-  "rank_key": "ev_mult",
-  "rows_total": 25,
-  "rows_written": 25,
-  "source": "C:\\Users\\rick\\projects\\Atlas\\data\\output\\runs\\20260218_063241\\Windfall\\recommended_4leg.csv",
-  "output_csv": "C:\\Users\\rick\\projects\\Atlas\\data\\archives\\financial_reports\\20260218_091132\\windfall_4leg_report.csv"
-}

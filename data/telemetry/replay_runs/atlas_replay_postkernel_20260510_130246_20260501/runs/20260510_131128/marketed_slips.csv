@@ -1,8 +1,0 @@
-slip,high_confidence,hit_prob,payout_mult,ev,player,team,opp,stat,direction,tier,line,p_cal
-4-leg,True,0.3081,1.897,0.5845,Ajay Mitchell,OKC,MIN,RA,OVER,GOBLIN,4.5,0.7234
-4-leg,True,0.3081,1.897,0.5845,Ausar Thompson,DET,TOR,AST,OVER,GOBLIN,1.5,0.7491
-4-leg,True,0.3081,1.897,0.5845,Toumani Camara,POR,PHI,PA,OVER,STANDARD,14.5,0.7829
-4-leg,True,0.3081,1.897,0.5845,Cade Cunningham,DET,TOR,PTS,OVER,STANDARD,24.0,0.7598
-3-leg,True,0.5973,1.931,1.1535,Ayo Dosunmu,MIN,OKC,AST,OVER,GOBLIN,1.5,0.7632
-3-leg,True,0.5973,1.931,1.1535,Isaiah Joe,OKC,MIN,PTS,OVER,STANDARD,6.5,0.7595
-3-leg,True,0.5973,1.931,1.1535,Deni Avdija,POR,PHI,PTS,OVER,STANDARD,22.0,0.7591

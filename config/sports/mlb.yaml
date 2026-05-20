@@ -1,0 +1,286 @@
+sport: mlb
+status: development
+schema_version: atlas_mlb_operational_config_v1
+config_version: mlb_dev_fidelity_bettingpros_dk_pick6_v6_tuned_slip_v18_matchup_matrix_v1_20260519
+contract_name: atlas_mlb_strict_fidelity_bettingpros_dk_pick6_v6_tuned_slip_v18_matchup_matrix_v1
+owner: Atlas Sports AI
+
+principles:
+  replay_rule: strict_fidelity
+  replay_contract: replay must consume the same feature, market, calibration, and slip-builder contracts as live
+  no_replay_only_inputs: true
+  no_post_date_context_for_probability: true
+
+code_paths:
+  package: src/mlb
+  core_helpers: src/core
+  cli: src/mlb/cli.py
+  runtime: src/mlb/runtime
+  modeling: src/mlb/modeling
+  contracts: src/mlb/contracts
+  tests: tests/mlb
+  scripts: scripts/mlb
+
+paths:
+  raw: data/mlb/raw
+  staged: data/mlb/staged
+  features: data/mlb/features
+  model: data/mlb/model
+  test_runs: data/mlb/test_runs
+  live_runs: data/mlb/live_runs
+  eval: data/mlb/eval
+  archives: data/mlb/archives
+
+publishing:
+  dashboard_enabled: false
+  discord_enabled: false
+  production_channels_enabled: false
+
+outputs:
+  replay_root: data/mlb/test_runs
+  live_root: data/mlb/live_runs
+  eval_root: data/mlb/eval
+  replay_types:
+    single: replay_single
+    corpus: replay_corpus
+
+kernels:
+  probability:
+    active_version: mlb_market_prior_sobol_qmc_v0
+    simulation_version: mlb_sobol_qmc_market_prior_v0
+    parameter_model_version: market_prior_parameters_v0
+  cat_residual:
+    active_version: mlb_cat_over_residual_v6_23date_live_context_scale_tuned
+    active_artifact: data/mlb/model/cat_probability_kernel_v6_23date_live_context/scale_tuning/tuned_best_config.json
+    challenger_versions:
+      - version: mlb_cat_over_residual_v5_reorg_bettingpros_on
+        artifact: data/mlb/model/cat_probability_kernel_v5_reorg_bettingpros_on/best_config.json
+      - version: mlb_cat_over_residual_v6_23date_live_context
+        artifact: data/mlb/model/cat_probability_kernel_v6_23date_live_context/best_config.json
+      - version: mlb_cat_over_residual_v4_bettingpros_on
+        artifact: data/mlb/model/cat_probability_kernel_v4_bettingpros_on/best_config.json
+      - version: mlb_cat_over_residual_v3_wide_market_v15
+        artifact: data/mlb/model/cat_probability_kernel_v3_wide_market_v15/best_config.json
+      - version: mlb_cat_over_residual_v4_bettingpros_off
+        artifact: data/mlb/model/cat_probability_kernel_v4_bettingpros_off/best_config.json
+    target: actual_over - target_over_probability
+    live_application: calibrated_parameter_table
+  probability_stacker:
+    active: false
+    challenger_version: mlb_cat_probability_stacker_v1_lodo_cat_v5
+    challenger_artifact: data/mlb/model/cat_probability_stacker_v1_lodo_cat_v5/best_config.json
+    base_model_version: mlb_cat_over_residual_v5_reorg_bettingpros_on
+    fair_lodo_brier: 0.17868454
+    fair_lodo_logloss: 0.53544371
+    blend_weight: 0.5
+    promotion_status: challenger_runtime_application_smoke_passed_pending_replay_smoke
+  calibration_gate:
+    require_manifest: true
+    require_lodo_predictions: true
+    require_same_feature_contract: true
+    active_feature_set: with_bettingpros
+
+market_sources:
+  primary: bettingpros_mlb_props
+  refresh_live_by_default: true
+  refresh_replay_by_default: false
+  live_pull_cadence:
+    timezone: America/Chicago
+    windows: ["11:00", "14:30", "17:00", "19:00"]
+    rule: refresh live board and markets multiple times per day; engine board excludes already-started games
+    draftkings_late_market_rule: evaluate readiness per game at one hour before each game start
+  optional_fallbacks:
+    - oddsapi_mlb_live
+    - parlayapi_historical_closing_props
+    - draftkings_mlb_live
+    - draftkings_pick6
+  external_features:
+    bettingpros_streaks_enabled: true
+    bettingpros_projection_enabled: true
+    draftkings_pick6_alignment_enabled: true
+    draftkings_sportsbook_alignment_enabled: true
+
+features:
+  required_manifests:
+    - board
+    - market_context
+    - injury_context
+    - statsapi_context
+    - roster_context
+    - player_history_context
+    - transaction_context
+    - matchup_context
+    - advanced_context
+    - feature_table
+    - parameter_table
+    - score
+    - slips
+    - replay_eval
+  replay_safe_context:
+    weather: true
+    wind_factors: true
+    ballpark_profiles_as_of_date: true
+    umpire_profiles_as_of_date: true
+    probable_pitcher: true
+    lineup: true
+    player_history: true
+    roster_identity_from_prior_history: true
+    advanced_profiles_as_of_date: true
+    bettingpros_market_context: true
+    cbs_injury_backfill: true
+    statsapi_transactions: true
+  readiness_gates:
+    roster_context_min_coverage: 0.90
+    player_history_context_min_coverage: 0.90
+    lineup_context_min_coverage: 0.70
+    market_context_min_coverage: 0.75
+    advanced_context_min_coverage: 0.90
+    eval_settlement_min_coverage: 0.95
+
+matchup_matrix:
+  active_version: mlb_matchup_matrix_v1
+  pitcher_prop:
+    target_shift_scale: 0.055
+    target_shift_cap: 0.06
+    opponent_lineup_enabled: true
+    pitcher_history_enabled: true
+    advanced_pitcher_enabled: true
+    environment_enabled: true
+
+slips:
+  active_builder_version: atlas_mlb_public_slip_ranker_v18_market_source_context
+  portfolio_priority:
+    - Marketed
+    - System
+    - Windfall
+    - DemonHunter
+  no_two_leg_full_slate: true
+  full_slate_sizes:
+    System: [3, 4, 5]
+    Windfall: [3, 4, 5]
+    Marketed: [3, 4, 5]
+    DemonHunter: [3, 4, 5]
+  single_game_sizes:
+    System: [2, 3, 4]
+    Windfall: [2, 3, 4]
+    Marketed: [2, 3]
+    DemonHunter: []
+  tier_contract:
+    goblin_playable_sides: [OVER]
+    demon_playable_sides: [OVER]
+    standard_playable_sides: [OVER, UNDER]
+    playable_over_only_for_discounted_tiers: true
+  family_contracts:
+    Marketed:
+      purpose: premium_public_picks
+      templates:
+        - label: 3-leg
+          goblin: 1
+          standard: 2
+          demon: 0
+        - label: 4-leg
+          goblin: 2
+          standard: 2
+          demon: 0
+        - label: 5-leg
+          goblin: 2
+          standard: 2
+          demon: 1
+          flex_eval: true
+    System:
+      purpose: atlas_value_ev
+      templates:
+        - label: 3-leg
+          goblin: 1
+          standard: 2
+          demon: 0
+        - label: 4-leg
+          goblin: 2
+          standard: 2
+          demon: 0
+        - label: 5-leg
+          goblin: 3
+          standard: 2
+          demon: 0
+    Windfall:
+      purpose: flex_upside_best_of_both_worlds
+      templates:
+        - label: 3-leg
+          goblin: 1
+          standard: 1
+          demon: 1
+        - label: 4-leg
+          goblin: 1
+          standard: 2
+          demon: 1
+        - label: 5-leg
+          goblin: 2
+          standard: 2
+          demon: 1
+          flex_eval: true
+    DemonHunter:
+      purpose: high_variance_demon_over_payout
+      templates:
+        - label: 3-leg
+          goblin: 0
+          standard: 0
+          demon: 3
+        - label: 4-leg
+          goblin: 0
+          standard: 0
+          demon: 4
+          flex_eval: true
+        - label: 5-leg
+          goblin: 0
+          standard: 0
+          demon: 5
+          flex_eval: true
+  exposure:
+    max_exact_leg_repeats_across_public: 1
+    max_exposure_repeats_across_public: 1
+    exact_leg_key: player/event/market/line/side
+    exposure_key: player/event/market/side
+    max_same_market_per_slip: 2
+    max_pitcher_workload_legs_per_slip: 1
+
+markets:
+  batter:
+    - hits
+    - singles
+    - doubles
+    - total_bases
+    - hits_runs_rbis
+    - home_runs
+    - runs
+    - rbis
+    - walks
+    - plate_appearances
+    - strikeouts
+    - hitter_strikeouts
+    - stolen_bases
+    - hitter_fantasy_score
+  pitcher:
+    - pitcher_strikeouts
+    - pitching_outs
+    - earned_runs
+    - earned_runs_allowed
+    - hits_allowed
+    - walks_allowed
+    - pitches_thrown
+    - pitcher_fantasy_score
+  game:
+    - first_inning_runs_allowed
+    - first_inning_walks_allowed
+  combo:
+    - pitcher_strikeouts_combo
+    - pitcher_strikeouts_plus_total_bases
+
+validation:
+  replay_required_before_live: true
+  require_raw_snapshot: true
+  require_config_hash: true
+  require_model_manifest: true
+  require_slip_manifest: true
+  require_slip_eval: true
+  require_eval_legs: true
+  require_eval_slips: true

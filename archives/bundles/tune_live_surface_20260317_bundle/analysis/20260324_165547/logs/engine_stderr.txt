@@ -1,9 +1,0 @@
-Traceback (most recent call last):
-  File "<frozen runpy>", line 189, in _run_module_as_main
-  File "<frozen runpy>", line 159, in _get_module_details
-  File "<frozen importlib._bootstrap_external>", line 1074, in get_code
-  File "<frozen importlib._bootstrap_external>", line 1004, in source_to_code
-  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
-  File "C:\Users\rick\projects\Atlas\src\Atlas\engine\main.py", line 806
-    p_role = pd.to_numeric(scored.get("p_role", p_raw), errors="coerce").fillna(p_raw).clip(0, 1)
-IndentationError: unexpected indent

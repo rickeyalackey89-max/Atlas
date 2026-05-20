@@ -5,13 +5,13 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "atlas-engine"
 version = "0.1.0"
-description = "Atlas Sports AI decision engine, live pipeline, replay tooling, and dashboard payload builder"
+description = "Atlas MLB development skeleton and shared Atlas environment"
 readme = "docs/README.md"
 requires-python = ">=3.11"
 authors = [
   { name = "Atlas Sports AI" },
 ]
-keywords = ["sports", "nba", "probability", "simulation", "calibration"]
+keywords = ["sports", "mlb", "probability", "simulation", "calibration"]
 classifiers = [
   "Development Status :: 3 - Alpha",
   "Intended Audience :: Developers",
@@ -31,8 +31,12 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
+ai = [
+  "openai>=1.68",
+]
 data = [
   "nba-api>=1.10",
+  "pdfplumber>=0.11",
 ]
 dev = [
   "pytest>=8.0",
@@ -50,13 +54,24 @@ train = [
 ]
 
 [project.scripts]
-atlas = "Atlas.cli:main"
+atlas-mlb = "mlb.cli:main"
 
 [tool.setuptools]
 include-package-data = true
 
 [tool.setuptools.packages.find]
 where = ["src"]
+include = ["mlb*", "core*"]
+exclude = [
+  "archives*",
+  "config*",
+  "data*",
+  "docs*",
+  "scripts*",
+  "tests*",
+  "tools*",
+  "Wind*",
+]
 
 [tool.pytest.ini_options]
 pythonpath = ["src"]

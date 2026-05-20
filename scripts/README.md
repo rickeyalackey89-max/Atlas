@@ -1,40 +1,39 @@
-# Atlas Scripts
+# Atlas MLB Scripts
 
-Operational wrappers, ad-hoc analysis, diagnostics, validation checks, reports, marketing exports, and local automation live here.
+Status: MLB development only.
 
-## Folder Map
+This folder is intentionally sparse after removing copied NBA automation.
 
-- `audits/` - one-off or periodic audit/evaluation scripts.
-- `diagnostics/` - debugging, inspection, and root-cause investigation scripts.
-- `experiments/` - sweeps, ablations, LOSO/LODO studies, prototypes, and research runs.
-- `reports/` - result extraction, slip scoring reports, and historical post helpers.
-- `validation/` - smoke checks, verification scripts, artifact checks, and production config checks.
-- `marketing/` - winner/free-pick HTML and graphic export utilities.
-- `dev/` - local development helpers.
-- `artifacts/` - local script outputs that are useful for handoff but are not durable tools.
+Use scripts for:
 
-## Root Scripts
+- local developer helpers
+- one-off inspections
+- manual source probes
+- small migration utilities
 
-Keep scheduled or operator-facing automation at the root when external tooling may call the exact path:
+Morning eval helper:
 
-- `run_iael_*.cmd`
-- `task_*.xml`
-- `setup_daily_automation.ps1`
-- `task_8am_graphics.ps1`
+```powershell
+pwsh -NoProfile -ExecutionPolicy Bypass -File .\scripts\mlb\run_prior_day_eval.ps1
+```
 
-Avoid adding new one-off Python files at the root. Put them in the smallest matching subfolder instead.
+By default this evaluates yesterday. It fetches prior-day StatsAPI boxscores,
+resolves the matching run from `live_runs` first and `test_runs` second, then
+writes:
 
-## Boundary With Tools
+- `data/mlb/eval/<run_id>/eval_legs.csv`
+- `data/mlb/eval/<run_id>/eval_slips.csv`
+- `data/mlb/eval/<run_id>/slip_eval.json`
 
-Use `tools/` for repeatable program runners that are part of the Atlas operating system:
+For Task Scheduler, add that PowerShell command as the 6am action, or pass
+`-RunId <run_id>` when evaluating a specific replay.
 
-- fetchers
-- readers
-- replay builders
-- backfills
-- trainers
-- generators
-- publishers
-- calibrators
+Primary command:
 
-Use `scripts/` for investigations, checks, reports, experiments, and one-off maintenance.
+```powershell
+uv run atlas-mlb doctor
+.\AtlasMLB.ps1 doctor
+```
+
+The PowerShell command is a local wrapper around the safe MLB development CLI,
+not the old NBA live pipeline.
