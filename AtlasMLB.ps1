@@ -9,7 +9,7 @@ $ErrorActionPreference = "Stop"
 # - Keep Atlas-MLB-dev from accidentally invoking copied NBA live code.
 # - Preserve a simple local Windows wrapper while MLB architecture is built.
 # - Keep the canonical command surface in the atlas-mlb Python CLI.
-# - Use this repo's local .venv314 interpreter.
+# - Use this repo's local Python environment when present.
 
 Write-Host ""
 Write-Host "============================================" -ForegroundColor DarkGray
@@ -30,9 +30,21 @@ if ($args.Count -eq 0) {
 # Ensure we're running from the directory containing this script (repo root expectation)
 $here = Split-Path -Parent $MyInvocation.MyCommand.Path
 Set-Location $here
-$python = Join-Path $here ".venv314\Scripts\python.exe"
-if (-not (Test-Path -LiteralPath $python)) {
-    throw "Missing Atlas-MLB-dev Python environment: $python"
+
+$srcPath = Join-Path $here "src"
+if ($env:PYTHONPATH) {
+    $env:PYTHONPATH = "$srcPath;$env:PYTHONPATH"
+} else {
+    $env:PYTHONPATH = $srcPath
+}
+
+$venvCandidates = @(
+    (Join-Path $here ".venv\Scripts\python.exe"),
+    (Join-Path $here ".venv314\Scripts\python.exe")
+)
+$python = $venvCandidates | Where-Object { Test-Path -LiteralPath $_ } | Select-Object -First 1
+if (-not $python) {
+    $python = "py"
 }
 
 # MLB-dev invocation. This intentionally does not call Atlas.cli.
