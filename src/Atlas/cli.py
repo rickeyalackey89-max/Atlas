@@ -304,6 +304,8 @@ def _publish_to_cloudflare_dashboard(repo_root: Path) -> None:
                 cwd=str(dashboard_repo),
                 text=True,
                 capture_output=True,
+                encoding="utf-8",
+                errors="replace",
             )
             if result.stdout:
                 print(result.stdout.rstrip())
