@@ -1,0 +1,105 @@
+[DEBUG] Dropped 665 invalid rows from today.csv (blank/unknown stat/line)
+[IAEL] Loaded invalidations=28. Report: 2026-03-17 07:00AM
+[IAEL] Removed 0 legs out of 4469 (statuses=['DOUBTFUL', 'OUT'])
+[BUILDER][DEBUG] ENTER build_slips_by_tier_buckets top_n=10 per_tier=650 max_attempts=500000 target_pool_mult=200 phase1_frac=0.2 phase1_pool_frac=0.5
+[BUILDER][DEBUG] leg_df tier counts: {'GOBLIN': 1364, 'STANDARD': 1048}
+[BUILDER][DEBUG] p_eff source: p_for_cal
+[BUILDER][DEBUG] candidate_pool rows=2000 role_nz=1281 role_max=1.0
+[BUILDER][DEBUG] role seed count=4 role_seed_slips=4 quota=4
+[BUILDER][DEBUG] greedy role rebuild applied | forced_role_slips=4 combined_rows=10
+[BUILDER][DEBUG] final selected role_active_slips=4 rows=10
+[BUILDER][DEBUG] beam summary | selected_vs_requested=10/10 | beam_window_size=200 | max_exposure=5 | top5_exposure=ayo dosunmu:5, jordan goodwin:5, coby white:2, davion mitchell:2, grayson allen:2 | rej_exposure_cap=7918 | rej_missing_players=0
+[BUILDER][DEBUG] ENTER build_slips_by_tier_buckets top_n=6 per_tier=650 max_attempts=500000 target_pool_mult=300 phase1_frac=0.4 phase1_pool_frac=0.35
+[BUILDER][DEBUG] leg_df tier counts: {'GOBLIN': 1364, 'STANDARD': 1048}
+[BUILDER][DEBUG] p_eff source: p_for_cal
+[BUILDER][DEBUG] candidate_pool rows=1800 role_nz=1032 role_max=1.0
+[BUILDER][DEBUG] role seed count=3 role_seed_slips=3 quota=3
+[BUILDER][DEBUG] greedy role rebuild applied | forced_role_slips=3 combined_rows=6
+[BUILDER][DEBUG] final selected role_active_slips=3 rows=6
+[BUILDER][DEBUG] beam summary | selected_vs_requested=6/6 | beam_window_size=120 | max_exposure=2 | top5_exposure=coby white:2, collin gillespie:2, james harden:2, jaylon tyson:2, ayo dosunmu:1 | rej_exposure_cap=0 | rej_missing_players=0
+[BUILDER][DEBUG] ENTER build_slips_by_tier_buckets top_n=10 per_tier=650 max_attempts=500000 target_pool_mult=400 phase1_frac=0.4 phase1_pool_frac=0.35
+[BUILDER][DEBUG] leg_df tier counts: {'GOBLIN': 1364, 'STANDARD': 1048}
+[BUILDER][DEBUG] p_eff source: p_for_cal
+[BUILDER][DEBUG] candidate_pool rows=4000 role_nz=2651 role_max=1.0
+[BUILDER][DEBUG] role seed count=4 role_seed_slips=4 quota=4
+[BUILDER][DEBUG] greedy role rebuild applied | forced_role_slips=4 combined_rows=10
+[BUILDER][DEBUG] final selected role_active_slips=4 rows=10
+[BUILDER][DEBUG] beam summary | selected_vs_requested=10/10 | beam_window_size=200 | max_exposure=4 | top5_exposure=jaylon tyson:4, collin gillespie:3, davion mitchell:3, justin edwards:3, royce o'neale:3 | rej_exposure_cap=114 | rej_missing_players=0
+[BUILDER][DEBUG] ENTER build_slips_by_tier_buckets top_n=10 per_tier=400 max_attempts=400000 target_pool_mult=200 phase1_frac=0.2 phase1_pool_frac=0.5
+[BUILDER][DEBUG] leg_df tier counts: {'DEMON': 2057, 'GOBLIN': 1364, 'STANDARD': 1048}
+[BUILDER][DEBUG] p_eff source: p_for_cal
+[BUILDER][DEBUG] ENTER build_slips_by_tier_buckets top_n=6 per_tier=400 max_attempts=400000 target_pool_mult=300 phase1_frac=0.4 phase1_pool_frac=0.35
+[BUILDER][DEBUG] leg_df tier counts: {'DEMON': 2057, 'GOBLIN': 1364, 'STANDARD': 1048}
+[BUILDER][DEBUG] p_eff source: p_for_cal
+[BUILDER][DEBUG] candidate_pool rows=1800 role_nz=1386 role_max=1.0
+[BUILDER][DEBUG] role seed count=3 role_seed_slips=3 quota=3
+[BUILDER][DEBUG] greedy role rebuild applied | forced_role_slips=3 combined_rows=6
+[BUILDER][DEBUG] final selected role_active_slips=3 rows=6
+[BUILDER][DEBUG] beam summary | selected_vs_requested=6/6 | beam_window_size=120 | max_exposure=3 | top5_exposure=jordan goodwin:3, ayo dosunmu:2, myles turner:2, sam merrill:2, adem bona:1 | rej_exposure_cap=0 | rej_missing_players=0
+[BUILDER][DEBUG] ENTER build_slips_by_tier_buckets top_n=10 per_tier=400 max_attempts=400000 target_pool_mult=400 phase1_frac=0.4 phase1_pool_frac=0.35
+[BUILDER][DEBUG] leg_df tier counts: {'DEMON': 2057, 'GOBLIN': 1364, 'STANDARD': 1048}
+[BUILDER][DEBUG] p_eff source: p_for_cal
+[BUILDER][DEBUG] candidate_pool rows=4000 role_nz=3321 role_max=1.0
+[BUILDER][DEBUG] role seed count=4 role_seed_slips=4 quota=4
+[BUILDER][DEBUG] greedy role rebuild applied | forced_role_slips=4 combined_rows=10
+[BUILDER][DEBUG] final selected role_active_slips=4 rows=10
+[BUILDER][DEBUG] beam summary | selected_vs_requested=10/10 | beam_window_size=200 | max_exposure=3 | top5_exposure=donte divincenzo:3, jaden mcdaniels:3, jaime jaquez:3, jaylon tyson:3, jordan goodwin:3 | rej_exposure_cap=0 | rej_missing_players=0
+[BUILDER][DEBUG] ENTER build_slips_by_tier_buckets top_n=10 per_tier=650 max_attempts=500000 target_pool_mult=200 phase1_frac=0.2 phase1_pool_frac=0.5
+[BUILDER][DEBUG] leg_df tier counts: {'GOBLIN': 1364, 'STANDARD': 1048}
+[BUILDER][DEBUG] p_eff source: p_for_cal
+[BUILDER][DEBUG] candidate_pool rows=2000 role_nz=1281 role_max=1.0
+[BUILDER][DEBUG] role seed count=0 role_seed_slips=0 quota=0
+[BUILDER][DEBUG] final selected role_active_slips=10 rows=10
+[BUILDER][DEBUG] beam summary | selected_vs_requested=10/10 | beam_window_size=200 | max_exposure=2 | top5_exposure=cameron payne:2, coby white:2, grant williams:2, jalen green:2, jordan goodwin:2 | rej_exposure_cap=321092 | rej_missing_players=0
+[BUILDER][DEBUG] ENTER build_slips_by_tier_buckets top_n=10 per_tier=650 max_attempts=500000 target_pool_mult=300 phase1_frac=0.4 phase1_pool_frac=0.35
+[BUILDER][DEBUG] leg_df tier counts: {'GOBLIN': 1364, 'STANDARD': 1048}
+[BUILDER][DEBUG] p_eff source: p_for_cal
+[BUILDER][DEBUG] candidate_pool rows=3000 role_nz=1772 role_max=1.0
+[BUILDER][DEBUG] role seed count=0 role_seed_slips=0 quota=0
+[BUILDER][DEBUG] final selected role_active_slips=10 rows=10
+[BUILDER][DEBUG] beam summary | selected_vs_requested=10/10 | beam_window_size=200 | max_exposure=5 | top5_exposure=tristan silva:5, jaylon tyson:4, ryan kalkbrenner:4, jalen green:3, cameron payne:2 | rej_exposure_cap=61560 | rej_missing_players=0
+[BUILDER][DEBUG] ENTER build_slips_by_tier_buckets top_n=10 per_tier=650 max_attempts=500000 target_pool_mult=400 phase1_frac=0.4 phase1_pool_frac=0.35
+[BUILDER][DEBUG] leg_df tier counts: {'GOBLIN': 1364, 'STANDARD': 1048}
+[BUILDER][DEBUG] p_eff source: p_for_cal
+[BUILDER][DEBUG] candidate_pool rows=4000 role_nz=2651 role_max=1.0
+[BUILDER][DEBUG] role seed count=0 role_seed_slips=0 quota=0
+[BUILDER][DEBUG] final selected role_active_slips=10 rows=10
+[BUILDER][DEBUG] beam summary | selected_vs_requested=10/10 | beam_window_size=200 | max_exposure=5 | top5_exposure=coby white:5, tristan silva:5, collin gillespie:2, davion mitchell:2, grayson allen:2 | rej_exposure_cap=143648 | rej_missing_players=0
+[BUILDER][DEBUG] ENTER build_slips_by_tier_buckets top_n=10 per_tier=400 max_attempts=400000 target_pool_mult=200 phase1_frac=0.2 phase1_pool_frac=0.5
+[BUILDER][DEBUG] leg_df tier counts: {'DEMON': 2057, 'GOBLIN': 1364, 'STANDARD': 1048}
+[BUILDER][DEBUG] p_eff source: p_for_cal
+[BUILDER][DEBUG] ENTER build_slips_by_tier_buckets top_n=10 per_tier=400 max_attempts=400000 target_pool_mult=300 phase1_frac=0.4 phase1_pool_frac=0.35
+[BUILDER][DEBUG] leg_df tier counts: {'DEMON': 2057, 'GOBLIN': 1364, 'STANDARD': 1048}
+[BUILDER][DEBUG] p_eff source: p_for_cal
+[BUILDER][DEBUG] candidate_pool rows=3000 role_nz=2406 role_max=1.0
+[BUILDER][DEBUG] role seed count=0 role_seed_slips=0 quota=0
+[BUILDER][DEBUG] final selected role_active_slips=10 rows=10
+[BUILDER][DEBUG] beam summary | selected_vs_requested=10/10 | beam_window_size=200 | max_exposure=5 | top5_exposure=coby white:5, tristan silva:5, davion mitchell:3, grant williams:3, jalen green:3 | rej_exposure_cap=144690 | rej_missing_players=0
+[BUILDER][DEBUG] ENTER build_slips_by_tier_buckets top_n=10 per_tier=400 max_attempts=400000 target_pool_mult=400 phase1_frac=0.4 phase1_pool_frac=0.35
+[BUILDER][DEBUG] leg_df tier counts: {'DEMON': 2057, 'GOBLIN': 1364, 'STANDARD': 1048}
+[BUILDER][DEBUG] p_eff source: p_for_cal
+[BUILDER][DEBUG] candidate_pool rows=4000 role_nz=3321 role_max=1.0
+[BUILDER][DEBUG] role seed count=0 role_seed_slips=0 quota=0
+[BUILDER][DEBUG] final selected role_active_slips=10 rows=10
+[BUILDER][DEBUG] beam summary | selected_vs_requested=10/10 | beam_window_size=200 | max_exposure=5 | top5_exposure=coby white:5, davion mitchell:5, tristan silva:5, grant williams:4, james harden:3 | rej_exposure_cap=256216 | rej_missing_players=0
+Model run complete.
+Outputs folder: C:\Users\rick\projects\Atlas\data\telemetry\replay_runs\exp_blowout_soften_a_20260317\20260326_143757
+Run folder: C:\Users\rick\projects\Atlas\data\telemetry\replay_runs\exp_blowout_soften_a_20260317\20260326_143757\runs\20260326_093926
+Wrote:
+ - C:\Users\rick\projects\Atlas\data\telemetry\replay_runs\exp_blowout_soften_a_20260317\20260326_143757\runs\20260326_093926\scored_legs.csv
+ - C:\Users\rick\projects\Atlas\data\telemetry\replay_runs\exp_blowout_soften_a_20260317\20260326_143757\runs\20260326_093926\scored_legs_deduped.csv
+ - C:\Users\rick\projects\Atlas\data\telemetry\replay_runs\exp_blowout_soften_a_20260317\20260326_143757\runs\20260326_093926\System\recommended_3leg.csv (SYSTEM)
+ - C:\Users\rick\projects\Atlas\data\telemetry\replay_runs\exp_blowout_soften_a_20260317\20260326_143757\runs\20260326_093926\System\recommended_4leg.csv (SYSTEM)
+ - C:\Users\rick\projects\Atlas\data\telemetry\replay_runs\exp_blowout_soften_a_20260317\20260326_143757\runs\20260326_093926\System\recommended_5leg.csv (SYSTEM)
+ - C:\Users\rick\projects\Atlas\data\telemetry\replay_runs\exp_blowout_soften_a_20260317\20260326_143757\runs\20260326_093926\Windfall\recommended_3leg.csv (WINDFALL)
+ - C:\Users\rick\projects\Atlas\data\telemetry\replay_runs\exp_blowout_soften_a_20260317\20260326_143757\runs\20260326_093926\Windfall\recommended_4leg.csv (WINDFALL)
+ - C:\Users\rick\projects\Atlas\data\telemetry\replay_runs\exp_blowout_soften_a_20260317\20260326_143757\runs\20260326_093926\Windfall\recommended_5leg.csv (WINDFALL)
+ - C:\Users\rick\projects\Atlas\data\telemetry\replay_runs\exp_blowout_soften_a_20260317\20260326_143757\runs\20260326_093926\System\recommended_3leg_winprob.csv (SYSTEM winprob)
+ - C:\Users\rick\projects\Atlas\data\telemetry\replay_runs\exp_blowout_soften_a_20260317\20260326_143757\runs\20260326_093926\System\recommended_4leg_winprob.csv (SYSTEM winprob)
+ - C:\Users\rick\projects\Atlas\data\telemetry\replay_runs\exp_blowout_soften_a_20260317\20260326_143757\runs\20260326_093926\System\recommended_5leg_winprob.csv (SYSTEM winprob)
+ - C:\Users\rick\projects\Atlas\data\telemetry\replay_runs\exp_blowout_soften_a_20260317\20260326_143757\runs\20260326_093926\Windfall\recommended_3leg_winprob.csv (WINDFALL winprob)
+ - C:\Users\rick\projects\Atlas\data\telemetry\replay_runs\exp_blowout_soften_a_20260317\20260326_143757\runs\20260326_093926\Windfall\recommended_4leg_winprob.csv (WINDFALL winprob)
+ - C:\Users\rick\projects\Atlas\data\telemetry\replay_runs\exp_blowout_soften_a_20260317\20260326_143757\runs\20260326_093926\Windfall\recommended_5leg_winprob.csv (WINDFALL winprob)
+ - C:\Users\rick\projects\Atlas\data\telemetry\replay_runs\exp_blowout_soften_a_20260317\20260326_143757\runs\20260326_093926\dashboard\injury_invalidations_latest.json (IAEL snapshot)
+ - C:\Users\rick\projects\Atlas\data\telemetry\replay_runs\exp_blowout_soften_a_20260317\20260326_143757\runs\20260326_093926\dashboard\status_latest.json (IAEL snapshot)
+ - C:\Users\rick\projects\Atlas\data\telemetry\replay_runs\exp_blowout_soften_a_20260317\20260326_143757\runs\20260326_093926\dashboard\injury_snapshot_manifest.json (IAEL snapshot manifest)

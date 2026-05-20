@@ -1,0 +1,24 @@
+[DEBUG] Dropped 665 invalid rows from today.csv (blank/unknown stat/line)
+[IAEL] Loaded invalidations=28. Report: 2026-03-17 07:00AM
+[IAEL] Removed 0 legs out of 4469 (statuses=['DOUBTFUL', 'OUT'])
+Model run complete.
+Outputs folder: C:\Users\rick\projects\Atlas\data\telemetry\replay_runs\exp_role_ctx_proposed_h010_20260325\20260326_022716
+Run folder: C:\Users\rick\projects\Atlas\data\telemetry\replay_runs\exp_role_ctx_proposed_h010_20260325\20260326_022716\runs\20260325_212826
+Wrote:
+ - C:\Users\rick\projects\Atlas\data\telemetry\replay_runs\exp_role_ctx_proposed_h010_20260325\20260326_022716\runs\20260325_212826\scored_legs.csv
+ - C:\Users\rick\projects\Atlas\data\telemetry\replay_runs\exp_role_ctx_proposed_h010_20260325\20260326_022716\runs\20260325_212826\scored_legs_deduped.csv
+ - C:\Users\rick\projects\Atlas\data\telemetry\replay_runs\exp_role_ctx_proposed_h010_20260325\20260326_022716\runs\20260325_212826\System\recommended_3leg.csv (SYSTEM)
+ - C:\Users\rick\projects\Atlas\data\telemetry\replay_runs\exp_role_ctx_proposed_h010_20260325\20260326_022716\runs\20260325_212826\System\recommended_4leg.csv (SYSTEM)
+ - C:\Users\rick\projects\Atlas\data\telemetry\replay_runs\exp_role_ctx_proposed_h010_20260325\20260326_022716\runs\20260325_212826\System\recommended_5leg.csv (SYSTEM)
+ - C:\Users\rick\projects\Atlas\data\telemetry\replay_runs\exp_role_ctx_proposed_h010_20260325\20260326_022716\runs\20260325_212826\Windfall\recommended_3leg.csv (WINDFALL)
+ - C:\Users\rick\projects\Atlas\data\telemetry\replay_runs\exp_role_ctx_proposed_h010_20260325\20260326_022716\runs\20260325_212826\Windfall\recommended_4leg.csv (WINDFALL)
+ - C:\Users\rick\projects\Atlas\data\telemetry\replay_runs\exp_role_ctx_proposed_h010_20260325\20260326_022716\runs\20260325_212826\Windfall\recommended_5leg.csv (WINDFALL)
+ - C:\Users\rick\projects\Atlas\data\telemetry\replay_runs\exp_role_ctx_proposed_h010_20260325\20260326_022716\runs\20260325_212826\System\recommended_3leg_winprob.csv (SYSTEM winprob)
+ - C:\Users\rick\projects\Atlas\data\telemetry\replay_runs\exp_role_ctx_proposed_h010_20260325\20260326_022716\runs\20260325_212826\System\recommended_4leg_winprob.csv (SYSTEM winprob)
+ - C:\Users\rick\projects\Atlas\data\telemetry\replay_runs\exp_role_ctx_proposed_h010_20260325\20260326_022716\runs\20260325_212826\System\recommended_5leg_winprob.csv (SYSTEM winprob)
+ - C:\Users\rick\projects\Atlas\data\telemetry\replay_runs\exp_role_ctx_proposed_h010_20260325\20260326_022716\runs\20260325_212826\Windfall\recommended_3leg_winprob.csv (WINDFALL winprob)
+ - C:\Users\rick\projects\Atlas\data\telemetry\replay_runs\exp_role_ctx_proposed_h010_20260325\20260326_022716\runs\20260325_212826\Windfall\recommended_4leg_winprob.csv (WINDFALL winprob)
+ - C:\Users\rick\projects\Atlas\data\telemetry\replay_runs\exp_role_ctx_proposed_h010_20260325\20260326_022716\runs\20260325_212826\Windfall\recommended_5leg_winprob.csv (WINDFALL winprob)
+ - C:\Users\rick\projects\Atlas\data\telemetry\replay_runs\exp_role_ctx_proposed_h010_20260325\20260326_022716\runs\20260325_212826\dashboard\injury_invalidations_latest.json (IAEL snapshot)
+ - C:\Users\rick\projects\Atlas\data\telemetry\replay_runs\exp_role_ctx_proposed_h010_20260325\20260326_022716\runs\20260325_212826\dashboard\status_latest.json (IAEL snapshot)
+ - C:\Users\rick\projects\Atlas\data\telemetry\replay_runs\exp_role_ctx_proposed_h010_20260325\20260326_022716\runs\20260325_212826\dashboard\injury_snapshot_manifest.json (IAEL snapshot manifest)

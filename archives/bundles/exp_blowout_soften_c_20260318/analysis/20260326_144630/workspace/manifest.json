@@ -1,0 +1,38 @@
+{
+  "bundle_id": "atlas_bundle_20260318_173935.zip",
+  "bundle_mode": "FULL_RUN",
+  "engine_entry": "python -m Atlas.cli live",
+  "files": {
+    "data/board/today.csv": {
+      "bytes": 1527245,
+      "sha256": "3d1b3817688faa6331fd792ad70d360b0506739d2c4717279bb73f37dd7aa7dc"
+    },
+    "data/gamelogs/nba_gamelogs.csv": {
+      "bytes": 1411093,
+      "sha256": "7e0c905c883b347787bea2dc6178812bf9330eee4b2c277317fa4bd64b372684"
+    },
+    "data/input/external_priors_today.yaml": {
+      "bytes": 117773,
+      "sha256": "61c758bb761a92a061aba7b74f5781f0fedd88f786adec7118a6838b61fe8850"
+    },
+    "data/input/roster_map.csv": {
+      "bytes": 10508,
+      "sha256": "f45bb579cbea3c2bd51c84f51a2f961b8e7ba9cf1ead5a2939c6646febcaae83"
+    },
+    "data/input/rotowire_lines.json": {
+      "bytes": 2122,
+      "sha256": "df3dc2b816580418697dcbf1fc556594998518fde3d6d8074124403a88f21076"
+    },
+    "data/input/slate.csv": {
+      "bytes": 131,
+      "sha256": "d370079db2ee9387f163144b6bc9dff3838c119ff13cc04ca93938a0eabfe9e9"
+    }
+  },
+  "generated_at_utc": "2026-03-18T22:39:37+00:00",
+  "ok": true,
+  "paths": {
+    "data_dir": "C:\\Users\\rick\\projects\\Atlas\\data"
+  },
+  "run_id": "20260318_173935",
+  "schema_version": 2
+}
