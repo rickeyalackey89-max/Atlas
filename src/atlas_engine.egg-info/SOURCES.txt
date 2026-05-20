@@ -77,6 +77,8 @@ src/Atlas/stages/rebuild/rebuild_today.py
 src/Atlas/stages/rebuild/rebuild_today_from_any_raw.py
 src/Atlas/stages/score/score_board.py
 src/Atlas/stages/score/score_today.py
+src/NBA/__init__.py
+src/NBA/cli.py
 src/atlas_engine.egg-info/PKG-INFO
 src/atlas_engine.egg-info/SOURCES.txt
 src/atlas_engine.egg-info/dependency_links.txt

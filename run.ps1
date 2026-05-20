@@ -1,11 +1,12 @@
 Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
 
-# Simple wrapper around the canonical entrypoint:
-#   py -m Atlas.cli live
+# Simple wrapper around the canonical operator entrypoint:
+#   py -m NBA.cli live
 #
 # Purpose:
-# - Keep ONE model entrypoint (Atlas.cli)
+# - Keep ONE NBA model entrypoint for operators (NBA.cli)
+# - Preserve Atlas.cli as a compatibility alias for older automation
 # - Preserve the legacy banner / UX
 # - Avoid ProcessStartInfo quirks (env vars + differing banners / paths)
 
@@ -16,8 +17,8 @@ Write-Host "============================================" -ForegroundColor DarkG
 Write-Host ""
 
 # Pass-through args:
-#   .\run.ps1 live        -> py -m Atlas.cli live
-#   .\run.ps1 replay ...  -> py -m Atlas.cli replay ...
+#   .\run.ps1 live        -> py -m NBA.cli live
+#   .\run.ps1 replay ...  -> py -m NBA.cli replay ...
 #
 # Default mode is "live" if none provided.
 if ($args.Count -eq 0) {
@@ -40,7 +41,7 @@ if ($env:PYTHONPATH) {
     $env:PYTHONPATH = $srcPath
 }
 
-# Canonical invocation (single source of truth)
-& py -m Atlas.cli $mode @rest
+# Canonical invocation (operator-facing namespace)
+& py -m NBA.cli $mode @rest
 
 exit $LASTEXITCODE
