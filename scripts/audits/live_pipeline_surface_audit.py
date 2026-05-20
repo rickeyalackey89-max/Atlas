@@ -255,6 +255,43 @@ def _external_prior_audit(scored: pd.DataFrame) -> dict[str, Any]:
     }
 
 
+def _spread_context_audit(scored: pd.DataFrame) -> dict[str, Any]:
+    if scored.empty:
+        return {}
+
+    spread_ok = _bool(scored, "spread_ok")
+    game_spread = _num(scored, "game_spread", default=float("nan")) if "game_spread" in scored.columns else pd.Series(float("nan"), index=scored.index)
+    spread_reason = scored["spread_reason"].astype(str) if "spread_reason" in scored.columns else pd.Series("", index=scored.index)
+    dates = sorted(str(d) for d in scored["game_date"].dropna().unique()) if "game_date" in scored.columns else []
+    teams = sorted(str(t) for t in scored["team"].dropna().unique()) if "team" in scored.columns else []
+
+    rotowire_path = ROOT / "data" / "input" / "rotowire_lines.json"
+    rotowire_events = 0
+    rotowire_date = None
+    if rotowire_path.exists():
+        try:
+            raw = json.loads(rotowire_path.read_text(encoding="utf-8"))
+            rotowire_date = raw.get("date") if isinstance(raw, dict) else None
+            events = raw.get("events", []) if isinstance(raw, dict) else []
+            rotowire_events = len(events) if isinstance(events, list) else 0
+        except Exception:
+            rotowire_events = 0
+
+    return {
+        "rows": int(len(scored)),
+        "spread_ok_rows": int(spread_ok.sum()),
+        "spread_ok_rate": float(spread_ok.mean()) if len(spread_ok) else None,
+        "game_spread_present_rows": int(game_spread.notna().sum()),
+        "dates": dates,
+        "teams": teams,
+        "rotowire_lines_path": str(rotowire_path),
+        "rotowire_lines_exists": rotowire_path.exists(),
+        "rotowire_date": rotowire_date,
+        "rotowire_events": rotowire_events,
+        "top_spread_reasons": spread_reason.value_counts(dropna=False).head(10).to_dict(),
+    }
+
+
 def _parse_leg(text: str) -> dict[str, Any] | None:
     match = LEG_RE.search(str(text))
     if not match:
@@ -423,6 +460,7 @@ def audit_run(run_dir: Path) -> dict[str, Any]:
     direction_surface = _direction_tier_surface(scored)
     under_summary = _under_eligible_summary(scored, manifest)
     external_priors = _external_prior_audit(scored)
+    spread_context = _spread_context_audit(scored)
     slips = _slip_output_audit(run_dir)
     cat_policy = _cat_policy_audit(run_dir)
 
@@ -452,6 +490,13 @@ def audit_run(run_dir: Path) -> dict[str, Any]:
     if external_priors.get("prior_rows", 0) > 0 and cat_bp_has_mean == 0.0:
         warnings.append("CAT policy manifest reports bp_has_mean=0.0 despite external-prior rows")
 
+    if spread_context.get("rotowire_lines_exists") and spread_context.get("rotowire_events", 0) > 0:
+        spread_ok_rate = spread_context.get("spread_ok_rate")
+        if spread_ok_rate == 0.0:
+            failures.append("Rotowire lines exist for the slate but no scored legs have game-spread context")
+        elif spread_ok_rate is not None and spread_ok_rate < 0.80:
+            warnings.append("Rotowire game-spread context coverage is below 80%")
+
     return {
         "verdict": "FAIL" if failures else ("WARN" if warnings else "PASS"),
         "failures": failures,
@@ -464,6 +509,7 @@ def audit_run(run_dir: Path) -> dict[str, Any]:
         "direction_tier_surface": direction_surface,
         "under_eligibility": under_summary,
         "external_priors": external_priors,
+        "spread_context": spread_context,
         "slip_outputs": slips,
         "catboost_scale_policy_manifest": cat_policy,
     }

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 import sys
 import tempfile
 import unittest
@@ -13,7 +14,7 @@ SRC_ROOT = PROJECT_ROOT / "src"
 if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
-from Atlas.core.matchup_enricher import enrich_with_matchups
+from Atlas.core.matchup_enricher import _resolve_rotowire_lines_path, enrich_with_matchups
 
 
 class MatchupEnricherRoleMetricsTest(unittest.TestCase):
@@ -38,6 +39,23 @@ class MatchupEnricherRoleMetricsTest(unittest.TestCase):
             ]
         }
         path.write_text(json.dumps(payload), encoding="utf-8")
+
+    def test_rotowire_path_defaults_to_current_repo_data_input(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            root = Path(tmpdir)
+            rotowire_path = root / "data" / "input" / "rotowire_lines.json"
+            rotowire_path.parent.mkdir(parents=True)
+            self._write_rotowire_json(rotowire_path, "2026-03-17")
+
+            old_cwd = Path.cwd()
+            old_env = os.environ.pop("ATLAS_ROTOWIRE_LINES_PATH", None)
+            try:
+                os.chdir(root)
+                self.assertEqual(Path(_resolve_rotowire_lines_path()).resolve(), rotowire_path.resolve())
+            finally:
+                os.chdir(old_cwd)
+                if old_env is not None:
+                    os.environ["ATLAS_ROTOWIRE_LINES_PATH"] = old_env
 
     def test_role_metrics_attach_by_player_key_and_date_when_team_mismatches(self) -> None:
         with tempfile.TemporaryDirectory() as tmpdir:

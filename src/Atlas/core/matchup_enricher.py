@@ -76,6 +76,27 @@ def _resolve_role_metrics_path(role_metrics_path: str | None = None) -> Path | N
     return None
 
 
+def _repo_root() -> Path:
+    return Path(__file__).resolve().parents[3]
+
+
+def _resolve_rotowire_lines_path(rotowire_lines_path: str | None = None) -> str:
+    env_path = (os.environ.get("ATLAS_ROTOWIRE_LINES_PATH") or "").strip()
+    candidates = [
+        env_path,
+        rotowire_lines_path or "",
+        str(Path("data") / "input" / "rotowire_lines.json"),
+        str(_repo_root() / "data" / "input" / "rotowire_lines.json"),
+    ]
+    for candidate in candidates:
+        if not candidate:
+            continue
+        path = Path(candidate)
+        if path.exists() and path.is_file():
+            return str(path)
+    return str(_repo_root() / "data" / "input" / "rotowire_lines.json")
+
+
 def _load_role_metrics_snapshot(role_metrics_path: str | None = None) -> pd.DataFrame:
     path = _resolve_role_metrics_path(role_metrics_path)
     if path is None:
@@ -423,11 +444,11 @@ def enrich_with_matchups(
     roster_map_path: str,
     slate_path: str,
     default_game_date: str,
-    rotowire_lines_path: str = r"C:\Users\rick\projects\Atlas\data\input\rotowire_lines.json",
+    rotowire_lines_path: str = "",
     role_metrics_path: str | None = None,
     attach_role_metrics: bool = False,
 ) -> pd.DataFrame:
-    rotowire_lines_path = (os.environ.get("ATLAS_ROTOWIRE_LINES_PATH") or rotowire_lines_path or "").strip()
+    rotowire_lines_path = _resolve_rotowire_lines_path(rotowire_lines_path)
     """
     Adds team/opp/home/game_date and game spreads to projections using:
       - roster_map.csv: player -> team abbreviation
