@@ -34,6 +34,7 @@ def normalize_draftkings_sportsbook_props(
         markets_by_id = {
             _str_id(item.get("id")): item for item in body.get("markets", []) or [] if isinstance(item, dict)
         }
+        ou_groups: dict[tuple[Any, ...], dict[str, Any]] = {}
         for selection in body.get("selections", []) or []:
             if not isinstance(selection, dict):
                 continue
@@ -43,10 +44,42 @@ def normalize_draftkings_sportsbook_props(
             player = _selection_player(selection)
             player_name = normalize_player_name(str(player.get("name") or player.get("seoIdentifier") or ""))
             line = _selection_line(selection)
+            side = _selection_side(selection)
+            if side in {"over", "under"}:
+                if not player_name or line is None or not event:
+                    rejects.append(_reject(snapshot_id, market, selection, "missing_player_line_or_event"))
+                    continue
+                group_key = (
+                    event.get("id"),
+                    market_id,
+                    player_name.lower(),
+                    market,
+                    line,
+                )
+                grouped = ou_groups.setdefault(
+                    group_key,
+                    {
+                        "event": event,
+                        "market_payload": market_payload,
+                        "player": player,
+                        "player_name": player_name,
+                        "line": line,
+                        "selections": {},
+                    },
+                )
+                grouped["selections"][side] = selection
+                continue
             over_probability = _selection_probability(selection)
             if not player_name or line is None or over_probability is None or not event:
                 rejects.append(_reject(snapshot_id, market, selection, "missing_player_line_probability_or_event"))
                 continue
+            source_market = str(market_payload.get("name") or market)
+            under_probability = max(0.0, 1.0 - over_probability)
+            price_model = "one_sided_milestone"
+            if _is_fewer_market(source_market, selection):
+                under_probability = over_probability
+                over_probability = max(0.0, 1.0 - under_probability)
+                price_model = "one_sided_fewer"
             start_time = str(event.get("startEventDate") or "")
             home_team, away_team, player_team, opponent = _team_context(event, player)
             key = (
@@ -78,11 +111,11 @@ def normalize_draftkings_sportsbook_props(
                     "player_team": player_team,
                     "opponent": opponent,
                     "market": market,
-                    "source_market": str(market_payload.get("name") or market),
+                    "source_market": source_market,
                     "source_market_id": subcategory_id,
                     "line": line,
                     "over_prob": round(over_probability, 6),
-                    "under_prob": round(max(0.0, 1.0 - over_probability), 6),
+                    "under_prob": round(under_probability, 6),
                     "n_books": 1,
                     "books": [
                         {
@@ -90,13 +123,13 @@ def normalize_draftkings_sportsbook_props(
                             "book_key": "draftkings",
                             "book_title": "DraftKings Sportsbook",
                             "book_last_update": pulled_at_utc,
-                            "source_market": str(market_payload.get("name") or market),
+                            "source_market": source_market,
                             "over_price": _american_odds(selection),
                             "under_price": 0,
                             "over_prob": round(over_probability, 6),
-                            "under_prob": round(max(0.0, 1.0 - over_probability), 6),
+                            "under_prob": round(under_probability, 6),
                             "line": line,
-                            "price_model": "one_sided_milestone",
+                            "price_model": price_model,
                         }
                     ],
                     "pulled_at_utc": pulled_at_utc,
@@ -108,6 +141,98 @@ def normalize_draftkings_sportsbook_props(
                         "label": str(selection.get("label") or ""),
                         "milestone_value": selection.get("milestoneValue"),
                         "one_sided_milestone": True,
+                    },
+                }
+            )
+        for grouped in ou_groups.values():
+            selections = grouped["selections"]
+            over_selection = selections.get("over")
+            under_selection = selections.get("under")
+            if not over_selection:
+                rejects.append(
+                    _reject(snapshot_id, market, under_selection or {}, "missing_over_side_for_ou_market")
+                )
+                continue
+            event = grouped["event"]
+            market_payload = grouped["market_payload"]
+            player = grouped["player"]
+            player_name = grouped["player_name"]
+            line = grouped["line"]
+            over_raw = _selection_probability(over_selection)
+            under_raw = _selection_probability(under_selection) if under_selection else None
+            if over_raw is None:
+                rejects.append(_reject(snapshot_id, market, over_selection, "missing_over_probability"))
+                continue
+            if under_raw is not None and (over_raw + under_raw) > 0:
+                over_probability = over_raw / (over_raw + under_raw)
+                under_probability = under_raw / (over_raw + under_raw)
+            else:
+                over_probability = over_raw
+                under_probability = max(0.0, 1.0 - over_raw)
+            start_time = str(event.get("startEventDate") or "")
+            home_team, away_team, player_team, opponent = _team_context(event, player)
+            market_id = _str_id(over_selection.get("marketId"))
+            key = (
+                event.get("id"),
+                market_id,
+                over_selection.get("id"),
+                player_name.lower(),
+                market,
+                line,
+            )
+            if key in seen:
+                continue
+            seen.add(key)
+            source_market = str(market_payload.get("name") or market)
+            rows.append(
+                {
+                    "snapshot_id": snapshot_id,
+                    "source": DRAFTKINGS_MLB_SPORTSBOOK_SOURCE,
+                    "event_id": f"draftkings_sportsbook_{event.get('id') or ''}",
+                    "source_event_id": str(event.get("id") or ""),
+                    "sport_key": "baseball_mlb",
+                    "league": "MLB",
+                    "game_date": local_slate_date(start_time, fallback=start_time[:10]),
+                    "commence_time": start_time,
+                    "home_team": home_team,
+                    "away_team": away_team,
+                    "player_id": str(player.get("id") or ""),
+                    "player_name": player_name,
+                    "player_norm": player_name.lower(),
+                    "player_team": player_team,
+                    "opponent": opponent,
+                    "market": market,
+                    "source_market": source_market,
+                    "source_market_id": subcategory_id,
+                    "line": line,
+                    "over_prob": round(over_probability, 6),
+                    "under_prob": round(under_probability, 6),
+                    "n_books": 1,
+                    "books": [
+                        {
+                            "book_id": 12,
+                            "book_key": "draftkings",
+                            "book_title": "DraftKings Sportsbook",
+                            "book_last_update": pulled_at_utc,
+                            "source_market": source_market,
+                            "over_price": _american_odds(over_selection),
+                            "under_price": _american_odds(under_selection) if under_selection else 0,
+                            "over_prob": round(over_probability, 6),
+                            "under_prob": round(under_probability, 6),
+                            "line": line,
+                            "price_model": "two_sided_ou",
+                        }
+                    ],
+                    "pulled_at_utc": pulled_at_utc,
+                    "snapshot_timestamp": pulled_at_utc,
+                    "draftkings_sportsbook": {
+                        "selection_id": over_selection.get("id"),
+                        "under_selection_id": under_selection.get("id") if under_selection else "",
+                        "market_id": market_id,
+                        "subcategory_id": subcategory_id,
+                        "label": "Over/Under",
+                        "milestone_value": over_selection.get("points"),
+                        "one_sided_milestone": False,
                     },
                 }
             )
@@ -170,6 +295,9 @@ def _selection_player(selection: dict[str, Any]) -> dict[str, Any]:
 
 
 def _selection_line(selection: dict[str, Any]) -> float | None:
+    points = _to_float(selection.get("points"))
+    if points is not None:
+        return points
     milestone = _to_float(selection.get("milestoneValue"))
     if milestone is not None:
         return max(0.0, milestone - 0.5)
@@ -180,7 +308,17 @@ def _selection_line(selection: dict[str, Any]) -> float | None:
     return _to_float(selection.get("line"))
 
 
+def _selection_side(selection: dict[str, Any]) -> str:
+    for key in ("outcomeType", "label"):
+        value = str(selection.get(key) or "").strip().lower()
+        if value in {"over", "under"}:
+            return value
+    return ""
+
+
 def _selection_probability(selection: dict[str, Any]) -> float | None:
+    if not selection:
+        return None
     american = _american_odds(selection)
     if american is not None:
         return _american_to_probability(american)
@@ -191,6 +329,8 @@ def _selection_probability(selection: dict[str, Any]) -> float | None:
 
 
 def _american_odds(selection: dict[str, Any]) -> int | None:
+    if not selection:
+        return None
     display = selection.get("displayOdds") if isinstance(selection.get("displayOdds"), dict) else {}
     value = str(display.get("american") or "").replace("\u2212", "-").replace("+", "").strip()
     try:
@@ -227,6 +367,11 @@ def _team_context(event: dict[str, Any], player: dict[str, Any]) -> tuple[str, s
 def _team_label(participant: dict[str, Any]) -> str:
     metadata = participant.get("metadata") if isinstance(participant.get("metadata"), dict) else {}
     return str(metadata.get("shortName") or participant.get("name") or "")
+
+
+def _is_fewer_market(source_market: str, selection: dict[str, Any]) -> bool:
+    text = f"{source_market} {selection.get('label') or ''}".lower()
+    return "fewer" in text or "or fewer" in text
 
 
 def _reject(snapshot_id: str, market: str, selection: dict[str, Any], reason: str) -> dict[str, Any]:

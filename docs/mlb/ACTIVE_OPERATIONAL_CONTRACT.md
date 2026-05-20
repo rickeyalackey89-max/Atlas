@@ -129,8 +129,18 @@ The live-path smoke corpus uses the full trained CAT artifact and is not the fai
 Market source order for live runs:
 
 - Primary: `bettingpros_mlb_props`.
-- Supplemental: `draftkings_mlb_pick6` normalized into `oddsapi_props.jsonl` for Pick6 line coverage, including `hitter_fantasy_score` and `pitcher_fantasy_score` aliases when present.
-- Supplemental: `draftkings_mlb_sportsbook` normalized into `oddsapi_props.jsonl` for one-sided DraftKings Sportsbook milestone odds. BettingPros consensus wins when both sources match because it has broader book depth.
+- Supplemental: `draftkings_mlb_pick6` normalized into `oddsapi_props.jsonl`
+  for Pick6 line coverage. DK usually exposes only a few hitter fantasy rows
+  per game and does not currently expose a stable pitcher fantasy feed.
+- Supplemental: `draftkings_mlb_sportsbook` normalized into `oddsapi_props.jsonl`
+  for DraftKings Sportsbook milestone and O/U odds. Current supplemental
+  gap-fill markets include batter walks, stolen bases, and hitter strikeouts
+  when DK has posted them. BettingPros consensus wins when both sources match
+  because it has broader book depth.
+- Every live run writes a `draftkings_gap_fill_monitor` section inside
+  `source_selection_manifest.json` so missing DK rows are classified as loaded,
+  timing-pending, no-board-rows, or not-currently-expected rather than being
+  inferred from broad market coverage.
 
 Live pull cadence:
 

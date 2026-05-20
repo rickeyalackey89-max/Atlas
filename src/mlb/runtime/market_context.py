@@ -204,6 +204,12 @@ def build_market_context_artifacts(
         "coverage_by_market": _true_rate_by_key(rows, key="market", value="market_context_available"),
         "coverage_by_tier": _true_rate_by_key(rows, key="tier", value="market_context_available"),
         "market_context_flag_counts": _flag_counts(row["market_context_flags"] for row in rows),
+        "board_rows_by_market": _count_by_key(rows, "market"),
+        "matched_rows_by_market": _count_by_key(
+            [row for row in rows if row.get("market_context_available")],
+            "market",
+        ),
+        "market_source_counts_by_market": _source_market_counts(odds_rows),
         "market_n_books_mean": _mean(
             row["market_n_books"] for row in rows if row.get("market_context_available")
         ),
@@ -556,6 +562,30 @@ def _flag_counts(values) -> dict[str, int]:
         for flag in _tuple_flags(value):
             counts[flag] = counts.get(flag, 0) + 1
     return dict(sorted(counts.items()))
+
+
+def _count_by_key(rows: list[dict[str, Any]], key: str) -> dict[str, int]:
+    counts: dict[str, int] = {}
+    for row in rows:
+        value = str(row.get(key) or "")
+        if value:
+            counts[value] = counts.get(value, 0) + 1
+    return dict(sorted(counts.items()))
+
+
+def _source_market_counts(rows: list[dict[str, Any]]) -> dict[str, dict[str, int]]:
+    counts: dict[str, dict[str, int]] = {}
+    for row in rows:
+        source = str(row.get("source") or "")
+        market = str(row.get("market") or "")
+        if not source or not market:
+            continue
+        source_counts = counts.setdefault(source, {})
+        source_counts[market] = source_counts.get(market, 0) + 1
+    return {
+        source: dict(sorted(source_counts.items()))
+        for source, source_counts in sorted(counts.items())
+    }
 
 
 def _tuple_flags(value: Any) -> tuple[str, ...]:

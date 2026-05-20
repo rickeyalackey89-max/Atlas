@@ -71,6 +71,39 @@ from mlb.runtime.statsapi_context import build_statsapi_context_artifacts
 from mlb.runtime.transaction_context import build_transaction_context_artifacts
 from mlb.sources.catalog import MLB_STATSAPI_MAJOR_SPORT_ID
 
+DK_GAP_FILL_MARKETS = {
+    "hitter_fantasy_score": {
+        "availability": "limited_featured_hitters",
+        "expected_sources": (DRAFTKINGS_MLB_PICK6_SOURCE,),
+        "notes": "DraftKings Pick6 usually exposes only a few hitter fantasy rows per game.",
+    },
+    "pitcher_fantasy_score": {
+        "availability": "not_currently_offered",
+        "expected_sources": (),
+        "notes": "No confirmed DraftKings pitcher fantasy feed; do not treat as a source failure.",
+    },
+    "hitter_strikeouts": {
+        "availability": "sportsbook_milestone",
+        "expected_sources": (DRAFTKINGS_MLB_SPORTSBOOK_SOURCE,),
+        "notes": "DraftKings Sportsbook exposes batter strikeout milestone prices when posted.",
+    },
+    "walks": {
+        "availability": "sportsbook_ou_and_milestone",
+        "expected_sources": (DRAFTKINGS_MLB_SPORTSBOOK_SOURCE,),
+        "notes": "DraftKings Sportsbook exposes batter walks O/U for a player subset.",
+    },
+    "stolen_bases": {
+        "availability": "sportsbook_ou_pick6_milestone",
+        "expected_sources": (DRAFTKINGS_MLB_SPORTSBOOK_SOURCE, DRAFTKINGS_MLB_PICK6_SOURCE),
+        "notes": "DraftKings Sportsbook exposes stolen bases O/U for a player subset.",
+    },
+    "pitches_thrown": {
+        "availability": "not_confirmed_in_current_feed",
+        "expected_sources": (),
+        "notes": "Keep monitored, but do not fail live runs until a stable DK category is confirmed.",
+    },
+}
+
 
 def run_board_pipeline_result(
     *,
@@ -652,6 +685,10 @@ def _write_source_selection_manifest(
     source_completeness = feature_manifest.get("source_completeness")
     source_completeness = source_completeness if isinstance(source_completeness, dict) else {}
     dk_timing_policy = _draftkings_timing_policy(engine_board, game_date=game_date)
+    dk_gap_fill_monitor = _draftkings_gap_fill_monitor(
+        market_context_manifest,
+        draftkings_timing_policy=dk_timing_policy,
+    )
     warnings = _source_contract_warnings(
         run_mode=run_mode,
         configured_sources=configured_sources,
@@ -679,6 +716,7 @@ def _write_source_selection_manifest(
             "primary": primary_market_source,
             "supplemental": supplemental_market_sources,
             "draftkings_timing_policy": dk_timing_policy,
+            "draftkings_gap_fill_monitor": dk_gap_fill_monitor,
             "selected_dirs": [str(path) for path in selected_market_source_dirs],
             "selected_details": selected_market_details,
             "context_manifest_dirs_by_date": market_context_manifest.get("market_source_dirs_by_date", {}),
@@ -714,6 +752,60 @@ def _write_source_selection_manifest(
     }
     source_manifest_path.write_text(json.dumps(manifest, indent=2, sort_keys=True), encoding="utf-8")
     return manifest
+
+
+def _draftkings_gap_fill_monitor(
+    market_context_manifest: dict[str, Any],
+    *,
+    draftkings_timing_policy: dict[str, Any],
+) -> dict[str, Any]:
+    source_counts = market_context_manifest.get("market_source_counts_by_market")
+    source_counts = source_counts if isinstance(source_counts, dict) else {}
+    board_counts = market_context_manifest.get("board_rows_by_market")
+    board_counts = board_counts if isinstance(board_counts, dict) else {}
+    matched_counts = market_context_manifest.get("matched_rows_by_market")
+    matched_counts = matched_counts if isinstance(matched_counts, dict) else {}
+    rows: list[dict[str, Any]] = []
+    for market, config in DK_GAP_FILL_MARKETS.items():
+        expected_sources = tuple(config.get("expected_sources") or ())
+        counts_by_source = {
+            source: int((source_counts.get(source) or {}).get(market) or 0)
+            for source in expected_sources
+        }
+        total_source_rows = sum(counts_by_source.values())
+        board_rows = int(board_counts.get(market) or 0)
+        matched_rows = int(matched_counts.get(market) or 0)
+        if not expected_sources:
+            status = "not_expected"
+        elif total_source_rows > 0:
+            status = "loaded"
+        elif board_rows > 0 and draftkings_timing_policy.get("missing_dk_is_timing_valid"):
+            status = "timing_pending"
+        elif board_rows > 0:
+            status = "missing"
+        else:
+            status = "no_board_rows"
+        rows.append(
+            {
+                "market": market,
+                "status": status,
+                "availability": config.get("availability", ""),
+                "expected_sources": list(expected_sources),
+                "source_rows": counts_by_source,
+                "total_source_rows": total_source_rows,
+                "board_rows": board_rows,
+                "matched_rows": matched_rows,
+                "matched_rate": round(matched_rows / board_rows, 6) if board_rows else None,
+                "notes": config.get("notes", ""),
+            }
+        )
+    return {
+        "monitor_version": "draftkings_gap_fill_monitor_v1",
+        "timing_status": draftkings_timing_policy.get("timing_status", ""),
+        "ready_game_count": draftkings_timing_policy.get("ready_game_count", 0),
+        "pending_game_count": draftkings_timing_policy.get("pending_game_count", 0),
+        "markets": rows,
+    }
 
 
 def _source_contract_warnings(
