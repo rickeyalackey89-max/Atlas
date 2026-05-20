@@ -163,6 +163,8 @@ def _load_csv_priors(path: Path) -> pd.DataFrame:
             df[col] = ""
     if "projection" not in df.columns:
         df["projection"] = np.nan
+    if "line" not in df.columns:
+        df["line"] = np.nan
     if "confidence" not in df.columns:
         df["confidence"] = 1.0
 
@@ -173,6 +175,7 @@ def _load_csv_priors(path: Path) -> pd.DataFrame:
             "league": df["league"].astype(str).str.strip().str.upper(),
             "player": df["player"].astype(str).str.strip(),
             "stat": df["stat"].astype(str).str.strip().str.upper(),
+            "line": pd.to_numeric(df["line"], errors="coerce"),
             "projection": pd.to_numeric(df["projection"], errors="coerce"),
             "confidence": pd.to_numeric(df["confidence"], errors="coerce").fillna(1.0).clip(0.0, 1.0),
             "notes": df["notes"].astype(str),
@@ -290,37 +293,71 @@ def apply_external_priors(
     resolved_rows = pd.DataFrame()
 
     if mode == "csv_projection":
-        # Blend multiple sources into a single mu per (player, stat)
+        # Blend multiple projection sources into a single mu per (player, stat).
+        # Exact sportsbook market rows carry a line plus over_prob/under_prob and
+        # are handled separately below so they do not pollute the projection mean.
         weights = _source_weight_map(pri_cfg)
         pri = pri_df.copy()
         pri["_w"] = pri["source"].map(lambda s: weights.get(str(s).lower(), 1.0)).astype(float)
         pri["_w_eff"] = pri["_w"] * pri["confidence"].astype(float)
+        pri["_line_key"] = pd.to_numeric(pri["line"], errors="coerce").round(4)
+
+        exact_market_mask = (
+            pri["_line_key"].notna()
+            & (pd.to_numeric(pri.get("over_prob"), errors="coerce").notna()
+               | pd.to_numeric(pri.get("under_prob"), errors="coerce").notna())
+        )
+        proj_pri = pri.loc[~exact_market_mask].copy()
 
         # Weighted mean per (player, stat)
-        grouped = pri.groupby(["player", "stat"], dropna=False)
-        num = (grouped.apply(lambda x: float((x["projection"] * x["_w_eff"]).sum()))).rename("num")
-        den = (grouped.apply(lambda x: float(x["_w_eff"].sum()))).rename("den")
-        blended = pd.concat([num, den], axis=1).reset_index()
-        blended["mu"] = blended["num"] / blended["den"].clip(lower=1e-9)
+        if not proj_pri.empty:
+            grouped = proj_pri.groupby(["player", "stat"], dropna=False)
+            num = (grouped.apply(lambda x: float((x["projection"] * x["_w_eff"]).sum()))).rename("num")
+            den = (grouped.apply(lambda x: float(x["_w_eff"].sum()))).rename("den")
+            blended = pd.concat([num, den], axis=1).reset_index()
+            blended["proj_mu"] = blended["num"] / blended["den"].clip(lower=1e-9)
 
-        # sources/n_sources/max_conf
-        agg = grouped.agg(
-            sources=("source", lambda s: ",".join(sorted(set(map(str, s.tolist()))))),
-            n_sources=("_w_eff", lambda w: int((pd.to_numeric(w, errors="coerce").fillna(0) > 0).sum())),
-            max_conf=("confidence", "max"),
-        ).reset_index()
-        blended = blended.merge(agg, on=["player", "stat"], how="left")
+            # sources/n_sources/max_conf
+            agg = grouped.agg(
+                proj_sources=("source", lambda s: ",".join(sorted(set(map(str, s.tolist()))))),
+                proj_n_sources=("_w_eff", lambda w: int((pd.to_numeric(w, errors="coerce").fillna(0) > 0).sum())),
+                proj_max_conf=("confidence", "max"),
+            ).reset_index()
+            blended = blended.merge(agg, on=["player", "stat"], how="left")
 
-        # Carry market probability columns through the blend (take first non-NaN per player/stat)
-        for mp_col in ["over_prob", "under_prob", "over_rating", "under_rating", "opp_rank"]:
-            if mp_col in pri.columns:
-                mp_agg = grouped[mp_col].first().rename(mp_col).reset_index()
-                blended = blended.merge(mp_agg, on=["player", "stat"], how="left")
+            # Carry optional market probability columns through projection rows
+            # for backward compatibility with older BettingPros/OddsAPI exports.
+            for mp_col in ["over_prob", "under_prob", "over_rating", "under_rating", "opp_rank"]:
+                if mp_col in proj_pri.columns:
+                    mp_agg = grouped[mp_col].first().rename(f"proj_{mp_col}").reset_index()
+                    blended = blended.merge(mp_agg, on=["player", "stat"], how="left")
 
-        blended = blended[
-            ["player", "stat", "mu", "sources", "n_sources", "max_conf"]
-            + [c for c in ["over_prob", "under_prob", "over_rating", "under_rating", "opp_rank"] if c in blended.columns]
-        ]
+            blended = blended[
+                ["player", "stat", "proj_mu", "proj_sources", "proj_n_sources", "proj_max_conf"]
+                + [c for c in [
+                    "proj_over_prob",
+                    "proj_under_prob",
+                    "proj_over_rating",
+                    "proj_under_rating",
+                    "proj_opp_rank",
+                ] if c in blended.columns]
+            ]
+        else:
+            blended = pd.DataFrame(
+                columns=[
+                    "player",
+                    "stat",
+                    "proj_mu",
+                    "proj_sources",
+                    "proj_n_sources",
+                    "proj_max_conf",
+                    "proj_over_prob",
+                    "proj_under_prob",
+                    "proj_over_rating",
+                    "proj_under_rating",
+                    "proj_opp_rank",
+                ]
+            )
 
         merged = out.merge(
             blended,
@@ -330,7 +367,9 @@ def apply_external_priors(
             suffixes=("", "_pri"),
         )
 
-        merged["edge_at_pp_line"] = merged["mu"] - merged["_ep_line"]
+        merged["edge_at_pp_line"] = pd.to_numeric(merged["proj_mu"], errors="coerce") - pd.to_numeric(
+            merged["_ep_line"], errors="coerce"
+        )
 
         # implied direction only when edge is known
         merged["implied_direction"] = np.where(
@@ -339,16 +378,65 @@ def apply_external_priors(
             np.where(merged["edge_at_pp_line"].notna(), "UNDER", ""),
         )
 
-        merged["apply_prior"] = (
+        merged["projection_apply_prior"] = (
             (merged["_ep_dir"] == merged["implied_direction"])
-            & merged["mu"].notna()
+            & merged["proj_mu"].notna()
             & merged["_ep_line"].notna()
+        )
+        merged["apply_prior"] = merged["projection_apply_prior"]
+
+        # Exact sportsbook market rows: blend by (player, stat, line), then use
+        # the direction's devig probability directly. These rows are the exact
+        # DK/FD O/U prices and should not depend on projection edge direction.
+        exact_pri = pri.loc[exact_market_mask].copy()
+        if not exact_pri.empty:
+            def _weighted_prob(group: pd.DataFrame, col: str) -> float:
+                values = pd.to_numeric(group[col], errors="coerce")
+                weights_eff = pd.to_numeric(group["_w_eff"], errors="coerce").fillna(0.0)
+                valid = values.notna() & (weights_eff > 0)
+                if not valid.any():
+                    return np.nan
+                return float((values[valid] * weights_eff[valid]).sum() / weights_eff[valid].sum())
+
+            exact_grouped = exact_pri.groupby(["player", "stat", "_line_key"], dropna=False)
+            exact_blended = exact_grouped.agg(
+                exact_sources=("source", lambda s: ",".join(sorted(set(map(str, s.tolist()))))),
+                exact_n_sources=("_w_eff", lambda w: int((pd.to_numeric(w, errors="coerce").fillna(0) > 0).sum())),
+                exact_max_conf=("confidence", "max"),
+            ).reset_index()
+            exact_blended["exact_over_prob"] = [
+                _weighted_prob(group, "over_prob") for _, group in exact_grouped
+            ]
+            exact_blended["exact_under_prob"] = [
+                _weighted_prob(group, "under_prob") for _, group in exact_grouped
+            ]
+            exact_blended = exact_blended.rename(columns={"player": "exact_player", "stat": "exact_stat"})
+        else:
+            exact_blended = pd.DataFrame(
+                columns=[
+                    "exact_player",
+                    "exact_stat",
+                    "_line_key",
+                    "exact_sources",
+                    "exact_n_sources",
+                    "exact_max_conf",
+                    "exact_over_prob",
+                    "exact_under_prob",
+                ]
+            )
+
+        merged["_line_key"] = pd.to_numeric(merged["_ep_line"], errors="coerce").round(4)
+        merged = merged.merge(
+            exact_blended,
+            left_on=["_ep_player", "_ep_stat", "_line_key"],
+            right_on=["exact_player", "exact_stat", "_line_key"],
+            how="left",
         )
 
         safe_scale = scale if scale > 1e-9 else 1.0
 
         # ── Signal 1: Projection edge score (existing) ──────────────
-        x = merged["edge_at_pp_line"] / safe_scale
+        x = pd.to_numeric(merged["edge_at_pp_line"], errors="coerce") / safe_scale
         # Direction-normalized projection edge:
         #   OVER is supported when projection > PP line.
         #   UNDER is supported when projection < PP line.
@@ -358,6 +446,8 @@ def apply_external_priors(
         direction_sign = np.where(merged["_ep_dir"] == "UNDER", -1.0, 1.0)
         proj_score = (np.tanh(x).astype(float) * direction_sign).astype(float)
         proj_score = pd.to_numeric(proj_score, errors="coerce").fillna(0.0).clip(-1.0, 1.0)
+        proj_score = pd.Series(proj_score, index=merged.index)
+        proj_score.loc[~merged["projection_apply_prior"]] = 0.0
 
         # ── Signal 2: Market probability divergence (new) ───────────
         # Pick the market-implied probability matching this leg's direction.
@@ -365,12 +455,20 @@ def apply_external_priors(
         # Compare to Atlas p_adj: if market is more confident in the same
         # direction, that's a bullish signal; less confident = bearish.
         market_prob_weight = float(pri_cfg.get("market_prob_weight", 0.0))
-        mkt_prob = np.where(
+        projection_mkt_prob = np.where(
             merged["_ep_dir"] == "OVER",
-            pd.to_numeric(merged.get("over_prob"), errors="coerce"),
-            pd.to_numeric(merged.get("under_prob"), errors="coerce"),
+            pd.to_numeric(merged.get("proj_over_prob"), errors="coerce"),
+            pd.to_numeric(merged.get("proj_under_prob"), errors="coerce"),
         )
-        mkt_prob = pd.to_numeric(pd.Series(mkt_prob, index=merged.index), errors="coerce")
+        projection_mkt_prob = pd.to_numeric(pd.Series(projection_mkt_prob, index=merged.index), errors="coerce")
+        exact_mkt_prob = np.where(
+            merged["_ep_dir"] == "OVER",
+            pd.to_numeric(merged.get("exact_over_prob"), errors="coerce"),
+            pd.to_numeric(merged.get("exact_under_prob"), errors="coerce"),
+        )
+        exact_mkt_prob = pd.to_numeric(pd.Series(exact_mkt_prob, index=merged.index), errors="coerce")
+        has_exact_mkt = exact_mkt_prob.notna()
+        mkt_prob = exact_mkt_prob.where(has_exact_mkt, projection_mkt_prob)
 
         # Market divergence: how much more confident is the market than Atlas?
         # Positive = market agrees with this direction more strongly.
@@ -386,29 +484,51 @@ def apply_external_priors(
         # Normalize to [-1, 1] range (0.5 max divergence → 1.0 score)
         mkt_score = (mkt_divergence / 0.5).clip(-1.0, 1.0)
 
-        # Gate: only apply market signal when direction agrees with projection
-        mkt_score_gated = np.where(merged["apply_prior"], mkt_score, 0.0)
+        # Exact line markets can speak directly. Projection-level market
+        # probabilities remain gated by the projection direction.
+        mkt_score_gated = np.where(has_exact_mkt | merged["projection_apply_prior"], mkt_score, 0.0)
 
         # ── Combine signals ─────────────────────────────────────────
-        if market_prob_weight > 0 and mkt_prob.notna().any():
-            # Blend: (1-w)*projection_score + w*market_score
-            combined_score = (1.0 - market_prob_weight) * proj_score + market_prob_weight * mkt_score_gated
+        exact_market_prob_weight = float(pri_cfg.get("exact_market_prob_weight", 1.0))
+        exact_market_prob_weight = max(0.0, min(1.0, exact_market_prob_weight))
+        if mkt_prob.notna().any():
+            projection_blend = (
+                (1.0 - market_prob_weight) * proj_score + market_prob_weight * mkt_score_gated
+                if market_prob_weight > 0
+                else proj_score
+            )
+            exact_blend = (1.0 - exact_market_prob_weight) * proj_score + exact_market_prob_weight * mkt_score_gated
+            combined_score = pd.Series(projection_blend, index=merged.index).where(~has_exact_mkt, exact_blend)
         else:
             combined_score = proj_score
 
         merged["external_prior_score"] = pd.Series(combined_score, index=merged.index).fillna(0.0).clip(-1.0, 1.0)
 
-        # Gate: if not apply, zero it out
+        merged["exact_market_apply_prior"] = has_exact_mkt
+        merged["apply_prior"] = merged["projection_apply_prior"] | merged["exact_market_apply_prior"]
         merged.loc[~merged["apply_prior"], "external_prior_score"] = 0.0
 
         # Store market prob audit columns
         merged["bp_market_prob"] = mkt_prob
         merged["bp_market_divergence"] = mkt_divergence
 
-        merged["external_prior_n"] = (
-            merged["apply_prior"].astype(int) * merged["n_sources"].fillna(0).astype(int)
-        )
-        merged["external_prior_sources"] = merged["sources"].fillna("").astype(str)
+        proj_n = merged["projection_apply_prior"].astype(int) * pd.to_numeric(
+            merged.get("proj_n_sources"), errors="coerce"
+        ).fillna(0).astype(int)
+        exact_n = merged["exact_market_apply_prior"].astype(int) * pd.to_numeric(
+            merged.get("exact_n_sources"), errors="coerce"
+        ).fillna(0).astype(int)
+        merged["external_prior_n"] = proj_n + exact_n
+
+        def _combine_sources(row: pd.Series) -> str:
+            parts: set[str] = set()
+            if bool(row.get("projection_apply_prior")):
+                parts.update(s for s in str(row.get("proj_sources") or "").split(",") if s)
+            if bool(row.get("exact_market_apply_prior")):
+                parts.update(s for s in str(row.get("exact_sources") or "").split(",") if s)
+            return ",".join(sorted(parts))
+
+        merged["external_prior_sources"] = merged.apply(_combine_sources, axis=1)
         merged.loc[merged["external_prior_n"] <= 0, "external_prior_sources"] = ""
 
         # Apply bounded nudge only when the caller wants the prior to affect the
@@ -418,6 +538,19 @@ def apply_external_priors(
         if target_col is not None and apply_probability:
             direction_caps = _direction_cap_map(pri_cfg, cap)
             row_cap = merged["_ep_dir"].map(lambda d: direction_caps.get(str(d).upper(), abs(cap))).astype(float)
+            exact_direction_caps_raw = pri_cfg.get("exact_market_cap_by_direction", {})
+            if not isinstance(exact_direction_caps_raw, dict):
+                exact_direction_caps_raw = {}
+            exact_direction_caps = {
+                str(k).strip().upper(): max(0.0, abs(float(v)))
+                for k, v in exact_direction_caps_raw.items()
+                if str(k).strip().upper() in {"OVER", "UNDER"} and _safe_float(v, None) is not None
+            }
+            if exact_direction_caps:
+                exact_cap = merged["_ep_dir"].map(
+                    lambda d: exact_direction_caps.get(str(d).upper(), np.nan)
+                ).astype(float)
+                row_cap = row_cap.where(~(merged["exact_market_apply_prior"] & exact_cap.notna()), exact_cap)
             row_cap = row_cap.fillna(abs(cap)).clip(lower=0.0)
             merged["external_prior_cap_applied"] = row_cap
             merged["delta_p"] = (row_cap * merged["external_prior_score"]).clip(-row_cap, row_cap)
@@ -439,10 +572,12 @@ def apply_external_priors(
             "_ep_tier",
             "_ep_dir",
             "_ep_line",
-            "mu",
+            "proj_mu",
             "edge_at_pp_line",
             "implied_direction",
             "apply_prior",
+            "projection_apply_prior",
+            "exact_market_apply_prior",
             "external_prior_score",
             "external_prior_cap_applied",
             "bp_market_prob",

@@ -281,6 +281,7 @@ def _prop_to_row(prop: dict, asof_ts: str) -> Optional[Dict[str, str]]:
         "league": "NBA",
         "player": player_name,
         "stat": stat,
+        "line": str(line) if line != "" else "",
         "asof_ts": asof_ts,
         "projection": str(proj_value),
         "confidence": str(confidence),
@@ -384,6 +385,68 @@ def _merge_market_rows(book_rows: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
     return list(merged.values())
 
 
+def _avg_present(values: List[Any]) -> Optional[float]:
+    nums: List[float] = []
+    for value in values:
+        if value is None:
+            continue
+        try:
+            nums.append(float(value))
+        except (TypeError, ValueError):
+            continue
+    if not nums:
+        return None
+    return sum(nums) / len(nums)
+
+
+def _market_rows_to_external_prior_rows(
+    market_rows: List[Dict[str, Any]],
+    asof_ts: str,
+) -> List[Dict[str, str]]:
+    rows: List[Dict[str, str]] = []
+    for row in market_rows:
+        over_prob = _avg_present([row.get("dk_imp_over"), row.get("fd_imp_over")])
+        if over_prob is None:
+            continue
+        try:
+            line = float(row.get("line"))
+        except (TypeError, ValueError):
+            continue
+
+        book_count = int(row.get("dk_imp_over") is not None) + int(row.get("fd_imp_over") is not None)
+        confidence = 1.0 if book_count >= 2 else 0.75
+        under_prob = 1.0 - over_prob
+        notes = [
+            "type=exact_market",
+            f"books={book_count}",
+            f"dk_over={row.get('dk_over')}",
+            f"dk_under={row.get('dk_under')}",
+            f"fd_over={row.get('fd_over')}",
+            f"fd_under={row.get('fd_under')}",
+        ]
+        rows.append(
+            {
+                "source": "bettingpros_market",
+                "league": "NBA",
+                "player": str(row.get("player") or "").strip(),
+                "stat": str(row.get("stat") or "").strip().upper(),
+                "line": str(line),
+                "asof_ts": asof_ts,
+                # Neutral projection: exact market rows are consumed by line
+                # match + over/under probabilities, not by projection edge.
+                "projection": str(line),
+                "confidence": str(confidence),
+                "over_prob": str(round(over_prob, 4)),
+                "under_prob": str(round(under_prob, 4)),
+                "over_rating": "",
+                "under_rating": "",
+                "opp_rank": "",
+                "notes": "; ".join(notes),
+            }
+        )
+    return rows
+
+
 def _fetch_market_rows(timeout: int, max_pages: int) -> List[Dict[str, Any]]:
     rows: List[Dict[str, Any]] = []
     for book_id, prefix in BOOK_ID_TO_MARKET_PREFIX.items():
@@ -408,7 +471,7 @@ def _fetch_market_rows(timeout: int, max_pages: int) -> List[Dict[str, Any]]:
 # Write / merge
 # ---------------------------------------------------------------------------
 
-CSV_FIELDS = ["source", "league", "player", "stat", "asof_ts", "projection", "confidence", "over_prob", "under_prob", "over_rating", "under_rating", "opp_rank", "notes"]
+CSV_FIELDS = ["source", "league", "player", "stat", "line", "asof_ts", "projection", "confidence", "over_prob", "under_prob", "over_rating", "under_rating", "opp_rank", "notes"]
 
 
 def _write_bp_csv(rows: List[Dict[str, str]], path: Path) -> None:
@@ -428,7 +491,7 @@ def _merge_into_external_priors(bp_rows: List[Dict[str, str]], merged_path: Path
     yesterday's market priors in the model input. If OddsAPI is explicitly
     enabled, the orchestrator runs that tool after this one and adds fresh rows.
     """
-    stale_sources = {"bettingpros"}
+    stale_sources = {"bettingpros", "bettingpros_market"}
     keep_oddsapi = os.getenv("BETTINGPROS_KEEP_ODDSAPI_PRIORS", "").strip().lower() in {"1", "true", "yes", "y"}
     if not keep_oddsapi:
         stale_sources.add("oddsapi")
@@ -514,17 +577,9 @@ def main() -> int:
         _write_market_json([], market_json_path)
         return 0
 
-    # Write standalone BP CSV
-    _write_bp_csv(rows, out_path)
-
-    # Merge into external_priors_today.csv
-    _merge_into_external_priors(rows, merged_path)
-
-    # Archive for replay
-    _archive_snapshot(out_path, game_date, archive_dir)
-
     # Write the market odds package consumed by the website/API payload. This
     # replaces the old OddsAPI-only source and keeps the downstream contract.
+    market_rows: List[Dict[str, Any]] = []
     try:
         market_rows = _fetch_market_rows(timeout=timeout, max_pages=max_pages)
         _write_market_json(market_rows, market_json_path)
@@ -532,12 +587,26 @@ def main() -> int:
         print(f"[BP] Market JSON fetch failed: {e}", file=sys.stderr)
         _write_market_json([], market_json_path)
 
+    market_prior_rows = _market_rows_to_external_prior_rows(market_rows, asof_ts)
+    if market_prior_rows:
+        print(f"[BP] Converted {len(market_prior_rows)} exact market rows into external priors")
+    all_prior_rows = rows + market_prior_rows
+
+    # Write standalone BP CSV
+    _write_bp_csv(all_prior_rows, out_path)
+
+    # Merge into external_priors_today.csv
+    _merge_into_external_priors(all_prior_rows, merged_path)
+
+    # Archive for replay
+    _archive_snapshot(out_path, game_date, archive_dir)
+
     # Write summary
     stat_counts = {}
-    for r in rows:
+    for r in all_prior_rows:
         stat_counts[r["stat"]] = stat_counts.get(r["stat"], 0) + 1
     print(f"[BP] Stats breakdown: {dict(sorted(stat_counts.items()))}")
-    print(f"[BP] Done. {len(rows)} props ready for external priors.")
+    print(f"[BP] Done. {len(all_prior_rows)} props ready for external priors.")
 
     return 0
 

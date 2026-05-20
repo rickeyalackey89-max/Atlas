@@ -739,6 +739,10 @@ optimizer:
     cap_by_direction:
       OVER: 0.03
       UNDER: 0.0
+    exact_market_cap_by_direction:
+      OVER: 0.03
+      UNDER: 0.03
+    exact_market_prob_weight: 1.0
     scale: 6.0
     p_floor: 0.02
     p_ceil: 0.98
@@ -746,6 +750,8 @@ optimizer:
       rotowire:
         weight: 1.0
       bettingpros:
+        weight: 1.0
+      bettingpros_market:
         weight: 1.0
       oddsapi:
         weight: 1.0

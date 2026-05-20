@@ -210,6 +210,13 @@ def _external_prior_audit(scored: pd.DataFrame) -> dict[str, Any]:
     cap_applied = _num(scored, "external_prior_cap_applied", default=0.0)
     applied = _bool(scored, "external_prior_probability_applied")
     direction = scored["direction"].astype(str).str.upper().str.strip() if "direction" in scored.columns else ""
+    sources = (
+        scored["external_prior_sources"].astype(str).str.lower()
+        if "external_prior_sources" in scored.columns
+        else pd.Series("", index=scored.index)
+    )
+    exact_market = sources.str.contains("bettingpros_market", regex=False, na=False)
+    negative_applied = (delta < -1e-12) & applied
 
     applied_df = scored[applied].copy()
     applied_df["_delta"] = delta[applied]
@@ -246,7 +253,9 @@ def _external_prior_audit(scored: pd.DataFrame) -> dict[str, Any]:
     return {
         "prior_rows": int((prior_n > 0).sum()),
         "probability_applied_rows": int(applied.sum()),
-        "applied_negative_delta_rows": int(((delta < -1e-12) & applied).sum()),
+        "applied_negative_delta_rows": int(negative_applied.sum()),
+        "applied_negative_exact_market_delta_rows": int((negative_applied & exact_market).sum()),
+        "applied_negative_non_exact_market_delta_rows": int((negative_applied & ~exact_market).sum()),
         "applied_under_rows": int((applied & under_mask).sum()),
         "applied_over_rows": int((applied & over_mask).sum()),
         "cap_applied_by_direction": sorted(cap_by_direction, key=lambda r: r["direction"]),
@@ -466,8 +475,8 @@ def audit_run(run_dir: Path) -> dict[str, Any]:
 
     if external_priors.get("prior_rows", 0) > 0 and external_priors.get("probability_applied_rows", 0) == 0:
         failures.append("external priors exist but no rows were probability-applied")
-    if external_priors.get("applied_negative_delta_rows", 0) > 0:
-        warnings.append("external priors applied negative deltas; inspect market/projection blend")
+    if external_priors.get("applied_negative_non_exact_market_delta_rows", 0) > 0:
+        warnings.append("projection external priors applied negative deltas; inspect projection blend")
     max_diff = external_priors.get("p_for_cal_equals_p_adj_max_abs_diff")
     if max_diff is not None and max_diff > 1e-9:
         warnings.append("p_for_cal differs from p_adj; confirm this is intentional before CAT")

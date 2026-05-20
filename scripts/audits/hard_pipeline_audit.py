@@ -394,6 +394,14 @@ def _external_prior_audit(scored: pd.DataFrame) -> tuple[dict[str, Any], list[di
     cap = _num_fill(scored, "external_prior_cap_applied", 0.0)
     applied = _bool(scored, "external_prior_probability_applied")
     direction = scored["direction"].astype(str).str.upper().str.strip() if "direction" in scored.columns else pd.Series("", index=scored.index)
+    sources = (
+        scored["external_prior_sources"].astype(str).str.lower()
+        if "external_prior_sources" in scored.columns
+        else pd.Series("", index=scored.index)
+    )
+    exact_market = sources.str.contains("bettingpros_market", regex=False, na=False)
+    negative_applied = applied & (delta < -1e-12)
+    negative_non_exact = negative_applied & ~exact_market
 
     flag_should_apply = delta.abs() > 1e-12
     flag_false_nonzero = (~applied) & flag_should_apply
@@ -438,13 +446,13 @@ def _external_prior_audit(scored: pd.DataFrame) -> tuple[dict[str, Any], list[di
             )
         )
 
-    if int((applied & (delta < -1e-12)).sum()):
+    if int(negative_non_exact.sum()):
         findings.append(
             _finding(
                 "warn",
                 "external_prior_negative_delta",
-                "external priors applied negative probability deltas; verify this is intended market-divergence behavior",
-                detail={"rows": int((applied & (delta < -1e-12)).sum())},
+                "projection external priors applied negative probability deltas; verify projection blend",
+                detail={"rows": int(negative_non_exact.sum())},
             )
         )
 
@@ -476,7 +484,9 @@ def _external_prior_audit(scored: pd.DataFrame) -> tuple[dict[str, Any], list[di
         "flag_false_nonzero_rows": int(flag_false_nonzero.sum()),
         "flag_true_zero_rows": int(flag_true_zero.sum()),
         "cap_violation_rows": int(cap_violation.sum()),
-        "negative_delta_applied_rows": int((applied & (delta < -1e-12)).sum()),
+        "negative_delta_applied_rows": int(negative_applied.sum()),
+        "negative_exact_market_delta_rows": int((negative_applied & exact_market).sum()),
+        "negative_non_exact_market_delta_rows": int(negative_non_exact.sum()),
         "by_direction": sorted(by_direction, key=lambda r: r["direction"]),
     }, findings
 
