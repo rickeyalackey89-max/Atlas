@@ -148,9 +148,9 @@ SELECTED_LEG_COLUMNS = (
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--corpus-dir", required=True, help="Corpus eval directory with replay_single_*.eval.json files.")
+    parser.add_argument("--corpus-dir", required=True, help="Corpus replay directory with replay_single_*.eval.json files.")
     parser.add_argument("--eval-root", default="data/mlb/eval")
-    parser.add_argument("--run-root", default="data/mlb/test_runs")
+    parser.add_argument("--run-root", default="data/mlb/replay_runs")
     parser.add_argument("--feature-root", default="data/mlb/features/player_props")
     parser.add_argument("--matchup-root", default="data/mlb/features/matchups")
     parser.add_argument("--output-dir", default="")

@@ -471,15 +471,15 @@ Required columns:
 Current paths:
 
 ```text
-data/mlb/test_runs/<run_id>/scored_legs.csv
+data/mlb/replay_runs/<run_id>/scored_legs.csv
 data/mlb/live_runs/<run_id>/scored_legs.csv
-data/mlb/<test_runs|live_runs>/<run_id>/scored_legs_deduped.csv
-data/mlb/<test_runs|live_runs>/<run_id>/scored_legs.json
-data/mlb/<test_runs|live_runs>/<run_id>/score_manifest.json
-data/mlb/<test_runs|live_runs>/latest_scored_legs.csv
-data/mlb/<test_runs|live_runs>/latest_scored_legs_deduped.csv
-data/mlb/<test_runs|live_runs>/latest_scored_legs.json
-data/mlb/<test_runs|live_runs>/latest_score_manifest.json
+data/mlb/<replay_runs|live_runs>/<run_id>/scored_legs_deduped.csv
+data/mlb/<replay_runs|live_runs>/<run_id>/scored_legs.json
+data/mlb/<replay_runs|live_runs>/<run_id>/score_manifest.json
+data/mlb/<replay_runs|live_runs>/latest_scored_legs.csv
+data/mlb/<replay_runs|live_runs>/latest_scored_legs_deduped.csv
+data/mlb/<replay_runs|live_runs>/latest_scored_legs.json
+data/mlb/<replay_runs|live_runs>/latest_score_manifest.json
 ```
 
 `score_manifest.json` must include:
@@ -508,19 +508,19 @@ Current scorer status:
 MLB run outputs follow the Atlas family surface:
 
 ```text
-data/mlb/<test_runs|live_runs>/<run_id>/System/recommended_2leg.csv
-data/mlb/<test_runs|live_runs>/<run_id>/System/recommended_3leg.csv
-data/mlb/<test_runs|live_runs>/<run_id>/System/recommended_4leg.csv
-data/mlb/<test_runs|live_runs>/<run_id>/System/recommended_5leg.csv
-data/mlb/<test_runs|live_runs>/<run_id>/Windfall/recommended_2leg.csv
-data/mlb/<test_runs|live_runs>/<run_id>/Windfall/recommended_3leg.csv
-data/mlb/<test_runs|live_runs>/<run_id>/Windfall/recommended_4leg.csv
-data/mlb/<test_runs|live_runs>/<run_id>/Windfall/recommended_5leg.csv
-data/mlb/<test_runs|live_runs>/<run_id>/demonhunter.csv
-data/mlb/<test_runs|live_runs>/<run_id>/marketed_slips.csv
-data/mlb/<test_runs|live_runs>/<run_id>/marketed_slips.json
-data/mlb/<test_runs|live_runs>/<run_id>/slips/slips_manifest.json
-data/mlb/<test_runs|live_runs>/<run_id>/slips/payout_quote_manifest.json
+data/mlb/<replay_runs|live_runs>/<run_id>/System/recommended_2leg.csv
+data/mlb/<replay_runs|live_runs>/<run_id>/System/recommended_3leg.csv
+data/mlb/<replay_runs|live_runs>/<run_id>/System/recommended_4leg.csv
+data/mlb/<replay_runs|live_runs>/<run_id>/System/recommended_5leg.csv
+data/mlb/<replay_runs|live_runs>/<run_id>/Windfall/recommended_2leg.csv
+data/mlb/<replay_runs|live_runs>/<run_id>/Windfall/recommended_3leg.csv
+data/mlb/<replay_runs|live_runs>/<run_id>/Windfall/recommended_4leg.csv
+data/mlb/<replay_runs|live_runs>/<run_id>/Windfall/recommended_5leg.csv
+data/mlb/<replay_runs|live_runs>/<run_id>/demonhunter.csv
+data/mlb/<replay_runs|live_runs>/<run_id>/marketed_slips.csv
+data/mlb/<replay_runs|live_runs>/<run_id>/marketed_slips.json
+data/mlb/<replay_runs|live_runs>/<run_id>/slips/slips_manifest.json
+data/mlb/<replay_runs|live_runs>/<run_id>/slips/payout_quote_manifest.json
 ```
 
 Tier labels are canonical PrizePicks/Atlas labels: `GOBLIN`, `STANDARD`, and
@@ -563,7 +563,7 @@ PrizePicks payout quoting is a replayable tool contract:
 Per-run operator artifacts:
 
 ```text
-data/mlb/<test_runs|live_runs>/<run_id>/operator/
+data/mlb/<replay_runs|live_runs>/<run_id>/operator/
   operator_input.json
   anomalies.jsonl
   ai_evaluation.json

@@ -43,7 +43,8 @@ These are rebuild/debug artifacts and may be compacted:
 
 - `data/mlb/features/`
 - `data/mlb/staged/`
-- `data/mlb/test_runs/`
+- `data/mlb/replay_runs/`
+- `data/mlb/test_runs/` legacy compatibility only
 - `data/mlb/eval/`
 
 The compactor archives small audit files and manifests before deleting bulky generated CSV/JSON/JSONL files. It does not touch `raw`, `model`, `live_runs`, `season_gamelogs`, or `runtime_state` unless explicitly configured.

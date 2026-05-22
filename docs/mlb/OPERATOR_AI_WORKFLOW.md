@@ -52,7 +52,7 @@ Code:
 Artifacts:
 
 ```text
-data/mlb/<test_runs|live_runs>/<run_id>/operator/
+data/mlb/<replay_runs|live_runs>/<run_id>/operator/
   ai_evaluation.json
   anomalies.jsonl
   operator_report.md

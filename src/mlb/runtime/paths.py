@@ -15,6 +15,7 @@ class MlbPaths:
     features: Path
     models: Path
     runs: Path
+    replay_runs: Path
     test_runs: Path
     live_runs: Path
     eval: Path
@@ -40,7 +41,8 @@ def mlb_paths(root: Path | None = None) -> MlbPaths:
         staged=data_root / "staged",
         features=data_root / "features",
         models=data_root / "model",
-        runs=data_root / "test_runs",
+        runs=data_root / "replay_runs",
+        replay_runs=data_root / "replay_runs",
         test_runs=data_root / "test_runs",
         live_runs=data_root / "live_runs",
         eval=data_root / "eval",
@@ -52,14 +54,14 @@ def mlb_paths(root: Path | None = None) -> MlbPaths:
 def output_runs_dir(paths: MlbPaths, run_mode: str | None = None) -> Path:
     """Return the run artifact root for a live or replay/test run."""
 
-    return paths.live_runs if str(run_mode or "").strip().lower() == "live" else paths.test_runs
+    return paths.live_runs if str(run_mode or "").strip().lower() == "live" else paths.replay_runs
 
 
 def candidate_run_dirs(paths: MlbPaths) -> tuple[Path, ...]:
     """Return run roots in lookup order, including the legacy development path."""
 
     legacy_runs = paths.data_root / "runs"
-    candidates = (paths.test_runs, paths.live_runs, legacy_runs)
+    candidates = (paths.replay_runs, paths.live_runs, paths.test_runs, legacy_runs)
     return tuple(dict.fromkeys(candidates))
 
 
@@ -70,6 +72,7 @@ def ensure_mlb_dirs(root: Path | None = None) -> MlbPaths:
         paths.staged,
         paths.features,
         paths.models,
+        paths.replay_runs,
         paths.test_runs,
         paths.live_runs,
         paths.eval,

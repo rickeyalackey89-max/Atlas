@@ -22,7 +22,8 @@ The active Python package uses a normal `src/` layout. The old `src/Atlas/sports
 - `data/mlb/raw/` - immutable raw snapshots and manifests.
 - `data/mlb/staged/` - normalized source tables.
 - `data/mlb/features/` - feature artifacts with manifests.
-- `data/mlb/test_runs/` - replay and corpus-member runs.
+- `data/mlb/replay_runs/` - single replay, corpus-member, and replay sweep outputs.
+- `data/mlb/test_runs/` - legacy/read-only compatibility outputs only.
 - `data/mlb/live_runs/` - live runs only.
 - `data/mlb/eval/` - eval legs, eval slips, corpus summaries, audits.
 - `data/mlb/model/` - active and candidate model artifacts.
@@ -60,7 +61,7 @@ Rules:
   still before its own target. Once any game is inside its ready window, missing
   DK context is a source contract failure for that ready portion of the slate.
 - Single replay and corpus replay stay separate from live output roots.
-- Replays write to `data/mlb/test_runs/`.
+- Replays write to `data/mlb/replay_runs/`.
 - Live writes to `data/mlb/live_runs/`.
 - Evaluations write to `data/mlb/eval/`.
 
@@ -118,7 +119,7 @@ Known challenger artifacts:
 
 Current CAT promotion basis:
 
-- Strict corpus: `data/mlb/eval/corpus_replay_20260516_20260520_strict_fidelity_v2`
+- Strict corpus: `data/mlb/replay_runs/corpus_replay_20260516_20260520_strict_fidelity_v2`
 - Strict preflight report: `data/mlb/audits/strict_replay_preflight/strict_replay_preflight_20260522T162108Z.json`
 - Date count / row count: `5` dates / `30337` rows.
 - v9 projection-feature LODO brier/logloss: `0.18648419` / `0.55538485`.

@@ -192,7 +192,7 @@ flowchart TD
 
     J --> L[data/mlb/features/player_props/run_id/feature_table.csv]
     P --> L
-    K --> M[data/mlb/<test_runs|live_runs>/run_id/run_manifest.json]
+    K --> M[data/mlb/<replay_runs|live_runs>/run_id/run_manifest.json]
 ```
 
 Why:

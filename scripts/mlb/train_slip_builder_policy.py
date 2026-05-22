@@ -31,7 +31,7 @@ def main() -> int:
         "--output-dir",
         default="data/mlb/model/slip_builder_policy_v1_bettingpros_v4",
     )
-    parser.add_argument("--run-root", default="data/mlb/test_runs")
+    parser.add_argument("--run-root", default="data/mlb/replay_runs")
     parser.add_argument("--eval-root", default="data/mlb/eval")
     parser.add_argument(
         "--probability-overlay-csv",

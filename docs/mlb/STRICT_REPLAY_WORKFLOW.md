@@ -92,7 +92,7 @@ The corpus directory must contain:
 Each run referenced by the corpus must also exist under:
 
 ```text
-data/mlb/test_runs/<run_id>/
+data/mlb/replay_runs/<run_id>/
 data/mlb/eval/<run_id>/
 ```
 

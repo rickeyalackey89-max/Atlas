@@ -1,5 +1,5 @@
 param(
-    [string]$OutputDir = "data\mlb\eval\corpus_replay_20260426_20260520_strict_fidelity_v1",
+    [string]$OutputDir = "data\mlb\replay_runs\corpus_replay_20260426_20260520_strict_fidelity_v1",
     [switch]$RefreshBettingProsOdds,
     [string]$CalibrationArtifact = "",
     [string]$RunIdSuffix = "github_csv_fidelity_v1",

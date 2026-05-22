@@ -1827,7 +1827,10 @@ def build_parser() -> argparse.ArgumentParser:
         help="Audit context coverage feeding a completed MLB probability run",
     )
     audit_context.add_argument("--json", action="store_true", help="Render command output as JSON")
-    audit_context.add_argument("--run-id", help="Run id under data/mlb/test_runs or data/mlb/live_runs; defaults to latest run manifest")
+    audit_context.add_argument(
+        "--run-id",
+        help="Run id under data/mlb/replay_runs or data/mlb/live_runs; defaults to latest run manifest",
+    )
     audit_context.add_argument("--root", help="Override repo root for test/dev execution")
     audit_context.add_argument("--no-write", action="store_true", help="Do not write audit artifacts")
     audit_context.set_defaults(func=_cmd_audit_context)
@@ -1837,7 +1840,10 @@ def build_parser() -> argparse.ArgumentParser:
         help="Settle a scored replay run from StatsAPI boxscores and write Brier/logloss diagnostics",
     )
     audit_eval.add_argument("--json", action="store_true", help="Render command output as JSON")
-    audit_eval.add_argument("--run-id", help="Run id under data/mlb/test_runs or data/mlb/live_runs; defaults to latest scored legs")
+    audit_eval.add_argument(
+        "--run-id",
+        help="Run id under data/mlb/replay_runs or data/mlb/live_runs; defaults to latest scored legs",
+    )
     audit_eval.add_argument("--scored-legs", help="Path to scored_legs.json or a run directory")
     audit_eval.add_argument("--root", help="Override repo root for test/dev execution")
     audit_eval.set_defaults(func=_cmd_audit_eval)

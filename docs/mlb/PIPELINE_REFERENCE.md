@@ -105,17 +105,17 @@ uv run atlas-mlb score board --parameter-table data/mlb/features/parameters/<run
 
 Writes:
 
-- `data/mlb/test_runs/<run_id>/scored_legs.csv` for replay/test runs
+- `data/mlb/replay_runs/<run_id>/scored_legs.csv` for replay runs
 - `data/mlb/live_runs/<run_id>/scored_legs.csv` for live runs
-- `data/mlb/<test_runs|live_runs>/<run_id>/scored_legs_deduped.csv`
-- `data/mlb/<test_runs|live_runs>/<run_id>/scored_legs.json`
-- `data/mlb/<test_runs|live_runs>/<run_id>/score_manifest.json`
-- `data/mlb/<test_runs|live_runs>/<run_id>/simulation_manifest.json`
-- `data/mlb/<test_runs|live_runs>/latest_scored_legs.csv`
-- `data/mlb/<test_runs|live_runs>/latest_scored_legs_deduped.csv`
-- `data/mlb/<test_runs|live_runs>/latest_scored_legs.json`
-- `data/mlb/<test_runs|live_runs>/latest_score_manifest.json`
-- `data/mlb/<test_runs|live_runs>/latest_simulation_manifest.json`
+- `data/mlb/<replay_runs|live_runs>/<run_id>/scored_legs_deduped.csv`
+- `data/mlb/<replay_runs|live_runs>/<run_id>/scored_legs.json`
+- `data/mlb/<replay_runs|live_runs>/<run_id>/score_manifest.json`
+- `data/mlb/<replay_runs|live_runs>/<run_id>/simulation_manifest.json`
+- `data/mlb/<replay_runs|live_runs>/latest_scored_legs.csv`
+- `data/mlb/<replay_runs|live_runs>/latest_scored_legs_deduped.csv`
+- `data/mlb/<replay_runs|live_runs>/latest_scored_legs.json`
+- `data/mlb/<replay_runs|live_runs>/latest_score_manifest.json`
+- `data/mlb/<replay_runs|live_runs>/latest_simulation_manifest.json`
 
 Purpose:
 
@@ -163,7 +163,7 @@ Writes:
 - `data/mlb/features/player_props/<run_id>/feature_table.csv`
 - `data/mlb/features/parameters/<run_id>/parameter_table.csv`
 - `data/mlb/features/advanced_context/<run_id>/advanced_context.csv`
-- `data/mlb/test_runs/<run_id>/...` for replay/test mode
+- `data/mlb/replay_runs/<run_id>/...` for replay mode
 - `data/mlb/live_runs/<run_id>/...` for live mode
 - `scored_legs.csv` and `scored_legs_deduped.csv`
 - `System/recommended_2leg.csv` through `System/recommended_5leg.csv`
@@ -264,7 +264,7 @@ Replay:
 - loads pinned raw snapshots
 - normalizes from the pinned board
 - writes isolated engine board inputs
-- writes run outputs to `data/mlb/test_runs/<run_id>/`
+- writes run outputs to `data/mlb/replay_runs/<run_id>/`
 - must not publish externally
 
 ## Guardrails

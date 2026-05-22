@@ -37,7 +37,7 @@ EXPECTED_BUNDLE_ARTIFACTS = (
     BundleArtifact(
         name="source_manifest",
         phase="normalized_board",
-        path_template="data/mlb/test_runs/{run_id}/source_manifest.json",
+        path_template="data/mlb/replay_runs/{run_id}/source_manifest.json",
     ),
     BundleArtifact(
         name="share_matrix",
@@ -52,12 +52,12 @@ EXPECTED_BUNDLE_ARTIFACTS = (
     BundleArtifact(
         name="simulation_manifest",
         phase="simulation",
-        path_template="data/mlb/test_runs/{run_id}/simulation_manifest.json",
+        path_template="data/mlb/replay_runs/{run_id}/simulation_manifest.json",
     ),
     BundleArtifact(
         name="scored_legs",
         phase="simulation",
-        path_template="data/mlb/test_runs/{run_id}/scored_legs.csv",
+        path_template="data/mlb/replay_runs/{run_id}/scored_legs.csv",
     ),
     BundleArtifact(
         name="eval_legs",
@@ -67,12 +67,12 @@ EXPECTED_BUNDLE_ARTIFACTS = (
     BundleArtifact(
         name="run_manifest",
         phase="settlement_replay",
-        path_template="data/mlb/test_runs/{run_id}/run_manifest.json",
+        path_template="data/mlb/replay_runs/{run_id}/run_manifest.json",
     ),
     BundleArtifact(
         name="slip_families",
         phase="slips",
-        path_template="data/mlb/test_runs/{run_id}/{System,Windfall,marketed_slips.csv,demonhunter.csv}",
+        path_template="data/mlb/replay_runs/{run_id}/{System,Windfall,marketed_slips.csv,demonhunter.csv}",
         required=False,
     ),
 )

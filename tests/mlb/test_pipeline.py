@@ -12,6 +12,7 @@ from mlb.runtime.live_delegation import live_plan_result
 from mlb.runtime.replay_delegation import replay_plan_result
 from mlb.runtime.results import render_runtime_result
 from mlb.runtime.fidelity import fidelity_policy, normalize_run_mode
+from mlb.runtime.paths import candidate_run_dirs, mlb_paths, output_runs_dir
 from mlb.domain.slips import supported_slip_families
 
 
@@ -45,6 +46,19 @@ def test_replay_fidelity_policy_is_canonical():
     assert policy["strict_replay_fidelity"] is True
     assert policy["post_date_context_allowed"] is False
     assert policy["replay_only_model_inputs_allowed"] is False
+
+
+def test_replay_outputs_use_dedicated_replay_runs_root(tmp_path):
+    paths = mlb_paths(tmp_path)
+
+    assert output_runs_dir(paths, "live") == tmp_path / "data" / "mlb" / "live_runs"
+    assert output_runs_dir(paths, "replay_single") == tmp_path / "data" / "mlb" / "replay_runs"
+    assert output_runs_dir(paths, "replay_corpus") == tmp_path / "data" / "mlb" / "replay_runs"
+    assert candidate_run_dirs(paths)[:3] == (
+        tmp_path / "data" / "mlb" / "replay_runs",
+        tmp_path / "data" / "mlb" / "live_runs",
+        tmp_path / "data" / "mlb" / "test_runs",
+    )
 
 
 def test_publishing_is_disabled_in_dev_skeleton():

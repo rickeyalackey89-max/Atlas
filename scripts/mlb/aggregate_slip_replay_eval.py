@@ -14,7 +14,7 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--input-dir", required=True, help="Replay sweep output directory.")
     parser.add_argument("--eval-root", default="data/mlb/eval")
-    parser.add_argument("--run-root", default="data/mlb/test_runs")
+    parser.add_argument("--run-root", default="data/mlb/replay_runs")
     parser.add_argument(
         "--min-slate-games",
         type=int,

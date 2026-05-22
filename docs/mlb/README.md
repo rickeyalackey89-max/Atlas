@@ -59,7 +59,8 @@ builder, publish, or data-retention code:
 - `data/mlb/staged/` - normalized source tables.
 - `data/mlb/features/` - model-ready feature tables.
 - `data/mlb/model/` - active and candidate MLB model artifacts.
-- `data/mlb/test_runs/` - replay, smoke-test, and corpus-member run outputs.
+- `data/mlb/replay_runs/` - single replay, corpus replay, and replay sweep outputs.
+- `data/mlb/test_runs/` - legacy smoke-test/read-only compatibility outputs.
 - `data/mlb/live_runs/` - actual live model run outputs and live slip files.
 - `data/mlb/eval/` - scored historical outcomes and evaluation reports.
 - `data/mlb/season_gamelogs/` - running season truth store used by replay eval and history context.

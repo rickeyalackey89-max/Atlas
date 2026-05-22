@@ -18,15 +18,15 @@ pwsh -NoProfile -ExecutionPolicy Bypass -File .\scripts\mlb\run_prior_day_eval.p
 ```
 
 By default this evaluates yesterday. It fetches prior-day StatsAPI boxscores,
-resolves the matching run from `live_runs` first and `test_runs` second, then
-writes:
+resolves every matching run for the highest-priority scope (`live_runs`, then
+`replay_runs`, then legacy `test_runs`), then writes one eval folder per run:
 
 - `data/mlb/eval/<run_id>/eval_legs.csv`
 - `data/mlb/eval/<run_id>/eval_slips.csv`
 - `data/mlb/eval/<run_id>/slip_eval.json`
 
-For Task Scheduler, add that PowerShell command as the 6am action, or pass
-`-RunId <run_id>` when evaluating a specific replay.
+For Task Scheduler, add that PowerShell command as the 6am action. Pass
+`-RunId <run_id>` only when evaluating one specific run.
 
 Primary command:
 

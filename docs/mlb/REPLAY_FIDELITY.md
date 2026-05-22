@@ -37,8 +37,10 @@ canonical names above.
 Run outputs are physically separated:
 
 - `data/mlb/live_runs/<run_id>/` is reserved for actual live model runs.
-- `data/mlb/test_runs/<run_id>/` is used for replay, smoke-test, and corpus
-  member runs.
+- `data/mlb/replay_runs/<run_id>/` is used for single replay, corpus replay,
+  and replay sweep run artifacts.
+- `data/mlb/test_runs/<run_id>/` is a legacy/read-only compatibility root and
+  must not be used for new replay output.
 
 ## Source Timing
 

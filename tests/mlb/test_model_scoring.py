@@ -70,7 +70,7 @@ def test_engine_scores_board_and_writes_contract_outputs(tmp_path):
 
     scored = json.loads(Path(manifest["json_path"]).read_text(encoding="utf-8"))
     simulation_manifest = json.loads(
-        (tmp_path / "data" / "mlb" / "test_runs" / "score_run" / "simulation_manifest.json").read_text(encoding="utf-8")
+        (tmp_path / "data" / "mlb" / "replay_runs" / "score_run" / "simulation_manifest.json").read_text(encoding="utf-8")
     )
     assert Path(manifest["deduped_csv_path"]).exists()
     assert scored["scored_legs"][0]["kernel_version"]
@@ -128,7 +128,7 @@ def test_engine_manifest_reports_active_calibration_from_parameter_table(tmp_pat
 
     scored = json.loads(Path(manifest["json_path"]).read_text(encoding="utf-8"))
     simulation_manifest = json.loads(
-        (tmp_path / "data" / "mlb" / "test_runs" / "calibrated_score_run" / "simulation_manifest.json").read_text(
+        (tmp_path / "data" / "mlb" / "replay_runs" / "calibrated_score_run" / "simulation_manifest.json").read_text(
             encoding="utf-8"
         )
     )
@@ -148,7 +148,7 @@ def test_cli_score_board_delegates_to_runtime(tmp_path, capsys):
     captured = capsys.readouterr()
     assert exit_code == 0
     assert "Scored MLB engine board:" in captured.out
-    assert (tmp_path / "data" / "mlb" / "test_runs" / "cli_score_run" / "scored_legs.json").exists()
+    assert (tmp_path / "data" / "mlb" / "replay_runs" / "cli_score_run" / "scored_legs.json").exists()
 
 
 def test_engine_board_row_score_preserves_source_identity():

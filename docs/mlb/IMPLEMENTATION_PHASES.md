@@ -117,7 +117,7 @@ Artifacts:
 
 - `data/mlb/staged/board/<run_id>/normalized_board.parquet`
 - `data/mlb/staged/board/<run_id>/normalized_board.jsonl`
-- `data/mlb/<test_runs|live_runs>/<run_id>/source_manifest.json`
+- `data/mlb/<replay_runs|live_runs>/<run_id>/source_manifest.json`
 
 Exit criteria:
 
@@ -169,9 +169,9 @@ Build:
 
 Artifacts:
 
-- `data/mlb/test_runs/<run_id>/scored_candidates.parquet`
+- `data/mlb/replay_runs/<run_id>/scored_candidates.parquet`
 - `data/mlb/eval/<run_id>/eval_legs.parquet`
-- `data/mlb/test_runs/<run_id>/run_manifest.json`
+- `data/mlb/replay_runs/<run_id>/run_manifest.json`
 
 Exit criteria:
 
@@ -229,11 +229,11 @@ Build:
 
 Artifacts:
 
-- `data/mlb/<test_runs|live_runs>/<run_id>/simulation_manifest.json`
-- `data/mlb/<test_runs|live_runs>/<run_id>/scored_legs.csv`
-- `data/mlb/<test_runs|live_runs>/<run_id>/scored_legs_deduped.csv`
-- `data/mlb/<test_runs|live_runs>/<run_id>/scored_legs.json`
-- `data/mlb/<test_runs|live_runs>/<run_id>/operator/operator_input.json`
+- `data/mlb/<replay_runs|live_runs>/<run_id>/simulation_manifest.json`
+- `data/mlb/<replay_runs|live_runs>/<run_id>/scored_legs.csv`
+- `data/mlb/<replay_runs|live_runs>/<run_id>/scored_legs_deduped.csv`
+- `data/mlb/<replay_runs|live_runs>/<run_id>/scored_legs.json`
+- `data/mlb/<replay_runs|live_runs>/<run_id>/operator/operator_input.json`
 
 Exit criteria:
 
@@ -287,17 +287,17 @@ Build:
 
 Artifacts:
 
-- `data/mlb/<test_runs|live_runs>/<run_id>/System/recommended_2leg.csv`
-- `data/mlb/<test_runs|live_runs>/<run_id>/System/recommended_3leg.csv`
-- `data/mlb/<test_runs|live_runs>/<run_id>/System/recommended_4leg.csv`
-- `data/mlb/<test_runs|live_runs>/<run_id>/System/recommended_5leg.csv`
-- `data/mlb/<test_runs|live_runs>/<run_id>/Windfall/recommended_2leg.csv`
-- `data/mlb/<test_runs|live_runs>/<run_id>/Windfall/recommended_3leg.csv`
-- `data/mlb/<test_runs|live_runs>/<run_id>/Windfall/recommended_4leg.csv`
-- `data/mlb/<test_runs|live_runs>/<run_id>/Windfall/recommended_5leg.csv`
-- `data/mlb/<test_runs|live_runs>/<run_id>/demonhunter.csv`
-- `data/mlb/<test_runs|live_runs>/<run_id>/marketed_slips.csv`
-- `data/mlb/<test_runs|live_runs>/<run_id>/marketed_slips.json`
+- `data/mlb/<replay_runs|live_runs>/<run_id>/System/recommended_2leg.csv`
+- `data/mlb/<replay_runs|live_runs>/<run_id>/System/recommended_3leg.csv`
+- `data/mlb/<replay_runs|live_runs>/<run_id>/System/recommended_4leg.csv`
+- `data/mlb/<replay_runs|live_runs>/<run_id>/System/recommended_5leg.csv`
+- `data/mlb/<replay_runs|live_runs>/<run_id>/Windfall/recommended_2leg.csv`
+- `data/mlb/<replay_runs|live_runs>/<run_id>/Windfall/recommended_3leg.csv`
+- `data/mlb/<replay_runs|live_runs>/<run_id>/Windfall/recommended_4leg.csv`
+- `data/mlb/<replay_runs|live_runs>/<run_id>/Windfall/recommended_5leg.csv`
+- `data/mlb/<replay_runs|live_runs>/<run_id>/demonhunter.csv`
+- `data/mlb/<replay_runs|live_runs>/<run_id>/marketed_slips.csv`
+- `data/mlb/<replay_runs|live_runs>/<run_id>/marketed_slips.json`
 
 Exit criteria:
 
@@ -319,11 +319,11 @@ Build:
 
 Artifacts:
 
-- `data/mlb/<test_runs|live_runs>/<run_id>/operator/operator_input.json`
-- `data/mlb/<test_runs|live_runs>/<run_id>/operator/anomalies.jsonl`
-- `data/mlb/<test_runs|live_runs>/<run_id>/operator/ai_evaluation.json`
-- `data/mlb/<test_runs|live_runs>/<run_id>/operator/operator_report.md`
-- `data/mlb/<test_runs|live_runs>/<run_id>/operator/publish_decision.json`
+- `data/mlb/<replay_runs|live_runs>/<run_id>/operator/operator_input.json`
+- `data/mlb/<replay_runs|live_runs>/<run_id>/operator/anomalies.jsonl`
+- `data/mlb/<replay_runs|live_runs>/<run_id>/operator/ai_evaluation.json`
+- `data/mlb/<replay_runs|live_runs>/<run_id>/operator/operator_report.md`
+- `data/mlb/<replay_runs|live_runs>/<run_id>/operator/publish_decision.json`
 
 Exit criteria:
 

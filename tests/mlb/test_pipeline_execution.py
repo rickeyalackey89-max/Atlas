@@ -53,7 +53,7 @@ def test_board_pipeline_writes_qmc_runtime_artifacts(tmp_path):
         game_date="2026-05-11",
     )
 
-    run_dir = tmp_path / "data" / "mlb" / "test_runs" / "pipeline_run"
+    run_dir = tmp_path / "data" / "mlb" / "replay_runs" / "pipeline_run"
     assert manifest["run_id"] == "pipeline_run"
     assert manifest["run_mode"] == "replay_single"
     assert manifest["fidelity_policy"]["strict_replay_fidelity"] is True
@@ -118,7 +118,7 @@ def test_board_pipeline_blocks_failed_replay_source_contract(tmp_path, monkeypat
             game_date="2026-05-11",
         )
 
-    run_dir = tmp_path / "data" / "mlb" / "test_runs" / "failed_source_contract_run"
+    run_dir = tmp_path / "data" / "mlb" / "replay_runs" / "failed_source_contract_run"
     source_manifest = json.loads((run_dir / "source_selection_manifest.json").read_text(encoding="utf-8"))
     assert source_manifest["contract_status"] == "fail"
     assert not (run_dir / "scored_legs.csv").exists()
@@ -145,7 +145,7 @@ def test_cli_run_board_pipeline_delegates_to_runtime(tmp_path, capsys):
     captured = capsys.readouterr()
     assert exit_code == 0
     assert "Executed MLB board pipeline:" in captured.out
-    assert (tmp_path / "data" / "mlb" / "test_runs" / "cli_pipeline_run" / "run_manifest.json").exists()
+    assert (tmp_path / "data" / "mlb" / "replay_runs" / "cli_pipeline_run" / "run_manifest.json").exists()
 
 
 def test_cli_live_runs_live_model(monkeypatch, tmp_path, capsys):
@@ -263,7 +263,7 @@ def test_board_pipeline_can_run_from_existing_normalized_dir(tmp_path):
     assert manifest["normalized_source_type"] == "normalized_dir"
     assert manifest["normalized"]["normalized_count"] == 2
     assert manifest["engine_board"]["row_count"] == 2
-    assert (tmp_path / "data" / "mlb" / "test_runs" / "normalized_pipeline_run" / "run_manifest.json").exists()
+    assert (tmp_path / "data" / "mlb" / "replay_runs" / "normalized_pipeline_run" / "run_manifest.json").exists()
 
 
 def test_board_pipeline_can_refresh_context_sources(tmp_path, monkeypatch):
