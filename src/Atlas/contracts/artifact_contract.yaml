@@ -39,6 +39,14 @@ artifacts:
       p_cal: {}
       role_ctx_mult: {}
       role_ctx_outs_used: {}
+      role_ctx_impact_tier: {}
+      role_ctx_max_out_weight: {}
+      role_ctx_total_bump: {}
+      role_ctx_projection_clamp_hi_effective: {}
+      role_ctx_rate_clamp_hi_effective: {}
+      sim_minutes_close: {}
+      projected_minutes_model: {}
+      projected_minutes_source: {}
 
   scored_legs_deduped.csv:
     description: Model output legs with scores (deduped)
@@ -55,4 +63,12 @@ artifacts:
       p_cal: {}
       role_ctx_mult: {}
       role_ctx_outs_used: {}
+      role_ctx_impact_tier: {}
+      role_ctx_max_out_weight: {}
+      role_ctx_total_bump: {}
+      role_ctx_projection_clamp_hi_effective: {}
+      role_ctx_rate_clamp_hi_effective: {}
+      sim_minutes_close: {}
+      projected_minutes_model: {}
+      projected_minutes_source: {}
       prop_key: {}

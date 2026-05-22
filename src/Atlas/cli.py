@@ -22,6 +22,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -333,6 +334,34 @@ def _publish_to_cloudflare_dashboard(repo_root: Path) -> None:
         print(f"[DASH] Publish failed (non-fatal): {e}", file=sys.stderr)
 
 
+def _find_raw_snapshot_for_run(repo_root: Path, run_id: str) -> Path | None:
+    """Find the PrizePicks raw JSON that belongs to a completed live run."""
+    data_dir = repo_root / "data"
+    pinned = data_dir / "archives" / "pins" / run_id / "prizepicks_raw.json"
+    if pinned.is_file():
+        return pinned
+
+    m = re.match(r"(\d{8})_(\d{6})", run_id)
+    if not m:
+        return None
+    run_dt = datetime.strptime("".join(m.groups()), "%Y%m%d%H%M%S")
+    raw_dir = data_dir / "raw"
+    candidates: list[tuple[float, Path]] = []
+    for path in raw_dir.glob(f"prizepicks_{m.group(1)}_*.json"):
+        mm = re.search(r"prizepicks_(\d{8})_(\d{6})", path.name)
+        if not mm:
+            continue
+        raw_dt = datetime.strptime("".join(mm.groups()), "%Y%m%d%H%M%S")
+        # The live fetch writes raw near the start of the run. Do not choose
+        # a later board snapshot as that can leak a different slate state.
+        if raw_dt <= run_dt:
+            candidates.append(((run_dt - raw_dt).total_seconds(), path))
+    if not candidates:
+        return None
+    candidates.sort(key=lambda item: item[0])
+    return candidates[0][1]
+
+
 def _write_full_run_bundle(repo_root: Path, run_id: str) -> None:
     """Best-effort: emit a FULL_RUN bundle via the Python bundler (Phase 7C)."""
     try:
@@ -342,12 +371,13 @@ def _write_full_run_bundle(repo_root: Path, run_id: str) -> None:
         audit_dir = data_dir / "output" / "runs" / run_id / ".atlas_audit"
         if not audit_dir.exists():
             audit_dir = None
+        raw_snapshot = _find_raw_snapshot_for_run(repo_root, run_id)
         zp = write_bundle_zip(
             repo_root=repo_root,
             data_dir=data_dir,
             run_id=run_id,
             ok=True,
-            raw_path=None,
+            raw_path=raw_snapshot,
             iael_live_dir=iael_dir if iael_dir.exists() else None,
             runs_dir=(data_dir / "output" / "runs"),
             audit_dir=audit_dir,
@@ -665,6 +695,20 @@ def main(argv: Optional[list[str]] = None) -> None:
             python_executable=sys.executable,
         )
         print(f"[REPLAY] eval_legs={eval_path}")
+        try:
+            from scripts.audits.strict_replay_fidelity_audit import audit_run as strict_replay_audit
+
+            strict_result = strict_replay_audit(eval_path.parent)
+            strict_path = eval_path.parent / "strict_replay_fidelity_audit.json"
+            strict_path.write_text(json.dumps(strict_result, indent=2, sort_keys=True), encoding="utf-8")
+            print(
+                f"[REPLAY] strict_fidelity={strict_result.get('verdict')} "
+                f"failures={len(strict_result.get('failures') or [])} -> {strict_path}"
+            )
+            if strict_result.get("verdict") != "PASS":
+                raise RuntimeError(f"Replay failed strict fidelity audit: {strict_result.get('failures')}")
+        except Exception:
+            raise
         return
 
     # TOOLS

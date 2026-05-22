@@ -38,3 +38,21 @@ def test_parse_txt_rows_preserves_san_antonio_team_context(tmp_path):
     assert ("MIN", "DiVincenzo, Donte", "OUT") in keyed
     assert ("SAS", "Fox, De'Aaron", "QUESTIONABLE") in keyed
     assert ("SAS", "Harper, Dylan", "QUESTIONABLE") in keyed
+
+
+def test_parse_txt_rows_not_yet_submitted_is_no_injuries_reported(tmp_path):
+    parser = _load_parser_module()
+    txt_path = tmp_path / "injury_no_rows.txt"
+    txt_path.write_text(
+        "\n".join(
+            [
+                "Injury Report: 05/21/26 11:00 AM",
+                "Game Date    Game Time    Matchup   Team                    Player Name   Current Status   Reason",
+                "05/22/2026   08:30 (ET)   OKC@SAS   Oklahoma City Thunder                              NOT YET SUBMITTED",
+                "                                    San Antonio Spurs                                   NOT YET SUBMITTED",
+            ]
+        ),
+        encoding="utf-8",
+    )
+
+    assert parser.parse_txt_rows_text(txt_path) == []

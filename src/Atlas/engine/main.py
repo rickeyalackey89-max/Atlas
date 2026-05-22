@@ -60,6 +60,9 @@ IAEL_INVALIDATIONS_PATH = Path(
 IAEL_STATUS_PATH = Path(
     os.environ.get("ATLAS_IAEL_STATUS_PATH", str(OUT_DIR / "dashboard" / "status_latest.json"))
 ).resolve()
+IAEL_NORMALIZED_PATH = Path(
+    os.environ.get("ATLAS_IAEL_NORMALIZED_PATH", str(OUT_DIR / "injury" / "normalized" / "latest.json"))
+).resolve()
 
 LOCAL_TZ = ZoneInfo("America/Chicago")
 
@@ -1278,6 +1281,20 @@ def main() -> None:
             scored.loc[_zdnp_mask, "p_cal"] = _np2.clip(_blended, 1e-6, 1 - 1e-6)
             flip_indices = scored.index[_zdnp_mask][_direction_disagree]
             scored.loc[flip_indices, "_zero_dnp_flip"] = True
+            if "p_cal_src" in scored.columns:
+                _all_zdnp_indices = scored.index[_zdnp_mask]
+                _blend_indices = _all_zdnp_indices[~_direction_disagree]
+                _src = scored["p_cal_src"].fillna("").astype(str).str.strip()
+                if len(flip_indices) > 0:
+                    scored.loc[flip_indices, "p_cal_src"] = (
+                        _src.loc[flip_indices].mask(_src.loc[flip_indices].eq(""), "p_cal")
+                        + "->zero_dnp_direction_to_p_adj"
+                    )
+                if len(_blend_indices) > 0:
+                    scored.loc[_blend_indices, "p_cal_src"] = (
+                        _src.loc[_blend_indices].mask(_src.loc[_blend_indices].eq(""), "p_cal")
+                        + "->zero_dnp_blend"
+                    )
             _n_override = int(_direction_disagree.sum())
             _n_blend = int(_zdnp_mask.sum()) - _n_override
             print(f"[ZERO_DNP] Post-cal: {_n_override} legs direction-corrected to p_adj, {_n_blend} blended (mult>={_zdnp_blend_thresh})")
@@ -1486,6 +1503,22 @@ def main() -> None:
     from Atlas.stages.publish.publish_run_outputs import run_publish_stage
     from Atlas.stages.publish.build_cloudflare_payload import build_cloudflare_payload
 
+    feature_audit_manifest = None
+    try:
+        from Atlas.core.feature_audit import build_feature_audit_payload
+
+        feature_audit_manifest = build_feature_audit_payload(
+            scored=scored,
+            logs=logs,
+            cfg=cfg,
+            repo_root=PROJECT_ROOT,
+        )
+        gbm_counts = (feature_audit_manifest.get("gbm", {}) or {}).get("status_counts", {})
+        cat_counts = (feature_audit_manifest.get("catboost", {}) or {}).get("status_counts", {})
+        print(f"[FEATURE_AUDIT] GBM={gbm_counts} CAT={cat_counts}")
+    except Exception as _feature_audit_err:
+        print(f"[FEATURE_AUDIT] Skipped: {_feature_audit_err!r}")
+
     run_dir = run_publish_stage(
         LOCAL_TZ=LOCAL_TZ,
         OUT_DIR=OUT_DIR,
@@ -1512,37 +1545,49 @@ def main() -> None:
         
         marketed_slips=marketed_slips,
         public_slip_quality_manifest=portfolio_quality.manifest,
+        feature_audit_manifest=feature_audit_manifest,
         
         iael_invalidations_path=IAEL_INVALIDATIONS_PATH,
         iael_status_path=IAEL_STATUS_PATH,
+        iael_normalized_path=IAEL_NORMALIZED_PATH,
 
         write_csv_clean=write_csv_clean,
         cfg=cfg,
         ensemble_dir=cfg.get("posthoc_calibrator", {}).get("ensemble_dir"),
     )
 
+    strict_replay = os.environ.get("ATLAS_STRICT_REPLAY") == "1"
+
     # Report-only OpenAI builder review. This is downstream of deterministic
     # selection and quality gates, and must never change or fail live outputs.
-    try:
-        from Atlas.core.builder_openai_review import write_builder_openai_review
+    # Strict replay skips it because CAT/LODO training consumes scored/eval
+    # surfaces, not report-only review artifacts.
+    if strict_replay:
+        print("OpenAI builder review: skipped (strict replay)")
+    else:
+        try:
+            from Atlas.core.builder_openai_review import write_builder_openai_review
 
-        review_paths = write_builder_openai_review(run_dir, cfg)
-        if review_paths:
-            for label, path in review_paths.items():
-                print(f" - {path} ({label})")
-    except Exception as e:
-        import sys as _sys
+            review_paths = write_builder_openai_review(run_dir, cfg)
+            if review_paths:
+                for label, path in review_paths.items():
+                    print(f" - {path} ({label})")
+        except Exception as e:
+            import sys as _sys
 
-        print(f"Warning: failed to write OpenAI builder review: {e}", file=_sys.stderr)
+            print(f"Warning: failed to write OpenAI builder review: {e}", file=_sys.stderr)
 
     # Build dashboard payload from slip CSVs
-    try:
-        dashboard_dir = OUT_DIR / "dashboard"
-        payload_path = build_cloudflare_payload(run_dir, dashboard_dir, marketed_slips=marketed_slips or [], gamelogs_path=LOGS_PATH, include_yesterday_slips=False)
-        print(f"Dashboard payload: {payload_path}")
-    except Exception as e:
-        import sys as _sys
-        print(f"Warning: failed to build dashboard payload: {e}", file=_sys.stderr)
+    if strict_replay:
+        print("Dashboard payload: skipped (strict replay)")
+    else:
+        try:
+            dashboard_dir = OUT_DIR / "dashboard"
+            payload_path = build_cloudflare_payload(run_dir, dashboard_dir, marketed_slips=marketed_slips or [], gamelogs_path=LOGS_PATH, include_yesterday_slips=False)
+            print(f"Dashboard payload: {payload_path}")
+        except Exception as e:
+            import sys as _sys
+            print(f"Warning: failed to build dashboard payload: {e}", file=_sys.stderr)
 
     # Discord picks post is handled by the orchestrator (discord_post.py --picks-today).
     # Do not call notify_discord here — it would double-post to the same channel.

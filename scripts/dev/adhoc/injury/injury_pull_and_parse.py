@@ -94,6 +94,19 @@ def read_json(path: Path) -> Any:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+def _txt_indicates_no_injuries_reported(txt_path: Path) -> bool:
+    """
+    Official NBA reports sometimes contain only team rows with
+    "NOT YET SUBMITTED" and no player injury rows. That is a valid
+    no-actionable-injuries state, not a parser failure.
+    """
+    try:
+        text = txt_path.read_text(encoding="utf-8", errors="ignore").upper()
+    except Exception:
+        return False
+    return "NOT YET SUBMITTED" in text
+
+
 # ---------------------------------------------------------------------
 # HTTP and link discovery
 # ---------------------------------------------------------------------
@@ -478,6 +491,9 @@ def parse_txt_rows_text(txt_path: Path) -> List[Dict[str, str]]:
         cleaned.append(r)
 
     if not cleaned:
+        if _txt_indicates_no_injuries_reported(txt_path):
+            print(f"[INJURY] No Injuries Reported: {txt_path}")
+            return []
         print(f"[INJURY] No injury rows parsed from TXT: {txt_path}")
         raise RuntimeError(f"No injury rows parsed from TXT: {txt_path}")
 
@@ -614,6 +630,7 @@ def main() -> None:
             "source_url": pdf_url,
             "pulled_at_local": pulled_at,
             "pdf_sha1": pdf_hash,
+            "no_injuries_reported": len(normalized) == 0,
             "rows": normalized,
         },
     )
@@ -626,6 +643,7 @@ def main() -> None:
         rows=normalized,
     )
 
+    no_injuries_reported = len(normalized) == 0
     status_obj = {
         "report_datetime_local": f"{target_date} {report_label}",
         "pulled_at_local": pulled_at,
@@ -635,7 +653,9 @@ def main() -> None:
         "post_iael": True,
         "post_line_recon": False,
         "dead_period": False,
-        "notes": "IAEL completed. Injury rows parsed via text (table extraction unreliable).",
+        "no_injuries_reported": no_injuries_reported,
+        "injury_report_state": "no_injuries_reported" if no_injuries_reported else "injuries_reported",
+        "notes": "No Injuries Reported." if no_injuries_reported else "IAEL completed. Injury rows parsed via text (table extraction unreliable).",
     }
     write_json(STATUS_LATEST, status_obj)
 
@@ -643,7 +663,10 @@ def main() -> None:
     _archive_latest_dashboard_pair()
 
     invalid_count = int(read_json(INVALIDATIONS_LATEST).get("invalidated_players_count", 0))
-    print(f"OK: pulled {pdf_url} -> {norm_path.name} (rows={len(normalized)}) invalid={invalid_count}")
+    if no_injuries_reported:
+        print(f"OK: pulled {pdf_url} -> {norm_path.name} (rows=0) invalid=0 -- No Injuries Reported")
+    else:
+        print(f"OK: pulled {pdf_url} -> {norm_path.name} (rows={len(normalized)}) invalid={invalid_count}")
 
 
 if __name__ == "__main__":

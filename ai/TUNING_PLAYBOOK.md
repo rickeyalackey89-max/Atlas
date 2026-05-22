@@ -1,6 +1,6 @@
 # Atlas Tuning Playbook
 
-> **Last updated:** 2026-05-10
+> **Last updated:** 2026-05-21
 > **Purpose:** Diagnostic decision tree for improving model metrics. For each symptom, this file tells you which lever to pull, what to change, and how to validate the result before promoting.
 > **Current runtime:** CatBoost playoff v5cD active; v18 GBM and telemetry isotonic disabled.
 
@@ -13,6 +13,22 @@
 3. Make the smallest change that addresses the root cause
 4. Validate with a single-slate replay before a full backtest
 5. Never change two levers simultaneously — you won't know which one worked
+
+## Hard Gate Before Any Replay, Corpus, LODO, CAT, Or Builder Run
+
+Strict fidelity is mandatory. Before any expensive run, execute the preflight
+against every target date:
+
+```powershell
+cd C:\Users\13142\Atlas\NBA
+python tools\preflight_strict_replay_dates.py --dates YYYYMMDD ...
+python tools\batch_replay_backfill.py --dry-run --dates YYYYMMDD ...
+```
+
+Do not start corpus replay, LODO, CAT training, or slip-builder tuning if any
+date fails preflight. Repair the source bundle, source manifest, eval truth,
+game-line context, market context, or raw snapshot first. A model result from a
+broken corpus is not actionable, even when the aggregate Brier looks better.
 
 ---
 
@@ -210,8 +226,10 @@ When to retrain: new playoff dates since 2026-05-09, persistent Brier drift, or 
 # Step 1: Rebuild or verify playoff cache
 python tools/build_playoff_resim_cache.py
 
-# Step 2: Run v5cD replay validation
-python tools/replay_v5cD_corpus.py
+# Step 2: Strict preflight and replay validation
+python tools\preflight_strict_replay_dates.py --dates YYYYMMDD ...
+python tools\batch_replay_backfill.py --dry-run --dates YYYYMMDD ...
+python tools\batch_replay_backfill.py --force --corpus-tag <strict_tag> --dates YYYYMMDD ...
 
 # Step 3: Inspect summary
 type logs\replay_v5cD_corpus_<tag>_summary.csv
@@ -235,8 +253,10 @@ When to retrain: ≥15 new eval dates accumulated since last train, or Brier ris
 # Step 1: Check cache dates
 python -c "import pickle; c=pickle.load(open('data/model/_v18_resim_cache.pkl','rb')); print(sorted(c['dates']))"
 
-# Step 2: Backfill any missing dates from bundles
-python tools/batch_replay_backfill.py
+# Step 2: Backfill only after strict replay preflight passes
+python tools\preflight_strict_replay_dates.py --dates YYYYMMDD ...
+python tools\batch_replay_backfill.py --dry-run --dates YYYYMMDD ...
+python tools\batch_replay_backfill.py --force --corpus-tag <strict_tag> --dates YYYYMMDD ...
 
 # Step 3: Rebuild cache (update version number)
 python tools/build_resim_cache.py --version v19 --force

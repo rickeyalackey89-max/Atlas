@@ -330,16 +330,48 @@ _NBA_TEAM_ABBR: Dict[str, str] = {
     "Washington Wizards": "WAS",
 }
 
+_NBA_ABBR_ALIAS: Dict[str, str] = {
+    "SA": "SAS",
+    "SAS": "SAS",
+    "GS": "GSW",
+    "GSW": "GSW",
+    "NY": "NYK",
+    "NYK": "NYK",
+    "NO": "NOP",
+    "NOP": "NOP",
+    "PHO": "PHX",
+    "PHX": "PHX",
+    "UT": "UTA",
+    "UTA": "UTA",
+}
+
 
 def _abbr_from_team_name(name: str) -> Optional[str]:
     if not name:
         return None
     n = str(name).strip()
+    abbr = _canonical_abbr(n)
+    if abbr:
+        return abbr
     if n in _NBA_TEAM_ABBR:
         return _NBA_TEAM_ABBR[n]
     n2 = n.replace("Los Angeles", "LA")
     if n2 in _NBA_TEAM_ABBR:
         return _NBA_TEAM_ABBR[n2]
+    return None
+
+
+def _canonical_abbr(raw: Any) -> Optional[str]:
+    if raw is None:
+        return None
+    s = str(raw).upper().strip()
+    if not s:
+        return None
+    if s in _NBA_ABBR_ALIAS:
+        return _NBA_ABBR_ALIAS[s]
+    valid = set(_NBA_TEAM_ABBR.values())
+    if s in valid:
+        return s
     return None
 
 
@@ -494,6 +526,235 @@ def _fetch_oddsapi_events(game_date: str) -> List[Event]:
 
 
 # -----------------------------
+# ESPN game-line fallback
+# -----------------------------
+def _espn_local_date(dt: datetime) -> str:
+    tz = _oddsapi_tz()
+    local_dt = dt.astimezone(tz) if tz is not None and dt.tzinfo is not None else dt
+    return local_dt.date().isoformat()
+
+
+def _espn_competitor_abbr(comp: Dict[str, Any], home_away: str) -> Optional[str]:
+    competitors = comp.get("competitors")
+    if not isinstance(competitors, list):
+        return None
+    want = home_away.lower().strip()
+    for item in competitors:
+        if not isinstance(item, dict):
+            continue
+        if str(item.get("homeAway") or "").lower().strip() != want:
+            continue
+        team = item.get("team")
+        if isinstance(team, dict):
+            for key in ("abbreviation", "shortDisplayName", "displayName", "name"):
+                abbr = _abbr_from_team_name(str(team.get(key) or ""))
+                if abbr:
+                    return abbr
+        for key in ("abbreviation", "team", "displayName", "name"):
+            abbr = _abbr_from_team_name(str(item.get(key) or ""))
+            if abbr:
+                return abbr
+    return None
+
+
+def _pick_espn_odds_item(items: Any) -> Optional[Dict[str, Any]]:
+    if isinstance(items, dict):
+        # Site API may expose a single object.
+        if "items" in items:
+            return _pick_espn_odds_item(items.get("items"))
+        return items
+    if not isinstance(items, list):
+        return None
+    odds_items = [x for x in items if isinstance(x, dict)]
+    if not odds_items:
+        return None
+
+    pref = [
+        x.strip().lower()
+        for x in (os.getenv("ESPN_ODDS_PROVIDER_PREF") or "draftkings,espn bet,fanduel,caesars").split(",")
+        if x.strip()
+    ]
+
+    def provider_name(item: Dict[str, Any]) -> str:
+        provider = item.get("provider")
+        if isinstance(provider, dict):
+            return str(provider.get("name") or provider.get("id") or "").lower().strip()
+        return str(provider or "").lower().strip()
+
+    for want in pref:
+        for item in odds_items:
+            if provider_name(item) == want:
+                return item
+    return odds_items[0]
+
+
+def _parse_espn_spread(odds: Dict[str, Any], home_abbr: str, away_abbr: str) -> Tuple[Optional[float], Optional[float]]:
+    details = str(odds.get("details") or "").upper().strip()
+    m = re.search(r"\b([A-Z]{2,4})\b\s*([+-]\d+(?:\.\d+)?)", details)
+    if m:
+        fav = _canonical_abbr(m.group(1)) or m.group(1)
+        spread_val = to_float(m.group(2))
+        if spread_val is not None:
+            if fav == home_abbr:
+                return float(spread_val), float(-spread_val)
+            if fav == away_abbr:
+                return float(-spread_val), float(spread_val)
+
+    raw_spread = to_float(odds.get("spread"))
+    if raw_spread is None:
+        return None, None
+    spread_abs = abs(float(raw_spread))
+
+    home_odds = odds.get("homeTeamOdds")
+    away_odds = odds.get("awayTeamOdds")
+    home_fav = isinstance(home_odds, dict) and bool(home_odds.get("favorite"))
+    away_fav = isinstance(away_odds, dict) and bool(away_odds.get("favorite"))
+    if home_fav and not away_fav:
+        return -spread_abs, spread_abs
+    if away_fav and not home_fav:
+        return spread_abs, -spread_abs
+
+    # ESPN top-level spread is commonly negative for the favorite. If there is
+    # no favorite metadata, keep the sign on the home side only when details
+    # cannot tell us more. This is less trusted, but still auditable by source.
+    return float(raw_spread), float(-raw_spread)
+
+
+def _parse_espn_moneyline(odds: Dict[str, Any], side: str) -> Optional[int]:
+    key = "homeTeamOdds" if side == "home" else "awayTeamOdds"
+    obj = odds.get(key)
+    if not isinstance(obj, dict):
+        return None
+    return _to_nullable_int(obj.get("moneyLine"))
+
+
+def _fetch_espn_core_odds(event_id: str, competition_id: str) -> Optional[Dict[str, Any]]:
+    timeout_s = float(os.getenv("ESPN_ODDS_TIMEOUT_S", os.getenv("ROTOWIRE_TIMEOUT_S", "20")))
+    url = (
+        "https://sports.core.api.espn.com/v2/sports/basketball/leagues/nba"
+        f"/events/{event_id}/competitions/{competition_id}/odds?lang=en&region=us"
+    )
+    try:
+        r = requests.get(url, headers={"User-Agent": "Mozilla/5.0", "Accept": "application/json"}, timeout=timeout_s)
+        print(f"[espn-odds] status={r.status_code} bytes={len(r.content or b'')} event={event_id}")
+        if r.status_code != 200:
+            _write_debug(f"espn_odds_http_{r.status_code}_{event_id}.txt", (r.text or "")[:20000])
+            return None
+        data = r.json()
+    except Exception as exc:
+        _write_debug(f"espn_odds_error_{event_id}.txt", repr(exc))
+        return None
+    if not isinstance(data, dict):
+        return None
+    return _pick_espn_odds_item(data.get("items"))
+
+
+def _site_odds_from_comp(comp: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+    for source in (comp.get("odds"), comp.get("competitionOdds")):
+        item = _pick_espn_odds_item(source)
+        if item:
+            return item
+    return None
+
+
+def _fetch_espn_events(game_date: str) -> List[Event]:
+    timeout_s = float(os.getenv("ESPN_ODDS_TIMEOUT_S", os.getenv("ROTOWIRE_TIMEOUT_S", "20")))
+    yyyymmdd = game_date.replace("-", "")
+    url = f"https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates={yyyymmdd}"
+    print(f"[espn-odds] GET {url}")
+    try:
+        r = requests.get(url, headers={"User-Agent": "Mozilla/5.0", "Accept": "application/json"}, timeout=timeout_s)
+        print(f"[espn-odds] scoreboard status={r.status_code} bytes={len(r.content or b'')}")
+        if r.status_code != 200:
+            _write_debug(f"espn_scoreboard_http_{r.status_code}_{game_date}.txt", (r.text or "")[:20000])
+            return []
+        data = r.json()
+    except Exception as exc:
+        _write_debug(f"espn_scoreboard_error_{game_date}.txt", repr(exc))
+        return []
+
+    events_raw = data.get("events") if isinstance(data, dict) else None
+    if not isinstance(events_raw, list):
+        return []
+
+    out: List[Event] = []
+    for ev in events_raw:
+        if not isinstance(ev, dict):
+            continue
+        event_id = str(ev.get("id") or "").strip()
+        comps = ev.get("competitions")
+        if not event_id or not isinstance(comps, list) or not comps:
+            continue
+        comp = comps[0] if isinstance(comps[0], dict) else {}
+        comp_id = str(comp.get("id") or event_id).strip()
+        start = _parse_iso_z(str(comp.get("date") or ev.get("date") or ""))
+        if start is None:
+            continue
+        gd = _espn_local_date(start)
+        if gd != game_date:
+            continue
+
+        home_abbr = _espn_competitor_abbr(comp, "home")
+        away_abbr = _espn_competitor_abbr(comp, "away")
+        if not home_abbr or not away_abbr:
+            continue
+
+        odds = _site_odds_from_comp(comp) or _fetch_espn_core_odds(event_id, comp_id)
+        if not isinstance(odds, dict):
+            continue
+
+        home_spread, away_spread = _parse_espn_spread(odds, home_abbr, away_abbr)
+        ou = to_float(odds.get("overUnder") or odds.get("total") or odds.get("ou"))
+        if home_spread is None and away_spread is None and ou is None:
+            continue
+
+        provider = odds.get("provider")
+        if isinstance(provider, dict):
+            provider_name = str(provider.get("name") or provider.get("id") or "espn")
+        else:
+            provider_name = str(provider or "espn")
+
+        out.append(
+            Event(
+                gameID=event_id,
+                eventTime=int(start.timestamp()),
+                game_date=gd,
+                homeTeam=home_abbr,
+                awayTeam=away_abbr,
+                home_spread=home_spread,
+                away_spread=away_spread,
+                home_ml=_parse_espn_moneyline(odds, "home"),
+                away_ml=_parse_espn_moneyline(odds, "away"),
+                ou=ou,
+                source=f"espn:{provider_name.lower().replace(' ', '_')}",
+            )
+        )
+
+    return out
+
+
+def _write_event_fallback(
+    *,
+    source: str,
+    note: str,
+    events: List[Event],
+    out_path: Path,
+    last_good_path: Path,
+) -> None:
+    out_obj = {
+        "sport": "NBA",
+        "source": source,
+        "date": events[0].game_date if events else "",
+        "events": [e.to_json() for e in events],
+        "fetched_at": _now_utc_iso(),
+        "note": note,
+    }
+    _write_json_atomic(out_path, out_obj)
+    _maybe_archive_live_rotowire(out_path)
+    _write_json_atomic(last_good_path, out_obj)
+
+
+# -----------------------------
 # Last-good fallback
 # -----------------------------
 def _load_last_good(path: Path) -> Optional[Dict[str, Any]]:
@@ -559,6 +820,15 @@ def _write_json_atomic(path: Path, obj: Dict[str, Any]) -> None:
     tmp = path.with_suffix(path.suffix + ".tmp")
     tmp.write_text(json.dumps(obj, ensure_ascii=False), encoding="utf-8")
     tmp.replace(path)
+
+
+def _events_have_market_context(events: List[Event]) -> bool:
+    for ev in events:
+        if ev.home_spread is not None and ev.away_spread is not None:
+            return True
+        if ev.ou is not None:
+            return True
+    return False
 
 
 def _utc_compact() -> str:
@@ -627,6 +897,26 @@ def main() -> int:
     if not game_date:
         game_date = datetime.now().strftime("%Y-%m-%d")
 
+    out_path = Path(os.getenv("ROTOWIRE_OUT_PATH", str(_default_out_path())))
+    last_good_path = Path(os.getenv("ROTOWIRE_LAST_GOOD_PATH", str(_default_last_good_path())))
+
+    if os.getenv("ROTOWIRE_FORCE_ESPN_FALLBACK", "0").strip() == "1":
+        espn_events = _fetch_espn_events(game_date)
+        if espn_events and _events_have_market_context(espn_events):
+            _write_event_fallback(
+                source="espn_scoreboard/core_odds (forced fallback)",
+                note="FALLBACK_USED: espn odds (forced repair)",
+                events=espn_events,
+                out_path=out_path,
+                last_good_path=last_good_path,
+            )
+            print(f"[espn-odds] wrote {out_path} (events={len(espn_events)}) using FORCED FALLBACK")
+            return 0
+        print("[espn-odds] forced fallback requested but no ESPN game-line context was available")
+        if allow_empty:
+            return 0
+        return 7
+
     if not url:
         url = _build_url(game_date)
 
@@ -642,9 +932,6 @@ def main() -> int:
     else:
         _bootstrap_rotowire_session(sess, timeout_s)
 
-    out_path = Path(os.getenv("ROTOWIRE_OUT_PATH", str(_default_out_path())))
-    last_good_path = Path(os.getenv("ROTOWIRE_LAST_GOOD_PATH", str(_default_last_good_path())))
-
     print(f"[rotowire] GET {url}")
     r = sess.get(url, timeout=timeout_s)
     body = r.content or b""
@@ -655,6 +942,18 @@ def main() -> int:
     # -----------------------------
     if r.status_code != 200:
         _write_debug(f"rotowire_http_{r.status_code}_{game_date}.txt", (r.text or "")[:10000])
+
+        espn_events = _fetch_espn_events(game_date)
+        if espn_events and _events_have_market_context(espn_events):
+            _write_event_fallback(
+                source="espn_scoreboard/core_odds (fallback)",
+                note=f"FALLBACK_USED: espn odds (rotowire http_{r.status_code})",
+                events=espn_events,
+                out_path=out_path,
+                last_good_path=last_good_path,
+            )
+            print(f"[espn-odds] wrote {out_path} (events={len(espn_events)}) using FALLBACK")
+            return 0
 
         oa_events = _fetch_oddsapi_events(game_date)
         if oa_events:
@@ -687,6 +986,18 @@ def main() -> int:
     ct = (r.headers.get("Content-Type") or "").lower()
     if "text/html" in ct:
         _write_debug(f"rotowire_html_{game_date}.html", (r.text or "")[:200000])
+
+        espn_events = _fetch_espn_events(game_date)
+        if espn_events and _events_have_market_context(espn_events):
+            _write_event_fallback(
+                source="espn_scoreboard/core_odds (fallback)",
+                note="FALLBACK_USED: espn odds (rotowire got_html)",
+                events=espn_events,
+                out_path=out_path,
+                last_good_path=last_good_path,
+            )
+            print(f"[espn-odds] wrote {out_path} (events={len(espn_events)}) using FALLBACK")
+            return 0
 
         oa_events = _fetch_oddsapi_events(game_date)
         if oa_events:
@@ -722,6 +1033,18 @@ def main() -> int:
         payload = r.json()
     except Exception as e:
         _write_debug(f"rotowire_not_json_{game_date}.txt", (r.text or "")[:10000])
+
+        espn_events = _fetch_espn_events(game_date)
+        if espn_events and _events_have_market_context(espn_events):
+            _write_event_fallback(
+                source="espn_scoreboard/core_odds (fallback)",
+                note=f"FALLBACK_USED: espn odds (rotowire not_json:{type(e).__name__})",
+                events=espn_events,
+                out_path=out_path,
+                last_good_path=last_good_path,
+            )
+            print(f"[espn-odds] wrote {out_path} (events={len(espn_events)}) using FALLBACK")
+            return 0
 
         oa_events = _fetch_oddsapi_events(game_date)
         if oa_events:
@@ -772,6 +1095,18 @@ def main() -> int:
             f"rotowire_empty_rows_{game_date}.json",
             json.dumps(payload, ensure_ascii=False)[:200000],
         )
+
+        espn_events = _fetch_espn_events(game_date)
+        if espn_events and _events_have_market_context(espn_events):
+            _write_event_fallback(
+                source="espn_scoreboard/core_odds (fallback)",
+                note="FALLBACK_USED: espn odds (rotowire empty_rows)",
+                events=espn_events,
+                out_path=out_path,
+                last_good_path=last_good_path,
+            )
+            print(f"[espn-odds] wrote {out_path} (events={len(espn_events)}) using FALLBACK")
+            return 0
 
         oa_events = _fetch_oddsapi_events(game_date)
         if oa_events:
@@ -872,6 +1207,68 @@ def main() -> int:
         "fetched_at": _now_utc_iso(),
     }
 
+    if events and not _events_have_market_context(events):
+        print("[rotowire] events returned but spreads/totals are all empty; trying fallback context")
+
+        espn_events = _fetch_espn_events(game_date)
+        if espn_events and _events_have_market_context(espn_events):
+            _write_event_fallback(
+                source="espn_scoreboard/core_odds (fallback)",
+                note="FALLBACK_USED: espn odds (rotowire null market context)",
+                events=espn_events,
+                out_path=out_path,
+                last_good_path=last_good_path,
+            )
+            print(f"[espn-odds] wrote {out_path} (events={len(espn_events)}) using FALLBACK")
+            return 0
+
+        oa_events = _fetch_oddsapi_events(game_date)
+        if oa_events and _events_have_market_context(oa_events):
+            out_obj = {
+                "sport": "NBA",
+                "source": "the-odds-api.com/v4 (fallback)",
+                "date": game_date,
+                "events": [e.to_json() for e in oa_events],
+                "fetched_at": _now_utc_iso(),
+                "note": "FALLBACK_USED: oddsapi (rotowire null market context)",
+            }
+            _write_json_atomic(out_path, out_obj)
+            _maybe_archive_live_rotowire(out_path)
+            _write_json_atomic(last_good_path, out_obj)
+            print(f"[oddsapi] wrote {out_path} (events={len(oa_events)}) using FALLBACK")
+            return 0
+
+        fallback = _load_date_pinned_fallback(last_good_path, game_date)
+        if fallback is not None:
+            lg, source_path = fallback
+            fallback_events = []
+            try:
+                for ev in lg.get("events", []):
+                    spread = ev.get("spread", {}) if isinstance(ev, dict) else {}
+                    fallback_events.append(
+                        Event(
+                            gameID=str(ev.get("gameID", "")),
+                            eventTime=int(ev.get("eventTime", 0) or 0),
+                            game_date=str(ev.get("game_date", game_date)),
+                            homeTeam=str(ev.get("homeTeam", "")),
+                            awayTeam=str(ev.get("awayTeam", "")),
+                            home_spread=to_float(spread.get("home")),
+                            away_spread=to_float(spread.get("away")),
+                            home_ml=None,
+                            away_ml=None,
+                            ou=to_float(ev.get("ou")),
+                            source=str(ev.get("source", "fallback")),
+                        )
+                    )
+            except Exception:
+                fallback_events = []
+            if fallback_events and _events_have_market_context(fallback_events):
+                _write_fallback_output(out_path, last_good_path, lg, "DATE_PINNED_FALLBACK_USED: rotowire_null_market_context")
+                print(f"[rotowire] wrote {out_path} (events={len(lg['events'])}) using fallback from {source_path}")
+                return 0
+
+        out_obj["note"] = "Rotowire returned events, but all spread/total fields were empty."
+
     _write_json_atomic(out_path, out_obj)
     _maybe_archive_live_rotowire(out_path)
     print(f"[rotowire] wrote {out_path} (events={len(events)}) at {_now_utc_iso()}")
@@ -889,6 +1286,18 @@ def main() -> int:
         f"rotowire_zero_events_{game_date}.json",
         json.dumps(rows, ensure_ascii=False)[:200000],
     )
+
+    espn_events = _fetch_espn_events(game_date)
+    if espn_events and _events_have_market_context(espn_events):
+        _write_event_fallback(
+            source="espn_scoreboard/core_odds (fallback)",
+            note="FALLBACK_USED: espn odds (rotowire parsed_zero_events)",
+            events=espn_events,
+            out_path=out_path,
+            last_good_path=last_good_path,
+        )
+        print(f"[espn-odds] wrote {out_path} (events={len(espn_events)}) using FALLBACK")
+        return 0
 
     oa_events = _fetch_oddsapi_events(game_date)
     if oa_events:

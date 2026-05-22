@@ -190,12 +190,18 @@ This is the file used for all Brier score computations and reader backtests.
 Self-contained zip files for deterministic replay. Each bundle contains:
 - Raw PrizePicks JSON snapshot
 - IAEL injury snapshots (invalidations, status, normalized)
-- Rotowire lines snapshot
+- ESPN-primary game-line snapshot (legacy filename `rotowire_lines.json`)
+- Market context snapshots such as external priors, odds market, BettingPros, and DraftKings when available
 - Role metrics snapshot (when available)
+- Run/source manifests needed to audit replay fidelity
 
 Named: `atlas_bundle_YYYYMMDD_HHMMSS.zip`
 
-Use with: `python tools/replay_bundle.py <bundle.zip> --scenario-id <name>`
+Use with: `python tools/replay_bundle.py <bundle.zip> --scenario-id <name>`.
+
+Strict corpus work must run `python tools\preflight_strict_replay_dates.py --dates ...`
+before replaying bundles. Bundles should be treated as the primary replay input
+container so replay does not hunt mutable repo state.
 
 ---
 

@@ -55,7 +55,7 @@ from Atlas.core.slip_builders import build_system_slips, build_windfall_slips
 from Atlas.stages.optimize.build_slips_today import _cfg_for_n_legs
 
 # ── corpus ───────────────────────────────────────────────────────────
-BASE = Path(r"C:\Users\13142\Atlas\NBA\data\telemetry\v18_corpus")
+BASE = Path(os.environ.get("ATLAS_SLIP_TRAINER_CORPUS", r"C:\Users\13142\Atlas\NBA\data\telemetry\v18_corpus"))
 
 
 def _load_run_dates() -> list[str]:
@@ -769,7 +769,20 @@ def main() -> None:
         "--legs", type=int, choices=[3, 4, 5], default=None,
         help="Restrict to one leg count (default: all)",
     )
+    ap.add_argument(
+        "--base", default=None,
+        help="Corpus directory containing YYYYMMDD subdirectories. Overrides ATLAS_SLIP_TRAINER_CORPUS.",
+    )
+    ap.add_argument(
+        "--out-path", default=None,
+        help="Output YAML path. Defaults to tools/slip_builder_trainer_results.yaml.",
+    )
     args = ap.parse_args()
+
+    global BASE, RUN_DATES
+    if args.base:
+        BASE = Path(args.base)
+        RUN_DATES = _load_run_dates()
 
     print("Slip Builder Trainer")
     print("=" * 50)
@@ -838,7 +851,10 @@ def main() -> None:
     _print_yaml_overrides(results, cats)
 
     # Save
-    out_path = Path(__file__).resolve().parent / "slip_builder_trainer_results.yaml"
+    out_path = Path(args.out_path) if args.out_path else Path(__file__).resolve().parent / "slip_builder_trainer_results.yaml"
+    if not out_path.is_absolute():
+        out_path = Path(__file__).resolve().parents[1] / out_path
+    out_path.parent.mkdir(parents=True, exist_ok=True)
     with open(out_path, "w") as f:
         yaml.dump(results, f, default_flow_style=False, sort_keys=False)
     print(f"\n  Results saved to: {out_path}")

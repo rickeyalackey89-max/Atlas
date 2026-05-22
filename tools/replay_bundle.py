@@ -2,8 +2,10 @@ from __future__ import annotations
 
 import argparse
 import csv
+import hashlib
 import json
 import os
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -546,29 +548,163 @@ def _find_best_normalized_snapshot(repo_root: Path, target_local: datetime | Non
     return candidates[0][2]
 
 
+def _sha256_file(path: Path) -> str:
+    h = hashlib.sha256()
+    with path.open("rb") as f:
+        for chunk in iter(lambda: f.read(1024 * 1024), b""):
+            h.update(chunk)
+    return h.hexdigest()
+
+
+def _game_line_context_status(path: Path, *, game_date: str | None) -> tuple[bool, str]:
+    try:
+        obj = json.loads(path.read_text(encoding="utf-8"))
+    except Exception as exc:
+        return False, f"unreadable:{type(exc).__name__}"
+    if not isinstance(obj, dict):
+        return False, "bad_shape"
+    source_date = str(obj.get("date", "")).strip()
+    if game_date and source_date and source_date != game_date:
+        return False, f"date_mismatch expected={game_date} found={source_date}"
+    events = obj.get("events")
+    if not isinstance(events, list) or not events:
+        return False, "no_events"
+    missing: list[str] = []
+    for idx, ev in enumerate(events):
+        if not isinstance(ev, dict):
+            missing.append(f"event_{idx}:bad_shape")
+            continue
+        spread = ev.get("spread")
+        if not isinstance(spread, dict):
+            spread = {}
+        if spread.get("home") is None or spread.get("away") is None:
+            missing.append(f"event_{idx}:missing_spread")
+        if ev.get("ou") is None:
+            missing.append(f"event_{idx}:missing_total")
+    if missing:
+        return False, ";".join(missing[:8])
+    return True, f"ok events={len(events)}"
+
+
+def _prepare_source_context_snapshot(
+    *,
+    out_dir: Path,
+    run_id: str,
+    game_date: str | None,
+    data_dir: Path,
+    env: dict[str, str],
+) -> Path:
+    """Create the run-scoped source manifest before engine publish audits run."""
+    snapshot_dir = out_dir / "runs_manifest" / run_id
+    snapshot_dir.mkdir(parents=True, exist_ok=True)
+
+    candidates: dict[str, Path | None] = {
+        "prizepicks_raw": Path(env["ATLAS_REPLAY_RAW"]) if env.get("ATLAS_REPLAY_RAW") else None,
+        "rotowire_lines": Path(env["ATLAS_ROTOWIRE_LINES_PATH"]) if env.get("ATLAS_ROTOWIRE_LINES_PATH") else None,
+        "external_priors": Path(env["ATLAS_EXTERNAL_PRIORS_CSV_PATH"]) if env.get("ATLAS_EXTERNAL_PRIORS_CSV_PATH") else None,
+        "odds_market": Path(env["ATLAS_ODDS_MARKET_JSON_PATH"]) if env.get("ATLAS_ODDS_MARKET_JSON_PATH") else None,
+        "bettingpros_props": Path(env["ATLAS_BETTINGPROS_PROPS_CSV_PATH"])
+        if env.get("ATLAS_BETTINGPROS_PROPS_CSV_PATH")
+        else None,
+        "draftkings_props": Path(env["ATLAS_DRAFTKINGS_PROPS_CSV_PATH"])
+        if env.get("ATLAS_DRAFTKINGS_PROPS_CSV_PATH")
+        else None,
+        "github_prop_odds": Path(env["ATLAS_GITHUB_PROP_ODDS_CSV_PATH"])
+        if env.get("ATLAS_GITHUB_PROP_ODDS_CSV_PATH")
+        else None,
+    }
+    manifest: dict[str, dict[str, str]] = {}
+    copied: dict[str, Path] = {}
+    for label, source in candidates.items():
+        if source is None:
+            continue
+        source = source.expanduser().resolve()
+        if not source.is_file():
+            continue
+        destination = snapshot_dir / source.name
+        shutil.copy2(source, destination)
+        copied[label] = destination
+        manifest[label] = {
+            "source": str(source),
+            "destination": str(destination.resolve()),
+            "sha256": _sha256_file(destination),
+        }
+
+    if "prizepicks_raw" not in copied:
+        raise RuntimeError("Strict replay bundle missing pinned PrizePicks raw JSON for source context")
+    if "rotowire_lines" not in copied:
+        raise RuntimeError("Strict replay bundle missing pinned rotowire_lines.json for source context")
+    if "external_priors" not in copied:
+        raise RuntimeError("Strict replay bundle missing pinned external_priors_today.csv for source context")
+
+    line_ok, line_reason = _game_line_context_status(copied["rotowire_lines"], game_date=game_date)
+    if not line_ok:
+        raise RuntimeError(f"Strict replay bundle has unusable game-line spread/total context: {line_reason}")
+
+    env["ATLAS_ROTOWIRE_LINES_PATH"] = str(copied["rotowire_lines"])
+    env["ATLAS_EXTERNAL_PRIORS_CSV_PATH"] = str(copied["external_priors"])
+    env["ATLAS_REPLAY_RAW"] = str(copied["prizepicks_raw"])
+    env["ATLAS_ROTOWIRE_ORIGINAL_SOURCE_PATH"] = manifest["rotowire_lines"]["source"]
+
+    manifest_path = snapshot_dir / "source_context_manifest.json"
+    manifest_path.write_text(
+        json.dumps(
+            {
+                "run_id": run_id,
+                "game_date": game_date,
+                "strict_replay": True,
+                "generated_at": datetime.now().isoformat(timespec="seconds"),
+                "artifacts": manifest,
+            },
+            indent=2,
+            sort_keys=True,
+        ),
+        encoding="utf-8",
+    )
+    return manifest_path
+
+
 CSV_FIELDS = [
-    "source", "league", "player", "stat", "asof_ts", "projection",
+    "source", "league", "player", "stat", "line", "asof_ts", "projection",
     "confidence", "over_prob", "under_prob", "over_rating", "under_rating",
     "opp_rank", "notes",
 ]
 
 
-def _merge_priors_with_oddsapi(bundled_priors: Path, oddsapi_csv: Path) -> Path:
-    """Merge bundled BettingPros priors with OddsAPI historical data into a temp CSV."""
+def _read_prior_rows(path: Path) -> list[dict[str, str]]:
+    rows: list[dict[str, str]] = []
+    if not path.is_file():
+        return rows
+    with path.open("r", encoding="utf-8") as f:
+        for row in csv.DictReader(f):
+            rows.append(row)
+    return rows
+
+
+def _prior_source(row: dict[str, str]) -> str:
+    return str(row.get("source", "")).strip().lower()
+
+
+def _merge_priors_with_overlays(bundled_priors: Path, overlay_csvs: list[Path]) -> Path:
+    """Merge bundled priors with date-pinned market overlays into a temp CSV.
+
+    Overlay rows replace same-source bundled rows. That lets strict replay
+    preserve the bundle context while upgrading stale market files with the
+    archived BettingPros/DK/OddsAPI rows for that replay date.
+    """
     existing_rows: list[dict[str, str]] = []
     if bundled_priors.is_file():
-        with bundled_priors.open("r", encoding="utf-8") as f:
-            for row in csv.DictReader(f):
-                if row.get("source", "").strip().lower() != "oddsapi":
-                    existing_rows.append(row)
+        existing_rows = _read_prior_rows(bundled_priors)
 
-    oa_rows: list[dict[str, str]] = []
-    if oddsapi_csv.is_file():
-        with oddsapi_csv.open("r", encoding="utf-8") as f:
-            for row in csv.DictReader(f):
-                oa_rows.append(row)
+    overlay_rows: list[dict[str, str]] = []
+    for overlay_csv in overlay_csvs:
+        overlay_rows.extend(_read_prior_rows(overlay_csv))
 
-    all_rows = existing_rows + oa_rows
+    overlay_sources = {_prior_source(row) for row in overlay_rows if _prior_source(row)}
+    if overlay_sources:
+        existing_rows = [row for row in existing_rows if _prior_source(row) not in overlay_sources]
+
+    all_rows = existing_rows + overlay_rows
     merged = bundled_priors.parent / "external_priors_merged.csv"
     with merged.open("w", newline="", encoding="utf-8") as f:
         writer = csv.DictWriter(f, fieldnames=CSV_FIELDS, extrasaction="ignore")
@@ -577,8 +713,17 @@ def _merge_priors_with_oddsapi(bundled_priors: Path, oddsapi_csv: Path) -> Path:
             safe_row = {k: row.get(k, "") for k in CSV_FIELDS}
             writer.writerow(safe_row)
 
-    print(f"[REPLAY_BUNDLE] Merged priors: {len(existing_rows)} existing + {len(oa_rows)} oddsapi = {len(all_rows)} total")
+    print(
+        "[REPLAY_BUNDLE] Merged priors: "
+        f"{len(existing_rows)} existing + {len(overlay_rows)} overlay = {len(all_rows)} total "
+        f"(overlay_sources={','.join(sorted(overlay_sources)) or 'none'})"
+    )
     return merged
+
+
+def _merge_priors_with_oddsapi(bundled_priors: Path, oddsapi_csv: Path) -> Path:
+    """Backward-compatible wrapper for older callers."""
+    return _merge_priors_with_overlays(bundled_priors, [oddsapi_csv])
 
 
 def main() -> int:
@@ -594,9 +739,14 @@ def main() -> int:
     ap.add_argument("--scenario-id", default="", help="Scenario id used for output/archives folder naming.")
     ap.add_argument("--keep-workspace", action="store_true", help="Keep extracted bundle workspace (debug).")
     ap.add_argument("--oddsapi-overlay", default="", help="Path to OddsAPI historical CSV to merge into bundled priors.")
+    ap.add_argument("--bettingpros-overlay", default="", help="Path to date-pinned BettingPros CSV to merge into bundled priors.")
+    ap.add_argument("--draftkings-overlay", default="", help="Path to date-pinned DraftKings CSV to merge into bundled priors.")
+    ap.add_argument("--github-props-overlay", default="", help="Path to date-pinned GitHub-recovered prop odds CSV to merge into bundled priors.")
     args = ap.parse_args()
 
     repo_root = find_repo_root(Path(__file__).parent)
+    if str(repo_root) not in sys.path:
+        sys.path.insert(0, str(repo_root))
     bundle_zip = _resolve_bundle_path(repo_root, args.bundle)
 
     scenario_id = (args.scenario_id or bundle_zip.stem).replace(" ", "_")
@@ -639,6 +789,7 @@ def main() -> int:
     env["ATLAS_STRICT_REPLAY"] = "1"
     env["ATLAS_DATA_DIR"] = str(data_dir)
     env["ATLAS_OUT_DIR"] = str(out_dir)
+    env["ATLAS_RUN_ID"] = ts
     env["ATLAS_GAMELOGS_PATH"] = str(gamelogs_path)
 
     raw_path = _find_unique_file(data_dir, "*.json", parent_name="raw")
@@ -667,7 +818,11 @@ def main() -> int:
             env["ATLAS_IAEL_NORMALIZED_PATH"] = str(normalized_path)
             print(f"[REPLAY_BUNDLE] normalized fallback={normalized_path}")
 
-    target_utc, _target_local = _bundle_target_datetimes(bundle_zip, workspace)
+    target_utc, target_local = _bundle_target_datetimes(bundle_zip, workspace)
+    target_game_date = f"{target_local:%Y-%m-%d}" if target_local is not None else None
+    if target_game_date:
+        env["ATLAS_GAME_DATE"] = target_game_date
+        env["ATLAS_ASOF_DATE_DASHED"] = target_game_date
     role_metrics_artifacts = _find_bundle_role_metrics_artifacts(data_dir)
     if not role_metrics_artifacts:
         role_metrics_artifacts = _find_best_role_metrics_artifacts(repo_root, target_utc)
@@ -686,28 +841,53 @@ def main() -> int:
 
     cmd = [sys.executable, "-m", "Atlas.engine.main"]
 
-    # Pin external priors from bundle (deterministic replay), merging OddsAPI overlay if provided
+    # Pin external priors from bundle (deterministic replay), merging date-pinned
+    # market overlays when provided. This keeps replay aligned with live's
+    # exact-market source path without allowing current-day repo defaults.
     bundled_priors = data_dir / "input" / "external_priors_today.csv"
-    oddsapi_overlay = Path(args.oddsapi_overlay) if args.oddsapi_overlay else None
-    if bundled_priors.is_file() and oddsapi_overlay and oddsapi_overlay.is_file():
-        # Merge bundled BettingPros + OddsAPI historical into one file
-        merged = _merge_priors_with_oddsapi(bundled_priors, oddsapi_overlay)
+    overlay_paths: list[Path] = []
+    overlay_specs = [
+        ("oddsapi", Path(args.oddsapi_overlay) if args.oddsapi_overlay else None, None),
+        ("bettingpros", Path(args.bettingpros_overlay) if args.bettingpros_overlay else None, "ATLAS_BETTINGPROS_PROPS_CSV_PATH"),
+        ("draftkings", Path(args.draftkings_overlay) if args.draftkings_overlay else None, "ATLAS_DRAFTKINGS_PROPS_CSV_PATH"),
+        ("github_prop_odds", Path(args.github_props_overlay) if args.github_props_overlay else None, "ATLAS_GITHUB_PROP_ODDS_CSV_PATH"),
+    ]
+    for label, overlay_path, env_key in overlay_specs:
+        if overlay_path and overlay_path.is_file():
+            overlay_paths.append(overlay_path)
+            if env_key:
+                env[env_key] = str(overlay_path)
+            print(f"[REPLAY_BUNDLE] {label} overlay={overlay_path}")
+
+    if bundled_priors.is_file() and overlay_paths:
+        merged = _merge_priors_with_overlays(bundled_priors, overlay_paths)
         env["ATLAS_EXTERNAL_PRIORS_CSV_PATH"] = str(merged)
-        print(f"[REPLAY_BUNDLE] external priors merged: bundle + oddsapi -> {merged}")
-    elif oddsapi_overlay and oddsapi_overlay.is_file() and not bundled_priors.is_file():
-        # No bundle priors, but OddsAPI available — use OddsAPI alone
-        env["ATLAS_EXTERNAL_PRIORS_CSV_PATH"] = str(oddsapi_overlay)
-        print(f"[REPLAY_BUNDLE] external priors from oddsapi only={oddsapi_overlay}")
+        print(f"[REPLAY_BUNDLE] external priors merged: bundle + overlays -> {merged}")
+    elif overlay_paths and not bundled_priors.is_file():
+        # No bundle priors, but pinned market overlays are available.
+        merged = _merge_priors_with_overlays(data_dir / "input" / "external_priors_today.csv", overlay_paths)
+        env["ATLAS_EXTERNAL_PRIORS_CSV_PATH"] = str(merged)
+        print(f"[REPLAY_BUNDLE] external priors from overlays only={merged}")
     elif bundled_priors.is_file():
         env["ATLAS_EXTERNAL_PRIORS_CSV_PATH"] = str(bundled_priors)
         print(f"[REPLAY_BUNDLE] external priors pinned={bundled_priors}")
     else:
-        print("[REPLAY_BUNDLE] No bundled external_priors_today.csv — priors will use repo default")
+        print("[REPLAY_BUNDLE] Missing pinned external_priors_today.csv. Refusing repo-default market priors in strict replay.")
+        return 2
+
+    source_context_path = _prepare_source_context_snapshot(
+        out_dir=out_dir,
+        run_id=ts,
+        game_date=target_game_date,
+        data_dir=data_dir,
+        env=env,
+    )
+    print(f"[REPLAY_BUNDLE] source context manifest={source_context_path}")
 
     # Rebuild share matrix with this bundle's IAEL snapshot (mimics live orchestrator Stage 3)
     sm_cmd = [sys.executable, str(repo_root / "tools" / "build_share_matrix.py")]
     print(f"[REPLAY_BUNDLE] Rebuilding share matrix with pinned IAEL")
-    sm_result = subprocess.run(sm_cmd, cwd=str(repo_root), env=env, capture_output=True, text=True)
+    sm_result = subprocess.run(sm_cmd, cwd=str(repo_root), env=env, capture_output=True, text=True, timeout=int(os.environ.get("ATLAS_SHARE_MATRIX_TIMEOUT_SEC", "300")))
     if sm_result.returncode != 0:
         tail = "\n".join((sm_result.stderr or "").splitlines()[-10:])
         print(f"[REPLAY_BUNDLE] WARN share matrix build failed: {tail}")
@@ -730,7 +910,7 @@ def main() -> int:
     print(f"[REPLAY_BUNDLE] out_dir={out_dir}")
     print(f"[REPLAY_BUNDLE] running: {' '.join(cmd)}")
 
-    p = subprocess.run(cmd, cwd=str(repo_root), env=env, capture_output=True, text=True)
+    p = subprocess.run(cmd, cwd=str(repo_root), env=env, capture_output=True, text=True, timeout=int(os.environ.get("ATLAS_ENGINE_REPLAY_TIMEOUT_SEC", "1500")))
     stdout_path.write_text(p.stdout or "", encoding="utf-8")
     stderr_path.write_text(p.stderr or "", encoding="utf-8")
 
@@ -751,6 +931,22 @@ def main() -> int:
     summary_path = _write_role_metrics_payload_summary(eval_path)
     if summary_path is not None:
         print(f"[REPLAY_BUNDLE] role_metrics_payload_summary={summary_path}")
+
+    try:
+        from scripts.audits.strict_replay_fidelity_audit import audit_run as strict_replay_audit
+
+        strict_result = strict_replay_audit(eval_path.parent)
+        strict_path = eval_path.parent / "strict_replay_fidelity_audit.json"
+        strict_path.write_text(json.dumps(strict_result, indent=2, sort_keys=True), encoding="utf-8")
+        print(
+            f"[REPLAY_BUNDLE] strict_replay_fidelity={strict_result.get('verdict')} "
+            f"failures={len(strict_result.get('failures') or [])} -> {strict_path}"
+        )
+        if strict_result.get("verdict") != "PASS":
+            return 3
+    except Exception as exc:
+        print(f"[REPLAY_BUNDLE] strict replay fidelity audit failed: {exc}")
+        return 3
 
     print("[REPLAY_BUNDLE] OK")
     return 0

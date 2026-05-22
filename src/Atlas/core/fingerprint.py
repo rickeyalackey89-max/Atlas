@@ -90,6 +90,9 @@ def build_manifest(
         "role_ctx": {
             "projection_clamp_lo": role_ctx.get("projection_clamp_lo"),
             "projection_clamp_hi": role_ctx.get("projection_clamp_hi"),
+            "impact_tier_enabled": role_ctx.get("impact_tier_enabled"),
+            "impact_tier_projection_clamp_hi": role_ctx.get("impact_tier_projection_clamp_hi"),
+            "impact_tier_rate_clamp_hi": role_ctx.get("impact_tier_rate_clamp_hi"),
             "variance_k": role_ctx.get("variance_k"),
             "under_relief_factor": role_ctx.get("factor"),
             "under_relief_q_min": role_ctx.get("q_min"),

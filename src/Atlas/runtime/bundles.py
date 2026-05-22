@@ -125,7 +125,7 @@ def write_bundle_zip(
     if raw_path:
         raw_path = Path(raw_path)
         if raw_path.exists() and raw_path.is_file():
-            allow.append((raw_path, f"raw/{raw_path.name}"))
+            allow.append((raw_path, f"data/raw/{raw_path.name}"))
 
     # IAEL live minimal
     iael_status = iael_live / "status.json"
@@ -178,6 +178,7 @@ def write_bundle_zip(
         data_dir / "input" / "external_priors_today.yaml",
         data_dir / "input" / "external_priors_today.csv",
         data_dir / "input" / "bettingpros_props_today.csv",
+        data_dir / "input" / "draftkings_props_today.csv",
         data_dir / "input" / "odds_market_today.json",
         data_dir / "input" / "rotowire_lines.json",
     ):
@@ -231,7 +232,7 @@ def write_bundle_zip(
         }
         if raw_path:
             manifest["paths"]["raw_snapshot"] = str(raw_path)
-            manifest["paths"]["raw_snapshot_arc"] = f"raw/{Path(raw_path).name}"
+            manifest["paths"]["raw_snapshot_arc"] = f"data/raw/{Path(raw_path).name}"
         if extra_manifest:
             manifest.update(extra_manifest)
 

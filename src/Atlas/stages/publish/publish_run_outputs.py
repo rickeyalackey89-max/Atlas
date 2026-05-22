@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 import shutil
 from datetime import datetime, timezone
 from pathlib import Path
@@ -91,6 +92,27 @@ def write_post_run_audit_manifests(run_dir: Path) -> list[Path]:
     except Exception as exc:
         print(f"[POST_RUN_AUDIT][WARN] hard pipeline audit unavailable: {exc}")
 
+    try:
+        from scripts.audits.probability_surface_audit import audit_run as probability_surface_audit
+
+        audits.append(("probability_surface_audit", "probability_surface_audit.json", probability_surface_audit))
+    except Exception as exc:
+        print(f"[POST_RUN_AUDIT][WARN] probability surface audit unavailable: {exc}")
+
+    try:
+        from scripts.audits.role_context_audit import audit_run as role_context_audit
+
+        audits.append(("role_context_audit", "role_context_audit.json", role_context_audit))
+    except Exception as exc:
+        print(f"[POST_RUN_AUDIT][WARN] role context audit unavailable: {exc}")
+
+    try:
+        from scripts.audits.catboost_feature_contract_audit import audit_run as catboost_feature_contract_audit
+
+        audits.append(("catboost_feature_contract", "catboost_feature_contract.json", catboost_feature_contract_audit))
+    except Exception as exc:
+        print(f"[POST_RUN_AUDIT][WARN] CAT feature contract audit unavailable: {exc}")
+
     for label, filename, audit_fn in audits:
         try:
             result = audit_fn(run_dir)
@@ -158,6 +180,9 @@ def write_catboost_scale_policy_manifest(
             "games": _first_float("catboost_scale_games"),
             "q_out_frac_mean": _first_float("catboost_scale_q_out_frac_mean"),
             "q_blowout_p90": _first_float("catboost_scale_q_blowout_p90"),
+            "q_blowout_unique": _first_float("catboost_scale_q_blowout_unique"),
+            "spread_ok_rate": _first_float("catboost_scale_spread_ok_rate"),
+            "game_total_nonzero_rate": _first_float("catboost_scale_game_total_nonzero_rate"),
             "role_ctx_outs_used_share_gt0": _first_float("catboost_scale_role_ctx_outs_used_share_gt0"),
             "bp_has_mean": _first_float("catboost_scale_bp_has_mean"),
         },
@@ -355,6 +380,31 @@ def write_single_game_mode_manifest(
     return out_path
 
 
+def write_feature_audit_manifest(
+    run_dir: Path,
+    OUT_DIR: Path,
+    feature_audit_manifest: Optional[dict],
+) -> Optional[Path]:
+    """Write the runtime feature audit into the run and dashboard latest paths."""
+
+    if not feature_audit_manifest:
+        return None
+
+    out_path = run_dir / "feature_audit.json"
+    out_path.write_text(
+        json.dumps(feature_audit_manifest, indent=2, sort_keys=True, default=str),
+        encoding="utf-8",
+    )
+
+    latest_dir = OUT_DIR / "dashboard"
+    latest_dir.mkdir(parents=True, exist_ok=True)
+    (latest_dir / "feature_audit_latest.json").write_text(
+        json.dumps(feature_audit_manifest, indent=2, sort_keys=True, default=str),
+        encoding="utf-8",
+    )
+    return out_path
+
+
 def run_publish_stage(
     *,
     LOCAL_TZ,
@@ -380,8 +430,10 @@ def run_publish_stage(
     wind5_winprob: Optional[pd.DataFrame] = None,
     marketed_slips: Optional[list] = None,
     public_slip_quality_manifest: Optional[dict] = None,
+    feature_audit_manifest: Optional[dict] = None,
     iael_invalidations_path: Optional[Path] = None,
     iael_status_path: Optional[Path] = None,
+    iael_normalized_path: Optional[Path] = None,
     write_csv_clean: Optional[Callable[[pd.DataFrame, Path], Path]] = None,
     cfg: Optional[dict] = None,
     ensemble_dir: Optional[str | Path] = None,
@@ -396,7 +448,10 @@ def run_publish_stage(
         raise ValueError("write_csv_clean must be provided")
     w = write_csv_clean  # local non-optional alias
 
-    ts = datetime.now(LOCAL_TZ).strftime("%Y%m%d_%H%M%S")
+    # The orchestrator owns the run id. Honor it so pre-engine source
+    # manifests and post-engine scored artifacts land under the same id.
+    env_run_id = str(os.environ.get("ATLAS_RUN_ID") or "").strip()
+    ts = env_run_id if env_run_id else datetime.now(LOCAL_TZ).strftime("%Y%m%d_%H%M%S")
     run_dir = OUT_DIR / "runs" / ts
     run_dir.mkdir(parents=True, exist_ok=True)
 
@@ -415,6 +470,7 @@ def run_publish_stage(
     cat_policy_manifest_path = write_catboost_scale_policy_manifest(run_dir, OUT_DIR, scored)
     raw_guard_manifest_path = write_raw_slate_fragility_guard_manifest(run_dir, OUT_DIR, scored)
     single_game_manifest_path = write_single_game_mode_manifest(run_dir, OUT_DIR, scored)
+    feature_audit_manifest_path = write_feature_audit_manifest(run_dir, OUT_DIR, feature_audit_manifest)
     public_quality_manifest_path: Optional[Path] = None
     if public_slip_quality_manifest is not None:
         public_quality_manifest_path = run_dir / "public_slip_quality_manifest.json"
@@ -556,6 +612,16 @@ def run_publish_stage(
         if not src_path.exists() or not src_path.is_file():
             return
         dst_path = dashboard_dir / dst_name
+        try:
+            if src_path.resolve() == dst_path.resolve():
+                snapshot_artifacts[dst_name] = {
+                    "source": str(src_path.resolve()),
+                    "destination": str(dst_path.resolve()),
+                    "copy_skipped": "same_file",
+                }
+                return
+        except OSError:
+            pass
         shutil.copy2(src_path, dst_path)
         snapshot_artifacts[dst_name] = {
             "source": str(src_path.resolve()),
@@ -564,6 +630,10 @@ def run_publish_stage(
 
     _copy_snapshot(iael_invalidations_path, "injury_invalidations_latest.json")
     _copy_snapshot(iael_status_path, "status_latest.json")
+    _copy_snapshot(iael_normalized_path, "normalized_latest.json")
+    _copy_snapshot(Path(os.environ["ATLAS_ROLE_METRICS_PATH"]) if os.environ.get("ATLAS_ROLE_METRICS_PATH") else None, "role_metrics_latest.json")
+    _copy_snapshot(Path(os.environ["ATLAS_ROLE_METRICS_HTML_PATH"]) if os.environ.get("ATLAS_ROLE_METRICS_HTML_PATH") else None, "role_metrics_latest.html")
+    _copy_snapshot(Path(os.environ["ATLAS_ROLE_METRICS_MANIFEST_PATH"]) if os.environ.get("ATLAS_ROLE_METRICS_MANIFEST_PATH") else None, "role_metrics_snapshot_manifest.json")
 
     if snapshot_artifacts:
         (dashboard_dir / "injury_snapshot_manifest.json").write_text(
@@ -605,6 +675,9 @@ def run_publish_stage(
     if single_game_manifest_path is not None:
         print(f" - {single_game_manifest_path} (single-game mode manifest)")
         print(f" - {OUT_DIR / 'dashboard' / 'single_game_mode_latest.json'} (single-game mode latest)")
+    if feature_audit_manifest_path is not None:
+        print(f" - {feature_audit_manifest_path} (runtime feature audit)")
+        print(f" - {OUT_DIR / 'dashboard' / 'feature_audit_latest.json'} (runtime feature audit latest)")
     if public_quality_manifest_path is not None:
         print(f" - {public_quality_manifest_path} (public slip quality manifest)")
     if sys2 is not None:

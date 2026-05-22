@@ -262,7 +262,9 @@ Active pipelines:
 
 Replay systems:
 
-- Strict replay via `python -m Atlas.cli replay --raw <raw_json>`.
+- Strict replay preflight via `python tools\preflight_strict_replay_dates.py --dates ...`.
+- Strict bundle replay via `python tools\replay_bundle.py <bundle.zip> --scenario-id <name>`.
+- Direct raw replay via `python -m Atlas.cli replay --raw <raw_json>` is only for interactive debugging when matching pinned artifacts are known.
 - Replay output root: `data/telemetry/replay_runs/`.
 
 Deployment targets:
@@ -316,7 +318,8 @@ Monitoring:
 Dashboards:
 
 - Public dashboard: `https://atlassports.ai/dashboard/`
-- Data payload: `https://atlassports.ai/data/cloudflare_payload.json`
+- Public preview payload: `https://atlassports.ai/data/picks_today.json`
+- Premium payload API: `https://atlassports.ai/api/premium-data?dataset=dashboard&sport=nba`
 
 ---
 
@@ -331,6 +334,8 @@ Reproducibility:
 Replay integrity:
 
 - Do not let replay fetch fresh live inputs unless explicitly testing that behavior.
+- Do not run corpus, LODO, CAT, or builder tuning unless every included date passes strict preflight.
+- Bundles should carry replay inputs so replay does not depend on mutable repo state.
 - Replay output belongs under `data/telemetry/replay_runs/`.
 - Live output belongs under `data/output/`.
 

@@ -29,6 +29,14 @@ def player_key_from_value(player: Any) -> str:
     return " ".join(str(player or "").strip().lower().split())
 
 
+def player_stat_key_from_values(player: Any, stat: Any) -> str:
+    player_s = player_key_from_value(player)
+    stat_s = str(stat or "").strip().upper()
+    if not player_s or not stat_s:
+        return ""
+    return f"{player_s}|{stat_s}"
+
+
 def prop_key_from_leg_text(text: Any) -> str:
     match = _LEG_RE.match(str(text or "").strip())
     if not match:
@@ -41,6 +49,13 @@ def prop_key_from_leg_text(text: Any) -> str:
     )
 
 
+def player_stat_key_from_leg_text(text: Any) -> str:
+    match = _LEG_RE.match(str(text or "").strip())
+    if not match:
+        return ""
+    return player_stat_key_from_values(match.group("player"), match.group("stat"))
+
+
 def prop_key_from_mapping(leg: Any) -> str:
     getter = leg.get if hasattr(leg, "get") else lambda _key, _default=None: _default
     return prop_key_from_values(
@@ -48,6 +63,14 @@ def prop_key_from_mapping(leg: Any) -> str:
         getter("direction", ""),
         getter("stat", getter("stat_type", "")),
         getter("line", ""),
+    )
+
+
+def player_stat_key_from_mapping(leg: Any) -> str:
+    getter = leg.get if hasattr(leg, "get") else lambda _key, _default=None: _default
+    return player_stat_key_from_values(
+        getter("player", ""),
+        getter("stat", getter("stat_type", "")),
     )
 
 
@@ -68,10 +91,36 @@ def prop_keys_from_slip_row(row: pd.Series) -> set[str]:
     return keys
 
 
+def player_stat_keys_from_slip_row(row: pd.Series) -> set[str]:
+    keys: set[str] = set()
+    legs = str(row.get("legs", "") or "")
+    if legs:
+        for part in legs.split(" | "):
+            key = player_stat_key_from_leg_text(part)
+            if key:
+                keys.add(key)
+    if keys:
+        return keys
+    for i in range(1, 6):
+        key = player_stat_key_from_leg_text(row.get(f"leg_{i}", ""))
+        if key:
+            keys.add(key)
+    return keys
+
+
 def prop_keys_from_marketed_slip(slip: dict[str, Any]) -> set[str]:
     keys: set[str] = set()
     for leg in slip.get("legs", []) or []:
         key = prop_key_from_mapping(leg)
+        if key:
+            keys.add(key)
+    return keys
+
+
+def player_stat_keys_from_marketed_slip(slip: dict[str, Any]) -> set[str]:
+    keys: set[str] = set()
+    for leg in slip.get("legs", []) or []:
+        key = player_stat_key_from_mapping(leg)
         if key:
             keys.add(key)
     return keys

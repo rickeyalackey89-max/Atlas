@@ -1,11 +1,11 @@
 # Atlas Pipeline Reference
 
-> **Last updated:** 2026-05-12 — full file-to-file trace of the live pipeline.
+> **Last updated:** 2026-05-21 - full file-to-file trace of the live pipeline.
 > **Current runtime:** CatBoost playoff v5cD active; v18 LightGBM and telemetry isotonic disabled.
 
 ---
 
-## Working Directory — CRITICAL
+## Working Directory - CRITICAL
 
 **All Atlas NBA commands and tools must run from `C:\Users\13142\Atlas\NBA` (production repo root).**
 
@@ -21,6 +21,8 @@ cd C:\Users\13142\Atlas\Atlas                 # junction to Atlas\NBA
 ```
 
 Relative paths like `data/model/marketed_calibration.json` resolve against CWD. `C:\Users\13142\Atlas\NBA` is now the canonical production output root; `C:\Users\13142\Atlas\Atlas` is only a compatibility junction.
+
+The umbrella root `C:\Users\13142\Atlas` is for cross-sport orchestration and shared operating docs only. New NBA automation should not target the legacy `C:\Users\13142\Atlas\Atlas` path.
 
 ---
 
@@ -91,13 +93,14 @@ Sets `ATLAS_GAME_DATE` env var from board data.
 
 ---
 
-### Stage 2b — Fetch Rotowire Lines
+### Stage 2b - Fetch ESPN Game Lines
 **Tool:** `tools/fetch_rotowire_lines.py`
 | Reads | Writes |
 |---|---|
-| Rotowire API | `data/input/rotowire_lines.json` |
+| ESPN scoreboard/odds primary; DK/Rotowire compatibility fallback where configured | `data/input/rotowire_lines.json` |
 | | `data/input/rotowire_lines_last_good.json` |
 
+> **Note:** the file is still named `rotowire_lines.json` for compatibility, but the current live contract treats ESPN game lines as the primary spread/total source.
 > **Replay:** uses pinned `$env:ATLAS_ROTOWIRE_LINES_PATH` or bundle snapshot.
 
 ---
@@ -167,7 +170,7 @@ Sets `ATLAS_GAME_DATE` env var from board data.
 | `data/model/share_matrix.csv` | Role context (injury redistribution weights) |
 | `data/output/dashboard/injury_invalidations_latest.json` | OUT/DOUBTFUL filtering |
 | `data/output/dashboard/role_metrics_latest.json` | Role metrics snapshot |
-| `data/input/rotowire_lines.json` | Spreads + game totals (blowout, q_blowout) |
+| `data/input/rotowire_lines.json` | ESPN-primary spreads + game totals (blowout, q_blowout); legacy filename retained |
 | `data/input/external_priors_today.csv` | BettingPros + OddsAPI merged priors |
 | `data/input/odds_market_today.json` | Market consensus |
 | `data/model/ensemble/*.txt` | Historical v18 GBM models; currently disabled |
@@ -361,7 +364,7 @@ tools/
 ├── fetch_bettingpros_props.py      # BettingPros external priors fetch
 ├── fetch_crafted_player_stats.py   # CraftedNBA role metrics fetch
 ├── fetch_oddsapi_props.py          # OddsAPI external priors fetch
-├── fetch_rotowire_lines.py         # Rotowire spreads/totals fetch
+├── fetch_rotowire_lines.py         # ESPN-primary spreads/totals fetch; legacy filename
 ├── gbm_v19_train.py                # Current GBM trainer pattern (LODO cross-validation)
 ├── catboost_playoff_v5cD_full_corpus.py # Trains active v5cD full-corpus CatBoost model
 ├── replay_v5cD_corpus.py           # 10-date v5cD replay validation
@@ -388,7 +391,7 @@ tools/
 | Data source | Fresh API fetch | Pinned raw JSON + archived artifacts |
 | Output root | `data/output/runs/{run_id}/` | `data/telemetry/replay_runs/{run_id}/` |
 | Injury source | Live IAEL refresh | Pinned IAEL snapshot (invalidations + status + normalized) |
-| Rotowire source | Fresh fetch | Pinned snapshot |
+| Game-line source | Fresh ESPN-primary fetch | Pinned bundle/archive snapshot |
 | Publish latest surfaces | Yes | **No** |
 | Game log refresh | Yes | **No** |
 | Cloudflare push | Yes | **No** |
@@ -434,7 +437,7 @@ python tools/replay_bundle.py data\bundles\atlas_bundle_YYYYMMDD_HHMMSS.zip --sc
 | `ATLAS_IAEL_INVALIDATIONS_PATH` | Pinned injury invalidations JSON |
 | `ATLAS_IAEL_STATUS_PATH` | Pinned injury status JSON |
 | `ATLAS_IAEL_NORMALIZED_PATH` | Pinned normalized injury snapshot |
-| `ATLAS_ROTOWIRE_LINES_PATH` | Pinned Rotowire lines JSON |
+| `ATLAS_ROTOWIRE_LINES_PATH` | Pinned game-line JSON; legacy env name retained |
 | `ATLAS_ROLE_METRICS_PATH` | Pinned role metrics JSON |
 | `ATLAS_FS_ENFORCE` | `warn` or `hard` — filesystem write enforcement |
 | `PYTHONIOENCODING` | Set to `utf-8` for all runs |

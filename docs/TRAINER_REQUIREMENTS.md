@@ -492,13 +492,20 @@ Select-String "GOBLIN|STANDARD|DEMON" Atlas\tools\marketed_slip_trainer_v2.py | 
 Before launching any trainer:
 
 - [ ] **CWD is correct:** Running from `C:\Users\13142\Atlas\NBA` (NBA production root)
+- [ ] **Strict replay preflight passed:** `python tools\preflight_strict_replay_dates.py --dates ...` passed for every date included in the corpus
+- [ ] **Corpus dry-run passed:** `python tools\batch_replay_backfill.py --dry-run --dates ...` selected valid same-day, pre-start bundles or raw snapshots
 - [ ] **BASE_CONFIG matches production:** Trainer thresholds match `config.yaml` marketed_slips section
 - [ ] **Cache exists:** `data/model/_v{N}_resim_cache.pkl` with expected date count
 - [ ] **Gamelogs current:** `data/gamelogs/nba_gamelogs.csv` covers all replay dates
 - [ ] **Corpus complete:** Every date in `RUN_DATES` has both `scored_legs_deduped.csv` and `eval_legs.csv` with >0 rows
+- [ ] **Run manifests present:** Every corpus member has run-scoped source/probability manifests; no stale current-day files are used for historical replay
+- [ ] **Market context timestamp-safe:** Any OddsAPI, BettingPros, DraftKings, or GitHub archive overlay is as-of before the replay scoring window
+- [ ] **Game context live-equivalent:** spread/total context is present when live would have it; trained CAT features are not silently defaulted
 - [ ] **Feature columns present:** `p_cal` not NaN, `hit` not NaN, `game_date` correct
 - [ ] **Config backed up:** Copy of current `config.yaml` saved before applying trainer results
 - [ ] **No stale models:** If re-training GBM, old ensemble in `data/model/ensemble/` will be overwritten with `--promote`
+
+If any of these fail, do not launch LODO, CAT, or builder training. Fix the replay source contract first.
 
 ---
 

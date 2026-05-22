@@ -102,7 +102,10 @@ DEFAULT_PARAMS: Dict[str, Any] = {
     "limit": "25",
     "sort": "diff",
     "sort_direction": "desc",
-    "ev_threshold": "true",
+    # Fetch the full prop board, not only rows that BettingPros classifies as
+    # actionable EV. The model needs market context even when the book disagrees
+    # with a PrizePicks direction.
+    "ev_threshold": "false",
     "ev_threshold_min": "-0.4",
     "ev_threshold_max": "0.4",
     "min_odds": "-1000",
@@ -444,6 +447,29 @@ def _market_rows_to_external_prior_rows(
                 "notes": "; ".join(notes),
             }
         )
+        rows.append(
+            {
+                "source": "bettingpros_market_anchor",
+                "league": "NBA",
+                "player": str(row.get("player") or "").strip(),
+                "stat": str(row.get("stat") or "").strip().upper(),
+                # Keep this blank so external_priors.py treats it as a
+                # player/stat projection row, not an exact line market.
+                "line": "",
+                "asof_ts": asof_ts,
+                # A sportsbook O/U line is a market center. It gives useful
+                # context for PrizePicks goblin/demon alt lines even when the
+                # exact PP line does not exist at DK/FD.
+                "projection": str(line),
+                "confidence": str(round(0.60 * confidence, 4)),
+                "over_prob": "",
+                "under_prob": "",
+                "over_rating": "",
+                "under_rating": "",
+                "opp_rank": "",
+                "notes": "type=market_anchor; derived_from=dk_fd_exact_market",
+            }
+        )
     return rows
 
 
@@ -491,7 +517,7 @@ def _merge_into_external_priors(bp_rows: List[Dict[str, str]], merged_path: Path
     yesterday's market priors in the model input. If OddsAPI is explicitly
     enabled, the orchestrator runs that tool after this one and adds fresh rows.
     """
-    stale_sources = {"bettingpros", "bettingpros_market"}
+    stale_sources = {"bettingpros", "bettingpros_market", "bettingpros_market_anchor"}
     keep_oddsapi = os.getenv("BETTINGPROS_KEEP_ODDSAPI_PRIORS", "").strip().lower() in {"1", "true", "yes", "y"}
     if not keep_oddsapi:
         stale_sources.add("oddsapi")
@@ -589,7 +615,12 @@ def main() -> int:
 
     market_prior_rows = _market_rows_to_external_prior_rows(market_rows, asof_ts)
     if market_prior_rows:
-        print(f"[BP] Converted {len(market_prior_rows)} exact market rows into external priors")
+        exact_rows = sum(1 for row in market_prior_rows if row.get("source") == "bettingpros_market")
+        anchor_rows = sum(1 for row in market_prior_rows if row.get("source") == "bettingpros_market_anchor")
+        print(
+            "[BP] Converted "
+            f"{exact_rows} exact market rows + {anchor_rows} market anchors into external priors"
+        )
     all_prior_rows = rows + market_prior_rows
 
     # Write standalone BP CSV

@@ -11,7 +11,7 @@ SRC_ROOT = PROJECT_ROOT / "src"
 if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
-from Atlas.engine.new_probability import _competitive_usage_bonus, _crafted_role_workload_adjustment, _crafted_role_workload_minutes_projection, _fragility_root_inputs, _role_metrics_adjustment, _role_metrics_role_ctx_active, _usage_dependence_proxy
+from Atlas.engine.new_probability import _competitive_usage_bonus, _crafted_role_workload_adjustment, _crafted_role_workload_minutes_projection, _fragility_root_inputs, _role_metrics_adjustment, _role_metrics_role_ctx_active, _usage_dependence_proxy, _zero_dnp_minutes_mult
 
 
 class RoleMetricsAdjustmentTest(unittest.TestCase):
@@ -197,6 +197,37 @@ class RoleMetricsAdjustmentTest(unittest.TestCase):
         self.assertGreater(strong_mult, weak_mult)
         self.assertGreater(strong_mult, 1.0)
 
+    def test_crafted_role_workload_uses_live_craftednba_fallback_fields(self) -> None:
+        cfg = {
+            "crafted_role_workload_enabled": True,
+            "crafted_role_workload_weight_scale": 1.35,
+        }
+        row = {
+            "role_ctx_outs_used": 1,
+            "role_metrics_usage_projection": None,
+            "role_metrics_load": None,
+            "role_metrics_touches": None,
+            "role_metrics_bc": None,
+            "role_metrics_usg_pct": 31.0,
+            "role_metrics_minutes_projection": 1980.0,
+            "role_metrics_ts_pct": 62.0,
+            "role_metrics_sq": 66.0,
+            "role_metrics_ftr": 32.0,
+        }
+
+        mult, components = _crafted_role_workload_adjustment(
+            row,
+            "PTS",
+            role_cfg=cfg,
+            role_ctx_on_override=True,
+        )
+
+        self.assertGreater(mult, 1.0)
+        self.assertIn("usage_projection_raw", components)
+        self.assertIn("load_raw", components)
+        self.assertIn("touches_raw", components)
+        self.assertAlmostEqual(components["minutes_projection_raw"], 33.0, places=12)
+
     def test_crafted_role_workload_adjustment_can_be_over_only(self) -> None:
         cfg = {"crafted_role_workload_enabled": True, "crafted_role_workload_over_only": True}
         row = {
@@ -228,6 +259,67 @@ class RoleMetricsAdjustmentTest(unittest.TestCase):
         self.assertIsNotNone(blended)
         assert blended is not None
         self.assertAlmostEqual(float(blended), 31.5, places=12)
+
+    def test_crafted_minutes_projection_can_apply_without_role_context(self) -> None:
+        cfg = {
+            "crafted_role_workload_enabled": True,
+            "crafted_role_workload_minutes_require_role_ctx": False,
+            "crafted_role_workload_minutes_blend": 0.50,
+            "crafted_role_workload_minutes_ratio_lo": 0.90,
+            "crafted_role_workload_minutes_ratio_hi": 1.10,
+        }
+        row = {"role_ctx_outs_used": 0, "role_metrics_minutes_projection": 1980.0}
+
+        blended = _crafted_role_workload_minutes_projection(
+            row,
+            role_cfg=cfg,
+            role_ctx_on_override=False,
+            base_minutes_fallback=30.0,
+        )
+
+        self.assertIsNotNone(blended)
+        assert blended is not None
+        self.assertAlmostEqual(float(blended), 31.5, places=12)
+
+    def test_usage_fragility_can_use_metrics_without_role_context(self) -> None:
+        _, usage = _fragility_root_inputs(
+            row=pd.Series(
+                {
+                    "role_ctx_outs_used": 0,
+                    "role_metrics_usg_pct": 34.0,
+                    "role_metrics_ts_pct": 64.0,
+                    "role_metrics_sq": 70.0,
+                    "role_metrics_ftr": 34.0,
+                }
+            ),
+            stat_u="PTS",
+            base_rate_mu=0.85,
+            line=28.5,
+            expected_minutes=34.0,
+            role_cfg={"usage_metrics_require_role_ctx": False},
+        )
+
+        self.assertGreater(usage["usage_usg_mult"], 1.0)
+        self.assertGreater(usage["usage_metric_mult"], 1.0)
+
+    def test_zero_dnp_ignores_low_minute_out_players(self) -> None:
+        gamelogs = pd.DataFrame(
+            {
+                "player": ["Low Impact", "Low Impact", "Low Impact"],
+                "game_date": ["2026-05-01", "2026-05-02", "2026-05-03"],
+                "minutes": [15.0, 16.0, 14.0],
+            }
+        )
+
+        mult, reason = _zero_dnp_minutes_mult(
+            ["Low Impact"],
+            player_min_mean=12.0,
+            gamelogs=gamelogs,
+            cfg={"zero_dnp_enabled": True, "zero_dnp_out_min_threshold": 24.0},
+        )
+
+        self.assertEqual(mult, 1.0)
+        self.assertEqual(reason, "no_zero_dnp_out")
 
     def test_fragility_role_metrics_can_require_minimum_outs(self) -> None:
         blocked_row = {

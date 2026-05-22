@@ -1,6 +1,6 @@
 # AGENT.md — Atlas Operating Charter
 
-> **Last updated:** 2026-05-11
+> **Last updated:** 2026-05-21
 > **Audience:** Codex, ChatGPT, Copilot agents, and human developers working in Atlas.
 > **Purpose:** Defines how an AI collaborator should operate in this repository now that Atlas is in a stable production state.
 
@@ -30,12 +30,16 @@ For model/runtime work, read these first:
 
 | File | Use For |
 |---|---|
-| `ai/CURRENT_STATE_2026-05-10.md` | Freshest NBA runtime truth: CatBoost v5cD, kernel transforms, replay metrics |
+| `C:\Users\13142\Atlas\ATLAS_OPERATING_MEMORY.md` | Workspace-level non-negotiables: data retention, strict replay, promotion order |
+| `C:\Users\13142\Atlas\ai\README.md` | Cross-repo doc index |
+| `ai/CURRENT_STATE_2026-05-10.md` | CatBoost v5cD baseline snapshot; pair with current replay/source-contract docs |
 | `ai/ATLAS_MODEL_CONTEXT.md` | Probability chain, module interfaces, model architecture |
 | `ai/PIPELINE_REFERENCE.md` | Live run stages, paths, produced artifacts |
 | `ai/CONFIG_REFERENCE.md` | Meaning of `config.yaml` parameters |
 | `ai/TUNING_PLAYBOOK.md` | Diagnostics, replay workflows, retrain criteria |
 | `ai/KNOWN_UNCERTAINTIES.md` | Known blind spots and areas not to overfit |
+| `docs/REPLAY_AND_LIVE_RUN_RULES.md` | Strict replay and corpus gate |
+| `config/replay_fidelity_contract.yaml` | Machine-readable replay contract |
 | `docs/LATE_INJURY_HANDLING.md` | Direct-player injury risk vs beneficiary uncertainty policy |
 | `ai/ATLAS_ROADMAP.md` | MLB/NFL/mobile roadmap and future sport plans |
 | `ai/AtlasSportsAI.md` | Product goal, subscriber experience, tiers, brand context |
@@ -57,7 +61,7 @@ Agents may inspect and modify any Atlas file needed for the work, including:
 - `docs/**` and `ai/**` documentation
 - `.github/**` agent and workflow metadata
 
-This access is not a license to churn. It means an agent should not refuse a needed file or punt to another imaginary role. If a file matters, inspect it. If it needs a safe change, make it. If the change carries production risk, state the risk clearly before or while making it.
+This access is not a license to churn or delete. It means an agent should not refuse a needed file or punt to another imaginary role. If a file matters, inspect it. If it needs a safe change, make it. If the change carries production risk, state the risk clearly before or while making it.
 
 ---
 
@@ -80,6 +84,9 @@ When one of these is necessary, the agent should explain:
 - Why it is needed
 - What validation will prove it worked
 - How to roll back if it misbehaves
+
+Raw snapshots, run folders, bundles, manifests, telemetry, archives, and backups
+are protected evidence. Do not delete them for cleanup.
 
 ---
 

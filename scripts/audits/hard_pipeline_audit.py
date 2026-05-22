@@ -399,7 +399,13 @@ def _external_prior_audit(scored: pd.DataFrame) -> tuple[dict[str, Any], list[di
         if "external_prior_sources" in scored.columns
         else pd.Series("", index=scored.index)
     )
-    exact_market = sources.str.contains("bettingpros_market", regex=False, na=False)
+    if "external_prior_exact_market" in scored.columns:
+        exact_market = _bool(scored, "external_prior_exact_market")
+    else:
+        exact_market = (
+            sources.str.contains("bettingpros_market", regex=False, na=False)
+            | sources.str.contains("draftkings_direct_market", regex=False, na=False)
+        )
     negative_applied = applied & (delta < -1e-12)
     negative_non_exact = negative_applied & ~exact_market
 

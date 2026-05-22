@@ -22,6 +22,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import subprocess
 import sys
 from dataclasses import dataclass
@@ -246,6 +247,30 @@ def _latest_run_id(repo_root: Path) -> str | None:
     return dirs[0].name
 
 
+def _find_raw_snapshot_for_run(repo_root: Path, run_id: str) -> Path | None:
+    data_dir = repo_root / "data"
+    pinned = data_dir / "archives" / "pins" / run_id / "prizepicks_raw.json"
+    if pinned.is_file():
+        return pinned
+
+    m = re.match(r"(\d{8})_(\d{6})", run_id)
+    if not m:
+        return None
+    run_dt = datetime.strptime("".join(m.groups()), "%Y%m%d%H%M%S")
+    candidates: list[tuple[float, Path]] = []
+    for path in (data_dir / "raw").glob(f"prizepicks_{m.group(1)}_*.json"):
+        mm = re.search(r"prizepicks_(\d{8})_(\d{6})", path.name)
+        if not mm:
+            continue
+        raw_dt = datetime.strptime("".join(mm.groups()), "%Y%m%d%H%M%S")
+        if raw_dt <= run_dt:
+            candidates.append(((run_dt - raw_dt).total_seconds(), path))
+    if not candidates:
+        return None
+    candidates.sort(key=lambda item: item[0])
+    return candidates[0][1]
+
+
 def _write_full_run_bundle(repo_root: Path, run_id: str) -> None:
     """Best-effort: emit a FULL_RUN bundle via the Python bundler (Phase 7C)."""
     try:
@@ -255,12 +280,13 @@ def _write_full_run_bundle(repo_root: Path, run_id: str) -> None:
         audit_dir = data_dir / "output" / "runs" / run_id / ".atlas_audit"
         if not audit_dir.exists():
             audit_dir = None
+        raw_snapshot = _find_raw_snapshot_for_run(repo_root, run_id)
         zp = write_bundle_zip(
             repo_root=repo_root,
             data_dir=data_dir,
             run_id=run_id,
             ok=True,
-            raw_path=None,
+            raw_path=raw_snapshot,
             iael_live_dir=iael_dir if iael_dir.exists() else None,
             runs_dir=(data_dir / "output" / "runs"),
             audit_dir=audit_dir,

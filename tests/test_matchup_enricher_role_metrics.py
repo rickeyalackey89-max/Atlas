@@ -35,6 +35,7 @@ class MatchupEnricherRoleMetricsTest(unittest.TestCase):
                     "homeTeam": "CHA",
                     "awayTeam": "CHI",
                     "spread": {"home": -2.5, "away": 2.5},
+                    "ou": 218.5,
                 }
             ]
         }
@@ -128,6 +129,10 @@ class MatchupEnricherRoleMetricsTest(unittest.TestCase):
             self.assertAlmostEqual(self._as_float(enriched.loc[0, "role_metrics_usg_pct"]), 31.4)
             self.assertEqual(enriched.loc[0, "role_metrics_snapshot_id"], "snap-123")
             self.assertEqual(enriched.loc[0, "team"], "CHA")
+            self.assertAlmostEqual(self._as_float(enriched.loc[0, "game_spread"]), -2.5)
+            self.assertAlmostEqual(self._as_float(enriched.loc[0, "rotowire_game_spread"]), -2.5)
+            self.assertAlmostEqual(self._as_float(enriched.loc[0, "game_total"]), 218.5)
+            self.assertAlmostEqual(self._as_float(enriched.loc[0, "game_total_norm"]), 218.5 / 230.0 - 1.0)
 
     def test_role_metrics_do_not_cross_attach_with_same_team_and_date(self) -> None:
         with tempfile.TemporaryDirectory() as tmpdir:

@@ -31,6 +31,7 @@ data/board/*.json
 data/input/bettingpros_props_today.csv
 data/input/bettingpros_signals_today.csv
 data/input/Bettingpros_props.json
+data/input/draftkings_props_today.csv
 data/input/external_priors_today.csv
 data/input/external_priors_today.yaml
 data/input/odds_market_today.json
@@ -72,9 +73,11 @@ scripts/marketing/*.jpeg
 data/model/_*.pkl
 data/model/candidates/
 data/model/catboost_playoff/backups/
+data/model/catboost_playoff/archive/
 data/model/catboost_playoff/catboost_fold_*.cbm
 data/model/catboost_playoff/catboost_full_corpus.cbm
 data/model/catboost_playoff_*.json
+data/model/builder_trainers/
 data/model/ensemble_v*/
 data/model/ensemble/oof_predictions.csv
 data/model/*_lodo.json
@@ -95,3 +98,4 @@ data/model/tier_dir_logit_shift*.json
 data/model/v5b_promotion.json
 data/model/*.log
 data/model/*_run.log
+data/tmp/

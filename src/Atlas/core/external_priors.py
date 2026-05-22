@@ -58,6 +58,8 @@ Behavior
 from __future__ import annotations
 
 import os
+import re
+import unicodedata
 from pathlib import Path
 from Atlas.runtime.paths import find_repo_root
 from typing import Any, Dict, Optional
@@ -157,6 +159,13 @@ def _safe_float(x: Any, default: Optional[float] = None) -> Optional[float]:
         return default
 
 
+def _player_match_key(value: Any) -> str:
+    text = "" if value is None else str(value)
+    text = unicodedata.normalize("NFKD", text).encode("ascii", "ignore").decode("ascii")
+    text = re.sub(r"[^A-Za-z0-9]+", " ", text)
+    return text.strip().upper()
+
+
 def _load_csv_priors(path: Path) -> pd.DataFrame:
     df = pd.read_csv(path)
 
@@ -176,7 +185,7 @@ def _load_csv_priors(path: Path) -> pd.DataFrame:
             "source": df["source"].astype(str).str.strip().str.lower(),
             "asof_ts": df["asof_ts"].astype(str).str.strip(),
             "league": df["league"].astype(str).str.strip().str.upper(),
-            "player": df["player"].astype(str).str.strip(),
+            "player": df["player"].map(_player_match_key),
             "stat": df["stat"].astype(str).str.strip().str.upper(),
             "line": pd.to_numeric(df["line"], errors="coerce"),
             "projection": pd.to_numeric(df["projection"], errors="coerce"),
@@ -184,6 +193,41 @@ def _load_csv_priors(path: Path) -> pd.DataFrame:
             "notes": df["notes"].astype(str),
         }
     )
+
+    # Older BettingPros archives stored the sportsbook line only in notes
+    # (for example: "side=over; ...; line=26.5; ..."). Recover it so
+    # historical replay can still match exact player/stat/line market rows.
+    if out["line"].isna().any():
+        extracted_line = (
+            out["notes"]
+            .astype(str)
+            .str.extract(r"(?:^|[;\s])line\s*=\s*(-?\d+(?:\.\d+)?)", flags=re.IGNORECASE)[0]
+        )
+        out["line"] = out["line"].fillna(pd.to_numeric(extracted_line, errors="coerce"))
+
+    # Historical OddsAPI exports used `projection` as the sportsbook line and
+    # carried devig probabilities in over_prob/under_prob. Promote that value
+    # into `line` so replay can treat those rows as exact player/stat/line
+    # market rows instead of misusing them as player-stat projections.
+    has_market_prob = (
+        pd.to_numeric(df.get("over_prob", pd.Series(index=df.index, dtype=float)), errors="coerce").notna()
+        | pd.to_numeric(df.get("under_prob", pd.Series(index=df.index, dtype=float)), errors="coerce").notna()
+    )
+    oddsapi_line_from_projection = (
+        out["line"].isna()
+        & out["source"].astype(str).str.lower().eq("oddsapi")
+        & has_market_prob
+        & out["projection"].notna()
+    )
+    out.loc[oddsapi_line_from_projection, "line"] = out.loc[oddsapi_line_from_projection, "projection"]
+
+    # Exact sportsbook rows only need player/stat/line plus market
+    # probabilities. Some recovered/public market archives correctly leave
+    # projection blank because they are not projection sources. Preserve those
+    # rows by carrying the line into projection as an internal placeholder;
+    # exact market rows are excluded from projection blending later.
+    exact_market_line_only = out["projection"].isna() & out["line"].notna() & has_market_prob
+    out.loc[exact_market_line_only, "projection"] = out.loc[exact_market_line_only, "line"]
 
     # New market probability columns (optional — may not exist in older CSVs)
     for col in ["over_prob", "under_prob", "over_rating", "under_rating", "opp_rank"]:
@@ -231,6 +275,17 @@ def _direction_cap_map(pri_cfg: dict[str, Any], default_cap: float) -> Dict[str,
             continue
         out[direction] = max(0.0, abs(float(cap_value)))
     return out
+
+
+def _anchor_source_names(pri_cfg: dict[str, Any]) -> set[str]:
+    raw = pri_cfg.get("anchor_sources", None)
+    if raw is None:
+        return {"bettingpros_market_anchor"}
+    if isinstance(raw, str):
+        return {raw.strip().lower()} if raw.strip() else set()
+    if isinstance(raw, (list, tuple, set)):
+        return {str(item).strip().lower() for item in raw if str(item).strip()}
+    return {"bettingpros_market_anchor"}
 
 
 def apply_external_priors(
@@ -290,7 +345,7 @@ def apply_external_priors(
         return out
 
     # Normalized internal keys
-    out["_ep_player"] = out["player"].astype(str).str.strip()
+    out["_ep_player"] = out["player"].map(_player_match_key)
     out["_ep_stat"] = out["stat"].astype(str).str.strip().str.upper()
     out["_ep_line"] = pd.to_numeric(out["line"], errors="coerce")
     out["_ep_dir"] = out["direction"].astype(str).str.strip().str.upper()
@@ -314,6 +369,28 @@ def apply_external_priors(
                | pd.to_numeric(pri.get("under_prob"), errors="coerce").notna())
         )
         proj_pri = pri.loc[~exact_market_mask].copy()
+        if not proj_pri.empty:
+            # Market anchors are the fallback source, not a co-equal blend.
+            # If a real player/stat projection exists, use that first. Only
+            # use anchor rows when they are the only available player/stat
+            # context. Exact line markets are handled separately and override
+            # projection context later at the row level.
+            anchor_sources = _anchor_source_names(pri_cfg)
+            proj_pri["_is_anchor_source"] = proj_pri["source"].astype(str).str.lower().isin(anchor_sources)
+            has_non_anchor = (
+                proj_pri.loc[~proj_pri["_is_anchor_source"]]
+                .groupby(["player", "stat"], dropna=False)
+                .size()
+                .rename("_has_non_anchor")
+                .reset_index()
+            )
+            proj_pri = proj_pri.merge(has_non_anchor, on=["player", "stat"], how="left")
+            proj_pri["_has_non_anchor"] = pd.to_numeric(
+                proj_pri["_has_non_anchor"], errors="coerce"
+            ).fillna(0)
+            proj_pri = proj_pri.loc[
+                (~proj_pri["_is_anchor_source"]) | (proj_pri["_has_non_anchor"] <= 0)
+            ].copy()
 
         # Weighted mean per (player, stat)
         if not proj_pri.empty:
@@ -476,6 +553,12 @@ def apply_external_priors(
         has_exact_mkt = exact_mkt_prob.notna()
         mkt_prob = exact_mkt_prob.where(has_exact_mkt, projection_mkt_prob)
 
+        # Exact line markets outrank all projection/anchor context for this
+        # leg. This keeps source lineage honest and prevents an anchor from
+        # being counted alongside a true player/stat/line market probability.
+        merged.loc[has_exact_mkt, "projection_apply_prior"] = False
+        proj_score.loc[has_exact_mkt] = 0.0
+
         # Market divergence: how much more confident is the market than Atlas?
         # Positive = market agrees with this direction more strongly.
         target_col_name: Optional[str] = "p_adj" if "p_adj" in merged.columns else ("p" if "p" in merged.columns else None)
@@ -560,6 +643,28 @@ def apply_external_priors(
             row_cap = row_cap.fillna(abs(cap)).clip(lower=0.0)
             merged["external_prior_cap_applied"] = row_cap
             merged["delta_p"] = (row_cap * merged["external_prior_score"]).clip(-row_cap, row_cap)
+
+            # Exact sportsbook rows are a stronger signal than player/stat
+            # projection anchors. If DK/FD/BettingPros gives an exact
+            # probability for this player/stat/line/direction, move directly
+            # toward that market probability instead of only using the generic
+            # tanh-score nudge. This keeps alt-line anchors soft while letting
+            # true exact market prices materially affect the final surface.
+            exact_blend_alpha = max(0.0, min(1.0, float(pri_cfg.get("exact_market_blend_alpha", 0.0))))
+            if exact_blend_alpha > 0.0:
+                exact_blend_cap = _safe_float(pri_cfg.get("exact_market_blend_cap", None), None)
+                if exact_blend_cap is None:
+                    exact_blend_cap = row_cap
+                exact_blend_cap_series = pd.Series(exact_blend_cap, index=merged.index).astype(float).abs()
+                exact_blend_delta = (
+                    exact_blend_alpha
+                    * (pd.to_numeric(merged["bp_market_prob"], errors="coerce") - pd.to_numeric(atlas_p, errors="coerce"))
+                ).clip(-exact_blend_cap_series, exact_blend_cap_series)
+                exact_blend_mask = merged["exact_market_apply_prior"] & pd.to_numeric(
+                    merged["bp_market_prob"], errors="coerce"
+                ).notna()
+                merged.loc[exact_blend_mask, "delta_p"] = exact_blend_delta.loc[exact_blend_mask]
+                merged.loc[exact_blend_mask, "external_prior_cap_applied"] = exact_blend_cap_series.loc[exact_blend_mask]
             # Avoid audit pollution from floating-point dust when the prior edge
             # is mathematically zero. These rows should remain prior-covered but
             # not be counted as probability-applied.

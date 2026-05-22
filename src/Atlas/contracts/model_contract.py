@@ -45,9 +45,10 @@ class ModelContract:
     feature_count: int = 33
     cat_features: Tuple[str, ...] = ("stat_cat", "tier_cat")
 
-    # CatBoost residual overlay. This intentionally uses a smaller feature set
-    # than the 33-feature GBM basis because playoff ablations favored it.
-    catboost_feature_count: int = 19
+    # CatBoost residual overlay. Promoted 2026-05-21 after strict-fidelity
+    # no-2026-05-02 LODO: 34-feature market/minutes contract, iter=800,
+    # depth=5, lr=0.03, residual_scale=0.45.
+    catboost_feature_count: int = 34
     catboost_cat_features: Tuple[str, ...] = ("tier_cat", "use_role")
 
     # OVER GBM (slim: fewer leaves for enriched q_blowout)

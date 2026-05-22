@@ -87,6 +87,16 @@ def _load_manifest(run_dir: Path) -> dict[str, Any]:
         return {}
 
 
+def _run_scoped_source_path(run_dir: Path, name: str) -> Path:
+    candidate = ROOT / "data" / "output" / "runs_manifest" / run_dir.name / name
+    if candidate.exists():
+        return candidate
+    replay_candidate = run_dir.parent.parent / "runs_manifest" / run_dir.name / name
+    if replay_candidate.exists():
+        return replay_candidate
+    return ROOT / "data" / "input" / name
+
+
 def _direction_tier_surface(scored: pd.DataFrame) -> list[dict[str, Any]]:
     if scored.empty or not {"tier", "direction", "p_cal"}.issubset(scored.columns):
         return []
@@ -215,7 +225,13 @@ def _external_prior_audit(scored: pd.DataFrame) -> dict[str, Any]:
         if "external_prior_sources" in scored.columns
         else pd.Series("", index=scored.index)
     )
-    exact_market = sources.str.contains("bettingpros_market", regex=False, na=False)
+    if "external_prior_exact_market" in scored.columns:
+        exact_market = _bool(scored, "external_prior_exact_market")
+    else:
+        exact_market = (
+            sources.str.contains("bettingpros_market", regex=False, na=False)
+            | sources.str.contains("draftkings_direct_market", regex=False, na=False)
+        )
     negative_applied = (delta < -1e-12) & applied
 
     applied_df = scored[applied].copy()
@@ -264,7 +280,7 @@ def _external_prior_audit(scored: pd.DataFrame) -> dict[str, Any]:
     }
 
 
-def _spread_context_audit(scored: pd.DataFrame) -> dict[str, Any]:
+def _spread_context_audit(scored: pd.DataFrame, run_dir: Path) -> dict[str, Any]:
     if scored.empty:
         return {}
 
@@ -274,7 +290,7 @@ def _spread_context_audit(scored: pd.DataFrame) -> dict[str, Any]:
     dates = sorted(str(d) for d in scored["game_date"].dropna().unique()) if "game_date" in scored.columns else []
     teams = sorted(str(t) for t in scored["team"].dropna().unique()) if "team" in scored.columns else []
 
-    rotowire_path = ROOT / "data" / "input" / "rotowire_lines.json"
+    rotowire_path = _run_scoped_source_path(run_dir, "rotowire_lines.json")
     rotowire_events = 0
     rotowire_date = None
     if rotowire_path.exists():
@@ -313,7 +329,7 @@ def _parse_leg(text: str) -> dict[str, Any] | None:
 def _slip_output_audit(run_dir: Path) -> dict[str, Any]:
     slip_files = []
     for p in run_dir.glob("*.csv"):
-        if p.name not in {"scored_legs.csv", "scored_legs_deduped.csv"}:
+        if p.name in {"marketed_slips.csv", "demonhunter.csv"} or p.name.startswith("recommended_"):
             slip_files.append(p)
     slip_files.extend((run_dir / "System").glob("*.csv"))
     slip_files.extend((run_dir / "Windfall").glob("*.csv"))
@@ -469,7 +485,7 @@ def audit_run(run_dir: Path) -> dict[str, Any]:
     direction_surface = _direction_tier_surface(scored)
     under_summary = _under_eligible_summary(scored, manifest)
     external_priors = _external_prior_audit(scored)
-    spread_context = _spread_context_audit(scored)
+    spread_context = _spread_context_audit(scored, run_dir)
     slips = _slip_output_audit(run_dir)
     cat_policy = _cat_policy_audit(run_dir)
 
@@ -489,9 +505,24 @@ def audit_run(run_dir: Path) -> dict[str, Any]:
     eligible_under = int(under_summary.get("marketed_standard_under_eligible_rows", 0) or 0)
     selected_under = int(slips.get("total_under_legs", 0) or 0)
     selected_total = int(slips.get("total_selected_legs", 0) or 0)
-    if eligible_under >= 3 and selected_under == 0:
+    cfg = manifest.get("full_config", {}) if isinstance(manifest, dict) else {}
+    sg = cfg.get("single_game_mode", {}) if isinstance(cfg, dict) else {}
+    rules = sg.get("slip_rules", {}) if isinstance(sg, dict) else {}
+    build_sizes = sg.get("build_slip_sizes", []) if isinstance(sg, dict) else []
+    max_under_by_legs = rules.get("max_under_legs_by_legs", {}) if isinstance(rules, dict) else {}
+    under_intentionally_blocked = False
+    if isinstance(max_under_by_legs, dict) and build_sizes:
+        try:
+            under_intentionally_blocked = all(
+                int(max_under_by_legs.get(str(int(n)), max_under_by_legs.get(int(n), 999)) or 0) == 0
+                for n in build_sizes
+            )
+        except Exception:
+            under_intentionally_blocked = False
+
+    if not under_intentionally_blocked and eligible_under >= 3 and selected_under == 0:
         warnings.append("eligible STANDARD UNDER pool exists but no UNDER legs reached slip outputs")
-    elif eligible_under >= 5 and selected_total > 0 and (selected_under / selected_total) < 0.05:
+    elif not under_intentionally_blocked and eligible_under >= 5 and selected_total > 0 and (selected_under / selected_total) < 0.05:
         warnings.append("eligible STANDARD UNDER pool exists but selected UNDER exposure is below 5%")
 
     cat_metrics = cat_policy.get("slate_metrics") or {}

@@ -9,7 +9,7 @@ SRC_ROOT = PROJECT_ROOT / "src"
 if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
-from Atlas.engine.new_probability import _bounded_role_rate_multiplier
+from Atlas.engine.new_probability import _bounded_role_rate_multiplier, _role_ctx_impact_policy
 
 
 class RoleRateCorridorTest(unittest.TestCase):
@@ -39,6 +39,43 @@ class RoleRateCorridorTest(unittest.TestCase):
         self.assertGreaterEqual(bounded_mult, 0.95)
         self.assertAlmostEqual(clamp_lo, 0.95, places=12)
         self.assertAlmostEqual(clamp_hi, 1.08, places=12)
+
+    def test_role_impact_policy_widens_primary_creator_corridor(self) -> None:
+        policy = _role_ctx_impact_policy(
+            {
+                "bump": 0.37,
+                "by_out": [
+                    {"out_canon": "deaaron fox", "weight": 0.24},
+                    {"out_canon": "bench guard", "weight": 0.02},
+                ],
+            },
+            {
+                "projection_clamp_hi": 1.11,
+                "role_rate_clamp_hi": 1.08,
+            },
+        )
+
+        self.assertTrue(policy["impact_policy_applied"])
+        self.assertEqual(policy["impact_tier"], "primary_creator")
+        self.assertAlmostEqual(policy["max_out_weight"], 0.24, places=12)
+        self.assertAlmostEqual(policy["projection_clamp_hi_effective"], 1.16, places=12)
+        self.assertAlmostEqual(policy["role_rate_clamp_hi_effective"], 1.12, places=12)
+
+    def test_role_impact_policy_keeps_bench_out_tight(self) -> None:
+        policy = _role_ctx_impact_policy(
+            {
+                "bump": 0.03,
+                "by_out": [{"out_canon": "bench wing", "weight": 0.02}],
+            },
+            {
+                "projection_clamp_hi": 1.11,
+                "role_rate_clamp_hi": 1.08,
+            },
+        )
+
+        self.assertEqual(policy["impact_tier"], "bench_or_low")
+        self.assertLessEqual(policy["projection_clamp_hi_effective"], 1.08)
+        self.assertLessEqual(policy["role_rate_clamp_hi_effective"], 1.06)
 
 
 if __name__ == "__main__":

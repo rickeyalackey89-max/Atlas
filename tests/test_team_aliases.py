@@ -87,3 +87,44 @@ def test_share_matrix_joins_sa_gamelogs_to_sas_iael() -> None:
     assert mult > 1.0
     assert debug["reason"] == "ok"
     assert debug["outs_used"] == 1
+
+
+def test_role_context_does_not_count_questionable_or_missing_matrix_as_applied() -> None:
+    iael_q = pd.DataFrame([{"team": "SAS", "player": "Fox, De'Aaron", "status": "QUESTIONABLE"}])
+    mult_q, debug_q = compute_role_multiplier(
+        pd.DataFrame(),
+        iael_q,
+        player="Victor Wembanyama",
+        team="SAS",
+        stat="PTS",
+        min_games=1,
+    )
+    assert mult_q == 1.0
+    assert debug_q["reason"] == "no_outs"
+    assert debug_q["outs_used"] == 0
+
+    iael_q_out_player = pd.DataFrame([{"team": "SAS", "out_player": "Fox, De'Aaron", "status": "QUESTIONABLE"}])
+    mult_q_out_player, debug_q_out_player = compute_role_multiplier(
+        pd.DataFrame(),
+        iael_q_out_player,
+        player="Victor Wembanyama",
+        team="SAS",
+        stat="PTS",
+        min_games=1,
+    )
+    assert mult_q_out_player == 1.0
+    assert debug_q_out_player["reason"] == "no_outs"
+    assert debug_q_out_player["outs_used"] == 0
+
+    iael_out = pd.DataFrame([{"team": "SAS", "player": "Fox, De'Aaron", "status": "OUT"}])
+    mult_out, debug_out = compute_role_multiplier(
+        pd.DataFrame(),
+        iael_out,
+        player="Victor Wembanyama",
+        team="SAS",
+        stat="PTS",
+        min_games=1,
+    )
+    assert mult_out == 1.0
+    assert debug_out["reason"] == "no_share_matrix"
+    assert debug_out["outs_used"] == 0

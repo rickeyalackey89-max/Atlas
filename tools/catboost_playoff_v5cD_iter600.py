@@ -28,6 +28,29 @@ CACHE_PATH = ROOT / "data" / "model" / "_v1_playoff_resim_cache.pkl"
 V5B_PATH   = ROOT / "data" / "model" / "catboost_playoff_v5b_lodo.json"
 V5C_PATH   = ROOT / "data" / "model" / "catboost_playoff_v5c_sweep.json"
 OUT_PATH   = ROOT / "data" / "model" / "catboost_playoff_v5cD_iter600.json"
+CURRENT_META_PATH = ROOT / "data" / "model" / "catboost_playoff" / "catboost_v5cD_full_corpus.meta.json"
+
+CURRENT_PRODUCTION_FEATURES = [
+    "p_for_cal",
+    "bp_score_gated",
+    "bp_has",
+    "is_assists",
+    "thin_flag",
+    "is_home_feat",
+    "min_sensitivity",
+    "is_b2b",
+    "tier_cat",
+    "line_dist",
+    "tail_risk",
+    "line_tightness",
+    "margin_x_under",
+    "q_blowout",
+    "rate_cv",
+    "q_x_under",
+    "player_stat_te",
+    "use_role",
+    "game_total_norm",
+]
 
 CAT_FEATURES_ALL = ["stat_cat", "tier_cat", "use_role"]
 
@@ -119,6 +142,36 @@ def parse_date_scales(raw: list[str] | None) -> dict[str, float]:
     return mapping
 
 
+def parse_feature_list(raw: list[str] | None) -> list[str]:
+    if not raw:
+        return []
+    values: list[str] = []
+    for item in raw:
+        for part in str(item).replace(",", " ").split():
+            part = part.strip()
+            if part:
+                values.append(part)
+    return values
+
+
+def load_feature_contract() -> tuple[list[str], str]:
+    if CURRENT_META_PATH.is_file():
+        with open(CURRENT_META_PATH, "r") as f:
+            meta = json.load(f)
+        features = meta.get("features") or []
+        if features:
+            return list(features), str(CURRENT_META_PATH)
+
+    if V5B_PATH.is_file():
+        with open(V5B_PATH, "r") as f:
+            v5b = json.load(f)
+        features = v5b.get("v5b_features") or []
+        if features:
+            return list(features), str(V5B_PATH)
+
+    return list(CURRENT_PRODUCTION_FEATURES), "embedded_current_production_features"
+
+
 def summarize_scale(hit_arr, pforcal_arr, date_arr, dates, oof, fold_pred_map, scale: float) -> dict:
     valid = ~np.isnan(oof)
     p_oof = apply_residual(pforcal_arr[valid], oof[valid], residual_scale=scale)
@@ -164,7 +217,11 @@ def summarize_scale(hit_arr, pforcal_arr, date_arr, dates, oof, fold_pred_map, s
     clean_verdict = "PROMOTE" if (clean_agg_mb < -0.5 and clean_pass) else "REJECT"
     return {
         "residual_scale": scale,
+        "agg_brier_pforcal": b_pre,
+        "agg_brier_after_cal": b_post,
         "agg_delta_mB": agg_mb,
+        "clean_brier_pforcal": b_clean_pre,
+        "clean_brier_after_cal": b_clean_post,
         "clean_agg_delta_mB": clean_agg_mb,
         "worst_slate_mB": worst_mb,
         "clean_worst_slate_mB": clean_worst,
@@ -219,7 +276,11 @@ def summarize_date_policy(hit_arr, pforcal_arr, date_arr, dates, oof, fold_pred_
         "policy": "date_scale_override",
         "default_residual_scale": default_scale,
         "date_scales": date_scales,
+        "agg_brier_pforcal": b_pre,
+        "agg_brier_after_cal": b_post,
         "agg_delta_mB": agg_mb,
+        "clean_brier_pforcal": b_clean_pre,
+        "clean_brier_after_cal": b_clean_post,
         "clean_agg_delta_mB": clean_agg_mb,
         "worst_slate_mB": worst_mb,
         "clean_worst_slate_mB": clean_worst,
@@ -234,12 +295,36 @@ def main() -> int:
     ap.add_argument("--out-path", default=str(OUT_PATH), help="Output JSON path.")
     ap.add_argument("--residual-scale", type=float, default=RESIDUAL_SCALE, help="Single residual scale to evaluate.")
     ap.add_argument("--residual-scales", nargs="*", help="Optional residual scale sweep, e.g. 0.45 0.40 0.35 0.30.")
+    ap.add_argument("--iterations", type=int, default=PARAMS["iterations"], help="CatBoost iterations.")
+    ap.add_argument("--depth", type=int, default=PARAMS["depth"], help="CatBoost tree depth.")
+    ap.add_argument("--learning-rate", type=float, default=PARAMS["learning_rate"], help="CatBoost learning rate.")
+    ap.add_argument("--l2-leaf-reg", type=float, default=PARAMS["l2_leaf_reg"], help="CatBoost L2 leaf regularization.")
+    ap.add_argument("--min-data-in-leaf", type=int, default=PARAMS["min_data_in_leaf"], help="CatBoost min_data_in_leaf.")
+    ap.add_argument("--label", default="v5cD", help="Label recorded in the output JSON.")
     ap.add_argument(
         "--date-scales",
         nargs="*",
         help="Optional date-specific policy overrides, e.g. 2026-05-01=0.15 2026-05-05=0.15.",
     )
+    ap.add_argument(
+        "--features",
+        nargs="*",
+        help="Optional explicit feature list. Space or comma separated. Overrides the promoted feature contract.",
+    )
+    ap.add_argument(
+        "--drop-features",
+        nargs="*",
+        help="Optional feature names to drop from the selected feature contract. Space or comma separated.",
+    )
     args = ap.parse_args()
+    params = dict(PARAMS)
+    params.update(
+        iterations=args.iterations,
+        depth=args.depth,
+        learning_rate=args.learning_rate,
+        l2_leaf_reg=args.l2_leaf_reg,
+        min_data_in_leaf=args.min_data_in_leaf,
+    )
     residual_scales = parse_scales(args.residual_scales, args.residual_scale)
     primary_scale = residual_scales[0]
     date_scales = parse_date_scales(args.date_scales)
@@ -252,13 +337,29 @@ def main() -> int:
         out_path = ROOT / out_path
 
     print("=" * 80)
-    print(f"v5c-D control: iter=600, lr=0.075, scales={residual_scales}, 19 features, clean-6")
+    print(
+        f"v5c-D control: iter={params['iterations']}, depth={params['depth']}, "
+        f"lr={params['learning_rate']}, scales={residual_scales}, 19 features, clean-6"
+    )
     print("=" * 80)
 
-    with open(V5B_PATH, "r") as f:
-        v5b = json.load(f)
-    features = v5b["v5b_features"]
-    print(f"features ({len(features)}): {features}")
+    explicit_features = parse_feature_list(args.features)
+    if explicit_features:
+        features = explicit_features
+        feature_source = "cli:--features"
+    else:
+        features, feature_source = load_feature_contract()
+    drop_features = set(parse_feature_list(args.drop_features))
+    if drop_features:
+        before = list(features)
+        features = [feature for feature in features if feature not in drop_features]
+        missing_drops = sorted(drop_features - set(before))
+        if missing_drops:
+            raise ValueError(f"--drop-features requested unknown features: {missing_drops}")
+        feature_source = f"{feature_source}; drop={sorted(drop_features)}"
+    if not features:
+        raise ValueError("No CatBoost features selected.")
+    print(f"features ({len(features)}) from {feature_source}: {features}")
     print(f"clean-6 excludes: {sorted(EXCLUDE_SLATES)}")
     print()
 
@@ -285,6 +386,7 @@ def main() -> int:
     oof = np.full(len(cv), np.nan)
     fold_rows = []
     fold_pred_map = {}
+    feature_importance_rows: list[dict] = []
 
     t0 = time.time()
     for held in dates:
@@ -303,9 +405,21 @@ def main() -> int:
         eval_pool  = make_pool(X_tr_all.iloc[eval_idx],  y_tr_all[eval_idx],  cat_in)
         test_pool  = make_pool(X_te, None, cat_in)
 
-        m = CatBoostRegressor(**PARAMS)
+        m = CatBoostRegressor(**params)
         m.fit(train_pool, eval_set=eval_pool)
         pred = m.predict(test_pool)
+        try:
+            importances = m.get_feature_importance(train_pool)
+            for feature, importance in zip(features, importances):
+                feature_importance_rows.append(
+                    {
+                        "date": held,
+                        "feature": feature,
+                        "importance": float(importance),
+                    }
+                )
+        except Exception:
+            pass
         oof[test_mask] = pred
         fold_pred_map[held] = pred
         best_it = m.get_best_iteration()
@@ -409,12 +523,33 @@ def main() -> int:
         d_worst = clean_worst - a["clean_worst_slate_mB"]
         print(f"  {'delta D-A':<25} {'':>8} {d_agg:>+8.2f} {'':>8} {d_worst:>+8.2f}")
 
+    feature_importance_summary: list[dict] = []
+    if feature_importance_rows:
+        imp_df = pd.DataFrame(feature_importance_rows)
+        feature_importance_summary = (
+            imp_df.groupby("feature")["importance"]
+            .agg(["mean", "std", "min", "max"])
+            .reset_index()
+            .rename(columns={"mean": "importance_mean", "std": "importance_std", "min": "importance_min", "max": "importance_max"})
+            .sort_values("importance_mean", ascending=False)
+            .to_dict("records")
+        )
+
     payload = {
-        "config": {"iterations": 600, "learning_rate": 0.075,
+        "config": {"iterations": args.iterations, "learning_rate": args.learning_rate,
+                    "depth": args.depth,
+                    "l2_leaf_reg": args.l2_leaf_reg,
+                    "min_data_in_leaf": args.min_data_in_leaf,
                     "residual_scale": primary_scale, "residual_clip": 0.20,
-                    "residual_scales": residual_scales},
+                    "residual_scales": residual_scales,
+                    "label": args.label,
+                    "catboost_params": {
+                        k: (str(v) if not isinstance(v, (int, float, str, bool)) else v)
+                        for k, v in params.items()
+                    }},
         "cache_path": str(cache_path),
         "features": features,
+        "feature_source": feature_source,
         "exclude_slates_clean6": sorted(EXCLUDE_SLATES),
         "agg_delta_mB": agg_mb,
         "clean_agg_delta_mB": clean_agg_mb,
@@ -422,6 +557,8 @@ def main() -> int:
         "clean_worst_slate_mB": clean_worst,
         "clean_verdict": clean_verdict,
         "folds": fold_rows,
+        "feature_importance": feature_importance_summary,
+        "feature_importance_by_fold": feature_importance_rows,
         "elapsed_sec": elapsed,
         "scale_results": scale_results,
         "date_scale_policy": policy_result,

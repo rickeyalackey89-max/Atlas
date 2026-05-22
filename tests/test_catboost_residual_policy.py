@@ -5,7 +5,11 @@ from pathlib import Path
 
 import pandas as pd
 
-from Atlas.engine.catboost_calibrator import _build_feature_df_regressor, resolve_residual_scale
+from Atlas.engine.catboost_calibrator import (
+    _build_feature_df_regressor,
+    _stamp_catboost_p_cal_src,
+    resolve_residual_scale,
+)
 
 
 class CatBoostResidualPolicyTest(unittest.TestCase):
@@ -22,6 +26,10 @@ class CatBoostResidualPolicyTest(unittest.TestCase):
                 "blowout_role_ctx_share_max": 0.30,
                 "no_role_ctx_share_max": 0.01,
                 "low_external_prior_bp_has_mean_max": 0.10,
+                "dead_game_context_enabled": True,
+                "dead_game_context_spread_ok_max": 0.01,
+                "dead_game_context_total_nonzero_max": 0.01,
+                "dead_game_context_q_unique_max": 1,
             }
         }
 
@@ -66,6 +74,8 @@ class CatBoostResidualPolicyTest(unittest.TestCase):
                 "q_blowout": [0.20, 0.30, 0.20, 0.30],
                 "role_ctx_outs_used": [1, 0, 1, 0],
                 "bp_has": [1, 1, 1, 1],
+                "spread_ok": [1, 1, 1, 1],
+                "game_total": [220.5, 220.5, 218.0, 218.0],
             }
         )
 
@@ -73,6 +83,24 @@ class CatBoostResidualPolicyTest(unittest.TestCase):
 
         self.assertEqual(scale, 0.55)
         self.assertFalse(metrics["policy_triggered"])
+
+    def test_dead_game_context_constant_blowout_uses_defensive_scale(self) -> None:
+        df = pd.DataFrame(
+            {
+                "game_id": ["a", "a", "a", "a"],
+                "q_out_frac": [0.0, 0.0, 0.0, 0.0],
+                "q_blowout": [0.125, 0.125, 0.125, 0.125],
+                "role_ctx_outs_used": [1, 1, 0, 0],
+                "bp_has": [1, 1, 1, 1],
+                "spread_ok": [0, 0, 0, 0],
+                "game_total_norm": [0.0, 0.0, 0.0, 0.0],
+            }
+        )
+
+        scale, metrics = resolve_residual_scale(df, self._cfg(), {}, fallback_scale=0.50)
+
+        self.assertEqual(scale, 0.10)
+        self.assertIn("dead_game_context_constant_q_blowout", metrics["policy_reasons"])
 
     def test_no_role_low_external_prior_uses_defensive_scale(self) -> None:
         df = pd.DataFrame(
@@ -129,10 +157,13 @@ class CatBoostResidualPolicyTest(unittest.TestCase):
                 "player": ["Test Player"],
                 "team": ["MIN"],
                 "opp": ["SAS"],
+                "home_team": ["MIN"],
+                "away_team": ["SAS"],
                 "stat": ["PTS"],
                 "direction": ["OVER"],
                 "tier": ["GOBLIN"],
                 "line": [5.5],
+                "game_total": [216.5],
                 "p_adj": [0.62],
                 "p_for_cal": [0.62],
                 "q_blowout": [0.24],
@@ -142,7 +173,6 @@ class CatBoostResidualPolicyTest(unittest.TestCase):
                 "min_std": [6.0],
                 "games_used": [12],
                 "role_ctx_outs_used": [1],
-                "is_home": [1],
                 "external_prior_n": [1],
                 "external_prior_score": [0.75],
                 "game_date": ["2026-05-12"],
@@ -161,6 +191,8 @@ class CatBoostResidualPolicyTest(unittest.TestCase):
             "line_dist",
             "q_blowout",
             "rate_cv",
+            "is_home_feat",
+            "game_total_norm",
             "use_role",
         ]
 
@@ -177,8 +209,35 @@ class CatBoostResidualPolicyTest(unittest.TestCase):
         self.assertEqual(float(X_df.loc[0, "thin_flag"]), 1.0)
         self.assertEqual(X_df.loc[0, "tier_cat"], "1")
         self.assertEqual(X_df.loc[0, "use_role"], "1")
+        self.assertEqual(float(X_df.loc[0, "is_home_feat"]), 1.0)
+        self.assertAlmostEqual(float(X_df.loc[0, "game_total_norm"]), 216.5 / 230.0 - 1.0)
         self.assertNotEqual(float(X_df.loc[0, "line_dist"]), 0.0)
         self.assertGreater(float(X_df.loc[0, "rate_cv"]), 0.0)
+
+    def test_catboost_source_stamp_preserves_original_prefix(self) -> None:
+        scored = pd.DataFrame(
+            {
+                "p_cal_src": ["p_adj", "p_adj_under_relief", ""],
+                "p_cal": [0.60, 0.55, 0.50],
+            }
+        )
+
+        out = _stamp_catboost_p_cal_src(
+            scored.copy(),
+            kind="regressor",
+            mode="replace",
+            meta={"version": "catboost_test_v1"},
+        )
+
+        self.assertEqual(
+            out["p_cal_src"].tolist(),
+            [
+                "p_adj->catboost_residual_replace:catboost_test_v1",
+                "p_adj_under_relief->catboost_residual_replace:catboost_test_v1",
+                "p_for_cal->catboost_residual_replace:catboost_test_v1",
+            ],
+        )
+        self.assertTrue(out.loc[0, "p_cal_src"].startswith("p_adj"))
 
 
 if __name__ == "__main__":

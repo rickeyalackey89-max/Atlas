@@ -15,6 +15,8 @@ from Atlas.core.slip_composition_policy import (
 from Atlas.core.slip_family_diversity import (
     player_keys_from_marketed_slip,
     player_keys_from_slip_row,
+    player_stat_keys_from_marketed_slip,
+    player_stat_keys_from_slip_row,
     prop_keys_from_marketed_slip,
     prop_keys_from_slip_row,
 )
@@ -170,6 +172,12 @@ def apply_public_portfolio_exposure(
         slate_games=slate_games,
         default=1,
     )
+    max_player_stat_repeats = _resolve_exposure_cap(
+        exposure,
+        "max_player_stat_repeats_across_public",
+        slate_games=slate_games,
+        default=1,
+    )
 
     kept_frames = {name: _ensure_quality_columns(frame) for name, frame in frames.items()}
     kept_marketed = annotate_marketed_slips(marketed_slips, cfg, family="Marketed")
@@ -191,6 +199,7 @@ def apply_public_portfolio_exposure(
                 "index": slip_index,
                 "keys": prop_keys_from_marketed_slip(slip),
                 "player_keys": player_keys_from_marketed_slip(slip),
+                "player_stat_keys": player_stat_keys_from_marketed_slip(slip),
                 "n_legs": int(_float(slip.get("n_legs"), len(leg_parts)) or len(leg_parts)),
                 "leg_parts": leg_parts,
                 "quality_pass": bool(slip.get("public_quality_pass", True)),
@@ -213,6 +222,7 @@ def apply_public_portfolio_exposure(
                             "index": idx,
                             "survival_score": _float(row.get("public_survival_score"), 0.0),
                             "player_keys": player_keys_from_slip_row(row),
+                            "player_stat_keys": player_stat_keys_from_slip_row(row),
                         },
                         "family_disabled_for_slate",
                         prop_keys_from_slip_row(row),
@@ -229,6 +239,7 @@ def apply_public_portfolio_exposure(
                     "index": idx,
                     "keys": prop_keys_from_slip_row(row),
                     "player_keys": player_keys_from_slip_row(row),
+                    "player_stat_keys": player_stat_keys_from_slip_row(row),
                     "n_legs": int(_float(row.get("n_legs"), len(leg_parts)) or len(leg_parts)),
                     "leg_parts": leg_parts,
                     "quality_pass": bool(row.get("public_quality_pass", True)),
@@ -248,6 +259,7 @@ def apply_public_portfolio_exposure(
 
     counts: dict[str, int] = {}
     player_counts: dict[str, int] = {}
+    player_stat_counts: dict[str, int] = {}
     output_counts: dict[str, int] = {}
     kept_item_ids: set[tuple[str, str, int]] = set()
     drops: list[dict[str, Any]] = list(pre_drops)
@@ -256,6 +268,7 @@ def apply_public_portfolio_exposure(
         item_id = (str(item["kind"]), str(item["name"]), int(item["index"]))
         keys = {key for key in item.get("keys", set()) if key}
         player_keys = {key for key in item.get("player_keys", set()) if key}
+        player_stat_keys = {key for key in item.get("player_stat_keys", set()) if key}
         composition_reason = composition_drop_reason_for_item(item, section, slate_games)
         if composition_reason:
             drops.append(_drop_record(item, composition_reason, keys))
@@ -265,6 +278,11 @@ def apply_public_portfolio_exposure(
             continue
         if keys and any(counts.get(key, 0) >= max_repeats for key in keys):
             drops.append(_drop_record(item, "exact_prop_exposure_cap", keys))
+            continue
+        if max_player_stat_repeats > 0 and player_stat_keys and any(
+            player_stat_counts.get(key, 0) >= max_player_stat_repeats for key in player_stat_keys
+        ):
+            drops.append(_drop_record(item, "player_stat_exposure_cap", keys))
             continue
         if max_player_repeats > 0 and player_keys and any(player_counts.get(key, 0) >= max_player_repeats for key in player_keys):
             drops.append(_drop_record(item, "player_exposure_cap", keys))
@@ -278,6 +296,8 @@ def apply_public_portfolio_exposure(
             output_counts[output_name] = output_counts.get(output_name, 0) + 1
         for key in keys:
             counts[key] = counts.get(key, 0) + 1
+        for key in player_stat_keys:
+            player_stat_counts[key] = player_stat_counts.get(key, 0) + 1
         for key in player_keys:
             player_counts[key] = player_counts.get(key, 0) + 1
 
@@ -307,6 +327,7 @@ def apply_public_portfolio_exposure(
 
     manifest = _manifest(enabled=True, kept_frames=final_frames, kept_marketed=final_marketed, drops=drops)
     manifest["max_exact_prop_repeats_across_public"] = max_repeats
+    manifest["max_player_stat_repeats_across_public"] = max_player_stat_repeats
     manifest["max_player_repeats_across_public"] = max_player_repeats
     manifest["max_rows_per_public_output"] = max_rows_per_output
     manifest["priority"] = priority
@@ -538,6 +559,7 @@ def _drop_record(item: Mapping[str, Any], reason: str, keys: set[str]) -> dict[s
         "reason": reason,
         "prop_keys": sorted(keys),
         "player_keys": sorted({key for key in item.get("player_keys", set()) if key}),
+        "player_stat_keys": sorted({key for key in item.get("player_stat_keys", set()) if key}),
         "survival_score": float(item.get("survival_score", 0.0) or 0.0),
     }
 

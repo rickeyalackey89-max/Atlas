@@ -1,12 +1,18 @@
 # Atlas Docs
 
-Last updated: 2026-05-11
+Last updated: 2026-05-21
 
 This folder is the durable engineering documentation for Atlas. The `ai/` folder can carry operator-facing summaries and handoff notes, but this `docs/` folder should be the long-term repo reference.
 
+Before changing live, replay, corpus, CAT, LODO, builder, or publish code, read
+the workspace-level operating memory first:
+
+- `C:\Users\13142\Atlas\ATLAS_OPERATING_MEMORY.md`
+- `C:\Users\13142\Atlas\ai\README.md`
+
 ## Start Here
 
-- [Current State](CURRENT_STATE_2026-05-10.md) — active NBA runtime truth: CatBoost playoff v5cD, May 10 kernel transforms, replay metrics.
+- [Current State](CURRENT_STATE_2026-05-10.md) — CatBoost playoff v5cD baseline snapshot. Pair it with the replay/source-contract docs for current operating rules.
 - [Model Context](ATLAS_MODEL_CONTEXT.md) — model architecture, active probability chain, config knobs, and debugging flow.
 - [Pipeline Reference](PIPELINE_REFERENCE.md) — live run file-to-file trace, publishing, Discord, and evaluation artifacts.
 - [Late Injury Handling](LATE_INJURY_HANDLING.md) — direct-player risk vs beneficiary uncertainty rules.
@@ -21,7 +27,7 @@ This folder is the durable engineering documentation for Atlas. The `ai/` folder
 - [Scored Legs Data Dictionary](SCORED_LEGS_DEDUPED_DATA_DICTIONARY.md) — current `scored_legs_deduped.csv` column surface.
 - [Replay and Live Run Rules](REPLAY_AND_LIVE_RUN_RULES.md) — strict replay versus live run contract.
 - [Baseline v18 + Current Runtime](BASELINE_V18.md) — historical LightGBM baseline plus current CatBoost runtime reference.
-- [Trainer Requirements](TRAINER_REQUIREMENTS.md) — historical trainer requirements. This file is intentionally not refreshed yet; trainers need a dedicated audit before being treated as current.
+- [Trainer Requirements](TRAINER_REQUIREMENTS.md) — trainer prerequisites and current strict replay preflight gates.
 
 ## Subfolders
 

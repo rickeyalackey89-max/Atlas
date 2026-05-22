@@ -65,7 +65,10 @@ def _truncate(s: str, limit: int = 4000) -> str:
 def _output_root_for_run(ctx: RunContext) -> Path:
     configured = (os.environ.get("ATLAS_OUT_DIR") or "").strip()
     if configured:
-        return Path(configured).expanduser().resolve()
+        # The engine publish stage treats ATLAS_OUT_DIR as the output root and
+        # writes timestamped run artifacts under <root>/runs/<run_id>. Keep the
+        # orchestrator's run-scoped manifests aligned with that same location.
+        return (Path(configured).expanduser().resolve() / "runs" / ctx.run_id).resolve()
     return (RUNS_DIR / ctx.run_id).resolve()
 
 
@@ -249,6 +252,7 @@ def _prepare_iael_run_snapshot(ctx: RunContext, run_root: Path) -> dict[str, Pat
 
 def _prepare_rotowire_run_snapshot(*, game_date: str) -> Path:
     source = _require_env_path("ATLAS_ROTOWIRE_LINES_PATH", "Rotowire snapshot")
+    os.environ["ATLAS_ROTOWIRE_ORIGINAL_SOURCE_PATH"] = str(source.resolve())
     out_path = DATA_DIR / "input" / "rotowire_lines.json"
     out_path.parent.mkdir(parents=True, exist_ok=True)
 
@@ -264,6 +268,217 @@ def _prepare_rotowire_run_snapshot(*, game_date: str) -> Path:
     shutil.copy2(source, out_path)
     os.environ["ATLAS_ROTOWIRE_LINES_PATH"] = str(out_path)
     return out_path
+
+
+def _rotowire_has_game_line_context(path: Path, *, game_date: str) -> tuple[bool, str]:
+    try:
+        obj = json.loads(path.read_text(encoding="utf-8"))
+    except Exception as exc:
+        return False, f"rotowire_unreadable:{type(exc).__name__}"
+
+    if not isinstance(obj, dict):
+        return False, "rotowire_bad_shape"
+
+    source_date = str(obj.get("date", "")).strip()
+    if source_date and source_date != game_date:
+        return False, f"rotowire_date_mismatch expected={game_date} found={source_date}"
+
+    events = obj.get("events", [])
+    if not isinstance(events, list) or not events:
+        return False, "rotowire_no_events"
+
+    for ev in events:
+        if not isinstance(ev, dict):
+            continue
+        spread = ev.get("spread", {})
+        if not isinstance(spread, dict):
+            spread = {}
+        if spread.get("home") is not None and spread.get("away") is not None:
+            return True, "ok"
+        if ev.get("ou") is not None:
+            return True, "ok"
+
+    return False, "rotowire_events_have_null_spread_total"
+
+
+def _find_date_pinned_rotowire_fallback(*, game_date: str) -> Path | None:
+    candidates: list[Path] = []
+    for path in [
+        DATA_DIR / "input" / "rotowire_lines_last_good.json",
+        DATA_DIR / "input" / "rotowire_lines.json",
+    ]:
+        if path.exists() and path.is_file():
+            candidates.append(path)
+
+    archive_root = DATA_DIR / "archives" / "iael" / game_date[:4] / game_date
+    if archive_root.exists():
+        candidates.extend(
+            sorted(
+                archive_root.rglob("rotowire_lines.json"),
+                key=lambda p: p.stat().st_mtime,
+                reverse=True,
+            )
+        )
+
+    for candidate in candidates:
+        ok, _ = _rotowire_has_game_line_context(candidate, game_date=game_date)
+        if ok:
+            return candidate
+    return None
+
+
+def _ensure_rotowire_game_line_context(ctx: RunContext, *, rotowire_path: Path, game_date: str) -> None:
+    ok, reason = _rotowire_has_game_line_context(rotowire_path, game_date=game_date)
+    emit_event(
+        ctx,
+        "rotowire_game_line_context_check",
+        ok=ok,
+        reason=reason,
+        rotowire_path=str(rotowire_path),
+        game_date=game_date,
+    )
+    if ok:
+        return
+    if not _strict_replay_enabled():
+        _banner("REPAIR GAME-LINE CONTEXT")
+        print(f"[game-lines][WARN] Missing spread/total context from primary file: {reason}")
+        print("[game-lines] Trying ESPN/DK scoreboard repair before continuing.")
+        repair_result = _run(
+            [_py(), str(TOOLS_DIR / "fetch_rotowire_lines.py")],
+            "FETCH ESPN/DK GAME LINES (repair)",
+            extra_env={
+                "ROTOWIRE_GAME_DATE": game_date,
+                "ROTOWIRE_LINES_URL": "",
+                "ROTOWIRE_FORCE_ESPN_FALLBACK": "1",
+            },
+            check=False,
+        )
+        emit_event(
+            ctx,
+            "rotowire_repair_fetch_result",
+            returncode=repair_result.returncode,
+            ok=repair_result.ok,
+        )
+        ok_after_repair, repair_reason = _rotowire_has_game_line_context(rotowire_path, game_date=game_date)
+        if ok_after_repair:
+            emit_event(ctx, "rotowire_game_line_context_repaired", method="espn_scoreboard")
+            return
+
+        fallback = _find_date_pinned_rotowire_fallback(game_date=game_date)
+        if fallback is not None:
+            shutil.copy2(fallback, rotowire_path)
+            emit_event(
+                ctx,
+                "rotowire_game_line_context_repaired",
+                method="date_pinned_archive",
+                fallback_path=str(fallback),
+            )
+            print(f"[game-lines] Repaired game-line context from date-pinned fallback: {fallback}")
+            return
+
+        reason = repair_reason
+    if (os.environ.get("ATLAS_ALLOW_MISSING_GAME_LINES") or "").strip() == "1":
+        print(f"[game-lines][WARN] game-line context missing but ATLAS_ALLOW_MISSING_GAME_LINES=1: {reason}")
+        return
+    raise SystemExit(f"[game-lines][FATAL] Missing game spread/total context for {game_date} after fallback repair: {reason}")
+
+
+def _snapshot_live_source_context(ctx: RunContext, *, run_root: Path, game_date: str) -> dict[str, Path]:
+    """Copy live source inputs into the run-scoped manifest folder.
+
+    This is intentionally additive. The scored CSVs are not enough for fidelity:
+    if a source file changes later, the run must still prove exactly what it saw.
+    """
+    snapshot_dir = run_root.parent.parent / "runs_manifest" / run_root.name
+    snapshot_dir.mkdir(parents=True, exist_ok=True)
+
+    rotowire_source_raw = (
+        os.environ.get("ATLAS_ROTOWIRE_ORIGINAL_SOURCE_PATH")
+        or os.environ.get("ATLAS_ROTOWIRE_LINES_PATH")
+        or str(DATA_DIR / "input" / "rotowire_lines.json")
+    )
+    priors_source_raw = os.environ.get("ATLAS_EXTERNAL_PRIORS_CSV_PATH") or str(DATA_DIR / "input" / "external_priors_today.csv")
+
+    strict_replay = _strict_replay_enabled()
+
+    sources = {
+        "prizepicks_raw": Path(os.environ["ATLAS_REPLAY_RAW"]).expanduser()
+        if strict_replay and os.environ.get("ATLAS_REPLAY_RAW")
+        else None,
+        "rotowire_lines": Path(rotowire_source_raw).expanduser(),
+        "external_priors": Path(priors_source_raw).expanduser(),
+    }
+    if strict_replay:
+        optional_replay_sources = {
+            "odds_market": os.environ.get("ATLAS_ODDS_MARKET_JSON_PATH"),
+            "bettingpros_props": os.environ.get("ATLAS_BETTINGPROS_PROPS_CSV_PATH"),
+            "draftkings_props": os.environ.get("ATLAS_DRAFTKINGS_PROPS_CSV_PATH"),
+            "github_prop_odds": os.environ.get("ATLAS_GITHUB_PROP_ODDS_CSV_PATH"),
+        }
+        for label, raw in optional_replay_sources.items():
+            if raw:
+                sources[label] = Path(raw).expanduser()
+    else:
+        sources.update(
+            {
+                "odds_market": DATA_DIR / "input" / "odds_market_today.json",
+                "bettingpros_props": DATA_DIR / "input" / "bettingpros_props_today.csv",
+                "draftkings_props": DATA_DIR / "input" / "draftkings_props_today.csv",
+            }
+        )
+    copied: dict[str, Path] = {}
+    manifest: dict[str, dict[str, str]] = {}
+
+    for label, src in sources.items():
+        if src is None:
+            continue
+        if not src.exists() or not src.is_file():
+            continue
+        dst = snapshot_dir / src.name
+        shutil.copy2(src, dst)
+        copied[label] = dst
+        manifest[label] = {
+            "source": str(src.resolve()),
+            "destination": str(dst.resolve()),
+            "sha256": sha256_file(dst) or "",
+        }
+
+    manifest_path = snapshot_dir / "source_context_manifest.json"
+    manifest_path.write_text(
+        json.dumps(
+            {
+                "run_id": ctx.run_id,
+                "game_date": game_date,
+                "strict_replay": strict_replay,
+                "generated_at": datetime.now().isoformat(timespec="seconds"),
+                "artifacts": manifest,
+            },
+            indent=2,
+            sort_keys=True,
+        ),
+        encoding="utf-8",
+    )
+    copied["source_context_manifest"] = manifest_path
+
+    if "rotowire_lines" in copied:
+        os.environ["ATLAS_ROTOWIRE_LINES_PATH"] = str(copied["rotowire_lines"])
+    if "external_priors" in copied:
+        os.environ["ATLAS_EXTERNAL_PRIORS_CSV_PATH"] = str(copied["external_priors"])
+    if "prizepicks_raw" in copied:
+        os.environ["ATLAS_REPLAY_RAW"] = str(copied["prizepicks_raw"])
+
+    emit_event(
+        ctx,
+        "source_context_snapshot_prepared",
+        snapshot_dir=str(snapshot_dir),
+        manifest_path=str(manifest_path),
+        files=sorted(path.name for path in copied.values()),
+    )
+
+    for label, path in copied.items():
+        _artifact_fingerprint(ctx, path.name, path)
+
+    return copied
 
 
 def _csv_has_data_rows(path: Path) -> bool:
@@ -629,17 +844,23 @@ def fetch_rotowire_lines(*, game_date: str, raw_path: Optional[str | Path] = Non
 
     if _strict_replay_enabled():
         rotowire_path = _prepare_rotowire_run_snapshot(game_date=game_date)
-        _banner("REPLAY ROTOWIRE SNAPSHOT (pinned)")
-        print(f"[REPLAY] rotowire snapshot copied to: {rotowire_path}")
+        _banner("REPLAY GAME-LINE SNAPSHOT (pinned)")
+        print(f"[REPLAY] game-line snapshot copied to: {rotowire_path}")
         return
 
     extra_env = {
         "ROTOWIRE_GAME_DATE": game_date,
         "ROTOWIRE_BOOK": os.getenv("ROTOWIRE_BOOK", "mgm"),
         "ROTOWIRE_LINES_URL": "",
+        "ROTOWIRE_FORCE_ESPN_FALLBACK": "1",
     }
 
-    _run([_py(), str(script)], "FETCH ROTOWIRE (lines/spreads)", extra_env=extra_env)
+    result = _run([_py(), str(script)], "FETCH ESPN GAME LINES (spreads/totals)", extra_env=extra_env, check=False)
+    if result.returncode != 0:
+        print(
+            f"[espn-lines][WARN] ESPN primary game-line fetch returned {result.returncode}; "
+            "date-pinned fallback repair will be attempted before scoring."
+        )
 
 
 def fetch_bettingpros_props(*, game_date: str, raw_path: Optional[str | Path] = None) -> None:
@@ -664,6 +885,33 @@ def fetch_bettingpros_props(*, game_date: str, raw_path: Optional[str | Path] = 
         # Non-fatal: model can run without BettingPros data
         logger.warning("BettingPros fetch failed (non-fatal): %s", e)
         print(f"⚠️ BettingPros fetch failed (non-fatal): {e}", file=sys.stderr)
+
+
+def fetch_draftkings_props(*, game_date: str, raw_path: Optional[str | Path] = None) -> None:
+    """Fetch direct DraftKings milestone props → external_priors_today.csv (non-fatal)."""
+    script = TOOLS_DIR / "fetch_draftkings_props.py"
+    if not script.exists():
+        logger.warning("fetch_draftkings_props.py not found; skipping DraftKings direct fetch.")
+        return
+
+    if _strict_replay_enabled():
+        _banner("REPLAY DRAFTKINGS DIRECT (skipped, using pinned priors)")
+        return
+
+    enabled = os.environ.get("ATLAS_DRAFTKINGS_DIRECT_ENABLED", "true").strip().lower()
+    if enabled in {"0", "false", "no", "off"}:
+        _banner("FETCH DRAFTKINGS DIRECT (skipped, disabled)")
+        return
+
+    extra_env = {
+        "DRAFTKINGS_GAME_DATE": game_date,
+    }
+
+    try:
+        _run([_py(), str(script)], "FETCH DRAFTKINGS DIRECT (milestone props)", extra_env=extra_env)
+    except Exception as e:
+        logger.warning("DraftKings direct fetch failed (non-fatal): %s", e)
+        print(f"⚠️ DraftKings direct fetch failed (non-fatal): {e}", file=sys.stderr)
 
 
 def fetch_oddsapi_props(*, game_date: str, raw_path: Optional[str | Path] = None) -> None:
@@ -770,36 +1018,36 @@ def _resolve_role_metrics_source() -> tuple[str, str, str]:
 
 
 def _resolve_strict_replay_role_metrics_artifacts() -> tuple[dict[str, str], str]:
-    dashboard_dir = DATA_DIR / "output" / "dashboard"
-
     configured_json = (os.environ.get("ATLAS_ROLE_METRICS_PATH") or "").strip()
     configured_html = (os.environ.get("ATLAS_ROLE_METRICS_HTML_PATH") or "").strip()
     configured_manifest = (os.environ.get("ATLAS_ROLE_METRICS_MANIFEST_PATH") or "").strip()
 
-    json_path = Path(configured_json).expanduser() if configured_json else dashboard_dir / "role_metrics_latest.json"
-    html_path = Path(configured_html).expanduser() if configured_html else dashboard_dir / "role_metrics_latest.html"
-    manifest_path = Path(configured_manifest).expanduser() if configured_manifest else dashboard_dir / "role_metrics_snapshot_manifest.json"
+    if not configured_json:
+        raise RuntimeError(
+            "Strict replay requires a pinned role-metrics JSON artifact via ATLAS_ROLE_METRICS_PATH. "
+            "Refusing dashboard fallback because it can leak current live context into historical replay."
+        )
+
+    json_path = Path(configured_json).expanduser()
+    html_path = Path(configured_html).expanduser() if configured_html else None
+    manifest_path = Path(configured_manifest).expanduser() if configured_manifest else None
 
     if not json_path.exists() or not json_path.is_file():
         raise RuntimeError(
             "Strict replay requires a pinned role-metrics JSON artifact. "
-            "Set ATLAS_ROLE_METRICS_PATH or provide data/output/dashboard/role_metrics_latest.json."
+            "Set ATLAS_ROLE_METRICS_PATH to the historical snapshot for this replay."
         )
 
     resolved = {
         "ATLAS_ROLE_METRICS_PATH": str(json_path),
     }
-    source_kind = "configured" if configured_json else "dashboard-fallback"
+    source_kind = "configured"
 
-    if html_path.exists() and html_path.is_file():
+    if html_path is not None and html_path.exists() and html_path.is_file():
         resolved["ATLAS_ROLE_METRICS_HTML_PATH"] = str(html_path)
-        if configured_html:
-            source_kind = "configured"
 
-    if manifest_path.exists() and manifest_path.is_file():
+    if manifest_path is not None and manifest_path.exists() and manifest_path.is_file():
         resolved["ATLAS_ROLE_METRICS_MANIFEST_PATH"] = str(manifest_path)
-        if configured_manifest:
-            source_kind = "configured"
 
     return resolved, source_kind
 
@@ -820,12 +1068,8 @@ def fetch_role_metrics_snapshot(*, game_date: str, raw_path: Optional[str | Path
         if configured_url:
             print("[ROLE_METRICS] Ignoring ATLAS_ROLE_METRICS_URL during strict replay; replay requires pinned artifacts.")
 
-        if source_kind == "configured":
-            _banner("REPLAY ROLE METRICS (pinned)")
-            print("[ROLE_METRICS] Strict replay will use pinned role-metrics artifacts only.")
-        else:
-            _banner("REPLAY ROLE METRICS (dashboard fallback)")
-            print("[ROLE_METRICS] Strict replay found no explicit role-metrics paths; using pinned dashboard artifacts.")
+        _banner("REPLAY ROLE METRICS (pinned)")
+        print("[ROLE_METRICS] Strict replay will use pinned role-metrics artifacts only.")
 
         print(f"[ROLE_METRICS] JSON: {os.environ['ATLAS_ROLE_METRICS_PATH']}")
         if os.environ.get("ATLAS_ROLE_METRICS_HTML_PATH"):
@@ -1092,6 +1336,7 @@ def run_today(
     import json
 
     ctx = create_run_context(authority=authority)
+    os.environ["ATLAS_RUN_ID"] = ctx.run_id
     emit_event(
         ctx,
         "run_start",
@@ -1154,23 +1399,31 @@ def run_today(
 
     os.environ.pop("ROTOWIRE_LINES_URL", None)
     os.environ["ATLAS_GAME_DATE"] = game_date
+    os.environ["ATLAS_ASOF_DATE_DASHED"] = game_date
 
     # 2a.5) Fetch role metrics snapshot when configured, before the injury snapshot is frozen.
     with StageTimer(ctx, "fetch_role_metrics_snapshot"):
         fetch_role_metrics_snapshot(game_date=game_date, raw_path=raw_path)
 
-    # 2b) Fetch Rotowire lines/spreads (MUST match game_date)
+    # 2b) Fetch ESPN game lines/spreads (MUST match game_date).
+    # The artifact is still named rotowire_lines.json for compatibility with
+    # the existing model/replay contract.
     with StageTimer(ctx, "fetch_rotowire_lines"):
         fetch_rotowire_lines(game_date=game_date, raw_path=raw_path)
 
     rotowire_path = DATA_DIR / "input" / "rotowire_lines.json"
     if not _strict_replay_enabled():
-        assert_fresh(rotowire_path, max_age_hours=6, label="Rotowire lines")
+        assert_fresh(rotowire_path, max_age_hours=6, label="ESPN game lines")
     _artifact_fingerprint(ctx, "rotowire_lines.json", rotowire_path)
 
     # 2c) Fetch BettingPros player props → merge into external_priors_today.csv
     with StageTimer(ctx, "fetch_bettingpros_props"):
         fetch_bettingpros_props(game_date=game_date, raw_path=raw_path)
+
+    # 2c.5) Supplemental direct DraftKings milestone props. This fills PP alt
+    # threshold gaps when DK exposes one-sided ladders such as `10+ points`.
+    with StageTimer(ctx, "fetch_draftkings_props"):
+        fetch_draftkings_props(game_date=game_date, raw_path=raw_path)
 
     # 2c-oddsapi) Optional legacy OddsAPI overlay. BettingPros is now the
     # default market odds provider and writes odds_market_today.json itself.
@@ -1196,6 +1449,10 @@ def run_today(
     if rw_date and rw_date != game_date:
         emit_event(ctx, "rotowire_date_mismatch", expected=game_date, found=rw_date)
         raise SystemExit(f"[rotowire] rotowire_lines.json date mismatch: expected={game_date} found={rw_date}")
+    _ensure_rotowire_game_line_context(ctx, rotowire_path=rotowire_path, game_date=game_date)
+
+    run_root = _output_root_for_run(ctx)
+    _snapshot_live_source_context(ctx, run_root=run_root, game_date=game_date)
 
     # 2d) Refresh IAEL snapshot before freezing — ensures injuries reported since
     # the morning cron are captured (e.g. afternoon status-change outs).
@@ -1214,7 +1471,6 @@ def run_today(
                 emit_event(ctx, "iael_refresh_missing", script=str(refresh_script))
 
     # Freeze the injury state for this run before model scoring starts.
-    run_root = _output_root_for_run(ctx)
     iael_run_snapshot = _prepare_iael_run_snapshot(ctx, run_root)
     if not iael_run_snapshot:
         raise RuntimeError("IAEL snapshot could not be prepared for this run")

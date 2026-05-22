@@ -3,7 +3,8 @@
 > **Stamped:** 2026-05-10
 > **Config fingerprint:** `c23c1419ef945163`
 > **Reference live run:** `data/output/runs/20260510_174904/run_manifest.json`
-> **Purpose:** Current production/runtime truth for Atlas NBA after the May 10 playoff tuning work.
+> **Purpose:** CatBoost v5cD production baseline after the May 10 playoff tuning work.
+> **Note:** Source contracts, replay preflight, market coverage, ESPN game-line handling, and security publishing were hardened after this stamp. For current operating rules, read `C:\Users\13142\Atlas\ATLAS_OPERATING_MEMORY.md`, `docs/REPLAY_AND_LIVE_RUN_RULES.md`, and `config/replay_fidelity_contract.yaml`.
 
 ---
 

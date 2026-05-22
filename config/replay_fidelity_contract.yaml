@@ -1,0 +1,74 @@
+version: 1
+sport: NBA
+owner: AtlasSportsAI
+purpose: Strict replay fidelity contract for NBA live, replay, corpus, LODO, CAT, and builder tuning.
+
+protected_paths:
+  - data/raw
+  - data/output/runs
+  - data/bundles
+  - data/telemetry
+  - data/archives
+  - data/gamelogs
+  - data/model
+
+required_bundle_artifacts:
+  - data/raw/*.json
+  - data/board/today.csv
+  - data/input/external_priors_today.csv
+  - data/input/rotowire_lines.json
+  - data/gamelogs/nba_gamelogs.csv
+  - manifest.json
+
+optional_bundle_artifacts:
+  - data/input/bettingpros_props_today.csv
+  - data/input/draftkings_props_today.csv
+  - data/input/odds_market_today.json
+  - dashboard/role_metrics_latest.json
+  - dashboard/role_metrics_latest.html
+  - dashboard/role_metrics_snapshot_manifest.json
+  - dashboard/injury_invalidations_latest.json
+  - dashboard/status_latest.json
+  - dashboard/normalized_latest.json
+
+strict_replay_blockers:
+  one_game_date_only: true
+  no_started_games: true
+  no_future_slate_leakage: true
+  missing_prizepicks_raw: block
+  missing_eval_truth: block
+  missing_source_manifest: block
+  missing_game_spread_or_total: block
+  current_day_source_leak: block
+  cat_trained_feature_defaulted: block
+  missing_market_context: warn
+  missing_role_metrics: block_when_role_features_enabled
+  missing_injury_context: block_after_report_window
+
+timing_rules:
+  minimum_pre_start_buffer_minutes: 15
+  market_overlay_max_future_minutes: 15
+  market_overlay_requires_asof_ts: true
+  prefer_bundle_selection:
+    - highest_time_safe_market_overlay_rows
+    - highest_bundled_prior_rows
+    - latest_pre_start_run
+
+market_probability_precedence:
+  - exact_market_probability
+  - source_specific_exact_probability
+  - anchor_or_blended_prior
+  - model_only_fallback
+
+required_audit_artifacts:
+  - source_context_manifest.json
+  - probability_surface_audit.json
+  - catboost_feature_contract.json
+  - role_context_audit.json
+
+training_gate:
+  require_preflight_pass: true
+  require_corpus_audit_pass: true
+  require_no_cat_feature_defaulting: true
+  run_builder_tuning_after_lodo_only: true
+

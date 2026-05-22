@@ -1,6 +1,6 @@
 # Atlas Live Run and Replay Rules
 
-> **Last updated:** 2026-05-11
+> **Last updated:** 2026-05-21
 > **Current runtime:** CatBoost playoff v5cD. Replay should exercise the current pipeline unless a test explicitly pins an older baseline.
 
 This document is the reference for what live runs are for, what replay is for, how replay should be launched during testing, where the pinned inputs live, and where each mode is allowed to write outputs.
@@ -20,7 +20,7 @@ Replay is not for publishing live artifacts. Replay is not allowed to write into
 | Main purpose | Produce the current model run | Test the current model on pinned historical inputs |
 | PrizePicks source | Fresh fetch | Pinned raw JSON |
 | Injury source | Fresh IAEL refresh and publish | Pinned IAEL status, invalidations, and normalized snapshot |
-| Rotowire source | Fresh fetch | Pinned Rotowire snapshot |
+| Game-line source | Fresh ESPN-primary fetch | Pinned bundle/archive snapshot |
 | Role metrics | Current fetch or current configured source | Pinned role-metrics artifact, with dashboard artifact fallback if explicit env paths are not set |
 | Output root | `data/output` | `data/telemetry/replay_runs/<run_id>` |
 | Missing artifact behavior | Usually recoverable by fetching | Fail closed |
@@ -38,13 +38,27 @@ The replay output folder is where the scored CSVs, replay diagnostics, replay da
 
 ## Canonical Replay Command
 
-Use the direct raw replay entrypoint:
+For strict replay and corpus work, prefer replay bundles because bundles carry
+the raw slate, source manifests, market context, injury context, and run
+artifacts needed to reproduce live behavior without hunting mutable repo state:
 
 ```powershell
+cd C:\Users\13142\Atlas\NBA
+python tools\preflight_strict_replay_dates.py --dates YYYYMMDD ...
+python tools\replay_bundle.py data\bundles\atlas_bundle_YYYYMMDD_HHMMSS.zip --scenario-id strict_probe_YYYYMMDD
+```
+
+Use the direct raw replay entrypoint only for interactive debugging when the
+matching pinned artifacts are already known and explicitly provided:
+
+```powershell
+cd C:\Users\13142\Atlas\NBA
 python -m Atlas.cli replay --raw C:\Users\13142\Atlas\NBA\data\raw\prizepicks_YYYYMMDD_HHMMSS.json
 ```
 
-That is the preferred replay path for testing. A bundle is not required when the pinned raw file and matching archive artifacts are already available.
+Direct raw replay is not a substitute for corpus replay fidelity. A date is not
+eligible for corpus, LODO, CAT, or builder tuning until the strict preflight
+passes for that date.
 
 ## Required Replay Inputs
 
@@ -53,8 +67,10 @@ Replay should be launched from pinned artifacts only:
 2. IAEL invalidations snapshot for the same replay window.
 3. IAEL status snapshot for the same replay window.
 4. IAEL normalized injury snapshot for the same replay window.
-5. Rotowire snapshot for the same replay window.
+5. ESPN game-line spread/total context for the same replay window.
 6. Role-metrics JSON artifact for the replayed model context.
+7. Market priors and exact market probabilities from time-safe OddsAPI, BettingPros, DraftKings, or GitHub archive overlays.
+8. Gamelog truth for eval only, never for pregame probability scoring.
 
 If the pinned artifact set is incomplete, strict replay should stop and report the missing input instead of substituting fresh live data.
 
@@ -65,8 +81,9 @@ Use these locations during replay setup:
 2. IAEL archive snapshots by date and timestamp: `C:\Users\13142\Atlas\NBA\data\archives\iael\2026`
 3. Historical normalized injury snapshots: `C:\Users\13142\Atlas\NBA\data\output\injury\normalized`
 4. Pinned dashboard role-metrics artifacts: `C:\Users\13142\Atlas\NBA\data\output\dashboard`
-5. Replay output root: `C:\Users\13142\Atlas\NBA\data\telemetry\replay_runs`
-6. Replay truth source: `C:\Users\13142\Atlas\NBA\data\gamelogs\nba_gamelogs.csv`
+5. Bundles: `C:\Users\13142\Atlas\NBA\data\bundles`
+6. Replay output root: `C:\Users\13142\Atlas\NBA\data\telemetry\replay_runs`
+7. Replay truth source: `C:\Users\13142\Atlas\NBA\data\gamelogs\nba_gamelogs.csv`
 
 The dashboard folder is also the default fallback location for pinned role metrics in replay when explicit role-metrics env paths are not supplied.
 
@@ -79,7 +96,7 @@ $env:ATLAS_STRICT_REPLAY = "1"
 $env:ATLAS_IAEL_INVALIDATIONS_PATH = "C:\Users\13142\Atlas\NBA\data\archives\iael\2026\<date>\<timestamp>\injury_invalidations.json"
 $env:ATLAS_IAEL_STATUS_PATH = "C:\Users\13142\Atlas\NBA\data\archives\iael\2026\<date>\<timestamp>\status.json"
 $env:ATLAS_IAEL_NORMALIZED_PATH = "C:\Users\13142\Atlas\NBA\data\output\injury\normalized\<timestamp>.json"
-$env:ATLAS_ROTOWIRE_LINES_PATH = "C:\Users\13142\Atlas\NBA\data\archives\iael\2026\<date>\<timestamp>\rotowire_lines.json"
+$env:ATLAS_ROTOWIRE_LINES_PATH = "C:\Users\13142\Atlas\NBA\data\archives\iael\2026\<date>\<timestamp>\rotowire_lines.json"  # legacy env/file name for pinned game-line context
 ```
 
 Optional explicit role-metrics pins:
@@ -96,19 +113,24 @@ If those role-metrics env vars are not provided, strict replay should fall back 
 
 1. Replay exists to test the current model against pinned historical inputs.
 2. Replay should use `python -m Atlas.cli replay --raw ...` as the normal entrypoint.
-3. Replay should use pinned raw, IAEL, Rotowire, and role-metrics artifacts only.
+3. Replay should use pinned raw, IAEL, game-line, market, and role-metrics artifacts only.
 4. Replay should not quietly substitute fresh live data when a pinned artifact is missing.
 5. Replay should not write into `data/output/runs`.
 6. Replay should not publish `latest` live surfaces.
 7. Replay should use the historical raw payload as the source of truth for slate timing.
 8. Replay should fail closed if the pinned artifact set is incomplete.
+9. Replay must be one game date only.
+10. Replay must not include already-started games or future-slate leakage.
+11. Replay must not use stale current-day files for historical context.
+12. Replay must write source and probability audit manifests for the run.
+13. Corpus, LODO, CAT, and builder work must not start unless every included date passed `tools/preflight_strict_replay_dates.py`.
 
 ## Live Run Rules
 
 1. Live run starts from `run.ps1` or `python -m Atlas.cli live`.
 2. Live IAEL preflight may refresh injury state and enforce freshness.
 3. Live run rebuilds `today.csv` from the freshest raw PrizePicks snapshot.
-4. Live run fetches Rotowire lines for the current slate date.
+4. Live run fetches ESPN-primary game lines for the current slate date. The artifact is still named `rotowire_lines.json` for compatibility.
 5. Live run fetches or refreshes current role metrics as needed.
 6. Live run builds the share matrix after the board and injury state are ready.
 7. Live run scores, publishes, and bundles the outputs.
@@ -143,15 +165,19 @@ Batch replay re-runs the full Atlas pipeline across many historical dates to bui
 | --- | --- |
 | `tools/batch_replay_backfill.py` | Orchestrates per-date replays (bundles + raw JSONs), copies output to D drive corpus and local v13_corpus |
 | `tools/build_v16_corpus.py` | Extracts latest v16-kernel runs into clean `data/telemetry/v16_corpus/<YYYYMMDD>/` folder |
-| `tools/replay_bundle.py` | Single-bundle replay with `--scenario-id` and optional `--oddsapi-overlay` |
+| `tools/replay_bundle.py` | Single-bundle replay with `--scenario-id` and optional time-safe market overlays |
+| `tools/preflight_strict_replay_dates.py` | Validates replay date eligibility before expensive corpus runs |
+| `tools/hydrate_replay_bundles_with_raw.py` | One-time repair tool for old bundles missing raw PrizePicks JSON |
 
 ### Batch Replay Architecture
 
 `batch_replay_backfill.py` has two replay paths depending on the source material:
 
-**Bundle path** (Mar 15+): Calls `tools/replay_bundle.py` as a subprocess. The bundle script handles all env setup, extraction, and output routing internally. Output lands in `data/telemetry/replay_runs/<scenario_id>/`.
+**Bundle path** (preferred): Calls `tools/replay_bundle.py` as a subprocess. The bundle script handles env setup, extraction, source pinning, and output routing internally. Output lands in `data/telemetry/replay_runs/<scenario_id>/`.
 
-**Raw JSON path** (early dates without bundles): Sets up all env vars explicitly (ATLAS_OUT_DIR, ATLAS_GAME_DATE, ATLAS_STRICT_REPLAY, IAEL paths, rotowire, gamelogs, external priors) then calls `run_today()` directly via `python -c`. Output lands in `data/telemetry/replay_runs/<scenario_id>/runs/<timestamp>/`.
+**Raw JSON path** (only when no valid bundle exists): Sets up all env vars explicitly (`ATLAS_OUT_DIR`, `ATLAS_GAME_DATE`, `ATLAS_STRICT_REPLAY`, injury paths, game-line context, gamelogs, market priors) then calls `run_today()` directly. Output lands in `data/telemetry/replay_runs/<scenario_id>/runs/<timestamp>/`.
+
+`batch_replay_backfill.py` now selects the best pre-start, same-day bundle and rejects bundles without raw payloads. For market overlays, it rejects files without timestamps and rejects any overlay whose `asof_ts` is after the replay window. The selection priority is: time-safe market overlay coverage, bundled prior rows, then latest valid pre-start run time.
 
 ### Common Failures and Fixes
 
@@ -191,7 +217,15 @@ Batch replay re-runs the full Atlas pipeline across many historical dates to bui
 
 **Fix**: Never use `Atlas.cli replay` from batch_replay_backfill.py. Always call `run_today()` directly. The CLI replay path is only for interactive single-date replays.
 
-#### 5. fetch_apis.py contract failures on early dates
+#### 5. Strict preflight failure
+
+**Symptom**: A date is rejected before replay starts.
+
+**Root cause**: The date does not have a valid bundle/raw slate, one-game-date board, eval truth, time-safe market context, or required source manifests.
+
+**Fix**: Repair the missing artifact first. Do not bypass the preflight for corpus, LODO, CAT, or builder training.
+
+#### 6. fetch_apis.py contract failures on early dates
 
 **Symptom**: `FETCH CONTRACT FAIL: missing columns` error from `tools/fetch_apis.py` during replay.
 
@@ -234,11 +268,11 @@ v16 kernel output is identified by these columns in `scored_legs_deduped.csv`:
 
 If these columns are missing, the output was produced by an older kernel.
 
-### OddsAPI Historical Data
+### Market Historical Data
 
-Historical OddsAPI archives live at `data/archives/oddsapi/historical/oddsapi_props_<YYYYMMDD>.csv`. The batch backfill merges these into the external priors CSV via `_build_merged_priors()`. For bundle replays, the `--oddsapi-overlay` flag passes the archive path to `replay_bundle.py`.
+Historical market archives can come from OddsAPI, BettingPros, DraftKings, or GitHub archive overlays. The batch backfill merges time-safe files into the external priors CSV before scoring. For bundle replays, market overlays must be passed explicitly and must be timestamp-safe for the replay window.
 
-Do NOT re-fetch from the OddsAPI — it costs credits. Always use the archived historical files.
+Do not re-fetch paid historical APIs during replay unless explicitly approved. Prefer archived files and bundle-contained artifacts.
 
 ### D Drive Corpus
 
@@ -254,14 +288,15 @@ A local copy is also written to `data/telemetry/v13_corpus/<YYYYMMDD>/` on C dri
 ### Checklist: Full Corpus Rebuild
 
 1. Ensure gamelogs are current: `python tools/refresh_nba_gamelogs.py`
-2. Ensure IAEL archives exist for all target dates: check `data/archives/iael/2026/`
-3. Dry run: `python tools/batch_replay_backfill.py --dry-run`
-4. Execute: `python tools/batch_replay_backfill.py --force` (add `--dates YYYYMMDD ...` to target specific dates)
-5. Verify: Check summary output — every date should show `scored=3000+` and `eval_legs=3000+`
-6. Extract clean corpus: `python tools/build_v16_corpus.py` (use `--dry-run` first)
-7. Build resim cache from clean corpus
-8. Retrain only through the current tuning plan. As of 2026-05-11, CatBoost v5cD should be revalidated before historical GBM promotion paths are used.
-9. Re-run DemonHunter trainer or reapply saved configs (see below)
+2. Ensure pinned source archives exist for all target dates.
+3. Run strict preflight: `python tools/preflight_strict_replay_dates.py --dates YYYYMMDD ...`
+4. Stop if any date fails. Repair or exclude the date before continuing.
+5. Dry run: `python tools/batch_replay_backfill.py --dry-run --dates YYYYMMDD ...`
+6. Execute only after preflight pass: `python tools/batch_replay_backfill.py --force --corpus-tag <tag> --dates YYYYMMDD ...`
+7. Verify every date has scored legs, eval legs, probability/source manifests, one game date, and no started/future slate leakage.
+8. Extract clean corpus or build the model candidate input from the strict replay folders.
+9. Run LODO/CAT only after the full corpus audit passes.
+10. Run builder tuning only after the probability surface decision is made.
 
 ### After Trainer Changes: Verify Slip/Discord Configs
 

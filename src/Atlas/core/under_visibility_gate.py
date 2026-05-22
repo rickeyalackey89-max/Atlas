@@ -137,5 +137,6 @@ def apply_under_visibility_gate(
     """Drop UNDER rows that are not builder-playable under the configured gate."""
 
     mask = under_visibility_mask(df, cfg, section=section, probability_col=probability_col)
-    return df.loc[mask].reset_index(drop=True)
-
+    # Preserve the source index so downstream calibration artifacts can be
+    # rejoined to the optimizer frame without row drift.
+    return df.loc[mask].copy()

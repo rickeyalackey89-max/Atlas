@@ -17,6 +17,8 @@ import pandas as pd
 from scipy.special import logit as sp_logit
 
 from Atlas.core.minutes import minutes_sensitivity
+from Atlas.core.share_name_key import share_name_key
+from Atlas.core.team_aliases import CANONICAL_NBA_TEAMS, normalize_team_abbr
 
 # ---------------------------------------------------------------------------
 # Constants
@@ -229,6 +231,61 @@ def _compute_b2b_lookup(logs: pd.DataFrame) -> set[tuple[str, str]]:
     return b2b
 
 
+def _derive_live_b2b_flags(scored: pd.DataFrame, logs: pd.DataFrame) -> np.ndarray:
+    """
+    Derive B2B for live/pre-game rows.
+
+    The older lookup only marked dates already present in gamelogs. That works
+    for replay after final stats exist, but live slates do not have today's
+    gamelog row yet. For live fidelity, mark a player as B2B when their latest
+    completed gamelog before the slate date was exactly one day earlier.
+    """
+    n = len(scored)
+    flags = np.zeros(n, dtype=np.float64)
+    if n == 0 or logs is None or logs.empty or not {"player", "game_date"}.issubset(logs.columns):
+        return flags
+    if "game_date" not in scored.columns or "player" not in scored.columns:
+        return flags
+
+    gl = logs[["player", "game_date"]].dropna(subset=["player", "game_date"]).copy()
+    if gl.empty:
+        return flags
+    gl["game_date"] = pd.to_datetime(gl["game_date"], errors="coerce").dt.normalize()
+    gl = gl.dropna(subset=["game_date"])
+    if gl.empty:
+        return flags
+
+    date_lookup: dict[str, np.ndarray] = {}
+    for player, grp in gl.groupby(gl["player"].astype(str).str.strip()):
+        dates = np.array(sorted(grp["game_date"].dropna().unique()), dtype="datetime64[ns]")
+        if dates.size == 0:
+            continue
+        raw_key = str(player).strip()
+        date_lookup[raw_key] = dates
+        date_lookup.setdefault(share_name_key(raw_key), dates)
+
+    for pos, (_, row) in enumerate(scored.iterrows()):
+        player = str(row.get("player", "")).strip()
+        if not player:
+            continue
+        gd = pd.to_datetime(row.get("game_date", None), errors="coerce")
+        if pd.isna(gd):
+            continue
+        game_day = gd.normalize().to_datetime64()
+        dates = date_lookup.get(player)
+        if dates is None:
+            dates = date_lookup.get(share_name_key(player))
+        if dates is None or dates.size == 0:
+            continue
+        prior = dates[dates < game_day]
+        if prior.size == 0:
+            continue
+        days_since = (game_day - prior[-1]).astype("timedelta64[D]").astype(int)
+        if int(days_since) == 1:
+            flags[pos] = 1.0
+    return flags
+
+
 def compute_features(scored: pd.DataFrame, logs: pd.DataFrame) -> tuple[np.ndarray, np.ndarray]:
     """Compute the full v18 feature superset from a scored DataFrame + gamelogs.
 
@@ -245,6 +302,47 @@ def compute_features(scored: pd.DataFrame, logs: pd.DataFrame) -> tuple[np.ndarr
         if name in scored.columns:
             return np.asarray(pd.to_numeric(scored[name], errors="coerce").fillna(default), dtype=np.float64)
         return np.full(n, default, dtype=np.float64)
+
+    def _derive_is_home() -> np.ndarray:
+        """Derive home flag from matchup teams when the raw is_home/home field is absent or stale."""
+        if {"team", "home_team"}.issubset(scored.columns):
+            teams = scored["team"].map(normalize_team_abbr)
+            homes = scored["home_team"].map(normalize_team_abbr)
+            valid = (
+                scored["team"].notna()
+                & scored["home_team"].notna()
+                & teams.astype(str).isin(CANONICAL_NBA_TEAMS)
+                & homes.astype(str).isin(CANONICAL_NBA_TEAMS)
+            )
+            if bool(valid.any()):
+                return np.asarray((teams == homes) & valid, dtype=np.float64)
+
+        for name in ("is_home", "home"):
+            if name in scored.columns:
+                vals = pd.to_numeric(scored[name], errors="coerce")
+                if vals.notna().any():
+                    return np.asarray(vals.fillna(0.0).clip(lower=0.0, upper=1.0), dtype=np.float64)
+
+        return np.zeros(n, dtype=np.float64)
+
+    def _derive_game_total_norm() -> np.ndarray:
+        """Use canonical game_total_norm, or derive it from fetched game total columns."""
+        if "game_total_norm" in scored.columns:
+            vals = pd.to_numeric(scored["game_total_norm"], errors="coerce")
+            if vals.notna().any() and float(vals.fillna(0.0).abs().sum()) > 1e-12:
+                return np.asarray(vals.fillna(0.0).clip(lower=-0.15, upper=0.15), dtype=np.float64)
+
+        for name in ("game_total", "rotowire_game_total", "ou", "game_ou", "total"):
+            if name not in scored.columns:
+                continue
+            totals = pd.to_numeric(scored[name], errors="coerce")
+            if not bool((totals > 0).any()):
+                continue
+            norm = (totals / 230.0 - 1.0).clip(lower=-0.15, upper=0.15)
+            norm = norm.where(totals > 0, 0.0).fillna(0.0)
+            return np.asarray(norm, dtype=np.float64)
+
+        return np.zeros(n, dtype=np.float64)
 
     # --- Extract base columns ---
     dir_u = scored["direction"].astype(str).str.upper()
@@ -291,11 +389,12 @@ def compute_features(scored: pd.DataFrame, logs: pd.DataFrame) -> tuple[np.ndarr
         _bp_n = _col("external_prior_n", 0.0)
         has_bp_mask = _bp_n > 0
         bp_has = has_bp_mask.astype(np.float64)
+        # external_prior_score is already a direction-aware support score in
+        # [-1, 1]. The older expression subtracted the stat line from this
+        # normalized score, which made the feature mostly unusable for normal
+        # basketball lines. Keep the CAT/GBM feature on its trained signal scale.
         _bp_score = _col("external_prior_score", 0.0)
-        edge = _bp_score - line
-        dm = ((edge > 0) & np.asarray(dir_u == "OVER")) | ((edge <= 0) & np.asarray(dir_u == "UNDER"))
-        sel = has_bp_mask & dm
-        bp_score_gated[sel] = np.tanh(edge[sel] / 3.0)
+        bp_score_gated[has_bp_mask] = np.clip(_bp_score[has_bp_mask], -1.0, 1.0)
 
     # --- Stat family flags ---
     is_assists: np.ndarray = np.asarray(stat_u == "AST", dtype=np.float64)
@@ -307,13 +406,13 @@ def compute_features(scored: pd.DataFrame, logs: pd.DataFrame) -> tuple[np.ndarr
     line_norm: np.ndarray = np.clip(line / 40.0, 0.0, 2.0)
 
     # --- is_home ---
-    is_home_feat = _col("is_home", 0.0)
+    is_home_feat = _derive_is_home()
 
     # --- min_sensitivity ---
     min_sensitivity: np.ndarray = np.asarray(stat_u.apply(minutes_sensitivity), dtype=np.float64)
 
     # --- game_total_norm ---
-    game_total_norm: np.ndarray = np.clip(_col("game_total_norm", 0.0), -0.15, 0.15)
+    game_total_norm: np.ndarray = _derive_game_total_norm()
 
     # --- is_b2b ---
     is_b2b = np.zeros(n, dtype=np.float64)
@@ -323,6 +422,9 @@ def compute_features(scored: pd.DataFrame, logs: pd.DataFrame) -> tuple[np.ndarr
             gd = str(scored.iloc[i].get("game_date", ""))[:10]
             if (pl, gd) in b2b_set:
                 is_b2b[i] = 1.0
+    live_b2b = _derive_live_b2b_flags(scored, logs)
+    if live_b2b.shape == is_b2b.shape:
+        is_b2b = np.maximum(is_b2b, live_b2b)
 
     # --- Logit interactions ---
     is_demon: np.ndarray = np.asarray(scored["tier"].astype(str).str.upper() == "DEMON", dtype=np.float64) if "tier" in scored.columns else np.zeros(n, dtype=np.float64)

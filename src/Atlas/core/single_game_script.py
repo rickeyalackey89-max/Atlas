@@ -26,6 +26,16 @@ DEFAULT_ROBUSTNESS: dict[str, Any] = {
     "injury_uncertainty_penalty": 0.06,
     "high_volatility_penalty": 0.03,
     "high_fragility_penalty": 0.03,
+    "minute_risk_penalty_max": 0.07,
+    "minutes_cv_penalty_max": 0.05,
+    "rate_cv_penalty_max": 0.05,
+    "fragility_continuous_penalty_max": 0.06,
+    "usage_burden_penalty_max": 0.04,
+    "role_dependency_penalty_max": 0.04,
+    "zero_dnp_penalty_max": 0.04,
+    "minutes_stability_bonus_max": 0.025,
+    "broad_market_support_bonus": 0.012,
+    "exact_market_support_bonus": 0.025,
     "max_abs_selection_delta": 0.12,
     "role_shooter_stats": ["FG3M", "3PM", "3PTM", "PTS"],
     "fg3m_stats": ["FG3M", "3PM", "3PTM", "3PT MADE", "THREES"],
@@ -81,6 +91,32 @@ def _num_col(df: pd.DataFrame, col: str, default: float = 0.0) -> pd.Series:
     arr = np.asarray(out.to_numpy(copy=True), dtype="float64")
     arr[np.isnan(arr)] = float(default)
     return pd.Series(arr, index=df.index)
+
+
+def _minutes_col(df: pd.DataFrame) -> pd.Series:
+    """Return modeled minutes on a true minutes scale.
+
+    Some upstream surfaces carry `modeled_minutes` as seconds-like values
+    (for example 1473 instead of 24.55). Single-game robustness should compare
+    real minutes to the core/bench thresholds, so normalize obviously
+    seconds-like values and fall back to min_mean when the modeled field is bad.
+    """
+    modeled = _num_col(df, "modeled_minutes", default=np.nan)
+    fallback = _num_col(df, "min_mean", default=np.nan)
+
+    vals = modeled.copy()
+    if vals.isna().all():
+        vals = fallback.copy()
+
+    seconds_like = vals > 80.0
+    if bool(seconds_like.any()):
+        vals.loc[seconds_like] = vals.loc[seconds_like] / 60.0
+
+    invalid = vals.isna() | (vals < 0.0) | (vals > 60.0)
+    if bool(invalid.any()):
+        vals.loc[invalid] = fallback.loc[invalid]
+
+    return vals.fillna(0.0).clip(lower=0.0, upper=48.0)
 
 
 def _str_col(df: pd.DataFrame, col: str) -> pd.Series:
@@ -167,11 +203,7 @@ def apply_single_game_script_annotations(
     stats = _str_col(out, "stat").map(_upper)
     directions = _str_col(out, "direction").map(_upper)
     lines = _num_col(out, "line", default=np.nan)
-    minutes = _num_col(out, "modeled_minutes", default=np.nan)
-    if np.isnan(minutes.to_numpy(copy=False)).all():
-        minutes = _num_col(out, "min_mean", default=np.nan)
-    if np.isnan(minutes.to_numpy(copy=False)).all():
-        minutes = pd.Series(np.zeros(len(out.index), dtype="float64"), index=out.index)
+    minutes = _minutes_col(out)
 
     core_minutes = float(robust.get("core_minutes", 28.0) or 28.0)
     low_minutes = float(robust.get("low_minutes", 18.0) or 18.0)
@@ -212,6 +244,16 @@ def apply_single_game_script_annotations(
         fit[mask_arr] += float(amount)
         if dependency_amount:
             dependency[mask_arr] += float(dependency_amount)
+        for idx in np.flatnonzero(mask_arr):
+            reasons[int(idx)].append(reason)
+
+    def _add_series(values: pd.Series | np.ndarray, reason: str, *, min_abs: float = 1e-6) -> None:
+        arr = np.asarray(values, dtype="float64")
+        arr = np.nan_to_num(arr, nan=0.0, posinf=0.0, neginf=0.0)
+        mask_arr = np.abs(arr) > float(min_abs)
+        if not bool(mask_arr.any()):
+            return
+        fit[:] = fit + arr
         for idx in np.flatnonzero(mask_arr):
             reasons[int(idx)].append(reason)
 
@@ -263,6 +305,77 @@ def apply_single_game_script_annotations(
             "high_fragility",
             dependency_amount=float(robust.get("high_fragility_penalty", 0.03)),
         )
+
+        minutes_bonus_max = float(robust.get("minutes_stability_bonus_max", 0.025) or 0.0)
+        if minutes_bonus_max > 0.0:
+            minutes_bonus = ((minutes - core_minutes) / 10.0).clip(lower=0.0, upper=1.0) * minutes_bonus_max
+            _add_series(minutes_bonus, "minutes_stability_gradient", min_abs=0.002)
+
+        minute_risk_penalty_max = float(robust.get("minute_risk_penalty_max", 0.07) or 0.0)
+        if minute_risk_penalty_max > 0.0 and "minute_risk_score" in out.columns:
+            minute_risk = _num_col(out, "minute_risk_score", default=0.0).clip(lower=0.0, upper=1.0)
+            _add_series(-minute_risk * minute_risk_penalty_max, "minute_risk_penalty", min_abs=0.002)
+
+        minutes_cv_penalty_max = float(robust.get("minutes_cv_penalty_max", 0.05) or 0.0)
+        if minutes_cv_penalty_max > 0.0 and "minutes_cv" in out.columns:
+            minutes_cv = _num_col(out, "minutes_cv", default=0.0).clip(lower=0.0, upper=1.0)
+            minutes_cv_pressure = ((minutes_cv - 0.12) / 0.28).clip(lower=0.0, upper=1.0)
+            _add_series(-minutes_cv_pressure * minutes_cv_penalty_max, "minutes_cv_penalty", min_abs=0.002)
+
+        rate_cv_penalty_max = float(robust.get("rate_cv_penalty_max", 0.05) or 0.0)
+        if rate_cv_penalty_max > 0.0:
+            rate_candidates = []
+            for col in ("volatility_rate_cv", "rate_cv", "volatility_low_line_rate_cv"):
+                if col in out.columns:
+                    rate_candidates.append(_num_col(out, col, default=0.0).clip(lower=0.0, upper=2.0))
+            if rate_candidates:
+                rate_cv = pd.concat(rate_candidates, axis=1).max(axis=1)
+                rate_pressure = ((rate_cv - 0.30) / 0.70).clip(lower=0.0, upper=1.0)
+                _add_series(-rate_pressure * rate_cv_penalty_max, "rate_cv_penalty", min_abs=0.002)
+
+        fragility_penalty_max = float(robust.get("fragility_continuous_penalty_max", 0.06) or 0.0)
+        if fragility_penalty_max > 0.0:
+            frag_candidates = []
+            for col in ("fragility_abs", "fragility", "fragility_gap_core"):
+                if col in out.columns:
+                    frag_candidates.append(_num_col(out, col, default=0.0).abs())
+            if frag_candidates:
+                frag = pd.concat(frag_candidates, axis=1).max(axis=1)
+                frag_pressure = (frag / 0.30).clip(lower=0.0, upper=1.0)
+                _add_series(-frag_pressure * fragility_penalty_max, "fragility_gradient_penalty", min_abs=0.002)
+
+        usage_burden_penalty_max = float(robust.get("usage_burden_penalty_max", 0.04) or 0.0)
+        if usage_burden_penalty_max > 0.0 and "usage_burden_ratio" in out.columns:
+            burden = _num_col(out, "usage_burden_ratio", default=0.0).clip(lower=0.0, upper=2.0)
+            burden_pressure = ((burden - 0.80) / 0.45).clip(lower=0.0, upper=1.0)
+            _add_series(-burden_pressure * usage_burden_penalty_max, "usage_burden_penalty", min_abs=0.002)
+
+        role_dependency_penalty_max = float(robust.get("role_dependency_penalty_max", 0.04) or 0.0)
+        if role_dependency_penalty_max > 0.0 and "role_ctx_outs_used" in out.columns:
+            outs_used = _num_col(out, "role_ctx_outs_used", default=0.0).clip(lower=0.0, upper=4.0)
+            role_mult = _num_col(out, "role_ctx_mult", default=1.0).clip(lower=0.0, upper=1.30)
+            role_pressure = ((role_mult - 1.03) / 0.12).clip(lower=0.0, upper=1.0)
+            role_pressure = role_pressure * (outs_used > 0.0).astype(float)
+            _add_series(-role_pressure * role_dependency_penalty_max, "role_dependency_penalty", min_abs=0.002)
+
+        zero_dnp_penalty_max = float(robust.get("zero_dnp_penalty_max", 0.04) or 0.0)
+        if zero_dnp_penalty_max > 0.0 and "zero_dnp_mult" in out.columns:
+            zero_dnp = _num_col(out, "zero_dnp_mult", default=1.0).clip(lower=0.0, upper=2.20)
+            zero_pressure = ((zero_dnp - 1.05) / 0.60).clip(lower=0.0, upper=1.0)
+            _add_series(-zero_pressure * zero_dnp_penalty_max, "zero_dnp_dependency_penalty", min_abs=0.002)
+
+        broad_bonus = float(robust.get("broad_market_support_bonus", 0.012) or 0.0)
+        exact_bonus = float(robust.get("exact_market_support_bonus", 0.025) or 0.0)
+        if broad_bonus > 0.0 and "external_prior_probability_applied" in out.columns:
+            broad_market = _num_col(out, "external_prior_probability_applied", default=0.0) > 0.0
+            exact_market = (
+                (_num_col(out, "external_prior_exact_market", default=0.0) > 0.0)
+                if "external_prior_exact_market" in out.columns
+                else pd.Series(False, index=out.index)
+            )
+            _add_series(broad_market.astype(float) * broad_bonus, "market_support", min_abs=0.002)
+            if exact_bonus > 0.0:
+                _add_series(exact_market.astype(float) * exact_bonus, "exact_market_support", min_abs=0.002)
 
     max_delta = float(robust.get("max_abs_selection_delta", 0.12) or 0.12)
     if max_delta > 0.0:

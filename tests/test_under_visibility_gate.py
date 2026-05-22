@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import pandas as pd
 
-from Atlas.core.under_visibility_gate import under_visibility_mask
+from Atlas.core.under_visibility_gate import apply_under_visibility_gate, under_visibility_mask
 
 
 def _cfg() -> dict:
@@ -110,3 +110,36 @@ def test_under_visibility_blocks_noisy_unders_even_with_market_support() -> None
 
     assert mask.tolist() == [False, False, False]
 
+
+def test_under_visibility_filter_preserves_source_index_for_lineage() -> None:
+    rows = pd.DataFrame(
+        [
+            {
+                "player": "Keep",
+                "direction": "UNDER",
+                "tier": "STANDARD",
+                "stat": "REB",
+                "p_cal": 0.61,
+                "external_prior_sources": "bettingpros_market",
+                "external_prior_market_prob": 0.53,
+                "q_out_frac": 0.0,
+                "minute_risk_score": 0.0,
+            },
+            {
+                "player": "Drop",
+                "direction": "UNDER",
+                "tier": "STANDARD",
+                "stat": "REB",
+                "p_cal": 0.64,
+                "external_prior_sources": "",
+                "external_prior_market_prob": None,
+                "q_out_frac": 0.0,
+                "minute_risk_score": 0.0,
+            },
+        ],
+        index=[101, 202],
+    )
+
+    filtered = apply_under_visibility_gate(rows, _cfg(), section="slip_build", probability_col="p_cal")
+
+    assert filtered.index.tolist() == [101]

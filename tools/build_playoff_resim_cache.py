@@ -440,6 +440,33 @@ def compute_player_te(cv: pd.DataFrame, um: np.ndarray,
 # Corpus discovery
 # ---------------------------------------------------------------------------
 
+def _strict_audit_path_for_scored(scored_path: Path) -> Path:
+    return scored_path.parent / "strict_replay_fidelity_audit.json"
+
+
+def _read_strict_audit(path: Path) -> dict:
+    if not path.is_file():
+        return {}
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except Exception:
+        return {}
+
+
+def validate_strict_replay_audits(all_dates: list[tuple[str, Path, Path]]) -> list[str]:
+    failures: list[str] = []
+    for date, scored_path, _eval_path in all_dates:
+        audit_path = _strict_audit_path_for_scored(scored_path)
+        audit = _read_strict_audit(audit_path)
+        verdict = str(audit.get("verdict", "")).upper()
+        if verdict != "PASS":
+            problems = audit.get("failures") or ["missing_or_invalid_strict_replay_fidelity_audit"]
+            failures.append(
+                f"{date}: verdict={verdict or 'MISSING'} audit={audit_path} failures={problems}"
+            )
+    return failures
+
+
 def find_playoff_dates(prefix: str = CORPUS_PREFIX) -> list[tuple[str, Path, Path]]:
     """Scan <prefix>YYYYMMDD dirs. Return (date, scored_path, eval_path)."""
     results = []
@@ -573,6 +600,12 @@ def main() -> int:
         default=None,
         help=f"Output cache path (default: data/model/{CACHE_NAME})",
     )
+    ap.add_argument(
+        "--allow-non-strict",
+        action="store_true",
+        help="Legacy escape hatch: allow cache build without PASS strict replay audits.",
+    )
+    ap.add_argument("--dates", nargs="*", help="Optional YYYYMMDD dates to include from the prefix.")
     args = ap.parse_args()
     prefix = args.prefix
 
@@ -606,7 +639,27 @@ def main() -> int:
     if not all_dates:
         print(f"ERROR: No {prefix}* dirs found in data/telemetry/replay_runs/")
         return 1
+    if args.dates:
+        wanted = set(args.dates)
+        all_dates = [row for row in all_dates if row[0] in wanted]
+        missing = sorted(wanted - {row[0] for row in all_dates})
+        if missing:
+            print(f"ERROR: Requested dates not found under prefix: {missing}")
+            return 1
+        if not all_dates:
+            print("ERROR: No requested dates remain after filtering.")
+            return 1
     print(f"  Found {len(all_dates)} dates: {[d for d, _, _ in all_dates]}\n")
+
+    if not args.allow_non_strict:
+        strict_failures = validate_strict_replay_audits(all_dates)
+        if strict_failures:
+            print("ERROR: Strict replay fidelity gate failed. Refusing to build CAT/LODO cache.")
+            for failure in strict_failures:
+                print(f"  - {failure}")
+            print("Use --allow-non-strict only for legacy diagnostics, never for promotion.")
+            return 1
+        print("Strict replay fidelity gate: PASS for every included date.\n")
 
     if args.dry_run:
         print("[DRY RUN] Plan:")

@@ -129,6 +129,12 @@ telemetry:
     combo_under_midq_ra_trim_retain: 1.0
 role_ctx:
   enabled: true
+  # CraftedNBA context is attached to scored legs for telemetry/training, but
+  # direct role-metric probability movement is only allowed when a real role
+  # redistribution event exists. This keeps normal slates from getting a blind
+  # quality overlay while preserving the data needed for CAT/LODO audits.
+  role_metrics_require_role_ctx: true
+  role_metrics_min_role_ctx_outs: 1
   projection_clamp_lo: 0.9
   projection_clamp_hi: 1.11
   projection_softcap_k: 0.9
@@ -147,6 +153,41 @@ role_ctx:
   demon_tier_damp: 0.0
   over_direction_damp: 1.0
   multi_injury_boost: 1.3
+  # Out-player impact policy: widen the role-context corridor only when the
+  # missing player materially changes this beneficiary/stat row. This keeps
+  # bench/rotation injuries tight while allowing primary-creator outs to move
+  # more than the normal global cap.
+  impact_tier_enabled: true
+  impact_tier_max_out_weight_primary: 0.18
+  impact_tier_total_bump_primary: 0.30
+  impact_tier_max_out_weight_high: 0.10
+  impact_tier_total_bump_high: 0.18
+  impact_tier_max_out_weight_rotation: 0.04
+  impact_tier_total_bump_rotation: 0.08
+  impact_tier_projection_clamp_hi:
+    primary_creator: 1.16
+    high_usage: 1.13
+    rotation: 1.11
+    bench_or_low: 1.08
+    none: 1.11
+  impact_tier_rate_clamp_hi:
+    primary_creator: 1.12
+    high_usage: 1.10
+    rotation: 1.08
+    bench_or_low: 1.06
+    none: 1.08
+  impact_tier_softcap_k:
+    primary_creator: 1.15
+    high_usage: 1.0
+    rotation: 0.9
+    bench_or_low: 0.8
+    none: 0.9
+  impact_tier_rate_softcap_k:
+    primary_creator: 1.25
+    high_usage: 1.15
+    rotation: 1.1
+    bench_or_low: 0.95
+    none: 1.1
   under_relief_q_min: 0.1
   under_relief_haircut_min: 0.05
   under_relief_factor: 0.0
@@ -154,12 +195,29 @@ role_ctx:
   # their backup's minutes expectation is scaled up accordingly.
   zero_dnp_enabled: true
   zero_dnp_dnp_thresh: 2      # out player must have < 2 DNPs to trigger
-  zero_dnp_min_cap: 2.5       # max minutes ratio (caps extreme outliers)
-  zero_dnp_min_blend: 0.80    # blend factor (1.0 = full ratio, 0.8 = 80% of the gap)
+  zero_dnp_min_cap: 1.65      # max minutes ratio (caps extreme outliers)
+  zero_dnp_min_blend: 0.55    # blend factor (1.0 = full ratio, 0.55 = 55% of the gap)
   # Post-GBM blend: prevent GBM from overriding MC signal when zero-DNP fired
-  zero_dnp_postcal_blend_thresh: 1.40   # only applies when mult >= this
-  zero_dnp_postcal_blend_weight: 0.70   # weight on p_adj (vs GBM p_cal)
+  zero_dnp_postcal_blend_thresh: 1.30   # only applies when mult >= this
+  zero_dnp_postcal_blend_weight: 0.50   # weight on p_adj (vs GBM p_cal)
   zero_dnp_games_missed_max: 7          # suppress zero-DNP correction after this many consecutive games missed (GBM has learned)
+  zero_dnp_out_min_threshold: 24.0      # suppress low-rotation OUT players from triggering team-wide minutes redistribution
+  # Keep CraftedNBA/role-quality as a gated role-context feature. It can shape
+  # true role-redistribution rows, but it is not allowed to become a blind
+  # global player-quality overlay on normal slates.
+  crafted_role_workload_enabled: true
+  crafted_role_workload_minutes_require_role_ctx: false
+  usage_metrics_require_role_ctx: false
+  crafted_role_workload_use_impact_prior: true
+  crafted_role_workload_weight_scale: 1.35
+  crafted_role_workload_score_clip: 0.028
+  crafted_role_workload_mult_clip_lo: 0.022
+  crafted_role_workload_mult_clip_hi: 0.030
+  role_metrics_quality_weight_scale: 0.35
+  role_metrics_quality_score_clip: 0.012
+  role_metrics_quality_mult_clip: 0.012
+role_metrics:
+  enabled: true
 posthoc_calibrator:
   enabled: false  # DISABLED 2026-05-09: GBM degrades playoff Brier (0.2135->0.2398). MC+isotonic is better until playoff GBM retrain at 25+ dates.
   coefficients_path: data/model/posthoc_calibrator_coeffs_enriched.json
@@ -255,31 +313,31 @@ single_game_mode:
     high_volatility_threshold: 0.70
     high_fragility_threshold: 0.35
     core_minutes_stability_bonus: 0.02
-    multi_script_survival_bonus: 0.03
-    non_shooting_volume_bonus: 0.02
-    fragile_shooter_over_penalty: 0.05
-    low_minutes_role_penalty: 0.08
-    low_line_noise_penalty: 0.03
+    multi_script_survival_bonus: 0.035
+    non_shooting_volume_bonus: 0.025
+    fragile_shooter_over_penalty: 0.07
+    low_minutes_role_penalty: 0.10
+    low_line_noise_penalty: 0.05
     injury_uncertainty_penalty: 0.0
-    high_volatility_penalty: 0.03
-    high_fragility_penalty: 0.03
-    max_abs_selection_delta: 0.12
+    high_volatility_penalty: 0.04
+    high_fragility_penalty: 0.04
+    max_abs_selection_delta: 0.16
     role_shooter_stats: [FG3M, 3PM, 3PTM, PTS]
     fg3m_stats: [FG3M, 3PM, 3PTM, 3PT MADE, THREES]
     non_shooting_volume_stats: [REB, AST, RA, PA, PR, PRA]
 
 catboost_playoff_calibrator:
-  # v5cD 12-date residual regressor -- 19 features, iter=600, clip=0.20.
-  # Runtime scale policy: default 0.55, defensive 0.10 on fragile pregame slates.
-  # 12-date policy audit: agg -5.83 mB, clean -5.30 mB, worst +2.51 mB, PROMOTE.
+  # v5cD market/minutes residual regressor -- 34 features, iter=800, depth=5, lr=0.03, clip=0.20.
+  # Promoted 2026-05-21 from strict-fidelity 17-date cache excluding 2026-05-02.
+  # LODO gate: scale .45 fair -3.50 mB, clean -2.38 mB, clean worst +6.48 mB, PROMOTE.
   enabled: true
   kind: regressor  # "regressor" (v5cD) or "classifier" (legacy v1)
   model_path: data/model/catboost_playoff/catboost_v5cD_full_corpus.cbm
   meta_path: data/model/catboost_playoff/catboost_v5cD_full_corpus.meta.json
-  residual_scale: 0.55
+  residual_scale: 0.45
   residual_scale_policy:
     enabled: true
-    aggressive_residual_scale: 0.55
+    aggressive_residual_scale: 0.45
     defensive_residual_scale: 0.10
     thin_slate_games_max: 2
     # QUESTIONABLE/q_out soft-risk is report-only; do not downscale CAT solely
@@ -290,6 +348,13 @@ catboost_playoff_calibrator:
     blowout_role_ctx_share_max: 0.30
     no_role_ctx_share_max: 0.01
     low_external_prior_bp_has_mean_max: 0.10
+    # Defensive CAT mode when high-importance game-context features are dead.
+    # If spread/total are empty and q_blowout is a constant fallback, do not let
+    # the residual model apply the aggressive scale.
+    dead_game_context_enabled: true
+    dead_game_context_spread_ok_max: 0.01
+    dead_game_context_total_nonzero_max: 0.01
+    dead_game_context_q_unique_max: 1
   mode: replace  # "replace" writes p_catboost -> p_cal; "blend" uses blend_alpha
   # blend_alpha: 0.5  # only used when mode: blend
 
@@ -394,8 +459,8 @@ blowout:
     FG3M: 1.001
   rate_std_under_mult: 2.0
   rate_min_correlation: 0.45
-  thin_window_games: 20
-  thin_window_max_mult: 1.3
+  thin_window_games: 8
+  thin_window_max_mult: 1.18
   recency_halflife: 4
   recency_halflife_by_stat: {}
   recent_form_blend: 0.0
@@ -476,14 +541,14 @@ blowout:
     sensitivity_mult: 0.94
 slip_build:
   max_players_per_team: 2
-  # Single-game slate cap overrides (2026-05-10): when only 1 game is on the board,
-  # use per-leg-count caps. 3-leg stays tight at 2 to force cross-team diversification;
-  # 4-leg/5-leg relax to 3 since there are only 2 teams to draw from.
+  # Single-game slate cap overrides. Fast family trainer 2026-05-22 selected
+  # marketed_floor_plus; keep 4/5 at 2 so one team/player cluster cannot carry
+  # the full public card when the slate is thin.
   single_game_caps_by_legs:
     2: 1
     3: 2
-    4: 3
-    5: 3
+    4: 2
+    5: 2
   no_same_game_within_slip: false
   prefer_calibrated_prob: true
   max_slips_per_player: 5
@@ -758,6 +823,9 @@ optimizer:
       OVER: 0.03
       UNDER: 0.03
     exact_market_prob_weight: 1.0
+    exact_market_blend_alpha: 1.0
+    exact_market_blend_cap: 0.08
+    anchor_sources: [bettingpros_market_anchor]
     scale: 6.0
     p_floor: 0.02
     p_ceil: 0.98
@@ -767,6 +835,10 @@ optimizer:
       bettingpros:
         weight: 1.0
       bettingpros_market:
+        weight: 1.0
+      bettingpros_market_anchor:
+        weight: 1.0
+      draftkings_direct_market:
         weight: 1.0
       oddsapi:
         weight: 1.0
@@ -953,6 +1025,11 @@ public_slip_quality:
     # Cross-family exposure caps. The public card set must not be able to lean
     # on one player through different lines/markets and tank every output.
     max_exact_prop_repeats_across_public: 1
+    # A player can repeat on a thin/single-game slate, but not through the same
+    # market family. Example: OG Anunoby PRA cannot appear in both the 2-leg and
+    # 3-leg Marketed cards; OG PRA + OG REB can still be considered if player
+    # exposure allows it.
+    max_player_stat_repeats_across_public: 1
     max_player_repeats_across_public: 1
     max_player_repeats_across_public_by_slate_games:
       # One-game slates need a small relaxation or Marketed consumes the whole
@@ -970,14 +1047,13 @@ marketed_slips:
   reserve_player_props_across_templates: true
   enforce_single_game_slip_rules: true
   max_players_per_team: 2
-  # Single-game slate cap overrides (2026-05-10): when only 1 game is on the board,
-  # use per-leg-count caps. 3-leg stays tight at 2 to force cross-team diversification;
-  # 4-leg/5-leg relax to 3 since there are only 2 teams to draw from.
+  # Single-game slate cap overrides. Keep every size at 2 or lower on thin
+  # playoff boards so one team/player cluster cannot carry all public output.
   single_game_caps_by_legs:
     2: 1
     3: 2
-    4: 3
-    5: 3
+    4: 2
+    5: 2
   excluded_stats:
   - BLK
   - STL
@@ -997,9 +1073,11 @@ marketed_slips:
   # v5cD shrinks ~70% of legs and spans full 0.10-0.85 range (no isotonic compression).
   # Floors set so each tier exposes enough unique players to fill 12-player marketed pool.
   min_raw_thresholds:
-    GOBLIN: 0.68
-    STANDARD: 0.55
-    DEMON: 0.50
+    # Fast family trainer 2026-05-22 (`marketed_floor_plus`) improved the
+    # strict-fidelity portfolio score without changing CAT probabilities.
+    GOBLIN: 0.70
+    STANDARD: 0.57
+    DEMON: 0.52
   # GOBLIN/DEMON are structurally OVER-only (PrizePicks shifts the line to manufacture
   # "easy OVER" / "hard OVER"). UNDER on these tiers is invalid and must never reach a slip.
   # The board ingest also raises on UNDER+GOBLIN/DEMON, this is defense-in-depth.

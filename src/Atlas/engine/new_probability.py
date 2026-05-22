@@ -448,9 +448,25 @@ def _usage_dependence_proxy(
     }
 
 
-def _role_metrics_adjustment(row: Any, *, role_ctx_on_override: bool | None = None) -> tuple[float, dict[str, float]]:
+def _role_metrics_adjustment(
+    row: Any,
+    *,
+    role_ctx_on_override: bool | None = None,
+    role_cfg: dict[str, Any] | None = None,
+) -> tuple[float, dict[str, float]]:
     """Convert parsed role-metrics columns into a weak bounded prior."""
-    weight_scale = 0.04
+    try:
+        weight_scale = float((role_cfg or {}).get("role_metrics_quality_weight_scale", 0.04))
+    except Exception:
+        weight_scale = 0.04
+    try:
+        score_clip = abs(float((role_cfg or {}).get("role_metrics_quality_score_clip", 0.008)))
+    except Exception:
+        score_clip = 0.008
+    try:
+        mult_clip = abs(float((role_cfg or {}).get("role_metrics_quality_mult_clip", 0.008)))
+    except Exception:
+        mult_clip = 0.008
     role_ctx_on = False
     if role_ctx_on_override is None:
         try:
@@ -495,8 +511,8 @@ def _role_metrics_adjustment(row: Any, *, role_ctx_on_override: bool | None = No
     _add("darko", _get("role_metrics_darko"), 9.0, 0.003 * weight_scale)
 
     score = float(sum(v for k, v in components.items() if k.endswith("_weighted")))
-    score = float(np.clip(score, -0.008, 0.008))
-    mult = float(np.clip(1.0 + score, 0.992, 1.008))
+    score = float(np.clip(score, -score_clip, score_clip))
+    mult = float(np.clip(1.0 + score, 1.0 - mult_clip, 1.0 + mult_clip))
     components["score"] = score
     components["mult"] = mult
     return mult, components
@@ -537,6 +553,74 @@ def _crafted_role_workload_adjustment(
         except Exception:
             return float("nan")
 
+    def _get_first(*names: str) -> float:
+        for name in names:
+            value = _get(name)
+            if not pd.isna(value):
+                return value
+        return float("nan")
+
+    def _minutes_projection() -> float:
+        minutes = _get_first("role_metrics_minutes_projection", "modeled_minutes", "min_mean")
+        if pd.isna(minutes):
+            return float("nan")
+        # CraftedNBA feed can carry seconds-like values. Normalize before using
+        # this as a workload signal so it does not dwarf other components.
+        if minutes > 80.0:
+            minutes = minutes / 60.0
+        return float(np.clip(minutes, 0.0, 48.0))
+
+    def _usage_projection() -> float:
+        direct = _get("role_metrics_usage_projection")
+        if not pd.isna(direct):
+            return direct
+        return _get("role_metrics_usg_pct")
+
+    def _load_projection() -> float:
+        direct = _get("role_metrics_load")
+        if not pd.isna(direct):
+            return direct
+        usg = _get("role_metrics_usg_pct")
+        mins = _minutes_projection()
+        if pd.isna(usg) and pd.isna(mins):
+            return float("nan")
+        if pd.isna(usg):
+            return float(mins * 0.75)
+        if pd.isna(mins):
+            return float(usg)
+        return float(0.65 * usg + 0.35 * mins * 0.75)
+
+    def _touch_proxy() -> float:
+        direct = _get_first("role_metrics_touches", "role_metrics_bc")
+        if not pd.isna(direct):
+            return direct
+        usg = _get("role_metrics_usg_pct")
+        mins = _minutes_projection()
+        if pd.isna(usg) or pd.isna(mins):
+            return float("nan")
+        return float((usg / 30.0) * (mins / 36.0) * 70.0)
+
+    def _ast_proxy() -> float:
+        direct = _get_first("role_metrics_ast_pct", "role_metrics_ast_usg")
+        if not pd.isna(direct):
+            return direct
+        # radtov is not AST%, but when AST% is absent it gives a weak passing
+        # proxy so ball handlers do not collapse to no workload signal.
+        radtov = _get("role_metrics_radtov")
+        if pd.isna(radtov):
+            return float("nan")
+        return float(18.0 + 4.0 * radtov)
+
+    def _trb_proxy() -> float:
+        direct = _get("role_metrics_trb_pct")
+        if not pd.isna(direct):
+            return direct
+        orb = _get("role_metrics_orb_pct")
+        drb = _get("role_metrics_drb_pct")
+        if pd.isna(orb) and pd.isna(drb):
+            return float("nan")
+        return float((0.0 if pd.isna(orb) else orb) + (0.0 if pd.isna(drb) else drb))
+
     def _scale(raw_value: float, center: float, scale: float) -> float | None:
         if pd.isna(raw_value):
             return None
@@ -552,38 +636,59 @@ def _crafted_role_workload_adjustment(
 
     stat_norm = str(stat_u or "").upper().strip()
     components: dict[str, float] = {"enabled": 1.0}
+    try:
+        weight_scale = float((role_cfg or {}).get("crafted_role_workload_weight_scale", 1.0))
+    except Exception:
+        weight_scale = 1.0
+    try:
+        score_clip = abs(float((role_cfg or {}).get("crafted_role_workload_score_clip", 0.020)))
+    except Exception:
+        score_clip = 0.020
+    try:
+        mult_clip_lo = abs(float((role_cfg or {}).get("crafted_role_workload_mult_clip_lo", 0.015)))
+    except Exception:
+        mult_clip_lo = 0.015
+    try:
+        mult_clip_hi = abs(float((role_cfg or {}).get("crafted_role_workload_mult_clip_hi", 0.020)))
+    except Exception:
+        mult_clip_hi = 0.020
+
+    def _w(value: float) -> float:
+        return float(value) * weight_scale
 
     if stat_norm in {"PTS", "PRA", "PA", "PR", "RA"}:
-        _add(components, "usage_projection", _get("role_metrics_usage_projection"), 24.0, 9.0, 0.007)
-        _add(components, "usg_pct", _get("role_metrics_usg_pct"), 26.5, 12.0, 0.005)
-        _add(components, "load", _get("role_metrics_load"), 20.0, 10.0, 0.005)
-        _add(components, "touches", _get("role_metrics_touches"), 55.0, 25.0, 0.003)
-        _add(components, "ts_pct", _get("role_metrics_ts_pct"), 58.0, 10.0, 0.004)
-        _add(components, "sq", _get("role_metrics_sq"), 50.0, 22.0, 0.004)
-        _add(components, "ftr", _get("role_metrics_ftr"), 26.0, 18.0, 0.003)
+        _add(components, "usage_projection", _usage_projection(), 24.0, 9.0, _w(0.007))
+        _add(components, "usg_pct", _get("role_metrics_usg_pct"), 26.5, 12.0, _w(0.005))
+        _add(components, "load", _load_projection(), 20.0, 10.0, _w(0.005))
+        _add(components, "touches", _touch_proxy(), 55.0, 25.0, _w(0.003))
+        _add(components, "minutes_projection", _minutes_projection(), 28.0, 8.0, _w(0.004))
+        _add(components, "ts_pct", _get("role_metrics_ts_pct"), 58.0, 10.0, _w(0.004))
+        _add(components, "sq", _get("role_metrics_sq"), 50.0, 22.0, _w(0.004))
+        _add(components, "ftr", _get("role_metrics_ftr"), 26.0, 18.0, _w(0.003))
 
     if stat_norm in {"AST", "PA", "PRA", "RA"}:
-        _add(components, "ast_pct", _get("role_metrics_ast_pct"), 18.0, 12.0, 0.006)
-        _add(components, "touches", _get("role_metrics_touches"), 55.0, 25.0, 0.006)
-        _add(components, "ast_usg", _get("role_metrics_ast_usg"), 0.85, 0.35, 0.007)
-        _add(components, "bc", _get("role_metrics_bc"), 8.0, 4.0, 0.006)
-        _add(components, "load", _get("role_metrics_load"), 20.0, 10.0, 0.004)
-        _add(components, "pr", _get("role_metrics_pr"), 5.0, 2.0, 0.006)
+        _add(components, "ast_pct", _ast_proxy(), 18.0, 12.0, _w(0.006))
+        _add(components, "touches", _touch_proxy(), 55.0, 25.0, _w(0.006))
+        _add(components, "ast_usg", _get("role_metrics_ast_usg"), 0.85, 0.35, _w(0.007))
+        _add(components, "bc", _get("role_metrics_bc"), 8.0, 4.0, _w(0.006))
+        _add(components, "load", _load_projection(), 20.0, 10.0, _w(0.004))
+        _add(components, "pr", _get("role_metrics_pr"), 5.0, 2.0, _w(0.006))
 
     if stat_norm in {"REB", "PR", "PRA", "RA"}:
-        _add(components, "trb_pct", _get("role_metrics_trb_pct"), 13.0, 8.0, 0.007)
-        _add(components, "orb_pct", _get("role_metrics_orb_pct"), 4.0, 4.0, 0.004)
-        _add(components, "drb_pct", _get("role_metrics_drb_pct"), 10.0, 6.0, 0.005)
+        _add(components, "trb_pct", _trb_proxy(), 13.0, 8.0, _w(0.007))
+        _add(components, "orb_pct", _get("role_metrics_orb_pct"), 4.0, 4.0, _w(0.004))
+        _add(components, "drb_pct", _get("role_metrics_drb_pct"), 10.0, 6.0, _w(0.005))
 
     if stat_norm in {"FG3M", "3PM", "THREES"}:
-        _add(components, "three_par", _get("role_metrics_three_par"), 40.0, 22.0, 0.008)
-        _add(components, "sq", _get("role_metrics_sq"), 55.0, 22.0, 0.006)
-        _add(components, "ts_pct", _get("role_metrics_ts_pct"), 58.0, 10.0, 0.004)
-        _add(components, "usage_projection", _get("role_metrics_usage_projection"), 22.0, 10.0, 0.003)
+        _add(components, "three_par", _get("role_metrics_three_par"), 40.0, 22.0, _w(0.008))
+        _add(components, "sq", _get("role_metrics_sq"), 55.0, 22.0, _w(0.006))
+        _add(components, "ts_pct", _get("role_metrics_ts_pct"), 58.0, 10.0, _w(0.004))
+        _add(components, "usage_projection", _usage_projection(), 22.0, 10.0, _w(0.003))
+        _add(components, "minutes_projection", _minutes_projection(), 26.0, 8.0, _w(0.003))
 
     score = float(sum(v for k, v in components.items() if k.endswith("_weighted")))
-    score = float(np.clip(score, -0.015, 0.020))
-    mult = float(np.clip(1.0 + score, 0.985, 1.020))
+    score = float(np.clip(score, -score_clip, score_clip))
+    mult = float(np.clip(1.0 + score, 1.0 - mult_clip_lo, 1.0 + mult_clip_hi))
     components["score"] = score
     components["mult"] = mult
     return mult, components
@@ -594,6 +699,7 @@ def _crafted_role_workload_minutes_projection(
     *,
     role_cfg: dict[str, Any] | None = None,
     role_ctx_on_override: bool | None = None,
+    base_minutes_fallback: float | None = None,
 ) -> float | None:
     enabled = bool((role_cfg or {}).get("crafted_role_workload_enabled", False))
     if not enabled:
@@ -603,17 +709,27 @@ def _crafted_role_workload_minutes_projection(
         role_ctx_on = _role_metrics_role_ctx_active(row, role_cfg)
     else:
         role_ctx_on = bool(role_ctx_on_override)
-    if not role_ctx_on:
+    require_role_ctx = bool((role_cfg or {}).get("crafted_role_workload_minutes_require_role_ctx", False))
+    if require_role_ctx and not role_ctx_on:
         return None
 
     try:
         base_minutes = float(pd.to_numeric(pd.Series([row.get("minutes_projection", None)]), errors="coerce").iloc[0])
     except Exception:
         base_minutes = float("nan")
+    if pd.isna(base_minutes):
+        try:
+            fallback = float(base_minutes_fallback) if base_minutes_fallback is not None else float("nan")
+        except Exception:
+            fallback = float("nan")
+        if pd.notna(fallback) and fallback > 0.0:
+            base_minutes = fallback
     try:
         crafted_minutes = float(pd.to_numeric(pd.Series([row.get("role_metrics_minutes_projection", None)]), errors="coerce").iloc[0])
     except Exception:
         crafted_minutes = float("nan")
+    if pd.notna(crafted_minutes) and crafted_minutes > 80.0:
+        crafted_minutes = crafted_minutes / 60.0
 
     if pd.isna(base_minutes) and pd.isna(crafted_minutes):
         return None
@@ -685,6 +801,163 @@ def _bounded_role_rate_multiplier(
         float(role_rate_clamp_hi),
         float(role_rate_softcap_k),
     )
+
+
+_ROLE_CTX_IMPACT_TIERS = ("none", "bench_or_low", "rotation", "high_usage", "primary_creator")
+
+
+def _role_ctx_cfg_float(cfg: dict[str, Any] | None, key: str, default: float) -> float:
+    try:
+        value = float((cfg or {}).get(key, default))
+        return value if math.isfinite(value) else float(default)
+    except Exception:
+        return float(default)
+
+
+def _role_ctx_tier_map_float(
+    cfg: dict[str, Any] | None,
+    key: str,
+    tier: str,
+    defaults: dict[str, float],
+) -> float:
+    default = float(defaults.get(tier, defaults.get("none", 1.0)))
+    raw = (cfg or {}).get(key, None)
+    if isinstance(raw, dict):
+        try:
+            value = float(raw.get(tier, default))
+            return value if math.isfinite(value) else default
+        except Exception:
+            return default
+    return default
+
+
+def _role_ctx_by_out_weights(role_debug: dict[str, Any] | None) -> dict[str, float]:
+    """Aggregate role share-matrix weights by missing player for policy telemetry."""
+    if not isinstance(role_debug, dict):
+        return {}
+    raw_by_out = role_debug.get("by_out")
+    rows: list[dict[str, Any]]
+    if isinstance(raw_by_out, list):
+        rows = [r for r in raw_by_out if isinstance(r, dict)]
+    elif isinstance(raw_by_out, dict):
+        rows = [r for r in raw_by_out.values() if isinstance(r, dict)]
+    else:
+        rows = []
+
+    weights: dict[str, float] = {}
+    for item in rows:
+        out_name = (
+            item.get("out_canon")
+            or item.get("out_player")
+            or item.get("out")
+            or item.get("player")
+            or ""
+        )
+        key = str(out_name).strip().lower()
+        if not key:
+            key = f"out_{len(weights) + 1}"
+        try:
+            weight = float(item.get("weight", item.get("bump", 0.0)) or 0.0)
+        except Exception:
+            weight = 0.0
+        if not math.isfinite(weight) or weight <= 0.0:
+            continue
+        weights[key] = float(weights.get(key, 0.0) + weight)
+    return weights
+
+
+def _role_ctx_impact_policy(
+    role_debug: dict[str, Any] | None,
+    cfg: dict[str, Any] | None,
+) -> dict[str, Any]:
+    """Classify the out-player impact and return row-level role-context caps.
+
+    This is intentionally based on the share-matrix impact for the specific
+    beneficiary/stat row, not a global injury count. A De'Aaron Fox/Luka-level
+    out can get a wider corridor; a bench out stays tight.
+    """
+    cfg = cfg or {}
+    base_proj_hi = _role_ctx_cfg_float(cfg, "projection_clamp_hi", 1.10)
+    base_softcap_k = _role_ctx_cfg_float(cfg, "projection_softcap_k", 0.90)
+    base_rate_hi = _role_ctx_cfg_float(cfg, "role_rate_clamp_hi", 1.08)
+    base_rate_softcap_k = _role_ctx_cfg_float(cfg, "role_rate_softcap_k", 1.10)
+    enabled = bool(cfg.get("impact_tier_enabled", True))
+
+    weights = _role_ctx_by_out_weights(role_debug)
+    max_out_weight = float(max(weights.values())) if weights else 0.0
+    total_out_weight = float(sum(weights.values())) if weights else 0.0
+    try:
+        total_bump = float((role_debug or {}).get("bump", 0.0) or 0.0)
+        if not math.isfinite(total_bump):
+            total_bump = 0.0
+    except Exception:
+        total_bump = 0.0
+
+    if not enabled or not isinstance(role_debug, dict):
+        tier = "none"
+    else:
+        primary_w = _role_ctx_cfg_float(cfg, "impact_tier_max_out_weight_primary", 0.18)
+        primary_b = _role_ctx_cfg_float(cfg, "impact_tier_total_bump_primary", 0.30)
+        high_w = _role_ctx_cfg_float(cfg, "impact_tier_max_out_weight_high", 0.10)
+        high_b = _role_ctx_cfg_float(cfg, "impact_tier_total_bump_high", 0.18)
+        rotation_w = _role_ctx_cfg_float(cfg, "impact_tier_max_out_weight_rotation", 0.04)
+        rotation_b = _role_ctx_cfg_float(cfg, "impact_tier_total_bump_rotation", 0.08)
+        if max_out_weight >= primary_w or total_bump >= primary_b:
+            tier = "primary_creator"
+        elif max_out_weight >= high_w or total_bump >= high_b:
+            tier = "high_usage"
+        elif max_out_weight >= rotation_w or total_bump >= rotation_b:
+            tier = "rotation"
+        elif max_out_weight > 0.0 or total_bump > 0.0:
+            tier = "bench_or_low"
+        else:
+            tier = "none"
+
+    proj_defaults = {
+        "none": base_proj_hi,
+        "bench_or_low": min(base_proj_hi, 1.08),
+        "rotation": base_proj_hi,
+        "high_usage": max(base_proj_hi, 1.13),
+        "primary_creator": max(base_proj_hi, 1.16),
+    }
+    rate_defaults = {
+        "none": base_rate_hi,
+        "bench_or_low": min(base_rate_hi, 1.06),
+        "rotation": base_rate_hi,
+        "high_usage": max(base_rate_hi, 1.10),
+        "primary_creator": max(base_rate_hi, 1.12),
+    }
+    softcap_defaults = {
+        "none": base_softcap_k,
+        "bench_or_low": min(base_softcap_k, 0.80),
+        "rotation": base_softcap_k,
+        "high_usage": max(base_softcap_k, 1.00),
+        "primary_creator": max(base_softcap_k, 1.15),
+    }
+    rate_softcap_defaults = {
+        "none": base_rate_softcap_k,
+        "bench_or_low": min(base_rate_softcap_k, 0.95),
+        "rotation": base_rate_softcap_k,
+        "high_usage": max(base_rate_softcap_k, 1.15),
+        "primary_creator": max(base_rate_softcap_k, 1.25),
+    }
+
+    proj_hi = _role_ctx_tier_map_float(cfg, "impact_tier_projection_clamp_hi", tier, proj_defaults)
+    rate_hi = _role_ctx_tier_map_float(cfg, "impact_tier_rate_clamp_hi", tier, rate_defaults)
+    softcap_k = _role_ctx_tier_map_float(cfg, "impact_tier_softcap_k", tier, softcap_defaults)
+    rate_softcap_k = _role_ctx_tier_map_float(cfg, "impact_tier_rate_softcap_k", tier, rate_softcap_defaults)
+
+    return {
+        "impact_policy_applied": bool(enabled and tier not in ("none", "")),
+        "impact_tier": tier if tier in _ROLE_CTX_IMPACT_TIERS else "none",
+        "max_out_weight": float(max_out_weight),
+        "total_out_weight": float(total_out_weight),
+        "total_bump": float(total_bump),
+        "projection_clamp_hi_effective": float(np.clip(proj_hi, 1.0, 1.25)),
+        "projection_softcap_k_effective": float(max(0.01, softcap_k)),
+        "role_rate_clamp_hi_effective": float(np.clip(rate_hi, 1.0, 1.20)),
+        "role_rate_softcap_k_effective": float(max(0.01, rate_softcap_k)),
+    }
 
 
 
@@ -937,9 +1210,16 @@ def _fragility_root_inputs(
         minutes_s = float(minutes_sensitivity(stat_u))
 
     role_ctx_on = _role_metrics_role_ctx_active(row, role_cfg)
+    require_usage_role_ctx = bool(
+        (role_cfg or {}).get(
+            "usage_metrics_require_role_ctx",
+            (role_cfg or {}).get("role_metrics_require_role_ctx", False),
+        )
+    )
+    usage_metrics_allowed = bool(role_ctx_on or not require_usage_role_ctx)
 
     def _row_metric(name: str) -> float | None:
-        if not role_ctx_on:
+        if not usage_metrics_allowed:
             return None
         try:
             raw = row.get(name, None)
@@ -1042,6 +1322,7 @@ def _zero_dnp_minutes_mult(
     min_cap = float(cfg.get("zero_dnp_min_cap", 2.5))
     min_blend = float(cfg.get("zero_dnp_min_blend", 0.80))
     games_missed_max = int(cfg.get("zero_dnp_games_missed_max", 7))
+    out_min_threshold = float(cfg.get("zero_dnp_out_min_threshold", 24.0))
 
     best_mult = 1.0
     best_reason = "no_zero_dnp_out"
@@ -1073,6 +1354,8 @@ def _zero_dnp_minutes_mult(
             continue
         out_avg_min = float(playing_gl["minutes"].mean())
         if not np.isfinite(out_avg_min) or out_avg_min <= 0:
+            continue
+        if out_avg_min < out_min_threshold:
             continue
         player_min = max(float(player_min_mean), 3.0)
         ratio = float(np.clip(out_avg_min / player_min, 1.0, min_cap))
@@ -1113,22 +1396,31 @@ def _extract_team_outs(iael_df: pd.DataFrame, team_u: str) -> list[str]:
 
     df = iael_df.loc[tmask].copy()
 
-    if "out_player" in cols:
-        out_col = cols["out_player"]
+    status_col = cols.get("status") or cols.get("iael_status") or cols.get("injury_status")
+    name_col = cols.get("player") or cols.get("name")
+    out_col = cols.get("out_player")
+
+    if out_col and not status_col:
         outs = df[out_col].dropna().astype(str).tolist()
         return [o for o in outs if str(o).strip()]
 
-    status_col = cols.get("status") or cols.get("iael_status") or cols.get("injury_status")
-    name_col = cols.get("player") or cols.get("name")
-    if not name_col or not status_col:
+    if not (name_col or out_col) or not status_col:
         return []
 
     status_u = df[status_col].astype(str).str.upper().str.strip()
-    out_mask = status_u.isin(["OUT", "O", "OUT.", "DNP", "INACTIVE", "DOUBTFUL", "D", "QUESTIONABLE", "Q"])
+    # Role redistribution is a hard-absence layer. QUESTIONABLE is handled by
+    # the IAEL soft-risk layer; treating Q as an OUT here creates fake role
+    # context and stale share-matrix misses.
+    out_mask = status_u.isin(["OUT", "O", "OUT.", "DNP", "INACTIVE", "DOUBTFUL", "D"])
+    hard_col = cols.get("hard_invalid")
+    if hard_col:
+        hard_s = df[hard_col].astype(str).str.lower().str.strip()
+        out_mask = out_mask | hard_s.isin(["1", "true", "yes", "y"])
     if not bool(out_mask.any()):
         return []
 
-    outs = df.loc[out_mask, name_col].dropna().astype(str).tolist()
+    player_source_col = out_col or name_col
+    outs = df.loc[out_mask, player_source_col].dropna().astype(str).tolist()
     return [o for o in outs if str(o).strip()]
 
 
@@ -1167,6 +1459,7 @@ def compute_role_multiplier(
         return 1.0, {
             "reason": "no_outs",
             "outs": [],
+            "outs_used": 0,
             "components": [stat_u],
             "component_mults": [1.0],
             "component_reasons": ["no_outs"],
@@ -1178,6 +1471,8 @@ def compute_role_multiplier(
         return 1.0, {
             "reason": "no_share_matrix",
             "outs": outs[: len(outs_canon)],
+            "outs_used": 0,
+            "bump": 0.0,
             "components": [stat_u],
             "component_mults": [1.0],
             "component_reasons": ["no_share_matrix"],
@@ -1188,6 +1483,8 @@ def compute_role_multiplier(
         return 1.0, {
             "reason": "share_matrix_schema_missing",
             "outs": outs[: len(outs_canon)],
+            "outs_used": 0,
+            "bump": 0.0,
             "components": [stat_u],
             "component_mults": [1.0],
             "component_reasons": ["share_matrix_schema_missing"],
@@ -1776,6 +2073,7 @@ def simulate_leg_probability_new(
         row,
         role_cfg=role_cfg,
         role_ctx_on_override=role_ctx_on_for_external_metrics,
+        base_minutes_fallback=float(s.get("min_mean", 0.0)),
     )
 
     if hasattr(row, "get"):
@@ -1794,6 +2092,11 @@ def simulate_leg_probability_new(
     role_metrics_debug: dict[str, float] = {}
 
     _pm_for_tier = float(projected_minutes_val if pd.notna(projected_minutes) else float(s.get("min_mean", 0.0)))
+    _projected_minutes_source = (
+        "crafted_blend"
+        if crafted_minutes_projection is not None
+        else ("board" if pd.notna(projected_minutes) else "gamelog_mean")
+    )
     is_star = _pm_for_tier >= 33.0
 
     # Rotation-tier-aware blowout minute adjustment
@@ -2042,6 +2345,7 @@ def simulate_leg_probability_new(
     role_sigma_mult = 1.0
     role_reason = "not_applied"
     role_debug: dict[str, Any] | None = None
+    role_ctx_impact_debug: dict[str, Any] = _role_ctx_impact_policy(None, cfg)
     _damp_applied: list[str] = []
 
     stat_u = str(stat).upper().strip()
@@ -2199,6 +2503,9 @@ def simulate_leg_probability_new(
                 }
 
             role_mult_raw = role_mult_raw if np.isfinite(role_mult_raw) and role_mult_raw > 0 else 1.0
+            role_ctx_impact_debug = _role_ctx_impact_policy(role_debug, cfg)
+            proj_hi_effective = float(role_ctx_impact_debug.get("projection_clamp_hi_effective", proj_hi))
+            proj_softcap_k_effective = float(role_ctx_impact_debug.get("projection_softcap_k_effective", cfg.get("projection_softcap_k", 1.35)))
 
             # ── Pre-softcap dampening ──────────────────────────────
             _bump_pre = max(0.0, role_mult_raw - 1.0)
@@ -2239,16 +2546,16 @@ def simulate_leg_probability_new(
             role_mult_raw = 1.0 + _bump_pre
 
             # Soft-cap to proj_hi
-            k_soft = float(cfg.get("projection_softcap_k", 1.35))
+            k_soft = float(proj_softcap_k_effective)
             rm = float(role_mult_raw)
-            if proj_hi <= 1.0 + 1e-12:
-                role_mult = float(np.clip(rm, proj_lo, proj_hi))
+            if proj_hi_effective <= 1.0 + 1e-12:
+                role_mult = float(np.clip(rm, proj_lo, proj_hi_effective))
             else:
                 bump_raw = max(0.0, rm - 1.0)
-                cap_bump = float(proj_hi - 1.0)
+                cap_bump = float(proj_hi_effective - 1.0)
                 bump_soft = cap_bump * (1.0 - float(np.exp(-k_soft * bump_raw / max(1e-12, cap_bump))))
                 role_mult_soft = 1.0 + bump_soft
-                role_mult = float(np.clip(role_mult_soft, proj_lo, proj_hi))
+                role_mult = float(np.clip(role_mult_soft, proj_lo, proj_hi_effective))
 
             role_sigma_mult = 1.0 + var_k * abs(role_mult - 1.0)
             role_sigma_mult = float(np.clip(role_sigma_mult, var_lo, var_hi))
@@ -2364,6 +2671,7 @@ def simulate_leg_probability_new(
                 impact_mult, impact_debug = _role_metrics_adjustment(
                     row,
                     role_ctx_on_override=role_ctx_on_for_metrics,
+                    role_cfg=role_cfg,
                 )
                 role_metrics_mult = float(np.clip(float(role_metrics_mult) * float(impact_mult), 0.98, 1.03))
                 role_metrics_debug.update({f"impact_{k}": v for k, v in impact_debug.items()})
@@ -2371,6 +2679,7 @@ def simulate_leg_probability_new(
             role_metrics_mult, role_metrics_debug = _role_metrics_adjustment(
                 row,
                 role_ctx_on_override=role_ctx_on_for_metrics,
+                role_cfg=role_cfg,
             )
     except Exception:
         role_metrics_mult = 1.0
@@ -2381,10 +2690,23 @@ def simulate_leg_probability_new(
     rate_sd_raw = rate_sd_base
 
     # Role-context channel parameters (ctx applied)
+    role_rate_cfg = dict(cfg)
+    try:
+        role_rate_cfg["role_rate_clamp_hi"] = float(
+            role_ctx_impact_debug.get("role_rate_clamp_hi_effective", cfg.get("role_rate_clamp_hi", 1.08))
+        )
+    except Exception:
+        role_rate_cfg["role_rate_clamp_hi"] = float(cfg.get("role_rate_clamp_hi", 1.08))
+    try:
+        role_rate_cfg["role_rate_softcap_k"] = float(
+            role_ctx_impact_debug.get("role_rate_softcap_k_effective", cfg.get("role_rate_softcap_k", 1.10))
+        )
+    except Exception:
+        role_rate_cfg["role_rate_softcap_k"] = float(cfg.get("role_rate_softcap_k", 1.10))
     rate_mu_role_mult_raw, rate_mu_role_mult, rate_mu_role_clamp_lo, rate_mu_role_clamp_hi, rate_mu_role_softcap_k = _bounded_role_rate_multiplier(
         role_mult=role_mult,
         role_metrics_mult=role_metrics_mult,
-        cfg=cfg,
+        cfg=role_rate_cfg,
     )
     rate_mu_role_raw = base_rate_mu * rate_mu_role_mult_raw
     rate_mu_role = base_rate_mu * rate_mu_role_mult
@@ -2808,6 +3130,19 @@ def simulate_leg_probability_new(
     else:
         under_frag_dampen_amount = 0.0
 
+    atlas_projection_mean = float(_pm_for_tier) * float(rate_mu_role)
+    atlas_projection_delta = float(atlas_projection_mean) - float(line)
+    atlas_projection_side_delta = (
+        -float(atlas_projection_delta)
+        if str(direction).upper().strip() == "UNDER"
+        else float(atlas_projection_delta)
+    )
+    atlas_projection_line_ratio = (
+        float(atlas_projection_mean) / float(line)
+        if float(line) > 0.0
+        else 0.0
+    )
+
     out: dict[str, Any] = {
         # Core outputs
         "p": float(p_raw),
@@ -2840,6 +3175,16 @@ def simulate_leg_probability_new(
         "rotation_tier": str(_rot_tier),
         "blowout_minute_delta": float(minute_delta),
         "blowout_base_min_for_curve": float(_base_min_for_curve),
+        "sim_minutes_close": float(mu_close),
+        "sim_minutes_blowout": float(mu_blow),
+        "projected_minutes_model": float(_pm_for_tier),
+        "projected_minutes_source": str(_projected_minutes_source),
+        "projected_minutes_delta_from_gamelog": float(_pm_for_tier - float(s.get("min_mean", 0.0))),
+        "atlas_projection_mean": float(atlas_projection_mean),
+        "atlas_projection_delta": float(atlas_projection_delta),
+        "atlas_projection_side_delta": float(atlas_projection_side_delta),
+        "atlas_projection_abs_delta": float(abs(atlas_projection_delta)),
+        "atlas_projection_line_ratio": float(atlas_projection_line_ratio),
 
         # Fragility (aligned to adjusted channel)
         "fragility": float(frag),
@@ -2910,6 +3255,15 @@ def simulate_leg_probability_new(
         "role_ctx_sigma_mult": float(role_sigma_mult),
         "role_ctx_reason": str(role_reason),
         "role_ctx_damp_applied": ",".join(_damp_applied) if _damp_applied else "",
+        "role_ctx_impact_policy_applied": bool(role_ctx_impact_debug.get("impact_policy_applied", False)),
+        "role_ctx_impact_tier": str(role_ctx_impact_debug.get("impact_tier", "none")),
+        "role_ctx_max_out_weight": float(role_ctx_impact_debug.get("max_out_weight", 0.0)),
+        "role_ctx_total_out_weight": float(role_ctx_impact_debug.get("total_out_weight", 0.0)),
+        "role_ctx_total_bump": float(role_ctx_impact_debug.get("total_bump", 0.0)),
+        "role_ctx_projection_clamp_hi_effective": float(role_ctx_impact_debug.get("projection_clamp_hi_effective", proj_hi)),
+        "role_ctx_projection_softcap_k_effective": float(role_ctx_impact_debug.get("projection_softcap_k_effective", cfg.get("projection_softcap_k", 1.35))),
+        "role_ctx_rate_clamp_hi_effective": float(role_ctx_impact_debug.get("role_rate_clamp_hi_effective", cfg.get("role_rate_clamp_hi", 1.08))),
+        "role_ctx_rate_softcap_k_effective": float(role_ctx_impact_debug.get("role_rate_softcap_k_effective", cfg.get("role_rate_softcap_k", 1.10))),
         "zero_dnp_mult": float(_zero_dnp_mult),
         "zero_dnp_debug": str(_zero_dnp_debug),
 

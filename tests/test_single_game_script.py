@@ -107,7 +107,7 @@ def test_single_game_annotations_score_generic_robustness() -> None:
     assert core["single_game_anchor_flag"] == 1
     assert core["single_game_multi_script_survival_flag"] == 1
     assert "multi_script_survival" in str(core["single_game_script_reasons"])
-    assert round(float(core["single_game_script_fit"]), 2) == 0.07
+    assert round(float(core["single_game_script_fit"]), 2) == 0.09
 
     shooter = out[out["player"] == "Bench Shooter"].iloc[0]
     assert shooter["single_game_role_shooter_over_flag"] == 1
@@ -181,8 +181,8 @@ def test_single_game_selection_surface_adjusts_selection_only_score() -> None:
 
     core = out[out["player"] == "Core Rebounder"].iloc[0]
     assert round(float(core["p_eff_pre_single_game"]), 2) == 0.66
-    assert round(float(core["single_game_selection_delta"]), 2) == 0.07
-    assert round(float(core["p_eff"]), 2) == 0.73
+    assert round(float(core["single_game_selection_delta"]), 2) == 0.09
+    assert round(float(core["p_eff"]), 2) == 0.74
 
 
 def test_single_game_rules_reject_low_minute_fragility_not_size() -> None:

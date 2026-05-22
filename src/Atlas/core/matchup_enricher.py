@@ -250,15 +250,16 @@ def _load_role_metrics_snapshot(role_metrics_path: str | None = None) -> pd.Data
 
 
 # -----------------------------
-# Rotowire attach (game spreads)
+# Rotowire attach (game spreads/totals)
 # -----------------------------
 def attach_rotowire_game_spreads(df: pd.DataFrame, rotowire_path: str) -> pd.DataFrame:
     """
-    Attach Rotowire *game* spreads (event-level) onto prop rows.
+    Attach Rotowire *game* spreads/totals (event-level) onto prop rows.
 
     Requires df columns: team, opp (may be blank), game_date
     Adds columns:
       home_team, away_team, home_spread, away_spread, game_spread,
+      game_total, rotowire_game_total, game_total_norm,
       spread_source, spread_ok, spread_reason
 
     Behavior:
@@ -276,6 +277,10 @@ def attach_rotowire_game_spreads(df: pd.DataFrame, rotowire_path: str) -> pd.Dat
             "home_spread",
             "away_spread",
             "game_spread",
+            "rotowire_game_spread",
+            "game_total",
+            "rotowire_game_total",
+            "game_total_norm",
             "spread_source",
             "spread_ok",
             "spread_reason",
@@ -319,13 +324,13 @@ def attach_rotowire_game_spreads(df: pd.DataFrame, rotowire_path: str) -> pd.Dat
         out["spread_source"] = "rotowire"
         return out
 
-    # Build lookup: (game_date, home, away) -> (home_spread, away_spread)
+    # Build lookup: (game_date, home, away) -> (home_spread, away_spread, total)
     # IMPORTANT:
     #   Rotowire's payload includes both:
     #     - game_date: "YYYY-MM-DD" (authoritative for joining)
     #     - eventTime: epoch seconds (can drift a day vs local timezones for late games)
     #   We prefer game_date when present, and fall back to eventTime->UTC date.
-    lookup: Dict[Tuple[str, str, str], Tuple[float, float]] = {}
+    lookup: Dict[Tuple[str, str, str], Tuple[float, float, Optional[float], str]] = {}
     for ev in events:
         try:
             home = normalize_team_abbr(ev.get("homeTeam", ""))
@@ -351,8 +356,13 @@ def attach_rotowire_game_spreads(df: pd.DataFrame, rotowire_path: str) -> pd.Dat
                 d = _utc_date_from_epoch(et)
             hs_f = float(hs)
             aws_f = float(aws)
+            try:
+                total_f = float(ev.get("ou")) if ev.get("ou") is not None else None
+            except Exception:
+                total_f = None
 
-            lookup[(d, home, away)] = (hs_f, aws_f)
+            source = _clean_str(ev.get("source", "")) or _clean_str(rw.get("source", "")) or "rotowire"
+            lookup[(d, home, away)] = (hs_f, aws_f, total_f, source)
         except Exception:
             continue
 
@@ -363,11 +373,11 @@ def attach_rotowire_game_spreads(df: pd.DataFrame, rotowire_path: str) -> pd.Dat
         return out
 
     # Build reverse index: (utc_date, team) -> list of games containing team
-    # store as (home, away, home_spread, away_spread)
-    team_index: Dict[Tuple[str, str], List[Tuple[str, str, float, float]]] = {}
-    for (d, home, away), (hs, aws) in lookup.items():
-        team_index.setdefault((d, home), []).append((home, away, hs, aws))
-        team_index.setdefault((d, away), []).append((home, away, hs, aws))
+    # store as (home, away, home_spread, away_spread, total, source)
+    team_index: Dict[Tuple[str, str], List[Tuple[str, str, float, float, Optional[float], str]]] = {}
+    for (d, home, away), (hs, aws, total_f, source) in lookup.items():
+        team_index.setdefault((d, home), []).append((home, away, hs, aws, total_f, source))
+        team_index.setdefault((d, away), []).append((home, away, hs, aws, total_f, source))
 
     def _row_attach(team: str, opp: str, d: str):
         team = normalize_team_abbr(team)
@@ -375,18 +385,18 @@ def attach_rotowire_game_spreads(df: pd.DataFrame, rotowire_path: str) -> pd.Dat
         d = _clean_str(d)
 
         if not team or not d:
-            return (pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, "missing_team_or_date")
+            return (pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, "rotowire", "missing_team_or_date")
 
         # Strict match when opp is present
         if opp:
             key1 = (d, team, opp)  # team as home
             key2 = (d, opp, team)  # team as away
             if key1 in lookup:
-                hs, aws = lookup[key1]
-                return (team, opp, hs, aws, hs, "ok")
+                hs, aws, total_f, source = lookup[key1]
+                return (team, opp, hs, aws, hs, total_f, source, "ok")
             if key2 in lookup:
-                hs, aws = lookup[key2]
-                return (opp, team, hs, aws, aws, "ok")
+                hs, aws, total_f, source = lookup[key2]
+                return (opp, team, hs, aws, aws, total_f, source, "ok")
 
         def _shift_date(d: str, delta_days: int) -> str:
             try:
@@ -406,17 +416,17 @@ def attach_rotowire_game_spreads(df: pd.DataFrame, rotowire_path: str) -> pd.Dat
                 break
 
         if picked is not None:
-            used_date, (home, away, hs, aws) = picked
+            used_date, (home, away, hs, aws, total_f, source) = picked
             inferred_opp = away if team == home else home
             team_spread = hs if team == home else aws
             reason = "ok_inferred_opp" if used_date == d else f"ok_inferred_opp_date_shift_{used_date}"
-            return (home, away, hs, aws, team_spread, reason)
+            return (home, away, hs, aws, team_spread, total_f, source, reason)
 
         # If still no match, report the best reason
         games0 = team_index.get((d, team), [])
         if len(games0) == 0:
-            return (pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, "no_game_for_team_date")
-        return (pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, "ambiguous_team_date")
+            return (pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, "rotowire", "no_game_for_team_date")
+        return (pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, pd.NA, "rotowire", "ambiguous_team_date")
 
     attached = [
         _row_attach(t, o, d)
@@ -428,10 +438,16 @@ def attach_rotowire_game_spreads(df: pd.DataFrame, rotowire_path: str) -> pd.Dat
     out["home_spread"] = [a[2] for a in attached]
     out["away_spread"] = [a[3] for a in attached]
     out["game_spread"] = [a[4] for a in attached]
+    out["rotowire_game_spread"] = out["game_spread"]
+    out["game_total"] = [a[5] for a in attached]
+    out["rotowire_game_total"] = out["game_total"]
+    _game_total = pd.to_numeric(out["game_total"], errors="coerce")
+    out["game_total_norm"] = (_game_total / 230.0 - 1.0).clip(lower=-0.15, upper=0.15)
+    out.loc[_game_total.isna() | (_game_total <= 0), "game_total_norm"] = 0.0
 
-    out["spread_source"] = "rotowire"
+    out["spread_source"] = [a[6] for a in attached]
     out["spread_ok"] = out["game_spread"].notna()
-    out["spread_reason"] = [a[5] for a in attached]
+    out["spread_reason"] = [a[7] for a in attached]
 
     return out
 

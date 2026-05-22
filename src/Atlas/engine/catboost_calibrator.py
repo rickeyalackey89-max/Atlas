@@ -69,7 +69,46 @@ DEFAULT_RESIDUAL_SCALE_POLICY = {
     "blowout_role_ctx_share_max": 0.30,
     "no_role_ctx_share_max": 0.01,
     "low_external_prior_bp_has_mean_max": 0.10,
+    "dead_game_context_enabled": True,
+    "dead_game_context_spread_ok_max": 0.01,
+    "dead_game_context_total_nonzero_max": 0.01,
+    "dead_game_context_q_unique_max": 1,
 }
+
+
+def _stamp_catboost_p_cal_src(
+    scored: pd.DataFrame,
+    *,
+    kind: str,
+    mode: str,
+    meta: dict[str, Any],
+) -> pd.DataFrame:
+    """Mark p_cal as CAT-derived while preserving the original upstream source.
+
+    Historical telemetry calibration configs can use source-prefix filters like
+    ``p_adj``. Keeping the original prefix and appending the CAT stage preserves
+    that behavior while making the final probability lineage visible.
+    """
+    base: Any
+    if "p_cal_src" in scored.columns:
+        base = scored["p_cal_src"]
+    elif "p_for_cal_src" in scored.columns:
+        base = scored["p_for_cal_src"]
+    elif "p_adj_src" in scored.columns:
+        base = scored["p_adj_src"]
+    else:
+        base = "p_for_cal"
+
+    base_src = pd.Series(base, index=scored.index).fillna("").astype(str).str.strip()
+    base_src = base_src.mask(base_src.eq(""), "p_for_cal")
+    clean_kind = "catboost_residual" if str(kind).strip().lower() == "regressor" else "catboost_classifier"
+    clean_mode = str(mode or "replace").strip().lower() or "replace"
+    version = str(meta.get("version", "")).strip()
+    suffix = f"{clean_kind}_{clean_mode}"
+    if version:
+        suffix = f"{suffix}:{version}"
+    scored["p_cal_src"] = base_src + "->" + suffix
+    return scored
 
 
 # ---------------------------------------------------------------------------
@@ -295,11 +334,16 @@ def _merge_residual_scale_policy(cat_cfg: dict[str, Any], meta: dict[str, Any]) 
         "blowout_role_ctx_share_max",
         "no_role_ctx_share_max",
         "low_external_prior_bp_has_mean_max",
+        "dead_game_context_spread_ok_max",
+        "dead_game_context_total_nonzero_max",
     ]:
         if key in policy:
             policy[key] = float(policy[key])
     if "thin_slate_games_max" in policy:
         policy["thin_slate_games_max"] = int(policy["thin_slate_games_max"])
+    if "dead_game_context_q_unique_max" in policy:
+        policy["dead_game_context_q_unique_max"] = int(policy["dead_game_context_q_unique_max"])
+    policy["dead_game_context_enabled"] = bool(policy.get("dead_game_context_enabled", True))
     policy["enabled"] = bool(policy.get("enabled", False))
     return policy
 
@@ -325,6 +369,15 @@ def resolve_residual_scale(
     games = int(scored["game_id"].nunique()) if "game_id" in scored.columns else 0
     q_out_frac = _numeric_series(scored, "q_out_frac", default=0.0)
     q_blowout = _numeric_series(scored, "q_blowout", default=0.0)
+    game_total_norm = _numeric_series(scored, "game_total_norm", default=0.0)
+    game_total = _numeric_series(scored, "game_total", default=0.0)
+    rotowire_game_total = _numeric_series(scored, "rotowire_game_total", default=0.0)
+    game_spread = _numeric_series(scored, "game_spread", default=np.nan)
+    rotowire_game_spread = _numeric_series(scored, "rotowire_game_spread", default=np.nan)
+    if "spread_ok" in scored.columns:
+        spread_ok = scored["spread_ok"].map(lambda x: str(x).strip().lower() in {"1", "true", "yes", "ok"}).astype(float)
+    else:
+        spread_ok = pd.Series(np.zeros(len(scored), dtype="float64"), index=scored.index)
     role_outs = _numeric_series(scored, "role_ctx_outs_used", default=0.0)
     if "bp_has" in scored.columns:
         bp_has = _numeric_series(scored, "bp_has", default=0.0)
@@ -335,6 +388,16 @@ def resolve_residual_scale(
 
     q_out_frac_mean = float(q_out_frac.mean())
     q_blowout_p90 = float(q_blowout.quantile(0.90))
+    q_blowout_unique = int(q_blowout.round(6).nunique(dropna=True))
+    spread_present = (
+        pd.to_numeric(game_spread, errors="coerce").notna()
+        | pd.to_numeric(rotowire_game_spread, errors="coerce").notna()
+    )
+    spread_ok_rate = float(((spread_ok > 0.0) | spread_present).mean())
+    total_nonzero = (
+        game_total_norm.abs() > 1e-9
+    ) | (game_total > 0.0) | (rotowire_game_total > 0.0)
+    total_nonzero_rate = float(total_nonzero.mean())
     role_ctx_share = float((role_outs > 0.0).mean())
     bp_has_mean = float(bp_has.mean())
 
@@ -343,6 +406,9 @@ def resolve_residual_scale(
             "games": games,
             "q_out_frac_mean": q_out_frac_mean,
             "q_blowout_p90": q_blowout_p90,
+            "q_blowout_unique": q_blowout_unique,
+            "spread_ok_rate": spread_ok_rate,
+            "game_total_nonzero_rate": total_nonzero_rate,
             "role_ctx_outs_used_share_gt0": role_ctx_share,
             "bp_has_mean": bp_has_mean,
         }
@@ -359,6 +425,13 @@ def resolve_residual_scale(
         reasons.append("high_blowout_limited_role_context")
     if role_ctx_share <= float(policy["no_role_ctx_share_max"]) and bp_has_mean <= float(policy["low_external_prior_bp_has_mean_max"]):
         reasons.append("no_role_low_external_prior")
+    if bool(policy.get("dead_game_context_enabled", True)):
+        if (
+            spread_ok_rate <= float(policy["dead_game_context_spread_ok_max"])
+            and total_nonzero_rate <= float(policy["dead_game_context_total_nonzero_max"])
+            and q_blowout_unique <= int(policy["dead_game_context_q_unique_max"])
+        ):
+            reasons.append("dead_game_context_constant_q_blowout")
 
     triggered = bool(reasons)
     metrics["policy_triggered"] = triggered
@@ -495,6 +568,9 @@ def apply_catboost_calibrator(
                 "q_blowout_p90",
                 "role_ctx_outs_used_share_gt0",
                 "bp_has_mean",
+                "spread_ok_rate",
+                "game_total_nonzero_rate",
+                "q_blowout_unique",
             ]:
                 if key in scale_metrics:
                     scored[f"catboost_scale_{key}"] = scale_metrics[key]
@@ -514,6 +590,7 @@ def apply_catboost_calibrator(
                 )
             else:
                 scored["p_cal"] = p_new
+            scored = _stamp_catboost_p_cal_src(scored, kind=kind, mode=mode, meta=meta)
 
             print(
                 f"[CATBOOST_CAL] regressor/{mode} -- "
@@ -534,6 +611,8 @@ def apply_catboost_calibrator(
                     f"games={scale_metrics.get('games')}, "
                     f"q_out_frac_mean={scale_metrics.get('q_out_frac_mean'):.4f}, "
                     f"q_blowout_p90={scale_metrics.get('q_blowout_p90'):.4f}, "
+                    f"spread_ok_rate={scale_metrics.get('spread_ok_rate'):.4f}, "
+                    f"game_total_nonzero_rate={scale_metrics.get('game_total_nonzero_rate'):.4f}, "
                     f"role_ctx_share={scale_metrics.get('role_ctx_outs_used_share_gt0'):.4f}, "
                     f"bp_has_mean={scale_metrics.get('bp_has_mean'):.4f}"
                 )
@@ -544,6 +623,8 @@ def apply_catboost_calibrator(
                     f"games={scale_metrics.get('games')}, "
                     f"q_out_frac_mean={scale_metrics.get('q_out_frac_mean'):.4f}, "
                     f"q_blowout_p90={scale_metrics.get('q_blowout_p90'):.4f}, "
+                    f"spread_ok_rate={scale_metrics.get('spread_ok_rate'):.4f}, "
+                    f"game_total_nonzero_rate={scale_metrics.get('game_total_nonzero_rate'):.4f}, "
                     f"role_ctx_share={scale_metrics.get('role_ctx_outs_used_share_gt0'):.4f}, "
                     f"bp_has_mean={scale_metrics.get('bp_has_mean'):.4f}"
                 )
@@ -585,6 +666,7 @@ def apply_catboost_calibrator(
                 )
             else:
                 scored["p_cal"] = p_cat
+            scored = _stamp_catboost_p_cal_src(scored, kind=kind, mode=mode, meta=meta)
 
             print(
                 f"[CATBOOST_CAL] classifier/{mode} -- "

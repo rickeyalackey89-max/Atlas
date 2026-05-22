@@ -129,6 +129,7 @@ def _normalize_iael_df(iael_df: pd.DataFrame) -> pd.DataFrame:
     player_col = cols.get("player") or cols.get("player_norm") or cols.get("out_player") or cols.get("name")
     status_col = cols.get("status") or cols.get("iael_status") or cols.get("injury_status")
     out_frac_col = cols.get("out_frac")
+    hard_col = cols.get("hard_invalid")
 
     if not team_col or not player_col:
         return pd.DataFrame()
@@ -144,17 +145,17 @@ def _normalize_iael_df(iael_df: pd.DataFrame) -> pd.DataFrame:
     else:
         out["status"] = "OUT"
 
+    hard_status = out["status"].isin({"OUT", "O", "OUT.", "DOUBTFUL", "D", "DNP", "INACTIVE"})
+    if hard_col:
+        hard_s = df[hard_col].astype(str).str.lower().str.strip()
+        hard_status = hard_status | hard_s.isin({"1", "true", "yes", "y"})
+
     if out_frac_col:
         out["out_frac"] = pd.to_numeric(df[out_frac_col], errors="coerce").fillna(0.0).clip(lower=0.0)
+        out.loc[hard_status, "out_frac"] = 1.0
+        out.loc[~hard_status, "out_frac"] = 0.0
     else:
-        def _out_frac(status: str) -> float:
-            if status in {"OUT", "O", "DOUBTFUL", "D"}:
-                return 1.0
-            if status in {"QUESTIONABLE", "Q"}:
-                return 0.5
-            return 0.0
-
-        out["out_frac"] = out["status"].map(_out_frac)
+        out["out_frac"] = hard_status.astype(float)
 
     out = out[(out["team_u"] != "") & (out["player_key"] != "") & (out["out_frac"] > 0.0)].copy()
     if out.empty:

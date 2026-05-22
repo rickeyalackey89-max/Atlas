@@ -1,8 +1,9 @@
 """Train final v5cD full-corpus CatBoost residual regressor.
 
-Trains a SINGLE model on all 10 playoff dates (no holdout) using the v5cD
-config: 19 features, iter=600, depth=5, lr=0.075. Saves the model file used
-by runtime inference.
+Trains a SINGLE model on every row in a strict-fidelity cache (no holdout) and
+saves the CatBoost model file used by runtime inference. The promoted feature
+contract, training params, and residual scale are CLI-controlled so production
+can match a selected LODO candidate exactly.
 
 Outputs:
     data/model/catboost_playoff/catboost_v5cD_full_corpus.cbm
@@ -51,6 +52,40 @@ PARAMS = dict(
 )
 
 
+def parse_feature_list(raw: list[str] | None) -> list[str]:
+    if not raw:
+        return []
+    values: list[str] = []
+    for item in raw:
+        for part in str(item).replace(",", " ").split():
+            part = part.strip()
+            if part:
+                values.append(part)
+    return values
+
+
+def load_feature_contract(path: pathlib.Path | None = None) -> tuple[list[str], str]:
+    if path is not None:
+        with open(path, "r") as f:
+            payload = json.load(f)
+        features = payload.get("features") or payload.get("v5b_features") or []
+        if not features:
+            raise ValueError(f"No feature contract found in {path}")
+        return list(features), str(path)
+
+    current_meta = OUT_DIR / "catboost_v5cD_full_corpus.meta.json"
+    if current_meta.is_file():
+        with open(current_meta, "r") as f:
+            payload = json.load(f)
+        features = payload.get("features") or []
+        if features:
+            return list(features), str(current_meta)
+
+    with open(V5B_PATH, "r") as f:
+        payload = json.load(f)
+    return list(payload["v5b_features"]), str(V5B_PATH)
+
+
 def brier(y, p):
     return float(np.mean((p - y) ** 2))
 
@@ -79,7 +114,24 @@ def main() -> int:
     ap.add_argument("--version", default="catboost_playoff_v5cD", help="Version string written to metadata.")
     ap.add_argument("--residual-scale", type=float, default=RESIDUAL_SCALE, help="Default runtime residual scale.")
     ap.add_argument("--policy-defensive-scale", type=float, default=None, help="Optional slate-policy defensive residual scale.")
+    ap.add_argument("--iterations", type=int, default=PARAMS["iterations"], help="CatBoost iterations.")
+    ap.add_argument("--depth", type=int, default=PARAMS["depth"], help="CatBoost tree depth.")
+    ap.add_argument("--learning-rate", type=float, default=PARAMS["learning_rate"], help="CatBoost learning rate.")
+    ap.add_argument("--l2-leaf-reg", type=float, default=PARAMS["l2_leaf_reg"], help="CatBoost L2 leaf regularization.")
+    ap.add_argument("--min-data-in-leaf", type=int, default=PARAMS["min_data_in_leaf"], help="CatBoost min_data_in_leaf.")
+    ap.add_argument("--features", nargs="*", help="Explicit feature list. Space or comma separated.")
+    ap.add_argument("--feature-contract", default=None, help="Optional JSON file with a 'features' list.")
+    ap.add_argument("--lodo-path", default=None, help="LODO report JSON that justified this promotion.")
+    ap.add_argument("--notes", default="", help="Free-form promotion notes stored in metadata.")
     args = ap.parse_args()
+    params = dict(PARAMS)
+    params.update(
+        iterations=args.iterations,
+        depth=args.depth,
+        learning_rate=args.learning_rate,
+        l2_leaf_reg=args.l2_leaf_reg,
+        min_data_in_leaf=args.min_data_in_leaf,
+    )
 
     cache_path = pathlib.Path(args.cache_path)
     if not cache_path.is_absolute():
@@ -92,14 +144,19 @@ def main() -> int:
         meta_out = ROOT / meta_out
 
     print("=" * 80, flush=True)
-    print("v5cD FULL-CORPUS Trainer (residual regressor, 19 features)", flush=True)
+    print("v5cD FULL-CORPUS Trainer (residual regressor)", flush=True)
     print("=" * 80, flush=True)
 
-    # Read v5b features (the canonical 19-feature set)
-    with open(V5B_PATH, "r") as f:
-        v5b = json.load(f)
-    features = v5b["v5b_features"]
-    print(f"features ({len(features)}): {features}", flush=True)
+    explicit_features = parse_feature_list(args.features)
+    if explicit_features:
+        features = explicit_features
+        feature_source = "cli:--features"
+    else:
+        feature_contract = pathlib.Path(args.feature_contract) if args.feature_contract else None
+        if feature_contract is not None and not feature_contract.is_absolute():
+            feature_contract = ROOT / feature_contract
+        features, feature_source = load_feature_contract(feature_contract)
+    print(f"features ({len(features)}) from {feature_source}: {features}", flush=True)
     print(flush=True)
 
     # Load cache
@@ -136,13 +193,13 @@ def main() -> int:
 
     # Train on full corpus
     print("Training full-corpus model (no holdout)...", flush=True)
-    print(f"  iter={PARAMS['iterations']}  depth={PARAMS['depth']}  "
-          f"lr={PARAMS['learning_rate']}  l2={PARAMS['l2_leaf_reg']}", flush=True)
+    print(f"  iter={params['iterations']}  depth={params['depth']}  "
+          f"lr={params['learning_rate']}  l2={params['l2_leaf_reg']}", flush=True)
     print("-" * 80, flush=True)
 
     t0 = time.time()
     pool = Pool(X, label=residual_tgt, cat_features=cat_in)
-    model = CatBoostRegressor(**PARAMS)
+    model = CatBoostRegressor(**params)
     model.fit(pool)
     elapsed = time.time() - t0
 
@@ -184,8 +241,11 @@ def main() -> int:
         "cat_features": cat_in,
         "n_features":   len(features),
         "params":       {k: (str(v) if not isinstance(v, (int, float, str, bool)) else v)
-                         for k, v in PARAMS.items()},
+                         for k, v in params.items()},
+        "feature_source": feature_source,
         "cache_path":   str(cache_path),
+        "lodo_path":    str(args.lodo_path or ""),
+        "promotion_notes": args.notes,
         "n_legs":       int(len(cv)),
         "n_dates":      len(dates),
         "dates":        dates,
