@@ -47,6 +47,6 @@ POLICY = FamilyBuilderPolicy(
         ("STANDARD", "hitter_fantasy_score"): 0.03,
         ("STANDARD", "total_bases"): 0.03,
     },
-    min_probability_by_tier={"GOBLIN": 0.67, "STANDARD": 0.61, "DEMON": 0.60},
+    min_probability_by_tier={"GOBLIN": 0.67, "STANDARD": 0.63, "DEMON": 0.60},
     min_edge=0.03,
 )

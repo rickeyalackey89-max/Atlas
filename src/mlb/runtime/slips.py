@@ -122,6 +122,8 @@ PUBLIC_RISK_CAPPED_SEGMENTS = {
     ("GOBLIN", "pitching_outs", "OVER"),
 }
 PUBLIC_STANDARD_PRIOR_FLOOR = 0.505
+PUBLIC_MARKETED_STANDARD_UNDER_MIN_PROBABILITY = 0.64
+PUBLIC_MARKETED_STANDARD_UNDER_CONTEXT_MIN_SCORE = 0.58
 PUBLIC_LOW_RELIABILITY_PRIOR = 0.56
 PUBLIC_STRONG_RELIABILITY_PRIOR = 0.62
 PUBLIC_MODEL_PRIOR_GAP_START = 0.10
@@ -1491,10 +1493,40 @@ def _public_candidate(row: dict[str, Any], *, family: str = "") -> bool:
     if family in {"Marketed", "System"} and tier == "STANDARD":
         if _tier_market_side_prior(row) < PUBLIC_STANDARD_PRIOR_FLOOR:
             return False
+    if family == "Marketed" and tier == "STANDARD" and side == "UNDER":
+        if not _marketed_standard_under_allowed(row):
+            return False
     if market in PUBLIC_BATTER_MARKETS:
         if family in {"Marketed", "System", "DemonHunter"} and not _batter_action_context_available(row):
             return False
     return True
+
+
+def _marketed_standard_under_allowed(row: dict[str, Any]) -> bool:
+    """Keep public premium unders from replacing materially stronger overs.
+
+    The Marketed family is the customer-facing premium board. Standard unders are
+    still allowed, but they need either a high model probability or confirmed
+    external/streak support. System/Windfall keep their broader policy behavior.
+    """
+    probability = _float(row.get("model_probability"))
+    if probability >= PUBLIC_MARKETED_STANDARD_UNDER_MIN_PROBABILITY:
+        return True
+    if not _truthy(row.get("external_market_context_available")):
+        return False
+    if _market_context_source_type(row) == "prizepicks_line_only":
+        return False
+    if _bettingpros_context_score(row) < PUBLIC_MARKETED_STANDARD_UNDER_CONTEXT_MIN_SCORE:
+        return False
+    side = _side(row).lower()
+    recommended_side = str(row.get("bettingpros_recommended_side") or "").strip().lower()
+    if recommended_side == side:
+        return True
+    if _bettingpros_weighted_side_rate(row, side=side) >= 0.60:
+        return True
+    projection_diff = _float(row.get("bettingpros_projection_diff"))
+    direction = 1.0 if side == "over" else -1.0
+    return direction * projection_diff >= 0.15
 
 
 def _family_policy_candidate(row: dict[str, Any], *, family: str) -> bool:
@@ -1846,6 +1878,12 @@ def _selection_policy_manifest() -> dict[str, Any]:
             "independent_family_builders": sorted(PUBLIC_PORTFOLIO_INDEPENDENT_FAMILIES),
         },
         "standard_prior_floor_for_system_and_marketed": PUBLIC_STANDARD_PRIOR_FLOOR,
+        "marketed_standard_under_guard": {
+            "min_probability": PUBLIC_MARKETED_STANDARD_UNDER_MIN_PROBABILITY,
+            "external_context_min_score": PUBLIC_MARKETED_STANDARD_UNDER_CONTEXT_MIN_SCORE,
+            "scope": "Marketed STANDARD UNDER legs only",
+            "pass_if": "model_probability >= min_probability or confirmed external context supports the selected side",
+        },
         "feature_context_fields": list(FEATURE_CONTEXT_FIELDS),
         "bettingpros_context_fields": list(BETTINGPROS_CONTEXT_FIELDS),
         "prop_market_identifiers": dict(sorted(PROP_MARKET_IDENTIFIERS.items(), key=lambda item: item[1])),
