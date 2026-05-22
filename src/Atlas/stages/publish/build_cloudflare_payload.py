@@ -1484,7 +1484,7 @@ def build_cloudflare_payload(
     if scored_csv.exists():
         try:
             _KEEP = [
-                "game_date", "player", "team", "opp", "stat", "line", "direction", "tier",
+                "game_date", "start_time", "player", "team", "opp", "stat", "line", "direction", "tier",
                 "p_cal", "fragility", "q_blowout", "l20_edge", "role_ctx_mult",
                 "role_ctx_reason", "role_ctx_outs_used", "role_ctx_impact_tier",
                 "role_ctx_max_out_weight", "role_ctx_total_out_weight", "role_ctx_total_bump",
@@ -1534,6 +1534,7 @@ def build_cloudflare_payload(
                     atlas_ev = float(p_cal) * payout_modifier if pd.notna(p_cal) else None
                 all_legs_out.append({
                     "game_date":   str(row.get("game_date", "")) or None,
+                    "start_time":  str(row.get("start_time", "")) or None,
                     "player":      str(row.get("player", "")),
                     "team":        str(row.get("team", "")),
                     "opp":         str(row.get("opp", "")),
