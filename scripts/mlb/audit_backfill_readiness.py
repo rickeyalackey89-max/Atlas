@@ -69,6 +69,46 @@ def count_jsonl(path: Path) -> int:
         return 0
 
 
+def count_json_rows(path: Path) -> int:
+    if not path.exists():
+        return 0
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return 0
+    if isinstance(payload, list):
+        return sum(1 for row in payload if isinstance(row, dict))
+    if isinstance(payload, dict):
+        rows = payload.get("rows")
+        if isinstance(rows, list):
+            return sum(1 for row in rows if isinstance(row, dict))
+    return 0
+
+
+def count_csv_rows(path: Path) -> int:
+    if not path.exists():
+        return 0
+    try:
+        with path.open("r", encoding="utf-8", errors="ignore", newline="") as handle:
+            return sum(1 for _ in csv.DictReader(handle))
+    except OSError:
+        return 0
+
+
+def actual_artifact_rows(source: SourceDir, names: tuple[str, ...]) -> int:
+    total = 0
+    for name in names:
+        path = source.path / name
+        suffix = path.suffix.lower()
+        if suffix == ".jsonl":
+            total += count_jsonl(path)
+        elif suffix == ".json":
+            total += count_json_rows(path)
+        elif suffix == ".csv":
+            total += count_csv_rows(path)
+    return total
+
+
 def iter_jsonl(path: Path) -> list[dict[str, Any]]:
     if not path.exists():
         return []
@@ -191,8 +231,21 @@ def staged_count_by_date(root: Path, relative: str, day: date, rows_name: str | 
         rows = sum(count_jsonl(source.path / rows_name) for source in matches)
     else:
         for source in matches:
-            manifest = source.manifest
-            rows += _manifest_row_count(manifest)
+            rows += actual_artifact_rows(
+                source,
+                (
+                    "advanced_profiles_source.jsonl",
+                    "advanced_profiles_source.json",
+                    "advanced_profiles.jsonl",
+                    "advanced_profiles.json",
+                    "ballpark_factors_source.jsonl",
+                    "ballpark_factors_source.json",
+                    "ballpark_profiles.jsonl",
+                    "ballpark_profiles.json",
+                    "schedule.jsonl",
+                    "trending_players.jsonl",
+                ),
+            )
     return len(matches), rows
 
 
@@ -289,7 +342,13 @@ def latest_source_on_or_before(root: Path, relative: str, day: date, rows_name: 
     target = day.strftime(DATE_FMT)
     eligible: list[SourceDir] = []
     for source in source_dirs(root, relative):
-        if not (source.path / rows_name).exists():
+        rows_path = source.path / rows_name
+        allow_empty_injury_manifest = (
+            rows_name == "injuries.jsonl"
+            and bool(source.manifest.get("empty_snapshot"))
+            and int(source.manifest.get("injury_count") or 0) == 0
+        )
+        if not rows_path.exists() and not allow_empty_injury_manifest:
             continue
         source_date = snapshot_date_key(source)
         if source_date and source_date <= target:
@@ -340,21 +399,9 @@ def staged_context_counts_by_date(root: Path, relative: str, day: date) -> dict[
         for rows_name in ("batting_orders.jsonl", "pitchers.jsonl", "environment.jsonl", "bullpens.jsonl"):
             rows.extend(iter_jsonl(source.path / rows_name))
         if not rows:
-            manifest_rows = int(
-                sum(v for v in source.manifest.get("row_counts", {}).values() if isinstance(v, int))
-                or source.manifest.get("row_count")
-                or 0
-            )
-            counts["rows"] += manifest_rows
-            if is_reconstructed_pregame_context(source.manifest):
-                counts["reconstructed_pregame_rows"] += manifest_rows
-                counts["fidelity_rows"] += manifest_rows
-            elif manifest_is_postgame(source.manifest):
-                counts["postgame_rows"] += manifest_rows
-            elif source_after_latest_start(source.manifest, source.path, latest_start):
-                counts["post_start_rows"] += manifest_rows
-            else:
-                counts["fidelity_rows"] += manifest_rows
+            # A manifest without row files is not replay context. Counting it
+            # as runnable coverage is how a preflight can pass while runtime
+            # source selection later fails.
             continue
 
         for row in rows:
@@ -493,8 +540,10 @@ def advanced_profile_rows(root: Path, day: date) -> int:
     base = root / "data/mlb/staged/advanced_profiles"
     rows = 0
     for source in sorted(base.glob(f"*{compact}*")):
-        manifest = read_json(source / "advanced_profiles_manifest.json")
-        rows += _manifest_row_count(manifest)
+        rows += actual_artifact_rows(
+            SourceDir(path=source, manifest=read_json(source / "advanced_profiles_manifest.json")),
+            ("advanced_profiles.json", "advanced_profiles.jsonl", "advanced_profiles.csv"),
+        )
     return rows
 
 

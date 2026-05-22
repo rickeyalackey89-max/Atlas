@@ -17,6 +17,7 @@ import pandas as pd
 from catboost import CatBoostClassifier, CatBoostRegressor, Pool  # type: ignore[import-untyped]
 from scipy.special import expit, logit  # type: ignore[import-untyped]
 
+from mlb.modeling.qmc import default_distribution_for_market, projection_mean_for_target
 from mlb.runtime.engine_inputs import _load_json
 from mlb.runtime.paths import ensure_mlb_dirs
 
@@ -86,11 +87,11 @@ def apply_parameter_calibration(
     adjusted_count = 0
     residual_values: list[float] = []
     shift_values: list[float] = []
-    for row, residual in zip(source_rows, residuals, strict=False):
+    for row, merged_feature_row, residual in zip(source_rows, merged_feature_rows, residuals, strict=False):
         calibrated = dict(row)
         base = _clamp(_float(row.get("target_over_probability"), 0.50), p_lo, p_hi)
         clipped = _clamp(float(residual), -residual_clip, residual_clip)
-        row_residual_scale = _residual_scale_for_row(meta, row, residual_scale)
+        row_residual_scale = _residual_scale_for_row(meta, merged_feature_row, residual_scale)
         scaled = row_residual_scale * clipped
         adjusted = _clamp(base + scaled, p_lo, p_hi)
         calibrated["uncalibrated_target_over_probability"] = round(base, 6)
@@ -132,6 +133,10 @@ def apply_parameter_calibration(
         "residual_scale_by_tier_count": len(meta.get("residual_scale_by_tier") or {}),
         "residual_scale_by_market_count": len(meta.get("residual_scale_by_market") or {}),
         "residual_scale_by_tier_market_count": len(meta.get("residual_scale_by_tier_market") or {}),
+        "residual_scale_by_market_source_type_count": len(meta.get("residual_scale_by_market_source_type") or {}),
+        "residual_scale_by_line_bucket_count": len(meta.get("residual_scale_by_line_bucket") or {}),
+        "residual_scale_by_market_source_count": len(meta.get("residual_scale_by_market_source") or {}),
+        "residual_scale_by_tier_market_source_count": len(meta.get("residual_scale_by_tier_market_source") or {}),
         "residual_clip": residual_clip,
         "p_lo": p_lo,
         "p_hi": p_hi,
@@ -221,11 +226,17 @@ def _apply_parameter_stacker_calibration(
     residual_shift_values: list[float] = []
     stacker_values: list[float] = []
     stacker_shift_values: list[float] = []
-    for row, residual, stacker_probability in zip(source_rows, residuals, stacker_probabilities, strict=False):
+    for row, merged_feature_row, residual, stacker_probability in zip(
+        source_rows,
+        merged_feature_rows,
+        residuals,
+        stacker_probabilities,
+        strict=False,
+    ):
         calibrated = dict(row)
         base = _clamp(_float(row.get("target_over_probability"), 0.50), p_lo, p_hi)
         clipped = _clamp(float(residual), -residual_clip, residual_clip)
-        row_residual_scale = _residual_scale_for_row(base_meta, row, residual_scale)
+        row_residual_scale = _residual_scale_for_row(base_meta, merged_feature_row, residual_scale)
         scaled = row_residual_scale * clipped
         cat_adjusted = _clamp(base + scaled, p_lo, p_hi)
         stacker_p = _clamp(float(stacker_probability), p_lo, p_hi)
@@ -289,6 +300,10 @@ def _apply_parameter_stacker_calibration(
         "residual_scale_by_tier_count": len(base_meta.get("residual_scale_by_tier") or {}),
         "residual_scale_by_market_count": len(base_meta.get("residual_scale_by_market") or {}),
         "residual_scale_by_tier_market_count": len(base_meta.get("residual_scale_by_tier_market") or {}),
+        "residual_scale_by_market_source_type_count": len(base_meta.get("residual_scale_by_market_source_type") or {}),
+        "residual_scale_by_line_bucket_count": len(base_meta.get("residual_scale_by_line_bucket") or {}),
+        "residual_scale_by_market_source_count": len(base_meta.get("residual_scale_by_market_source") or {}),
+        "residual_scale_by_tier_market_source_count": len(base_meta.get("residual_scale_by_tier_market_source") or {}),
         "residual_clip": residual_clip,
         "blend_weight": blend_weight,
         "p_lo": p_lo,
@@ -342,8 +357,31 @@ def join_key(row: dict[str, Any]) -> tuple[str, str, str, str, str]:
 
 def _training_feature_row(parameter_row: dict[str, Any], feature_row: dict[str, Any] | None = None) -> dict[str, Any]:
     feature_row = feature_row or {}
+    market_context_source_type = str(feature_row.get("market_context_source_type") or "").strip()
+    external_market_context_source = str(feature_row.get("external_market_context_source") or "").strip()
+    if not market_context_source_type:
+        market_context_source_type = (
+            f"external_{external_market_context_source}"
+            if external_market_context_source
+            else ("external_market" if _bool_number(feature_row.get("external_market_context_available")) else "prizepicks_line_only")
+        )
+    source_flags = _market_source_flags(market_context_source_type, external_market_context_source)
+    line_value = _float(parameter_row.get("line"), _float(feature_row.get("line"), 0.0))
+    market = str(parameter_row.get("market") or feature_row.get("market") or "")
+    distribution = str(parameter_row.get("distribution") or default_distribution_for_market(market))
+    base_probability = _float(
+        parameter_row.get("uncalibrated_target_over_probability"),
+        _float(parameter_row.get("target_over_probability"), 0.50),
+    )
+    projection_mean = _projection_mean(
+        market=market,
+        line=line_value,
+        target_over_probability=base_probability,
+        distribution=distribution,
+    )
+    projection_delta = projection_mean - line_value
     row: dict[str, Any] = {
-        "market": str(parameter_row.get("market") or feature_row.get("market") or ""),
+        "market": market,
         "source_market": str(parameter_row.get("source_market") or feature_row.get("source_market") or ""),
         "tier": str(parameter_row.get("tier") or feature_row.get("tier") or "STANDARD").upper(),
         "player_team": str(parameter_row.get("player_team") or feature_row.get("player_team") or ""),
@@ -351,25 +389,40 @@ def _training_feature_row(parameter_row: dict[str, Any], feature_row: dict[str, 
         "player_position": str(feature_row.get("player_position") or ""),
         "market_group": str(parameter_row.get("market_group") or feature_row.get("market_group") or ""),
         "opportunity_type": str(parameter_row.get("opportunity_type") or feature_row.get("opportunity_type") or ""),
-        "distribution": str(parameter_row.get("distribution") or ""),
+        "distribution": distribution,
         "injury_status": str(feature_row.get("injury_status") or ""),
         "statsapi_venue_name": str(feature_row.get("statsapi_venue_name") or ""),
         "statsapi_player_position": str(feature_row.get("statsapi_player_position") or ""),
         "statsapi_bats": str(feature_row.get("statsapi_bats") or ""),
         "statsapi_throws": str(feature_row.get("statsapi_throws") or ""),
+        "batter_bats": str(feature_row.get("batter_bats") or ""),
+        "starter_throws": str(feature_row.get("starter_throws") or ""),
+        "handedness_matchup_type": str(feature_row.get("handedness_matchup_type") or ""),
+        "pitcher_starter_throws": str(feature_row.get("pitcher_starter_throws") or ""),
         "statsapi_roster_status": str(feature_row.get("statsapi_roster_status") or ""),
+        "home_plate_umpire": str(feature_row.get("home_plate_umpire") or ""),
+        "umpire_rating": str(feature_row.get("umpire_rating") or ""),
         "bettingpros_recommended_side": str(feature_row.get("bettingpros_recommended_side") or ""),
         "bettingpros_streak_type": str(feature_row.get("bettingpros_streak_type") or ""),
         "advanced_profile_source": str(parameter_row.get("advanced_profile_source") or feature_row.get("advanced_profile_source") or ""),
         "advanced_profile_match_type": str(parameter_row.get("advanced_profile_match_type") or feature_row.get("advanced_profile_match_type") or ""),
         "market_line_match_type": str(parameter_row.get("market_line_match_type") or ""),
-        "base_over_probability": _float(
-            parameter_row.get("uncalibrated_target_over_probability"),
-            _float(parameter_row.get("target_over_probability"), 0.50),
-        ),
-        "line": _float(parameter_row.get("line"), _float(feature_row.get("line"), 0.0)),
+        "market_context_source_type": market_context_source_type,
+        "external_market_context_source": external_market_context_source,
+        "line_bucket": _line_bucket(line_value),
+        "base_over_probability": base_probability,
+        "line": line_value,
+        "projection_mean_from_base": projection_mean,
+        "projection_delta_from_line": projection_delta,
+        "projection_abs_delta_from_line": abs(projection_delta),
+        "projection_line_ratio": projection_mean / max(abs(line_value), 0.5),
         "is_live": _bool_number(feature_row.get("is_live")),
         "is_combo": _bool_number(feature_row.get("is_combo")),
+        "feature_market_source_is_bettingpros": source_flags["bettingpros"],
+        "feature_market_source_is_dk_pick6": source_flags["draftkings_pick6"],
+        "feature_market_source_is_dk_sportsbook": source_flags["draftkings_sportsbook"],
+        "feature_market_source_is_external": source_flags["external"],
+        "feature_market_source_is_prizepicks_only": source_flags["prizepicks_line_only"],
     }
     numeric_columns = (
         "projected_opportunity",
@@ -411,6 +464,49 @@ def _training_feature_row(parameter_row: dict[str, Any], feature_row: dict[str, 
     feature_numeric_columns = (
         "lineup_context_available",
         "probable_pitcher_context_available",
+        "batting_order_slot",
+        "lineup_probability",
+        "lineup_confirmed",
+        "top_order_flag",
+        "projected_plate_appearances",
+        "pinch_hit_risk",
+        "same_hand_matchup",
+        "platoon_advantage",
+        "handedness_context_available",
+        "hitter_strikeout_pressure_score",
+        "hitter_contact_context_score",
+        "hitter_power_context_score",
+        "hitter_walk_context_score",
+        "hitter_late_game_run_score",
+        "park_run_factor",
+        "park_hr_factor",
+        "park_hit_factor",
+        "park_extra_base_factor",
+        "park_factor_confidence",
+        "umpire_era",
+        "umpire_run_score",
+        "umpire_confidence",
+        "pitcher_prop_context_available",
+        "pitcher_workload_context_score",
+        "pitcher_strikeout_context_score",
+        "pitcher_run_allow_context_score",
+        "pitcher_walk_context_score",
+        "pitcher_opponent_lineup_score",
+        "pitcher_opponent_k_context_score",
+        "pitcher_opponent_contact_context_score",
+        "pitcher_opponent_power_context_score",
+        "pitcher_opponent_walk_context_score",
+        "pitcher_opponent_projected_pa",
+        "pitcher_opponent_top_order_pa",
+        "pitcher_opponent_confirmed_batters",
+        "pitcher_opponent_lineup_confidence",
+        "pitcher_history_k_score",
+        "pitcher_history_hit_allow_score",
+        "pitcher_history_walk_score",
+        "pitcher_history_confidence",
+        "pitcher_bullpen_support_score",
+        "pitcher_prop_composite_score",
+        "pitcher_prop_confidence",
         "injury_context_available",
         "injury_risk_score",
         "weather_context_available",
@@ -434,6 +530,7 @@ def _training_feature_row(parameter_row: dict[str, Any], feature_row: dict[str, 
         "recent_injury_status_count",
         "transaction_volatility_score",
         "external_market_context_available",
+        "prizepicks_line_only_market_context",
         "bettingpros_projection_value",
         "bettingpros_projection_probability",
         "bettingpros_projection_expected_value",
@@ -453,6 +550,53 @@ def _training_feature_row(parameter_row: dict[str, Any], feature_row: dict[str, 
     for column in feature_numeric_columns:
         row[f"feature_{column}"] = _number(feature_row.get(column))
     return row
+
+
+def _projection_mean(*, market: str, line: float, target_over_probability: float, distribution: str) -> float:
+    try:
+        value = projection_mean_for_target(
+            market=market,
+            line=line,
+            target_over_probability=target_over_probability,
+            distribution=distribution,
+        )
+    except Exception:
+        value = line
+    if not math.isfinite(float(value)):
+        return 0.0
+    return round(float(value), 6)
+
+
+def _market_source_flags(source_type: str, source: str) -> dict[str, float]:
+    source_text = f"{source_type} {source}".lower()
+    prizepicks_only = "prizepicks_line_only" in source_text
+    return {
+        "bettingpros": 1.0 if "bettingpros" in source_text else 0.0,
+        "draftkings_pick6": 1.0 if "draftkings_mlb_pick6" in source_text or "pick6" in source_text else 0.0,
+        "draftkings_sportsbook": 1.0 if "draftkings_mlb_sportsbook" in source_text or "sportsbook" in source_text else 0.0,
+        "external": 0.0 if prizepicks_only else (1.0 if source_text.strip() else 0.0),
+        "prizepicks_line_only": 1.0 if prizepicks_only else 0.0,
+    }
+
+
+def _line_bucket(value: float) -> str:
+    if value <= 0:
+        return "line_unknown"
+    if value < 0.75:
+        return "line_0_0.5"
+    if value < 1.75:
+        return "line_1_1.5"
+    if value < 2.75:
+        return "line_2_2.5"
+    if value < 4.75:
+        return "line_3_4.5"
+    if value < 7.75:
+        return "line_5_7.5"
+    if value < 12.75:
+        return "line_8_12.5"
+    if value < 25.0:
+        return "line_13_24.5"
+    return "line_25_plus"
 
 
 def _prep_frame(rows: list[dict[str, Any]], *, features: list[str], cat_features: list[str]) -> pd.DataFrame:
@@ -641,13 +785,29 @@ def _float(value: Any, default: float = 0.0) -> float:
 def _residual_scale_for_row(meta: dict[str, Any], row: dict[str, Any], default: float) -> float:
     tier = str(row.get("tier") or "STANDARD").strip().upper() or "STANDARD"
     market = str(row.get("market") or row.get("source_market") or "").strip()
+    source_type = str(row.get("market_context_source_type") or "").strip()
+    line_bucket = str(row.get("line_bucket") or "").strip() or _line_bucket(_float(row.get("line"), 0.0))
     tier_market_key = f"{tier}|{market}"
+    market_source_key = f"{market}|{source_type}" if source_type else ""
+    tier_market_source_key = f"{tier}|{market}|{source_type}" if source_type else ""
+    tier_market_source_map = meta.get("residual_scale_by_tier_market_source")
+    if isinstance(tier_market_source_map, dict) and tier_market_source_key in tier_market_source_map:
+        return _float(tier_market_source_map.get(tier_market_source_key), default)
     tier_market_map = meta.get("residual_scale_by_tier_market")
     if isinstance(tier_market_map, dict) and tier_market_key in tier_market_map:
         return _float(tier_market_map.get(tier_market_key), default)
+    market_source_map = meta.get("residual_scale_by_market_source")
+    if isinstance(market_source_map, dict) and market_source_key in market_source_map:
+        return _float(market_source_map.get(market_source_key), default)
     market_map = meta.get("residual_scale_by_market")
     if isinstance(market_map, dict) and market in market_map:
         return _float(market_map.get(market), default)
+    source_map = meta.get("residual_scale_by_market_source_type")
+    if isinstance(source_map, dict) and source_type in source_map:
+        return _float(source_map.get(source_type), default)
+    line_bucket_map = meta.get("residual_scale_by_line_bucket")
+    if isinstance(line_bucket_map, dict) and line_bucket in line_bucket_map:
+        return _float(line_bucket_map.get(line_bucket), default)
     tier_map = meta.get("residual_scale_by_tier")
     if isinstance(tier_map, dict) and tier in tier_map:
         return _float(tier_map.get(tier), default)

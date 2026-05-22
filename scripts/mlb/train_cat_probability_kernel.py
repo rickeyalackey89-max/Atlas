@@ -27,6 +27,7 @@ from mlb.modeling.calibration import (
     prepare_calibration_frame,
     training_feature_row,
 )
+from mlb.runtime.source_contract import enforce_corpus_source_contracts
 
 DEFAULT_FEATURES = [
     "market",
@@ -43,14 +44,27 @@ DEFAULT_FEATURES = [
     "statsapi_player_position",
     "statsapi_bats",
     "statsapi_throws",
+    "batter_bats",
+    "starter_throws",
+    "handedness_matchup_type",
+    "pitcher_starter_throws",
     "statsapi_roster_status",
+    "home_plate_umpire",
+    "umpire_rating",
     "bettingpros_recommended_side",
     "bettingpros_streak_type",
     "advanced_profile_source",
     "advanced_profile_match_type",
     "market_line_match_type",
+    "market_context_source_type",
+    "external_market_context_source",
+    "line_bucket",
     "base_over_probability",
     "line",
+    "projection_mean_from_base",
+    "projection_delta_from_line",
+    "projection_abs_delta_from_line",
+    "projection_line_ratio",
     "is_live",
     "is_combo",
     "projected_opportunity",
@@ -87,6 +101,49 @@ DEFAULT_FEATURES = [
     "advanced_target_shift",
     "feature_lineup_context_available",
     "feature_probable_pitcher_context_available",
+    "feature_batting_order_slot",
+    "feature_lineup_probability",
+    "feature_lineup_confirmed",
+    "feature_top_order_flag",
+    "feature_projected_plate_appearances",
+    "feature_pinch_hit_risk",
+    "feature_same_hand_matchup",
+    "feature_platoon_advantage",
+    "feature_handedness_context_available",
+    "feature_hitter_strikeout_pressure_score",
+    "feature_hitter_contact_context_score",
+    "feature_hitter_power_context_score",
+    "feature_hitter_walk_context_score",
+    "feature_hitter_late_game_run_score",
+    "feature_park_run_factor",
+    "feature_park_hr_factor",
+    "feature_park_hit_factor",
+    "feature_park_extra_base_factor",
+    "feature_park_factor_confidence",
+    "feature_umpire_era",
+    "feature_umpire_run_score",
+    "feature_umpire_confidence",
+    "feature_pitcher_prop_context_available",
+    "feature_pitcher_workload_context_score",
+    "feature_pitcher_strikeout_context_score",
+    "feature_pitcher_run_allow_context_score",
+    "feature_pitcher_walk_context_score",
+    "feature_pitcher_opponent_lineup_score",
+    "feature_pitcher_opponent_k_context_score",
+    "feature_pitcher_opponent_contact_context_score",
+    "feature_pitcher_opponent_power_context_score",
+    "feature_pitcher_opponent_walk_context_score",
+    "feature_pitcher_opponent_projected_pa",
+    "feature_pitcher_opponent_top_order_pa",
+    "feature_pitcher_opponent_confirmed_batters",
+    "feature_pitcher_opponent_lineup_confidence",
+    "feature_pitcher_history_k_score",
+    "feature_pitcher_history_hit_allow_score",
+    "feature_pitcher_history_walk_score",
+    "feature_pitcher_history_confidence",
+    "feature_pitcher_bullpen_support_score",
+    "feature_pitcher_prop_composite_score",
+    "feature_pitcher_prop_confidence",
     "feature_injury_context_available",
     "feature_injury_risk_score",
     "feature_weather_context_available",
@@ -110,6 +167,12 @@ DEFAULT_FEATURES = [
     "feature_recent_injury_status_count",
     "feature_transaction_volatility_score",
     "feature_external_market_context_available",
+    "feature_prizepicks_line_only_market_context",
+    "feature_market_source_is_bettingpros",
+    "feature_market_source_is_dk_pick6",
+    "feature_market_source_is_dk_sportsbook",
+    "feature_market_source_is_external",
+    "feature_market_source_is_prizepicks_only",
     "feature_bettingpros_projection_value",
     "feature_bettingpros_projection_probability",
     "feature_bettingpros_projection_expected_value",
@@ -142,12 +205,21 @@ CAT_FEATURES = [
     "statsapi_player_position",
     "statsapi_bats",
     "statsapi_throws",
+    "batter_bats",
+    "starter_throws",
+    "handedness_matchup_type",
+    "pitcher_starter_throws",
     "statsapi_roster_status",
+    "home_plate_umpire",
+    "umpire_rating",
     "bettingpros_recommended_side",
     "bettingpros_streak_type",
     "advanced_profile_source",
     "advanced_profile_match_type",
     "market_line_match_type",
+    "market_context_source_type",
+    "external_market_context_source",
+    "line_bucket",
 ]
 
 LEAKAGE_COLUMN_NAMES = {
@@ -197,6 +269,14 @@ def main() -> int:
     parser.add_argument("--iterations", default="200,400,600")
     parser.add_argument("--learning-rates", default="0.03,0.06")
     parser.add_argument("--depths", default="4")
+    parser.add_argument(
+        "--model-configs",
+        default="",
+        help=(
+            "Optional exact model configs as iterations:learning_rate:depth entries, "
+            "comma-separated. Example: 600:0.03:4,400:0.03:4"
+        ),
+    )
     parser.add_argument("--residual-scales", default="0.25,0.35,0.50,0.65")
     parser.add_argument("--residual-clip", type=float, default=0.20)
     parser.add_argument("--p-lo", type=float, default=0.03)
@@ -246,11 +326,7 @@ def main() -> int:
     sweep_rows: list[dict[str, Any]] = []
     prediction_payloads: dict[str, dict[str, Any]] = {}
     started = time.time()
-    for iterations, learning_rate, depth in product(
-        _int_list(args.iterations),
-        _float_list(args.learning_rates),
-        _int_list(args.depths),
-    ):
+    for iterations, learning_rate, depth in _model_configs(args):
         config_id = f"iter{iterations}_lr{learning_rate:g}_depth{depth}"
         print(
             json.dumps(
@@ -378,6 +454,23 @@ def main() -> int:
                 "base_over_probability": round(float(base[index]), 8),
                 "cat_residual": round(float(best_predictions["residual"][index]), 8),
                 "adjusted_over_probability": round(float(best_predictions["adjusted"][index]), 8),
+                "market_context_source_type": rows[index].get("market_context_source_type", ""),
+                "external_market_context_source": rows[index].get("external_market_context_source", ""),
+                "market_line_match_type": rows[index].get("market_line_match_type", ""),
+                "line_bucket": rows[index].get("line_bucket", ""),
+                "feature_external_market_context_available": rows[index].get("feature_external_market_context_available", 0.0),
+                "feature_prizepicks_line_only_market_context": rows[index].get("feature_prizepicks_line_only_market_context", 0.0),
+                "feature_market_source_is_bettingpros": rows[index].get("feature_market_source_is_bettingpros", 0.0),
+                "feature_market_source_is_dk_pick6": rows[index].get("feature_market_source_is_dk_pick6", 0.0),
+                "feature_market_source_is_dk_sportsbook": rows[index].get("feature_market_source_is_dk_sportsbook", 0.0),
+                "batter_bats": rows[index].get("batter_bats", ""),
+                "starter_throws": rows[index].get("starter_throws", ""),
+                "handedness_matchup_type": rows[index].get("handedness_matchup_type", ""),
+                "feature_lineup_probability": rows[index].get("feature_lineup_probability", 0.0),
+                "feature_batting_order_slot": rows[index].get("feature_batting_order_slot", 0.0),
+                "feature_top_order_flag": rows[index].get("feature_top_order_flag", 0.0),
+                "feature_pitcher_prop_context_available": rows[index].get("feature_pitcher_prop_context_available", 0.0),
+                "feature_pitcher_workload_context_score": rows[index].get("feature_pitcher_workload_context_score", 0.0),
             }
             for index in range(len(rows))
         ],
@@ -438,6 +531,7 @@ def main() -> int:
 
 
 def build_training_rows(*, root: Path, corpus_dir: Path) -> list[dict[str, Any]]:
+    enforce_corpus_source_contracts(corpus_dir, root=root)
     rows: list[dict[str, Any]] = []
     for run_id in _run_ids(corpus_dir):
         eval_rows = _read_csv(root / "data" / "mlb" / "eval" / run_id / "eval_legs.csv")
@@ -588,6 +682,36 @@ def _float_list(value: str) -> list[float]:
 
 def _int_list(value: str) -> list[int]:
     return [int(item.strip()) for item in value.split(",") if item.strip()]
+
+
+def _model_configs(args: argparse.Namespace) -> list[tuple[int, float, int]]:
+    exact = str(getattr(args, "model_configs", "") or "").strip()
+    if not exact:
+        return [
+            (iterations, learning_rate, depth)
+            for iterations, learning_rate, depth in product(
+                _int_list(args.iterations),
+                _float_list(args.learning_rates),
+                _int_list(args.depths),
+            )
+        ]
+
+    configs: list[tuple[int, float, int]] = []
+    seen: set[tuple[int, float, int]] = set()
+    for item in exact.split(","):
+        text = item.strip()
+        if not text:
+            continue
+        parts = [part.strip() for part in text.split(":")]
+        if len(parts) != 3:
+            raise ValueError(f"Invalid --model-configs entry {text!r}; expected iterations:learning_rate:depth")
+        config = (int(parts[0]), float(parts[1]), int(parts[2]))
+        if config not in seen:
+            seen.add(config)
+            configs.append(config)
+    if not configs:
+        raise ValueError("--model-configs did not contain any valid configs")
+    return configs
 
 
 def _float(value: Any) -> float:

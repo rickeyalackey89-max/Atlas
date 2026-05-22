@@ -1,18 +1,28 @@
 # Atlas MLB Dev
 
 Status: active development engine  
-Last updated: 2026-05-19
+Last updated: 2026-05-21
 
-Atlas MLB Dev is a separate development fork used to design the MLB engine without disturbing the production NBA Atlas model.
+Atlas MLB is a separate engine under the umbrella Atlas workspace. Read the
+workspace-level operating memory before changing live, replay, corpus, CAT,
+builder, publish, or data-retention code:
+
+- `C:\Users\13142\Atlas\ATLAS_OPERATING_MEMORY.md`
+- `C:\Users\13142\Atlas\ai\README.md`
+- `C:\Users\13142\Atlas\MLB\config\replay_fidelity_contract.yaml`
 
 ## Operating Rules
 
 - NBA Atlas remains the working production model.
-- MLB Dev may be gutted, renamed, moved, and refactored aggressively.
+- MLB may be refactored aggressively, but source snapshots, run outputs,
+  manifests, telemetry, archives, and `MLB_info_DO_NOT_DELETE` files are
+  protected data and must not be deleted.
 - Do not run copied NBA live jobs as MLB production.
 - Keep the Python environment compatible with NBA Atlas while MLB architecture is built.
 - Prefer new MLB modules under `src/mlb/`. Imports remain `mlb.*`.
 - Treat copied NBA modules as reference material until they are explicitly migrated or removed.
+- Do not run corpus, LODO, CAT training, or builder sweeps until replay source
+  contracts pass for every included date.
 
 ## Start Here
 

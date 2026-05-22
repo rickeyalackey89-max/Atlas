@@ -1,0 +1,87 @@
+version: 1
+sport: MLB
+owner: AtlasSportsAI
+purpose: Strict replay fidelity contract for MLB live, replay, corpus, LODO, CAT, and builder tuning.
+
+protected_paths:
+  - data/mlb/raw
+  - data/mlb/runs
+  - data/mlb/live_runs
+  - data/mlb/test_runs
+  - data/mlb/eval
+  - data/mlb/runtime_state
+  - data/mlb/model
+  - data/mlb/archives
+  - docs/MLB_info_DO_NOT_DELETE
+
+required_bundle_artifacts:
+  - data/mlb/raw/**/*.json
+  - data/mlb/runtime_state/**/*.json
+  - data/mlb/gamelogs/**/*.csv
+  - manifest.json
+
+required_replay_context:
+  - prizepicks_raw
+  - market_odds
+  - game_lines
+  - weather
+  - wind
+  - ballpark
+  - lineup
+  - probable_pitcher
+  - roster
+  - player_history
+  - gamelog_truth
+  - injury_context
+  - source_manifest
+  - cat_calibration_config
+
+strict_replay_blockers:
+  one_game_date_only: true
+  no_started_games: true
+  no_future_slate_leakage: true
+  missing_prizepicks_raw: block
+  missing_eval_truth: block
+  missing_source_manifest: block
+  missing_game_lines: block
+  missing_probable_pitcher: block
+  missing_ballpark_when_weather_enabled: block
+  missing_weather_when_weather_enabled: block
+  missing_lineup_when_lineup_features_enabled: block
+  current_day_source_leak: block
+  cat_trained_feature_defaulted: block
+
+timing_rules:
+  minimum_pre_start_buffer_minutes: 15
+  market_overlay_max_future_minutes: 15
+  market_overlay_requires_asof_ts: true
+  live_run_windows_local:
+    weekday_regular:
+      - "11:00"
+      - "14:30"
+      - "17:00"
+      - "19:00"
+    sunday_regular:
+      - "10:00"
+      - "14:30"
+      - "17:00"
+      - "19:00"
+
+market_probability_precedence:
+  - exact_market_probability
+  - source_specific_exact_probability
+  - anchor_or_blended_prior
+  - model_only_fallback
+
+required_audit_artifacts:
+  - source_context_manifest.json
+  - probability_surface_audit.json
+  - catboost_feature_contract.json
+  - role_context_audit.json
+
+training_gate:
+  require_preflight_pass: true
+  require_corpus_audit_pass: true
+  require_no_cat_feature_defaulting: true
+  run_builder_tuning_after_lodo_only: true
+

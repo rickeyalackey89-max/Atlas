@@ -10,7 +10,7 @@ def test_feature_table_writes_source_completeness_contract(tmp_path):
     manifest = build_player_prop_feature_table(engine_board_path=engine_board_path, root=tmp_path, run_id="feature_run")
 
     assert manifest["row_count"] == 2
-    assert manifest["feature_model_version"] == "baseline_player_prop_features_v1_market_source_type"
+    assert manifest["feature_model_version"] == "baseline_player_prop_features_v2_matchup_source_context"
     assert manifest["source_completeness"]["lineup_context_available"] == 0.0
     assert manifest["opportunity_model_versions"] == {"baseline_opportunity_v0": 2}
     assert Path(manifest["csv_path"]).exists()
@@ -124,6 +124,46 @@ def test_feature_table_carries_advanced_profile_context(tmp_path):
     assert clean_row["advanced_context_flags"] == ["missing_advanced_context_row"]
 
 
+def test_feature_table_carries_matchup_detail_and_pitcher_prop_context(tmp_path):
+    engine_board_path = _write_engine_board(tmp_path)
+    matchup_context_path = _write_matchup_context(tmp_path)
+    pitcher_prop_context_path = _write_pitcher_prop_context(tmp_path)
+    roster_context_path = _write_roster_context(tmp_path)
+
+    manifest = build_player_prop_feature_table(
+        engine_board_path=engine_board_path,
+        matchup_context_path=matchup_context_path,
+        pitcher_prop_context_path=pitcher_prop_context_path,
+        roster_context_path=roster_context_path,
+        root=tmp_path,
+        run_id="feature_matchup_detail_run",
+    )
+
+    payload = json.loads(Path(manifest["json_path"]).read_text(encoding="utf-8"))
+    hitter_row = next(row for row in payload["rows"] if row["source_projection_id"] == "proj_hitter")
+    pitcher_row = next(row for row in payload["rows"] if row["source_projection_id"] == "proj_pitcher")
+
+    assert manifest["pitcher_prop_context_path"] == str(pitcher_prop_context_path)
+    assert manifest["source_completeness"]["handedness_context_available"] == 0.5
+    assert manifest["source_completeness"]["pitcher_prop_context_available"] == 0.5
+    assert hitter_row["batting_order_slot"] == 2
+    assert hitter_row["lineup_probability"] == 0.99
+    assert hitter_row["lineup_confirmed"] is True
+    assert hitter_row["top_order_flag"] is True
+    assert hitter_row["projected_plate_appearances"] == 4.7
+    assert hitter_row["batter_bats"] == "L"
+    assert hitter_row["starter_throws"] == "R"
+    assert hitter_row["handedness_matchup_type"] == "L_vs_R"
+    assert hitter_row["platoon_advantage"] == 1.0
+    assert hitter_row["park_hr_factor"] == 1.12
+    assert hitter_row["home_plate_umpire"] == "Sample Ump"
+    assert pitcher_row["pitcher_prop_context_available"] is True
+    assert pitcher_row["pitcher_starter_throws"] == "R"
+    assert pitcher_row["pitcher_workload_context_score"] == -0.18
+    assert pitcher_row["pitcher_opponent_confirmed_batters"] == 7
+    assert pitcher_row["pitcher_prop_confidence"] == 0.81
+
+
 def _write_engine_board(tmp_path: Path) -> Path:
     path = tmp_path / "data" / "mlb" / "staged" / "engine_board" / "board_run" / "engine_board.json"
     path.parent.mkdir(parents=True)
@@ -166,6 +206,101 @@ def _write_advanced_context(tmp_path: Path) -> Path:
                         "advanced_profile_source": "fixture",
                         "advanced_profile_match_type": "exact_player_team_profile_match",
                         "advanced_context_flags": ["advanced_profile_context_available"],
+                    }
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+    return path
+
+
+def _write_matchup_context(tmp_path: Path) -> Path:
+    path = tmp_path / "data" / "mlb" / "features" / "matchups" / "matchup_run" / "hitter_matchup_context.json"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        json.dumps(
+            {
+                "run_id": "matchup_run",
+                "rows": [
+                    {
+                        "source_projection_id": "proj_hitter",
+                        "market": "hits",
+                        "line": 0.5,
+                        "tier": "STANDARD",
+                        "direction": "over",
+                        "lineup_score": 0.28,
+                        "starter_matchup_score": 0.16,
+                        "bullpen_matchup_score": 0.06,
+                        "environment_score": 0.11,
+                        "matchup_composite_score": 0.21,
+                        "matchup_confidence": 0.86,
+                        "projected_plate_appearances": 4.7,
+                        "batting_order_slot": 2,
+                        "lineup_probability": 0.99,
+                        "pinch_hit_risk": 0.01,
+                        "starter_hand": "R",
+                        "strikeout_pressure_score": -0.17,
+                        "contact_context_score": 0.22,
+                        "power_context_score": 0.18,
+                        "walk_context_score": 0.05,
+                        "late_game_run_score": 0.03,
+                        "park_run_factor": 1.04,
+                        "park_hr_factor": 1.12,
+                        "park_hit_factor": 1.03,
+                        "park_extra_base_factor": 1.08,
+                        "park_factor_confidence": 0.74,
+                        "home_plate_umpire": "Sample Ump",
+                        "umpire_era": 4.41,
+                        "umpire_rating": "hitter_friendly",
+                        "umpire_run_score": 0.07,
+                        "umpire_confidence": 0.64,
+                        "missing_context_flags": [],
+                    }
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+    return path
+
+
+def _write_pitcher_prop_context(tmp_path: Path) -> Path:
+    path = tmp_path / "data" / "mlb" / "features" / "matchups" / "matchup_run" / "pitcher_prop_context.json"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        json.dumps(
+            {
+                "run_id": "matchup_run",
+                "rows": [
+                    {
+                        "source_projection_id": "proj_pitcher",
+                        "market": "pitcher_strikeouts",
+                        "line": 0.5,
+                        "tier": "STANDARD",
+                        "direction": "over",
+                        "starter_hand": "R",
+                        "strikeout_context_score": 0.33,
+                        "workload_context_score": -0.18,
+                        "run_allow_context_score": 0.04,
+                        "walk_context_score": -0.05,
+                        "opponent_lineup_score": 0.19,
+                        "opponent_k_context_score": 0.26,
+                        "opponent_contact_context_score": -0.14,
+                        "opponent_power_context_score": 0.09,
+                        "opponent_walk_context_score": 0.03,
+                        "opponent_projected_pa": 38.2,
+                        "opponent_top_order_pa": 17.5,
+                        "opponent_confirmed_batters": 7,
+                        "opponent_lineup_confidence": 0.78,
+                        "pitcher_history_k_score": 0.24,
+                        "pitcher_history_hit_allow_score": -0.11,
+                        "pitcher_history_walk_score": 0.04,
+                        "pitcher_history_confidence": 0.69,
+                        "bullpen_support_score": 0.08,
+                        "pitcher_prop_composite_score": 0.31,
+                        "pitcher_prop_confidence": 0.81,
+                        "missing_context_flags": [],
                     }
                 ],
             }

@@ -12,7 +12,7 @@ from mlb.modeling.opportunity import estimate_opportunity
 from mlb.runtime.engine_inputs import _load_json
 from mlb.runtime.paths import ensure_mlb_dirs
 
-FEATURE_MODEL_VERSION = "baseline_player_prop_features_v1_market_source_type"
+FEATURE_MODEL_VERSION = "baseline_player_prop_features_v2_matchup_source_context"
 
 FEATURE_COLUMNS = (
     "run_id",
@@ -48,6 +48,56 @@ FEATURE_COLUMNS = (
     "matchup_confidence",
     "matchup_context_available",
     "matchup_context_flags",
+    "batting_order_slot",
+    "lineup_probability",
+    "lineup_confirmed",
+    "top_order_flag",
+    "projected_plate_appearances",
+    "pinch_hit_risk",
+    "batter_bats",
+    "starter_throws",
+    "handedness_matchup_type",
+    "same_hand_matchup",
+    "platoon_advantage",
+    "handedness_context_available",
+    "hitter_strikeout_pressure_score",
+    "hitter_contact_context_score",
+    "hitter_power_context_score",
+    "hitter_walk_context_score",
+    "hitter_late_game_run_score",
+    "park_run_factor",
+    "park_hr_factor",
+    "park_hit_factor",
+    "park_extra_base_factor",
+    "park_factor_confidence",
+    "home_plate_umpire",
+    "umpire_era",
+    "umpire_rating",
+    "umpire_run_score",
+    "umpire_confidence",
+    "pitcher_prop_context_available",
+    "pitcher_starter_throws",
+    "pitcher_workload_context_score",
+    "pitcher_strikeout_context_score",
+    "pitcher_run_allow_context_score",
+    "pitcher_walk_context_score",
+    "pitcher_opponent_lineup_score",
+    "pitcher_opponent_k_context_score",
+    "pitcher_opponent_contact_context_score",
+    "pitcher_opponent_power_context_score",
+    "pitcher_opponent_walk_context_score",
+    "pitcher_opponent_projected_pa",
+    "pitcher_opponent_top_order_pa",
+    "pitcher_opponent_confirmed_batters",
+    "pitcher_opponent_lineup_confidence",
+    "pitcher_history_k_score",
+    "pitcher_history_hit_allow_score",
+    "pitcher_history_walk_score",
+    "pitcher_history_confidence",
+    "pitcher_bullpen_support_score",
+    "pitcher_prop_composite_score",
+    "pitcher_prop_confidence",
+    "pitcher_prop_context_flags",
     "lineup_context_available",
     "probable_pitcher_context_available",
     "injury_context_available",
@@ -142,6 +192,7 @@ def build_player_prop_feature_table(
     player_history_context_path: Path | None = None,
     transaction_context_path: Path | None = None,
     advanced_context_path: Path | None = None,
+    pitcher_prop_context_path: Path | None = None,
     root: Path | None = None,
     run_id: str | None = None,
 ) -> dict[str, Any]:
@@ -158,6 +209,7 @@ def build_player_prop_feature_table(
     player_history_rows = _load_matchup_rows(player_history_context_path)
     transaction_rows = _load_matchup_rows(transaction_context_path)
     advanced_rows = _load_matchup_rows(advanced_context_path)
+    pitcher_prop_rows = _load_matchup_rows(pitcher_prop_context_path)
     rows = [
         _feature_row(
             row,
@@ -170,6 +222,7 @@ def build_player_prop_feature_table(
             player_history_row=player_history_rows.get(_matchup_key(row)),
             transaction_row=transaction_rows.get(_matchup_key(row)),
             advanced_row=advanced_rows.get(_matchup_key(row)),
+            pitcher_prop_row=pitcher_prop_rows.get(_matchup_key(row)),
         )
         for row in engine_board.get("rows", [])
         if isinstance(row, dict)
@@ -196,6 +249,7 @@ def build_player_prop_feature_table(
         "player_history_context_path": str(player_history_context_path) if player_history_context_path else "",
         "transaction_context_path": str(transaction_context_path) if transaction_context_path else "",
         "advanced_context_path": str(advanced_context_path) if advanced_context_path else "",
+        "pitcher_prop_context_path": str(pitcher_prop_context_path) if pitcher_prop_context_path else "",
         "row_count": len(rows),
         "feature_model_version": FEATURE_MODEL_VERSION,
         "market_group_counts": _counts(row["market_group"] for row in rows),
@@ -229,6 +283,7 @@ def _feature_row(
     player_history_row: dict[str, Any] | None = None,
     transaction_row: dict[str, Any] | None = None,
     advanced_row: dict[str, Any] | None = None,
+    pitcher_prop_row: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     opportunity = estimate_opportunity(row)
     matchup = _matchup_values(matchup_row)
@@ -239,7 +294,12 @@ def _feature_row(
     player_history = _player_history_values(player_history_row)
     transaction = _transaction_values(transaction_row)
     advanced = _advanced_values(advanced_row)
+    pitcher_prop = _pitcher_prop_values(pitcher_prop_row)
     bettingpros = _bettingpros_values(market_row)
+    handedness = _handedness_values(
+        bats=roster["bats"] if opportunity.market_group == "batter" else "",
+        starter_throws=matchup["starter_hand"] or pitcher_prop["starter_hand"],
+    )
     flags = ["baseline_feature_contract"]
     flags.extend(opportunity.flags)
     if matchup["available"]:
@@ -311,6 +371,56 @@ def _feature_row(
         "matchup_confidence": matchup["matchup_confidence"],
         "matchup_context_available": matchup["available"],
         "matchup_context_flags": matchup["flags"],
+        "batting_order_slot": matchup["batting_order_slot"],
+        "lineup_probability": matchup["lineup_probability"],
+        "lineup_confirmed": matchup["lineup_confirmed"],
+        "top_order_flag": matchup["top_order_flag"],
+        "projected_plate_appearances": matchup["projected_plate_appearances"],
+        "pinch_hit_risk": matchup["pinch_hit_risk"],
+        "batter_bats": handedness["batter_bats"],
+        "starter_throws": handedness["starter_throws"],
+        "handedness_matchup_type": handedness["matchup_type"],
+        "same_hand_matchup": handedness["same_hand_matchup"],
+        "platoon_advantage": handedness["platoon_advantage"],
+        "handedness_context_available": handedness["available"],
+        "hitter_strikeout_pressure_score": matchup["strikeout_pressure_score"],
+        "hitter_contact_context_score": matchup["contact_context_score"],
+        "hitter_power_context_score": matchup["power_context_score"],
+        "hitter_walk_context_score": matchup["walk_context_score"],
+        "hitter_late_game_run_score": matchup["late_game_run_score"],
+        "park_run_factor": matchup["park_run_factor"],
+        "park_hr_factor": matchup["park_hr_factor"],
+        "park_hit_factor": matchup["park_hit_factor"],
+        "park_extra_base_factor": matchup["park_extra_base_factor"],
+        "park_factor_confidence": matchup["park_factor_confidence"],
+        "home_plate_umpire": matchup["home_plate_umpire"],
+        "umpire_era": matchup["umpire_era"],
+        "umpire_rating": matchup["umpire_rating"],
+        "umpire_run_score": matchup["umpire_run_score"],
+        "umpire_confidence": matchup["umpire_confidence"],
+        "pitcher_prop_context_available": pitcher_prop["available"],
+        "pitcher_starter_throws": pitcher_prop["starter_hand"],
+        "pitcher_workload_context_score": pitcher_prop["workload_context_score"],
+        "pitcher_strikeout_context_score": pitcher_prop["strikeout_context_score"],
+        "pitcher_run_allow_context_score": pitcher_prop["run_allow_context_score"],
+        "pitcher_walk_context_score": pitcher_prop["walk_context_score"],
+        "pitcher_opponent_lineup_score": pitcher_prop["opponent_lineup_score"],
+        "pitcher_opponent_k_context_score": pitcher_prop["opponent_k_context_score"],
+        "pitcher_opponent_contact_context_score": pitcher_prop["opponent_contact_context_score"],
+        "pitcher_opponent_power_context_score": pitcher_prop["opponent_power_context_score"],
+        "pitcher_opponent_walk_context_score": pitcher_prop["opponent_walk_context_score"],
+        "pitcher_opponent_projected_pa": pitcher_prop["opponent_projected_pa"],
+        "pitcher_opponent_top_order_pa": pitcher_prop["opponent_top_order_pa"],
+        "pitcher_opponent_confirmed_batters": pitcher_prop["opponent_confirmed_batters"],
+        "pitcher_opponent_lineup_confidence": pitcher_prop["opponent_lineup_confidence"],
+        "pitcher_history_k_score": pitcher_prop["pitcher_history_k_score"],
+        "pitcher_history_hit_allow_score": pitcher_prop["pitcher_history_hit_allow_score"],
+        "pitcher_history_walk_score": pitcher_prop["pitcher_history_walk_score"],
+        "pitcher_history_confidence": pitcher_prop["pitcher_history_confidence"],
+        "pitcher_bullpen_support_score": pitcher_prop["bullpen_support_score"],
+        "pitcher_prop_composite_score": pitcher_prop["pitcher_prop_composite_score"],
+        "pitcher_prop_confidence": pitcher_prop["pitcher_prop_confidence"],
+        "pitcher_prop_context_flags": pitcher_prop["flags"],
         "lineup_context_available": "missing_lineup_context" not in matchup["flags"] and matchup["available"],
         "probable_pitcher_context_available": "missing_pitcher_context" not in matchup["flags"] and matchup["available"],
         "injury_context_available": injury["available"],
@@ -407,6 +517,8 @@ def _source_completeness(rows: list[dict[str, Any]]) -> dict[str, Any]:
         "external_market_context_available",
         "prizepicks_line_only_market_context",
         "advanced_context_available",
+        "pitcher_prop_context_available",
+        "handedness_context_available",
     )
     return {field: _true_rate(row[field] for row in rows) for field in fields}
 
@@ -497,6 +609,8 @@ def _matchup_values(row: dict[str, Any] | None) -> dict[str, Any]:
         return _empty_matchup()
     flags = _tuple_flags(row.get("missing_context_flags"))
     confidence = _clamp(_float(row.get("matchup_confidence")), 0.0, 1.0)
+    lineup_probability = _clamp(_float(row.get("lineup_probability")), 0.0, 1.0)
+    batting_order_slot = _int(row.get("batting_order_slot"))
     return {
         "lineup_score": _float(row.get("lineup_score")),
         "starter_matchup_score": _float(row.get("starter_matchup_score")),
@@ -504,6 +618,28 @@ def _matchup_values(row: dict[str, Any] | None) -> dict[str, Any]:
         "environment_score": _float(row.get("environment_score")),
         "matchup_composite_score": _float(row.get("matchup_composite_score")),
         "matchup_confidence": confidence,
+        "projected_plate_appearances": _float(row.get("projected_plate_appearances")),
+        "batting_order_slot": batting_order_slot,
+        "lineup_probability": lineup_probability,
+        "lineup_confirmed": bool(lineup_probability >= 0.99 and batting_order_slot > 0),
+        "top_order_flag": bool(0 < batting_order_slot <= 4),
+        "pinch_hit_risk": _float(row.get("pinch_hit_risk")),
+        "starter_hand": _normalize_hand(row.get("starter_hand")),
+        "strikeout_pressure_score": _float(row.get("strikeout_pressure_score")),
+        "contact_context_score": _float(row.get("contact_context_score")),
+        "power_context_score": _float(row.get("power_context_score")),
+        "walk_context_score": _float(row.get("walk_context_score")),
+        "late_game_run_score": _float(row.get("late_game_run_score")),
+        "park_run_factor": _float(row.get("park_run_factor")) or 1.0,
+        "park_hr_factor": _float(row.get("park_hr_factor")) or 1.0,
+        "park_hit_factor": _float(row.get("park_hit_factor")) or 1.0,
+        "park_extra_base_factor": _float(row.get("park_extra_base_factor")) or 1.0,
+        "park_factor_confidence": _float(row.get("park_factor_confidence")),
+        "home_plate_umpire": str(row.get("home_plate_umpire") or ""),
+        "umpire_era": _float(row.get("umpire_era")),
+        "umpire_rating": str(row.get("umpire_rating") or ""),
+        "umpire_run_score": _float(row.get("umpire_run_score")),
+        "umpire_confidence": _float(row.get("umpire_confidence")),
         "available": bool(confidence > 0.0 and len(flags) < 4),
         "flags": flags,
     }
@@ -517,8 +653,113 @@ def _empty_matchup() -> dict[str, Any]:
         "environment_score": 0.0,
         "matchup_composite_score": 0.0,
         "matchup_confidence": 0.0,
+        "projected_plate_appearances": 0.0,
+        "batting_order_slot": 0,
+        "lineup_probability": 0.0,
+        "lineup_confirmed": False,
+        "top_order_flag": False,
+        "pinch_hit_risk": 0.0,
+        "starter_hand": "",
+        "strikeout_pressure_score": 0.0,
+        "contact_context_score": 0.0,
+        "power_context_score": 0.0,
+        "walk_context_score": 0.0,
+        "late_game_run_score": 0.0,
+        "park_run_factor": 1.0,
+        "park_hr_factor": 1.0,
+        "park_hit_factor": 1.0,
+        "park_extra_base_factor": 1.0,
+        "park_factor_confidence": 0.0,
+        "home_plate_umpire": "",
+        "umpire_era": 0.0,
+        "umpire_rating": "",
+        "umpire_run_score": 0.0,
+        "umpire_confidence": 0.0,
         "available": False,
         "flags": ("missing_matchup_context_row",),
+    }
+
+
+def _pitcher_prop_values(row: dict[str, Any] | None) -> dict[str, Any]:
+    if not row:
+        return _empty_pitcher_prop()
+    flags = _tuple_flags(row.get("missing_context_flags"))
+    confidence = _clamp(_float(row.get("pitcher_prop_confidence")), 0.0, 1.0)
+    missing_source = any(flag.startswith("missing_") for flag in flags)
+    return {
+        "available": bool(confidence > 0.0 and not missing_source),
+        "starter_hand": _normalize_hand(row.get("starter_hand")),
+        "workload_context_score": _float(row.get("workload_context_score")),
+        "strikeout_context_score": _float(row.get("strikeout_context_score")),
+        "run_allow_context_score": _float(row.get("run_allow_context_score")),
+        "walk_context_score": _float(row.get("walk_context_score")),
+        "opponent_lineup_score": _float(row.get("opponent_lineup_score")),
+        "opponent_k_context_score": _float(row.get("opponent_k_context_score")),
+        "opponent_contact_context_score": _float(row.get("opponent_contact_context_score")),
+        "opponent_power_context_score": _float(row.get("opponent_power_context_score")),
+        "opponent_walk_context_score": _float(row.get("opponent_walk_context_score")),
+        "opponent_projected_pa": _float(row.get("opponent_projected_pa")),
+        "opponent_top_order_pa": _float(row.get("opponent_top_order_pa")),
+        "opponent_confirmed_batters": _int(row.get("opponent_confirmed_batters")),
+        "opponent_lineup_confidence": _float(row.get("opponent_lineup_confidence")),
+        "pitcher_history_k_score": _float(row.get("pitcher_history_k_score")),
+        "pitcher_history_hit_allow_score": _float(row.get("pitcher_history_hit_allow_score")),
+        "pitcher_history_walk_score": _float(row.get("pitcher_history_walk_score")),
+        "pitcher_history_confidence": _float(row.get("pitcher_history_confidence")),
+        "bullpen_support_score": _float(row.get("bullpen_support_score")),
+        "pitcher_prop_composite_score": _float(row.get("pitcher_prop_composite_score")),
+        "pitcher_prop_confidence": confidence,
+        "flags": flags,
+    }
+
+
+def _empty_pitcher_prop() -> dict[str, Any]:
+    return {
+        "available": False,
+        "starter_hand": "",
+        "workload_context_score": 0.0,
+        "strikeout_context_score": 0.0,
+        "run_allow_context_score": 0.0,
+        "walk_context_score": 0.0,
+        "opponent_lineup_score": 0.0,
+        "opponent_k_context_score": 0.0,
+        "opponent_contact_context_score": 0.0,
+        "opponent_power_context_score": 0.0,
+        "opponent_walk_context_score": 0.0,
+        "opponent_projected_pa": 0.0,
+        "opponent_top_order_pa": 0.0,
+        "opponent_confirmed_batters": 0,
+        "opponent_lineup_confidence": 0.0,
+        "pitcher_history_k_score": 0.0,
+        "pitcher_history_hit_allow_score": 0.0,
+        "pitcher_history_walk_score": 0.0,
+        "pitcher_history_confidence": 0.0,
+        "bullpen_support_score": 0.0,
+        "pitcher_prop_composite_score": 0.0,
+        "pitcher_prop_confidence": 0.0,
+        "flags": ("missing_pitcher_prop_context_row",),
+    }
+
+
+def _handedness_values(*, bats: Any, starter_throws: Any) -> dict[str, Any]:
+    batter_bats = _normalize_hand(bats)
+    pitcher_throws = _normalize_hand(starter_throws)
+    available = bool(batter_bats and pitcher_throws)
+    matchup_type = f"{batter_bats}_vs_{pitcher_throws}" if available else ""
+    same_hand = 1.0 if available and batter_bats == pitcher_throws and batter_bats in {"L", "R"} else 0.0
+    platoon = 0.0
+    if available:
+        if batter_bats == "S":
+            platoon = 1.0
+        elif batter_bats in {"L", "R"} and pitcher_throws in {"L", "R"} and batter_bats != pitcher_throws:
+            platoon = 1.0
+    return {
+        "batter_bats": batter_bats,
+        "starter_throws": pitcher_throws,
+        "matchup_type": matchup_type,
+        "same_hand_matchup": same_hand,
+        "platoon_advantage": platoon,
+        "available": available,
     }
 
 
@@ -739,6 +980,17 @@ def _bool(value: Any) -> bool:
     if isinstance(value, str):
         return value.strip().lower() in {"1", "true", "yes", "y"}
     return bool(value)
+
+
+def _normalize_hand(value: Any) -> str:
+    text = str(value or "").strip().upper()
+    if text in {"L", "LEFT", "LEFTY"}:
+        return "L"
+    if text in {"R", "RIGHT", "RIGHTY"}:
+        return "R"
+    if text in {"S", "B", "BOTH", "SWITCH"}:
+        return "S"
+    return ""
 
 
 def _tuple_flags(value: Any) -> tuple[str, ...]:

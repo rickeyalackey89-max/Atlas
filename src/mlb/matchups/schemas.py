@@ -28,7 +28,9 @@ HITTER_MATCHUP_CONTEXT_COLUMNS = (
     "matchup_confidence",
     "projected_plate_appearances",
     "batting_order_slot",
+    "lineup_probability",
     "pinch_hit_risk",
+    "starter_hand",
     "strikeout_pressure_score",
     "contact_context_score",
     "power_context_score",
@@ -237,7 +239,9 @@ class HitterMatchupContext:
     matchup_confidence: float = 0.0
     projected_plate_appearances: float = 0.0
     batting_order_slot: int | None = None
+    lineup_probability: float = 0.0
     pinch_hit_risk: float = 0.0
+    starter_hand: str = ""
     strikeout_pressure_score: float = 0.0
     contact_context_score: float = 0.0
     power_context_score: float = 0.0

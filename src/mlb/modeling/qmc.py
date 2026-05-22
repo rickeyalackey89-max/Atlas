@@ -105,6 +105,25 @@ def simulate_market(input_value: MarketSimulationInput) -> MarketSimulationResul
     )
 
 
+def projection_mean_for_target(
+    *,
+    market: str,
+    line: float,
+    target_over_probability: float,
+    distribution: str | None = None,
+) -> float:
+    """Deterministic projection mean implied by the over-probability target."""
+
+    target = _clamp(float(target_over_probability), 0.001, 0.999)
+    resolved_distribution = distribution or default_distribution_for_market(market)
+    if resolved_distribution == "poisson":
+        return _solve_poisson_mean(line=float(line), target_over_probability=target)
+    if resolved_distribution == "normal":
+        sigma = _normal_sigma(str(market), float(line))
+        return max(float(line) + sigma * float(norm.ppf(target)), 0.0)
+    return max(float(line), 0.0)
+
+
 def _sobol_unit_interval(simulation_n: int, seed: int) -> np.ndarray:
     engine = qmc.Sobol(d=1, scramble=True, seed=seed)
     values = engine.random_base2(m=int(log2(simulation_n))).reshape(-1)

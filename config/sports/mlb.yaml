@@ -1,8 +1,8 @@
 sport: mlb
 status: development
 schema_version: atlas_mlb_operational_config_v1
-config_version: mlb_dev_fidelity_bettingpros_dk_pick6_v6_tuned_slip_v18_matchup_matrix_v1_20260519
-contract_name: atlas_mlb_strict_fidelity_bettingpros_dk_pick6_v6_tuned_slip_v18_matchup_matrix_v1
+config_version: mlb_dev_fidelity_projection_features_v9_slip_v20_empirical_reliability_matchup_matrix_v1_20260522
+contract_name: atlas_mlb_strict_fidelity_projection_features_v9_slip_v20_empirical_reliability_matchup_matrix_v1
 owner: Atlas Sports AI
 
 principles:
@@ -50,9 +50,13 @@ kernels:
     simulation_version: mlb_sobol_qmc_market_prior_v0
     parameter_model_version: market_prior_parameters_v0
   cat_residual:
-    active_version: mlb_cat_over_residual_v6_23date_live_context_scale_tuned
-    active_artifact: data/mlb/model/cat_probability_kernel_v6_23date_live_context/scale_tuning/tuned_best_config.json
+    active_version: mlb_cat_over_residual_v9_projection_features_strict_fidelity
+    active_artifact: data/mlb/model/cat_probability_kernel_v9_20260516_20260520_strict_fidelity_projection_features/best_config.json
     challenger_versions:
+      - version: mlb_cat_over_residual_v8_20260516_20260520_strict_fidelity
+        artifact: data/mlb/model/cat_probability_kernel_v8_20260516_20260520_strict_fidelity/best_config.json
+      - version: mlb_cat_over_residual_v6_23date_live_context_scale_tuned
+        artifact: data/mlb/model/cat_probability_kernel_v6_23date_live_context/scale_tuning/tuned_best_config.json
       - version: mlb_cat_over_residual_v5_reorg_bettingpros_on
         artifact: data/mlb/model/cat_probability_kernel_v5_reorg_bettingpros_on/best_config.json
       - version: mlb_cat_over_residual_v6_23date_live_context
@@ -148,7 +152,7 @@ matchup_matrix:
     environment_enabled: true
 
 slips:
-  active_builder_version: atlas_mlb_public_slip_ranker_v18_market_source_context
+  active_builder_version: atlas_mlb_public_slip_ranker_v22_marketed_bettingpros_windfall_probability
   portfolio_priority:
     - Marketed
     - System

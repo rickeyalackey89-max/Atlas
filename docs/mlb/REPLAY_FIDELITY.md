@@ -1,7 +1,11 @@
 # Atlas MLB Replay Fidelity Rule
 
 Status: binding rule  
-Last updated: 2026-05-19
+Last updated: 2026-05-21
+
+This document is backed by the machine-readable replay contract at
+`C:\Users\13142\Atlas\MLB\config\replay_fidelity_contract.yaml` and the
+workspace operating memory at `C:\Users\13142\Atlas\ATLAS_OPERATING_MEMORY.md`.
 
 ## Rule
 
@@ -14,6 +18,9 @@ knowledge, settlement data, or replay-only model inputs.
 
 This rule applies before calibration, kernels, caches, corpus construction,
 trainer inputs, and dashboard comparisons.
+
+If replay fidelity fails, stop before scoring/training decisions. Do not run
+corpus, LODO, CAT, or builder training on a failed replay source contract.
 
 ## Run Surfaces
 

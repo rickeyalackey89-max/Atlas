@@ -19,6 +19,7 @@ from typing import Any
 
 DEFAULT_ARTIFACT = "data/mlb/model/cat_probability_kernel_v6_23date_live_context/best_config.json"
 DEFAULT_OUTPUT_DIR = "data/mlb/model/cat_probability_kernel_v6_23date_live_context/scale_tuning"
+DEFAULT_STRATEGIES = "artifact,global,tier,market,tier_market,source,line_bucket"
 
 
 def main() -> int:
@@ -27,9 +28,21 @@ def main() -> int:
     parser.add_argument("--artifact", default=DEFAULT_ARTIFACT)
     parser.add_argument("--output-dir", default=DEFAULT_OUTPUT_DIR)
     parser.add_argument("--scales", default="0.40,0.45,0.50,0.55,0.60,0.65,0.70,0.75,0.80,0.85,0.90,0.95,1.00,1.05,1.10,1.15,1.20")
+    parser.add_argument(
+        "--strategies",
+        default=DEFAULT_STRATEGIES,
+        help=(
+            "Comma-separated strategies to test. Supported: artifact,global,tier,market,tier_market,"
+            "source,line_bucket,market_source,tier_market_source."
+        ),
+    )
     parser.add_argument("--min-tier-rows", type=int, default=1000)
     parser.add_argument("--min-market-rows", type=int, default=1500)
     parser.add_argument("--min-tier-market-rows", type=int, default=900)
+    parser.add_argument("--min-source-rows", type=int, default=900)
+    parser.add_argument("--min-line-bucket-rows", type=int, default=900)
+    parser.add_argument("--min-market-source-rows", type=int, default=700)
+    parser.add_argument("--min-tier-market-source-rows", type=int, default=500)
     parser.add_argument(
         "--min-train-improvement",
         type=float,
@@ -58,7 +71,7 @@ def main() -> int:
     p_lo = _float(meta.get("p_lo"), 0.03)
     p_hi = _float(meta.get("p_hi"), 0.97)
     dates = sorted({str(row.get("game_date") or "") for row in rows if row.get("game_date")})
-    strategies = ["artifact", "global", "tier", "market", "tier_market"]
+    strategies = _strategy_list(args.strategies)
 
     fold_rows: list[dict[str, Any]] = []
     prediction_rows_by_strategy: dict[str, list[dict[str, Any]]] = {strategy: [] for strategy in strategies}
@@ -66,39 +79,36 @@ def main() -> int:
         train_rows = [row for row in rows if str(row.get("game_date") or "") != holdout_date]
         test_rows = [row for row in rows if str(row.get("game_date") or "") == holdout_date]
         fitted = {
-            "artifact": {"global": _float(meta.get("residual_scale"), 0.50), "tier": {}, "market": {}, "tier_market": {}},
+            "artifact": {
+                "global": _float(meta.get("residual_scale"), 0.50),
+                "tier": dict(meta.get("residual_scale_by_tier") or {}),
+                "market": dict(meta.get("residual_scale_by_market") or {}),
+                "tier_market": dict(meta.get("residual_scale_by_tier_market") or {}),
+                "source": dict(meta.get("residual_scale_by_market_source_type") or {}),
+                "line_bucket": dict(meta.get("residual_scale_by_line_bucket") or {}),
+                "market_source": dict(meta.get("residual_scale_by_market_source") or {}),
+                "tier_market_source": dict(meta.get("residual_scale_by_tier_market_source") or {}),
+            },
             "global": _fit_global(train_rows, scales, residual_clip=residual_clip, p_lo=p_lo, p_hi=p_hi),
         }
-        fitted["tier"] = _fit_tier(
-            train_rows,
-            scales,
-            fallback=fitted["global"]["global"],
-            min_rows=args.min_tier_rows,
-            min_train_improvement=args.min_train_improvement,
-            residual_clip=residual_clip,
-            p_lo=p_lo,
-            p_hi=p_hi,
-        )
-        fitted["market"] = _fit_market(
-            train_rows,
-            scales,
-            fallback=fitted["global"]["global"],
-            min_rows=args.min_market_rows,
-            min_train_improvement=args.min_train_improvement,
-            residual_clip=residual_clip,
-            p_lo=p_lo,
-            p_hi=p_hi,
-        )
-        fitted["tier_market"] = _fit_tier_market(
-            train_rows,
-            scales,
-            tier_map=fitted["tier"]["tier"],
-            global_scale=fitted["global"]["global"],
-            min_rows=args.min_tier_market_rows,
-            min_train_improvement=args.min_train_improvement,
-            residual_clip=residual_clip,
-            p_lo=p_lo,
-            p_hi=p_hi,
+        fitted.update(
+            _fit_selected_strategies(
+                strategies,
+                rows=train_rows,
+                scales=scales,
+                global_scale=fitted["global"]["global"],
+                min_tier_rows=args.min_tier_rows,
+                min_market_rows=args.min_market_rows,
+                min_tier_market_rows=args.min_tier_market_rows,
+                min_source_rows=args.min_source_rows,
+                min_line_bucket_rows=args.min_line_bucket_rows,
+                min_market_source_rows=args.min_market_source_rows,
+                min_tier_market_source_rows=args.min_tier_market_source_rows,
+                min_train_improvement=args.min_train_improvement,
+                residual_clip=residual_clip,
+                p_lo=p_lo,
+                p_hi=p_hi,
+            )
         )
 
         for strategy in strategies:
@@ -121,6 +131,10 @@ def main() -> int:
                     "tier_override_count": len(fitted[strategy].get("tier", {})),
                     "market_override_count": len(fitted[strategy].get("market", {})),
                     "tier_market_override_count": len(fitted[strategy].get("tier_market", {})),
+                    "source_override_count": len(fitted[strategy].get("source", {})),
+                    "line_bucket_override_count": len(fitted[strategy].get("line_bucket", {})),
+                    "market_source_override_count": len(fitted[strategy].get("market_source", {})),
+                    "tier_market_source_override_count": len(fitted[strategy].get("tier_market_source", {})),
                 }
             )
             prediction_rows_by_strategy[strategy].extend(
@@ -137,6 +151,10 @@ def main() -> int:
                     "cat_residual": item["residual"],
                     "tuned_over_probability": item["probability"],
                     "scale_used": item["scale"],
+                    "market_context_source_type": str(row.get("market_context_source_type") or ""),
+                    "external_market_context_source": str(row.get("external_market_context_source") or ""),
+                    "market_line_match_type": str(row.get("market_line_match_type") or ""),
+                    "line_bucket": _line_bucket(row),
                 }
                 for row, item in zip(test_rows, predictions, strict=False)
             )
@@ -168,36 +186,34 @@ def main() -> int:
     full_fit = {
         "global": _fit_global(rows, scales, residual_clip=residual_clip, p_lo=p_lo, p_hi=p_hi),
     }
-    full_fit["tier"] = _fit_tier(
-        rows,
-        scales,
-        fallback=full_fit["global"]["global"],
-        min_rows=args.min_tier_rows,
-        min_train_improvement=args.min_train_improvement,
-        residual_clip=residual_clip,
-        p_lo=p_lo,
-        p_hi=p_hi,
-    )
-    full_fit["market"] = _fit_market(
-        rows,
-        scales,
-        fallback=full_fit["global"]["global"],
-        min_rows=args.min_market_rows,
-        min_train_improvement=args.min_train_improvement,
-        residual_clip=residual_clip,
-        p_lo=p_lo,
-        p_hi=p_hi,
-    )
-    full_fit["tier_market"] = _fit_tier_market(
-        rows,
-        scales,
-        tier_map=full_fit["tier"]["tier"],
-        global_scale=full_fit["global"]["global"],
-        min_rows=args.min_tier_market_rows,
-        min_train_improvement=args.min_train_improvement,
-        residual_clip=residual_clip,
-        p_lo=p_lo,
-        p_hi=p_hi,
+    full_fit["artifact"] = {
+        "global": _float(meta.get("residual_scale"), 0.50),
+        "tier": dict(meta.get("residual_scale_by_tier") or {}),
+        "market": dict(meta.get("residual_scale_by_market") or {}),
+        "tier_market": dict(meta.get("residual_scale_by_tier_market") or {}),
+        "source": dict(meta.get("residual_scale_by_market_source_type") or {}),
+        "line_bucket": dict(meta.get("residual_scale_by_line_bucket") or {}),
+        "market_source": dict(meta.get("residual_scale_by_market_source") or {}),
+        "tier_market_source": dict(meta.get("residual_scale_by_tier_market_source") or {}),
+    }
+    full_fit.update(
+        _fit_selected_strategies(
+            strategies,
+            rows=rows,
+            scales=scales,
+            global_scale=full_fit["global"]["global"],
+            min_tier_rows=args.min_tier_rows,
+            min_market_rows=args.min_market_rows,
+            min_tier_market_rows=args.min_tier_market_rows,
+            min_source_rows=args.min_source_rows,
+            min_line_bucket_rows=args.min_line_bucket_rows,
+            min_market_source_rows=args.min_market_source_rows,
+            min_tier_market_source_rows=args.min_tier_market_source_rows,
+            min_train_improvement=args.min_train_improvement,
+            residual_clip=residual_clip,
+            p_lo=p_lo,
+            p_hi=p_hi,
+        )
     )
 
     best_strategy = str(summary_rows[0]["strategy"])
@@ -209,6 +225,10 @@ def main() -> int:
     tuned_artifact["residual_scale_by_tier"] = full_fit.get(best_strategy, {}).get("tier", {})
     tuned_artifact["residual_scale_by_market"] = full_fit.get(best_strategy, {}).get("market", {})
     tuned_artifact["residual_scale_by_tier_market"] = full_fit.get(best_strategy, {}).get("tier_market", {})
+    tuned_artifact["residual_scale_by_market_source_type"] = full_fit.get(best_strategy, {}).get("source", {})
+    tuned_artifact["residual_scale_by_line_bucket"] = full_fit.get(best_strategy, {}).get("line_bucket", {})
+    tuned_artifact["residual_scale_by_market_source"] = full_fit.get(best_strategy, {}).get("market_source", {})
+    tuned_artifact["residual_scale_by_tier_market_source"] = full_fit.get(best_strategy, {}).get("tier_market_source", {})
     tuned_artifact["scale_tuning"] = {
         "schema_version": "mlb_cat_residual_scale_tuning_v1",
         "source_artifact_path": str(artifact_path),
@@ -218,6 +238,10 @@ def main() -> int:
         "min_tier_rows": args.min_tier_rows,
         "min_market_rows": args.min_market_rows,
         "min_tier_market_rows": args.min_tier_market_rows,
+        "min_source_rows": args.min_source_rows,
+        "min_line_bucket_rows": args.min_line_bucket_rows,
+        "min_market_source_rows": args.min_market_source_rows,
+        "min_tier_market_source_rows": args.min_tier_market_source_rows,
         "min_train_improvement": args.min_train_improvement,
         "scales": scales,
     }
@@ -227,6 +251,12 @@ def main() -> int:
     _write_csv(output_dir / "tuned_predictions.csv", prediction_rows_by_strategy[best_strategy])
     _write_segment_summary(output_dir / "segment_summary_by_tier.csv", prediction_rows_by_strategy)
     _write_segment_summary(output_dir / "segment_summary_by_market.csv", prediction_rows_by_strategy, segment="market")
+    _write_segment_summary(
+        output_dir / "segment_summary_by_market_source_type.csv",
+        prediction_rows_by_strategy,
+        segment="market_context_source_type",
+    )
+    _write_segment_summary(output_dir / "segment_summary_by_line_bucket.csv", prediction_rows_by_strategy, segment="line_bucket")
     (output_dir / "tuned_best_config.json").write_text(json.dumps(tuned_artifact, indent=2, sort_keys=True), encoding="utf-8")
     manifest = {
         "schema_version": "mlb_cat_residual_scale_tuning_v1",
@@ -254,6 +284,146 @@ def _fit_global(
     p_hi: float,
 ) -> dict[str, Any]:
     return {"global": _best_scale(rows, scales, residual_clip=residual_clip, p_lo=p_lo, p_hi=p_hi)}
+
+
+def _strategy_list(value: str) -> list[str]:
+    supported = {
+        "artifact",
+        "global",
+        "tier",
+        "market",
+        "tier_market",
+        "source",
+        "line_bucket",
+        "market_source",
+        "tier_market_source",
+    }
+    strategies = []
+    for item in str(value or "").split(","):
+        clean = item.strip()
+        if not clean:
+            continue
+        if clean not in supported:
+            raise RuntimeError(f"Unsupported strategy {clean!r}; supported={sorted(supported)}")
+        if clean not in strategies:
+            strategies.append(clean)
+    if not strategies:
+        raise RuntimeError("At least one residual-scale strategy is required")
+    if "artifact" not in strategies:
+        strategies.insert(0, "artifact")
+    if "global" not in strategies:
+        strategies.insert(1, "global")
+    return strategies
+
+
+def _fit_selected_strategies(
+    strategies: list[str],
+    *,
+    rows: list[dict[str, Any]],
+    scales: list[float],
+    global_scale: float,
+    min_tier_rows: int,
+    min_market_rows: int,
+    min_tier_market_rows: int,
+    min_source_rows: int,
+    min_line_bucket_rows: int,
+    min_market_source_rows: int,
+    min_tier_market_source_rows: int,
+    min_train_improvement: float,
+    residual_clip: float,
+    p_lo: float,
+    p_hi: float,
+) -> dict[str, dict[str, Any]]:
+    output: dict[str, dict[str, Any]] = {}
+    needs_tier = any(strategy in strategies for strategy in ("tier", "tier_market", "tier_market_source"))
+    needs_market = any(strategy in strategies for strategy in ("market", "market_source"))
+    needs_tier_market = any(strategy in strategies for strategy in ("tier_market", "tier_market_source"))
+    if needs_tier:
+        output["tier"] = _fit_tier(
+            rows,
+            scales,
+            fallback=global_scale,
+            min_rows=min_tier_rows,
+            min_train_improvement=min_train_improvement,
+            residual_clip=residual_clip,
+            p_lo=p_lo,
+            p_hi=p_hi,
+        )
+    if needs_market:
+        output["market"] = _fit_market(
+            rows,
+            scales,
+            fallback=global_scale,
+            min_rows=min_market_rows,
+            min_train_improvement=min_train_improvement,
+            residual_clip=residual_clip,
+            p_lo=p_lo,
+            p_hi=p_hi,
+        )
+    if needs_tier_market:
+        tier_map = output.get("tier", {}).get("tier", {})
+        output["tier_market"] = _fit_tier_market(
+            rows,
+            scales,
+            tier_map=tier_map,
+            global_scale=global_scale,
+            min_rows=min_tier_market_rows,
+            min_train_improvement=min_train_improvement,
+            residual_clip=residual_clip,
+            p_lo=p_lo,
+            p_hi=p_hi,
+        )
+    if "source" in strategies:
+        output["source"] = _fit_source(
+            rows,
+            scales,
+            fallback=global_scale,
+            min_rows=min_source_rows,
+            min_train_improvement=min_train_improvement,
+            residual_clip=residual_clip,
+            p_lo=p_lo,
+            p_hi=p_hi,
+        )
+    if "line_bucket" in strategies:
+        output["line_bucket"] = _fit_line_bucket(
+            rows,
+            scales,
+            fallback=global_scale,
+            min_rows=min_line_bucket_rows,
+            min_train_improvement=min_train_improvement,
+            residual_clip=residual_clip,
+            p_lo=p_lo,
+            p_hi=p_hi,
+        )
+    if "market_source" in strategies:
+        market_map = output.get("market", {}).get("market", {})
+        output["market_source"] = _fit_market_source(
+            rows,
+            scales,
+            market_map=market_map,
+            global_scale=global_scale,
+            min_rows=min_market_source_rows,
+            min_train_improvement=min_train_improvement,
+            residual_clip=residual_clip,
+            p_lo=p_lo,
+            p_hi=p_hi,
+        )
+    if "tier_market_source" in strategies:
+        tier_market_map = output.get("tier_market", {}).get("tier_market", {})
+        tier_map = output.get("tier", {}).get("tier", {})
+        output["tier_market_source"] = _fit_tier_market_source(
+            rows,
+            scales,
+            tier_market_map=tier_market_map,
+            tier_map=tier_map,
+            global_scale=global_scale,
+            min_rows=min_tier_market_source_rows,
+            min_train_improvement=min_train_improvement,
+            residual_clip=residual_clip,
+            p_lo=p_lo,
+            p_hi=p_hi,
+        )
+    return output
 
 
 def _fit_tier(
@@ -332,6 +502,120 @@ def _fit_tier_market(
     return {"global": global_scale, "tier": tier_map, "market": {}, "tier_market": tier_market_map}
 
 
+def _fit_source(
+    rows: list[dict[str, Any]],
+    scales: list[float],
+    *,
+    fallback: float,
+    min_rows: int,
+    min_train_improvement: float,
+    residual_clip: float,
+    p_lo: float,
+    p_hi: float,
+) -> dict[str, Any]:
+    source_map = _fit_segment_map(
+        rows,
+        scales,
+        key_fn=lambda row: _source_key(row),
+        fallback_fn=lambda _key: fallback,
+        min_rows=min_rows,
+        min_train_improvement=min_train_improvement,
+        residual_clip=residual_clip,
+        p_lo=p_lo,
+        p_hi=p_hi,
+    )
+    return {"global": fallback, "tier": {}, "market": {}, "tier_market": {}, "source": source_map}
+
+
+def _fit_line_bucket(
+    rows: list[dict[str, Any]],
+    scales: list[float],
+    *,
+    fallback: float,
+    min_rows: int,
+    min_train_improvement: float,
+    residual_clip: float,
+    p_lo: float,
+    p_hi: float,
+) -> dict[str, Any]:
+    line_bucket_map = _fit_segment_map(
+        rows,
+        scales,
+        key_fn=lambda row: _line_bucket(row),
+        fallback_fn=lambda _key: fallback,
+        min_rows=min_rows,
+        min_train_improvement=min_train_improvement,
+        residual_clip=residual_clip,
+        p_lo=p_lo,
+        p_hi=p_hi,
+    )
+    return {"global": fallback, "tier": {}, "market": {}, "tier_market": {}, "line_bucket": line_bucket_map}
+
+
+def _fit_market_source(
+    rows: list[dict[str, Any]],
+    scales: list[float],
+    *,
+    market_map: dict[str, float],
+    global_scale: float,
+    min_rows: int,
+    min_train_improvement: float,
+    residual_clip: float,
+    p_lo: float,
+    p_hi: float,
+) -> dict[str, Any]:
+    market_source_map = _fit_segment_map(
+        rows,
+        scales,
+        key_fn=lambda row: _market_source_key(row),
+        fallback_fn=lambda key: market_map.get(key.split("|", 1)[0], global_scale),
+        min_rows=min_rows,
+        min_train_improvement=min_train_improvement,
+        residual_clip=residual_clip,
+        p_lo=p_lo,
+        p_hi=p_hi,
+    )
+    return {"global": global_scale, "tier": {}, "market": market_map, "tier_market": {}, "market_source": market_source_map}
+
+
+def _fit_tier_market_source(
+    rows: list[dict[str, Any]],
+    scales: list[float],
+    *,
+    tier_market_map: dict[str, float],
+    tier_map: dict[str, float],
+    global_scale: float,
+    min_rows: int,
+    min_train_improvement: float,
+    residual_clip: float,
+    p_lo: float,
+    p_hi: float,
+) -> dict[str, Any]:
+    tier_market_source_map = _fit_segment_map(
+        rows,
+        scales,
+        key_fn=lambda row: _tier_market_source_key(row),
+        fallback_fn=lambda key: _fallback_tier_market_source_scale(
+            key,
+            tier_market_map=tier_market_map,
+            tier_map=tier_map,
+            global_scale=global_scale,
+        ),
+        min_rows=min_rows,
+        min_train_improvement=min_train_improvement,
+        residual_clip=residual_clip,
+        p_lo=p_lo,
+        p_hi=p_hi,
+    )
+    return {
+        "global": global_scale,
+        "tier": tier_map,
+        "market": {},
+        "tier_market": tier_market_map,
+        "tier_market_source": tier_market_source_map,
+    }
+
+
 def _fit_segment_map(
     rows: list[dict[str, Any]],
     scales: list[float],
@@ -372,20 +656,11 @@ def _best_scale(
 ) -> float:
     best_scale = scales[0]
     best_brier = math.inf
-    best_logloss = math.inf
     for scale in scales:
-        predictions = _predict_rows(
-            rows,
-            {"global": scale, "tier": {}, "market": {}, "tier_market": {}},
-            residual_clip=residual_clip,
-            p_lo=p_lo,
-            p_hi=p_hi,
-        )
-        metric = _metrics([item["actual"] for item in predictions], [item["probability"] for item in predictions])
-        if metric["brier"] < best_brier or (metric["brier"] == best_brier and metric["logloss"] < best_logloss):
+        brier = _brier_for_scale(rows, scale, residual_clip=residual_clip, p_lo=p_lo, p_hi=p_hi)
+        if brier < best_brier:
             best_scale = scale
-            best_brier = metric["brier"]
-            best_logloss = metric["logloss"]
+            best_brier = brier
     return best_scale
 
 
@@ -397,14 +672,16 @@ def _brier_for_scale(
     p_lo: float,
     p_hi: float,
 ) -> float:
-    predictions = _predict_rows(
-        rows,
-        {"global": scale, "tier": {}, "market": {}, "tier_market": {}},
-        residual_clip=residual_clip,
-        p_lo=p_lo,
-        p_hi=p_hi,
-    )
-    return _metrics([item["actual"] for item in predictions], [item["probability"] for item in predictions])["brier"]
+    if not rows:
+        return 0.0
+    total = 0.0
+    for row in rows:
+        label = 1.0 if _float(row.get("actual_over"), 0.0) >= 0.5 else 0.0
+        base = _clamp(_float(row.get("base_over_probability"), 0.50), p_lo, p_hi)
+        residual = _clamp(_float(row.get("cat_residual"), 0.0), -residual_clip, residual_clip)
+        probability = _clamp(base + scale * residual, p_lo, p_hi)
+        total += (probability - label) ** 2
+    return round(total / len(rows), 8)
 
 
 def _predict_rows(
@@ -436,11 +713,23 @@ def _predict_rows(
 def _scale_for_row(row: dict[str, Any], scale_config: dict[str, Any]) -> float:
     tier = str(row.get("tier") or "STANDARD").upper()
     market = str(row.get("market") or "").strip()
+    source = _source_key(row)
+    line_bucket = _line_bucket(row)
     tier_market = f"{tier}|{market}"
+    market_source = _market_source_key(row)
+    tier_market_source = _tier_market_source_key(row)
+    if tier_market_source in scale_config.get("tier_market_source", {}):
+        return float(scale_config["tier_market_source"][tier_market_source])
     if tier_market in scale_config.get("tier_market", {}):
         return float(scale_config["tier_market"][tier_market])
+    if market_source in scale_config.get("market_source", {}):
+        return float(scale_config["market_source"][market_source])
     if market in scale_config.get("market", {}):
         return float(scale_config["market"][market])
+    if source in scale_config.get("source", {}):
+        return float(scale_config["source"][source])
+    if line_bucket in scale_config.get("line_bucket", {}):
+        return float(scale_config["line_bucket"][line_bucket])
     if tier in scale_config.get("tier", {}):
         return float(scale_config["tier"][tier])
     return float(scale_config.get("global", 0.50))
@@ -493,6 +782,65 @@ def _tier_market_key(row: dict[str, Any]) -> str:
     tier = str(row.get("tier") or "STANDARD").upper()
     market = str(row.get("market") or "").strip()
     return f"{tier}|{market}"
+
+
+def _source_key(row: dict[str, Any]) -> str:
+    source = str(row.get("market_context_source_type") or "").strip()
+    if source:
+        return source
+    return "prizepicks_line_only" if _float(row.get("feature_prizepicks_line_only_market_context"), 0.0) >= 0.5 else "external_market"
+
+
+def _market_source_key(row: dict[str, Any]) -> str:
+    return f"{str(row.get('market') or '').strip()}|{_source_key(row)}"
+
+
+def _tier_market_source_key(row: dict[str, Any]) -> str:
+    tier = str(row.get("tier") or "STANDARD").upper()
+    market = str(row.get("market") or "").strip()
+    return f"{tier}|{market}|{_source_key(row)}"
+
+
+def _fallback_tier_market_source_scale(
+    key: str,
+    *,
+    tier_market_map: dict[str, float],
+    tier_map: dict[str, float],
+    global_scale: float,
+) -> float:
+    pieces = key.split("|")
+    tier = pieces[0] if pieces else "STANDARD"
+    market = pieces[1] if len(pieces) > 1 else ""
+    tier_market = f"{tier}|{market}"
+    if tier_market in tier_market_map:
+        return float(tier_market_map[tier_market])
+    if tier in tier_map:
+        return float(tier_map[tier])
+    return float(global_scale)
+
+
+def _line_bucket(row: dict[str, Any]) -> str:
+    existing = str(row.get("line_bucket") or "").strip()
+    if existing:
+        return existing
+    value = _float(row.get("line"), 0.0)
+    if value <= 0:
+        return "line_unknown"
+    if value < 0.75:
+        return "line_0_0.5"
+    if value < 1.75:
+        return "line_1_1.5"
+    if value < 2.75:
+        return "line_2_2.5"
+    if value < 4.75:
+        return "line_3_4.5"
+    if value < 7.75:
+        return "line_5_7.5"
+    if value < 12.75:
+        return "line_8_12.5"
+    if value < 25:
+        return "line_13_24.5"
+    return "line_25_plus"
 
 
 def _predictions_path(artifact_path: Path, meta: dict[str, Any]) -> Path:

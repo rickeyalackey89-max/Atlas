@@ -296,4 +296,7 @@ Publishing should remain disabled until:
 - Do not import production NBA model artifacts as MLB baselines.
 - Do not use NBA Brier/calibration thresholds as MLB acceptance criteria.
 - Do not let MLB Dev publish to production dashboard automatically.
-- Do not modify `C:\Users\13142\Atlas\Atlas` while building MLB Dev.
+- Do not modify `C:\Users\13142\Atlas\NBA` while building MLB unless the task
+  explicitly includes NBA production work.
+- Do not target legacy roots such as `C:\Users\13142\Atlas\Atlas` or
+  `C:\Users\13142\Atlas\Atlas-MLB-dev` for new automation.

@@ -19,6 +19,7 @@ from dataclasses import replace
 from pathlib import Path
 from typing import Any
 
+import mlb.runtime.slip_builders as slip_builder_registry
 import mlb.runtime.slips as slips_runtime
 from mlb.runtime.replay_eval import _EvalLegIndex, _evaluate_slip, _load_slip_specs
 
@@ -50,7 +51,7 @@ def main() -> int:
     eval_root = Path(args.eval_root)
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    original_policies = dict(slips_runtime.FAMILY_BUILDER_POLICIES)
+    original_policies = dict(slip_builder_registry.FAMILY_BUILDER_POLICIES)
     variants = _policy_variants(original_policies)
     run_ids = _run_ids(corpus_dir)
     if not run_ids:
@@ -64,7 +65,7 @@ def main() -> int:
     temp_root = Path(tempfile.mkdtemp(prefix="_builder_policy_training_", dir=str(run_root)))
     try:
         for variant_name, policies in variants.items():
-            slips_runtime.FAMILY_BUILDER_POLICIES = policies
+            slip_builder_registry.FAMILY_BUILDER_POLICIES = policies
             evaluated: list[dict[str, Any]] = []
             for run_id in run_ids:
                 source_run_dir = run_root / run_id
@@ -100,7 +101,7 @@ def main() -> int:
 
             summary_rows.extend(_summary_rows(variant_name, evaluated))
     finally:
-        slips_runtime.FAMILY_BUILDER_POLICIES = original_policies
+        slip_builder_registry.FAMILY_BUILDER_POLICIES = original_policies
         if not args.keep_temp:
             shutil.rmtree(temp_root, ignore_errors=True)
 

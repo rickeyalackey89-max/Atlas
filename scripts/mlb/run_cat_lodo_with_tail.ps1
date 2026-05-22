@@ -5,6 +5,7 @@ param(
     [string]$Iterations = "200,400,600",
     [string]$LearningRates = "0.03,0.06",
     [string]$Depths = "4",
+    [string]$ModelConfigs = "",
     [string]$ResidualScales = "0.25,0.35,0.50,0.65",
     [double]$ResidualClip = 0.20,
     [double]$PLo = 0.03,
@@ -44,9 +45,6 @@ $cmd = @(
     "--corpus-dir", $CorpusDir,
     "--output-dir", $OutputDir,
     "--version", $Version,
-    "--iterations", $Iterations,
-    "--learning-rates", $LearningRates,
-    "--depths", $Depths,
     "--residual-scales", $ResidualScales,
     "--residual-clip", [string]$ResidualClip,
     "--p-lo", [string]$PLo,
@@ -55,6 +53,16 @@ $cmd = @(
     "--min-data-in-leaf", [string]$MinDataInLeaf,
     "--random-seed", [string]$RandomSeed
 )
+
+if ($ModelConfigs) {
+    $cmd += @("--model-configs", $ModelConfigs)
+} else {
+    $cmd += @(
+        "--iterations", $Iterations,
+        "--learning-rates", $LearningRates,
+        "--depths", $Depths
+    )
+}
 
 "[CAT-LODO] command=$($cmd -join ' ')" | Add-Content -Path $logPath -Encoding UTF8
 

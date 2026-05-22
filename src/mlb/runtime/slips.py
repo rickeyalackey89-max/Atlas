@@ -8,7 +8,6 @@ import json
 import math
 import os
 import time
-from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -26,6 +25,12 @@ from core.prizepicks_payout_formula import (
     write_payout_formula_audit,
 )
 from mlb.runtime.config import active_mlb_config_manifest
+from mlb.runtime.slip_builders import (
+    FamilyBuilderPolicy,
+    family_policy as _builder_family_policy,
+    family_policy_manifest as _builder_family_policy_manifest,
+    policy_to_manifest as _builder_policy_to_manifest,
+)
 from mlb.domain.playability import (
     TIER_PLAYABLE_SIDE_FILTERS,
     is_playable_side,
@@ -42,7 +47,7 @@ PUBLIC_SIZED_SLIP_COUNTS = (2, 3, 4, 5)
 DEMONHUNTER_SIZES = (3, 4, 5)
 PAYOUT_QUOTE_MANIFEST_NAME = "payout_quote_manifest.json"
 PAYOUT_FORMULA_AUDIT_NAME = "payout_formula_audit.json"
-PUBLIC_SLIP_RANKER_VERSION = "atlas_mlb_public_slip_ranker_v18_market_source_context"
+PUBLIC_SLIP_RANKER_VERSION = "atlas_mlb_public_slip_ranker_v22_marketed_bettingpros_windfall_probability"
 FEATURE_CONTEXT_FIELDS = (
     "market_group",
     "matchup_context_available",
@@ -64,8 +69,11 @@ FEATURE_CONTEXT_FIELDS = (
 )
 TIER_ORDER = ("GOBLIN", "STANDARD", "DEMON")
 PUBLIC_PORTFOLIO_PRIORITY = ("Marketed", "System", "Windfall", "DemonHunter")
+PUBLIC_PORTFOLIO_INDEPENDENT_FAMILIES: set[str] = {"DemonHunter"}
 PUBLIC_PORTFOLIO_MAX_EXACT_LEG_REPEATS = 1
 PUBLIC_PORTFOLIO_MAX_EXPOSURE_REPEATS = 1
+PUBLIC_PORTFOLIO_MAX_PLAYER_REPEATS = 1
+PUBLIC_PORTFOLIO_MAX_RISK_SEGMENT_REPEATS = 1
 PUBLIC_MAX_SAME_MARKET_PER_SLIP = 2
 PUBLIC_MAX_PITCHER_WORKLOAD_LEGS_PER_SLIP = 1
 PUBLIC_TIER_DIRECTION_FILTERS = {tier: set(sides) for tier, sides in TIER_PLAYABLE_SIDE_FILTERS.items()}
@@ -106,7 +114,29 @@ PUBLIC_BLOCKED_SEGMENTS = {
     ("STANDARD", "pitches_thrown", "UNDER"),
     ("STANDARD", "walks", "UNDER"),
 }
+PUBLIC_RISK_CAPPED_SEGMENTS = {
+    ("DEMON", "hits", "OVER"),
+    ("DEMON", "hits_runs_rbis", "OVER"),
+    ("DEMON", "total_bases", "OVER"),
+    ("STANDARD", "pitching_outs", "OVER"),
+    ("GOBLIN", "pitching_outs", "OVER"),
+}
 PUBLIC_STANDARD_PRIOR_FLOOR = 0.505
+PUBLIC_LOW_RELIABILITY_PRIOR = 0.56
+PUBLIC_STRONG_RELIABILITY_PRIOR = 0.62
+PUBLIC_MODEL_PRIOR_GAP_START = 0.10
+PUBLIC_MODEL_PRIOR_GAP_MAX_PENALTY = 0.08
+PUBLIC_WEAK_SEGMENT_MAX_PENALTY = 0.05
+PUBLIC_MARGINAL_WORKLOAD_PROBABILITY = {
+    "Marketed": 0.72,
+    "System": 0.72,
+    "Windfall": 0.68,
+    "DemonHunter": 0.62,
+}
+PUBLIC_PP_SPECIFIC_MARKETS = {
+    "hitter_fantasy_score",
+    "pitcher_fantasy_score",
+}
 BETTINGPROS_CONTEXT_FIELDS = (
     "bettingpros_recommended_side",
     "bettingpros_projection_value",
@@ -149,184 +179,6 @@ PROP_MARKET_IDENTIFIERS = {
     "stolen_bases": 20,
 }
 
-
-@dataclass(frozen=True)
-class _FamilyBuilderPolicy:
-    name: str
-    purpose: str
-    probability_weight: float
-    prior_weight: float
-    bettingpros_weight: float
-    stability_weight: float
-    fragility_weight: float
-    edge_weight: float
-    prop_identifier_weight: float
-    tier_bonus: dict[str, float]
-    market_bonus: dict[str, float]
-    market_penalty: dict[str, float]
-    segment_bonus: dict[tuple[str, str], float]
-    segment_penalty: dict[tuple[str, str], float]
-    min_probability_by_tier: dict[str, float]
-    min_edge: float = 0.0
-
-
-FAMILY_BUILDER_POLICIES: dict[str, _FamilyBuilderPolicy] = {
-    "Marketed": _FamilyBuilderPolicy(
-        name="Marketed",
-        purpose="premium_public_picks",
-        probability_weight=0.47,
-        prior_weight=0.19,
-        bettingpros_weight=0.05,
-        stability_weight=0.10,
-        fragility_weight=0.07,
-        edge_weight=0.13,
-        prop_identifier_weight=0.02,
-        tier_bonus={"GOBLIN": 0.06, "STANDARD": 0.03, "DEMON": -0.02},
-        market_bonus={
-            "hitter_fantasy_score": 0.10,
-            "total_bases": 0.05,
-            "singles": 0.04,
-            "runs": 0.03,
-            "pitcher_strikeouts": 0.03,
-            "plate_appearances": 0.02,
-            "hits": 0.02,
-        },
-        market_penalty={
-            "pitches_thrown": 0.12,
-            "pitcher_fantasy_score": 0.08,
-            "hits_allowed": 0.07,
-            "walks_allowed": 0.03,
-        },
-        segment_bonus={
-            ("STANDARD", "pitcher_strikeouts"): 0.05,
-            ("STANDARD", "pitching_outs"): 0.05,
-            ("DEMON", "singles"): 0.04,
-            ("DEMON", "hits_runs_rbis"): 0.03,
-        },
-        segment_penalty={
-            ("DEMON", "pitcher_strikeouts"): 0.10,
-            ("DEMON", "pitching_outs"): 0.10,
-            ("DEMON", "pitcher_fantasy_score"): 0.12,
-        },
-        min_probability_by_tier={"GOBLIN": 0.67, "STANDARD": 0.61, "DEMON": 0.60},
-        min_edge=0.03,
-    ),
-    "System": _FamilyBuilderPolicy(
-        name="System",
-        purpose="atlas_value_ev",
-        probability_weight=0.35,
-        prior_weight=0.39,
-        bettingpros_weight=0.05,
-        stability_weight=0.09,
-        fragility_weight=0.06,
-        edge_weight=0.11,
-        prop_identifier_weight=0.02,
-        tier_bonus={"GOBLIN": 0.04, "STANDARD": 0.02, "DEMON": -0.10},
-        market_bonus={
-            "hitter_fantasy_score": 0.07,
-            "pitching_outs": 0.04,
-            "pitcher_strikeouts": 0.03,
-            "total_bases": 0.03,
-            "hits_runs_rbis": 0.03,
-            "plate_appearances": 0.02,
-        },
-        market_penalty={
-            "pitches_thrown": 0.08,
-            "pitcher_fantasy_score": 0.04,
-            "hits_allowed": 0.03,
-        },
-        segment_bonus={
-            ("GOBLIN", "pitching_outs"): 0.03,
-        },
-        segment_penalty={
-            ("STANDARD", "plate_appearances"): 0.05,
-            ("STANDARD", "hits"): 0.04,
-            ("STANDARD", "hits_allowed"): 0.06,
-        },
-        min_probability_by_tier={"GOBLIN": 0.63, "STANDARD": 0.58, "DEMON": 0.61},
-        min_edge=0.01,
-    ),
-    "Windfall": _FamilyBuilderPolicy(
-        name="Windfall",
-        purpose="flex_upside_best_of_both_worlds",
-        probability_weight=0.34,
-        prior_weight=0.25,
-        bettingpros_weight=0.08,
-        stability_weight=0.08,
-        fragility_weight=0.05,
-        edge_weight=0.13,
-        prop_identifier_weight=0.02,
-        tier_bonus={"DEMON": 0.08, "GOBLIN": 0.04, "STANDARD": 0.02},
-        market_bonus={
-            "total_bases": 0.06,
-            "singles": 0.06,
-            "hitter_fantasy_score": 0.04,
-            "runs": 0.04,
-            "pitcher_strikeouts": 0.04,
-            "earned_runs_allowed": 0.03,
-        },
-        market_penalty={
-            "pitches_thrown": 0.04,
-            "pitcher_fantasy_score": 0.03,
-            "hits_allowed": 0.02,
-        },
-        segment_bonus={
-            ("DEMON", "runs"): 0.10,
-            ("DEMON", "total_bases"): 0.08,
-            ("DEMON", "singles"): 0.06,
-            ("DEMON", "hits_runs_rbis"): 0.04,
-            ("STANDARD", "pitcher_strikeouts"): 0.05,
-            ("STANDARD", "earned_runs_allowed"): 0.04,
-            ("STANDARD", "hitter_fantasy_score"): 0.03,
-        },
-        segment_penalty={
-            ("STANDARD", "singles"): 0.08,
-            ("DEMON", "pitcher_strikeouts"): 0.12,
-            ("DEMON", "pitching_outs"): 0.10,
-            ("DEMON", "pitcher_fantasy_score"): 0.12,
-        },
-        min_probability_by_tier={"GOBLIN": 0.60, "STANDARD": 0.55, "DEMON": 0.56},
-        min_edge=0.0,
-    ),
-    "DemonHunter": _FamilyBuilderPolicy(
-        name="DemonHunter",
-        purpose="high_variance_demon_over_payout",
-        probability_weight=0.38,
-        prior_weight=0.24,
-        bettingpros_weight=0.08,
-        stability_weight=0.06,
-        fragility_weight=0.03,
-        edge_weight=0.13,
-        prop_identifier_weight=0.02,
-        tier_bonus={"DEMON": 0.20, "GOBLIN": -1.00, "STANDARD": -1.00},
-        market_bonus={
-            "total_bases": 0.08,
-            "singles": 0.08,
-            "hits_runs_rbis": 0.06,
-            "hitter_fantasy_score": 0.05,
-            "pitcher_strikeouts": 0.03,
-        },
-        market_penalty={
-            "pitches_thrown": 0.08,
-            "pitcher_fantasy_score": 0.08,
-            "hits_allowed": 0.05,
-        },
-        segment_bonus={
-            ("DEMON", "total_bases"): 0.12,
-            ("DEMON", "singles"): 0.10,
-            ("DEMON", "runs"): 0.08,
-            ("DEMON", "hitter_fantasy_score"): 0.06,
-        },
-        segment_penalty={
-            ("DEMON", "hits_runs_rbis"): 0.08,
-            ("DEMON", "pitcher_strikeouts"): 0.08,
-            ("DEMON", "pitching_outs"): 0.08,
-            ("DEMON", "walks_allowed"): 0.08,
-        },
-        min_probability_by_tier={"DEMON": 0.56},
-        min_edge=0.0,
-    ),
-}
 
 TIER_MARKET_SIDE_PRIORS = {
     ("GOBLIN", "earned_runs_allowed", "OVER"): (0.567901, 162),
@@ -472,6 +324,7 @@ SLIP_ROW_COLUMNS = (
     "public_quality_reasons",
     "prop_market_ids",
     "bettingpros_context_avg",
+    "segment_reliability_adjustment_avg",
     "slip_consensus_legs",
     "slip_consensus_share",
     "public_portfolio_status",
@@ -617,6 +470,8 @@ def build_slip_families_from_scored_run(run_dir: Path) -> dict[str, Any]:
 
     portfolio_exact_counts: dict[str, int] = {}
     portfolio_exposure_counts: dict[str, int] = {}
+    portfolio_player_counts: dict[str, int] = {}
+    portfolio_risk_segment_counts: dict[str, int] = {}
     family_outputs: dict[str, Any] = {}
     quote_context = _PayoutQuoteContext(run_dir=run_dir, run_id=run_id, run_mode=run_mode)
 
@@ -628,6 +483,8 @@ def build_slip_families_from_scored_run(run_dir: Path) -> dict[str, Any]:
         single_game_slate=single_game_slate,
         portfolio_exact_counts=portfolio_exact_counts,
         portfolio_exposure_counts=portfolio_exposure_counts,
+        portfolio_player_counts=portfolio_player_counts,
+        portfolio_risk_segment_counts=portfolio_risk_segment_counts,
         max_exact_leg_repeats=PUBLIC_PORTFOLIO_MAX_EXACT_LEG_REPEATS,
         max_exposure_repeats=PUBLIC_PORTFOLIO_MAX_EXPOSURE_REPEATS,
         quote_context=quote_context,
@@ -646,6 +503,8 @@ def build_slip_families_from_scored_run(run_dir: Path) -> dict[str, Any]:
         run_id=run_id,
         portfolio_exact_counts=portfolio_exact_counts,
         portfolio_exposure_counts=portfolio_exposure_counts,
+        portfolio_player_counts=portfolio_player_counts,
+        portfolio_risk_segment_counts=portfolio_risk_segment_counts,
         max_exact_leg_repeats=PUBLIC_PORTFOLIO_MAX_EXACT_LEG_REPEATS,
         max_exposure_repeats=PUBLIC_PORTFOLIO_MAX_EXPOSURE_REPEATS,
         quote_context=quote_context,
@@ -664,6 +523,8 @@ def build_slip_families_from_scored_run(run_dir: Path) -> dict[str, Any]:
         run_id=run_id,
         portfolio_exact_counts=portfolio_exact_counts,
         portfolio_exposure_counts=portfolio_exposure_counts,
+        portfolio_player_counts=portfolio_player_counts,
+        portfolio_risk_segment_counts=portfolio_risk_segment_counts,
         max_exact_leg_repeats=PUBLIC_PORTFOLIO_MAX_EXACT_LEG_REPEATS,
         max_exposure_repeats=PUBLIC_PORTFOLIO_MAX_EXPOSURE_REPEATS,
         quote_context=quote_context,
@@ -677,6 +538,8 @@ def build_slip_families_from_scored_run(run_dir: Path) -> dict[str, Any]:
         run_id=run_id,
         portfolio_exact_counts=portfolio_exact_counts,
         portfolio_exposure_counts=portfolio_exposure_counts,
+        portfolio_player_counts=portfolio_player_counts,
+        portfolio_risk_segment_counts=portfolio_risk_segment_counts,
         max_exact_leg_repeats=PUBLIC_PORTFOLIO_MAX_EXACT_LEG_REPEATS,
         max_exposure_repeats=PUBLIC_PORTFOLIO_MAX_EXPOSURE_REPEATS,
         quote_context=quote_context,
@@ -728,12 +591,21 @@ def build_slip_families_from_scored_run(run_dir: Path) -> dict[str, Any]:
             "priority": list(PUBLIC_PORTFOLIO_PRIORITY),
             "max_exact_leg_repeats_across_public": PUBLIC_PORTFOLIO_MAX_EXACT_LEG_REPEATS,
             "max_exposure_repeats_across_public": PUBLIC_PORTFOLIO_MAX_EXPOSURE_REPEATS,
+            "max_player_repeats_across_public": PUBLIC_PORTFOLIO_MAX_PLAYER_REPEATS,
+            "max_risk_segment_repeats_across_public": PUBLIC_PORTFOLIO_MAX_RISK_SEGMENT_REPEATS,
+            "independent_family_builders": sorted(PUBLIC_PORTFOLIO_INDEPENDENT_FAMILIES),
             "exact_leg_key": "player/event/market/line/side",
             "exposure_key": "player/event/market/side",
+            "player_exposure_key": "player",
+            "risk_segment_key": "tier/market/side for capped volatile segments",
             "selected_exact_leg_count": len(portfolio_exact_counts),
             "selected_exposure_count": len(portfolio_exposure_counts),
+            "selected_player_count": len(portfolio_player_counts),
+            "selected_risk_segment_count": len(portfolio_risk_segment_counts),
             "repeat_violations": _portfolio_repeat_violations(portfolio_exact_counts),
             "exposure_repeat_violations": _portfolio_repeat_violations(portfolio_exposure_counts),
+            "player_repeat_violations": _portfolio_repeat_violations(portfolio_player_counts),
+            "risk_segment_repeat_violations": _portfolio_repeat_violations(portfolio_risk_segment_counts),
         },
         "manifest_path": str(slip_dir / "slips_manifest.json"),
     }
@@ -754,6 +626,8 @@ def _write_sized_family(
     run_id: Any,
     portfolio_exact_counts: dict[str, int],
     portfolio_exposure_counts: dict[str, int],
+    portfolio_player_counts: dict[str, int],
+    portfolio_risk_segment_counts: dict[str, int],
     max_exact_leg_repeats: int,
     max_exposure_repeats: int,
     quote_context: _PayoutQuoteContext,
@@ -776,6 +650,8 @@ def _write_sized_family(
             mix=tier_mix,
             portfolio_exact_counts=portfolio_exact_counts,
             portfolio_exposure_counts=portfolio_exposure_counts,
+            portfolio_player_counts=portfolio_player_counts,
+            portfolio_risk_segment_counts=portfolio_risk_segment_counts,
             max_exact_leg_repeats=max_exact_leg_repeats,
             max_exposure_repeats=max_exposure_repeats,
             family=family,
@@ -799,7 +675,13 @@ def _write_sized_family(
         csv_paths[f"{size}leg"] = str(csv_path)
         json_paths[f"{size}leg"] = str(json_path)
         if len(selected) == size:
-            _commit_portfolio_legs(selected, portfolio_exact_counts, portfolio_exposure_counts)
+            _commit_portfolio_legs(
+                selected,
+                portfolio_exact_counts,
+                portfolio_exposure_counts,
+                portfolio_player_counts,
+                portfolio_risk_segment_counts,
+            )
             slip_count += 1
     return {
         "family": family,
@@ -845,11 +727,17 @@ def _write_demonhunter(
     run_id: Any,
     portfolio_exact_counts: dict[str, int],
     portfolio_exposure_counts: dict[str, int],
+    portfolio_player_counts: dict[str, int],
+    portfolio_risk_segment_counts: dict[str, int],
     max_exact_leg_repeats: int,
     max_exposure_repeats: int,
     quote_context: _PayoutQuoteContext,
 ) -> dict[str, Any]:
     ranked = _ranked_legs(legs, family="DemonHunter")
+    demonhunter_exact_counts: dict[str, int] = {}
+    demonhunter_exposure_counts: dict[str, int] = {}
+    demonhunter_player_counts: dict[str, int] = {}
+    demonhunter_risk_segment_counts: dict[str, int] = {}
     rows: list[dict[str, Any]] = []
     slips: list[dict[str, Any]] = []
     for size in DEMONHUNTER_SIZES:
@@ -857,8 +745,10 @@ def _write_demonhunter(
             ranked,
             size=size,
             allowed_tiers={"DEMON"},
-            portfolio_exact_counts=portfolio_exact_counts,
-            portfolio_exposure_counts=portfolio_exposure_counts,
+            portfolio_exact_counts=demonhunter_exact_counts,
+            portfolio_exposure_counts=demonhunter_exposure_counts,
+            portfolio_player_counts=demonhunter_player_counts,
+            portfolio_risk_segment_counts=None,
             max_exact_leg_repeats=max_exact_leg_repeats,
             max_exposure_repeats=max_exposure_repeats,
             family="DemonHunter",
@@ -877,7 +767,13 @@ def _write_demonhunter(
                 payout_quote=payout_quote,
             )
         )
-        _commit_portfolio_legs(selected, portfolio_exact_counts, portfolio_exposure_counts)
+        _commit_portfolio_legs(
+            selected,
+            demonhunter_exact_counts,
+            demonhunter_exposure_counts,
+            demonhunter_player_counts,
+            demonhunter_risk_segment_counts,
+        )
 
     csv_path = run_dir / "demonhunter.csv"
     json_path = json_dir / "demonhunter.json"
@@ -902,6 +798,9 @@ def _write_demonhunter(
         "target_leg_counts": list(DEMONHUNTER_SIZES),
         "tier_mixes": {str(size): {"DEMON": size} for size in DEMONHUNTER_SIZES},
         "builder_policy": _policy_to_manifest(_family_policy("DemonHunter")),
+        "portfolio_scope": "independent_family_exposure",
+        "selected_exact_leg_count": len(demonhunter_exact_counts),
+        "selected_player_count": len(demonhunter_player_counts),
         "csv_path": str(csv_path),
         "json_path": str(json_path),
     }
@@ -916,6 +815,8 @@ def _write_marketed_slips(
     single_game_slate: bool,
     portfolio_exact_counts: dict[str, int],
     portfolio_exposure_counts: dict[str, int],
+    portfolio_player_counts: dict[str, int],
+    portfolio_risk_segment_counts: dict[str, int],
     max_exact_leg_repeats: int,
     max_exposure_repeats: int,
     quote_context: _PayoutQuoteContext,
@@ -930,6 +831,8 @@ def _write_marketed_slips(
             template=template,
             portfolio_exact_counts=portfolio_exact_counts,
             portfolio_exposure_counts=portfolio_exposure_counts,
+            portfolio_player_counts=portfolio_player_counts,
+            portfolio_risk_segment_counts=portfolio_risk_segment_counts,
             max_exact_leg_repeats=max_exact_leg_repeats,
             max_exposure_repeats=max_exposure_repeats,
             family="Marketed",
@@ -941,7 +844,13 @@ def _write_marketed_slips(
         slip = _marketed_slip_payload(label=label, selected=selected, payout_quote=payout_quote)
         slips.append(slip)
         csv_rows.extend(_marketed_csv_rows(slip))
-        _commit_portfolio_legs(selected, portfolio_exact_counts, portfolio_exposure_counts)
+        _commit_portfolio_legs(
+            selected,
+            portfolio_exact_counts,
+            portfolio_exposure_counts,
+            portfolio_player_counts,
+            portfolio_risk_segment_counts,
+        )
 
     json_path = run_dir / "marketed_slips.json"
     csv_path = run_dir / "marketed_slips.csv"
@@ -965,8 +874,13 @@ def _write_marketed_slips(
                 "priority": list(PUBLIC_PORTFOLIO_PRIORITY),
                 "max_exact_leg_repeats_across_public": max_exact_leg_repeats,
                 "max_exposure_repeats_across_public": max_exposure_repeats,
+                "max_player_repeats_across_public": PUBLIC_PORTFOLIO_MAX_PLAYER_REPEATS,
+                "max_risk_segment_repeats_across_public": PUBLIC_PORTFOLIO_MAX_RISK_SEGMENT_REPEATS,
+                "independent_family_builders": sorted(PUBLIC_PORTFOLIO_INDEPENDENT_FAMILIES),
                 "exact_leg_key": "player/event/market/line/side",
                 "exposure_key": "player/event/market/side",
+                "player_exposure_key": "player",
+                "risk_segment_key": "tier/market/side for capped volatile segments",
             },
             "slip_composition_policy": _slip_composition_policy_manifest(),
         },
@@ -986,7 +900,7 @@ def _write_marketed_slips(
 
 
 def _ranked_legs(legs: list[dict[str, Any]], *, family: str) -> list[dict[str, Any]]:
-    def sort_key(row: dict[str, Any]) -> tuple[float, float, float, float, float, float, float, float]:
+    def sort_key(row: dict[str, Any]) -> tuple[float, float, float, float, float, float, float, float, float]:
         policy = _family_policy(family)
         probability = _float(row.get("model_probability"))
         stability = _float(row.get("stability_score"))
@@ -995,6 +909,7 @@ def _ranked_legs(legs: list[dict[str, Any]], *, family: str) -> list[dict[str, A
         bettingpros = _bettingpros_context_score(row)
         edge = _edge_score(row)
         prop_identifier = _prop_identifier_score(row)
+        reliability_adjustment = _segment_reliability_adjustment(row, family=family)
         tier = _tier(row)
         market = _market_key(row)
         tier_bonus = policy.tier_bonus.get(tier, -0.04)
@@ -1014,15 +929,26 @@ def _ranked_legs(legs: list[dict[str, Any]], *, family: str) -> list[dict[str, A
             + edge * policy.edge_weight
             + prop_identifier * policy.prop_identifier_weight
             + market_adjustment
+            + reliability_adjustment
         )
         candidate_penalty = 0.0 if _public_candidate(row, family=family) else -10.0
-        return (score + tier_bonus + candidate_penalty, prior, bettingpros, probability, stability, edge, prop_identifier, -fragility)
+        return (
+            score + tier_bonus + candidate_penalty,
+            reliability_adjustment,
+            prior,
+            bettingpros,
+            probability,
+            stability,
+            edge,
+            prop_identifier,
+            -fragility,
+        )
 
     return sorted(legs, key=sort_key, reverse=True)
 
 
-def _family_policy(family: str) -> _FamilyBuilderPolicy:
-    return FAMILY_BUILDER_POLICIES.get(family, FAMILY_BUILDER_POLICIES["Marketed"])
+def _family_policy(family: str) -> FamilyBuilderPolicy:
+    return _builder_family_policy(family)
 
 
 def _select_distinct_legs(
@@ -1035,6 +961,8 @@ def _select_distinct_legs(
     used_pitcher_workload_count: list[int] | None = None,
     portfolio_exact_counts: dict[str, int] | None = None,
     portfolio_exposure_counts: dict[str, int] | None = None,
+    portfolio_player_counts: dict[str, int] | None = None,
+    portfolio_risk_segment_counts: dict[str, int] | None = None,
     max_exact_leg_repeats: int = PUBLIC_PORTFOLIO_MAX_EXACT_LEG_REPEATS,
     max_exposure_repeats: int = PUBLIC_PORTFOLIO_MAX_EXPOSURE_REPEATS,
     family: str = "",
@@ -1055,6 +983,8 @@ def _select_distinct_legs(
             row,
             portfolio_exact_counts,
             portfolio_exposure_counts,
+            portfolio_player_counts,
+            portfolio_risk_segment_counts,
             max_exact_leg_repeats,
             max_exposure_repeats,
         ):
@@ -1082,6 +1012,8 @@ def _select_tier_mix_legs(
     used_player_ids: set[str] | None = None,
     portfolio_exact_counts: dict[str, int] | None = None,
     portfolio_exposure_counts: dict[str, int] | None = None,
+    portfolio_player_counts: dict[str, int] | None = None,
+    portfolio_risk_segment_counts: dict[str, int] | None = None,
     max_exact_leg_repeats: int = PUBLIC_PORTFOLIO_MAX_EXACT_LEG_REPEATS,
     max_exposure_repeats: int = PUBLIC_PORTFOLIO_MAX_EXPOSURE_REPEATS,
     family: str = "",
@@ -1106,6 +1038,8 @@ def _select_tier_mix_legs(
             used_pitcher_workload_count=used_pitcher_workload_count,
             portfolio_exact_counts=portfolio_exact_counts,
             portfolio_exposure_counts=portfolio_exposure_counts,
+            portfolio_player_counts=portfolio_player_counts,
+            portfolio_risk_segment_counts=portfolio_risk_segment_counts,
             max_exact_leg_repeats=max_exact_leg_repeats,
             max_exposure_repeats=max_exposure_repeats,
             family=family,
@@ -1123,6 +1057,8 @@ def _select_template_legs(
     template: dict[str, Any],
     portfolio_exact_counts: dict[str, int] | None = None,
     portfolio_exposure_counts: dict[str, int] | None = None,
+    portfolio_player_counts: dict[str, int] | None = None,
+    portfolio_risk_segment_counts: dict[str, int] | None = None,
     max_exact_leg_repeats: int = PUBLIC_PORTFOLIO_MAX_EXACT_LEG_REPEATS,
     max_exposure_repeats: int = PUBLIC_PORTFOLIO_MAX_EXPOSURE_REPEATS,
     family: str = "Marketed",
@@ -1145,6 +1081,8 @@ def _select_template_legs(
             used_pitcher_workload_count=used_pitcher_workload_count,
             portfolio_exact_counts=portfolio_exact_counts,
             portfolio_exposure_counts=portfolio_exposure_counts,
+            portfolio_player_counts=portfolio_player_counts,
+            portfolio_risk_segment_counts=portfolio_risk_segment_counts,
             max_exact_leg_repeats=max_exact_leg_repeats,
             max_exposure_repeats=max_exposure_repeats,
             family=family,
@@ -1181,6 +1119,9 @@ def _slip_payload(
         "market_context_source_mix": _market_context_source_mix(selected),
         "avg_tier_market_side_prior": _mean([_tier_market_side_prior(row) for row in selected]) if selected else 0.0,
         "avg_bettingpros_context_score": _mean([_bettingpros_context_score(row) for row in selected]) if selected else 0.0,
+        "avg_segment_reliability_adjustment": _mean(
+            [_segment_reliability_adjustment(row, family=family) for row in selected]
+        ) if selected else 0.0,
         "hit_prob": _product(_float(row.get("model_probability")) for row in selected) if selected else 0.0,
         "payout_mult": payout,
         "payout_quote_status": _quote_status(payout_quote),
@@ -1218,6 +1159,9 @@ def _marketed_slip_payload(
         "public_quality_reasons": "",
         "family_builder_policy": _policy_to_manifest(_family_policy("Marketed")),
         "slip_composition_policy": _slip_composition_policy_manifest(),
+        "avg_segment_reliability_adjustment": _mean(
+            [_segment_reliability_adjustment(row, family="Marketed") for row in selected]
+        ) if selected else 0.0,
         "slip_consensus_legs": 0,
         "slip_consensus_share": 0.0,
         "public_portfolio_status": "kept",
@@ -1251,6 +1195,7 @@ def _marketed_leg(row: dict[str, Any]) -> dict[str, Any]:
         "selection_model_version": PUBLIC_SLIP_RANKER_VERSION,
         "prop_market_identifier": PROP_MARKET_IDENTIFIERS.get(_market_key(row), 0),
         "tier_market_side_prior": _tier_market_side_prior(row),
+        "segment_reliability_adjustment": _segment_reliability_adjustment(row, family="Marketed"),
         "bettingpros_context_score": _bettingpros_context_score(row),
         "market_context_source_type": _market_context_source_type(row),
         "external_market_context_available": _truthy(row.get("external_market_context_available")),
@@ -1348,6 +1293,9 @@ def _slip_csv_row(selected: list[dict[str, Any]], *, payout_quote: dict[str, Any
         "public_portfolio_reason": "",
         "prop_market_ids": json.dumps([PROP_MARKET_IDENTIFIERS.get(_market_key(row), 0) for row in selected]),
         "bettingpros_context_avg": _mean([_bettingpros_context_score(row) for row in selected]),
+        "segment_reliability_adjustment_avg": _mean(
+            [_segment_reliability_adjustment(row, family="") for row in selected]
+        ),
         "q_leg_count": 0,
         "q_players": "",
     }
@@ -1589,6 +1537,54 @@ def _tier_market_side_prior(row: dict[str, Any]) -> float:
     return round(0.5 + (float(rate) - 0.5) * weight, 6)
 
 
+def _segment_reliability_adjustment(row: dict[str, Any], *, family: str) -> float:
+    """Replay-derived segment guardrail.
+
+    This keeps external market/streak context as a tiebreaker instead of letting
+    a high model probability overrule weak historical segment evidence.
+    """
+    prior = _tier_market_side_prior(row)
+    probability = _float(row.get("model_probability"))
+    tier = _tier(row)
+    side = _side(row)
+    market = _market_key(row)
+    adjustment = 0.0
+
+    if prior >= PUBLIC_STRONG_RELIABILITY_PRIOR:
+        adjustment += min(0.035, (prior - PUBLIC_STRONG_RELIABILITY_PRIOR) * 0.50)
+    elif prior < PUBLIC_LOW_RELIABILITY_PRIOR:
+        adjustment -= min(PUBLIC_WEAK_SEGMENT_MAX_PENALTY, (PUBLIC_LOW_RELIABILITY_PRIOR - prior) * 0.45)
+
+    gap = probability - prior - PUBLIC_MODEL_PRIOR_GAP_START
+    if gap > 0 and prior < 0.58:
+        family_weight = {
+            "Marketed": 0.36,
+            "System": 0.32,
+            "Windfall": 0.22,
+            "DemonHunter": 0.12,
+        }.get(family, 0.25)
+        adjustment -= min(PUBLIC_MODEL_PRIOR_GAP_MAX_PENALTY, gap * family_weight)
+
+    if side == "OVER" and market in PUBLIC_PITCHER_WORKLOAD_MARKETS:
+        threshold = PUBLIC_MARGINAL_WORKLOAD_PROBABILITY.get(family, 0.68)
+        if probability < threshold:
+            adjustment -= min(0.07, 0.02 + (threshold - probability) * 0.45)
+
+    if (
+        family in {"Marketed", "System"}
+        and tier == "STANDARD"
+        and market in {"hitter_fantasy_score", "total_bases", "pitcher_strikeouts"}
+        and prior < PUBLIC_LOW_RELIABILITY_PRIOR
+    ):
+        adjustment -= 0.02
+
+    if family in {"Marketed", "System"} and market in PUBLIC_PP_SPECIFIC_MARKETS:
+        if not _truthy(row.get("external_market_context_available")):
+            adjustment -= 0.015
+
+    return round(_clamp(adjustment, -0.16, 0.05), 6)
+
+
 def _market_key(row: dict[str, Any]) -> str:
     text = str(row.get("market") or row.get("stat_raw") or row.get("source_market") or row.get("stat") or "")
     text = text.strip().lower()
@@ -1734,10 +1730,23 @@ def _exposure_leg_key(row: dict[str, Any]) -> str:
     return f"projection|{projection_id}|{side}" if projection_id else ""
 
 
+def _player_exposure_key(row: dict[str, Any]) -> str:
+    return _player_key(row)
+
+
+def _risk_segment_key(row: dict[str, Any]) -> str:
+    segment = (_tier(row), _market_key(row), _side(row))
+    if segment not in PUBLIC_RISK_CAPPED_SEGMENTS:
+        return ""
+    return "|".join(segment)
+
+
 def _portfolio_leg_available(
     row: dict[str, Any],
     portfolio_exact_counts: dict[str, int] | None,
     portfolio_exposure_counts: dict[str, int] | None,
+    portfolio_player_counts: dict[str, int] | None,
+    portfolio_risk_segment_counts: dict[str, int] | None,
     max_exact_leg_repeats: int,
     max_exposure_repeats: int,
 ) -> bool:
@@ -1749,6 +1758,14 @@ def _portfolio_leg_available(
     if portfolio_exposure_counts is not None and exposure_key:
         if int(portfolio_exposure_counts.get(exposure_key, 0)) >= max_exposure_repeats:
             return False
+    player_key = _player_exposure_key(row)
+    if portfolio_player_counts is not None and player_key:
+        if int(portfolio_player_counts.get(player_key, 0)) >= PUBLIC_PORTFOLIO_MAX_PLAYER_REPEATS:
+            return False
+    risk_key = _risk_segment_key(row)
+    if portfolio_risk_segment_counts is not None and risk_key:
+        if int(portfolio_risk_segment_counts.get(risk_key, 0)) >= PUBLIC_PORTFOLIO_MAX_RISK_SEGMENT_REPEATS:
+            return False
     return True
 
 
@@ -1756,6 +1773,8 @@ def _commit_portfolio_legs(
     rows: list[dict[str, Any]],
     portfolio_exact_counts: dict[str, int],
     portfolio_exposure_counts: dict[str, int],
+    portfolio_player_counts: dict[str, int],
+    portfolio_risk_segment_counts: dict[str, int],
 ) -> None:
     for row in rows:
         exact_key = _exact_leg_key(row)
@@ -1764,6 +1783,12 @@ def _commit_portfolio_legs(
         exposure_key = _exposure_leg_key(row)
         if exposure_key:
             portfolio_exposure_counts[exposure_key] = int(portfolio_exposure_counts.get(exposure_key, 0)) + 1
+        player_key = _player_exposure_key(row)
+        if player_key:
+            portfolio_player_counts[player_key] = int(portfolio_player_counts.get(player_key, 0)) + 1
+        risk_key = _risk_segment_key(row)
+        if risk_key:
+            portfolio_risk_segment_counts[risk_key] = int(portfolio_risk_segment_counts.get(risk_key, 0)) + 1
 
 
 def _portfolio_repeat_violations(portfolio_counts: dict[str, int]) -> list[dict[str, Any]]:
@@ -1808,6 +1833,18 @@ def _selection_policy_manifest() -> dict[str, Any]:
             {"tier": tier, "market": market, "side": side}
             for tier, market, side in sorted(PUBLIC_BLOCKED_SEGMENTS)
         ],
+        "risk_capped_segments": [
+            {"tier": tier, "market": market, "side": side, "max_repeats_across_public": PUBLIC_PORTFOLIO_MAX_RISK_SEGMENT_REPEATS}
+            for tier, market, side in sorted(PUBLIC_RISK_CAPPED_SEGMENTS)
+        ],
+        "portfolio_exposure_policy": {
+            "max_exact_leg_repeats_across_public": PUBLIC_PORTFOLIO_MAX_EXACT_LEG_REPEATS,
+            "max_exposure_repeats_across_public": PUBLIC_PORTFOLIO_MAX_EXPOSURE_REPEATS,
+            "max_player_repeats_across_public": PUBLIC_PORTFOLIO_MAX_PLAYER_REPEATS,
+            "max_risk_segment_repeats_across_public": PUBLIC_PORTFOLIO_MAX_RISK_SEGMENT_REPEATS,
+            "priority": list(PUBLIC_PORTFOLIO_PRIORITY),
+            "independent_family_builders": sorted(PUBLIC_PORTFOLIO_INDEPENDENT_FAMILIES),
+        },
         "standard_prior_floor_for_system_and_marketed": PUBLIC_STANDARD_PRIOR_FLOOR,
         "feature_context_fields": list(FEATURE_CONTEXT_FIELDS),
         "bettingpros_context_fields": list(BETTINGPROS_CONTEXT_FIELDS),
@@ -1815,10 +1852,20 @@ def _selection_policy_manifest() -> dict[str, Any]:
         "family_builder_policies": _family_policy_manifest(),
         "ranker_signal_weights": {
             "bettingpros_context_score": "family-weighted signal; projection/streak context, not a hard filter",
+            "empirical_reliability_adjustment": "replay-derived segment reliability guardrail; penalizes weak historical segments and high model/prior disagreement",
             "market_context_source_type": "external_bettingpros_mlb_props when a sportsbook market matched; prizepicks_line_only when PP is the only price/line source",
             "prizepicks_line_only_market_context": "playable PP prop without matched external sportsbook context; not an automatic exclusion",
             "prop_market_identifier": "family-weighted signal from replay prop ranking, not a hard filter",
             "tier_market_side_prior": "shrunk replay segment prior",
+        },
+        "empirical_reliability_guardrails": {
+            "low_reliability_prior": PUBLIC_LOW_RELIABILITY_PRIOR,
+            "strong_reliability_prior": PUBLIC_STRONG_RELIABILITY_PRIOR,
+            "model_prior_gap_start": PUBLIC_MODEL_PRIOR_GAP_START,
+            "model_prior_gap_max_penalty": PUBLIC_MODEL_PRIOR_GAP_MAX_PENALTY,
+            "weak_segment_max_penalty": PUBLIC_WEAK_SEGMENT_MAX_PENALTY,
+            "marginal_workload_probability_by_family": dict(PUBLIC_MARGINAL_WORKLOAD_PROBABILITY),
+            "pp_specific_markets": sorted(PUBLIC_PP_SPECIFIC_MARKETS),
         },
         "slip_composition_policy": _slip_composition_policy_manifest(),
         "batter_action_gate": {
@@ -1831,33 +1878,11 @@ def _selection_policy_manifest() -> dict[str, Any]:
 
 
 def _family_policy_manifest() -> dict[str, Any]:
-    return {family: _policy_to_manifest(policy) for family, policy in FAMILY_BUILDER_POLICIES.items()}
+    return _builder_family_policy_manifest()
 
 
-def _policy_to_manifest(policy: _FamilyBuilderPolicy) -> dict[str, Any]:
-    return {
-        "purpose": policy.purpose,
-        "signal_weights": {
-            "model_probability": policy.probability_weight,
-            "tier_market_side_prior": policy.prior_weight,
-            "bettingpros_context_score": policy.bettingpros_weight,
-            "stability_score": policy.stability_weight,
-            "inverse_fragility_score": policy.fragility_weight,
-            "edge_score": policy.edge_weight,
-            "prop_market_identifier": policy.prop_identifier_weight,
-        },
-        "tier_bonus": dict(policy.tier_bonus),
-        "market_bonus": dict(policy.market_bonus),
-        "market_penalty": dict(policy.market_penalty),
-        "segment_bonus": _stringify_segment_adjustments(policy.segment_bonus),
-        "segment_penalty": _stringify_segment_adjustments(policy.segment_penalty),
-        "min_probability_by_tier": dict(policy.min_probability_by_tier),
-        "min_edge": policy.min_edge,
-    }
-
-
-def _stringify_segment_adjustments(values: dict[tuple[str, str], float]) -> dict[str, float]:
-    return {f"{tier}:{market}": value for (tier, market), value in sorted(values.items())}
+def _policy_to_manifest(policy: FamilyBuilderPolicy) -> dict[str, Any]:
+    return _builder_policy_to_manifest(policy)
 
 
 def _slip_composition_policy_manifest() -> dict[str, Any]:
@@ -1865,6 +1890,12 @@ def _slip_composition_policy_manifest() -> dict[str, Any]:
         "max_same_market_per_slip": PUBLIC_MAX_SAME_MARKET_PER_SLIP,
         "max_pitcher_workload_legs_per_slip": PUBLIC_MAX_PITCHER_WORKLOAD_LEGS_PER_SLIP,
         "pitcher_workload_markets": sorted(PUBLIC_PITCHER_WORKLOAD_MARKETS),
+        "max_player_repeats_across_public": PUBLIC_PORTFOLIO_MAX_PLAYER_REPEATS,
+        "independent_family_builders": sorted(PUBLIC_PORTFOLIO_INDEPENDENT_FAMILIES),
+        "risk_capped_segments": [
+            {"tier": tier, "market": market, "side": side}
+            for tier, market, side in sorted(PUBLIC_RISK_CAPPED_SEGMENTS)
+        ],
     }
 
 

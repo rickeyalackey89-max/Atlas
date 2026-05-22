@@ -1,8 +1,10 @@
 param(
-    [string]$OutputDir = "data\mlb\eval\corpus_replay_20260426_20260518_fidelity_v1",
+    [string]$OutputDir = "data\mlb\eval\corpus_replay_20260426_20260520_strict_fidelity_v1",
     [switch]$RefreshBettingProsOdds,
     [string]$CalibrationArtifact = "",
-    [string]$RunIdSuffix = "github_csv_fidelity_v1"
+    [string]$RunIdSuffix = "github_csv_fidelity_v1",
+    [string[]]$ReplayDates = @(),
+    [switch]$SkipPreflight
 )
 
 $ErrorActionPreference = "Continue"
@@ -29,14 +31,59 @@ $items = @(
     @("2026-05-15", "github_prizepicks_csv_20260515T171127Z"),
     @("2026-05-16", "prizepicks_20260516T065109Z", "pp_json_fidelity_v1"),
     @("2026-05-17", "prizepicks_20260517T133520Z", "pp_json_fidelity_v1"),
-    @("2026-05-18", "prizepicks_20260518T164128Z", "pp_json_fidelity_v1")
+    @("2026-05-18", "prizepicks_20260518T164128Z", "pp_json_fidelity_v1"),
+    @("2026-05-19", "prizepicks_20260519T150832Z", "pp_json_fidelity_v1"),
+    @("2026-05-20", "prizepicks_20260520T180552Z", "pp_json_fidelity_v1")
 )
+
+if ($ReplayDates.Count -gt 0) {
+    $requested = @{}
+    foreach ($date in $ReplayDates) {
+        if ($date) {
+            $requested[$date] = $true
+        }
+    }
+    $items = @($items | Where-Object { $requested.ContainsKey($_[0]) })
+    if ($items.Count -eq 0) {
+        Write-Error "No replay items matched -ReplayDates: $($ReplayDates -join ', ')"
+        exit 2
+    }
+}
 
 New-Item -ItemType Directory -Force -Path $OutputDir | Out-Null
 $progressPath = Join-Path $OutputDir "progress.jsonl"
 $summaryPath = Join-Path $OutputDir "sweep_summary.json"
 $slipSummaryPath = Join-Path $OutputDir "slip_sweep_summary.json"
 Remove-Item -Force -ErrorAction SilentlyContinue $progressPath
+
+if (-not $SkipPreflight) {
+    $preflightDates = $items | ForEach-Object { $_[0] }
+    [pscustomobject]@{
+        ts = (Get-Date).ToString("o")
+        stage = "strict_preflight_start"
+        dates = $preflightDates
+    } | ConvertTo-Json -Compress | Add-Content -Encoding utf8 $progressPath
+
+    $preflightArgs = @("run", "python", "scripts\mlb\preflight_strict_replay_dates.py", "--dates") + $preflightDates
+    $preflightOutput = & uv @preflightArgs 2>&1
+    $preflightExit = $LASTEXITCODE
+    $preflightOutput | Set-Content -Encoding utf8 (Join-Path $OutputDir "strict_preflight_stdout.txt")
+    if ($preflightExit -ne 0) {
+        [pscustomobject]@{
+            ts = (Get-Date).ToString("o")
+            stage = "strict_preflight_failed"
+            exit_code = $preflightExit
+            stdout_path = (Join-Path $OutputDir "strict_preflight_stdout.txt")
+        } | ConvertTo-Json -Compress | Add-Content -Encoding utf8 $progressPath
+        Write-Error "Strict replay preflight failed. See $(Join-Path $OutputDir 'strict_preflight_stdout.txt')"
+        exit $preflightExit
+    }
+    [pscustomobject]@{
+        ts = (Get-Date).ToString("o")
+        stage = "strict_preflight_complete"
+        stdout_path = (Join-Path $OutputDir "strict_preflight_stdout.txt")
+    } | ConvertTo-Json -Compress | Add-Content -Encoding utf8 $progressPath
+}
 
 foreach ($item in $items) {
     $date = $item[0]

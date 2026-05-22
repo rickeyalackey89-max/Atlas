@@ -56,6 +56,7 @@ from mlb.runtime.results import RuntimeCommandResult
 from mlb.runtime.roster_context import build_roster_context_artifacts
 from mlb.runtime.runtime_state import publish_run_runtime_state
 from mlb.runtime.slips import build_slip_families_from_scored_run
+from mlb.runtime.source_contract import enforce_replay_source_contract
 from mlb.runtime.source_operations import (
     fetch_baseball_savant_result,
     fetch_espn_game_context_result,
@@ -195,6 +196,7 @@ def run_board_pipeline(
     resolved_snapshot = normalized_source["source_path"]
     normalized = normalized_source["normalized"]
     resolved_run_id = run_id or normalized.run_id
+    replay_source_as_of_utc = None if canonical_run_mode == "live" else _normalized_source_as_of(normalized)
     _progress(
         emit_progress,
         f"[BOARD NORMALIZED] source_type={normalized_source['source_type']} "
@@ -251,6 +253,7 @@ def run_board_pipeline(
         root=root,
         game_date=resolved_game_date,
         run_mode=canonical_run_mode,
+        source_as_of_utc=replay_source_as_of_utc,
     )
     _progress(
         emit_progress,
@@ -272,6 +275,7 @@ def run_board_pipeline(
         root=root,
         game_date=resolved_game_date,
         run_mode=canonical_run_mode,
+        source_as_of_utc=replay_source_as_of_utc,
     )
     _progress(
         emit_progress,
@@ -375,10 +379,43 @@ def run_board_pipeline(
         player_history_context_path=Path(player_history_context_manifest["json_path"]),
         transaction_context_path=Path(transaction_context_manifest["json_path"]),
         advanced_context_path=Path(advanced_context_manifest["json_path"]),
+        pitcher_prop_context_path=Path(matchup_manifest["pitcher_prop_json_path"]),
         root=root,
         run_id=resolved_run_id,
     )
     _progress(emit_progress, _feature_line(feature_manifest))
+    run_dir = output_runs_dir(paths, canonical_run_mode) / resolved_run_id
+    run_dir.mkdir(parents=True, exist_ok=True)
+    feature_completeness = feature_manifest.get("source_completeness", {})
+    source_selection_manifest = _write_source_selection_manifest(
+        run_dir=run_dir,
+        run_id=resolved_run_id,
+        run_mode=canonical_run_mode,
+        game_date=resolved_game_date,
+        config_payload=config_payload,
+        selected_market_source_dirs=market_source_dirs,
+        primary_market_source=primary_market_source,
+        supplemental_market_sources=[draftkings_pick6_source, draftkings_sportsbook_source],
+        context_source_refresh=context_source_refresh,
+        engine_board=engine_board,
+        market_context_manifest=market_context_manifest,
+        injury_context_manifest=injury_context_manifest,
+        statsapi_context_manifest=statsapi_context_manifest,
+        roster_context_manifest=roster_context_manifest,
+        player_history_context_manifest=player_history_context_manifest,
+        transaction_context_manifest=transaction_context_manifest,
+        matchup_manifest=matchup_manifest,
+        advanced_context_manifest=advanced_context_manifest,
+        feature_manifest=feature_manifest,
+    )
+    _progress(
+        emit_progress,
+        f"[SOURCE CONTRACT] status={source_selection_manifest.get('contract_status')} "
+        f"failures={source_selection_manifest.get('failure_count', 0)} "
+        f"warnings={source_selection_manifest.get('warning_count', 0)} "
+        f"manifest={source_selection_manifest.get('manifest_path')}",
+    )
+    enforce_replay_source_contract(source_selection_manifest, context="run_board_pipeline")
     _progress(emit_progress, _progress_banner("BUILD PARAMETER TABLE", resolved_run_id))
     parameter_manifest = build_parameter_table(
         engine_board_path=Path(engine_board["json_path"]),
@@ -435,41 +472,12 @@ def run_board_pipeline(
         f"p_max={score_manifest.get('model_probability_max', '')} "
         f"csv={score_manifest.get('csv_path', '')}",
     )
-    run_dir = output_runs_dir(paths, canonical_run_mode) / resolved_run_id
     _progress(emit_progress, _progress_banner("BUILD SLIPS AND QUOTE PAYOUTS", str(run_dir)))
     slips_manifest = build_slip_families_from_scored_run(run_dir)
     _progress(
         emit_progress,
         f"[SLIPS] count={slips_manifest.get('slip_count', 0)} families={list((slips_manifest.get('families') or {}).keys())} "
         f"payout={_payout_line(slips_manifest)}",
-    )
-    feature_completeness = feature_manifest.get("source_completeness", {})
-    source_selection_manifest = _write_source_selection_manifest(
-        run_dir=run_dir,
-        run_id=resolved_run_id,
-        run_mode=canonical_run_mode,
-        game_date=resolved_game_date,
-        config_payload=config_payload,
-        selected_market_source_dirs=market_source_dirs,
-        primary_market_source=primary_market_source,
-        supplemental_market_sources=[draftkings_pick6_source, draftkings_sportsbook_source],
-        context_source_refresh=context_source_refresh,
-        engine_board=engine_board,
-        market_context_manifest=market_context_manifest,
-        injury_context_manifest=injury_context_manifest,
-        statsapi_context_manifest=statsapi_context_manifest,
-        roster_context_manifest=roster_context_manifest,
-        player_history_context_manifest=player_history_context_manifest,
-        transaction_context_manifest=transaction_context_manifest,
-        matchup_manifest=matchup_manifest,
-        advanced_context_manifest=advanced_context_manifest,
-        feature_manifest=feature_manifest,
-    )
-    _progress(
-        emit_progress,
-        f"[SOURCE CONTRACT] status={source_selection_manifest.get('contract_status')} "
-        f"warnings={source_selection_manifest.get('warning_count', 0)} "
-        f"manifest={source_selection_manifest.get('manifest_path')}",
     )
     pitcher_prop_count = int(feature_manifest.get("market_group_counts", {}).get("pitcher", 0))
     run_packet = {
@@ -1046,6 +1054,20 @@ def _parse_utc_datetime(value: Any) -> datetime | None:
     text = str(value or "").strip()
     if not text:
         return None
+    compact = re.search(r"(20\d{2})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})Z", text)
+    if compact:
+        try:
+            return datetime(
+                int(compact.group(1)),
+                int(compact.group(2)),
+                int(compact.group(3)),
+                int(compact.group(4)),
+                int(compact.group(5)),
+                int(compact.group(6)),
+                tzinfo=timezone.utc,
+            )
+        except ValueError:
+            pass
     try:
         if text.endswith("Z"):
             return datetime.fromisoformat(text.replace("Z", "+00:00")).astimezone(timezone.utc)
@@ -1061,6 +1083,43 @@ def _iso_utc(value: datetime | None) -> str:
     if value is None:
         return ""
     return value.astimezone(timezone.utc).isoformat().replace("+00:00", "Z")
+
+
+def _normalized_source_as_of(normalized: BoardNormalizationResult) -> datetime | None:
+    candidates: list[datetime] = []
+    metadata = normalized.metadata if isinstance(normalized.metadata, dict) else {}
+    for key in ("pulled_at_utc", "snapshot_timestamp", "snapshot_id", "run_id"):
+        parsed = _parse_utc_datetime(metadata.get(key))
+        if parsed:
+            candidates.append(parsed)
+    for key in ("snapshot_id", "run_id"):
+        parsed = _parse_utc_datetime(getattr(normalized, key, ""))
+        if parsed:
+            candidates.append(parsed)
+    for row in normalized.rows:
+        if not isinstance(row, dict):
+            continue
+        for key in ("pulled_at_utc", "snapshot_timestamp"):
+            parsed = _parse_utc_datetime(row.get(key))
+            if parsed:
+                candidates.append(parsed)
+                break
+    return max(candidates) if candidates else None
+
+
+def _market_manifest_as_of(manifest: dict[str, Any], source_dir: Path) -> datetime | None:
+    for key in (
+        "pulled_at_utc",
+        "snapshot_timestamp",
+        "fetched_at_utc",
+        "created_at_utc",
+        "snapshot_id",
+        "run_id",
+    ):
+        parsed = _parse_utc_datetime(manifest.get(key))
+        if parsed:
+            return parsed
+    return _parse_utc_datetime(source_dir.name)
 
 
 def _iso_local(value: datetime | None) -> str:
@@ -1304,6 +1363,7 @@ def _ensure_draftkings_pick6_source(
     root: Path | None,
     game_date: str,
     run_mode: str,
+    source_as_of_utc: datetime | None = None,
 ) -> dict[str, Any]:
     payload: dict[str, Any] = {
         "enabled": enabled,
@@ -1328,16 +1388,23 @@ def _ensure_draftkings_pick6_source(
         source=DRAFTKINGS_MLB_PICK6_SOURCE,
         required_file="oddsapi_props.jsonl",
         game_date=game_date,
+        as_of_utc=source_as_of_utc if normalize_run_mode(run_mode) != "live" else None,
     )
     if normalize_run_mode(run_mode) != "live":
         if existing:
             _apply_existing_market_selection(payload, existing)
             payload["refresh_enabled"] = False
-            payload["selection_mode"] = "date_safe_existing"
+            payload["selection_mode"] = "date_safe_existing_asof" if source_as_of_utc else "date_safe_existing"
+            payload["source_as_of_utc"] = _iso_utc(source_as_of_utc)
         else:
             payload["status"] = "missing"
-            payload["missing_reason"] = "no_same_date_existing_source"
+            payload["missing_reason"] = (
+                "no_same_date_existing_source_at_or_before_replay_snapshot"
+                if source_as_of_utc
+                else "no_same_date_existing_source"
+            )
             payload["refresh_enabled"] = False
+            payload["source_as_of_utc"] = _iso_utc(source_as_of_utc)
         return payload
     try:
         snapshot = fetch_draftkings_mlb_pick6(root=root)
@@ -1368,6 +1435,7 @@ def _ensure_draftkings_sportsbook_source(
     root: Path | None,
     game_date: str,
     run_mode: str,
+    source_as_of_utc: datetime | None = None,
 ) -> dict[str, Any]:
     payload: dict[str, Any] = {
         "enabled": enabled,
@@ -1392,16 +1460,23 @@ def _ensure_draftkings_sportsbook_source(
         source=DRAFTKINGS_MLB_SPORTSBOOK_SOURCE,
         required_file="oddsapi_props.jsonl",
         game_date=game_date,
+        as_of_utc=source_as_of_utc if normalize_run_mode(run_mode) != "live" else None,
     )
     if normalize_run_mode(run_mode) != "live":
         if existing:
             _apply_existing_market_selection(payload, existing)
             payload["refresh_enabled"] = False
-            payload["selection_mode"] = "date_safe_existing"
+            payload["selection_mode"] = "date_safe_existing_asof" if source_as_of_utc else "date_safe_existing"
+            payload["source_as_of_utc"] = _iso_utc(source_as_of_utc)
         else:
             payload["status"] = "missing"
-            payload["missing_reason"] = "no_same_date_existing_source"
+            payload["missing_reason"] = (
+                "no_same_date_existing_source_at_or_before_replay_snapshot"
+                if source_as_of_utc
+                else "no_same_date_existing_source"
+            )
             payload["refresh_enabled"] = False
+            payload["source_as_of_utc"] = _iso_utc(source_as_of_utc)
         return payload
     try:
         snapshot = fetch_draftkings_mlb_sportsbook_props(root=root)
@@ -1439,7 +1514,17 @@ def _market_source_dirs_for_run(
         normalized_output_dir = str(source.get("normalized_output_dir") or "").strip()
         if normalized_output_dir:
             dirs.append(Path(normalized_output_dir))
-    return _dedupe_existing_paths(dirs)
+    selected = _dedupe_existing_paths(dirs)
+    if normalize_run_mode(run_mode) != "live" and game_date:
+        # Historical replay can use an older market source than live, but it
+        # still needs normalized, date-scoped rows. If the configured primary
+        # source is unavailable for that date, fall back to any date-matching
+        # normalized odds source instead of producing a zero-market replay.
+        repo_paths = ensure_mlb_dirs(root)
+        selected = _dedupe_existing_paths(
+            [*selected, *_existing_oddsapi_market_dirs_for_date(repo_paths, game_date)]
+        )
+    return selected
 
 
 def _live_market_source_dirs(
@@ -1517,6 +1602,7 @@ def _existing_market_normalization(
     source: str,
     required_file: str,
     game_date: str | None = None,
+    as_of_utc: datetime | None = None,
 ) -> Path | None:
     staged_root = paths.staged / staged_subdir
     if not staged_root.exists():
@@ -1529,6 +1615,10 @@ def _existing_market_normalization(
             continue
         if source and manifest.get("source") != source:
             continue
+        if as_of_utc is not None:
+            manifest_as_of = _market_manifest_as_of(manifest, manifest_path.parent)
+            if manifest_as_of is None or manifest_as_of > as_of_utc:
+                continue
         rows_path = manifest_path.parent / required_file
         if not rows_path.exists():
             continue

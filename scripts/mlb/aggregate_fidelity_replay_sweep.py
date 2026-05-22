@@ -8,6 +8,8 @@ import json
 from pathlib import Path
 from typing import Any
 
+from mlb.runtime.source_contract import enforce_corpus_source_contracts
+
 
 def main() -> int:
     parser = argparse.ArgumentParser()
@@ -17,6 +19,7 @@ def main() -> int:
     )
     args = parser.parse_args()
     input_dir = Path(args.input_dir)
+    enforce_corpus_source_contracts(input_dir, root=Path.cwd())
     members = []
     market_accumulator: dict[str, dict[str, float]] = {}
     for eval_path in sorted(input_dir.glob("replay_single_*.eval.json")):

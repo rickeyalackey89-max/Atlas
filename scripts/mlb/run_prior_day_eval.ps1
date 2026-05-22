@@ -37,7 +37,10 @@ function Invoke-LoggedCommand {
     )
 
     Write-ProgressJson @{ stage = "${Stage}_start"; date = $Date; run_id = $RunId }
+    $oldErrorActionPreference = $ErrorActionPreference
+    $ErrorActionPreference = "Continue"
     $output = & $CommandArgs[0] @($CommandArgs[1..($CommandArgs.Count - 1)]) 2>&1
+    $ErrorActionPreference = $oldErrorActionPreference
     $exitCode = $LASTEXITCODE
     $output | Set-Content -Encoding utf8 $OutputPath
     if ($exitCode -ne 0) {
@@ -75,13 +78,11 @@ function Resolve-RunIdForDate {
             $scoredPath = Join-Path $_.FullName "scored_legs.json"
             $dateMatched = $false
             if (Test-Path -LiteralPath $manifestPath) {
-                $manifest = Get-Content -Raw -LiteralPath $manifestPath | ConvertFrom-Json -AsHashtable
-                $manifestDate = [string]$manifest["game_date_filter"]
-                if ([string]::IsNullOrWhiteSpace($manifestDate) -and $manifest.ContainsKey("engine_board")) {
-                    $engineBoard = $manifest["engine_board"]
-                    if ($engineBoard -is [hashtable] -and $engineBoard.ContainsKey("game_date_filter")) {
-                        $manifestDate = [string]$engineBoard["game_date_filter"]
-                    }
+                $manifestRaw = Get-Content -Raw -LiteralPath $manifestPath
+                $manifestDate = ""
+                $dateMatches = [regex]::Matches($manifestRaw, '"game_date_filter"\s*:\s*"([^"]+)"')
+                if ($dateMatches.Count -gt 0) {
+                    $manifestDate = [string]$dateMatches[0].Groups[1].Value
                 }
                 $dateMatched = $manifestDate -eq $TargetDate
             } elseif ($_.Name -like "*$targetDateKey*") {

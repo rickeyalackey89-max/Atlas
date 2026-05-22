@@ -1,8 +1,14 @@
 # Active MLB Operational Contract
 
-Last updated: 2026-05-19
+Last updated: 2026-05-22
 
 This is the current working contract for Atlas MLB Dev. It is the source to check before running new replay corpuses, CAT training, or slip-builder sweeps.
+
+Binding replay docs:
+
+- `docs/mlb/STRICT_REPLAY_FIDELITY_CONTRACT.md`
+- `docs/mlb/STRICT_REPLAY_WORKFLOW.md`
+- `docs/mlb/REPLAY_FIDELITY.md`
 
 ## Repository Layout
 
@@ -65,7 +71,7 @@ Active config file: `config/sports/mlb.yaml`
 Current config version:
 
 ```text
-mlb_dev_fidelity_bettingpros_dk_pick6_v6_tuned_slip_v18_market_source_context_20260519
+mlb_dev_fidelity_projection_features_v9_slip_v20_empirical_reliability_matchup_matrix_v1_20260522
 ```
 
 Important config fields:
@@ -90,17 +96,19 @@ mlb_market_prior_sobol_qmc_v0
 Active CAT residual:
 
 ```text
-mlb_cat_over_residual_v6_23date_live_context_scale_tuned
+mlb_cat_over_residual_v9_projection_features_strict_fidelity
 ```
 
 Active CAT artifact:
 
 ```text
-data/mlb/model/cat_probability_kernel_v6_23date_live_context/scale_tuning/tuned_best_config.json
+data/mlb/model/cat_probability_kernel_v9_20260516_20260520_strict_fidelity_projection_features/best_config.json
 ```
 
 Known challenger artifacts:
 
+- `data/mlb/model/cat_probability_kernel_v8_20260516_20260520_strict_fidelity/best_config.json`
+- `data/mlb/model/cat_probability_kernel_v6_23date_live_context/scale_tuning/tuned_best_config.json`
 - `data/mlb/model/cat_probability_kernel_v5_reorg_bettingpros_on/best_config.json`
 - `data/mlb/model/cat_probability_kernel_v6_23date_live_context/best_config.json`
 - `data/mlb/model/cat_probability_kernel_v4_bettingpros_on/best_config.json`
@@ -110,19 +118,54 @@ Known challenger artifacts:
 
 Current CAT promotion basis:
 
-- Source LODO trainer artifact: `data/mlb/model/cat_probability_kernel_v6_23date_live_context/best_config.json`
-- Date-held-out residual scale tuner: `data/mlb/model/cat_probability_kernel_v6_23date_live_context/scale_tuning/tuned_best_config.json`
-- 23-date tuned LODO brier: `0.17984945`
-- 23-date tuned LODO logloss: `0.53872755`
-- 23-date original v6 LODO brier: `0.18093639`
-- 23-date original v6 LODO logloss: `0.54133007`
-- Same-20-date tuned v6 brier: `0.17926806`
-- Same-20-date v5 brier: `0.17963887`
-- Candidate replay smoke date: `2026-05-18`
-- Candidate replay v6 tuned brier/logloss: `0.165452` / `0.500917`
-- Candidate replay v5 brier/logloss: `0.199632` / `0.587311`
+- Strict corpus: `data/mlb/eval/corpus_replay_20260516_20260520_strict_fidelity_v2`
+- Strict preflight report: `data/mlb/audits/strict_replay_preflight/strict_replay_preflight_20260522T162108Z.json`
+- Date count / row count: `5` dates / `30337` rows.
+- v9 projection-feature LODO brier/logloss: `0.18648419` / `0.55538485`.
+- v8 strict-fidelity LODO brier/logloss: `0.18652262` / `0.55550450`.
+- v9 best parameters: `iterations=400`, `learning_rate=0.03`, `depth=4`, `residual_scale=0.65`.
+- Promotion reason: small but clean brier/logloss improvement on the same strict-fidelity corpus after adding projection-derived features.
+
+Projection-derived CAT features:
+
+- `projection_mean_from_base`
+- `projection_delta_from_line`
+- `projection_abs_delta_from_line`
+- `projection_line_ratio`
+
+These are generated from the same base probability/distribution contract used by live scoring. They must be present in replay feature rows before CAT training; missing projection features are a strict-fidelity failure for any projection-feature CAT candidate.
 
 The live-path smoke corpus uses the full trained CAT artifact and is not the fair estimate for future accuracy. Use LODO outputs for CAT and slip-builder decisions.
+
+Source-aware CAT upgrade path:
+
+- The CAT training feature contract now carries `market_context_source_type`,
+  `external_market_context_source`, `line_bucket`, and numeric source flags for
+  BettingPros, DraftKings Pick6, DraftKings Sportsbook, external market context,
+  and PrizePicks-line-only rows.
+- Feature-table contract `baseline_player_prop_features_v2_matchup_source_context`
+  carries live/replay matchup detail before CAT training: batting order slot,
+  lineup probability/confirmation, top-order flag, hitter handedness versus
+  starter handedness, park and umpire fields, and the dedicated pitcher-prop
+  context layer (`workload_context_score`, opponent lineup/K/contact/power/walk
+  scores, pitcher history scores, bullpen support, and pitcher prop confidence).
+  These are normal runtime fields, not hidden trainer-only features.
+- Runtime calibration applies residual scale maps against the same merged
+  parameter+feature row used for CAT prediction, so replay/live stay aligned when
+  a source-aware tuned artifact is promoted.
+- Fast diagnostic: `uv run python scripts/mlb/audit_cat_lodo_residuals.py --artifact <artifact-json>`.
+- Guarded scale tuner supports strategy subsets through `--strategies`; start
+  with `artifact,global,tier,market,tier_market,source,line_bucket` and only run
+  `market_source` or `tier_market_source` when there is enough time and row
+  count to justify the heavier sweep.
+- Current diagnostic on raw v6 LODO:
+  - Overall raw v6 LODO brier/logloss: `0.18093639` / `0.54133007`.
+  - Overall calibration gap: `-0.02312469` (average probability high by about
+    2.3 points).
+  - Line-bucket smoke tuning improved raw v6 to brier/logloss
+    `0.18008696` / `0.53984947`, but does not beat the current tuned artifact.
+  - Conclusion: the next real attempt should retrain CAT with source-aware
+    features, then run guarded segment scaling and builder training.
 
 ## Live Market Sources
 
@@ -179,24 +222,41 @@ Current fair LODO challenger:
 Active builder:
 
 ```text
-atlas_mlb_public_slip_ranker_v18_market_source_context
+atlas_mlb_public_slip_ranker_v22_marketed_bettingpros_windfall_probability
 ```
 
 Promotion basis:
 
-- Live-fidelity replay corpus: `data/mlb/eval/corpus_replay_20260426_20260518_v6_tuned_live_fidelity_v1`
-- Builder sweep: `data/mlb/model/slip_builder_policy_v5_v6_tuned_live_fidelity`
-- Best held-out variant: `marketed_system_probability_plus`
-- Objective score: `0.696264`
-- Settled slip count: `258`
-- Settled rate: `0.952030`
-- Marketed settled win rate: `54/66 = 0.818182`
-- System settled win rate: `54/67 = 0.805970`
-- Windfall settled win rate: `41/61 = 0.672131`
-- DemonHunter settled win rate: `31/64 = 0.484375`
-- Policy change: Marketed and System now weight direct calibrated probability more heavily under the active tuned V6 CAT artifact.
-- Market-source context: scored/eval/slip artifacts distinguish external sportsbook-confirmed props from PrizePicks line-only props using `market_context_source_type` and `prizepicks_line_only_market_context`.
-- 23-date audit result: selected slip legs without external sportsbook context were mostly PP fantasy-score alternates and hit `368/380 = 96.84%`; this context is a tuning signal, not an automatic exclusion.
+- CAT remains `mlb_cat_over_residual_v6_23date_live_context_scale_tuned`.
+- Builder Marketed policy was updated from the strict-fidelity trainer:
+  `data/mlb/model/slip_builder_policy_v8_20260516_20260520_strict_fidelity_cat_overlay`.
+- The selected builder variant is `marketed_bettingpros_plus`; it keeps model
+  probability as the primary Marketed signal while increasing BettingPros
+  streak/context weight as a tiebreaker for premium public picks.
+- Builder Windfall policy was updated from the strict-fidelity trainer after
+  DemonHunter was moved to independent family exposure:
+  `data/mlb/model/slip_builder_policy_v9_20260516_20260520_strict_fidelity_cat_overlay_demon_independent`.
+- The selected Windfall variant is `windfall_probability_plus`; it makes flex
+  slips more model-probability driven and slightly tightens per-tier minimums.
+- Family builder contracts are split by family under
+  `src/mlb/runtime/slip_builders/`:
+  - `marketed.py`: premium public picks.
+  - `system.py`: Atlas Value/EV.
+  - `windfall.py`: flex/upside construction.
+  - `demonhunter.py`: Demon-only high-variance construction.
+- Market-source context is a small tiebreaker only. It is not allowed to become
+  the primary reason a leg outranks stronger empirical family/segment evidence.
+- Runtime ranker `v20_empirical_reliability` adds a replay-derived segment
+  reliability adjustment. Weak historical segments and high model-vs-prior gaps
+  are penalized, especially for premium Marketed/System slips.
+- Pitcher workload props require stronger probability support before they can
+  outrank safer alternatives.
+- Portfolio exposure blocks exact repeats, player repeats, and repeated volatile
+  risk segments across the main public families.
+- DemonHunter is a family-independent builder. It ranks the best Demon overs
+  from its own Demon-only pool instead of being starved by Marketed/System/
+  Windfall exposure caps. It still avoids duplicate exact/player legs internally,
+  but does not hard-cap Demon market segments.
 
 Family order:
 
@@ -226,6 +286,22 @@ Flex-style eval:
 ## Replay Readiness Gates
 
 Before a new corpus replay or CAT training run, run a readiness audit. Do not use a corpus result for model decisions if the replay inputs are incomplete.
+
+Required preflight command:
+
+```powershell
+uv run python scripts\mlb\preflight_strict_replay_dates.py --start 2026-04-26 --end 2026-05-20
+```
+
+The replay sweep script also runs this preflight before scoring. If the
+preflight verdict is not `PASS`, the replay corpus must not start.
+
+Strict-fidelity blocker:
+
+- `source_selection_manifest.json` is a hard replay contract, not advisory telemetry.
+- Any replay with `contract_status: fail` must stop before parameter scoring, slip building, replay eval, corpus aggregation, or CAT training.
+- Corpus aggregation and CAT trainers must reject any member run whose source contract failed.
+- A missing source can only be downgraded from failure to warning by changing the shared source contract code and documenting why live has the same behavior.
 
 Minimum targets:
 

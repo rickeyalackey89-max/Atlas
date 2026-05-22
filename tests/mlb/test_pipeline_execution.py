@@ -1,4 +1,6 @@
+import json
 from pathlib import Path
+from datetime import datetime, timezone
 
 import pytest
 
@@ -7,10 +9,12 @@ from mlb.normalizers.prizepicks import write_prizepicks_board_normalization
 from mlb.runtime.live_execution import run_live_model_result
 from mlb.runtime.pipeline_execution import (
     _draftkings_timing_policy,
+    _existing_market_normalization,
     _live_market_source_dirs,
     _market_source_dirs_for_run,
     run_board_pipeline,
 )
+from mlb.runtime.paths import ensure_mlb_dirs
 from mlb.runtime.results import RuntimeCommandResult
 from mlb.sources.snapshots import write_raw_snapshot
 
@@ -36,6 +40,7 @@ def _stub_primary_market_source(monkeypatch):
         "mlb.runtime.pipeline_execution._ensure_primary_market_source",
         fake_primary_market_source,
     )
+    monkeypatch.setattr("mlb.runtime.pipeline_execution._source_contract_warnings", lambda **kwargs: [])
 
 
 def test_board_pipeline_writes_qmc_runtime_artifacts(tmp_path):
@@ -57,7 +62,7 @@ def test_board_pipeline_writes_qmc_runtime_artifacts(tmp_path):
     assert manifest["features"]["row_count"] == 2
     assert manifest["source_selection"]["source_selection_version"] == "mlb_replay_live_source_contract_v1"
     assert (run_dir / "source_selection_manifest.json").exists()
-    assert manifest["features"]["feature_model_version"] == "baseline_player_prop_features_v1_market_source_type"
+    assert manifest["features"]["feature_model_version"] == "baseline_player_prop_features_v2_matchup_source_context"
     assert manifest["matchups"]["game_date"] == "2026-05-11"
     assert manifest["market_context"]["game_date"] == "2026-05-11"
     assert manifest["injury_context"]["row_count"] == 2
@@ -89,6 +94,34 @@ def test_board_pipeline_writes_qmc_runtime_artifacts(tmp_path):
     assert (run_dir / "operator" / "ai_evaluation.json").exists()
     assert (run_dir / "operator" / "publish_decision.json").exists()
     assert (run_dir / "run_manifest.json").exists()
+
+
+def test_board_pipeline_blocks_failed_replay_source_contract(tmp_path, monkeypatch):
+    snapshot = write_raw_snapshot(source="prizepicks", payload=_sample_prizepicks_payload(), request={}, root=tmp_path)
+
+    monkeypatch.setattr(
+        "mlb.runtime.pipeline_execution._source_contract_warnings",
+        lambda **kwargs: [
+            {
+                "code": "zero_context_completeness",
+                "severity": "failure",
+                "source": "external_market_context_available",
+            }
+        ],
+    )
+
+    with pytest.raises(RuntimeError, match="MLB replay fidelity source contract failed"):
+        run_board_pipeline(
+            snapshot_path=Path(snapshot.path),
+            root=tmp_path,
+            run_id="failed_source_contract_run",
+            game_date="2026-05-11",
+        )
+
+    run_dir = tmp_path / "data" / "mlb" / "test_runs" / "failed_source_contract_run"
+    source_manifest = json.loads((run_dir / "source_selection_manifest.json").read_text(encoding="utf-8"))
+    assert source_manifest["contract_status"] == "fail"
+    assert not (run_dir / "scored_legs.csv").exists()
 
 
 def test_cli_run_board_pipeline_delegates_to_runtime(tmp_path, capsys):
@@ -447,6 +480,46 @@ def test_replay_market_source_dirs_explicitly_include_date_safe_sources(tmp_path
     )
 
     assert dirs == [oddsapi_dir, dk_dir]
+
+
+def test_draftkings_replay_existing_source_obeys_snapshot_asof(tmp_path):
+    staged_root = tmp_path / "data" / "mlb" / "staged" / "draftkings_mlb_pick6"
+    early_dir = staged_root / "draftkings_mlb_pick6_20990511T120000Z"
+    late_dir = staged_root / "draftkings_mlb_pick6_20990511T150000Z"
+    for source_dir in (early_dir, late_dir):
+        source_dir.mkdir(parents=True)
+        (source_dir / "oddsapi_props.jsonl").write_text(
+            '{"source":"draftkings_mlb_pick6","game_date":"2099-05-11"}\n',
+            encoding="utf-8",
+        )
+        (source_dir / "normalize_manifest.json").write_text(
+            (
+                '{"source":"draftkings_mlb_pick6","row_count":1,'
+                f'"snapshot_id":"{source_dir.name}"}}'
+            ),
+            encoding="utf-8",
+        )
+
+    paths = ensure_mlb_dirs(tmp_path)
+    selected = _existing_market_normalization(
+        paths,
+        staged_subdir="draftkings_mlb_pick6",
+        source="draftkings_mlb_pick6",
+        required_file="oddsapi_props.jsonl",
+        game_date="2099-05-11",
+        as_of_utc=datetime(2099, 5, 11, 13, 0, tzinfo=timezone.utc),
+    )
+    too_early = _existing_market_normalization(
+        paths,
+        staged_subdir="draftkings_mlb_pick6",
+        source="draftkings_mlb_pick6",
+        required_file="oddsapi_props.jsonl",
+        game_date="2099-05-11",
+        as_of_utc=datetime(2099, 5, 11, 11, 0, tzinfo=timezone.utc),
+    )
+
+    assert selected == early_dir
+    assert too_early is None
 
 
 def test_draftkings_timing_policy_tracks_each_game_window_on_normal_days():
