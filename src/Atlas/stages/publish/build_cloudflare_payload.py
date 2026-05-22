@@ -45,6 +45,146 @@ def _sanitize(obj):
     return obj
 
 
+def _num_or_none(value):
+    if value in (None, ""):
+        return None
+    try:
+        number = float(value)
+    except Exception:
+        return None
+    if math.isnan(number) or math.isinf(number):
+        return None
+    return number
+
+
+def _atlas_projection_from_row(row) -> dict:
+    """Dashboard-safe projection fields derived from the same minutes/rate surface live uses."""
+
+    explicit_projection = _num_or_none(row.get("atlas_projection_mean"))
+    explicit_delta = _num_or_none(row.get("atlas_projection_delta"))
+    explicit_side_delta = _num_or_none(row.get("atlas_projection_side_delta"))
+    explicit_abs_delta = _num_or_none(row.get("atlas_projection_abs_delta"))
+    explicit_ratio = _num_or_none(row.get("atlas_projection_line_ratio"))
+
+    minutes = _num_or_none(row.get("projected_minutes_model"))
+    if minutes is None:
+        minutes = _num_or_none(row.get("modeled_minutes"))
+    if minutes is None:
+        minutes = _num_or_none(row.get("min_mean"))
+
+    rate = _num_or_none(row.get("rate_mean_ctx"))
+    if rate is None:
+        rate = _num_or_none(row.get("rate_mean"))
+
+    projection = explicit_projection
+    if projection is None and minutes is not None and rate is not None:
+        projection = minutes * rate
+    line = _num_or_none(row.get("line"))
+    direction = str(row.get("direction") or row.get("dir") or "").upper()
+    raw_delta = explicit_delta
+    if raw_delta is None and projection is not None and line is not None:
+        raw_delta = projection - line
+    side_delta = explicit_side_delta
+    if raw_delta is not None:
+        side_delta = side_delta if side_delta is not None else (-raw_delta if direction == "UNDER" else raw_delta)
+    abs_delta = explicit_abs_delta if explicit_abs_delta is not None else (abs(raw_delta) if raw_delta is not None else None)
+    line_ratio = explicit_ratio
+    if line_ratio is None and projection is not None and line is not None and line > 0:
+        line_ratio = projection / line
+    return {
+        "atlas_projection_mean": projection,
+        "atlas_projection_median": None,
+        "atlas_projection_delta": raw_delta,
+        "atlas_projection_side_delta": side_delta,
+        "atlas_projection_abs_delta": abs_delta,
+        "atlas_projection_line_ratio": line_ratio,
+        "atlas_projection_source": row.get("projected_minutes_source") or "atlas_minutes_rate_model",
+        "atlas_projection_minutes": minutes,
+        "atlas_projection_rate": rate,
+    }
+
+
+def _nba_recent_stat_value(log_row, stat: str) -> float | None:
+    stat_key = str(stat or "").upper().strip()
+
+    def val(col: str) -> float:
+        try:
+            raw = log_row.get(col, 0)
+            return float(raw) if pd.notna(raw) else 0.0
+        except Exception:
+            return 0.0
+
+    pts = val("pts")
+    reb = val("reb")
+    ast = val("ast")
+    mapping = {
+        "PTS": pts,
+        "REB": reb,
+        "AST": ast,
+        "FG3M": val("fg3m"),
+        "3PM": val("fg3m"),
+        "PA": pts + ast,
+        "PR": pts + reb,
+        "RA": reb + ast,
+        "PRA": pts + reb + ast,
+        "FTA": val("fta"),
+        "TOV": val("tov"),
+    }
+    out = mapping.get(stat_key)
+    return out if out is not None else None
+
+
+def _nba_recent_games_for_leg(
+    leg: dict,
+    gamelogs_df: Optional["pd.DataFrame"],
+    *,
+    slate_date,
+    limit: int = 5,
+) -> list[dict]:
+    if gamelogs_df is None or gamelogs_df.empty:
+        return []
+    player = str(leg.get("player") or "").strip()
+    stat = str(leg.get("stat") or "").strip()
+    if not player or not stat or "player" not in gamelogs_df.columns:
+        return []
+    logs = gamelogs_df
+    if "player_norm" not in logs.columns:
+        logs = logs.copy()
+        logs["player_norm"] = logs["player"].astype(str).map(lambda x: _norm_name(x).lower())
+    player_norm = _norm_name(player).lower()
+    subset = logs[logs["player_norm"] == player_norm].copy()
+    if subset.empty:
+        return []
+    if "game_date_dt" not in subset.columns:
+        subset["game_date_dt"] = pd.to_datetime(subset["game_date"], errors="coerce")
+    subset = subset[subset["game_date_dt"].notna()].copy()
+    if slate_date is not None:
+        subset = subset[subset["game_date_dt"] < slate_date].copy()
+    if subset.empty:
+        return []
+    subset = subset.sort_values("game_date_dt").tail(limit)
+    line = _num_or_none(leg.get("line"))
+    direction = str(leg.get("dir") or leg.get("direction") or "").upper()
+    rows: list[dict] = []
+    for _, row in subset.iterrows():
+        value = _nba_recent_stat_value(row, stat)
+        if value is None:
+            continue
+        hit = None
+        if line is not None:
+            hit = value < line if direction == "UNDER" else value > line
+        game_date = row.get("game_date_dt")
+        rows.append(
+            {
+                "date": game_date.date().isoformat() if pd.notna(game_date) else str(row.get("game_date") or ""),
+                "opp": str(row.get("opp") or ""),
+                "value": value,
+                "hit": hit,
+            }
+        )
+    return rows
+
+
 def _run_date_from_name(run_name: str) -> str | None:
     match = re.match(r"^(\d{4})(\d{2})(\d{2})_", str(run_name or ""))
     if not match:
@@ -1287,6 +1427,7 @@ def build_cloudflare_payload(
                             "q_out_frac": float(leg.get("q_out_frac", 0.0) or 0.0),
                             "l10_hr": l10_hr,
                             "l10_n": l10_n,
+                            **_atlas_projection_from_row(leg),
                         })
 
             guard_ok, guard_reasons = _public_slip_publish_guard(clean_legs, run_dir, LOCAL_TZ)
@@ -1345,9 +1486,12 @@ def build_cloudflare_payload(
             _KEEP = [
                 "game_date", "player", "team", "opp", "stat", "line", "direction", "tier",
                 "p_cal", "fragility", "q_blowout", "l20_edge", "role_ctx_mult",
-                "role_ctx_reason", "p_for_cal", "p_adj", "payout_modifier", "ev_mult",
+                "role_ctx_reason", "role_ctx_outs_used", "role_ctx_impact_tier",
+                "role_ctx_max_out_weight", "role_ctx_total_out_weight", "role_ctx_total_bump",
+                "p_for_cal", "p_adj", "payout_modifier", "ev_mult",
                 "usage_dep", "usage_burden_ratio", "minutes_cv", "volatility_minutes_cv",
                 "min_mean", "min_std", "modeled_minutes", "minute_risk_score",
+                "projected_minutes_model", "projected_minutes_source", "rate_mean_ctx", "rate_mean",
             ]
             al_df = pd.read_csv(scored_csv, usecols=lambda c: c in set(_KEEP))
             al_df = al_df.drop_duplicates(subset=["player", "stat", "direction", "line"])
@@ -1358,6 +1502,9 @@ def build_cloudflare_payload(
                     return float(value) if pd.notna(value) else None
                 except Exception:
                     return None
+
+            slate_dates_for_recent = pd.to_datetime(al_df.get("game_date"), errors="coerce") if "game_date" in al_df.columns else pd.Series(dtype="datetime64[ns]")
+            slate_date_for_recent = slate_dates_for_recent.dropna().max().normalize() if not slate_dates_for_recent.dropna().empty else None
 
             for _, row in al_df.iterrows():
                 p_cal = row.get("p_cal")
@@ -1406,6 +1553,11 @@ def build_cloudflare_payload(
                     "l20_edge":    float(edge)  if pd.notna(edge)  else None,
                     "role_mult":   float(role)  if pd.notna(role)  else None,
                     "role_reason": str(row.get("role_ctx_reason", "")) or None,
+                    "role_ctx_outs_used": _f(row.get("role_ctx_outs_used")),
+                    "role_ctx_impact_tier": str(row.get("role_ctx_impact_tier", "")) or None,
+                    "role_ctx_max_out_weight": _f(row.get("role_ctx_max_out_weight")),
+                    "role_ctx_total_out_weight": _f(row.get("role_ctx_total_out_weight")),
+                    "role_ctx_total_bump": _f(row.get("role_ctx_total_bump")),
                     "usage_score": _f(row.get("usage_dep")),
                     "usage_dep": _f(row.get("usage_dep")),
                     "usage_burden_ratio": _f(row.get("usage_burden_ratio")),
@@ -1415,6 +1567,7 @@ def build_cloudflare_payload(
                     "min_mean": _f(row.get("min_mean")),
                     "min_std": _f(row.get("min_std")),
                     "minute_risk_score": _f(row.get("minute_risk_score")),
+                    **_atlas_projection_from_row(row),
                     # Market odds (None when not available)
                     "dk_over":     odds.get("dk_over"),
                     "dk_under":    odds.get("dk_under"),
@@ -1423,39 +1576,28 @@ def build_cloudflare_payload(
                     "dk_imp_over": odds.get("dk_imp_over"),
                     "fd_imp_over": odds.get("fd_imp_over"),
                 })
+            if gamelogs_df is not None and not gamelogs_df.empty:
+                for leg in all_legs_out:
+                    recent = _nba_recent_games_for_leg(leg, gamelogs_df, slate_date=slate_date_for_recent)
+                    if recent:
+                        leg["recent_games"] = recent
             payload["all_legs"] = all_legs_out
-            # Extract role-boosted legs for the injury tab
+            # Extract model-applied role-boosted legs for the injury tab.
+            # Do not synthesize display-only boosts here; the dashboard must
+            # reflect the same role context that actually reached scoring.
             no_effect_reasons = {"no_outs", "none", "combo_no_effect", "no_share_matrix", "stat_unmapped", ""}
-            share_matrix_for_display = None
-            iael_for_display = None
-            try:
-                from Atlas.engine.new_probability import _load_share_matrix
-                from Atlas.model.team_share_allocator_v2 import load_iael_snapshot
-
-                share_matrix_for_display = _load_share_matrix()
-                iael_for_display = load_iael_snapshot(
-                    invalidations_path=_repo_root() / "data" / "output" / "dashboard" / "injury_invalidations_latest.json",
-                )
-            except Exception:
-                share_matrix_for_display = None
-                iael_for_display = None
-
             role_boosted = []
             for leg in all_legs_out:
                 reason = str(leg.get("role_reason") or "").strip()
                 role_mult = leg.get("role_mult")
-                if role_mult is None:
-                    role_mult, reason = _fallback_role_context_for_leg(leg, share_matrix_for_display, iael_for_display)
-                    if role_mult is not None:
-                        leg["role_mult"] = role_mult
-                        leg["role_reason"] = reason
-                elif reason.lower() in no_effect_reasons:
-                    fallback_mult, fallback_reason = _fallback_role_context_for_leg(leg, share_matrix_for_display, iael_for_display)
-                    if fallback_mult is None:
-                        continue
-                    role_mult, reason = fallback_mult, fallback_reason or "ok"
-                    leg["role_mult"] = role_mult
-                    leg["role_reason"] = reason
+                if role_mult is None or reason.lower() in no_effect_reasons:
+                    continue
+                try:
+                    outs_used = float(leg.get("role_ctx_outs_used") or 0.0)
+                except (TypeError, ValueError):
+                    outs_used = 0.0
+                if outs_used <= 0.0:
+                    continue
                 try:
                     role_delta = abs(float(role_mult) - 1.0)
                 except (TypeError, ValueError):
@@ -1472,6 +1614,11 @@ def build_cloudflare_payload(
                     "p_cal": leg.get("p_cal"),
                     "role_mult": role_mult,
                     "role_reason": reason,
+                    "role_ctx_outs_used": leg.get("role_ctx_outs_used"),
+                    "role_ctx_impact_tier": leg.get("role_ctx_impact_tier"),
+                    "role_ctx_max_out_weight": leg.get("role_ctx_max_out_weight"),
+                    "role_ctx_total_out_weight": leg.get("role_ctx_total_out_weight"),
+                    "role_ctx_total_bump": leg.get("role_ctx_total_bump"),
                 })
             payload["injury_context"]["role_boosted"] = role_boosted
         except Exception:
