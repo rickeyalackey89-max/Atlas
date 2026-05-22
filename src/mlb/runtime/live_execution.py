@@ -7,6 +7,9 @@ wrapper fetches the live PrizePicks board and runs the live pipeline contract.
 from __future__ import annotations
 
 import time
+import os
+import subprocess
+import sys
 from collections.abc import Callable
 from datetime import datetime, timezone
 from pathlib import Path
@@ -30,6 +33,9 @@ def run_live_model_result(
     include_all_sports: bool = True,
     refresh_bettingpros_odds: bool = True,
     calibration_artifact_path: Path | None = None,
+    publish_dashboard: bool = True,
+    dashboard_root: Path | None = None,
+    dashboard_publish_no_git: bool = False,
     emit_progress: Callable[[str], None] | None = None,
     fetch_attempts: int = 3,
     fetch_retry_sleep_s: float = 2.2,
@@ -89,6 +95,17 @@ def run_live_model_result(
     )
     run_payload = pipeline_result.payload
     _emit_progress(emit_progress, _live_summary(run_payload))
+    dashboard_publish_payload: dict[str, Any] | None = None
+    if publish_dashboard:
+        dashboard_publish_payload = _publish_dashboard_payload(
+            root=root,
+            run_id=str(run_payload.get("run_id") or resolved_run_id),
+            dashboard_root=dashboard_root,
+            no_git=dashboard_publish_no_git,
+            emit_progress=emit_progress,
+        )
+    else:
+        dashboard_publish_payload = {"enabled": False, "ok": None, "reason": "disabled"}
     payload = {
         "command": "live",
         "run_id": run_payload.get("run_id"),
@@ -96,6 +113,7 @@ def run_live_model_result(
         "game_date_filter": run_payload.get("game_date_filter"),
         "fetch": fetch_payload,
         "run": run_payload,
+        "dashboard_publish": dashboard_publish_payload,
         "manifest_path": run_payload.get("manifest_path"),
     }
     lines = [
@@ -119,12 +137,134 @@ def run_live_model_result(
             f"  scored_legs: {run_payload['score']['row_count']}",
             f"  slip_count: {run_payload['slips']['slip_count']}",
             f"  publish_allowed: {run_payload['operator']['publish_allowed']}",
+            f"  dashboard_publish: {_format_dashboard_publish_status(dashboard_publish_payload)}",
             f"  run_manifest: {payload['manifest_path']}",
         ]
     )
     if fetch_lines:
         lines = [*lines, "", "Fetch detail:", *fetch_lines]
     return RuntimeCommandResult(name="live_model", payload=payload, lines=tuple(lines))
+
+
+def _publish_dashboard_payload(
+    *,
+    root: Path | None,
+    run_id: str,
+    dashboard_root: Path | None,
+    no_git: bool,
+    emit_progress: Callable[[str], None] | None,
+) -> dict[str, Any]:
+    resolved_root = (root or repo_root()).resolve()
+    resolved_dashboard_root = _resolve_dashboard_root(resolved_root, dashboard_root)
+    build_script = resolved_dashboard_root / "tools" / "build_mlb_dashboard_payload.py"
+    publish_script = resolved_dashboard_root / "publish-atlas.ps1"
+    payload: dict[str, Any] = {
+        "enabled": True,
+        "ok": False,
+        "run_id": run_id,
+        "dashboard_root": str(resolved_dashboard_root),
+        "build_script": str(build_script),
+        "publish_script": str(publish_script),
+        "no_git": bool(no_git),
+        "stdout": [],
+        "stderr": [],
+    }
+
+    _emit_progress(emit_progress, _banner("PUBLISH MLB DASHBOARD PAYLOAD", detail=_timestamp()))
+    try:
+        if not resolved_dashboard_root.exists():
+            raise FileNotFoundError(f"Dashboard repo not found: {resolved_dashboard_root}")
+        if not build_script.exists():
+            raise FileNotFoundError(f"Missing MLB dashboard payload builder: {build_script}")
+        if not publish_script.exists():
+            raise FileNotFoundError(f"Missing dashboard publish script: {publish_script}")
+
+        build_cmd = [
+            sys.executable,
+            str(build_script),
+            "--mlb-root",
+            str(resolved_root),
+            "--run-id",
+            run_id,
+        ]
+        build_result = subprocess.run(
+            build_cmd,
+            cwd=str(resolved_dashboard_root),
+            text=True,
+            capture_output=True,
+            encoding="utf-8",
+            errors="replace",
+        )
+        payload["stdout"].extend(_split_process_output(build_result.stdout))
+        payload["stderr"].extend(_split_process_output(build_result.stderr))
+        if build_result.returncode != 0:
+            raise RuntimeError(f"MLB dashboard payload build failed with exit code {build_result.returncode}")
+
+        publish_cmd = [
+            "powershell.exe",
+            "-NoProfile",
+            "-ExecutionPolicy",
+            "RemoteSigned",
+            "-File",
+            str(publish_script),
+            "-Sport",
+            "mlb",
+            "-AtlasRoot",
+            str(resolved_root),
+        ]
+        if no_git:
+            publish_cmd.append("-NoGit")
+        publish_result = subprocess.run(
+            publish_cmd,
+            cwd=str(resolved_dashboard_root),
+            text=True,
+            capture_output=True,
+            encoding="utf-8",
+            errors="replace",
+        )
+        payload["stdout"].extend(_split_process_output(publish_result.stdout))
+        payload["stderr"].extend(_split_process_output(publish_result.stderr))
+        if publish_result.returncode != 0:
+            raise RuntimeError(f"Dashboard publish script failed with exit code {publish_result.returncode}")
+
+        payload["ok"] = True
+        _emit_progress(emit_progress, "[DASH] Published MLB live run to Cloudflare dashboard")
+    except Exception as exc:
+        payload["ok"] = False
+        payload["error"] = str(exc)
+        _emit_progress(emit_progress, f"[DASH] Publish failed (non-fatal): {exc}")
+
+    for line in payload.get("stdout") or []:
+        _emit_progress(emit_progress, line)
+    for line in payload.get("stderr") or []:
+        _emit_progress(emit_progress, line)
+    return payload
+
+
+def _resolve_dashboard_root(resolved_root: Path, dashboard_root: Path | None) -> Path:
+    if dashboard_root is not None:
+        return dashboard_root.resolve()
+    env_value = os.environ.get("ATLAS_DASHBOARD_ROOT", "").strip()
+    if env_value:
+        return Path(env_value).expanduser().resolve()
+    return (resolved_root.parent / "atlas-dashboard").resolve()
+
+
+def _split_process_output(value: str | None) -> list[str]:
+    if not value:
+        return []
+    return [line.rstrip() for line in value.splitlines() if line.rstrip()]
+
+
+def _format_dashboard_publish_status(payload: dict[str, Any] | None) -> str:
+    if not payload:
+        return "not_run"
+    if not payload.get("enabled", True):
+        return "disabled"
+    if payload.get("ok"):
+        return "ok"
+    error = str(payload.get("error") or "failed").strip()
+    return f"failed ({error})"
 
 
 def _default_live_run_id() -> str:

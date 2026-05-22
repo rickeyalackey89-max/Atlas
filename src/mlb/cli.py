@@ -100,6 +100,7 @@ def _cmd_live(args: argparse.Namespace) -> int:
     snapshot = Path(args.snapshot) if args.snapshot else None
     normalized_dir = Path(args.normalized_dir) if args.normalized_dir else None
     calibration_artifact = Path(args.calibration_artifact) if args.calibration_artifact else None
+    dashboard_root = Path(args.dashboard_root) if args.dashboard_root else None
     progress = None if args.json else (lambda message: print(message, flush=True))
     return _emit_result(
         args,
@@ -113,6 +114,9 @@ def _cmd_live(args: argparse.Namespace) -> int:
             include_all_sports=not args.skip_all_sports,
             refresh_bettingpros_odds=not args.no_bettingpros_odds_refresh,
             calibration_artifact_path=calibration_artifact,
+            publish_dashboard=not args.no_dashboard_publish,
+            dashboard_root=dashboard_root,
+            dashboard_publish_no_git=args.dashboard_publish_no_git,
             emit_progress=progress,
             fetch_attempts=args.fetch_attempts,
         ),
@@ -884,6 +888,20 @@ def build_parser() -> argparse.ArgumentParser:
         help="Do not auto-fetch/stage BettingPros odds before market context",
     )
     live.add_argument("--calibration-artifact", help="Optional calibration metadata JSON")
+    live.add_argument(
+        "--no-dashboard-publish",
+        action="store_true",
+        help="Run the live model without building/publishing the MLB dashboard payload",
+    )
+    live.add_argument(
+        "--dashboard-root",
+        help="Override atlas-dashboard repo root; defaults to sibling atlas-dashboard or ATLAS_DASHBOARD_ROOT",
+    )
+    live.add_argument(
+        "--dashboard-publish-no-git",
+        action="store_true",
+        help="Build and stage dashboard payload without committing/pushing atlas-dashboard public data",
+    )
     live.add_argument("--fetch-attempts", type=int, default=3, help="PrizePicks fetch retry attempts")
     live.set_defaults(func=_cmd_live)
 
