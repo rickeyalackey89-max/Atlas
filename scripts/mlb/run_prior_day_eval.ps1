@@ -12,6 +12,21 @@ $ErrorActionPreference = "Stop"
 
 $repoRoot = Resolve-Path (Join-Path $PSScriptRoot "..\..")
 Set-Location $repoRoot
+$atlasRoot = Split-Path -Parent $repoRoot
+$atlasPython = Join-Path $atlasRoot ".venv\Scripts\python.exe"
+if (-not (Test-Path -LiteralPath $atlasPython)) {
+    throw "Shared Atlas Python not found: $atlasPython. Run from Atlas root: uv sync --python 3.11"
+}
+$atlasPythonPath = @(
+    (Join-Path $atlasRoot "NBA\src"),
+    (Join-Path $atlasRoot "MLB\src")
+) | Where-Object { Test-Path -LiteralPath $_ }
+$oldPythonPath = $env:PYTHONPATH
+if ($oldPythonPath) {
+    $env:PYTHONPATH = "$($atlasPythonPath -join ';');$oldPythonPath"
+} else {
+    $env:PYTHONPATH = ($atlasPythonPath -join ";")
+}
 
 if ([string]::IsNullOrWhiteSpace($Date)) {
     $Date = (Get-Date).Date.AddDays(-1).ToString("yyyy-MM-dd")
@@ -119,7 +134,7 @@ if (-not $SkipBoxscoreFetch) {
     Invoke-LoggedCommand `
         -Stage "fetch_boxscores" `
         -StageRunId "" `
-        -CommandArgs @("uv", "run", "atlas-mlb", "fetch", "statsapi-boxscores-bulk", "--start-date", $Date, "--end-date", $Date, "--json") `
+        -CommandArgs @($atlasPython, "-m", "mlb.cli", "fetch", "statsapi-boxscores-bulk", "--start-date", $Date, "--end-date", $Date, "--json") `
         -OutputPath (Join-Path $LogRoot "fetch_boxscores.json")
 }
 
@@ -136,7 +151,7 @@ foreach ($targetRunId in $runIds) {
     Invoke-LoggedCommand `
         -Stage "audit_eval" `
         -StageRunId $targetRunId `
-        -CommandArgs @("uv", "run", "atlas-mlb", "audit", "eval", "--run-id", $targetRunId, "--json") `
+        -CommandArgs @($atlasPython, "-m", "mlb.cli", "audit", "eval", "--run-id", $targetRunId, "--json") `
         -OutputPath (Join-Path $LogRoot "audit_eval_$safeRunId.json")
 
     $evalDir = Join-Path $repoRoot "data\mlb\eval\$targetRunId"
