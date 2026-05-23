@@ -324,7 +324,6 @@ SINGLE_GAME_WINDFALL_TIER_MIXES = {
 }
 
 MARKETED_TEMPLATES = (
-    {"label": "2-leg", "goblin": 2, "standard": 0, "demon": 0},
     {"label": "3-leg", "goblin": 1, "standard": 2, "demon": 0},
     {"label": "4-leg", "goblin": 2, "standard": 2, "demon": 0},
     {"label": "5-leg", "goblin": 2, "standard": 2, "demon": 1},

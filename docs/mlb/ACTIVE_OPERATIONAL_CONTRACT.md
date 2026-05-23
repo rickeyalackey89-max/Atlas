@@ -314,10 +314,10 @@ Promotion basis:
   - System does not inherit those hard blocks globally; it keeps them as
     ranking/composition signals unless replay evidence supports a family-level
     block.
-- Marketed full-slate templates include a 2-leg Goblin fallback. This keeps the
-  public premium family from starving on slates where baseball-context gates
-  leave too few Standard legs, and it tested as the strongest Marketed shape in
-  the strict corpus (`4/5` settled 2-leg slips).
+- Marketed full-slate templates are 3-leg, 4-leg, and 5-leg only. The 2-leg
+  Goblin template is reserved for single-game slates, even if historical
+  training found a strong 2-leg fallback; full multi-game slates should not
+  publish 2-man premium slips.
 - Runtime ranker `v20_empirical_reliability` adds a replay-derived segment
   reliability adjustment. Weak historical segments and high model-vs-prior gaps
   are penalized, especially for premium Marketed/System slips.
