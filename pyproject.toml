@@ -7,7 +7,7 @@ name = "atlas-engine"
 version = "0.1.0"
 description = "Atlas MLB development skeleton and shared Atlas environment"
 readme = "docs/README.md"
-requires-python = ">=3.11"
+requires-python = ">=3.11,<3.14"
 authors = [
   { name = "Atlas Sports AI" },
 ]
@@ -19,7 +19,6 @@ classifiers = [
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3.13",
-  "Programming Language :: Python :: 3.14",
 ]
 dependencies = [
   "catboost>=1.2,<2",
