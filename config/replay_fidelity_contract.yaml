@@ -7,6 +7,7 @@ protected_paths:
   - data/mlb/raw
   - data/mlb/runs
   - data/mlb/live_runs
+  - data/mlb/corpus_replays
   - data/mlb/test_runs
   - data/mlb/eval
   - data/mlb/runtime_state
@@ -84,4 +85,3 @@ training_gate:
   require_corpus_audit_pass: true
   require_no_cat_feature_defaulting: true
   run_builder_tuning_after_lodo_only: true
-

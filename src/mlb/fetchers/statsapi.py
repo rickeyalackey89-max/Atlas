@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from datetime import date as date_type, datetime
 from pathlib import Path
 from typing import Any
 
@@ -58,17 +59,29 @@ def fetch_statsapi_roster(
     *,
     team_id: int,
     season: int,
+    roster_date: str | None = None,
     root: Path | None = None,
     timeout: int = 30,
 ) -> RawSnapshot:
-    request = build_roster_request(team_id=team_id, season=season)
+    target_date = _target_date_key(roster_date)
+    request = build_roster_request(team_id=team_id, season=season, roster_date=target_date)
     response = _get_json(request, timeout=timeout)
     payload = response["payload"]
-    payload["_atlas_fetch"] = {"source": "statsapi_rosters", "team_id": team_id, "season": season}
+    payload["_atlas_fetch"] = {
+        "source": "statsapi_rosters",
+        "team_id": team_id,
+        "season": season,
+        "target_date": target_date or "",
+    }
     return write_raw_snapshot(
         source="statsapi_rosters",
         payload=payload,
-        request={**request.params, "url": request.url, "status_code": response["status_code"]},
+        request={
+            **request.params,
+            "target_date": target_date or "",
+            "url": request.url,
+            "status_code": response["status_code"],
+        },
         root=root,
     )
 
@@ -77,6 +90,7 @@ def fetch_statsapi_rosters_bulk(
     *,
     teams: list[dict[str, Any]],
     season: int,
+    roster_date: str | None = None,
     root: Path | None = None,
     timeout: int = 30,
 ) -> RawSnapshot:
@@ -89,11 +103,12 @@ def fetch_statsapi_rosters_bulk(
 
     payloads: list[dict[str, Any]] = []
     status_codes: list[int] = []
+    target_date = _target_date_key(roster_date)
     for team in teams:
         team_id = _to_int(team.get("team_id"))
         if team_id is None:
             continue
-        request = build_roster_request(team_id=team_id, season=season)
+        request = build_roster_request(team_id=team_id, season=season, roster_date=target_date)
         response = _get_json(request, timeout=timeout)
         status_codes.append(response["status_code"])
         roster_payload = response["payload"]
@@ -101,6 +116,7 @@ def fetch_statsapi_rosters_bulk(
             "source": "statsapi_rosters",
             "team_id": team_id,
             "season": season,
+            "target_date": target_date or "",
         }
         payloads.append(
             {
@@ -124,11 +140,13 @@ def fetch_statsapi_rosters_bulk(
     combined_payload = {
         "source": "statsapi_rosters_bulk",
         "season": season,
+        "target_date": target_date or "",
         "team_count": len(payloads),
         "payloads": payloads,
         "_atlas_fetch": {
             "source": "statsapi_rosters_bulk",
             "season": season,
+            "target_date": target_date or "",
             "requested_team_count": len(teams),
             "fetched_team_count": len(payloads),
             "status_codes": status_codes,
@@ -139,6 +157,7 @@ def fetch_statsapi_rosters_bulk(
         payload=combined_payload,
         request={
             "season": season,
+            "target_date": target_date or "",
             "requested_team_count": len(teams),
             "fetched_team_count": len(payloads),
             "status_codes": status_codes,
@@ -379,11 +398,14 @@ def build_teams_request(*, sport_id: int, season: int) -> StatsApiRequest:
     )
 
 
-def build_roster_request(*, team_id: int, season: int) -> StatsApiRequest:
+def build_roster_request(*, team_id: int, season: int, roster_date: str | None = None) -> StatsApiRequest:
+    params: dict[str, Any] = {"season": season, "hydrate": "person"}
+    if roster_date:
+        params["date"] = _statsapi_date(roster_date)
     return StatsApiRequest(
         source="statsapi_rosters",
         url=f"{MLB_STATSAPI_BASE_URL}/teams/{team_id}/roster",
-        params={"season": season, "hydrate": "person"},
+        params=params,
     )
 
 
@@ -472,6 +494,29 @@ def _game_context(game: dict[str, Any]) -> dict[str, Any]:
 def _response_status_code(exc: requests.RequestException) -> int | None:
     response = getattr(exc, "response", None)
     return _to_int(getattr(response, "status_code", None))
+
+
+def _target_date_key(value: str | date_type | None) -> str | None:
+    if value is None or value == "":
+        return None
+    if isinstance(value, date_type):
+        return value.isoformat()
+    text = str(value).strip()
+    if not text:
+        return None
+    for fmt in ("%Y-%m-%d", "%m/%d/%Y", "%Y%m%d"):
+        try:
+            return datetime.strptime(text, fmt).date().isoformat()
+        except ValueError:
+            continue
+    return text
+
+
+def _statsapi_date(value: str) -> str:
+    parsed = _target_date_key(value)
+    if not parsed:
+        return value
+    return datetime.strptime(parsed, "%Y-%m-%d").strftime("%m/%d/%Y")
 
 
 def _to_int(value: Any) -> int | None:

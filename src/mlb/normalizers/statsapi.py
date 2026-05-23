@@ -52,6 +52,7 @@ def normalize_statsapi_roster(payload: dict[str, Any], *, team_context: dict[str
     fetch = payload.get("_atlas_fetch") or {}
     team_id = _to_int(fetch.get("team_id") or context.get("team_id"))
     season = _to_int(fetch.get("season") or context.get("season"))
+    target_date = _clean_str(fetch.get("target_date") or context.get("target_date"))
     rows: list[dict[str, Any]] = []
     for item in payload.get("roster", []) or []:
         person = item.get("person") or {}
@@ -59,6 +60,7 @@ def normalize_statsapi_roster(payload: dict[str, Any], *, team_context: dict[str
         rows.append(
             {
                 "season": season,
+                "target_date": target_date,
                 "team_id": team_id,
                 "team_name": _clean_str(context.get("team_name")),
                 "team_abbreviation": _clean_str(context.get("team_abbreviation")),
@@ -315,7 +317,8 @@ def write_statsapi_normalization(
 
     payload = load_snapshot_payload(snapshot_path)
     manifest = load_snapshot_manifest(snapshot_path)
-    resolved_run_id = run_id or str(manifest.get("snapshot_id") or kind)
+    target_date = _target_date_from_statsapi_payload(payload, manifest)
+    resolved_run_id = run_id or _statsapi_run_id(kind=kind, snapshot_id=str(manifest.get("snapshot_id") or kind), target_date=target_date)
     rows = normalize_statsapi_payload(kind=kind, payload=payload)
     paths = ensure_mlb_dirs(root)
     output_dir = paths.staged / kind / resolved_run_id
@@ -330,12 +333,37 @@ def write_statsapi_normalization(
         "run_id": resolved_run_id,
         "snapshot_id": manifest.get("snapshot_id", ""),
         "source": kind,
+        "target_date": target_date,
+        "date": target_date,
         "row_count": len(rows),
         "rows_path": str(rows_path),
         "output_dir": str(output_dir),
     }
     manifest_path.write_text(json.dumps(out, indent=2, sort_keys=True), encoding="utf-8")
     return out
+
+
+def _target_date_from_statsapi_payload(payload: dict[str, Any], manifest: dict[str, Any]) -> str:
+    fetch = payload.get("_atlas_fetch") if isinstance(payload.get("_atlas_fetch"), dict) else {}
+    request = manifest.get("request") if isinstance(manifest.get("request"), dict) else {}
+    for value in (
+        payload.get("target_date"),
+        fetch.get("target_date"),
+        request.get("target_date"),
+    ):
+        text = _clean_str(value)
+        if text:
+            return text
+    return ""
+
+
+def _statsapi_run_id(*, kind: str, snapshot_id: str, target_date: str) -> str:
+    if not target_date:
+        return snapshot_id
+    compact = target_date.replace("-", "")
+    if compact in snapshot_id or target_date in snapshot_id:
+        return snapshot_id
+    return f"{kind}_{compact}_{snapshot_id}"
 
 
 def normalize_statsapi_payload(*, kind: str, payload: dict[str, Any]) -> list[dict[str, Any]]:

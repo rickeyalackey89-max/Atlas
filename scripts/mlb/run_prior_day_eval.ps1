@@ -119,6 +119,45 @@ function Resolve-RunIdsForDate {
         }
     }
 
+    # Live run folders are the source of truth for fresh evaluation, but the
+    # runtime summary catches edge cases where a late-night run has already
+    # been evaluated and its live folder is unavailable. Do not let that run
+    # disappear from the 6AM report silently.
+    $summaryPath = Join-Path $repoRoot "data\mlb\runtime_state\runs\run_summaries.jsonl"
+    if (($Scope -eq "live" -or $Scope -eq "auto") -and (Test-Path -LiteralPath $summaryPath)) {
+        foreach ($line in Get-Content -LiteralPath $summaryPath) {
+            if ([string]::IsNullOrWhiteSpace($line)) {
+                continue
+            }
+            try {
+                $summary = $line | ConvertFrom-Json
+            } catch {
+                continue
+            }
+            if ([string]$summary.game_date -ne $TargetDate) {
+                continue
+            }
+            if ([string]$summary.run_mode -ne "live") {
+                continue
+            }
+            $summaryRunId = [string]$summary.run_id
+            if ([string]::IsNullOrWhiteSpace($summaryRunId)) {
+                continue
+            }
+            $candidatePath = Join-Path (Join-Path $repoRoot "data\mlb\live_runs") $summaryRunId
+            $publishedUtc = [datetime]::MinValue
+            if (-not [string]::IsNullOrWhiteSpace([string]$summary.published_at_utc)) {
+                [datetime]::TryParse([string]$summary.published_at_utc, [ref]$publishedUtc) | Out-Null
+            }
+            $candidates += [pscustomobject]@{
+                RunId = $summaryRunId
+                Priority = 0
+                LastWriteTimeUtc = $publishedUtc
+                Path = $candidatePath
+            }
+        }
+    }
+
     if ($candidates.Count -eq 0) {
         throw "No scored MLB run found for $TargetDate in scope '$Scope'. Pass -RunId explicitly if needed."
     }
@@ -128,6 +167,55 @@ function Resolve-RunIdsForDate {
         $candidates = @($candidates | Where-Object { $_.Priority -eq $bestPriority })
     }
     return @($candidates | Sort-Object Priority, LastWriteTimeUtc, RunId | Select-Object -ExpandProperty RunId -Unique)
+}
+
+function Resolve-ScoredRunPath {
+    param([string]$TargetRunId)
+    $roots = @(
+        (Join-Path $repoRoot "data\mlb\live_runs"),
+        (Join-Path $repoRoot "data\mlb\replay_runs"),
+        (Join-Path $repoRoot "data\mlb\test_runs"),
+        (Join-Path $repoRoot "data\mlb\runs")
+    )
+    foreach ($root in $roots) {
+        $path = Join-Path (Join-Path $root $TargetRunId) "scored_legs.json"
+        if (Test-Path -LiteralPath $path) {
+            return $path
+        }
+    }
+    return ""
+}
+
+function Test-ExistingEvalComplete {
+    param([string]$TargetRunId)
+    $evalDir = Join-Path $repoRoot "data\mlb\eval\$TargetRunId"
+    return (
+        (Test-Path -LiteralPath (Join-Path $evalDir "eval_manifest.json")) -and
+        (Test-Path -LiteralPath (Join-Path $evalDir "eval_legs.csv")) -and
+        (Test-Path -LiteralPath (Join-Path $evalDir "eval_slips.csv"))
+    )
+}
+
+function Publish-ExistingEvalLatest {
+    param([string]$TargetRunId)
+    $evalRoot = Join-Path $repoRoot "data\mlb\eval"
+    $evalDir = Join-Path $evalRoot $TargetRunId
+    $copies = @(
+        @("eval_legs.csv", "latest_eval_legs.csv"),
+        @("eval_legs.json", "latest_eval_legs.json"),
+        @("eval_summary.json", "latest_eval_summary.json"),
+        @("eval_manifest.json", "latest_eval_manifest.json"),
+        @("slip_eval.json", "latest_slip_eval.json"),
+        @("eval_slips.csv", "latest_eval_slips.csv"),
+        @("eval_slips.json", "latest_eval_slips.json")
+    )
+    foreach ($copy in $copies) {
+        $source = Join-Path $evalDir $copy[0]
+        $destination = Join-Path $evalRoot $copy[1]
+        if (Test-Path -LiteralPath $source) {
+            Copy-Item -LiteralPath $source -Destination $destination -Force
+        }
+    }
 }
 
 if (-not $SkipBoxscoreFetch) {
@@ -148,13 +236,38 @@ if ([string]::IsNullOrWhiteSpace($RunId)) {
 $runResults = @()
 foreach ($targetRunId in $runIds) {
     $safeRunId = $targetRunId -replace '[^A-Za-z0-9_.-]', '_'
-    Invoke-LoggedCommand `
-        -Stage "audit_eval" `
-        -StageRunId $targetRunId `
-        -CommandArgs @($atlasPython, "-m", "mlb.cli", "audit", "eval", "--run-id", $targetRunId, "--json") `
-        -OutputPath (Join-Path $LogRoot "audit_eval_$safeRunId.json")
-
     $evalDir = Join-Path $repoRoot "data\mlb\eval\$targetRunId"
+    $scoredRunPath = Resolve-ScoredRunPath -TargetRunId $targetRunId
+    if ([string]::IsNullOrWhiteSpace($scoredRunPath)) {
+        if (Test-ExistingEvalComplete -TargetRunId $targetRunId) {
+            Publish-ExistingEvalLatest -TargetRunId $targetRunId
+            $reuseLog = Join-Path $LogRoot "audit_eval_$safeRunId.json"
+            [pscustomobject]@{
+                date = $Date
+                run_id = $targetRunId
+                status = "existing_eval_reused"
+                reason = "missing_scored_run_folder_existing_eval_reused"
+                eval_dir = $evalDir
+            } | ConvertTo-Json -Depth 4 | Set-Content -Encoding utf8 -LiteralPath $reuseLog
+            Write-ProgressJson @{
+                stage = "audit_eval_existing_reused"
+                date = $Date
+                run_id = $targetRunId
+                reason = "missing_scored_run_folder_existing_eval_reused"
+                eval_dir = $evalDir
+                log = $reuseLog
+            }
+        } else {
+            throw "Run $targetRunId is listed for $Date but has no scored_legs.json and no complete eval folder."
+        }
+    } else {
+        Invoke-LoggedCommand `
+            -Stage "audit_eval" `
+            -StageRunId $targetRunId `
+            -CommandArgs @($atlasPython, "-m", "mlb.cli", "audit", "eval", "--run-id", $targetRunId, "--json") `
+            -OutputPath (Join-Path $LogRoot "audit_eval_$safeRunId.json")
+    }
+
     $runResults += [pscustomobject]@{
         date = $Date
         run_id = $targetRunId

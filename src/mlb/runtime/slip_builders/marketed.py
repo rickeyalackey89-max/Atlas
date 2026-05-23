@@ -8,15 +8,16 @@ from .contracts import FamilyBuilderPolicy
 POLICY = FamilyBuilderPolicy(
     name="Marketed",
     purpose="premium_public_picks",
-    # Strict-fidelity 2026-05-16..20 baseball-context trainer selected the
-    # family_best_context_combo profile: Marketed benefits most from confirmed
-    # external context once the family-aware baseball gate is active.
-    probability_weight=0.51,
-    prior_weight=0.13,
-    bettingpros_weight=0.16,
+    # Strict-fidelity 2026-04-26..05-20 baseball-context v12 + CAT v11 overlay
+    # selected marketed_prob_edge_plus. Marketed is customer-facing, so it now
+    # leans harder into calibrated probability/edge and requires stronger tier
+    # floors instead of allowing broad prior-heavy shapes.
+    probability_weight=0.59,
+    prior_weight=0.08,
+    bettingpros_weight=0.15,
     stability_weight=0.10,
     fragility_weight=0.07,
-    edge_weight=0.14,
+    edge_weight=0.17,
     prop_identifier_weight=0.02,
     tier_bonus={"GOBLIN": 0.06, "STANDARD": 0.03, "DEMON": -0.02},
     market_bonus={
@@ -47,6 +48,6 @@ POLICY = FamilyBuilderPolicy(
         ("STANDARD", "hitter_fantasy_score"): 0.03,
         ("STANDARD", "total_bases"): 0.03,
     },
-    min_probability_by_tier={"GOBLIN": 0.69, "STANDARD": 0.65, "DEMON": 0.62},
+    min_probability_by_tier={"GOBLIN": 0.71, "STANDARD": 0.67, "DEMON": 0.64},
     min_edge=0.03,
 )

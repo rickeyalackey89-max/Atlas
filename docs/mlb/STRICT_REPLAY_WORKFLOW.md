@@ -89,6 +89,12 @@ The corpus directory must contain:
 - `slip_builder_family_summary.csv` or equivalent slip aggregate
 - `progress.jsonl`
 
+Corpus aggregate directories live under:
+
+```text
+data/mlb/corpus_replays/<corpus_id>/
+```
+
 Each run referenced by the corpus must also exist under:
 
 ```text

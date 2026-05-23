@@ -1454,10 +1454,11 @@ def fetch_statsapi_roster_result(
     *,
     team_id: int,
     season: int,
+    roster_date: str | None = None,
     root: Path | None = None,
     normalize: bool = True,
 ) -> RuntimeCommandResult:
-    snapshot = fetch_statsapi_roster(team_id=team_id, season=season, root=root)
+    snapshot = fetch_statsapi_roster(team_id=team_id, season=season, roster_date=roster_date, root=root)
     return _statsapi_fetch_result(snapshot_path=Path(snapshot.path), kind="statsapi_rosters", normalize=normalize, root=root)
 
 
@@ -1465,6 +1466,7 @@ def fetch_statsapi_rosters_bulk_result(
     *,
     season: int,
     sport_ids: tuple[int, ...],
+    roster_date: str | None = None,
     root: Path | None = None,
     normalize: bool = True,
 ) -> RuntimeCommandResult:
@@ -1483,7 +1485,7 @@ def fetch_statsapi_rosters_bulk_result(
     ]
     if not selected_teams:
         raise ValueError(f"No staged StatsAPI teams matched sport_ids={sport_ids}")
-    snapshot = fetch_statsapi_rosters_bulk(teams=selected_teams, season=season, root=root)
+    snapshot = fetch_statsapi_rosters_bulk(teams=selected_teams, season=season, roster_date=roster_date, root=root)
     result = _statsapi_fetch_result(
         snapshot_path=Path(snapshot.path),
         kind="statsapi_rosters_bulk",

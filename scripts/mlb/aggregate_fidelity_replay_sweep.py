@@ -15,7 +15,7 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--input-dir",
-        default="data/mlb/replay_runs/corpus_replay_20260426_20260515_fidelity_v1",
+        default="data/mlb/corpus_replays/corpus_replay_20260426_20260515_fidelity_v1",
     )
     args = parser.parse_args()
     input_dir = Path(args.input_dir)

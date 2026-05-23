@@ -1,5 +1,5 @@
 param(
-    [string]$CorpusDir = "data\mlb\replay_runs\corpus_replay_20260426_20260519_matchup_source_v2",
+    [string]$CorpusDir = "data\mlb\corpus_replays\corpus_replay_20260426_20260519_matchup_source_v2",
     [string]$OutputDir = "data\mlb\model\cat_probability_kernel_v7_24date_exact_winner_neighbors",
     [string]$Version = "mlb_cat_over_residual_v7_24date_exact_winner_neighbors"
 )

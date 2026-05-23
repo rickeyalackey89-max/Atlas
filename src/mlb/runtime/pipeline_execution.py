@@ -105,6 +105,11 @@ DK_GAP_FILL_MARKETS = {
     },
 }
 
+DK_REPLAY_SOURCE_START_DATES = {
+    DRAFTKINGS_MLB_PICK6_SOURCE: "2026-05-18",
+    DRAFTKINGS_MLB_SPORTSBOOK_SOURCE: "2026-05-19",
+}
+
 
 def run_board_pipeline_result(
     *,
@@ -767,6 +772,10 @@ def _draftkings_gap_fill_monitor(
     *,
     draftkings_timing_policy: dict[str, Any],
 ) -> dict[str, Any]:
+    historical_unavailable_sources = {
+        str(source)
+        for source in draftkings_timing_policy.get("historical_unavailable_sources") or []
+    }
     source_counts = market_context_manifest.get("market_source_counts_by_market")
     source_counts = source_counts if isinstance(source_counts, dict) else {}
     board_counts = market_context_manifest.get("board_rows_by_market")
@@ -787,6 +796,8 @@ def _draftkings_gap_fill_monitor(
             status = "not_expected"
         elif total_source_rows > 0:
             status = "loaded"
+        elif all(source in historical_unavailable_sources for source in expected_sources):
+            status = "historical_unavailable"
         elif board_rows > 0 and draftkings_timing_policy.get("missing_dk_is_timing_valid"):
             status = "timing_pending"
         elif board_rows > 0:
@@ -812,6 +823,7 @@ def _draftkings_gap_fill_monitor(
         "timing_status": draftkings_timing_policy.get("timing_status", ""),
         "ready_game_count": draftkings_timing_policy.get("ready_game_count", 0),
         "pending_game_count": draftkings_timing_policy.get("pending_game_count", 0),
+        "historical_unavailable_sources": sorted(historical_unavailable_sources),
         "markets": rows,
     }
 
@@ -836,8 +848,17 @@ def _source_contract_warnings(
         if status not in {"fetched", "existing"}:
             warning_code = "enabled_market_source_missing"
             severity = "failure"
-            if str(source.get("source") or "") in {DRAFTKINGS_MLB_PICK6_SOURCE, DRAFTKINGS_MLB_SPORTSBOOK_SOURCE}:
-                if timing_valid_missing_dk:
+            source_name = str(source.get("source") or "")
+            if source_name in {DRAFTKINGS_MLB_PICK6_SOURCE, DRAFTKINGS_MLB_SPORTSBOOK_SOURCE}:
+                if _draftkings_historical_source_unavailable(
+                    source=source_name,
+                    run_mode=run_mode,
+                    game_date=str(draftkings_timing_policy.get("game_date") or ""),
+                    reason=source.get("missing_reason") or source.get("errors"),
+                ):
+                    warning_code = "draftkings_source_historical_unavailable"
+                    severity = "timing_warning"
+                elif timing_valid_missing_dk:
                     warning_code = "draftkings_source_timing_pending"
                     severity = "timing_warning"
             warnings.append(
@@ -847,12 +868,29 @@ def _source_contract_warnings(
                     "source": source.get("source", ""),
                     "status": status,
                     "reason": source.get("missing_reason") or source.get("errors") or "no_selected_source",
+                    "first_available_date": DK_REPLAY_SOURCE_START_DATES.get(source_name, ""),
                     "draftkings_timing_policy": draftkings_timing_policy,
                 }
             )
     selected_sources = {str(detail.get("source") or "") for detail in selected_market_details}
     if configured_sources.get("draftkings_pick6_alignment_enabled") and DRAFTKINGS_MLB_PICK6_SOURCE not in selected_sources:
-        if timing_valid_missing_dk:
+        if _draftkings_historical_source_unavailable(
+            source=DRAFTKINGS_MLB_PICK6_SOURCE,
+            run_mode=run_mode,
+            game_date=str(draftkings_timing_policy.get("game_date") or ""),
+            reason="no_same_date_existing_source",
+        ):
+            warnings.append(
+                {
+                    "code": "draftkings_source_historical_unavailable",
+                    "severity": "timing_warning",
+                    "source": DRAFTKINGS_MLB_PICK6_SOURCE,
+                    "run_mode": run_mode,
+                    "first_available_date": DK_REPLAY_SOURCE_START_DATES.get(DRAFTKINGS_MLB_PICK6_SOURCE, ""),
+                    "draftkings_timing_policy": draftkings_timing_policy,
+                }
+            )
+        elif timing_valid_missing_dk:
             warnings.append(
                 {
                     "code": "draftkings_source_timing_pending",
@@ -876,7 +914,23 @@ def _source_contract_warnings(
         configured_sources.get("draftkings_sportsbook_alignment_enabled")
         and DRAFTKINGS_MLB_SPORTSBOOK_SOURCE not in selected_sources
     ):
-        if timing_valid_missing_dk:
+        if _draftkings_historical_source_unavailable(
+            source=DRAFTKINGS_MLB_SPORTSBOOK_SOURCE,
+            run_mode=run_mode,
+            game_date=str(draftkings_timing_policy.get("game_date") or ""),
+            reason="no_same_date_existing_source",
+        ):
+            warnings.append(
+                {
+                    "code": "draftkings_source_historical_unavailable",
+                    "severity": "timing_warning",
+                    "source": DRAFTKINGS_MLB_SPORTSBOOK_SOURCE,
+                    "run_mode": run_mode,
+                    "first_available_date": DK_REPLAY_SOURCE_START_DATES.get(DRAFTKINGS_MLB_SPORTSBOOK_SOURCE, ""),
+                    "draftkings_timing_policy": draftkings_timing_policy,
+                }
+            )
+        elif timing_valid_missing_dk:
             warnings.append(
                 {
                     "code": "draftkings_source_timing_pending",
@@ -919,6 +973,24 @@ def _source_contract_warnings(
     return warnings
 
 
+def _draftkings_historical_source_unavailable(
+    *,
+    source: str,
+    run_mode: str,
+    game_date: str,
+    reason: Any,
+) -> bool:
+    if normalize_run_mode(run_mode) == "live":
+        return False
+    first_available = DK_REPLAY_SOURCE_START_DATES.get(source)
+    if not first_available or not game_date:
+        return False
+    if str(game_date)[:10] >= first_available:
+        return False
+    reason_text = str(reason or "")
+    return reason_text.startswith("no_same_date_existing_source")
+
+
 def _source_contract_failure_count(warnings: list[dict[str, Any]]) -> int:
     return sum(1 for warning in warnings if warning.get("severity") != "timing_warning")
 
@@ -957,9 +1029,16 @@ def _draftkings_timing_policy(engine_board: dict[str, Any], *, game_date: str) -
         default=None,
     )
     missing_is_timing_valid = bool(game_windows and pending_games and not ready_games and not unknown_games)
+    historical_unavailable_sources = [
+        source
+        for source, first_available in DK_REPLAY_SOURCE_START_DATES.items()
+        if game_date and str(game_date)[:10] < first_available
+    ]
     return {
         "policy_version": "draftkings_mlb_late_market_timing_v2_per_game",
         "late_market_sources": [DRAFTKINGS_MLB_PICK6_SOURCE, DRAFTKINGS_MLB_SPORTSBOOK_SOURCE],
+        "historical_source_start_dates": DK_REPLAY_SOURCE_START_DATES,
+        "historical_unavailable_sources": historical_unavailable_sources,
         "late_market_examples": ["hitter_strikeouts", "walks", "pitches_thrown"],
         "normal_day_rule": "target capture is one hour before each game's first pitch",
         "sunday_rule": "same per-game one-hour rule; schedule the first daily live pull at 10:00 America/Chicago for 11:00 starts",

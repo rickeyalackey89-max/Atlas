@@ -16,6 +16,7 @@ class MlbPaths:
     models: Path
     runs: Path
     replay_runs: Path
+    corpus_replays: Path
     test_runs: Path
     live_runs: Path
     eval: Path
@@ -43,6 +44,7 @@ def mlb_paths(root: Path | None = None) -> MlbPaths:
         models=data_root / "model",
         runs=data_root / "replay_runs",
         replay_runs=data_root / "replay_runs",
+        corpus_replays=data_root / "corpus_replays",
         test_runs=data_root / "test_runs",
         live_runs=data_root / "live_runs",
         eval=data_root / "eval",
@@ -73,6 +75,7 @@ def ensure_mlb_dirs(root: Path | None = None) -> MlbPaths:
         paths.features,
         paths.models,
         paths.replay_runs,
+        paths.corpus_replays,
         paths.test_runs,
         paths.live_runs,
         paths.eval,

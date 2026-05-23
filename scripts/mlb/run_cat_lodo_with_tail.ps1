@@ -1,5 +1,5 @@
 param(
-    [string]$CorpusDir = "data\mlb\replay_runs\corpus_replay_20260426_20260518_live_context_fix_v1",
+    [string]$CorpusDir = "data\mlb\corpus_replays\corpus_replay_20260516_20260520_strict_fidelity_v2",
     [string]$OutputDir = "data\mlb\model\cat_probability_kernel_v6_23date_live_context",
     [string]$Version = "mlb_cat_over_residual_v6_23date_live_context",
     [string]$Iterations = "200,400,600",

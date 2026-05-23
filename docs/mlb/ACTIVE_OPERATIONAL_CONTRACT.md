@@ -71,7 +71,8 @@ The active Python package uses a normal `src/` layout. The old `src/Atlas/sports
 - `data/mlb/raw/` - immutable raw snapshots and manifests.
 - `data/mlb/staged/` - normalized source tables.
 - `data/mlb/features/` - feature artifacts with manifests.
-- `data/mlb/replay_runs/` - single replay, corpus-member, and replay sweep outputs.
+- `data/mlb/replay_runs/` - single replay and corpus-member run outputs.
+- `data/mlb/corpus_replays/` - corpus replay aggregate outputs, member run/eval logs, and trainer handoff summaries.
 - `data/mlb/test_runs/` - legacy/read-only compatibility outputs only.
 - `data/mlb/live_runs/` - live runs only.
 - `data/mlb/eval/` - eval legs, eval slips, corpus summaries, audits.
@@ -110,7 +111,8 @@ Rules:
   still before its own target. Once any game is inside its ready window, missing
   DK context is a source contract failure for that ready portion of the slate.
 - Single replay and corpus replay stay separate from live output roots.
-- Replays write to `data/mlb/replay_runs/`.
+- Single replay/member run artifacts write to `data/mlb/replay_runs/`.
+- Corpus aggregate artifacts write to `data/mlb/corpus_replays/`.
 - Live writes to `data/mlb/live_runs/`.
 - Evaluations write to `data/mlb/eval/`.
 
@@ -168,7 +170,7 @@ Known challenger artifacts:
 
 Current CAT promotion basis:
 
-- Strict corpus: `data/mlb/replay_runs/corpus_replay_20260516_20260520_strict_fidelity_v2`
+- Strict corpus: `data/mlb/corpus_replays/corpus_replay_20260516_20260520_strict_fidelity_v2`
 - Strict preflight report: `data/mlb/audits/strict_replay_preflight/strict_replay_preflight_20260522T162108Z.json`
 - Date count / row count: `5` dates / `30337` rows.
 - v9 projection-feature LODO brier/logloss: `0.18648419` / `0.55538485`.
@@ -272,30 +274,28 @@ Current fair LODO challenger:
 Active builder:
 
 ```text
-atlas_mlb_public_slip_ranker_v26_family_context_marketed_2leg
+atlas_mlb_public_slip_ranker_v27_marketed_prob_edge_cat_v11
 ```
 
 Promotion basis:
 
-- CAT remains `mlb_cat_over_residual_v6_23date_live_context_scale_tuned`.
-- Builder policies were updated from the strict-fidelity 2026-05-16..20
-  baseball-context trainer:
-  `data/mlb/model/slip_builder_policy_v16_20260516_20260520_baseball_context_v10_overlay_v25_family_combo_marketed_2leg`.
-- The selected variant is `baseline` after promoting the v14
-  `family_best_context_combo` family policies and adding a Marketed 2-leg
-  fallback:
-  - Marketed increases confirmed external-context weight while keeping model
-    probability as the primary signal.
-  - System increases calibrated probability weight and reduces prior weight.
-  - Windfall increases calibrated probability weight and slightly tightens
-    per-tier minimums.
-  - DemonHunter stays on the baseline independent Demon policy.
-- On the strict 5-date corpus, v16 baseline produced `30/76` strict slips
-  (`39.5%`) and `196/270` selected legs (`72.6%`). Marketed specifically
-  produced `16/32` strict slips (`50.0%`) and `78/102` selected legs
-  (`76.5%`). This improved the previous best `marketed_prob_edge_plus` run
-  (`24/78`, `30.8%` strict slips; `69.9%` selected legs) without adding a
-  broken source dependency.
+- CAT active candidate is
+  `mlb_cat_over_residual_v11_20260426_20260520_baseball_context_v12`
+  from the strict-fidelity 2026-04-26..05-20 corpus. Best held-out sweep:
+  `400` iterations, depth `4`, learning rate `0.03`, residual scale `0.80`.
+  It improved held-out Brier from `0.191641` to `0.181960`.
+- Builder policy trainer:
+  `data/mlb/model/slip_builder_policy_v17_20260426_20260520_baseball_context_v12_cat_v11_overlay`.
+  The selected variant is `marketed_prob_edge_plus`.
+- Only the Marketed policy is promoted from v17. System, Windfall, and
+  DemonHunter stay on their prior family contracts because the fresh strict
+  trainer did not prove a clean family-level improvement for them.
+- On the strict 25-date corpus with CAT LODO overlay:
+  - Baseline Marketed: `22/52` settled slips (`42.3%`), selected legs `72.1%`.
+  - Promoted Marketed: `21/38` settled slips (`55.3%`), selected legs `76.9%`.
+  - Marketed 2-leg remained the strongest public shape: `17/25` (`68.0%`).
+  - System/Windfall/DemonHunter were not loosened; their weaker long-slip hit
+    rates remain evidence that more volume is not automatically better.
 - Family builder contracts are split by family under
   `src/mlb/runtime/slip_builders/`:
   - `marketed.py`: premium public picks.
@@ -304,7 +304,7 @@ Promotion basis:
   - `demonhunter.py`: Demon-only high-variance construction.
 - Market-source context is a small tiebreaker only. It is not allowed to become
   the primary reason a leg outranks stronger empirical family/segment evidence.
-- Runtime ranker `v26_family_context_marketed_2leg` blocks public selected
+- Runtime ranker `v27_marketed_prob_edge_cat_v11` blocks public selected
   slips whose baseball-context packet is `suppress` (`unknown_hitter_lineup`,
   `unknown_pitcher_starter_status`, identity gaps, or weather-delay workload
   risk). It also applies family-specific hard blocks:

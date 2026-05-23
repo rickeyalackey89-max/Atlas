@@ -48,7 +48,7 @@ PUBLIC_SIZED_SLIP_COUNTS = (2, 3, 4, 5)
 DEMONHUNTER_SIZES = (3, 4, 5)
 PAYOUT_QUOTE_MANIFEST_NAME = "payout_quote_manifest.json"
 PAYOUT_FORMULA_AUDIT_NAME = "payout_formula_audit.json"
-PUBLIC_SLIP_RANKER_VERSION = "atlas_mlb_public_slip_ranker_v26_family_context_marketed_2leg"
+PUBLIC_SLIP_RANKER_VERSION = "atlas_mlb_public_slip_ranker_v27_marketed_prob_edge_cat_v11"
 FEATURE_CONTEXT_FIELDS = (
     "market_group",
     "matchup_context_available",

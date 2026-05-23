@@ -123,6 +123,7 @@ def evaluate_scored_run(
     scored_payload = json.loads(resolved_scored_path.read_text(encoding="utf-8"))
     scored_legs = [row for row in scored_payload.get("scored_legs", []) if isinstance(row, dict)]
     resolved_run_id = run_id or str(scored_payload.get("run_id") or resolved_scored_path.parent.name)
+    publish_latest = _is_live_eval_run(resolved_run_id)
     dates = sorted({str(row.get("game_date") or "") for row in scored_legs if row.get("game_date")})
     staged_boxscore_rows = _load_staged_boxscore_rows(paths=paths, dates=dates)
     season_gamelog_rows = _load_season_boxscore_rows(root=root, dates=dates)
@@ -164,6 +165,7 @@ def evaluate_scored_run(
         eval_rows=rows,
         output_dir=output_dir,
         paths=paths,
+        publish_latest=publish_latest,
     )
     manifest = {
         "run_id": resolved_run_id,
@@ -198,20 +200,26 @@ def evaluate_scored_run(
         "latest_eval_slips_csv_path": str(paths.eval / "latest_eval_slips.csv"),
         "latest_eval_slips_json_path": str(paths.eval / "latest_eval_slips.json"),
         "latest_manifest_path": str(paths.eval / "latest_eval_manifest.json"),
+        "publish_latest": publish_latest,
         "columns": list(EVAL_COLUMNS),
         "slip_columns": list(SLIP_EVAL_COLUMNS),
     }
     manifest_path.write_text(json.dumps(manifest, indent=2, sort_keys=True), encoding="utf-8")
-    _copy_latest(csv_path, paths.eval / "latest_eval_legs.csv")
-    _copy_latest(json_path, paths.eval / "latest_eval_legs.json")
-    _copy_latest(summary_path, paths.eval / "latest_eval_summary.json")
-    _copy_latest(manifest_path, paths.eval / "latest_eval_manifest.json")
-    from mlb.runtime.runtime_state import publish_eval_runtime_state
+    if publish_latest:
+        _copy_latest(csv_path, paths.eval / "latest_eval_legs.csv")
+        _copy_latest(json_path, paths.eval / "latest_eval_legs.json")
+        _copy_latest(summary_path, paths.eval / "latest_eval_summary.json")
+        _copy_latest(manifest_path, paths.eval / "latest_eval_manifest.json")
+        from mlb.runtime.runtime_state import publish_eval_runtime_state
 
-    manifest["runtime_state"] = publish_eval_runtime_state(eval_manifest=manifest, root=root)
-    manifest_path.write_text(json.dumps(manifest, indent=2, sort_keys=True), encoding="utf-8")
-    _copy_latest(manifest_path, paths.eval / "latest_eval_manifest.json")
+        manifest["runtime_state"] = publish_eval_runtime_state(eval_manifest=manifest, root=root)
+        manifest_path.write_text(json.dumps(manifest, indent=2, sort_keys=True), encoding="utf-8")
+        _copy_latest(manifest_path, paths.eval / "latest_eval_manifest.json")
     return manifest
+
+
+def _is_live_eval_run(run_id: str) -> bool:
+    return str(run_id or "").startswith("live_")
 
 
 def _evaluate_leg(row: dict[str, Any], *, settlement_index: "_SettlementIndex") -> dict[str, Any]:
@@ -514,6 +522,7 @@ def _evaluate_slips(
     eval_rows: list[dict[str, Any]],
     output_dir: Path,
     paths,
+    publish_latest: bool,
 ) -> dict[str, Any]:
     slip_specs = _load_slip_specs(run_dir)
     eval_index = _EvalLegIndex(eval_rows)
@@ -534,9 +543,10 @@ def _evaluate_slips(
     slip_eval_path.write_text(json.dumps(payload, indent=2, sort_keys=True), encoding="utf-8")
     eval_slips_json_path.write_text(json.dumps(payload, indent=2, sort_keys=True), encoding="utf-8")
     _write_slip_eval_csv(eval_slips_csv_path, evaluated_slips)
-    _copy_latest(slip_eval_path, paths.eval / "latest_slip_eval.json")
-    _copy_latest(eval_slips_csv_path, paths.eval / "latest_eval_slips.csv")
-    _copy_latest(eval_slips_json_path, paths.eval / "latest_eval_slips.json")
+    if publish_latest:
+        _copy_latest(slip_eval_path, paths.eval / "latest_slip_eval.json")
+        _copy_latest(eval_slips_csv_path, paths.eval / "latest_eval_slips.csv")
+        _copy_latest(eval_slips_json_path, paths.eval / "latest_eval_slips.json")
     return {
         "slip_eval_version": SLIP_EVAL_VERSION,
         "slip_count": len(evaluated_slips),

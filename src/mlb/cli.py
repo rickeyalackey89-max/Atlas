@@ -603,7 +603,12 @@ def _cmd_fetch_statsapi_teams(args: argparse.Namespace) -> int:
 def _cmd_fetch_statsapi_roster(args: argparse.Namespace) -> int:
     return _emit_result(
         args,
-        fetch_statsapi_roster_result(team_id=args.team_id, season=args.season, normalize=not args.no_normalize),
+        fetch_statsapi_roster_result(
+            team_id=args.team_id,
+            season=args.season,
+            roster_date=args.date,
+            normalize=not args.no_normalize,
+        ),
     )
 
 
@@ -613,6 +618,7 @@ def _cmd_fetch_statsapi_rosters_bulk(args: argparse.Namespace) -> int:
         fetch_statsapi_rosters_bulk_result(
             season=args.season,
             sport_ids=_parse_sport_ids(args.sport_ids),
+            roster_date=args.date,
             normalize=not args.no_normalize,
         ),
     )
@@ -1203,6 +1209,7 @@ def build_parser() -> argparse.ArgumentParser:
     fetch_roster.add_argument("--json", action="store_true", help="Render command output as JSON")
     fetch_roster.add_argument("--team-id", type=int, required=True)
     fetch_roster.add_argument("--season", type=int, default=2026)
+    fetch_roster.add_argument("--date", default="", help="Historical roster date, YYYY-MM-DD.")
     fetch_roster.add_argument("--no-normalize", action="store_true", help="Only write the raw snapshot")
     fetch_roster.set_defaults(func=_cmd_fetch_statsapi_roster)
 
@@ -1212,6 +1219,7 @@ def build_parser() -> argparse.ArgumentParser:
     )
     fetch_rosters_bulk.add_argument("--json", action="store_true", help="Render command output as JSON")
     fetch_rosters_bulk.add_argument("--season", type=int, default=2026)
+    fetch_rosters_bulk.add_argument("--date", default="", help="Historical roster date, YYYY-MM-DD.")
     fetch_rosters_bulk.add_argument(
         "--sport-ids",
         default=str(MLB_STATSAPI_MAJOR_SPORT_ID),

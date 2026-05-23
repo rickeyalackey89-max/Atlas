@@ -163,6 +163,11 @@ def dir_matches_date(source: SourceDir, day: date) -> bool:
     day_text = day.strftime(DATE_FMT)
     compact = date_compact(day)
     manifest = source.manifest
+    for key in ("game_dates", "dates", "target_dates", "official_dates"):
+        values = manifest.get(key)
+        if isinstance(values, list):
+            if any(str(value) == day_text or compact in str(value) for value in values):
+                return True
     candidates = [
         str(manifest.get("game_date", "")),
         str(manifest.get("date", "")),
@@ -389,23 +394,39 @@ def staged_context_counts_by_date(root: Path, relative: str, day: date) -> dict[
     counts = {
         "dirs": len(matches),
         "rows": 0,
+        "lineup_rows": 0,
+        "pitcher_rows": 0,
+        "environment_rows": 0,
         "fidelity_rows": 0,
+        "fidelity_environment_rows": 0,
         "reconstructed_pregame_rows": 0,
         "postgame_rows": 0,
         "post_start_rows": 0,
     }
     for source in matches:
-        rows = []
-        for rows_name in ("batting_orders.jsonl", "pitchers.jsonl", "environment.jsonl", "bullpens.jsonl"):
-            rows.extend(iter_jsonl(source.path / rows_name))
-        if not rows:
+        typed_rows: list[tuple[str, dict[str, Any]]] = []
+        for rows_name, row_type in (
+            ("batting_orders.jsonl", "lineup"),
+            ("pitchers.jsonl", "pitcher"),
+            ("environment.jsonl", "environment"),
+            ("bullpens.jsonl", "bullpen"),
+        ):
+            typed_rows.extend((row_type, row) for row in iter_jsonl(source.path / rows_name))
+        if not typed_rows:
             # A manifest without row files is not replay context. Counting it
             # as runnable coverage is how a preflight can pass while runtime
             # source selection later fails.
             continue
 
-        for row in rows:
+        for row_type, row in typed_rows:
             counts["rows"] += 1
+            if row_type == "lineup":
+                counts["lineup_rows"] += 1
+            elif row_type == "pitcher":
+                counts["pitcher_rows"] += 1
+            elif row_type == "environment":
+                counts["environment_rows"] += 1
+
             if manifest_is_postgame(source.manifest) or manifest_is_postgame(row):
                 counts["postgame_rows"] += 1
                 continue
@@ -415,12 +436,38 @@ def staged_context_counts_by_date(root: Path, relative: str, day: date) -> dict[
             if is_reconstructed_pregame_context(source.manifest) or is_reconstructed_pregame_context(row):
                 counts["reconstructed_pregame_rows"] += 1
                 counts["fidelity_rows"] += 1
+                if row_type == "environment":
+                    counts["fidelity_environment_rows"] += 1
                 continue
             row_snapshot = snapshot_time_utc(row) or snapshot_time_utc(source.manifest, source.path)
             if latest_start and row_snapshot and row_snapshot > latest_start:
                 counts["post_start_rows"] += 1
                 continue
             counts["fidelity_rows"] += 1
+            if row_type == "environment":
+                counts["fidelity_environment_rows"] += 1
+    return counts
+
+
+def staged_weather_context_counts_by_date(root: Path, relative: str, day: date) -> dict[str, int]:
+    matches = [source for source in source_dirs(root, relative) if dir_matches_date(source, day)]
+    counts = {"dirs": len(matches), "environment_rows": 0, "fidelity_environment_rows": 0}
+    day_text = day.strftime(DATE_FMT)
+    for source in matches:
+        rows = [
+            row
+            for row in iter_jsonl(source.path / "environment.jsonl")
+            if str(row.get("game_date") or row.get("official_date") or day_text) == day_text
+        ]
+        counts["environment_rows"] += len(rows)
+        if not rows:
+            continue
+        if manifest_is_postgame(source.manifest):
+            continue
+        for row in rows:
+            if manifest_is_postgame(row) or row_indicates_started(row):
+                continue
+            counts["fidelity_environment_rows"] += 1
     return counts
 
 
@@ -586,6 +633,12 @@ def audit_date(root: Path, day: date) -> dict[str, Any]:
         "data/mlb/staged/baseball_reference_boxscore_context",
         day,
     )
+    covers_weather_context = staged_weather_context_counts_by_date(root, "data/mlb/staged/covers_weather", day)
+    wunderground_weather_context = staged_weather_context_counts_by_date(
+        root,
+        "data/mlb/staged/wunderground_history_weather",
+        day,
+    )
     espn_count = espn_context["dirs"]
     espn_rows = espn_context["rows"]
     rotowire_count = rotowire_context["dirs"]
@@ -596,6 +649,13 @@ def audit_date(root: Path, day: date) -> dict[str, Any]:
         espn_context["fidelity_rows"]
         + rotowire_context["fidelity_rows"]
         + baseball_reference_context["fidelity_rows"]
+    )
+    weather_context_rows = (
+        espn_context["fidelity_environment_rows"]
+        + rotowire_context["fidelity_environment_rows"]
+        + baseball_reference_context["fidelity_environment_rows"]
+        + covers_weather_context["fidelity_environment_rows"]
+        + wunderground_weather_context["fidelity_environment_rows"]
     )
     postgame_context_rows = (
         espn_context["postgame_rows"]
@@ -640,6 +700,8 @@ def audit_date(root: Path, day: date) -> dict[str, Any]:
         warnings.append("lineup_pitcher_environment_context_not_fidelity_valid")
     if reconstructed_pregame_rows:
         warnings.append(f"baseball_reference_reconstructed_pregame_lineup_rows={reconstructed_pregame_rows}")
+    if weather_context_rows == 0:
+        warnings.append("missing_weather_environment_context")
     if postgame_context_rows:
         warnings.append(f"postgame_context_rows_excluded={postgame_context_rows}")
     if post_start_context_rows:
@@ -696,6 +758,13 @@ def audit_date(root: Path, day: date) -> dict[str, Any]:
         "baseball_reference_reconstructed_pregame_rows": reconstructed_pregame_rows,
         "baseball_reference_postgame_context_rows": baseball_reference_context["postgame_rows"],
         "baseball_reference_post_start_context_rows": baseball_reference_context["post_start_rows"],
+        "weather_context_rows": weather_context_rows,
+        "covers_weather_context_dirs": covers_weather_context["dirs"],
+        "covers_weather_context_rows": covers_weather_context["environment_rows"],
+        "covers_weather_fidelity_context_rows": covers_weather_context["fidelity_environment_rows"],
+        "wunderground_weather_context_dirs": wunderground_weather_context["dirs"],
+        "wunderground_weather_context_rows": wunderground_weather_context["environment_rows"],
+        "wunderground_weather_fidelity_context_rows": wunderground_weather_context["fidelity_environment_rows"],
         "fidelity_context_rows": fidelity_context_rows,
         "postgame_context_rows": postgame_context_rows,
         "post_start_context_rows": post_start_context_rows,

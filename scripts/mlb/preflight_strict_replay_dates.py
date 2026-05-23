@@ -62,12 +62,16 @@ def _strict_failures(row: dict[str, Any]) -> list[str]:
 
     if int(row.get("fidelity_context_rows") or 0) <= 0:
         failures.append("missing_pregame_lineup_pitcher_environment_context")
+    if int(row.get("weather_context_rows") or 0) <= 0:
+        failures.append("missing_weather_environment_context")
 
     if int(row.get("injury_dirs") or 0) <= 0:
         failures.append("missing_date_safe_injury_context_snapshot")
 
     roster_rows = int(row.get("roster_rows_total") or 0)
     prior_rows = int(row.get("prior_history_identity_rows") or 0)
+    if prior_rows <= 0:
+        failures.append("missing_prior_player_history_context")
     if roster_rows < MIN_ROSTER_ROWS and prior_rows < MIN_PRIOR_IDENTITY_ROWS:
         failures.append(
             f"thin_roster_identity rows={roster_rows} prior_history_rows={prior_rows}"
@@ -131,6 +135,7 @@ def _write_csv(path: Path, rows: list[dict[str, Any]]) -> None:
         "prior_history_identity_rows",
         "statsapi_schedule_games",
         "fidelity_context_rows",
+        "weather_context_rows",
         "postgame_context_rows",
         "post_start_context_rows",
         "baseball_savant_rows",
@@ -159,8 +164,8 @@ def _write_md(path: Path, payload: dict[str, Any]) -> None:
         f"Verdict: **{payload['verdict']}**",
         f"Passed: {payload['pass_count']} / {len(payload['requested_dates'])}",
         "",
-        "| Date | Status | Market Rows | Sources | Fidelity Ctx | Roster/Prior IDs | Advanced | Ballpark/Wind | Failures |",
-        "| --- | --- | ---: | --- | ---: | ---: | ---: | ---: | --- |",
+        "| Date | Status | Market Rows | Sources | Fidelity Ctx | Weather Ctx | Roster/Prior IDs | Advanced | Ballpark/Wind | Failures |",
+        "| --- | --- | ---: | --- | ---: | ---: | ---: | ---: | ---: | --- |",
     ]
     for row in payload["rows"]:
         failures = ", ".join(row.get("strict_preflight_failures") or []) or "-"
@@ -170,8 +175,8 @@ def _write_md(path: Path, payload: dict[str, Any]) -> None:
         park = int(row.get("ballpark_rows") or 0) + int(row.get("wind_factor_rows") or 0)
         lines.append(
             f"| {row['date']} | {row['strict_preflight_status']} | {row.get('staged_market_rows', 0)} | "
-            f"{sources} | {row.get('fidelity_context_rows', 0)} | {roster_prior} | "
-            f"{advanced} | {park} | {failures} |"
+            f"{sources} | {row.get('fidelity_context_rows', 0)} | {row.get('weather_context_rows', 0)} | "
+            f"{roster_prior} | {advanced} | {park} | {failures} |"
         )
     path.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
