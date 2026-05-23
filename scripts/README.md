@@ -22,6 +22,15 @@ Keep scheduled or operator-facing automation at the root when external tooling m
 - `setup_daily_automation.ps1`
 - `task_8am_graphics.ps1`
 
+Umbrella-root scheduled wrappers now live in `C:\Users\13142\Atlas`:
+
+- `run-live-sports.cmd` / `.ps1` runs NBA and/or MLB live from their own sport
+  roots.
+- `run-6am-eval-and-publish.cmd` / `.ps1` runs prior-day NBA and MLB evals and
+  publishes both dashboard payloads.
+- `run-nba-first-tip-live.cmd` / `.ps1` refreshes the NBA board and runs NBA live
+  about 20 minutes before first tip. This is a live-board refresh, not an eval.
+
 Avoid adding new one-off Python files at the root. Put them in the smallest matching subfolder instead.
 
 ## Boundary With Tools

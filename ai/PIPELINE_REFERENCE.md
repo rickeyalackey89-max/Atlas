@@ -34,11 +34,33 @@ Relative paths like `data/model/marketed_calibration.json` resolve against CWD. 
 | Command | Purpose |
 |---|---|
 | `python -m Atlas.cli live` | Production live run (fetches fresh data, scores, publishes) |
+| `python -m NBA.cli live` | Operator-facing alias for the same production live run |
 | `python -m Atlas.cli replay --raw <path>` | Deterministic replay from pinned raw JSON |
 | `python tools/replay_bundle.py <bundle.zip> --scenario-id <name>` | Bundle replay |
 | `python -m Atlas.cli tools list` | List available tools |
 
 CLI defined in `src/Atlas/cli.py`. Delegates to `src/Atlas/runtime/orchestrator.py` → `run_today()`.
+
+---
+
+## Scheduled NBA Live Automation
+
+The umbrella Atlas root owns scheduled orchestration.
+
+- `Atlas_11AM` runs NBA and MLB live together through
+  `C:\Users\13142\Atlas\run-live-sports.cmd`.
+- `Atlas_530PM` remains an NBA live refresh.
+- `Atlas_NBA_FirstTip_20Min` runs
+  `C:\Users\13142\Atlas\run-nba-first-tip-live.cmd`.
+
+The first-tip runner is a live run, not an eval task. It refreshes the current
+PrizePicks board before scoring and waits until roughly 20 minutes before the
+first NBA game of the day. Its purpose is to capture late injury/news and board
+movement close to tip while still publishing through the normal NBA live path.
+
+`Atlas_6AM_Eval` is separate. It evaluates prior-day NBA/MLB results and
+publishes performance payloads. It must not replace the current live slate board
+or public preview with historical eval data.
 
 ---
 
