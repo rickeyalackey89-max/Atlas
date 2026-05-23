@@ -90,7 +90,7 @@ market_sources:
   refresh_replay_by_default: false
   live_pull_cadence:
     timezone: America/Chicago
-    windows: ["11:00", "14:30", "17:00", "19:00"]
+    windows: ["11:00", "13:30", "16:30", "19:30"]
     rule: refresh live board and markets multiple times per day; engine board excludes already-started games
     draftkings_late_market_rule: evaluate readiness per game at one hour before each game start
   optional_fallbacks:
