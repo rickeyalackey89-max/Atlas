@@ -26,18 +26,21 @@ paths:
   staged: data/mlb/staged
   features: data/mlb/features
   model: data/mlb/model
+  replay_runs: data/mlb/replay_runs
+  corpus_replays: data/mlb/corpus_replays
   test_runs: data/mlb/test_runs
   live_runs: data/mlb/live_runs
   eval: data/mlb/eval
   archives: data/mlb/archives
 
 publishing:
-  dashboard_enabled: false
+  dashboard_enabled: true
   discord_enabled: false
   production_channels_enabled: false
 
 outputs:
-  replay_root: data/mlb/test_runs
+  replay_root: data/mlb/replay_runs
+  corpus_replay_root: data/mlb/corpus_replays
   live_root: data/mlb/live_runs
   eval_root: data/mlb/eval
   replay_types:

@@ -1,6 +1,6 @@
 # Active MLB Operational Contract
 
-Last updated: 2026-05-22
+Last updated: 2026-05-23
 
 This is the current working contract for Atlas MLB Dev. It is the source to check before running new replay corpuses, CAT training, or slip-builder sweeps.
 
@@ -239,13 +239,17 @@ Market source order for live runs:
 
 Live pull cadence:
 
-- Central time windows: `11:00`, `14:30`, `17:00`, `19:00`.
+- Central time windows: `11:00`, `13:30`, `16:30`, `19:30`.
 - Each live run fetches a fresh PrizePicks board and market context.
-- The engine board excludes games that have already started, so the 14:30,
-  17:00, and 19:00 runs are late-slate refreshes, not full-day repeats.
+- The engine board excludes games that have already started, so the 13:30,
+  16:30, and 19:30 runs are late-slate refreshes, not full-day repeats.
 - DraftKings late pitcher/hitter props are evaluated per game. Later games may
   remain timing-pending even when earlier games are already inside the DK-ready
   window.
+- Dashboard publishing is live-enabled for MLB. Live runs update the current
+  MLB dashboard payload and public preview. Prior-day eval publishing is handled
+  by the 6 AM umbrella eval wrapper and must stay separate from live slate
+  publishing.
 
 Latest live smoke with all three sources:
 

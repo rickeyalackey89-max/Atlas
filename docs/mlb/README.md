@@ -1,7 +1,7 @@
 # Atlas MLB Dev
 
-Status: active development engine  
-Last updated: 2026-05-21
+Status: production-facing engine under active model tuning
+Last updated: 2026-05-23
 
 Atlas MLB is a separate engine under the umbrella Atlas workspace. Read the
 workspace-level operating memory before changing live, replay, corpus, CAT,
@@ -13,8 +13,11 @@ builder, publish, or data-retention code:
 
 ## Operating Rules
 
-- NBA Atlas remains the working production model.
-- MLB may be refactored aggressively, but source snapshots, run outputs,
+- NBA Atlas remains the established production model.
+- MLB is now public-dashboard-facing. Runtime, publishing, and automation
+  changes must be treated as production-sensitive even while model tuning
+  continues.
+- MLB may be refactored, but source snapshots, run outputs,
   manifests, telemetry, archives, and `MLB_info_DO_NOT_DELETE` files are
   protected data and must not be deleted.
 - Do not run copied NBA live jobs as MLB production.
@@ -59,7 +62,8 @@ builder, publish, or data-retention code:
 - `data/mlb/staged/` - normalized source tables.
 - `data/mlb/features/` - model-ready feature tables.
 - `data/mlb/model/` - active and candidate MLB model artifacts.
-- `data/mlb/replay_runs/` - single replay, corpus replay, and replay sweep outputs.
+- `data/mlb/replay_runs/` - single replay/member run outputs.
+- `data/mlb/corpus_replays/` - corpus replay aggregate outputs and trainer handoff summaries.
 - `data/mlb/test_runs/` - legacy smoke-test/read-only compatibility outputs.
 - `data/mlb/live_runs/` - actual live model run outputs and live slip files.
 - `data/mlb/eval/` - scored historical outcomes and evaluation reports.
@@ -69,10 +73,10 @@ builder, publish, or data-retention code:
 
 ## Current Non-Goals
 
-- No live subscription-impacting MLB publishing.
 - No direct reuse of NBA calibration as MLB truth.
 - No production Discord posting.
-- No automatic dashboard deployment from MLB Dev until explicitly enabled.
+- No training or promotion from a corpus whose strict-fidelity preflight or
+  source contract failed.
 
 ## Command Surface
 

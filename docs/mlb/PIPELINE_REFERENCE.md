@@ -179,7 +179,7 @@ Writes:
 - `operator/operator_input.json`
 - `operator/publish_decision.json`
 - `operator/operator_report.md`
-- replay/test mode also writes `data/mlb/eval/<run_id>/eval_legs.*`, `eval_slips.*`, and `slip_eval.json`
+- eval writes `data/mlb/eval/<run_id>/eval_legs.*`, `eval_slips.*`, and `slip_eval.json`
 - `run_manifest.json`
 
 Purpose:
@@ -224,11 +224,11 @@ Implemented context stages:
   `game_date` rows, not folder timestamp text, so historical BettingPros
   backfills cannot pollute a live slate manifest.
 - Live MLB should run multiple same-day pulls in Central time: `11:00`,
-  `14:30`, `17:00`, and `19:00`. Each pull fetches a fresh board, excludes
+  `13:30`, `16:30`, and `19:30`. Each pull fetches a fresh board, excludes
   already-started games from the engine board, and refreshes market context for
   the remaining slate.
-- The local runner is `scripts/mlb/run_live_model.ps1`. The optional Windows
-  Task Scheduler installer is `scripts/mlb/register_live_pull_schedule.ps1`.
+- The scheduled runner is the umbrella-root `run-live-sports.cmd`; sport-local
+  runners remain available for manual/operator runs.
 - DraftKings supplemental context is evaluated per game. A late game can remain
   timing-pending while an early game is already DK-ready; the source-selection
   manifest records `ready_game_count`, `pending_game_count`, and per-game target
@@ -257,7 +257,8 @@ Live:
 - fetches fresh PrizePicks snapshots
 - writes latest engine board inputs
 - writes run outputs to `data/mlb/live_runs/<run_id>/`
-- may eventually publish dashboard/Discord outputs
+- publishes current MLB dashboard payloads through `atlas-dashboard`
+- does not write replay/corpus outputs
 
 Replay:
 
@@ -266,6 +267,18 @@ Replay:
 - writes isolated engine board inputs
 - writes run outputs to `data/mlb/replay_runs/<run_id>/`
 - must not publish externally
+
+Corpus replay:
+
+- uses only strict-fidelity replay members
+- writes aggregate artifacts to `data/mlb/corpus_replays/<corpus_id>/`
+- may feed CAT/LODO and builder training only after source contracts pass
+
+Eval:
+
+- evaluates completed live or replay outputs after games settle
+- writes to `data/mlb/eval/<run_id>/`
+- is separate from live publishing and separate from corpus replay storage
 
 ## Guardrails
 

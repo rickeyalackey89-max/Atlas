@@ -1,7 +1,7 @@
 # Atlas MLB Replay Fidelity Rule
 
 Status: binding rule  
-Last updated: 2026-05-21
+Last updated: 2026-05-23
 
 This document is backed by the machine-readable replay contract at
 `C:\Users\13142\Atlas\MLB\config\replay_fidelity_contract.yaml` and the
@@ -37,10 +37,14 @@ canonical names above.
 Run outputs are physically separated:
 
 - `data/mlb/live_runs/<run_id>/` is reserved for actual live model runs.
-- `data/mlb/replay_runs/<run_id>/` is used for single replay, corpus replay,
-  and replay sweep run artifacts.
+- `data/mlb/replay_runs/<run_id>/` is used for single replay/member run
+  artifacts.
+- `data/mlb/corpus_replays/<corpus_id>/` is used for corpus aggregate outputs,
+  member run/eval logs, strict summaries, and trainer handoff artifacts.
 - `data/mlb/test_runs/<run_id>/` is a legacy/read-only compatibility root and
   must not be used for new replay output.
+- `data/mlb/eval/<run_id>/` is used for eval legs/slips and prior-day live run
+  evaluation outputs. Eval data and replay/corpus data must remain separate.
 
 ## Source Timing
 

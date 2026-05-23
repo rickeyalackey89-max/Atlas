@@ -1,7 +1,7 @@
 # MLB Strict Replay Fidelity Contract
 
 Status: binding  
-Last updated: 2026-05-22
+Last updated: 2026-05-23
 
 This contract exists so MLB replay, corpus, CAT, and builder work cannot train
 on a replay surface that live would never have seen.
@@ -103,13 +103,13 @@ uv run python scripts\mlb\preflight_strict_replay_dates.py --dates 2026-04-26 20
 Only after all requested dates pass:
 
 ```powershell
-.\scripts\mlb\run_fidelity_replay_sweep.ps1 -OutputDir data\mlb\eval\<corpus_name>
+.\scripts\mlb\run_fidelity_replay_sweep.ps1 -OutputDir data\mlb\corpus_replays\<corpus_name>
 ```
 
 Before CAT:
 
 ```powershell
-uv run python scripts\mlb\aggregate_fidelity_replay_sweep.py --input-dir data\mlb\eval\<corpus_name>
+uv run python scripts\mlb\aggregate_fidelity_replay_sweep.py --input-dir data\mlb\corpus_replays\<corpus_name>
 ```
 
 The CAT trainer also calls `enforce_corpus_source_contracts()` and must stop if
