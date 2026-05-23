@@ -2,9 +2,10 @@
 """Wait until first tip minus a lead window, then run Atlas live.
 
 Default behavior:
-- Reads NBA start times from data/board/today.csv, falling back to fetch_board.csv.
+- Refreshes the live PrizePicks board, then reads NBA start times from
+  data/board/fetch_board.csv, falling back to today.csv.
 - Finds the first future game on the local slate.
-- Runs scripts/run_iael_530pm.cmd 20 minutes before that first tip.
+- Runs the root Atlas live wrapper for NBA 20 minutes before that first tip.
 
 This script is intended for Windows Task Scheduler or a long-running terminal.
 It does not change model logic; it only moves the production run closer to the
@@ -14,6 +15,7 @@ best available pre-tip injury report.
 from __future__ import annotations
 
 import argparse
+import os
 import subprocess
 import sys
 import time
@@ -25,7 +27,10 @@ import pandas as pd
 
 
 ROOT = Path(__file__).resolve().parents[1]
+ATLAS_ROOT = ROOT.parent
 LOCAL_TZ = ZoneInfo("America/Chicago")
+DEFAULT_RUN_CMD = str(ATLAS_ROOT / "run-live-sports.cmd")
+DEFAULT_RUN_ARGS = ["-WindowLabel", "firsttip", "-RunNBA", "-ContinueOnError"]
 
 
 def main() -> int:
@@ -33,10 +38,24 @@ def main() -> int:
     parser.add_argument("--lead-minutes", type=int, default=20)
     parser.add_argument("--poll-seconds", type=int, default=30)
     parser.add_argument("--board", default="")
-    parser.add_argument("--run-cmd", default=str(ROOT / "scripts" / "run_iael_530pm.cmd"))
+    parser.add_argument("--run-cmd", default=DEFAULT_RUN_CMD)
+    parser.add_argument(
+        "--run-arg",
+        action="append",
+        default=None,
+        help="Argument to pass to --run-cmd. Repeat for multiple args. Defaults to NBA live root wrapper args.",
+    )
+    parser.add_argument(
+        "--skip-refresh",
+        action="store_true",
+        help="Do not refresh PrizePicks board before calculating first tip.",
+    )
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--no-wait", action="store_true", help="Print target time and exit unless already due.")
     args = parser.parse_args()
+
+    if not args.skip_refresh:
+        _refresh_board()
 
     board_path = _resolve_board(args.board)
     first_tip = _first_tip(board_path)
@@ -59,7 +78,27 @@ def main() -> int:
     else:
         print("[FIRST_TIP] target is already due; running now")
 
-    return _run_command(args.run_cmd)
+    run_args = args.run_arg if args.run_arg is not None else DEFAULT_RUN_ARGS
+    return _run_command(args.run_cmd, run_args)
+
+
+def _refresh_board() -> None:
+    """Refresh the live board so first-tip timing is based on today's slate."""
+    env = os.environ.copy()
+    env["PYTHONIOENCODING"] = "utf-8"
+    env["PYTHONUTF8"] = "1"
+
+    steps = [
+        [sys.executable, str(ROOT / "tools" / "fetch_apis.py"), "--raw-only"],
+        [sys.executable, str(ROOT / "tools" / "rebuild_today_from_any_raw.py")],
+    ]
+    for cmd in steps:
+        if not Path(cmd[1]).is_file():
+            raise FileNotFoundError(f"Missing board refresh tool: {cmd[1]}")
+        print(f"[FIRST_TIP] refreshing board: {' '.join(cmd)}")
+        completed = subprocess.run(cmd, cwd=ROOT, env=env)
+        if completed.returncode != 0:
+            raise RuntimeError(f"Board refresh failed with exit code {completed.returncode}")
 
 
 def _resolve_board(value: str) -> Path:
@@ -68,14 +107,24 @@ def _resolve_board(value: str) -> Path:
         candidates.append(Path(value))
     candidates.extend(
         [
-            ROOT / "data" / "board" / "today.csv",
             ROOT / "data" / "board" / "fetch_board.csv",
+            ROOT / "data" / "board" / "today.csv",
         ]
     )
     for path in candidates:
-        if path.is_file():
+        if path.is_file() and _has_parseable_start_time(path):
             return path
-    raise FileNotFoundError("No board file found. Run a PrizePicks fetch first.")
+    raise FileNotFoundError("No board file with parseable start_time found. Run a PrizePicks fetch/rebuild first.")
+
+
+def _has_parseable_start_time(path: Path) -> bool:
+    try:
+        df = pd.read_csv(path, nrows=25, low_memory=False)
+    except Exception:
+        return False
+    if df.empty or "start_time" not in df.columns:
+        return False
+    return bool(pd.to_datetime(df["start_time"], errors="coerce", utc=True).notna().any())
 
 
 def _first_tip(board_path: Path) -> datetime:
@@ -108,14 +157,14 @@ def _sleep_until(target: datetime, poll_seconds: int) -> None:
         time.sleep(min(float(poll), remaining))
 
 
-def _run_command(command: str) -> int:
+def _run_command(command: str, args: list[str]) -> int:
     path = Path(command)
     if path.suffix.lower() == ".cmd":
-        cmd = ["cmd.exe", "/c", str(path)]
+        cmd = ["cmd.exe", "/c", str(path), *args]
     else:
-        cmd = command
-    print(f"[FIRST_TIP] running={command}")
-    completed = subprocess.run(cmd, cwd=ROOT, shell=isinstance(cmd, str))
+        cmd = [command, *args]
+    print(f"[FIRST_TIP] running={' '.join(cmd)}")
+    completed = subprocess.run(cmd, cwd=ATLAS_ROOT)
     return int(completed.returncode)
 
 
