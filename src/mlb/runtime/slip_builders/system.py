@@ -8,12 +8,15 @@ from .contracts import FamilyBuilderPolicy
 POLICY = FamilyBuilderPolicy(
     name="System",
     purpose="atlas_value_ev",
-    probability_weight=0.35,
-    prior_weight=0.42,
-    bettingpros_weight=0.03,
+    # Strict-fidelity 2026-05-16..20 baseball-context trainer selected the
+    # family_best_context_combo profile: System needs a stronger calibrated
+    # probability read and a little less historical prior weight.
+    probability_weight=0.42,
+    prior_weight=0.39,
+    bettingpros_weight=0.02,
     stability_weight=0.09,
     fragility_weight=0.06,
-    edge_weight=0.11,
+    edge_weight=0.13,
     prop_identifier_weight=0.02,
     tier_bonus={"GOBLIN": 0.04, "STANDARD": 0.02, "DEMON": -0.10},
     market_bonus={
@@ -40,6 +43,6 @@ POLICY = FamilyBuilderPolicy(
         ("STANDARD", "total_bases"): 0.04,
         ("STANDARD", "pitching_outs"): 0.03,
     },
-    min_probability_by_tier={"GOBLIN": 0.63, "STANDARD": 0.58, "DEMON": 0.61},
+    min_probability_by_tier={"GOBLIN": 0.64, "STANDARD": 0.59, "DEMON": 0.62},
     min_edge=0.01,
 )

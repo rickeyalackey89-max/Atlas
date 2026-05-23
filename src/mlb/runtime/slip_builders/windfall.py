@@ -8,14 +8,15 @@ from .contracts import FamilyBuilderPolicy
 POLICY = FamilyBuilderPolicy(
     name="Windfall",
     purpose="flex_upside_best_of_both_worlds",
-    # Strict-fidelity 2026-05-16..20 trainer with CAT v8 overlay and
-    # DemonHunter independent exposure selected `windfall_probability_plus`.
-    probability_weight=0.41,
+    # Strict-fidelity 2026-05-16..20 baseball-context trainer selected the
+    # family_best_context_combo profile: Windfall should lean harder into
+    # calibrated probability once weak Demon segments are blocked.
+    probability_weight=0.48,
     prior_weight=0.27,
-    bettingpros_weight=0.03,
+    bettingpros_weight=0.01,
     stability_weight=0.08,
     fragility_weight=0.05,
-    edge_weight=0.15,
+    edge_weight=0.17,
     prop_identifier_weight=0.02,
     tier_bonus={"DEMON": 0.08, "GOBLIN": 0.04, "STANDARD": 0.02},
     market_bonus={
@@ -46,6 +47,6 @@ POLICY = FamilyBuilderPolicy(
         ("DEMON", "pitching_outs"): 0.10,
         ("DEMON", "pitcher_fantasy_score"): 0.12,
     },
-    min_probability_by_tier={"GOBLIN": 0.61, "STANDARD": 0.56, "DEMON": 0.57},
+    min_probability_by_tier={"GOBLIN": 0.62, "STANDARD": 0.57, "DEMON": 0.58},
     min_edge=0.0,
 )

@@ -18,6 +18,18 @@ param(
 
 $ErrorActionPreference = "Stop"
 $repoRoot = Resolve-Path (Join-Path $PSScriptRoot "..\..")
+$atlasRoot = Split-Path $repoRoot -Parent
+$pythonExe = Join-Path $atlasRoot ".venv\Scripts\python.exe"
+if (-not (Test-Path $pythonExe)) {
+    $pythonExe = "python"
+}
+$srcPath = Join-Path $repoRoot "src"
+$existingPythonPath = [Environment]::GetEnvironmentVariable("PYTHONPATH", "Process")
+if ([string]::IsNullOrWhiteSpace($existingPythonPath)) {
+    $env:PYTHONPATH = $srcPath
+} elseif ($existingPythonPath -notlike "*$srcPath*") {
+    $env:PYTHONPATH = "$srcPath;$existingPythonPath"
+}
 Set-Location $repoRoot
 
 $resolvedOutput = Join-Path $repoRoot $OutputDir
@@ -40,7 +52,7 @@ if (-not $NoTailWindow) {
 $PID | Set-Content -Path $pidPath -Encoding UTF8
 
 $cmd = @(
-    "uv", "run", "python", "scripts\mlb\train_cat_probability_kernel.py",
+    $pythonExe, "scripts\mlb\train_cat_probability_kernel.py",
     "--root", ".",
     "--corpus-dir", $CorpusDir,
     "--output-dir", $OutputDir,

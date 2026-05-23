@@ -267,6 +267,31 @@ def _policy_variants(original: dict[str, Any]) -> dict[str, dict[str, Any]]:
                 min_probability=0.01,
             ),
         },
+        "family_best_context_combo": {
+            **original,
+            "Marketed": _adjust(
+                original["Marketed"],
+                probability=-0.02,
+                prior=-0.02,
+                bettingpros=0.07,
+                edge=-0.01,
+            ),
+            "System": _adjust(
+                original["System"],
+                probability=0.07,
+                prior=-0.03,
+                bettingpros=-0.01,
+                edge=0.02,
+                min_probability=0.01,
+            ),
+            "Windfall": _adjust(
+                original["Windfall"],
+                probability=0.07,
+                bettingpros=-0.02,
+                edge=0.02,
+                min_probability=0.01,
+            ),
+        },
     }
 
 

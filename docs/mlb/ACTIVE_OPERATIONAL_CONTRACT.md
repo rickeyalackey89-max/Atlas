@@ -6,9 +6,58 @@ This is the current working contract for Atlas MLB Dev. It is the source to chec
 
 Binding replay docs:
 
+- `docs/mlb/BASEBALL_PHILOSOPHY.md`
+- `docs/mlb/MLB_BASEBALL_CONTEXT_CODEX_BRIEF.md`
 - `docs/mlb/STRICT_REPLAY_FIDELITY_CONTRACT.md`
 - `docs/mlb/STRICT_REPLAY_WORKFLOW.md`
 - `docs/mlb/REPLAY_FIDELITY.md`
+
+## Baseball-First Rule
+
+The MLB model is not allowed to optimize around numbers divorced from baseball
+context. `docs/mlb/BASEBALL_PHILOSOPHY.md` is the baseball-first contract for
+how Atlas should interpret MLB props.
+
+Operational meaning:
+
+- Opportunity comes first: confirmed lineup, batting order, plate appearances,
+  confirmed starter, pitch count, and role.
+- Matchup comes second: hitter skill versus pitcher handedness, pitch mix,
+  contact shape, strikeout/walk profile, and bullpen continuation.
+- Environment comes third: ballpark, weather, wind, roof, umpire, defense, and
+  game run environment.
+- Prop personality matters: hits are not total bases, RBI are not isolated
+  hitter skill, home runs are high variance, and pitcher outs are workload plus
+  efficiency plus manager leash.
+- Slip fit matters: good legs can be bad pairings when they depend on the same
+  game script, fight each other, or cluster the same weather/team risk.
+
+CAT, replay, and builder work should be judged against those baseball paths, not
+only against global brier, aggregate hit rate, or table-level feature coverage.
+
+## Passive Baseball Context Layer
+
+The MLB runtime now writes passive baseball-context artifacts whenever scored
+legs are used to build slips. This layer is non-mutating: it does not change
+`p_cal`, `model_probability`, CAT artifacts, or slip probabilities.
+
+Run-level artifacts:
+
+- `mlb_scored_legs_context.csv`
+- `mlb_publication_gate_report.json`
+- `mlb_pick_context_packets.json`
+
+Latest mirrors:
+
+- `data/mlb/output/context/latest_mlb_scored_legs_context.csv`
+- `data/mlb/output/context/latest_mlb_publication_gate_report.json`
+- `data/mlb/output/context/latest_mlb_pick_context_packets.json`
+
+The artifacts tag each leg by opportunity, lineup status, batting-order bucket,
+pitcher starter status, prop volatility, matchup availability, park/weather
+availability, and publication gate level (`ok`, `caution`, `suppress`). These
+fields are audit context first. They become CAT or builder features only after
+strict replay fidelity confirms that live and replay can reproduce them.
 
 ## Repository Layout
 
@@ -223,22 +272,30 @@ Current fair LODO challenger:
 Active builder:
 
 ```text
-atlas_mlb_public_slip_ranker_v22_marketed_bettingpros_windfall_probability
+atlas_mlb_public_slip_ranker_v26_family_context_marketed_2leg
 ```
 
 Promotion basis:
 
 - CAT remains `mlb_cat_over_residual_v6_23date_live_context_scale_tuned`.
-- Builder Marketed policy was updated from the strict-fidelity trainer:
-  `data/mlb/model/slip_builder_policy_v8_20260516_20260520_strict_fidelity_cat_overlay`.
-- The selected builder variant is `marketed_bettingpros_plus`; it keeps model
-  probability as the primary Marketed signal while increasing BettingPros
-  streak/context weight as a tiebreaker for premium public picks.
-- Builder Windfall policy was updated from the strict-fidelity trainer after
-  DemonHunter was moved to independent family exposure:
-  `data/mlb/model/slip_builder_policy_v9_20260516_20260520_strict_fidelity_cat_overlay_demon_independent`.
-- The selected Windfall variant is `windfall_probability_plus`; it makes flex
-  slips more model-probability driven and slightly tightens per-tier minimums.
+- Builder policies were updated from the strict-fidelity 2026-05-16..20
+  baseball-context trainer:
+  `data/mlb/model/slip_builder_policy_v16_20260516_20260520_baseball_context_v10_overlay_v25_family_combo_marketed_2leg`.
+- The selected variant is `baseline` after promoting the v14
+  `family_best_context_combo` family policies and adding a Marketed 2-leg
+  fallback:
+  - Marketed increases confirmed external-context weight while keeping model
+    probability as the primary signal.
+  - System increases calibrated probability weight and reduces prior weight.
+  - Windfall increases calibrated probability weight and slightly tightens
+    per-tier minimums.
+  - DemonHunter stays on the baseline independent Demon policy.
+- On the strict 5-date corpus, v16 baseline produced `30/76` strict slips
+  (`39.5%`) and `196/270` selected legs (`72.6%`). Marketed specifically
+  produced `16/32` strict slips (`50.0%`) and `78/102` selected legs
+  (`76.5%`). This improved the previous best `marketed_prob_edge_plus` run
+  (`24/78`, `30.8%` strict slips; `69.9%` selected legs) without adding a
+  broken source dependency.
 - Family builder contracts are split by family under
   `src/mlb/runtime/slip_builders/`:
   - `marketed.py`: premium public picks.
@@ -247,9 +304,30 @@ Promotion basis:
   - `demonhunter.py`: Demon-only high-variance construction.
 - Market-source context is a small tiebreaker only. It is not allowed to become
   the primary reason a leg outranks stronger empirical family/segment evidence.
+- Runtime ranker `v26_family_context_marketed_2leg` blocks public selected
+  slips whose baseball-context packet is `suppress` (`unknown_hitter_lineup`,
+  `unknown_pitcher_starter_status`, identity gaps, or weather-delay workload
+  risk). It also applies family-specific hard blocks:
+  - DemonHunter/Windfall block weak Demon pitcher/workload and hitter fantasy
+    over segments exposed by replay.
+  - Marketed blocks specific fragile Standard workload unders/variance props.
+  - System does not inherit those hard blocks globally; it keeps them as
+    ranking/composition signals unless replay evidence supports a family-level
+    block.
+- Marketed full-slate templates include a 2-leg Goblin fallback. This keeps the
+  public premium family from starving on slates where baseball-context gates
+  leave too few Standard legs, and it tested as the strongest Marketed shape in
+  the strict corpus (`4/5` settled 2-leg slips).
 - Runtime ranker `v20_empirical_reliability` adds a replay-derived segment
   reliability adjustment. Weak historical segments and high model-vs-prior gaps
   are penalized, especially for premium Marketed/System slips.
+- Runtime ranker carries detailed lineup-volume fields from the run-scoped
+  feature table into slip selection: batting order slot, lineup confirmation,
+  top-order flag, projected plate appearances, opportunity confidence, park
+  confidence, matchup confidence, and environment scores. Batting slots 1-4 are
+  volume support only; they are not a blind boost. Unconfirmed high-variance
+  hitter overs, especially low-line hitter fantasy score legs without matched
+  external market context, receive a small ranking penalty.
 - Pitcher workload props require stronger probability support before they can
   outrank safer alternatives.
 - Portfolio exposure blocks exact repeats, player repeats, and repeated volatile
@@ -303,6 +381,8 @@ Strict-fidelity blocker:
 - Any replay with `contract_status: fail` must stop before parameter scoring, slip building, replay eval, corpus aggregation, or CAT training.
 - Corpus aggregation and CAT trainers must reject any member run whose source contract failed.
 - A missing source can only be downgraded from failure to warning by changing the shared source contract code and documenting why live has the same behavior.
+- `mlb_pick_context_packets.json` and `selected_slip_context_audit.json` are part of the replay slip contract. A replay member with suppress-gated selected legs must stop before eval aggregation, CAT training, or builder training.
+- `caution` context tags remain audit/ranking signals until replay evidence supports stricter gating. They are not a hard block by themselves.
 
 Minimum targets:
 

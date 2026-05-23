@@ -38,6 +38,7 @@ from mlb.domain.playability import (
     normalize_tier,
 )
 from mlb.domain.slips import supported_slip_families
+from mlb.overlays.mlb_publication_overlay import write_baseball_context_artifacts
 
 SYSTEM_FULL_SLATE_SIZES = (3, 4, 5)
 WINDFALL_FULL_SLATE_SIZES = (3, 4, 5)
@@ -47,7 +48,7 @@ PUBLIC_SIZED_SLIP_COUNTS = (2, 3, 4, 5)
 DEMONHUNTER_SIZES = (3, 4, 5)
 PAYOUT_QUOTE_MANIFEST_NAME = "payout_quote_manifest.json"
 PAYOUT_FORMULA_AUDIT_NAME = "payout_formula_audit.json"
-PUBLIC_SLIP_RANKER_VERSION = "atlas_mlb_public_slip_ranker_v22_marketed_bettingpros_windfall_probability"
+PUBLIC_SLIP_RANKER_VERSION = "atlas_mlb_public_slip_ranker_v26_family_context_marketed_2leg"
 FEATURE_CONTEXT_FIELDS = (
     "market_group",
     "matchup_context_available",
@@ -58,10 +59,23 @@ FEATURE_CONTEXT_FIELDS = (
     "history_games_14d",
     "history_games_7d",
     "plate_appearance_projection",
+    "projected_plate_appearances",
     "projected_opportunity",
+    "opportunity_confidence",
+    "opportunity_fragility_score",
     "weather_context_available",
     "advanced_context_available",
     "injury_context_available",
+    "batting_order_slot",
+    "lineup_probability",
+    "lineup_confirmed",
+    "top_order_flag",
+    "park_factor_confidence",
+    "matchup_confidence",
+    "matchup_target_shift",
+    "starter_matchup_score",
+    "bullpen_matchup_score",
+    "environment_score",
     "external_market_context_available",
     "market_context_source_type",
     "external_market_context_source",
@@ -106,13 +120,51 @@ PUBLIC_BATTER_MARKETS = {
     "triples",
     "walks",
 }
-PUBLIC_BLOCKED_SEGMENTS = {
-    ("DEMON", "hitter_strikeouts", "OVER"),
-    ("STANDARD", "hitter_strikeouts", "UNDER"),
-    ("STANDARD", "pitcher_fantasy_score", "OVER"),
-    ("STANDARD", "pitcher_fantasy_score", "UNDER"),
-    ("STANDARD", "pitches_thrown", "UNDER"),
-    ("STANDARD", "walks", "UNDER"),
+PUBLIC_BATTER_VOLUME_MARKETS = {
+    "doubles",
+    "hits",
+    "hits_runs_rbis",
+    "hitter_fantasy_score",
+    "home_runs",
+    "rbis",
+    "runs",
+    "singles",
+    "stolen_bases",
+    "total_bases",
+    "triples",
+}
+PUBLIC_HIGH_VARIANCE_BATTER_OVERS = {
+    "doubles",
+    "hits_runs_rbis",
+    "hitter_fantasy_score",
+    "home_runs",
+    "rbis",
+    "runs",
+    "total_bases",
+    "triples",
+}
+PUBLIC_BLOCKED_SEGMENTS_BY_FAMILY = {
+    "DemonHunter": {
+        ("DEMON", "hitter_fantasy_score", "OVER"),
+        ("DEMON", "hitter_strikeouts", "OVER"),
+        ("DEMON", "hits_allowed", "OVER"),
+        ("DEMON", "pitcher_fantasy_score", "OVER"),
+        ("DEMON", "pitcher_strikeouts", "OVER"),
+    },
+    "Marketed": {
+        ("STANDARD", "hitter_strikeouts", "UNDER"),
+        ("STANDARD", "pitcher_fantasy_score", "OVER"),
+        ("STANDARD", "pitcher_fantasy_score", "UNDER"),
+        ("STANDARD", "pitches_thrown", "UNDER"),
+        ("STANDARD", "walks", "UNDER"),
+    },
+    "Windfall": {
+        ("DEMON", "hitter_fantasy_score", "OVER"),
+        ("DEMON", "hitter_strikeouts", "OVER"),
+        ("DEMON", "hits_allowed", "OVER"),
+        ("DEMON", "pitcher_fantasy_score", "OVER"),
+        ("DEMON", "pitcher_strikeouts", "OVER"),
+    },
 }
 PUBLIC_RISK_CAPPED_SEGMENTS = {
     ("DEMON", "hits", "OVER"),
@@ -272,6 +324,7 @@ SINGLE_GAME_WINDFALL_TIER_MIXES = {
 }
 
 MARKETED_TEMPLATES = (
+    {"label": "2-leg", "goblin": 2, "standard": 0, "demon": 0},
     {"label": "3-leg", "goblin": 1, "standard": 2, "demon": 0},
     {"label": "4-leg", "goblin": 2, "standard": 2, "demon": 0},
     {"label": "5-leg", "goblin": 2, "standard": 2, "demon": 1},
@@ -458,6 +511,12 @@ def build_slip_families_from_scored_run(run_dir: Path) -> dict[str, Any]:
         run_dir=run_dir,
         run_id=run_id,
     )
+    baseball_context_manifest = write_baseball_context_artifacts(
+        run_dir=run_dir,
+        legs=legs,
+        run_id=str(run_id or run_dir.name),
+    )
+    _attach_baseball_context_to_legs(legs, baseball_context_manifest)
     single_game_slate = _is_single_game_slate(legs)
     system_sizes = SYSTEM_SINGLE_GAME_SIZES if single_game_slate else SYSTEM_FULL_SLATE_SIZES
     system_tier_mixes = SINGLE_GAME_SYSTEM_TIER_MIXES if single_game_slate else SYSTEM_TIER_MIXES
@@ -589,6 +648,14 @@ def build_slip_families_from_scored_run(run_dir: Path) -> dict[str, Any]:
         "excluded_public_markets": sorted(PUBLIC_EXCLUDED_MARKETS),
         "selection_policy": _selection_policy_manifest(),
         "family_builder_policies": _family_policy_manifest(),
+        "baseball_context_artifacts": {
+            "schema_version": baseball_context_manifest.get("schema_version"),
+            "artifact_version": baseball_context_manifest.get("artifact_version"),
+            "row_count": baseball_context_manifest.get("row_count"),
+            "summary": baseball_context_manifest.get("summary"),
+            "artifacts": baseball_context_manifest.get("artifacts"),
+            "latest_artifacts": baseball_context_manifest.get("latest_artifacts", {}),
+        },
         "portfolio_policy": {
             "priority": list(PUBLIC_PORTFOLIO_PRIORITY),
             "max_exact_leg_repeats_across_public": PUBLIC_PORTFOLIO_MAX_EXACT_LEG_REPEATS,
@@ -902,7 +969,7 @@ def _write_marketed_slips(
 
 
 def _ranked_legs(legs: list[dict[str, Any]], *, family: str) -> list[dict[str, Any]]:
-    def sort_key(row: dict[str, Any]) -> tuple[float, float, float, float, float, float, float, float, float]:
+    def sort_key(row: dict[str, Any]) -> tuple[float, ...]:
         policy = _family_policy(family)
         probability = _float(row.get("model_probability"))
         stability = _float(row.get("stability_score"))
@@ -912,6 +979,7 @@ def _ranked_legs(legs: list[dict[str, Any]], *, family: str) -> list[dict[str, A
         edge = _edge_score(row)
         prop_identifier = _prop_identifier_score(row)
         reliability_adjustment = _segment_reliability_adjustment(row, family=family)
+        lineup_volume_adjustment = _lineup_volume_adjustment(row, family=family)
         tier = _tier(row)
         market = _market_key(row)
         tier_bonus = policy.tier_bonus.get(tier, -0.04)
@@ -932,11 +1000,13 @@ def _ranked_legs(legs: list[dict[str, Any]], *, family: str) -> list[dict[str, A
             + prop_identifier * policy.prop_identifier_weight
             + market_adjustment
             + reliability_adjustment
+            + lineup_volume_adjustment
         )
         candidate_penalty = 0.0 if _public_candidate(row, family=family) else -10.0
         return (
             score + tier_bonus + candidate_penalty,
             reliability_adjustment,
+            lineup_volume_adjustment,
             prior,
             bettingpros,
             probability,
@@ -1203,6 +1273,10 @@ def _marketed_leg(row: dict[str, Any]) -> dict[str, Any]:
         "external_market_context_available": _truthy(row.get("external_market_context_available")),
         "external_market_context_source": str(row.get("external_market_context_source") or ""),
         "prizepicks_line_only_market_context": _truthy(row.get("prizepicks_line_only_market_context")),
+        "mlb_context_gate_level": str(row.get("mlb_context_gate_level") or ""),
+        "mlb_context_public_publish_ok": _truthy(row.get("mlb_context_public_publish_ok")),
+        "mlb_context_tags": row.get("mlb_context_tags") or [],
+        "mlb_context_gate_reasons": row.get("mlb_context_gate_reasons") or [],
     }
 
 
@@ -1386,6 +1460,36 @@ def _augment_legs_with_feature_context(
     return enriched_rows
 
 
+def _attach_baseball_context_to_legs(legs: list[dict[str, Any]], manifest: dict[str, Any]) -> None:
+    artifacts = manifest.get("artifacts") if isinstance(manifest, dict) else {}
+    packet_path_value = artifacts.get("pick_packets") if isinstance(artifacts, dict) else None
+    if not packet_path_value:
+        return
+    packet_path = Path(str(packet_path_value))
+    if not packet_path.exists():
+        return
+    payload = json.loads(packet_path.read_text(encoding="utf-8"))
+    packets = payload.get("packets") if isinstance(payload, dict) else []
+    if not isinstance(packets, list):
+        return
+    packet_index = {
+        str(packet.get("projection_id") or "").strip(): packet
+        for packet in packets
+        if isinstance(packet, dict) and str(packet.get("projection_id") or "").strip()
+    }
+    for leg in legs:
+        packet = packet_index.get(_feature_projection_key(leg))
+        if not packet:
+            continue
+        leg["mlb_context_gate_level"] = str(packet.get("gate_level") or "")
+        leg["mlb_context_public_publish_ok"] = bool(packet.get("public_publish_ok"))
+        leg["mlb_context_tags"] = list(packet.get("tags") or [])
+        leg["mlb_context_gate_reasons"] = list(packet.get("gate_reasons") or [])
+        leg["mlb_context_lineup_status"] = str(packet.get("lineup_status") or "")
+        leg["mlb_context_batting_order_bucket"] = str(packet.get("batting_order_bucket") or "")
+        leg["mlb_context_pitcher_status"] = str(packet.get("pitcher_status") or "")
+
+
 def _load_feature_context_index(*, run_dir: Path, run_id: Any) -> dict[str, dict[str, Any]]:
     if not run_id:
         return {}
@@ -1481,12 +1585,14 @@ def _public_candidate(row: dict[str, Any], *, family: str = "") -> bool:
     side = _side(row)
     if market in PUBLIC_EXCLUDED_MARKETS:
         return False
+    if not _baseball_context_public_candidate(row, family=family):
+        return False
     status = str(row.get("status") or "").strip().lower()
     if status in {"inactive", "removed", "suspended"}:
         return False
     if side not in PUBLIC_TIER_DIRECTION_FILTERS.get(tier, {side}):
         return False
-    if (tier, market, side) in PUBLIC_BLOCKED_SEGMENTS:
+    if (tier, market, side) in _blocked_segments_for_family(family):
         return False
     if not _family_policy_candidate(row, family=family):
         return False
@@ -1499,6 +1605,25 @@ def _public_candidate(row: dict[str, Any], *, family: str = "") -> bool:
     if market in PUBLIC_BATTER_MARKETS:
         if family in {"Marketed", "System", "DemonHunter"} and not _batter_action_context_available(row):
             return False
+    return True
+
+
+def _blocked_segments_for_family(family: str) -> set[tuple[str, str, str]]:
+    return PUBLIC_BLOCKED_SEGMENTS_BY_FAMILY.get(str(family or "").strip(), set())
+
+
+def _baseball_context_public_candidate(row: dict[str, Any], *, family: str = "") -> bool:
+    gate_level = str(row.get("mlb_context_gate_level") or "").strip().lower()
+    if not gate_level:
+        return True
+    if gate_level == "suppress":
+        return False
+    reasons = row.get("mlb_context_gate_reasons") or []
+    if isinstance(reasons, str):
+        reasons = [item.strip() for item in reasons.replace(",", "|").split("|") if item.strip()]
+    reason_set = {str(item).strip().lower() for item in reasons}
+    if family in {"DemonHunter", "Marketed", "Windfall"} and "bottom_order_volume_risk" in reason_set:
+        return False
     return True
 
 
@@ -1567,6 +1692,67 @@ def _tier_market_side_prior(row: dict[str, Any]) -> float:
     rate, count = TIER_MARKET_SIDE_PRIORS.get(key, (0.5, 0))
     weight = float(count) / (float(count) + 400.0) if count else 0.0
     return round(0.5 + (float(rate) - 0.5) * weight, 6)
+
+
+def _lineup_volume_adjustment(row: dict[str, Any], *, family: str) -> float:
+    """Small ranking-only adjustment for hitter volume quality.
+
+    Batting order is a volume signal, not a stand-alone quality signal. The
+    selected-leg audit showed top-order hitters can still fail badly when the
+    market is high variance, so this only gives a small lift to confirmed plate
+    appearance volume and penalizes unconfirmed low-line hitter overs.
+    """
+    market = _market_key(row)
+    if market not in PUBLIC_BATTER_VOLUME_MARKETS:
+        return 0.0
+
+    side = _side(row)
+    if side not in {"OVER", "UNDER"}:
+        return 0.0
+
+    tier = _tier(row)
+    plate_appearances = max(
+        _float(row.get("projected_plate_appearances")),
+        _float(row.get("plate_appearance_projection")),
+        _float(row.get("projected_opportunity")),
+    )
+    slot_value = _float(row.get("batting_order_slot"))
+    batting_slot = int(slot_value) if slot_value > 0 else 0
+    top_order = _truthy(row.get("top_order_flag")) or (1 <= batting_slot <= 4)
+    lineup_confirmed = _truthy(row.get("lineup_confirmed"))
+    lineup_available = _truthy(row.get("lineup_context_available"))
+
+    adjustment = 0.0
+
+    if plate_appearances >= 4.45:
+        adjustment += 0.018
+    elif plate_appearances >= 4.05:
+        adjustment += 0.010
+    elif 0 < plate_appearances < 3.25:
+        adjustment -= 0.030
+    elif 0 < plate_appearances < 3.60:
+        adjustment -= 0.020
+
+    if batting_slot:
+        if top_order and plate_appearances >= 4.0:
+            adjustment += 0.008
+        elif batting_slot >= 7:
+            adjustment -= 0.020
+    elif lineup_available and side == "OVER" and market in PUBLIC_HIGH_VARIANCE_BATTER_OVERS:
+        adjustment -= 0.018
+
+    if side == "OVER" and market in PUBLIC_HIGH_VARIANCE_BATTER_OVERS:
+        if not lineup_confirmed:
+            adjustment -= 0.012 if family in {"Marketed", "System"} else 0.006
+        if _truthy(row.get("prizepicks_line_only_market_context")) and market == "hitter_fantasy_score":
+            adjustment -= 0.020 if family in {"Marketed", "System"} else 0.012
+        if tier in {"GOBLIN", "STANDARD"} and market == "hitter_fantasy_score" and plate_appearances < 4.0:
+            adjustment -= 0.018
+
+    if side == "UNDER" and batting_slot >= 7 and plate_appearances < 3.75:
+        adjustment += 0.010
+
+    return round(_clamp(adjustment, -0.075, 0.04), 6)
 
 
 def _segment_reliability_adjustment(row: dict[str, Any], *, family: str) -> float:
@@ -1861,10 +2047,13 @@ def _selection_policy_manifest() -> dict[str, Any]:
         "tier_market_side_prior_count": len(TIER_MARKET_SIDE_PRIORS),
         "prior_shrinkage_count": 400,
         "excluded_public_markets": sorted(PUBLIC_EXCLUDED_MARKETS),
-        "blocked_segments": [
-            {"tier": tier, "market": market, "side": side}
-            for tier, market, side in sorted(PUBLIC_BLOCKED_SEGMENTS)
-        ],
+        "blocked_segments_by_family": {
+            family: [
+                {"tier": tier, "market": market, "side": side}
+                for tier, market, side in sorted(blocks)
+            ]
+            for family, blocks in sorted(PUBLIC_BLOCKED_SEGMENTS_BY_FAMILY.items())
+        },
         "risk_capped_segments": [
             {"tier": tier, "market": market, "side": side, "max_repeats_across_public": PUBLIC_PORTFOLIO_MAX_RISK_SEGMENT_REPEATS}
             for tier, market, side in sorted(PUBLIC_RISK_CAPPED_SEGMENTS)
@@ -1891,10 +2080,18 @@ def _selection_policy_manifest() -> dict[str, Any]:
         "ranker_signal_weights": {
             "bettingpros_context_score": "family-weighted signal; projection/streak context, not a hard filter",
             "empirical_reliability_adjustment": "replay-derived segment reliability guardrail; penalizes weak historical segments and high model/prior disagreement",
+            "lineup_volume_adjustment": "small ranking-only hitter-volume adjustment; rewards confirmed PA volume and penalizes unconfirmed high-variance hitter overs",
             "market_context_source_type": "external_bettingpros_mlb_props when a sportsbook market matched; prizepicks_line_only when PP is the only price/line source",
             "prizepicks_line_only_market_context": "playable PP prop without matched external sportsbook context; not an automatic exclusion",
             "prop_market_identifier": "family-weighted signal from replay prop ranking, not a hard filter",
             "tier_market_side_prior": "shrunk replay segment prior",
+        },
+        "lineup_volume_guardrails": {
+            "batter_volume_markets": sorted(PUBLIC_BATTER_VOLUME_MARKETS),
+            "high_variance_batter_overs": sorted(PUBLIC_HIGH_VARIANCE_BATTER_OVERS),
+            "max_positive_adjustment": 0.04,
+            "max_negative_adjustment": -0.075,
+            "note": "Batting slots 1-4 are treated as volume support only when projected plate appearances also support it.",
         },
         "empirical_reliability_guardrails": {
             "low_reliability_prior": PUBLIC_LOW_RELIABILITY_PRIOR,
@@ -1911,6 +2108,16 @@ def _selection_policy_manifest() -> dict[str, Any]:
             "pass_if": "lineup_context_available or plate_appearance_projection >= 3.0",
             "alternate_line_policy": "Goblin and Demon selections are over-only.",
             "demonhunter_enabled": bool(DEMONHUNTER_SIZES),
+        },
+        "baseball_context_publication_gate": {
+            "scope": "all public slip families block suppress; Marketed, Windfall, and DemonHunter also block bottom_order_volume_risk",
+            "hard_block_level": "suppress globally; bottom_order_volume_risk for public-facing high-conviction families",
+            "caution_policy": "other caution tags remain ranking-only until family-specific replay evidence justifies a hard block",
+            "source_artifacts": [
+                "mlb_scored_legs_context.csv",
+                "mlb_publication_gate_report.json",
+                "mlb_pick_context_packets.json",
+            ],
         },
     }
 

@@ -3,11 +3,27 @@ param(
     [switch]$RefreshBettingProsOdds,
     [string]$CalibrationArtifact = "",
     [string]$RunIdSuffix = "github_csv_fidelity_v1",
+    [string]$ReplayDateCsv = "",
     [string[]]$ReplayDates = @(),
     [switch]$SkipPreflight
 )
 
 $ErrorActionPreference = "Continue"
+$repoRoot = (Resolve-Path (Join-Path $PSScriptRoot "..\..")).Path
+$atlasRoot = Split-Path $repoRoot -Parent
+$pythonExe = Join-Path $atlasRoot ".venv\Scripts\python.exe"
+if (-not (Test-Path $pythonExe)) {
+    $pythonExe = "python"
+}
+$srcPath = Join-Path $repoRoot "src"
+$existingPythonPath = [Environment]::GetEnvironmentVariable("PYTHONPATH", "Process")
+if ([string]::IsNullOrWhiteSpace($existingPythonPath)) {
+    $env:PYTHONPATH = $srcPath
+} elseif ($existingPythonPath -notlike "*$srcPath*") {
+    $env:PYTHONPATH = "$srcPath;$existingPythonPath"
+}
+Set-Location $repoRoot
+
 $items = @(
     @("2026-04-26", "github_prizepicks_csv_20260426T155759Z"),
     @("2026-04-27", "github_prizepicks_csv_20260427T175625Z"),
@@ -36,6 +52,14 @@ $items = @(
     @("2026-05-20", "prizepicks_20260520T180552Z", "pp_json_fidelity_v1")
 )
 
+if (-not [string]::IsNullOrWhiteSpace($ReplayDateCsv)) {
+    $ReplayDates = @(
+        $ReplayDateCsv -split "," |
+            ForEach-Object { $_.Trim() } |
+            Where-Object { $_ }
+    )
+}
+
 if ($ReplayDates.Count -gt 0) {
     $requested = @{}
     foreach ($date in $ReplayDates) {
@@ -55,6 +79,7 @@ $progressPath = Join-Path $OutputDir "progress.jsonl"
 $summaryPath = Join-Path $OutputDir "sweep_summary.json"
 $slipSummaryPath = Join-Path $OutputDir "slip_sweep_summary.json"
 Remove-Item -Force -ErrorAction SilentlyContinue $progressPath
+$memberFailures = 0
 
 if (-not $SkipPreflight) {
     $preflightDates = $items | ForEach-Object { $_[0] }
@@ -64,8 +89,8 @@ if (-not $SkipPreflight) {
         dates = $preflightDates
     } | ConvertTo-Json -Compress | Add-Content -Encoding utf8 $progressPath
 
-    $preflightArgs = @("run", "python", "scripts\mlb\preflight_strict_replay_dates.py", "--dates") + $preflightDates
-    $preflightOutput = & uv @preflightArgs 2>&1
+    $preflightArgs = @("scripts\mlb\preflight_strict_replay_dates.py", "--dates") + $preflightDates
+    $preflightOutput = & $pythonExe @preflightArgs 2>&1
     $preflightExit = $LASTEXITCODE
     $preflightOutput | Set-Content -Encoding utf8 (Join-Path $OutputDir "strict_preflight_stdout.txt")
     if ($preflightExit -ne 0) {
@@ -99,8 +124,10 @@ foreach ($item in $items) {
     $runId = "replay_single_${dateKey}_${itemRunIdSuffix}"
     $runLog = Join-Path $OutputDir "$runId.run.json"
     $evalLog = Join-Path $OutputDir "$runId.eval.json"
+    $contextAuditLog = Join-Path $OutputDir "$runId.context_audit.txt"
     $errorLog = Join-Path $OutputDir "$runId.error.txt"
     $normalizedDir = "data\mlb\staged\board\$board"
+    $runDir = "data\mlb\replay_runs\$runId"
 
     [pscustomobject]@{
         ts = (Get-Date).ToString("o")
@@ -110,7 +137,7 @@ foreach ($item in $items) {
     } | ConvertTo-Json -Compress | Add-Content -Encoding utf8 $progressPath
 
     $runArgs = @(
-        "run", "atlas-mlb", "run", "board",
+        "-m", "mlb.cli", "run", "board",
         "--normalized-dir", $normalizedDir,
         "--run-id", $runId,
         "--date", $date,
@@ -123,7 +150,7 @@ foreach ($item in $items) {
     if ($CalibrationArtifact) {
         $runArgs += @("--calibration-artifact", $CalibrationArtifact)
     }
-    & uv @runArgs > $runLog 2> $errorLog
+    & $pythonExe @runArgs > $runLog 2> $errorLog
     $runExit = $LASTEXITCODE
     if ($runExit -ne 0) {
         [pscustomobject]@{
@@ -134,8 +161,41 @@ foreach ($item in $items) {
             exit_code = $runExit
             error_log = $errorLog
         } | ConvertTo-Json -Compress | Add-Content -Encoding utf8 $progressPath
+        $memberFailures += 1
         continue
     }
+
+    [pscustomobject]@{
+        ts = (Get-Date).ToString("o")
+        date = $date
+        run_id = $runId
+        stage = "selected_context_audit_start"
+        run_dir = $runDir
+    } | ConvertTo-Json -Compress | Add-Content -Encoding utf8 $progressPath
+
+    & $pythonExe scripts\mlb\audit_selected_slip_context.py --run-dir $runDir --fail-on-suppress > $contextAuditLog 2>> $errorLog
+    $contextAuditExit = $LASTEXITCODE
+    if ($contextAuditExit -ne 0) {
+        [pscustomobject]@{
+            ts = (Get-Date).ToString("o")
+            date = $date
+            run_id = $runId
+            stage = "selected_context_audit_failed"
+            exit_code = $contextAuditExit
+            context_audit_log = $contextAuditLog
+            error_log = $errorLog
+        } | ConvertTo-Json -Compress | Add-Content -Encoding utf8 $progressPath
+        $memberFailures += 1
+        continue
+    }
+
+    [pscustomobject]@{
+        ts = (Get-Date).ToString("o")
+        date = $date
+        run_id = $runId
+        stage = "selected_context_audit_complete"
+        context_audit_log = $contextAuditLog
+    } | ConvertTo-Json -Compress | Add-Content -Encoding utf8 $progressPath
 
     [pscustomobject]@{
         ts = (Get-Date).ToString("o")
@@ -144,7 +204,7 @@ foreach ($item in $items) {
         stage = "eval_start"
     } | ConvertTo-Json -Compress | Add-Content -Encoding utf8 $progressPath
 
-    & uv run atlas-mlb audit eval --run-id $runId --json > $evalLog 2>> $errorLog
+    & $pythonExe -m mlb.cli audit eval --run-id $runId --json > $evalLog 2>> $errorLog
     $evalExit = $LASTEXITCODE
     if ($evalExit -ne 0) {
         [pscustomobject]@{
@@ -155,6 +215,7 @@ foreach ($item in $items) {
             exit_code = $evalExit
             error_log = $errorLog
         } | ConvertTo-Json -Compress | Add-Content -Encoding utf8 $progressPath
+        $memberFailures += 1
         continue
     }
 
@@ -168,7 +229,18 @@ foreach ($item in $items) {
     } | ConvertTo-Json -Compress | Add-Content -Encoding utf8 $progressPath
 }
 
-$aggregateOutput = & uv run python scripts\mlb\aggregate_fidelity_replay_sweep.py --input-dir $OutputDir 2>&1
+if ($memberFailures -gt 0) {
+    [pscustomobject]@{
+        ts = (Get-Date).ToString("o")
+        stage = "member_failures_block_aggregate"
+        member_failures = $memberFailures
+        reason = "strict replay member failed before aggregation"
+    } | ConvertTo-Json -Compress | Add-Content -Encoding utf8 $progressPath
+    Write-Error "Strict replay sweep blocked aggregation because $memberFailures replay member(s) failed."
+    exit 3
+}
+
+$aggregateOutput = & $pythonExe scripts\mlb\aggregate_fidelity_replay_sweep.py --input-dir $OutputDir 2>&1
 $aggregateExit = $LASTEXITCODE
 $aggregateOutput | Set-Content -Encoding utf8 $summaryPath
 if ($aggregateExit -ne 0) {
@@ -181,7 +253,7 @@ if ($aggregateExit -ne 0) {
     exit $aggregateExit
 }
 
-$slipAggregateOutput = & uv run python scripts\mlb\aggregate_slip_replay_eval.py --input-dir $OutputDir 2>&1
+$slipAggregateOutput = & $pythonExe scripts\mlb\aggregate_slip_replay_eval.py --input-dir $OutputDir 2>&1
 $slipAggregateExit = $LASTEXITCODE
 $slipAggregateOutput | Set-Content -Encoding utf8 $slipSummaryPath
 if ($slipAggregateExit -ne 0) {
