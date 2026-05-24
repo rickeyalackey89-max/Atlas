@@ -1,11 +1,11 @@
 # Atlas MLB Operator AI Workflow
 
-Status: integrated skeleton  
-Last updated: 2026-05-11
+Status: integrated live operator review  
+Last updated: 2026-05-23
 
 ## Purpose
 
-The operator AI layer reviews Atlas MLB run outputs before dashboard publishing.
+The operator AI layer reviews Atlas MLB live run outputs before dashboard publishing.
 It is a publish gate, not a model component.
 
 The AI evaluator may:
@@ -72,7 +72,8 @@ Set credentials:
 ```powershell
 $env:OPENAI_API_KEY="..."
 $env:ATLAS_OPENAI_EVALUATOR_ENABLED="1"
-$env:ATLAS_OPENAI_EVALUATOR_MODEL="gpt-5.4-mini"
+$env:ATLAS_OPENAI_EVALUATOR_MODEL="gpt-5.3-spark"
+$env:ATLAS_OPENAI_EVALUATOR_LANE="5.3-spark"
 ```
 
 Local helper:
@@ -81,8 +82,10 @@ Local helper:
 .\scripts\setup_openai_evaluator.ps1
 ```
 
-The helper reads `OpenAI.txt`, sets the environment variables for the current
-PowerShell session, and does not print the key.
+The helper reads the local key file, sets the environment variables for the
+current PowerShell session, and does not print the key. If no `-KeyPath` is
+provided it checks `OpenAI.txt`, then `docs/MLB_info_DO_NOT_DELETE/OpenAI.txt`,
+then `MLB_info_DO_NOT_DELETE/OpenAI.txt`.
 
 Secret handling:
 
@@ -114,6 +117,10 @@ uv run atlas-mlb replay single
 uv run atlas-mlb replay bundle
 ```
 
+Replay runs do not call the AI reviewer by default. If an operator explicitly
+needs an AI audit on a replay artifact, set
+`ATLAS_OPENAI_EVALUATOR_ALLOW_REPLAY=1` for that one run only.
+
 ## Deterministic Checks
 
 Local checks run before OpenAI:
@@ -135,6 +142,7 @@ The OpenAI evaluator receives a compact review packet:
 
 - run id
 - run mode
+- reviewer lane (`5.3-spark`)
 - run summary
 - deterministic anomalies
 - operator instructions

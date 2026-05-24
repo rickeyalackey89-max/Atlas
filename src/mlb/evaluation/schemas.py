@@ -15,7 +15,8 @@ SEVERITY_RANK: dict[Severity, int] = {
     "hard_stop": 2,
 }
 
-DEFAULT_OPERATOR_MODEL = "gpt-5.4-mini"
+DEFAULT_OPERATOR_MODEL = "gpt-5.3-spark"
+DEFAULT_OPERATOR_REVIEWER_LANE = "5.3-spark"
 
 
 @dataclass(frozen=True)
@@ -107,4 +108,3 @@ def max_severity(anomalies: tuple[Anomaly, ...]) -> Severity:
     if not anomalies:
         return "info"
     return max((anomaly.severity for anomaly in anomalies), key=lambda severity: SEVERITY_RANK[severity])
-

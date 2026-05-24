@@ -1,7 +1,7 @@
 # Atlas MLB Pipeline Reference
 
 Status: development skeleton
-Last updated: 2026-05-12
+Last updated: 2026-05-23
 
 ## Concept
 
@@ -25,8 +25,10 @@ raw board
   -> replay/eval
 ```
 
-The OpenAI operator layer is a post-score review gate. It is not part of source
-normalization and must not change probabilities or picks.
+The OpenAI operator layer is a post-score live review gate. It is not part of
+source normalization and must not change probabilities or picks. The default
+reviewer lane/model is `5.3-spark`; replay runs skip AI review unless
+`ATLAS_OPENAI_EVALUATOR_ALLOW_REPLAY=1` is set for a targeted operator audit.
 
 ## Current Implemented Flow
 

@@ -20,7 +20,11 @@ except Exception:  # pragma: no cover - defensive fallback for stripped Python i
 
 from mlb.evaluation.anomaly_checks import run_deterministic_anomaly_checks
 from mlb.evaluation.artifacts import write_operator_artifacts
-from mlb.evaluation.openai_evaluator import evaluate_with_openai, openai_evaluator_enabled
+from mlb.evaluation.openai_evaluator import (
+    configured_operator_model,
+    evaluate_with_openai,
+    openai_evaluator_enabled,
+)
 from mlb.evaluation.publish_decision import build_publish_decision
 from mlb.modeling.calibration import apply_parameter_calibration
 from mlb.modeling.engine import score_engine_board
@@ -561,7 +565,9 @@ def run_board_pipeline(
         anomalies=anomalies,
     )
     ai_evaluation = None
-    if openai_evaluator_enabled():
+    ai_review_enabled = openai_evaluator_enabled()
+    allow_replay_ai_review = _env_bool("ATLAS_OPENAI_EVALUATOR_ALLOW_REPLAY", False)
+    if ai_review_enabled and (canonical_run_mode == "live" or allow_replay_ai_review):
         _progress(emit_progress, "[OPENAI EVAL] enabled; requesting operator evaluation")
         ai_evaluation = evaluate_with_openai(json.loads(Path(operator_input["path"]).read_text(encoding="utf-8")))
         run_packet["ai_status"] = ai_evaluation.get("ai_status", "error")
@@ -569,6 +575,14 @@ def run_board_pipeline(
         _progress(
             emit_progress,
             f"[OPENAI EVAL] status={ai_evaluation.get('ai_status', '')} model={ai_evaluation.get('ai_model', '')}",
+        )
+    elif ai_review_enabled:
+        run_packet["ai_status"] = "skipped"
+        run_packet["ai_model"] = configured_operator_model()
+        _progress(
+            emit_progress,
+            "[OPENAI EVAL] skipped for replay run "
+            "(set ATLAS_OPENAI_EVALUATOR_ALLOW_REPLAY=1 only for explicit operator audits)",
         )
 
     decision = build_publish_decision(run_packet, anomalies, ai_decision=ai_evaluation)

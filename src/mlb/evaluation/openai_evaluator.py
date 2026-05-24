@@ -7,7 +7,11 @@ import os
 from collections.abc import Mapping
 from typing import Any
 
-from mlb.evaluation.schemas import DEFAULT_OPERATOR_MODEL, OPENAI_EVALUATOR_RESPONSE_FORMAT
+from mlb.evaluation.schemas import (
+    DEFAULT_OPERATOR_MODEL,
+    DEFAULT_OPERATOR_REVIEWER_LANE,
+    OPENAI_EVALUATOR_RESPONSE_FORMAT,
+)
 
 
 SYSTEM_PROMPT = """You are the Atlas MLB operator evaluator.
@@ -23,6 +27,17 @@ def openai_evaluator_enabled() -> bool:
     return value in {"1", "true", "yes", "on"}
 
 
+def configured_operator_model() -> str:
+    return os.getenv("ATLAS_OPENAI_EVALUATOR_MODEL", DEFAULT_OPERATOR_MODEL).strip() or DEFAULT_OPERATOR_MODEL
+
+
+def configured_operator_reviewer_lane() -> str:
+    return (
+        os.getenv("ATLAS_OPENAI_EVALUATOR_LANE", DEFAULT_OPERATOR_REVIEWER_LANE).strip()
+        or DEFAULT_OPERATOR_REVIEWER_LANE
+    )
+
+
 def build_openai_review_packet(
     *,
     run_id: str,
@@ -35,6 +50,7 @@ def build_openai_review_packet(
     return {
         "run_id": run_id,
         "run_mode": run_mode,
+        "reviewer_lane": configured_operator_reviewer_lane(),
         "run_summary": dict(run_summary),
         "deterministic_anomalies": deterministic_anomalies,
         "instructions": {
@@ -57,17 +73,23 @@ def evaluate_with_openai(
     imports the SDK when the evaluator is enabled and a call is requested.
     """
 
-    model_name = model or os.getenv("ATLAS_OPENAI_EVALUATOR_MODEL", DEFAULT_OPERATOR_MODEL)
+    model_name = model or configured_operator_model()
+    reviewer_lane = configured_operator_reviewer_lane()
     if client is None and not openai_evaluator_enabled():
-        return _skipped("skipped", "ATLAS_OPENAI_EVALUATOR_ENABLED is not enabled.", model_name)
+        return _skipped("skipped", "ATLAS_OPENAI_EVALUATOR_ENABLED is not enabled.", model_name, reviewer_lane)
     if client is None and not os.getenv("OPENAI_API_KEY"):
-        return _skipped("skipped", "OPENAI_API_KEY is not set.", model_name)
+        return _skipped("skipped", "OPENAI_API_KEY is not set.", model_name, reviewer_lane)
 
     if client is None:
         try:
             from openai import OpenAI
         except ImportError:
-            return _skipped("unavailable", "OpenAI SDK is not installed. Install the optional ai extra.", model_name)
+            return _skipped(
+                "unavailable",
+                "OpenAI SDK is not installed. Install the optional ai extra.",
+                model_name,
+                reviewer_lane,
+            )
         client = OpenAI()
 
     try:
@@ -80,19 +102,20 @@ def evaluate_with_openai(
             text={"format": OPENAI_EVALUATOR_RESPONSE_FORMAT},
         )
     except Exception as exc:  # pragma: no cover - defensive wrapper around external SDK/network behavior.
-        return _skipped("error", f"OpenAI evaluator failed: {exc}", model_name)
+        return _skipped("error", f"OpenAI evaluator failed: {exc}", model_name, reviewer_lane)
 
     output_text = _extract_output_text(response)
     if not output_text:
-        return _skipped("error", "OpenAI evaluator returned no output text.", model_name)
+        return _skipped("error", "OpenAI evaluator returned no output text.", model_name, reviewer_lane)
 
     try:
         payload = json.loads(output_text)
     except json.JSONDecodeError as exc:
-        return _skipped("error", f"OpenAI evaluator returned invalid JSON: {exc}", model_name)
+        return _skipped("error", f"OpenAI evaluator returned invalid JSON: {exc}", model_name, reviewer_lane)
 
     payload["ai_status"] = "completed"
     payload["ai_model"] = model_name
+    payload["ai_reviewer_lane"] = reviewer_lane
     return payload
 
 
@@ -110,10 +133,11 @@ def _extract_output_text(response: Any) -> str:
     return "".join(chunks)
 
 
-def _skipped(status: str, reason: str, model: str) -> dict[str, Any]:
+def _skipped(status: str, reason: str, model: str, reviewer_lane: str) -> dict[str, Any]:
     return {
         "ai_status": status,
         "ai_model": model,
+        "ai_reviewer_lane": reviewer_lane,
         "publish_allowed": False,
         "severity": "warning" if status in {"skipped", "unavailable"} else "hard_stop",
         "summary": reason,
