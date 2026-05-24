@@ -20,6 +20,8 @@ from .slip_composition_policy import (
 
 REVIEW_FILE = "builder_openai_review.json"
 MANIFEST_FILE = "builder_candidate_manifest.json"
+DEFAULT_REVIEW_MODEL = "gpt-5.3-spark"
+DEFAULT_REVIEWER_LANE = "5.3-spark"
 
 
 def write_builder_openai_review(run_dir: Path, cfg: Mapping[str, Any] | None) -> dict[str, Path]:
@@ -34,6 +36,9 @@ def write_builder_openai_review(run_dir: Path, cfg: Mapping[str, Any] | None) ->
         return {}
 
     run_dir = Path(run_dir)
+    if bool(section.get("live_only", True)) and _is_replay_context(run_dir):
+        return {}
+
     out_dir = run_dir.parent.parent
     dashboard_dir = out_dir / "dashboard"
     dashboard_dir.mkdir(parents=True, exist_ok=True)
@@ -112,7 +117,8 @@ def _request_openai_review(candidate_manifest: Mapping[str, Any], section: Mappi
     if not key:
         return _build_skipped_review(section, "missing_api_key")
 
-    model = str(section.get("model") or "gpt-4.1-mini")
+    model = str(section.get("model") or DEFAULT_REVIEW_MODEL)
+    reviewer_lane = str(section.get("reviewer_lane") or DEFAULT_REVIEWER_LANE)
     timeout = float(_num(section.get("timeout_seconds"), 20.0))
     max_output_tokens = int(_num(section.get("max_output_tokens"), 1200))
     prompt_payload = _compact_for_prompt(candidate_manifest, int(_num(section.get("max_prompt_slips"), 24)))
@@ -123,6 +129,7 @@ def _request_openai_review(candidate_manifest: Mapping[str, Any], section: Mappi
                 "role": "system",
                 "content": (
                     "You are a report-only sports model operations reviewer for Atlas. "
+                    f"You are assigned to the {reviewer_lane} review lane. "
                     "You do not choose bets, do not guarantee outcomes, and do not change probabilities. "
                     "Review the deterministic builder output for composition risk, fragile concentration, "
                     "public-output quality, and whether the operator should publish, thin-publish, or pass. "
@@ -172,7 +179,8 @@ def _request_openai_review(candidate_manifest: Mapping[str, Any], section: Mappi
         "generated_at_utc": _utc_now(),
         "report_only": True,
         "status": "completed",
-        "model": section.get("model") or "gpt-4.1-mini",
+        "model": section.get("model") or DEFAULT_REVIEW_MODEL,
+        "reviewer_lane": section.get("reviewer_lane") or DEFAULT_REVIEWER_LANE,
         "review": structured if structured is not None else {"raw_text": text},
         "openai_response_id": parsed.get("id"),
         "usage": parsed.get("usage", {}),
@@ -446,7 +454,8 @@ def _build_skipped_review(section: Mapping[str, Any], reason: str) -> dict[str, 
         "report_only": True,
         "status": "skipped",
         "reason": reason,
-        "model": section.get("model") or "gpt-4.1-mini",
+        "model": section.get("model") or DEFAULT_REVIEW_MODEL,
+        "reviewer_lane": section.get("reviewer_lane") or DEFAULT_REVIEWER_LANE,
     }
 
 
@@ -457,7 +466,8 @@ def _build_error_review(section: Mapping[str, Any], reason: str, detail: str) ->
         "status": "error",
         "reason": reason,
         "detail": detail[:1000],
-        "model": section.get("model") or "gpt-4.1-mini",
+        "model": section.get("model") or DEFAULT_REVIEW_MODEL,
+        "reviewer_lane": section.get("reviewer_lane") or DEFAULT_REVIEWER_LANE,
     }
 
 
@@ -554,6 +564,15 @@ def _section(cfg: Mapping[str, Any] | None) -> dict[str, Any]:
         return {}
     section = cfg.get("builder_openai_review", {})
     return dict(section) if isinstance(section, Mapping) else {}
+
+
+def _is_replay_context(run_dir: Path) -> bool:
+    if (os.environ.get("ATLAS_STRICT_REPLAY") or "").strip() == "1":
+        return True
+    if (os.environ.get("ATLAS_AUTHORITY") or "").strip().lower() == "replay":
+        return True
+    normalized_parts = {part.lower() for part in Path(run_dir).parts}
+    return "replay_runs" in normalized_parts or "corpus_replays" in normalized_parts
 
 
 def _repo_root_from_run_dir(run_dir: Path) -> Path:

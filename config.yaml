@@ -956,14 +956,16 @@ builder_openai_review:
   # This must never mutate probabilities, slip outputs, tiers, or live publish.
   enabled: true
   call_openai: true
-  model: gpt-4.1-mini
+  live_only: true
+  model: gpt-5.3-spark
+  reviewer_lane: 5.3-spark
   temperature: 0.1
   timeout_seconds: 20
   max_output_tokens: 1200
   max_prompt_slips: 24
   key_path_env: ATLAS_OPENAI_API_KEY_PATH
-  # Local machine fallback approved 2026-05-15. The file itself is not tracked.
-  key_path: ../Atlas-MLB-dev/OpenAI.txt
+  # Local machine fallback approved by operator. The file itself is not tracked.
+  key_path: ../MLB/docs/MLB_info_DO_NOT_DELETE/OpenAI.txt
 public_slip_quality:
   # Final public-output guard. This does not rewrite leg probabilities or tiers.
   # It scores whole slips for survival, allows fewer outputs when quality fails,

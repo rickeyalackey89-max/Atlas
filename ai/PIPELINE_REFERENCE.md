@@ -1,6 +1,6 @@
 # Atlas Pipeline Reference
 
-> **Last updated:** 2026-05-21 - full file-to-file trace of the live pipeline.
+> **Last updated:** 2026-05-23 - full file-to-file trace of the live pipeline.
 > **Current runtime:** CatBoost playoff v5cD active; v18 LightGBM and telemetry isotonic disabled.
 
 ---
@@ -61,6 +61,20 @@ movement close to tip while still publishing through the normal NBA live path.
 `Atlas_6AM_Eval` is separate. It evaluates prior-day NBA/MLB results and
 publishes performance payloads. It must not replace the current live slate board
 or public preview with historical eval data.
+
+## Live Slip AI Review
+
+NBA live runs can write a report-only OpenAI builder review after deterministic
+slip construction. The reviewer is assigned to `5.3-spark` and configured under
+`builder_openai_review` in `config.yaml`.
+
+Rules:
+
+- live-only by default (`live_only: true`)
+- never mutates probabilities, tiers, slip rows, or publish payloads
+- strict replay and corpus replay do not call AI review
+- the local key fallback points to the shared Atlas OpenAI key file, but the key
+  itself is never tracked or printed
 
 ---
 
