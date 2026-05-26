@@ -70,6 +70,7 @@ def test_slip_families_keep_dashboard_shape():
     assert "System" in families
     assert "Windfall" in families
     assert "DemonHunter" in families
+    assert "BigSwings" in families
     assert "Marketed" in families
 
 

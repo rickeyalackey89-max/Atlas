@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from .bigswings import POLICY as BIGSWINGS_POLICY
 from .contracts import FamilyBuilderPolicy, policy_to_manifest
 from .demonhunter import POLICY as DEMONHUNTER_POLICY
 from .marketed import POLICY as MARKETED_POLICY
@@ -13,6 +14,7 @@ FAMILY_BUILDER_POLICIES: dict[str, FamilyBuilderPolicy] = {
     "System": SYSTEM_POLICY,
     "Windfall": WINDFALL_POLICY,
     "DemonHunter": DEMONHUNTER_POLICY,
+    "BigSwings": BIGSWINGS_POLICY,
 }
 
 

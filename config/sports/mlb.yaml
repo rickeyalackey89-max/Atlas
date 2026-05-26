@@ -53,9 +53,11 @@ kernels:
     simulation_version: mlb_sobol_qmc_market_prior_v0
     parameter_model_version: market_prior_parameters_v0
   cat_residual:
-    active_version: mlb_cat_over_residual_v9_projection_features_strict_fidelity
-    active_artifact: data/mlb/model/cat_probability_kernel_v9_20260516_20260520_strict_fidelity_projection_features/best_config.json
+    active_version: mlb_cat_v13_global
+    active_artifact: data/mlb/model/cat_probability_kernel_v13_hfs_guard_fp_milb_20260525/global/best_config.json
     challenger_versions:
+      - version: mlb_cat_over_residual_v9_projection_features_strict_fidelity
+        artifact: data/mlb/model/cat_probability_kernel_v9_20260516_20260520_strict_fidelity_projection_features/best_config.json
       - version: mlb_cat_over_residual_v8_20260516_20260520_strict_fidelity
         artifact: data/mlb/model/cat_probability_kernel_v8_20260516_20260520_strict_fidelity/best_config.json
       - version: mlb_cat_over_residual_v6_23date_live_context_scale_tuned
@@ -95,6 +97,12 @@ market_sources:
     timezone: America/Chicago
     windows: ["11:00", "13:30", "16:30", "19:30"]
     rule: refresh live board and markets multiple times per day; engine board excludes already-started games
+    sunday_late_cutoff:
+      enabled: true
+      task_schedule: "19:30 Monday-Saturday only"
+      skip_windows_after: "18:30"
+      skipped_windows: ["19:30"]
+      reason: Sunday MLB slates are normally underway by 6:30 PM Central, so the 7:30 PM refresh should not overwrite the public dashboard.
     draftkings_late_market_rule: evaluate readiness per game at one hour before each game start
   optional_fallbacks:
     - oddsapi_mlb_live
@@ -155,23 +163,26 @@ matchup_matrix:
     environment_enabled: true
 
 slips:
-  active_builder_version: atlas_mlb_public_slip_ranker_v22_marketed_bettingpros_windfall_probability
+  active_builder_version: atlas_mlb_public_slip_ranker_v30_spark_bucket_guards
   portfolio_priority:
     - Marketed
     - System
     - Windfall
     - DemonHunter
+    - BigSwings
   no_two_leg_full_slate: true
   full_slate_sizes:
-    System: [3, 4, 5]
+    System: [3]
     Windfall: [3, 4, 5]
-    Marketed: [3, 4, 5]
+    Marketed: [3, 4]
     DemonHunter: [3, 4, 5]
+    BigSwings: []
   single_game_sizes:
     System: [2, 3, 4]
     Windfall: [2, 3, 4]
     Marketed: [2, 3]
     DemonHunter: []
+    BigSwings: []
   tier_contract:
     goblin_playable_sides: [OVER]
     demon_playable_sides: [OVER]
@@ -182,31 +193,18 @@ slips:
       purpose: premium_public_picks
       templates:
         - label: 3-leg
-          goblin: 1
-          standard: 2
+          goblin: 2
+          standard: 1
           demon: 0
         - label: 4-leg
-          goblin: 2
-          standard: 2
+          goblin: 3
+          standard: 1
           demon: 0
-        - label: 5-leg
-          goblin: 2
-          standard: 2
-          demon: 1
-          flex_eval: true
     System:
       purpose: atlas_value_ev
       templates:
         - label: 3-leg
           goblin: 1
-          standard: 2
-          demon: 0
-        - label: 4-leg
-          goblin: 2
-          standard: 2
-          demon: 0
-        - label: 5-leg
-          goblin: 3
           standard: 2
           demon: 0
     Windfall:
@@ -236,12 +234,25 @@ slips:
           goblin: 0
           standard: 0
           demon: 4
-          flex_eval: true
         - label: 5-leg
           goblin: 0
           standard: 0
           demon: 5
-          flex_eval: true
+    BigSwings:
+      purpose: independent_high_upside_demon_pick_board
+      max_picks: 12
+      runs_after:
+        - Marketed
+        - System
+        - Windfall
+        - DemonHunter
+      isolated_from_public_portfolio: true
+      templates:
+        - label: pick-board
+          goblin: 0
+          standard: 0
+          demon: 1
+          parlay_family: false
   exposure:
     max_exact_leg_repeats_across_public: 1
     max_exposure_repeats_across_public: 1

@@ -40,6 +40,7 @@ def test_slip_outputs_enforce_atlas_tier_mix_contracts(tmp_path):
     assert manifest["family_builder_policies"]["System"]["purpose"] == "atlas_value_ev"
     assert manifest["family_builder_policies"]["Windfall"]["purpose"] == "flex_upside_best_of_both_worlds"
     assert manifest["family_builder_policies"]["DemonHunter"]["purpose"] == "high_variance_demon_over_payout"
+    assert manifest["family_builder_policies"]["BigSwings"]["purpose"] == "independent_high_upside_demon_pick_board"
     quote_manifest = json.loads((run_dir / "slips" / "payout_quote_manifest.json").read_text(encoding="utf-8"))
     assert manifest["payout_quote_manifest"]["quote_count"] == manifest["slip_count"]
     assert quote_manifest["quote_count"] == manifest["slip_count"]
@@ -50,22 +51,29 @@ def test_slip_outputs_enforce_atlas_tier_mix_contracts(tmp_path):
     assert not (run_dir / "slips" / "windfall_2leg.json").exists()
     assert not (run_dir / "Windfall" / "recommended_2leg.csv").exists()
     _assert_counts(_json_legs(run_dir, "system_3leg.json"), {"GOBLIN": 1, "STANDARD": 2})
-    _assert_counts(_json_legs(run_dir, "system_4leg.json"), {"GOBLIN": 2, "STANDARD": 2})
-    _assert_counts(_json_legs(run_dir, "system_5leg.json"), {"GOBLIN": 3, "STANDARD": 2})
-    _assert_counts(_json_legs(run_dir, "windfall_3leg.json"), {"GOBLIN": 1, "STANDARD": 1, "DEMON": 1})
-    _assert_counts(_json_legs(run_dir, "windfall_4leg.json"), {"GOBLIN": 1, "STANDARD": 2, "DEMON": 1})
-    _assert_counts(_json_legs(run_dir, "windfall_5leg.json"), {"GOBLIN": 2, "STANDARD": 2, "DEMON": 1})
+    assert _json_legs(run_dir, "system_4leg.json") == []
+    assert _json_legs(run_dir, "system_5leg.json") == []
+    assert _json_legs(run_dir, "windfall_3leg.json") == []
+    assert _json_legs(run_dir, "windfall_4leg.json") == []
+    assert _json_legs(run_dir, "windfall_5leg.json") == []
 
     demonhunter = json.loads((run_dir / "slips" / "demonhunter.json").read_text(encoding="utf-8"))
-    assert [len(slip["legs"]) for slip in demonhunter["slips"]] == [3, 4, 5]
+    assert demonhunter["family"] == "DemonHunter"
+    assert demonhunter["slip_count"] > 0
     for slip in demonhunter["slips"]:
-        _assert_counts(slip["legs"], {"DEMON": len(slip["legs"])})
+        assert all(leg["tier"] == "DEMON" for leg in slip["legs"])
+
+    big_swings = json.loads((run_dir / "slips" / "big_swings.json").read_text(encoding="utf-8"))
+    assert big_swings["family"] == "The Big Swings"
+    assert big_swings["board_type"] == "independent_demon_pick_board"
+    assert big_swings["does_not_mutate_public_slip_portfolio"] is True
+    assert big_swings["pick_count"] > 0
+    assert all(pick["tier"] == "DEMON" for pick in big_swings["picks"])
 
     marketed = json.loads((run_dir / "marketed_slips.json").read_text(encoding="utf-8"))
-    assert [slip["label"] for slip in marketed["slips"]] == ["3-leg", "4-leg", "5-leg"]
-    _assert_counts(marketed["slips"][0]["legs"], {"GOBLIN": 1, "STANDARD": 2})
-    _assert_counts(marketed["slips"][1]["legs"], {"GOBLIN": 2, "STANDARD": 2})
-    _assert_counts(marketed["slips"][2]["legs"], {"GOBLIN": 2, "STANDARD": 2, "DEMON": 1})
+    assert [slip["label"] for slip in marketed["slips"]] == ["3-leg", "4-leg"]
+    _assert_counts(marketed["slips"][0]["legs"], {"GOBLIN": 2, "STANDARD": 1})
+    _assert_counts(marketed["slips"][1]["legs"], {"GOBLIN": 3, "STANDARD": 1})
     for slip in marketed["slips"]:
         _assert_no_invalid_tier_direction(slip["legs"])
     _assert_unique_public_exact_legs(run_dir)
@@ -184,9 +192,9 @@ def test_single_game_slip_outputs_use_atlas_single_game_templates(tmp_path):
     manifest = build_slip_families_from_scored_run(run_dir)
 
     assert manifest["single_game_slate"] is True
-    _assert_counts(_json_legs(run_dir, "windfall_2leg.json"), {"GOBLIN": 2})
-    _assert_counts(_json_legs(run_dir, "windfall_3leg.json"), {"GOBLIN": 2, "STANDARD": 1})
-    _assert_counts(_json_legs(run_dir, "windfall_4leg.json"), {"GOBLIN": 3, "STANDARD": 1})
+    assert _json_legs(run_dir, "windfall_2leg.json") == []
+    assert _json_legs(run_dir, "windfall_3leg.json") == []
+    assert _json_legs(run_dir, "windfall_4leg.json") == []
     assert _json_legs(run_dir, "windfall_5leg.json") == []
 
     marketed = json.loads((run_dir / "marketed_slips.json").read_text(encoding="utf-8"))
@@ -234,6 +242,20 @@ def test_family_builder_policies_rank_marketed_away_from_volatile_pitch_count():
     assert marketed[0]["market"] == "hitter_fantasy_score"
 
 
+def test_demonhunter_uses_dedicated_demon_policy():
+    demonhunter = slips_runtime._family_policy("DemonHunter")
+
+    assert demonhunter.name == "DemonHunter"
+    assert demonhunter.purpose == "high_variance_demon_over_payout"
+
+
+def test_big_swings_uses_independent_demon_board_policy():
+    big_swings = slips_runtime._family_policy("BigSwings")
+
+    assert big_swings.name == "BigSwings"
+    assert big_swings.purpose == "independent_high_upside_demon_pick_board"
+
+
 def _write_scored_run(tmp_path: Path, rows: list[dict]) -> Path:
     run_dir = tmp_path / "run"
     run_dir.mkdir()
@@ -266,6 +288,17 @@ def _leg(
     player_id: str | None = None,
 ) -> dict:
     resolved_market = market or f"market_{index}"
+    pitcher_markets = {
+        "earned_runs_allowed",
+        "hits_allowed",
+        "pitcher_fantasy_score",
+        "pitcher_strikeouts",
+        "pitches_thrown",
+        "pitching_outs",
+        "walks_allowed",
+    }
+    market_group = "pitcher" if resolved_market in pitcher_markets else "hitter"
+    batting_order_slot = (index % 5) + 1
     return {
         "source_projection_id": f"proj_{index}",
         "event_id": event_id or f"game_{index % 3}",
@@ -283,6 +316,32 @@ def _leg(
         "model_probability": probability,
         "stability_score": 0.80,
         "fragility_score": 0.10,
+        "market_group": market_group,
+        "matchup_context_available": True,
+        "lineup_context_available": market_group == "hitter",
+        "lineup_confirmed": market_group == "hitter",
+        "lineup_probability": 1.0 if market_group == "hitter" else 0.0,
+        "batting_order_slot": batting_order_slot if market_group == "hitter" else None,
+        "plate_appearance_projection": 4.2 if market_group == "hitter" else None,
+        "projected_plate_appearances": 4.2 if market_group == "hitter" else None,
+        "probable_pitcher_context_available": market_group == "pitcher",
+        "player_history_context_available": True,
+        "history_games_season": 25,
+        "history_games_14d": 10,
+        "history_games_7d": 5,
+        "weather_context_available": True,
+        "park_factor_confidence": 0.9,
+        "environment_score": 0.12,
+        "opportunity_confidence": 0.82,
+        "opportunity_fragility_score": 0.08,
+        "matchup_confidence": 0.78,
+        "external_market_context_available": True,
+        "market_context_source_type": "external_test_context",
+        "bettingpros_context_score": 1.0,
+        "bettingpros_recommended_side": side,
+        "bettingpros_weighted_over_rate": 0.65 if side == "over" else 0.35,
+        "bettingpros_weighted_under_rate": 0.65 if side == "under" else 0.35,
+        "bettingpros_projection_diff": 0.25 if side == "over" else -0.25,
     }
 
 
@@ -353,10 +412,6 @@ def _public_slips(run_dir: Path) -> list[list[dict]]:
             if legs:
                 slips.append(legs)
 
-    demonhunter = json.loads((run_dir / "slips" / "demonhunter.json").read_text(encoding="utf-8"))
-    for slip in demonhunter.get("slips", []):
-        slips.append(slip.get("legs", []))
-
     marketed = json.loads((run_dir / "marketed_slips.json").read_text(encoding="utf-8"))
     for slip in marketed.get("slips", []):
         slips.append(slip.get("legs", []))
@@ -368,10 +423,6 @@ def _all_public_legs(run_dir: Path) -> list[dict]:
     for prefix in ("system", "windfall"):
         for size in (2, 3, 4, 5):
             legs.extend(_json_legs(run_dir, f"{prefix}_{size}leg.json"))
-
-    demonhunter = json.loads((run_dir / "slips" / "demonhunter.json").read_text(encoding="utf-8"))
-    for slip in demonhunter.get("slips", []):
-        legs.extend(slip.get("legs", []))
 
     marketed = json.loads((run_dir / "marketed_slips.json").read_text(encoding="utf-8"))
     for slip in marketed.get("slips", []):

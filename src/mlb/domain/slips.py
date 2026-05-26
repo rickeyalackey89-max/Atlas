@@ -4,6 +4,7 @@ SLIP_FAMILIES = (
     "System",
     "Windfall",
     "DemonHunter",
+    "BigSwings",
     "Marketed",
 )
 

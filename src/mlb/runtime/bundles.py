@@ -72,7 +72,7 @@ EXPECTED_BUNDLE_ARTIFACTS = (
     BundleArtifact(
         name="slip_families",
         phase="slips",
-        path_template="data/mlb/replay_runs/{run_id}/{System,Windfall,marketed_slips.csv,demonhunter.csv}",
+        path_template="data/mlb/replay_runs/{run_id}/{System,Windfall,marketed_slips.csv,demonhunter.csv,big_swings.csv}",
         required=False,
     ),
 )

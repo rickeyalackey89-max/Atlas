@@ -37,18 +37,16 @@ from mlb.domain.playability import (
     normalize_side,
     normalize_tier,
 )
-from mlb.domain.slips import supported_slip_families
 from mlb.overlays.mlb_publication_overlay import write_baseball_context_artifacts
 
-SYSTEM_FULL_SLATE_SIZES = (3, 4, 5)
+SYSTEM_FULL_SLATE_SIZES = (3,)
 WINDFALL_FULL_SLATE_SIZES = (3, 4, 5)
 SYSTEM_SINGLE_GAME_SIZES = (2, 3, 4)
 WINDFALL_SINGLE_GAME_SIZES = (2, 3, 4)
 PUBLIC_SIZED_SLIP_COUNTS = (2, 3, 4, 5)
-DEMONHUNTER_SIZES = (3, 4, 5)
 PAYOUT_QUOTE_MANIFEST_NAME = "payout_quote_manifest.json"
 PAYOUT_FORMULA_AUDIT_NAME = "payout_formula_audit.json"
-PUBLIC_SLIP_RANKER_VERSION = "atlas_mlb_public_slip_ranker_v27_marketed_prob_edge_cat_v11"
+PUBLIC_SLIP_RANKER_VERSION = "atlas_mlb_public_slip_ranker_v30_spark_bucket_guards"
 FEATURE_CONTEXT_FIELDS = (
     "market_group",
     "matchup_context_available",
@@ -82,13 +80,25 @@ FEATURE_CONTEXT_FIELDS = (
     "prizepicks_line_only_market_context",
 )
 TIER_ORDER = ("GOBLIN", "STANDARD", "DEMON")
-PUBLIC_PORTFOLIO_PRIORITY = ("Marketed", "System", "Windfall", "DemonHunter")
+PUBLIC_PORTFOLIO_PRIORITY = ("Marketed", "System")
+PUBLIC_SUPPORTED_FAMILIES = ("Marketed", "System", "DemonHunter", "The Big Swings")
+PUBLIC_DISABLED_FAMILIES = {
+    "Windfall": "disabled_public_live_liability",
+}
+DEMONHUNTER_SIZES = (3, 4, 5)
+BIG_SWINGS_DISPLAY_NAME = "The Big Swings"
+BIG_SWINGS_KEY = "big_swings"
+BIG_SWINGS_LIMIT = 12
 PUBLIC_PORTFOLIO_INDEPENDENT_FAMILIES: set[str] = {"DemonHunter"}
 PUBLIC_PORTFOLIO_MAX_EXACT_LEG_REPEATS = 1
 PUBLIC_PORTFOLIO_MAX_EXPOSURE_REPEATS = 1
 PUBLIC_PORTFOLIO_MAX_PLAYER_REPEATS = 1
 PUBLIC_PORTFOLIO_MAX_RISK_SEGMENT_REPEATS = 1
 PUBLIC_MAX_SAME_MARKET_PER_SLIP = 2
+PUBLIC_MARKET_SPECIFIC_MAX_PER_SLIP = {
+    "hitter_fantasy_score": 1,
+}
+PUBLIC_MAX_SAME_TEAM_MARKET_PER_SLIP = 1
 PUBLIC_MAX_PITCHER_WORKLOAD_LEGS_PER_SLIP = 1
 PUBLIC_TIER_DIRECTION_FILTERS = {tier: set(sides) for tier, sides in TIER_PLAYABLE_SIDE_FILTERS.items()}
 PUBLIC_EXCLUDED_MARKETS = {
@@ -144,6 +154,14 @@ PUBLIC_HIGH_VARIANCE_BATTER_OVERS = {
     "triples",
 }
 PUBLIC_BLOCKED_SEGMENTS_BY_FAMILY = {
+    "BigSwings": {
+        ("DEMON", "hitter_fantasy_score", "OVER"),
+        ("DEMON", "hitter_strikeouts", "OVER"),
+        ("DEMON", "hits_allowed", "OVER"),
+        ("DEMON", "pitcher_fantasy_score", "OVER"),
+        ("DEMON", "pitches_thrown", "OVER"),
+        ("DEMON", "walks_allowed", "OVER"),
+    },
     "DemonHunter": {
         ("DEMON", "hitter_fantasy_score", "OVER"),
         ("DEMON", "hitter_strikeouts", "OVER"),
@@ -152,11 +170,15 @@ PUBLIC_BLOCKED_SEGMENTS_BY_FAMILY = {
         ("DEMON", "pitcher_strikeouts", "OVER"),
     },
     "Marketed": {
+        ("GOBLIN", "pitcher_fantasy_score", "OVER"),
         ("STANDARD", "hitter_strikeouts", "UNDER"),
         ("STANDARD", "pitcher_fantasy_score", "OVER"),
         ("STANDARD", "pitcher_fantasy_score", "UNDER"),
         ("STANDARD", "pitches_thrown", "UNDER"),
         ("STANDARD", "walks", "UNDER"),
+    },
+    "System": {
+        ("GOBLIN", "pitcher_strikeouts", "OVER"),
     },
     "Windfall": {
         ("DEMON", "hitter_fantasy_score", "OVER"),
@@ -171,11 +193,17 @@ PUBLIC_RISK_CAPPED_SEGMENTS = {
     ("DEMON", "hits_runs_rbis", "OVER"),
     ("DEMON", "total_bases", "OVER"),
     ("STANDARD", "pitching_outs", "OVER"),
+    ("GOBLIN", "pitcher_fantasy_score", "OVER"),
     ("GOBLIN", "pitching_outs", "OVER"),
 }
 PUBLIC_STANDARD_PRIOR_FLOOR = 0.505
 PUBLIC_MARKETED_STANDARD_UNDER_MIN_PROBABILITY = 0.64
 PUBLIC_MARKETED_STANDARD_UNDER_CONTEXT_MIN_SCORE = 0.58
+PUBLIC_HITTER_FS_LINE_ONLY_STANDARD_MIN_PROBABILITY = 0.72
+PUBLIC_HITTER_FS_LINE_ONLY_GOBLIN_MIN_PROBABILITY = 0.76
+PUBLIC_HITTER_FS_LINE_ONLY_MIN_PA = 4.05
+PUBLIC_HITTER_FS_LINE_ONLY_MIN_PITCH_FIT = 0.24
+PUBLIC_HITTER_FS_LINE_ONLY_MIN_BATTER_ADVANTAGE = 0.50
 PUBLIC_LOW_RELIABILITY_PRIOR = 0.56
 PUBLIC_STRONG_RELIABILITY_PRIOR = 0.62
 PUBLIC_MODEL_PRIOR_GAP_START = 0.10
@@ -186,11 +214,14 @@ PUBLIC_MARGINAL_WORKLOAD_PROBABILITY = {
     "System": 0.72,
     "Windfall": 0.68,
     "DemonHunter": 0.62,
+    "BigSwings": 0.62,
 }
 PUBLIC_PP_SPECIFIC_MARKETS = {
     "hitter_fantasy_score",
     "pitcher_fantasy_score",
 }
+PUBLIC_CONFIRMED_LINEUP_REQUIRED_FAMILIES = {"Marketed", "System", "DemonHunter", "BigSwings"}
+PUBLIC_CONFIRMED_STARTER_REQUIRED_FAMILIES = {"Marketed", "System", "DemonHunter", "BigSwings"}
 BETTINGPROS_CONTEXT_FIELDS = (
     "bettingpros_recommended_side",
     "bettingpros_projection_value",
@@ -324,9 +355,8 @@ SINGLE_GAME_WINDFALL_TIER_MIXES = {
 }
 
 MARKETED_TEMPLATES = (
-    {"label": "3-leg", "goblin": 1, "standard": 2, "demon": 0},
-    {"label": "4-leg", "goblin": 2, "standard": 2, "demon": 0},
-    {"label": "5-leg", "goblin": 2, "standard": 2, "demon": 1},
+    {"label": "3-leg", "goblin": 2, "standard": 1, "demon": 0},
+    {"label": "4-leg", "goblin": 3, "standard": 1, "demon": 0},
 )
 
 SINGLE_GAME_MARKETED_TEMPLATES = (
@@ -385,6 +415,28 @@ SLIP_ROW_COLUMNS = (
     "public_portfolio_reason",
     "q_leg_count",
     "q_players",
+)
+
+BIG_SWINGS_CSV_COLUMNS = (
+    "rank",
+    "player",
+    "team",
+    "opp",
+    "stat",
+    "market",
+    "direction",
+    "tier",
+    "line",
+    "p_cal",
+    "tier_market_side_prior",
+    "segment_reliability_adjustment",
+    "external_market_context_available",
+    "market_context_source_type",
+    "prizepicks_line_only_market_context",
+    "mlb_context_gate_level",
+    "mlb_context_tags",
+    "mlb_context_gate_reasons",
+    "use_case",
 )
 
 MARKETED_CSV_COLUMNS = (
@@ -571,23 +623,16 @@ def build_slip_families_from_scored_run(run_dir: Path) -> dict[str, Any]:
     )
     family_outputs["System"] = system_outputs
 
-    windfall_outputs = _write_sized_family(
+    windfall_outputs = _write_disabled_sized_family(
         run_dir=run_dir,
         json_dir=slip_dir,
         output_dir=windfall_dir,
         family="Windfall",
-        rows=_ranked_legs(legs, family="Windfall"),
         sizes=windfall_sizes,
         tier_mixes=windfall_tier_mixes,
         root_mirror=False,
         run_id=run_id,
-        portfolio_exact_counts=portfolio_exact_counts,
-        portfolio_exposure_counts=portfolio_exposure_counts,
-        portfolio_player_counts=portfolio_player_counts,
-        portfolio_risk_segment_counts=portfolio_risk_segment_counts,
-        max_exact_leg_repeats=PUBLIC_PORTFOLIO_MAX_EXACT_LEG_REPEATS,
-        max_exposure_repeats=PUBLIC_PORTFOLIO_MAX_EXPOSURE_REPEATS,
-        quote_context=quote_context,
+        reason=PUBLIC_DISABLED_FAMILIES["Windfall"],
     )
     family_outputs["Windfall"] = windfall_outputs
 
@@ -606,6 +651,14 @@ def build_slip_families_from_scored_run(run_dir: Path) -> dict[str, Any]:
     )
     family_outputs["DemonHunter"] = demonhunter_outputs
 
+    big_swings_outputs = _write_big_swings(
+        run_dir=run_dir,
+        json_dir=slip_dir,
+        legs=legs,
+        run_id=run_id,
+    )
+    family_outputs["BigSwings"] = big_swings_outputs
+
     payout_quote_path = slip_dir / PAYOUT_QUOTE_MANIFEST_NAME
     payout_quote_manifest = quote_context.write_manifest(payout_quote_path)
     payout_formula_path = slip_dir / PAYOUT_FORMULA_AUDIT_NAME
@@ -618,7 +671,7 @@ def build_slip_families_from_scored_run(run_dir: Path) -> dict[str, Any]:
         "run_mode": run_mode,
         "single_game_slate": single_game_slate,
         "family_count": len(family_outputs),
-        "supported_families": list(supported_slip_families()),
+        "supported_families": list(PUBLIC_SUPPORTED_FAMILIES),
         "slip_count": sum(int(item.get("slip_count") or 0) for item in family_outputs.values()),
         "families": family_outputs,
         "payout_quote_manifest": {
@@ -641,6 +694,7 @@ def build_slip_families_from_scored_run(run_dir: Path) -> dict[str, Any]:
             "System": _stringify_mix_keys(system_tier_mixes),
             "Windfall": _stringify_mix_keys(windfall_tier_mixes),
             "DemonHunter": {str(size): {"DEMON": size} for size in DEMONHUNTER_SIZES},
+            "BigSwings": {"pick-board": {"DEMON": 1}},
             "Marketed": marketed_outputs.get("tier_templates", []),
         },
         "tier_direction_filters": {tier: sorted(values) for tier, values in PUBLIC_TIER_DIRECTION_FILTERS.items()},
@@ -657,11 +711,14 @@ def build_slip_families_from_scored_run(run_dir: Path) -> dict[str, Any]:
         },
         "portfolio_policy": {
             "priority": list(PUBLIC_PORTFOLIO_PRIORITY),
+            "public_supported_families": list(PUBLIC_SUPPORTED_FAMILIES),
+            "public_disabled_families": dict(PUBLIC_DISABLED_FAMILIES),
             "max_exact_leg_repeats_across_public": PUBLIC_PORTFOLIO_MAX_EXACT_LEG_REPEATS,
             "max_exposure_repeats_across_public": PUBLIC_PORTFOLIO_MAX_EXPOSURE_REPEATS,
             "max_player_repeats_across_public": PUBLIC_PORTFOLIO_MAX_PLAYER_REPEATS,
             "max_risk_segment_repeats_across_public": PUBLIC_PORTFOLIO_MAX_RISK_SEGMENT_REPEATS,
             "independent_family_builders": sorted(PUBLIC_PORTFOLIO_INDEPENDENT_FAMILIES),
+            "post_portfolio_pick_boards": [BIG_SWINGS_DISPLAY_NAME],
             "exact_leg_key": "player/event/market/line/side",
             "exposure_key": "player/event/market/side",
             "player_exposure_key": "player",
@@ -757,6 +814,58 @@ def _write_sized_family(
         "target_leg_counts": list(sizes),
         "tier_mixes": _stringify_mix_keys(tier_mixes),
         "builder_policy": _policy_to_manifest(_family_policy(family)),
+        "csv_paths": csv_paths,
+        "json_paths": json_paths,
+    }
+
+
+def _write_disabled_sized_family(
+    *,
+    run_dir: Path,
+    json_dir: Path,
+    output_dir: Path,
+    family: str,
+    sizes: tuple[int, ...],
+    tier_mixes: dict[int, dict[str, int]],
+    root_mirror: bool,
+    run_id: Any,
+    reason: str,
+) -> dict[str, Any]:
+    csv_paths: dict[str, str] = {}
+    json_paths: dict[str, str] = {}
+    family_key = _family_key(family)
+    for size in sizes:
+        csv_path = output_dir / f"recommended_{size}leg.csv"
+        json_path = json_dir / f"{family_key}_{size}leg.json"
+        _write_slip_rows_csv(csv_path, [])
+        payload = {
+            "family": family,
+            "run_id": run_id,
+            "leg_count": 0,
+            "target_leg_count": size,
+            "method": "atlas_mlb_public_family_disabled",
+            "selection_model_version": PUBLIC_SLIP_RANKER_VERSION,
+            "tier_mix": tier_mixes.get(size, {}),
+            "public_status": "disabled",
+            "disabled_reason": reason,
+            "replacement_family": None,
+            "legs": [],
+        }
+        json_path.write_text(json.dumps(payload, indent=2, sort_keys=True), encoding="utf-8")
+        if root_mirror:
+            _write_slip_rows_csv(run_dir / f"recommended_{size}leg.csv", [])
+        if size in sizes:
+            csv_paths[f"{size}leg"] = str(csv_path)
+            json_paths[f"{size}leg"] = str(json_path)
+    return {
+        "family": family,
+        "slip_count": 0,
+        "target_leg_counts": list(sizes),
+        "tier_mixes": _stringify_mix_keys(tier_mixes),
+        "builder_policy": _policy_to_manifest(_family_policy(family)),
+        "public_status": "disabled",
+        "disabled_reason": reason,
+        "replacement_family": None,
         "csv_paths": csv_paths,
         "json_paths": json_paths,
     }
@@ -874,6 +983,132 @@ def _write_demonhunter(
     }
 
 
+def _write_big_swings(
+    *,
+    run_dir: Path,
+    json_dir: Path,
+    legs: list[dict[str, Any]],
+    run_id: Any,
+) -> dict[str, Any]:
+    ranked = _ranked_legs(legs, family="BigSwings")
+    used_players: set[str] = set()
+    used_exact: set[str] = set()
+    market_counts: dict[str, int] = {}
+    risk_segment_counts: dict[str, int] = {}
+    picks: list[dict[str, Any]] = []
+    csv_rows: list[dict[str, Any]] = []
+
+    for row in ranked:
+        if _tier(row) != "DEMON":
+            continue
+        if not _tier_direction_allowed(row):
+            continue
+        if not _public_candidate(row, family="BigSwings"):
+            continue
+
+        player_key = _player_key(row)
+        exact_key = _exact_leg_key(row)
+        market_key = _market_key(row)
+        risk_key = _risk_segment_key(row)
+        if player_key in used_players or exact_key in used_exact:
+            continue
+        if int(market_counts.get(market_key, 0)) >= 3:
+            continue
+        if risk_key and int(risk_segment_counts.get(risk_key, 0)) >= 2:
+            continue
+
+        pick = _big_swing_pick(row, rank=len(picks) + 1)
+        picks.append(pick)
+        csv_rows.append(_big_swing_csv_row(pick))
+        used_players.add(player_key)
+        if exact_key:
+            used_exact.add(exact_key)
+        market_counts[market_key] = int(market_counts.get(market_key, 0)) + 1
+        if risk_key:
+            risk_segment_counts[risk_key] = int(risk_segment_counts.get(risk_key, 0)) + 1
+        if len(picks) >= BIG_SWINGS_LIMIT:
+            break
+
+    csv_path = run_dir / f"{BIG_SWINGS_KEY}.csv"
+    root_json_path = run_dir / f"{BIG_SWINGS_KEY}.json"
+    companion_json_path = json_dir / f"{BIG_SWINGS_KEY}.json"
+    payload = {
+        "family": BIG_SWINGS_DISPLAY_NAME,
+        "family_key": BIG_SWINGS_KEY,
+        "run_id": run_id,
+        "selection_model_version": PUBLIC_SLIP_RANKER_VERSION,
+        "board_type": "independent_demon_pick_board",
+        "public_status": "active",
+        "builder_policy": _policy_to_manifest(_family_policy("BigSwings")),
+        "portfolio_scope": "post_portfolio_independent_board",
+        "does_not_mutate_public_slip_portfolio": True,
+        "description": "Ranked individual high-upside DEMON picks; not a parlay slip family.",
+        "pick_count": len(picks),
+        "limit": BIG_SWINGS_LIMIT,
+        "risk_caps": {
+            "max_one_pick_per_player": True,
+            "max_same_market": 3,
+            "max_same_capped_risk_segment": 2,
+        },
+        "picks": picks,
+    }
+    _write_dict_csv(csv_path, csv_rows, BIG_SWINGS_CSV_COLUMNS)
+    root_json_path.write_text(json.dumps(payload, indent=2, sort_keys=True, allow_nan=False), encoding="utf-8")
+    companion_json_path.write_text(json.dumps(payload, indent=2, sort_keys=True, allow_nan=False), encoding="utf-8")
+    return {
+        "family": BIG_SWINGS_DISPLAY_NAME,
+        "family_key": BIG_SWINGS_KEY,
+        "slip_count": 0,
+        "pick_count": len(picks),
+        "board_type": "independent_demon_pick_board",
+        "builder_policy": _policy_to_manifest(_family_policy("BigSwings")),
+        "portfolio_scope": "post_portfolio_independent_board",
+        "does_not_mutate_public_slip_portfolio": True,
+        "csv_path": str(csv_path),
+        "json_path": str(companion_json_path),
+    }
+
+
+def _big_swing_pick(row: dict[str, Any], *, rank: int) -> dict[str, Any]:
+    pick = _marketed_leg(row)
+    pick.update(
+        {
+            "rank": rank,
+            "family": BIG_SWINGS_KEY,
+            "display_family": BIG_SWINGS_DISPLAY_NAME,
+            "use_case": "independent_high_upside_demon_pick",
+            "segment_reliability_adjustment": _segment_reliability_adjustment(row, family="BigSwings"),
+            "tier_market_side_prior": _tier_market_side_prior(row),
+            "risk_segment_key": _risk_segment_key(row),
+        }
+    )
+    return pick
+
+
+def _big_swing_csv_row(pick: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "rank": pick.get("rank"),
+        "player": pick.get("player"),
+        "team": pick.get("team"),
+        "opp": pick.get("opp"),
+        "stat": pick.get("stat"),
+        "market": pick.get("market"),
+        "direction": pick.get("direction"),
+        "tier": pick.get("tier"),
+        "line": pick.get("line"),
+        "p_cal": round(_float(pick.get("p_cal")), 4),
+        "tier_market_side_prior": round(_float(pick.get("tier_market_side_prior")), 4),
+        "segment_reliability_adjustment": round(_float(pick.get("segment_reliability_adjustment")), 4),
+        "external_market_context_available": bool(pick.get("external_market_context_available")),
+        "market_context_source_type": pick.get("market_context_source_type"),
+        "prizepicks_line_only_market_context": bool(pick.get("prizepicks_line_only_market_context")),
+        "mlb_context_gate_level": pick.get("mlb_context_gate_level"),
+        "mlb_context_tags": json.dumps(pick.get("mlb_context_tags") or []),
+        "mlb_context_gate_reasons": json.dumps(pick.get("mlb_context_gate_reasons") or []),
+        "use_case": pick.get("use_case"),
+    }
+
+
 def _write_marketed_slips(
     *,
     run_dir: Path,
@@ -891,9 +1126,9 @@ def _write_marketed_slips(
 ) -> dict[str, Any]:
     ranked = _ranked_legs(legs, family="Marketed")
     templates = SINGLE_GAME_MARKETED_TEMPLATES if single_game_slate else MARKETED_TEMPLATES
+    selection_templates = templates if single_game_slate else tuple(reversed(templates))
     slips: list[dict[str, Any]] = []
-    csv_rows: list[dict[str, Any]] = []
-    for template in templates:
+    for template in selection_templates:
         selected = _select_template_legs(
             ranked,
             template=template,
@@ -911,7 +1146,6 @@ def _write_marketed_slips(
         payout_quote = quote_context.quote(selected, family="Marketed", label=label)
         slip = _marketed_slip_payload(label=label, selected=selected, payout_quote=payout_quote)
         slips.append(slip)
-        csv_rows.extend(_marketed_csv_rows(slip))
         _commit_portfolio_legs(
             selected,
             portfolio_exact_counts,
@@ -919,6 +1153,9 @@ def _write_marketed_slips(
             portfolio_player_counts,
             portfolio_risk_segment_counts,
         )
+
+    slips = sorted(slips, key=lambda slip: (len(slip.get("legs") or []), str(slip.get("label") or "")))
+    csv_rows = [row for slip in slips for row in _marketed_csv_rows(slip)]
 
     json_path = run_dir / "marketed_slips.json"
     csv_path = run_dir / "marketed_slips.csv"
@@ -932,6 +1169,7 @@ def _write_marketed_slips(
             "selection_model_version": PUBLIC_SLIP_RANKER_VERSION,
             "single_game_slate": single_game_slate,
             "templates": [str(template["label"]) for template in templates],
+            "selection_order": [str(template["label"]) for template in selection_templates],
             "tier_templates": list(templates),
             "payout_quote_manifest": str(json_dir / PAYOUT_QUOTE_MANIFEST_NAME),
             "tier_direction_filters": {tier: sorted(values) for tier, values in PUBLIC_TIER_DIRECTION_FILTERS.items()},
@@ -1029,6 +1267,7 @@ def _select_distinct_legs(
     allowed_tiers: set[str],
     used_player_ids: set[str] | None = None,
     used_market_counts: dict[str, int] | None = None,
+    used_team_market_counts: dict[str, int] | None = None,
     used_pitcher_workload_count: list[int] | None = None,
     portfolio_exact_counts: dict[str, int] | None = None,
     portfolio_exposure_counts: dict[str, int] | None = None,
@@ -1042,6 +1281,7 @@ def _select_distinct_legs(
     used_players = set(used_player_ids or set())
     used_player_markets: set[tuple[str, str]] = set()
     market_counts = used_market_counts if used_market_counts is not None else {}
+    team_market_counts = used_team_market_counts if used_team_market_counts is not None else {}
     pitcher_workload_count = used_pitcher_workload_count if used_pitcher_workload_count is not None else [0]
     for row in rows:
         if not _public_candidate(row, family=family):
@@ -1060,7 +1300,7 @@ def _select_distinct_legs(
             max_exposure_repeats,
         ):
             continue
-        if not _slip_composition_available(row, market_counts, pitcher_workload_count):
+        if not _slip_composition_available(row, market_counts, pitcher_workload_count, team_market_counts):
             continue
         player_id = _player_key(row)
         market = str(row.get("market") or "")
@@ -1070,7 +1310,7 @@ def _select_distinct_legs(
         selected.append(row)
         used_players.add(player_id)
         used_player_markets.add(player_market)
-        _commit_slip_composition(row, market_counts, pitcher_workload_count)
+        _commit_slip_composition(row, market_counts, pitcher_workload_count, team_market_counts)
         if len(selected) >= size:
             break
     return selected
@@ -1094,6 +1334,7 @@ def _select_tier_mix_legs(
     selected: list[dict[str, Any]] = []
     used_players = set(used_player_ids or set())
     used_market_counts: dict[str, int] = {}
+    used_team_market_counts: dict[str, int] = {}
     used_pitcher_workload_count = [0]
     for tier in TIER_ORDER:
         count = int(mix.get(tier) or 0)
@@ -1106,6 +1347,7 @@ def _select_tier_mix_legs(
             allowed_tiers={tier},
             used_player_ids=used_players,
             used_market_counts=used_market_counts,
+            used_team_market_counts=used_team_market_counts,
             used_pitcher_workload_count=used_pitcher_workload_count,
             portfolio_exact_counts=portfolio_exact_counts,
             portfolio_exposure_counts=portfolio_exposure_counts,
@@ -1137,8 +1379,36 @@ def _select_template_legs(
     selected: list[dict[str, Any]] = []
     used_players: set[str] = set()
     used_market_counts: dict[str, int] = {}
+    used_team_market_counts: dict[str, int] = {}
     used_pitcher_workload_count = [0]
-    for tier_key in ("goblin", "standard", "demon"):
+
+    requested_tiers = [
+        tier_key
+        for tier_key in ("goblin", "standard", "demon")
+        if int(template.get(tier_key) or 0) > 0
+    ]
+    if family == "Marketed":
+        # Marketed templates have scarce required Standard legs. Selecting a
+        # high-ranked Goblin first can consume the same-market cap and make a
+        # valid template look impossible, so fill scarce tiers first.
+        public_counts = {
+            tier_key: sum(
+                1
+                for row in rows
+                if _tier(row) == tier_key.upper()
+                and _tier_direction_allowed(row)
+                and _public_candidate(row, family=family)
+            )
+            for tier_key in requested_tiers
+        }
+        requested_tiers.sort(
+            key=lambda tier_key: (
+                public_counts.get(tier_key, 0),
+                -int(template.get(tier_key) or 0),
+            )
+        )
+
+    for tier_key in requested_tiers:
         count = int(template.get(tier_key) or 0)
         if count <= 0:
             continue
@@ -1149,6 +1419,7 @@ def _select_template_legs(
             allowed_tiers={tier_key.upper()},
             used_player_ids=used_players,
             used_market_counts=used_market_counts,
+            used_team_market_counts=used_team_market_counts,
             used_pitcher_workload_count=used_pitcher_workload_count,
             portfolio_exact_counts=portfolio_exact_counts,
             portfolio_exposure_counts=portfolio_exposure_counts,
@@ -1602,7 +1873,14 @@ def _public_candidate(row: dict[str, Any], *, family: str = "") -> bool:
         if not _marketed_standard_under_allowed(row):
             return False
     if market in PUBLIC_BATTER_MARKETS:
-        if family in {"Marketed", "System", "DemonHunter"} and not _batter_action_context_available(row):
+        if family in PUBLIC_CONFIRMED_LINEUP_REQUIRED_FAMILIES and not _batter_lineup_confirmed(row):
+            return False
+        if family in {"Marketed", "System", "DemonHunter", "BigSwings"} and not _batter_action_context_available(row):
+            return False
+        if family in {"Marketed", "System", "DemonHunter", "BigSwings"} and not _hitter_fantasy_public_allowed(row):
+            return False
+    if market in PUBLIC_PITCHER_WORKLOAD_MARKETS:
+        if family in PUBLIC_CONFIRMED_STARTER_REQUIRED_FAMILIES and not _pitcher_starter_confirmed(row):
             return False
     return True
 
@@ -1621,7 +1899,7 @@ def _baseball_context_public_candidate(row: dict[str, Any], *, family: str = "")
     if isinstance(reasons, str):
         reasons = [item.strip() for item in reasons.replace(",", "|").split("|") if item.strip()]
     reason_set = {str(item).strip().lower() for item in reasons}
-    if family in {"DemonHunter", "Marketed", "Windfall"} and "bottom_order_volume_risk" in reason_set:
+    if family in {"DemonHunter", "BigSwings", "Marketed", "Windfall"} and "bottom_order_volume_risk" in reason_set:
         return False
     return True
 
@@ -1674,6 +1952,74 @@ def _batter_action_context_available(row: dict[str, Any]) -> bool:
     if _float(row.get("plate_appearance_projection")) >= 3.0:
         return True
     return False
+
+
+def _batter_lineup_confirmed(row: dict[str, Any]) -> bool:
+    status = str(row.get("mlb_context_lineup_status") or "").strip().lower()
+    if status == "confirmed":
+        return True
+    if status in {"projected", "unknown"}:
+        return False
+    slot_value = max(_float(row.get("batting_order_slot")), _float(row.get("batting_order_spot")))
+    if _truthy(row.get("lineup_confirmed")) and slot_value > 0:
+        return True
+    return slot_value > 0 and _float(row.get("lineup_probability")) >= 0.99
+
+
+def _pitcher_starter_confirmed(row: dict[str, Any]) -> bool:
+    status = str(row.get("mlb_context_pitcher_status") or "").strip().lower()
+    if status == "confirmed":
+        return True
+    if _truthy(row.get("probable_pitcher_context_available")):
+        return True
+    return _float(row.get("starter_confirmed_x_pitcher_props")) > 0.0
+
+
+def _hitter_fantasy_public_allowed(row: dict[str, Any]) -> bool:
+    if _market_key(row) != "hitter_fantasy_score" or _side(row) != "OVER":
+        return True
+
+    tier = _tier(row)
+    if tier == "DEMON":
+        return False
+
+    probability = _float(row.get("model_probability"))
+    plate_appearances = max(
+        _float(row.get("projected_plate_appearances")),
+        _float(row.get("plate_appearance_projection")),
+        _float(row.get("projected_opportunity")),
+    )
+    lineup_bucket = str(row.get("lineup_bucket") or "").strip().lower()
+    top_order = _truthy(row.get("top_order_flag")) or lineup_bucket == "top_order"
+    pitch_fit = _float(row.get("pitch_mix_fit_score"))
+    batter_advantage = _float(row.get("batter_pitch_type_advantage"))
+    line_only = _truthy(row.get("prizepicks_line_only_market_context")) or not _truthy(
+        row.get("external_market_context_available")
+    )
+
+    if not line_only:
+        return True
+
+    if tier == "STANDARD":
+        return (
+            probability >= PUBLIC_HITTER_FS_LINE_ONLY_STANDARD_MIN_PROBABILITY
+            and plate_appearances >= PUBLIC_HITTER_FS_LINE_ONLY_MIN_PA
+            and top_order
+            and (
+                pitch_fit >= PUBLIC_HITTER_FS_LINE_ONLY_MIN_PITCH_FIT
+                or batter_advantage >= PUBLIC_HITTER_FS_LINE_ONLY_MIN_BATTER_ADVANTAGE
+            )
+        )
+
+    if tier == "GOBLIN":
+        if plate_appearances < PUBLIC_HITTER_FS_LINE_ONLY_MIN_PA:
+            return False
+        if not top_order and probability < PUBLIC_HITTER_FS_LINE_ONLY_GOBLIN_MIN_PROBABILITY:
+            return False
+        if pitch_fit < 0.10 and batter_advantage < 0.35 and not top_order:
+            return False
+
+    return True
 
 
 def _is_combo_leg(row: dict[str, Any]) -> bool:
@@ -1744,7 +2090,11 @@ def _lineup_volume_adjustment(row: dict[str, Any], *, family: str) -> float:
         if not lineup_confirmed:
             adjustment -= 0.012 if family in {"Marketed", "System"} else 0.006
         if _truthy(row.get("prizepicks_line_only_market_context")) and market == "hitter_fantasy_score":
-            adjustment -= 0.020 if family in {"Marketed", "System"} else 0.012
+            adjustment -= 0.045 if family in {"Marketed", "System"} else 0.020
+            pitch_fit = _float(row.get("pitch_mix_fit_score"))
+            batter_advantage = _float(row.get("batter_pitch_type_advantage"))
+            if pitch_fit < 0.12 and batter_advantage < 0.40:
+                adjustment -= 0.025 if family in {"Marketed", "System"} else 0.012
         if tier in {"GOBLIN", "STANDARD"} and market == "hitter_fantasy_score" and plate_appearances < 4.0:
             adjustment -= 0.018
 
@@ -1779,6 +2129,7 @@ def _segment_reliability_adjustment(row: dict[str, Any], *, family: str) -> floa
             "System": 0.32,
             "Windfall": 0.22,
             "DemonHunter": 0.12,
+            "BigSwings": 0.12,
         }.get(family, 0.25)
         adjustment -= min(PUBLIC_MODEL_PRIOR_GAP_MAX_PENALTY, gap * family_weight)
 
@@ -2020,8 +2371,16 @@ def _slip_composition_available(
     row: dict[str, Any],
     market_counts: dict[str, int],
     pitcher_workload_count: list[int],
+    team_market_counts: dict[str, int] | None = None,
 ) -> bool:
     market = _market_key(row)
+    max_market_count = int(PUBLIC_MARKET_SPECIFIC_MAX_PER_SLIP.get(market, PUBLIC_MAX_SAME_MARKET_PER_SLIP))
+    if int(market_counts.get(market, 0)) >= max_market_count:
+        return False
+    if team_market_counts is not None:
+        team_market_key = _team_market_key(row)
+        if team_market_key and int(team_market_counts.get(team_market_key, 0)) >= PUBLIC_MAX_SAME_TEAM_MARKET_PER_SLIP:
+            return False
     if int(market_counts.get(market, 0)) >= PUBLIC_MAX_SAME_MARKET_PER_SLIP:
         return False
     if market in PUBLIC_PITCHER_WORKLOAD_MARKETS:
@@ -2033,11 +2392,22 @@ def _commit_slip_composition(
     row: dict[str, Any],
     market_counts: dict[str, int],
     pitcher_workload_count: list[int],
+    team_market_counts: dict[str, int] | None = None,
 ) -> None:
     market = _market_key(row)
     market_counts[market] = int(market_counts.get(market, 0)) + 1
+    if team_market_counts is not None:
+        team_market_key = _team_market_key(row)
+        if team_market_key:
+            team_market_counts[team_market_key] = int(team_market_counts.get(team_market_key, 0)) + 1
     if market in PUBLIC_PITCHER_WORKLOAD_MARKETS:
         pitcher_workload_count[0] = int(pitcher_workload_count[0]) + 1
+
+
+def _team_market_key(row: dict[str, Any]) -> str:
+    team = str(row.get("player_team") or row.get("team") or "").strip().lower()
+    market = _market_key(row)
+    return f"{team}|{market}" if team and market else ""
 
 
 def _selection_policy_manifest() -> dict[str, Any]:
@@ -2063,6 +2433,8 @@ def _selection_policy_manifest() -> dict[str, Any]:
             "max_player_repeats_across_public": PUBLIC_PORTFOLIO_MAX_PLAYER_REPEATS,
             "max_risk_segment_repeats_across_public": PUBLIC_PORTFOLIO_MAX_RISK_SEGMENT_REPEATS,
             "priority": list(PUBLIC_PORTFOLIO_PRIORITY),
+            "public_supported_families": list(PUBLIC_SUPPORTED_FAMILIES),
+            "public_disabled_families": dict(PUBLIC_DISABLED_FAMILIES),
             "independent_family_builders": sorted(PUBLIC_PORTFOLIO_INDEPENDENT_FAMILIES),
         },
         "standard_prior_floor_for_system_and_marketed": PUBLIC_STANDARD_PRIOR_FLOOR,
@@ -2102,14 +2474,32 @@ def _selection_policy_manifest() -> dict[str, Any]:
             "pp_specific_markets": sorted(PUBLIC_PP_SPECIFIC_MARKETS),
         },
         "slip_composition_policy": _slip_composition_policy_manifest(),
+        "hitter_fantasy_score_public_gate": {
+            "scope": "Marketed/System OVER legs",
+            "demon_policy": "blocked from public slips",
+            "standard_line_only_min_probability": PUBLIC_HITTER_FS_LINE_ONLY_STANDARD_MIN_PROBABILITY,
+            "goblin_line_only_min_probability": PUBLIC_HITTER_FS_LINE_ONLY_GOBLIN_MIN_PROBABILITY,
+            "line_only_min_projected_pa": PUBLIC_HITTER_FS_LINE_ONLY_MIN_PA,
+            "line_only_min_pitch_fit": PUBLIC_HITTER_FS_LINE_ONLY_MIN_PITCH_FIT,
+            "line_only_min_batter_advantage": PUBLIC_HITTER_FS_LINE_ONLY_MIN_BATTER_ADVANTAGE,
+            "reason": "Hitter FS replay segment is materially overconfident without market confirmation or strong pitcher/batter fit.",
+        },
+        "confirmed_context_public_gate": {
+            "hitter_public_families": sorted(PUBLIC_CONFIRMED_LINEUP_REQUIRED_FAMILIES),
+            "pitcher_public_families": sorted(PUBLIC_CONFIRMED_STARTER_REQUIRED_FAMILIES),
+            "hitter_requirement": "lineup_status == confirmed, or lineup_confirmed true with batting slot, before a hitter leg can enter public slips",
+            "pitcher_requirement": "probable/confirmed starter context before pitcher workload legs can enter public slips",
+            "scoring_policy": "projected and unknown lineups remain scored and audited but are not public-slip eligible",
+        },
         "batter_action_gate": {
-            "families": ["Marketed", "System", "DemonHunter"],
-            "pass_if": "lineup_context_available or plate_appearance_projection >= 3.0",
+            "families": ["Marketed", "System", "DemonHunter", BIG_SWINGS_DISPLAY_NAME],
+            "pass_if": "confirmed lineup first, then lineup_context_available or plate_appearance_projection >= 3.0",
             "alternate_line_policy": "Goblin and Demon selections are over-only.",
             "demonhunter_enabled": bool(DEMONHUNTER_SIZES),
+            "big_swings_enabled": True,
         },
         "baseball_context_publication_gate": {
-            "scope": "all public slip families block suppress; Marketed, Windfall, and DemonHunter also block bottom_order_volume_risk",
+            "scope": "all public slip families block suppress; Marketed, Windfall, DemonHunter, and The Big Swings also block bottom_order_volume_risk",
             "hard_block_level": "suppress globally; bottom_order_volume_risk for public-facing high-conviction families",
             "caution_policy": "other caution tags remain ranking-only until family-specific replay evidence justifies a hard block",
             "source_artifacts": [
@@ -2132,6 +2522,8 @@ def _policy_to_manifest(policy: FamilyBuilderPolicy) -> dict[str, Any]:
 def _slip_composition_policy_manifest() -> dict[str, Any]:
     return {
         "max_same_market_per_slip": PUBLIC_MAX_SAME_MARKET_PER_SLIP,
+        "market_specific_max_per_slip": dict(PUBLIC_MARKET_SPECIFIC_MAX_PER_SLIP),
+        "max_same_team_market_per_slip": PUBLIC_MAX_SAME_TEAM_MARKET_PER_SLIP,
         "max_pitcher_workload_legs_per_slip": PUBLIC_MAX_PITCHER_WORKLOAD_LEGS_PER_SLIP,
         "pitcher_workload_markets": sorted(PUBLIC_PITCHER_WORKLOAD_MARKETS),
         "max_player_repeats_across_public": PUBLIC_PORTFOLIO_MAX_PLAYER_REPEATS,
