@@ -240,7 +240,7 @@ slips:
           demon: 5
     BigSwings:
       purpose: independent_high_upside_demon_pick_board
-      max_picks: 12
+      max_picks: 3
       runs_after:
         - Marketed
         - System
