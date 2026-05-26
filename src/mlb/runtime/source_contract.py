@@ -9,12 +9,25 @@ from typing import Any
 from mlb.runtime.fidelity import normalize_run_mode
 
 
+REPLAY_SINGLE_PREFLIGHT_MINIMUMS: dict[str, float] = {
+    "external_market_context_available": 0.75,
+    "lineup_context_available": 0.70,
+    "probable_pitcher_context_available": 0.85,
+    "weather_context_available": 0.85,
+    "roster_context_available": 0.90,
+    "player_history_context_available": 0.90,
+    "advanced_context_available": 0.90,
+    "statsapi_context_available": 0.90,
+}
+
+
 def enforce_replay_source_contract(source_manifest: dict[str, Any], *, context: str = "") -> None:
     """Raise when a replay run does not satisfy the live-fidelity source contract."""
     run_mode = normalize_run_mode(str(source_manifest.get("run_mode") or "replay_single"))
     if run_mode == "live":
         return
-    if str(source_manifest.get("contract_status") or "") != "fail":
+    preflight_failures = replay_single_preflight_warnings(source_manifest)
+    if str(source_manifest.get("contract_status") or "") != "fail" and not preflight_failures:
         return
     run_id = str(source_manifest.get("run_id") or "")
     failures = [
@@ -22,6 +35,7 @@ def enforce_replay_source_contract(source_manifest: dict[str, Any], *, context: 
         for warning in source_manifest.get("warnings", [])
         if isinstance(warning, dict) and warning.get("severity") != "timing_warning"
     ]
+    failures.extend(preflight_failures)
     failure_codes = _summarize_failures(failures)
     manifest_path = str(source_manifest.get("manifest_path") or "")
     suffix = f" ({context})" if context else ""
@@ -47,12 +61,14 @@ def enforce_corpus_source_contracts(corpus_dir: Path, *, root: Path | None = Non
         if not source_manifest:
             failed.append(f"{run_path.name}: missing source_selection")
             continue
-        if str(source_manifest.get("contract_status") or "") == "fail":
+        preflight_failures = replay_single_preflight_warnings(source_manifest)
+        if str(source_manifest.get("contract_status") or "") == "fail" or preflight_failures:
             failures = [
                 warning
                 for warning in source_manifest.get("warnings", [])
                 if isinstance(warning, dict) and warning.get("severity") != "timing_warning"
             ]
+            failures.extend(preflight_failures)
             failed.append(
                 f"{run_path.name}: failures={len(failures)} top={_summarize_failures(failures)}"
             )
@@ -94,6 +110,47 @@ def _resolve_path(value: str, *, root: Path | None) -> Path:
     return root / path
 
 
+def replay_single_preflight_warnings(
+    source_manifest: dict[str, Any],
+    *,
+    minimums: dict[str, float] | None = None,
+) -> list[dict[str, Any]]:
+    """Return hard failures for one-off replays with insufficient live-context fidelity."""
+    run_mode = normalize_run_mode(str(source_manifest.get("run_mode") or "replay_single"))
+    if run_mode != "replay_single":
+        return []
+    source_completeness = source_manifest.get("source_completeness")
+    if not isinstance(source_completeness, dict):
+        source_completeness = {}
+    thresholds = minimums or REPLAY_SINGLE_PREFLIGHT_MINIMUMS
+    failures: list[dict[str, Any]] = []
+    for key, minimum in thresholds.items():
+        value = _float_value(source_completeness.get(key))
+        if value < minimum:
+            failures.append(
+                {
+                    "code": "single_replay_preflight_context_below_minimum",
+                    "severity": "failure",
+                    "source": key,
+                    "value": value,
+                    "minimum": minimum,
+                }
+            )
+    line_only_rate = _float_value(source_completeness.get("prizepicks_line_only_market_context"))
+    max_line_only_rate = max(0.0, 1.0 - float(thresholds.get("external_market_context_available", 0.75)))
+    if line_only_rate > max_line_only_rate:
+        failures.append(
+            {
+                "code": "single_replay_preflight_line_only_market_context_too_high",
+                "severity": "failure",
+                "source": "prizepicks_line_only_market_context",
+                "value": line_only_rate,
+                "maximum": max_line_only_rate,
+            }
+        )
+    return failures
+
+
 def _summarize_failures(failures: list[dict[str, Any]]) -> str:
     counts: dict[str, int] = {}
     for failure in failures:
@@ -104,6 +161,13 @@ def _summarize_failures(failures: list[dict[str, Any]]) -> str:
     if not counts:
         return "none"
     return ",".join(f"{key}={value}" for key, value in sorted(counts.items())[:8])
+
+
+def _float_value(value: Any) -> float:
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return 0.0
 
 
 def _load_json(path: Path) -> dict[str, Any]:
