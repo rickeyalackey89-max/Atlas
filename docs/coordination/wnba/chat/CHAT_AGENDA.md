@@ -17,7 +17,7 @@ Statuses:
 
 | ID | Topic | Status | Revisit trigger | Why retained |
 |---|---|---|---|---|
-| WNBA-3L-003 | V2 learner-vs-gate decomposition audit | CANDIDATE_NEXT | User authorizes next Codex task | V2 action results collapsed to control because nested thresholds frequently selected KEEP/INF; at least Jul06 and Jul31 had winning challengers identified before the gate |
+| WNBA-3L-003 | V2 learner-vs-gate decomposition audit | NEXT_AUTHORIZED | Codex completes Prime Delegation diagnostic | V2 action results collapsed to control because nested thresholds frequently selected KEEP/INF; at least Jul06 and Jul31 had winning challengers identified before the gate |
 | WNBA-3L-004 | Selective use of prior pointwise logistic substitutions | PARKED | Gate decomposition complete | Prior pointwise logistic is still best stored 3L OOF result at 22-7+1; may deserve a selective/confidence gate rather than a full rerank |
 | WNBA-3L-005 | Further relational learner research | PARKED | Gate decomposition shows repeatable pre-gate challenger signal | Avoid another expensive relational sweep unless the existing sealed outputs justify it |
 | WNBA-3L-006 | Nonlinear/GBM local learner | REVISIT_ON_TRIGGER | Linear/relational methods exhausted with evidence and sample design supports honest OOS | High overfit risk on small WNBA date count; do not jump here casually |
