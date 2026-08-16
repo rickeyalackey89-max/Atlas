@@ -1,6 +1,6 @@
 {
   "schema_version": "atlas_prime_delegation_wnba_current_state_v1",
-  "captured_at_ct": "2026-08-16T15:51:00-05:00",
+  "captured_at_ct": "2026-08-16T16:04:00-05:00",
   "snapshot_not_authority": true,
   "sport": "WNBA",
   "source_repository": "rickeyalackey89-max/Atlas-WNBA",
@@ -18,7 +18,6 @@
   },
   "live": {
     "probability_package_id": "gen2_rp24_full_chain_v2_20260801",
-    "active_runtime_sha256": "b9b71dde7d3ace14ce5ceb69e1476ed7b291cc0cfb880bc5d4f7a9207bb4098e",
     "builder_policy_id": "wnba_rc1_provisional_live",
     "builder_policy_sha256": "5bfcf019d83371cd381e99ae36171551d4fdc8da50fb96a68dcdd7293a06bed9",
     "builder_package_id": "972f15cf8a6f07f07593b8adc48f5731670305c78aa8a721a4b77e05395270ba",
@@ -41,7 +40,7 @@
       "losses": 7
     },
     "3L": {
-      "status": "ACTIVE_RESEARCH_R0_REVIEWED",
+      "status": "ACTIVE_RESEARCH_R1_AUTHORIZED",
       "control": "20-9-1",
       "ranking_failures": 8,
       "supply_impossible_dates": ["2026-07-08"],
@@ -57,10 +56,21 @@
         "G2": "FEASIBLE_REQUIRES_POINTWISE_PRIOR_ONLY_REGENERATION",
         "G3": "FEASIBLE_REQUIRES_POINTWISE_AND_A_B_D_PRIOR_ONLY_REGENERATION",
         "full_pointwise_cost_projection": "1-5 minutes",
-        "full_G1_G3_cost_projection": "15-45 minutes with shared caches",
-        "recommended_next_tier": "R1_ACTIONABILITY_CANARY"
+        "full_G1_G3_cost_projection": "15-45 minutes with shared caches"
       },
-      "chat_interpretation": "R0_PASSED_GO_NO_GO_FOR_SMALL_R1_CANARY_NOT_FOR_R2_R3"
+      "r1_authorization": {
+        "execution_tier": "R1_ACTIONABILITY_CANARY",
+        "prime_work_order": "docs/coordination/wnba/codex/archive/2026-08-16_3l_historical_asof_gate_r1.md",
+        "publication_commit": "c356db51249a4a4e0c44e6590523f040eee03bac",
+        "target_count": 4,
+        "target_rule": "first three chronologically eligible G3 targets plus final applicable date 2026-08-13",
+        "runtime_bound": "<=15 minutes",
+        "performance_backtest_allowed": false,
+        "gate_selection_allowed": false,
+        "validation_reads_allowed": 0,
+        "lockbox_reads_allowed": 0
+      },
+      "chat_interpretation": "R1_CANARY_AUTHORIZED_TO_PROVE_CAUSAL_REGENERATION_PARITY_ACTIONABILITY_AND_COST_ONLY"
     },
     "4L": {
       "status": "PARKED_PENDING_FINAL_3L_DEPLETION"
@@ -70,8 +80,9 @@
     }
   },
   "next_strategy": {
-    "status": "CANDIDATE_NEXT_NOT_CODEX_AUTHORIZED",
-    "topic": "R1 actionability canary for prior-only historical-as-of pointwise plus A/B/D regeneration",
-    "purpose": "Prove causal regeneration, cold start, selection sealing, signal/action variation, cache reuse, and measured runtime before any replay-scale or full experiment authorization"
+    "status": "R1_ACTIONABILITY_CANARY_USER_AUTHORIZED",
+    "prime_work_order": "docs/coordination/wnba/codex/archive/2026-08-16_3l_historical_asof_gate_r1.md",
+    "topic": "Four-target prior-only pointwise plus A/B/D regeneration canary with final-date parity and measured runtime",
+    "required_stop": "BLOCKED_USER_REVIEW_WNBA_3L_HISTORICAL_ASOF_GATE_R1"
   }
 }
