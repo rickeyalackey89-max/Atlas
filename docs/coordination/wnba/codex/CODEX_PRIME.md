@@ -62,46 +62,69 @@ If no permanent repository changes are produced, do not invent a commit.
 
 The preferred user handoff is the final SHA plus a short request for Chat review.
 
-## Active user-authorized task
+## Last completed delegation
 
 Execution tier: **R1_ACTIONABILITY_CANARY**
 
+WNBA result commit:
+
+`6789f0a595bf3956f42146e8742005febd7cc080`
+
+Chat review:
+
+- causal prior-only pointwise + relational regeneration worked on the first three sealed targets;
+- no temporal leakage detected;
+- G3 can score a pointwise proposal when relational nominees differ;
+- shared caches worked without G3 duplicate refits;
+- final target hit the 900-second watchdog before relational parity could complete;
+- current A/B/D full causal topology projects to ~5.1 hours;
+- full pointwise-only causal sequence projects to ~2.2 minutes;
+- therefore relational G1/G3 is not yet authorized.
+
+## Active user-authorized task
+
+Execution tier: **R2_BOUNDED_PILOT**
+
 Read and execute exactly:
 
-`docs/coordination/wnba/codex/archive/2026-08-16_3l_historical_asof_gate_r1.md`
+`docs/coordination/wnba/codex/archive/2026-08-16_3l_historical_asof_pointwise_r2.md`
 
 Work-order publication commit:
 
-`c356db51249a4a4e0c44e6590523f040eee03bac`
+`efbf0f494e5d176552f4d07952d191bf76c304a7`
 
 Purpose:
 
-**Prove prior-only pointwise + A/B/D regeneration, time-arrow sealing, final-target parity, G1/G2/G3 action interfaces, cache reuse, and measured runtime on a four-target deterministic canary before any replay-scale experiment is considered.**
+**Run the complete strict historical-as-of pointwise sequence only, using the existing frozen pointwise procedure with learned state regenerated from `t < D` history for every target.**
 
 Expected starting WNBA commit:
 
-`f2e40be6d1beff5db0e6ed1dc178a68d21f9b512`
+`6789f0a595bf3956f42146e8742005febd7cc080`
 
 Expected current WNBA stop:
 
-`BLOCKED_USER_REVIEW_WNBA_3L_HISTORICAL_ASOF_GATE_R0`
+`BLOCKED_USER_REVIEW_WNBA_3L_HISTORICAL_ASOF_GATE_R1`
 
 Critical constraints:
 
-- four canary targets only;
-- first three chronologically eligible G3 targets + final applicable target `2026-08-13`;
-- all learned state strictly from `t < D`;
-- no gate predicate/threshold/winner selection;
-- no full historical replay or 30-date performance result;
-- no validation or lockbox;
+- pointwise only;
+- 30-date applicable ledger with `2026-06-17` cold-start Atlas control and expected 29 pointwise fits thereafter;
+- strict `t < D` learned state;
+- fixed existing pointwise features / `C=1` / preprocessing / weighting / tie semantics;
+- no relational A/B/C/D regeneration;
+- no G1/G3;
+- no gate/threshold/predicate tuning;
+- final-date pointwise parity required;
+- hard runtime budget 10 minutes;
+- validation reads 0;
+- lockbox reads 0;
 - no Live/model mutation;
-- target runtime <= 15 minutes;
-- if resource bound is reached, stop at safe checkpoint rather than silently continuing.
+- no promotion authority.
 
-Codex must reconcile this user authorization through the existing `slip-builders` lane before any WNBA mutation or canary execution.
+Codex must reconcile this user authorization through the existing `slip-builders` lane before any WNBA mutation or R2 execution.
 
 ## Required final stop
 
-`BLOCKED_USER_REVIEW_WNBA_3L_HISTORICAL_ASOF_GATE_R1`
+`BLOCKED_USER_REVIEW_WNBA_3L_HISTORICAL_ASOF_POINTWISE_R2`
 
-After completion, do not begin R2/R3, another learner, 4L, or FromDeep automatically. Commit/push the R1 evidence, stop, and return the final WNBA SHA for Chat/user review.
+After completion, do not begin relational profiling, G1/G3, R3, another learner, 4L, or FromDeep automatically. Commit/push the R2 evidence, stop, and return the final WNBA SHA for Chat/user review.
