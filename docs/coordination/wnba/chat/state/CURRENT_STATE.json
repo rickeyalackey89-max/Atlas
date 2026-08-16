@@ -1,6 +1,6 @@
 {
   "schema_version": "atlas_prime_delegation_wnba_current_state_v1",
-  "captured_at_ct": "2026-08-16T14:38:00-05:00",
+  "captured_at_ct": "2026-08-16T15:17:00-05:00",
   "snapshot_not_authority": true,
   "sport": "WNBA",
   "source_repository": "rickeyalackey89-max/Atlas-WNBA",
@@ -48,7 +48,7 @@
       "losses": 7
     },
     "3L": {
-      "status": "ACTIVE_RESEARCH_USER_REVIEW",
+      "status": "ACTIVE_RESEARCH_R0_AUTHORIZED",
       "control": "20-9-1",
       "ranking_failures": 8,
       "supply_impossible_dates": ["2026-07-08"],
@@ -69,7 +69,7 @@
         "V2-D_ungated": "22-8-0; repairs Jul06/Jul31; harm Aug01; INF 29/30",
         "A_B_D_positive_consensus": "17 dates; 2 beneficial; 0 harmful; 13 neutral; 1 nonbinary; 1 supply-impossible; post-hoc only"
       },
-      "chat_interpretation": "GATE_DOMINATED_A_D_WITH_PROMISING_POSTHOC_CROSS_ARM_AGREEMENT_SIGNAL"
+      "chat_interpretation": "HISTORICAL_ASOF_GATE_PROCEDURE_IS_NEXT_RESEARCH_ROUTE"
     },
     "4L": {
       "status": "PARKED_PENDING_FINAL_3L_DEPLETION"
@@ -79,7 +79,9 @@
     }
   },
   "next_strategy": {
-    "status": "CANDIDATE_NEXT_NOT_CODEX_AUTHORIZED",
-    "topic": "Design an honest predeclared selective gate experiment for cross-arm agreement and compare against selective pointwise logistic gating without opening validation/lockbox until explicitly authorized"
+    "status": "R0_ARTIFACT_AUDIT_USER_AUTHORIZED",
+    "prime_work_order": "docs/coordination/wnba/codex/archive/2026-08-16_3l_historical_asof_gate_r0.md",
+    "topic": "Audit temporal legality and formalize G1 cross-arm, G2 selective pointwise, and G3 pointwise-plus-relational-witness historical-as-of gate procedures before any fitting or replay",
+    "critical_temporal_legality_issue": "Stored grouped-date OOF/LODO pointwise and V2 relational signals may include later-than-D training dates and therefore cannot be assumed reusable in a causal as-of replay"
   }
 }
