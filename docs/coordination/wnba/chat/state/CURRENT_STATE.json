@@ -1,17 +1,17 @@
 {
   "schema_version": "atlas_prime_delegation_wnba_current_state_v1",
-  "captured_at_ct": "2026-08-16T17:32:00-05:00",
+  "captured_at_ct": "2026-08-16T18:04:00-05:00",
   "snapshot_not_authority": true,
   "sport": "WNBA",
   "source_repository": "rickeyalackey89-max/Atlas-WNBA",
   "source_branch": "builder-method-contract-v1",
-  "source_head": "5eb96d83996e3f65c2ce021a5a3897b43f63da04",
+  "source_head": "64ac175dc1a2ec75f39fa5f9f91af4caed711fc2",
   "builder": {
     "status": "BLOCKED_USER_REVIEW",
     "active_stage_id": "builder_stage_5",
-    "active_step_id": "builder_s5_3l_historical_asof_pointwise_r2_user_review",
-    "method_step_id": "3l_historical_asof_pointwise_r2",
-    "completion_marker": "BLOCKED_USER_REVIEW_WNBA_3L_HISTORICAL_ASOF_POINTWISE_R2",
+    "active_step_id": "builder_s5_3l_pointwise_freeze_readiness_r0_user_review",
+    "method_step_id": "3l_pointwise_freeze_readiness_r0",
+    "completion_marker": "BLOCKED_USER_REVIEW_WNBA_3L_POINTWISE_FREEZE_READINESS_R0",
     "controller_skill": "slip-builders",
     "validation_reads": 0,
     "lockbox_reads": 0
@@ -40,51 +40,56 @@
       "losses": 7
     },
     "3L": {
-      "status": "ACTIVE_RESEARCH_FREEZE_READINESS_R0_AUTHORIZED",
-      "control": "20-9-1",
+      "status": "FREEZE_READY_PENDING_EXPLICIT_USER_AUTHORIZATION",
       "historical_asof_pointwise_r2": {
         "commit": "5eb96d83996e3f65c2ce021a5a3897b43f63da04",
         "diagnostic": "POINTWISE_ASOF_POSITIVE_NET",
         "evidence_language": "HISTORICAL_ASOF_PROCEDURAL_EVIDENCE",
         "record": "24-6-0",
         "control_record": "20-9-1",
-        "repairs": ["2026-06-20", "2026-07-03", "2026-07-06", "2026-07-31"],
-        "harm_dates": ["2026-08-01"],
-        "nonbinary_to_win_dates": ["2026-06-27"],
-        "remaining_loss_dates": ["2026-07-07", "2026-07-08", "2026-07-28", "2026-08-01", "2026-08-08", "2026-08-13"],
         "selection_churn": "29/30",
-        "fit_count": 29,
-        "elapsed_seconds": 10.105086,
         "time_arrow_passed": true,
-        "final_date_parity": true,
+        "final_date_parity": true
+      },
+      "freeze_readiness_r0": {
+        "commit": "64ac175dc1a2ec75f39fa5f9f91af4caed711fc2",
+        "disposition": "POINTWISE_3L_RESEARCH_FREEZE_READY",
+        "recommendation": "FREEZE_3L_POINTWISE_THEN_OPEN_4L_RESEARCH",
+        "actual_freeze_executed": false,
+        "failure_classifications": {
+          "2026-07-07": "TOP_RANK_DISCRIMINATION",
+          "2026-07-08": "SUPPLY_IMPOSSIBLE",
+          "2026-07-28": "TOP_RANK_DISCRIMINATION",
+          "2026-08-01": "ALREADY_CORRECT_CONTROL_DAMAGE",
+          "2026-08-08": "TOP_RANK_DISCRIMINATION",
+          "2026-08-13": "TOP_RANK_DISCRIMINATION"
+        },
         "validation_reads": 0,
         "lockbox_reads": 0
       },
-      "freeze_readiness_r0_authorization": {
-        "execution_tier": "R0_ARTIFACT_AUDIT",
-        "prime_work_order": "docs/coordination/wnba/codex/archive/2026-08-16_3l_pointwise_freeze_readiness_r0.md",
-        "publication_commit": "5549fee8b08aa5adc17b2097c00b2fb7f9a4b093",
-        "scope": "freeze-contract completeness, six-loss forensic with five meaningful ranking/error dates plus Jul08 supply-impossible, and exact post-pointwise 4L residual availability inventory",
-        "actual_freeze_allowed": false,
-        "candidate_generation_allowed": false,
-        "four_leg_research_allowed": false,
-        "relational_allowed": false,
-        "validation_reads_allowed": 0,
-        "lockbox_reads_allowed": 0
-      },
-      "chat_interpretation": "CAUSAL_POINTWISE_IS_LEADING_3L_BACKBONE_CANDIDATE_PENDING_FREEZE_READINESS_AUDIT"
+      "chat_interpretation": "CAUSAL_POINTWISE_IS_READY_FOR_SEPARATE_WORKING_3L_RESEARCH_DEPLETION_FREEZE"
     },
     "4L": {
-      "status": "PARKED_PENDING_SEPARATE_3L_FREEZE_DECISION"
+      "status": "PARKED_PENDING_3L_FREEZE_EXECUTION",
+      "post_pointwise_residual": {
+        "candidate_count": 481,
+        "unique_candidate_count": 481,
+        "date_count": 30,
+        "zero_residual_date_count": 15,
+        "inventory_sha256": "5500a88c5d14c3a2e6d5f043decc1d88500678986035bce8a431560ac343bd09",
+        "depletion_semantics": "exact_road_identity_only",
+        "four_leg_outcome_fields_retained": 0,
+        "scoring_ranking_or_grading_executed": false
+      },
+      "prior_context_diagnostic_status": "HISTORICAL_ONLY_NOT_CURRENT_SURFACE"
     },
     "FromDeep": {
       "status": "SEPARATE_UNCHANGED"
     }
   },
   "next_strategy": {
-    "status": "R0_POINTWISE_FREEZE_READINESS_USER_AUTHORIZED",
-    "prime_work_order": "docs/coordination/wnba/codex/archive/2026-08-16_3l_pointwise_freeze_readiness_r0.md",
-    "topic": "Audit whether causal pointwise 24-6-0 is ready for a working 3L research/depletion freeze and inventory the exact downstream 4L residual surface",
-    "required_stop": "BLOCKED_USER_REVIEW_WNBA_3L_POINTWISE_FREEZE_READINESS_R0"
+    "status": "CANDIDATE_NEXT_NOT_CODEX_AUTHORIZED",
+    "topic": "Execute a separate causal-pointwise 3L research/depletion freeze, then open 4L research on the exact 481-candidate post-pointwise residual inventory",
+    "required_user_action": "explicit authorization of actual 3L freeze"
   }
 }
