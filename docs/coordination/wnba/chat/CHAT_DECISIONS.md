@@ -102,3 +102,34 @@ Prime Delegation archive:
 `docs/coordination/wnba/codex/archive/2026-08-16_3l_v2_learner_gate_decomposition.md`
 
 This is diagnostic evidence only and cannot itself promote a post-hoc threshold.
+
+## 2026-08-16 — V2 learner-vs-gate decomposition accepted
+
+Reviewed WNBA result commit:
+
+`bc71d9442580fe69812d6dbad87545006aabdd4e`
+
+Decision:
+
+Accept the primary diagnosis `V2_GATE_DOMINATED_USEFUL_CHALLENGER_SIGNAL` as the correct strategic interpretation of V2-A/D action failure.
+
+Evidence:
+
+- V2-A pre-gate challenger result: 22-8-0, repairing 2026-07-06 and 2026-07-31 while damaging 2026-08-01; `INF` on 27/30 dates; both beneficial challengers blocked by `INF`.
+- V2-D produced the same repair/damage pattern; `INF` on 29/30 dates; both beneficial challengers blocked by `INF`.
+- V2-B was net 0 with 2 repairs / 2 harms and remains weak/unstable.
+- V2-C produced 3 repairs / 2 harms but remains weak/unstable because its broader discrimination evidence was poor and its gate selected `INF` on 30/30 dates.
+- no architecture had a beneficial challenger blocked by a finite threshold.
+- A/B/D three-way challenger consensus with all three margins positive occurred on 17 discovery dates and, post hoc, contained 2 beneficial / 0 harmful / 13 neutral / 1 nonbinary / 1 supply-impossible classifications. The two repairs were 2026-07-06 and 2026-07-31.
+
+Strategic interpretation:
+
+The strongest new signal is not a single relational learner. It is **cross-arm agreement/disagreement as a possible confidence gate**. A/B/D positive consensus retrospectively isolates two repairs with no damaged control wins and would map the 20-9-1 control to 22-7-1 if it had been predeclared.
+
+Methodological restriction:
+
+That consensus rule was identified after discovery settlement was visible. Its retrospective result is development-consumed diagnostic evidence, not OOS evidence, and cannot be promoted or represented as a validated 22-7-1 method.
+
+Next decision required:
+
+Design an honest predeclared evaluation route for the agreement-gate hypothesis and compare it with a selective gate around the stored pointwise logistic. Do not open validation or lockbox, and do not launch another learner, without explicit user authorization.
