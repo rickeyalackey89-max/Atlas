@@ -1,17 +1,17 @@
 {
   "schema_version": "atlas_prime_delegation_wnba_current_state_v1",
-  "captured_at_ct": "2026-08-16T13:30:00-05:00",
+  "captured_at_ct": "2026-08-16T14:38:00-05:00",
   "snapshot_not_authority": true,
   "sport": "WNBA",
   "source_repository": "rickeyalackey89-max/Atlas-WNBA",
   "source_branch": "builder-method-contract-v1",
-  "source_head": "879c1c4455821094f7ffc754a557a6097a2988ba",
+  "source_head": "bc71d9442580fe69812d6dbad87545006aabdd4e",
   "builder": {
     "status": "BLOCKED_USER_REVIEW",
     "active_stage_id": "builder_stage_5",
-    "active_step_id": "builder_s5_3l_relational_sweep_v2_user_review",
-    "method_step_id": "3l_relational_architecture_sweep_v2",
-    "completion_marker": "BLOCKED_USER_REVIEW_WNBA_3L_RELATIONAL_ARCHITECTURE_SWEEP_V2",
+    "active_step_id": "builder_s5_3l_v2_learner_gate_decomposition_user_review",
+    "method_step_id": "3l_v2_learner_gate_decomposition",
+    "completion_marker": "BLOCKED_USER_REVIEW_WNBA_3L_V2_LEARNER_GATE_DECOMPOSITION",
     "controller_skill": "slip-builders",
     "validation_reads": 0,
     "lockbox_reads": 0
@@ -54,13 +54,22 @@
       "supply_impossible_dates": ["2026-07-08"],
       "prior_pointwise_logistic": "22-7-1",
       "pairwise_v1": "19-10-1",
-      "relational_v2_action_results": {
+      "relational_v2_gated_action_results": {
         "V2-A": "20-9-1",
         "V2-B": "20-9-1",
         "V2-C": "20-9-1",
         "V2-D": "20-9-1"
       },
-      "chat_interpretation": "RELATIONAL_SIGNAL_WEAK_OR_UNSTABLE_AND_OVERRIDE_GATE_CONFOUNDED"
+      "v2_gate_decomposition": {
+        "commit": "bc71d9442580fe69812d6dbad87545006aabdd4e",
+        "primary_diagnosis": "V2_GATE_DOMINATED_USEFUL_CHALLENGER_SIGNAL",
+        "V2-A_ungated": "22-8-0; repairs Jul06/Jul31; harm Aug01; INF 27/30",
+        "V2-B_ungated": "21-9-0; repairs 2; harms 2; INF 28/30",
+        "V2-C_ungated": "22-8-0; repairs Jul03/Jul06/Jul07; harms Jun19/Jul02; INF 30/30",
+        "V2-D_ungated": "22-8-0; repairs Jul06/Jul31; harm Aug01; INF 29/30",
+        "A_B_D_positive_consensus": "17 dates; 2 beneficial; 0 harmful; 13 neutral; 1 nonbinary; 1 supply-impossible; post-hoc only"
+      },
+      "chat_interpretation": "GATE_DOMINATED_A_D_WITH_PROMISING_POSTHOC_CROSS_ARM_AGREEMENT_SIGNAL"
     },
     "4L": {
       "status": "PARKED_PENDING_FINAL_3L_DEPLETION"
@@ -71,6 +80,6 @@
   },
   "next_strategy": {
     "status": "CANDIDATE_NEXT_NOT_CODEX_AUTHORIZED",
-    "topic": "V2 learner-versus-override-gate decomposition using already-sealed OOS scores and discovery settlement"
+    "topic": "Design an honest predeclared selective gate experiment for cross-arm agreement and compare against selective pointwise logistic gating without opening validation/lockbox until explicitly authorized"
   }
 }
