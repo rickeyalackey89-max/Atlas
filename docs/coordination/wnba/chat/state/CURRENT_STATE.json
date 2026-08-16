@@ -1,17 +1,17 @@
 {
   "schema_version": "atlas_prime_delegation_wnba_current_state_v1",
-  "captured_at_ct": "2026-08-16T17:01:00-05:00",
+  "captured_at_ct": "2026-08-16T17:27:00-05:00",
   "snapshot_not_authority": true,
   "sport": "WNBA",
   "source_repository": "rickeyalackey89-max/Atlas-WNBA",
   "source_branch": "builder-method-contract-v1",
-  "source_head": "6789f0a595bf3956f42146e8742005febd7cc080",
+  "source_head": "5eb96d83996e3f65c2ce021a5a3897b43f63da04",
   "builder": {
     "status": "BLOCKED_USER_REVIEW",
     "active_stage_id": "builder_stage_5",
-    "active_step_id": "builder_s5_3l_historical_asof_gate_r1_user_review",
-    "method_step_id": "3l_historical_asof_gate_r1",
-    "completion_marker": "BLOCKED_USER_REVIEW_WNBA_3L_HISTORICAL_ASOF_GATE_R1",
+    "active_step_id": "builder_s5_3l_historical_asof_pointwise_r2_user_review",
+    "method_step_id": "3l_historical_asof_pointwise_r2",
+    "completion_marker": "BLOCKED_USER_REVIEW_WNBA_3L_HISTORICAL_ASOF_POINTWISE_R2",
     "controller_skill": "slip-builders",
     "validation_reads": 0,
     "lockbox_reads": 0
@@ -40,7 +40,7 @@
       "losses": 7
     },
     "3L": {
-      "status": "ACTIVE_RESEARCH_POINTWISE_R2_AUTHORIZED",
+      "status": "ACTIVE_RESEARCH_POINTWISE_R2_REVIEWED",
       "control": "20-9-1",
       "ranking_failures": 8,
       "supply_impossible_dates": ["2026-07-08"],
@@ -53,25 +53,28 @@
         "commit": "6789f0a595bf3956f42146e8742005febd7cc080",
         "primary_disposition": "R1_FAIL_RESOURCE_BOUND",
         "causal_mechanism": "PASSED_ON_FIRST_THREE_SEALED_TARGETS",
-        "temporal_leakage_detected": false,
-        "final_target_parity": "NOT_COMPLETED_RESOURCE_BOUND",
-        "pointwise_full_projection": "~132.5 seconds / 29 fits",
-        "A_B_D_full_projection": "~18232 seconds / ~5.1 hours",
-        "G3_full_projection": "~18365 seconds / ~5.1 hours",
+        "A_B_D_full_projection": "~5.1 hours",
         "relational_execution_authorized": false
       },
-      "pointwise_r2_authorization": {
-        "execution_tier": "R2_BOUNDED_PILOT",
-        "prime_work_order": "docs/coordination/wnba/codex/archive/2026-08-16_3l_historical_asof_pointwise_r2.md",
-        "publication_commit": "efbf0f494e5d176552f4d07952d191bf76c304a7",
-        "scope": "complete 30-date historical-as-of pointwise ledger with 29 prior-only fits and one cold-start control date",
-        "runtime_bound": "<=10 minutes",
-        "relational_allowed": false,
-        "gate_tuning_allowed": false,
-        "validation_reads_allowed": 0,
-        "lockbox_reads_allowed": 0
+      "historical_asof_pointwise_r2": {
+        "commit": "5eb96d83996e3f65c2ce021a5a3897b43f63da04",
+        "diagnostic": "POINTWISE_ASOF_POSITIVE_NET",
+        "evidence_language": "HISTORICAL_ASOF_PROCEDURAL_EVIDENCE",
+        "record": "24-6-0",
+        "control_record": "20-9-1",
+        "repairs": ["2026-06-20", "2026-07-03", "2026-07-06", "2026-07-31"],
+        "harm_dates": ["2026-08-01"],
+        "nonbinary_to_win_dates": ["2026-06-27"],
+        "remaining_loss_dates": ["2026-07-07", "2026-07-08", "2026-07-28", "2026-08-01", "2026-08-08", "2026-08-13"],
+        "selection_churn": "29/30",
+        "fit_count": 29,
+        "elapsed_seconds": 10.105086,
+        "time_arrow_passed": true,
+        "final_date_parity": true,
+        "validation_reads": 0,
+        "lockbox_reads": 0
       },
-      "chat_interpretation": "POINTWISE_CAUSAL_BENCHMARK_BEFORE_ANY_FURTHER_RELATIONAL_SPEND"
+      "chat_interpretation": "CAUSAL_POINTWISE_IS_CURRENT_LEADING_3L_BACKBONE_CANDIDATE_RELATIONAL_MUST_EARN_INCREMENTAL_VALUE"
     },
     "4L": {
       "status": "PARKED_PENDING_FINAL_3L_DEPLETION"
@@ -81,9 +84,8 @@
     }
   },
   "next_strategy": {
-    "status": "R2_POINTWISE_USER_AUTHORIZED",
-    "prime_work_order": "docs/coordination/wnba/codex/archive/2026-08-16_3l_historical_asof_pointwise_r2.md",
-    "topic": "Complete strict t<D pointwise historical-as-of sequence before deciding whether relational witness research warrants further compute",
+    "status": "CANDIDATE_NEXT_NOT_CODEX_AUTHORIZED",
+    "topic": "Decide whether causal pointwise 24-6-0 should be frozen as the working 3L research backbone before spending on relational witnesses",
     "required_stop": "BLOCKED_USER_REVIEW_WNBA_3L_HISTORICAL_ASOF_POINTWISE_R2"
   }
 }
