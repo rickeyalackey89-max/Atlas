@@ -164,3 +164,31 @@ Multi-arm experiments must prove during the runway that learner/arm differences 
 Long-running work must expose passive progress/heartbeat, completion-sentinel, and process-exit observability so completion/failure/stall is recognized promptly rather than remaining unnoticed for hours.
 
 Efficiency cannot weaken statistical rigor: no protected-data peeking, no serial heldout reaction where global sealing is required, and no post-hoc promotion.
+
+## 2026-08-16 — Historical as-of gate procedure adopted
+
+Decision:
+
+Use historical as-of / walk-forward / prequential simulation as the preferred retrospective procedure for evaluating an adaptive 3L gate-learning algorithm.
+
+For every historical target date `D`, the causal sequence must be:
+
+`settled history t<D -> train/update procedure -> freeze state -> expose D pregame surface -> freeze selection -> reveal D outcome -> append D to history`.
+
+The procedure may be fixed while learned state changes through time. No same-date or future-date information may affect D.
+
+Critical temporal-legality correction:
+
+Existing pointwise logistic and V2 relational results are grouped-date OOF/LODO evidence, but target-date exclusion alone does not make their stored predictions historical-as-of legal. If the model for D trained on any date later than D, that stored signal cannot be reused as a causal as-of input. The R0 audit must classify each base signal as reusable, prior-only regeneratable, or historically unavailable.
+
+Evidence-language restriction:
+
+Because the current gate/procedure family was designed after viewing discovery evidence, replay on those same dates can provide **historical as-of procedural evidence**, not pristine never-before-seen hypothesis evidence. Future dates after procedure freeze provide prospective evidence.
+
+User authorization:
+
+Authorize only an `R0_ARTIFACT_AUDIT` to formalize the time-arrow contract, audit base-signal temporal legality, define cold-start behavior, blueprint G1/G2/G3, and estimate causal replay cost. No fitting or historical replay is authorized at R0.
+
+Prime work order:
+
+`docs/coordination/wnba/codex/archive/2026-08-16_3l_historical_asof_gate_r0.md`
