@@ -1,17 +1,17 @@
 {
   "schema_version": "atlas_prime_delegation_wnba_current_state_v1",
-  "captured_at_ct": "2026-08-16T16:04:00-05:00",
+  "captured_at_ct": "2026-08-16T17:01:00-05:00",
   "snapshot_not_authority": true,
   "sport": "WNBA",
   "source_repository": "rickeyalackey89-max/Atlas-WNBA",
   "source_branch": "builder-method-contract-v1",
-  "source_head": "f2e40be6d1beff5db0e6ed1dc178a68d21f9b512",
+  "source_head": "6789f0a595bf3956f42146e8742005febd7cc080",
   "builder": {
     "status": "BLOCKED_USER_REVIEW",
     "active_stage_id": "builder_stage_5",
-    "active_step_id": "builder_s5_3l_historical_asof_gate_r0_user_review",
-    "method_step_id": "3l_historical_asof_gate_r0",
-    "completion_marker": "BLOCKED_USER_REVIEW_WNBA_3L_HISTORICAL_ASOF_GATE_R0",
+    "active_step_id": "builder_s5_3l_historical_asof_gate_r1_user_review",
+    "method_step_id": "3l_historical_asof_gate_r1",
+    "completion_marker": "BLOCKED_USER_REVIEW_WNBA_3L_HISTORICAL_ASOF_GATE_R1",
     "controller_skill": "slip-builders",
     "validation_reads": 0,
     "lockbox_reads": 0
@@ -40,37 +40,38 @@
       "losses": 7
     },
     "3L": {
-      "status": "ACTIVE_RESEARCH_R1_AUTHORIZED",
+      "status": "ACTIVE_RESEARCH_POINTWISE_R2_AUTHORIZED",
       "control": "20-9-1",
       "ranking_failures": 8,
       "supply_impossible_dates": ["2026-07-08"],
       "prior_pointwise_logistic": "22-7-1 grouped-date OOF evidence",
-      "pairwise_v1": "19-10-1",
       "historical_asof_r0": {
         "commit": "f2e40be6d1beff5db0e6ed1dc178a68d21f9b512",
-        "decision": "ASOF_GATE_PROCEDURE_FEASIBLE_BUT_REQUIRES_BASE_REGENERATION",
-        "stored_pointwise_v2_reuse": "ILLEGAL_ON_29_OF_30_TARGETS_DUE_TO_LATER_THAN_D_TRAINING",
-        "candidate_rank_surface": "ASOF_LEGAL_REUSABLE",
-        "frozen_2l_depletion": "ASOF_LEGAL_REUSABLE_WITH_OUTCOME_COLUMNS_EXCLUDED",
-        "G1": "FEASIBLE_REQUIRES_A_B_D_PRIOR_ONLY_REGENERATION",
-        "G2": "FEASIBLE_REQUIRES_POINTWISE_PRIOR_ONLY_REGENERATION",
-        "G3": "FEASIBLE_REQUIRES_POINTWISE_AND_A_B_D_PRIOR_ONLY_REGENERATION",
-        "full_pointwise_cost_projection": "1-5 minutes",
-        "full_G1_G3_cost_projection": "15-45 minutes with shared caches"
+        "decision": "ASOF_GATE_PROCEDURE_FEASIBLE_BUT_REQUIRES_BASE_REGENERATION"
       },
-      "r1_authorization": {
-        "execution_tier": "R1_ACTIONABILITY_CANARY",
-        "prime_work_order": "docs/coordination/wnba/codex/archive/2026-08-16_3l_historical_asof_gate_r1.md",
-        "publication_commit": "c356db51249a4a4e0c44e6590523f040eee03bac",
-        "target_count": 4,
-        "target_rule": "first three chronologically eligible G3 targets plus final applicable date 2026-08-13",
-        "runtime_bound": "<=15 minutes",
-        "performance_backtest_allowed": false,
-        "gate_selection_allowed": false,
+      "historical_asof_r1": {
+        "commit": "6789f0a595bf3956f42146e8742005febd7cc080",
+        "primary_disposition": "R1_FAIL_RESOURCE_BOUND",
+        "causal_mechanism": "PASSED_ON_FIRST_THREE_SEALED_TARGETS",
+        "temporal_leakage_detected": false,
+        "final_target_parity": "NOT_COMPLETED_RESOURCE_BOUND",
+        "pointwise_full_projection": "~132.5 seconds / 29 fits",
+        "A_B_D_full_projection": "~18232 seconds / ~5.1 hours",
+        "G3_full_projection": "~18365 seconds / ~5.1 hours",
+        "relational_execution_authorized": false
+      },
+      "pointwise_r2_authorization": {
+        "execution_tier": "R2_BOUNDED_PILOT",
+        "prime_work_order": "docs/coordination/wnba/codex/archive/2026-08-16_3l_historical_asof_pointwise_r2.md",
+        "publication_commit": "efbf0f494e5d176552f4d07952d191bf76c304a7",
+        "scope": "complete 30-date historical-as-of pointwise ledger with 29 prior-only fits and one cold-start control date",
+        "runtime_bound": "<=10 minutes",
+        "relational_allowed": false,
+        "gate_tuning_allowed": false,
         "validation_reads_allowed": 0,
         "lockbox_reads_allowed": 0
       },
-      "chat_interpretation": "R1_CANARY_AUTHORIZED_TO_PROVE_CAUSAL_REGENERATION_PARITY_ACTIONABILITY_AND_COST_ONLY"
+      "chat_interpretation": "POINTWISE_CAUSAL_BENCHMARK_BEFORE_ANY_FURTHER_RELATIONAL_SPEND"
     },
     "4L": {
       "status": "PARKED_PENDING_FINAL_3L_DEPLETION"
@@ -80,9 +81,9 @@
     }
   },
   "next_strategy": {
-    "status": "R1_ACTIONABILITY_CANARY_USER_AUTHORIZED",
-    "prime_work_order": "docs/coordination/wnba/codex/archive/2026-08-16_3l_historical_asof_gate_r1.md",
-    "topic": "Four-target prior-only pointwise plus A/B/D regeneration canary with final-date parity and measured runtime",
-    "required_stop": "BLOCKED_USER_REVIEW_WNBA_3L_HISTORICAL_ASOF_GATE_R1"
+    "status": "R2_POINTWISE_USER_AUTHORIZED",
+    "prime_work_order": "docs/coordination/wnba/codex/archive/2026-08-16_3l_historical_asof_pointwise_r2.md",
+    "topic": "Complete strict t<D pointwise historical-as-of sequence before deciding whether relational witness research warrants further compute",
+    "required_stop": "BLOCKED_USER_REVIEW_WNBA_3L_HISTORICAL_ASOF_POINTWISE_R2"
   }
 }
