@@ -79,3 +79,26 @@ Adopt Prime Delegation in the parent Atlas repo.
 - WNBA `slip-builders` remains sole Builder workflow controller.
 - Prime Delegation never becomes operational/model/statistical authority.
 - parked and future agendas receive explicit revisit triggers so important ideas do not disappear.
+
+## 2026-08-16 — V2 learner-vs-gate decomposition authorized
+
+Decision:
+
+Authorize one cheap diagnostic using only already-sealed V2 OOS scores and already-open discovery settlement to separate learner challenger quality from override-gate behavior.
+
+The diagnostic must not refit A/B/C/D, rerun outer folds, tune/install a threshold, open validation/lockbox, or change Live/model authority.
+
+Required strategic questions include:
+
+- how many correct challengers each learner identified before gating;
+- how many beneficial repairs were blocked by `INF` versus finite thresholds;
+- the ungated challenger counterfactual for each arm;
+- beneficial/harmful/neutral score separation;
+- A/D and A/B/D consensus behavior;
+- comparison with the stored 22-7+1 pointwise logistic.
+
+Prime Delegation archive:
+
+`docs/coordination/wnba/codex/archive/2026-08-16_3l_v2_learner_gate_decomposition.md`
+
+This is diagnostic evidence only and cannot itself promote a post-hoc threshold.
