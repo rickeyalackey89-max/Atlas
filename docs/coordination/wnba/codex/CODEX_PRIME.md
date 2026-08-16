@@ -28,6 +28,27 @@ This document:
 - does not convert `CHAT_AGENDA.md` ideas into permission;
 - must fail closed if it conflicts with WNBA authority.
 
+## Standing result handoff protocol
+
+For every Prime-authorized task that creates or changes repository evidence/code and passes its required validators/tests:
+
+1. stage only exact authorized paths;
+2. commit the authorized target-repository changes;
+3. push the governing target branch;
+4. verify local HEAD == tracking ref == direct remote ref;
+5. leave the worktree clean;
+6. report the final commit SHA and stop marker.
+
+If the task produces no permanent repository changes, do not invent a commit.
+
+This protocol exists so Chat can review the committed remote evidence directly from GitHub. The user should not need to paste large Codex completion packets into Chat.
+
+After Codex finishes, the preferred user handoff is simply:
+
+`Codex finished. Review the latest WNBA Prime task.`
+
+Optionally include the final SHA if convenient. Chat should then inspect the target repository and committed artifacts directly.
+
 ## Active user-authorized task
 
 Read and execute the exact delegation at:
