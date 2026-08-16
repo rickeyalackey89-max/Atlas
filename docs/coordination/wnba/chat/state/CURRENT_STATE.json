@@ -1,17 +1,17 @@
 {
   "schema_version": "atlas_prime_delegation_wnba_current_state_v1",
-  "captured_at_ct": "2026-08-16T15:17:00-05:00",
+  "captured_at_ct": "2026-08-16T15:51:00-05:00",
   "snapshot_not_authority": true,
   "sport": "WNBA",
   "source_repository": "rickeyalackey89-max/Atlas-WNBA",
   "source_branch": "builder-method-contract-v1",
-  "source_head": "bc71d9442580fe69812d6dbad87545006aabdd4e",
+  "source_head": "f2e40be6d1beff5db0e6ed1dc178a68d21f9b512",
   "builder": {
     "status": "BLOCKED_USER_REVIEW",
     "active_stage_id": "builder_stage_5",
-    "active_step_id": "builder_s5_3l_v2_learner_gate_decomposition_user_review",
-    "method_step_id": "3l_v2_learner_gate_decomposition",
-    "completion_marker": "BLOCKED_USER_REVIEW_WNBA_3L_V2_LEARNER_GATE_DECOMPOSITION",
+    "active_step_id": "builder_s5_3l_historical_asof_gate_r0_user_review",
+    "method_step_id": "3l_historical_asof_gate_r0",
+    "completion_marker": "BLOCKED_USER_REVIEW_WNBA_3L_HISTORICAL_ASOF_GATE_R0",
     "controller_skill": "slip-builders",
     "validation_reads": 0,
     "lockbox_reads": 0
@@ -19,19 +19,12 @@
   "live": {
     "probability_package_id": "gen2_rp24_full_chain_v2_20260801",
     "active_runtime_sha256": "b9b71dde7d3ace14ce5ceb69e1476ed7b291cc0cfb880bc5d4f7a9207bb4098e",
-    "calibration_artifact_id": "wnba_gen2_rp23_tier_isotonic_v1",
-    "calibration_sha256": "078c706ed257ac613fb79c3885f8f1965ce032d1b6a30abcd6b733b92ede0dc8",
-    "minutes_materializer_id": "wnba_gen2_minutes_identity_coverage_recent_state_width_v8_rp21b",
-    "active_minutes_sha256": "91db37926041de3b50cd8b6e6c1c2a6a52d07782ff758b6e088debdbd063870a",
     "builder_policy_id": "wnba_rc1_provisional_live",
     "builder_policy_sha256": "5bfcf019d83371cd381e99ae36171551d4fdc8da50fb96a68dcdd7293a06bed9",
     "builder_package_id": "972f15cf8a6f07f07593b8adc48f5731670305c78aa8a721a4b77e05395270ba",
     "builder_package_sha256": "59d11b878f42048b16f881a5c1eeacd873e7890db1d5d247a079fa57530b060c",
     "builder_promotion_id": "34c8061944f66000344ac7055865e7c759ee7847f0423ae32956ca712bde1be6",
-    "dependence_artifact_id": "wnba_builder_dependence_d258b7365d40a78e683245d8",
-    "dependence_sha256": "0dc1b9af9f1cc9f6d9cfd054899f19279f92842ef569d96b131158f98d10409c",
-    "publication_hold_active": false,
-    "rolling_corpus_id": "wnba_gen2_rc1_primary_rolling_20260815"
+    "publication_hold_active": false
   },
   "corpus": {
     "discovery_dates": 39,
@@ -48,28 +41,26 @@
       "losses": 7
     },
     "3L": {
-      "status": "ACTIVE_RESEARCH_R0_AUTHORIZED",
+      "status": "ACTIVE_RESEARCH_R0_REVIEWED",
       "control": "20-9-1",
       "ranking_failures": 8,
       "supply_impossible_dates": ["2026-07-08"],
-      "prior_pointwise_logistic": "22-7-1",
+      "prior_pointwise_logistic": "22-7-1 grouped-date OOF evidence",
       "pairwise_v1": "19-10-1",
-      "relational_v2_gated_action_results": {
-        "V2-A": "20-9-1",
-        "V2-B": "20-9-1",
-        "V2-C": "20-9-1",
-        "V2-D": "20-9-1"
+      "historical_asof_r0": {
+        "commit": "f2e40be6d1beff5db0e6ed1dc178a68d21f9b512",
+        "decision": "ASOF_GATE_PROCEDURE_FEASIBLE_BUT_REQUIRES_BASE_REGENERATION",
+        "stored_pointwise_v2_reuse": "ILLEGAL_ON_29_OF_30_TARGETS_DUE_TO_LATER_THAN_D_TRAINING",
+        "candidate_rank_surface": "ASOF_LEGAL_REUSABLE",
+        "frozen_2l_depletion": "ASOF_LEGAL_REUSABLE_WITH_OUTCOME_COLUMNS_EXCLUDED",
+        "G1": "FEASIBLE_REQUIRES_A_B_D_PRIOR_ONLY_REGENERATION",
+        "G2": "FEASIBLE_REQUIRES_POINTWISE_PRIOR_ONLY_REGENERATION",
+        "G3": "FEASIBLE_REQUIRES_POINTWISE_AND_A_B_D_PRIOR_ONLY_REGENERATION",
+        "full_pointwise_cost_projection": "1-5 minutes",
+        "full_G1_G3_cost_projection": "15-45 minutes with shared caches",
+        "recommended_next_tier": "R1_ACTIONABILITY_CANARY"
       },
-      "v2_gate_decomposition": {
-        "commit": "bc71d9442580fe69812d6dbad87545006aabdd4e",
-        "primary_diagnosis": "V2_GATE_DOMINATED_USEFUL_CHALLENGER_SIGNAL",
-        "V2-A_ungated": "22-8-0; repairs Jul06/Jul31; harm Aug01; INF 27/30",
-        "V2-B_ungated": "21-9-0; repairs 2; harms 2; INF 28/30",
-        "V2-C_ungated": "22-8-0; repairs Jul03/Jul06/Jul07; harms Jun19/Jul02; INF 30/30",
-        "V2-D_ungated": "22-8-0; repairs Jul06/Jul31; harm Aug01; INF 29/30",
-        "A_B_D_positive_consensus": "17 dates; 2 beneficial; 0 harmful; 13 neutral; 1 nonbinary; 1 supply-impossible; post-hoc only"
-      },
-      "chat_interpretation": "HISTORICAL_ASOF_GATE_PROCEDURE_IS_NEXT_RESEARCH_ROUTE"
+      "chat_interpretation": "R0_PASSED_GO_NO_GO_FOR_SMALL_R1_CANARY_NOT_FOR_R2_R3"
     },
     "4L": {
       "status": "PARKED_PENDING_FINAL_3L_DEPLETION"
@@ -79,9 +70,8 @@
     }
   },
   "next_strategy": {
-    "status": "R0_ARTIFACT_AUDIT_USER_AUTHORIZED",
-    "prime_work_order": "docs/coordination/wnba/codex/archive/2026-08-16_3l_historical_asof_gate_r0.md",
-    "topic": "Audit temporal legality and formalize G1 cross-arm, G2 selective pointwise, and G3 pointwise-plus-relational-witness historical-as-of gate procedures before any fitting or replay",
-    "critical_temporal_legality_issue": "Stored grouped-date OOF/LODO pointwise and V2 relational signals may include later-than-D training dates and therefore cannot be assumed reusable in a causal as-of replay"
+    "status": "CANDIDATE_NEXT_NOT_CODEX_AUTHORIZED",
+    "topic": "R1 actionability canary for prior-only historical-as-of pointwise plus A/B/D regeneration",
+    "purpose": "Prove causal regeneration, cold start, selection sealing, signal/action variation, cache reuse, and measured runtime before any replay-scale or full experiment authorization"
   }
 }
