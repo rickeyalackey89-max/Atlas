@@ -1,6 +1,6 @@
 # WNBA Codex Prime
 
-Status: **NO ACTIVE EXECUTION DELEGATION**
+Status: **ACTIVE EXECUTION DELEGATION**
 
 This file is the narrow execution surface for Prime Delegation.
 
@@ -10,7 +10,7 @@ Codex must read this file from the dedicated local Prime mirror:
 
 `C:\Users\13142\Atlas\PrimeDelegation\docs\coordination\wnba\codex\CODEX_PRIME.md`
 
-Before any future execution, the mirror must be a valid clean Git worktree on branch `main` and must be fast-forwarded to current `origin/main` according to `docs/coordination/PRIME_TRANSPORT.md`.
+Before execution, the mirror must be a valid clean Git worktree on branch `main` and must be fast-forwarded to current `origin/main` according to `docs/coordination/PRIME_TRANSPORT.md`.
 
 Do **not** attempt to use or repair `C:\Users\13142\Atlas\.git` for Prime Delegation.
 
@@ -23,7 +23,7 @@ While the WNBA Builder lane is active, `slip-builders` remains the sole workflow
 This document:
 
 - does not create a second state machine;
-- does not authorize Builder progression on its own;
+- does not authorize Builder progression outside the exact user-approved task;
 - does not authorize Live/model/promotion changes;
 - does not convert `CHAT_AGENDA.md` ideas into permission;
 - must fail closed if it conflicts with WNBA authority.
@@ -83,17 +83,55 @@ Chat review disposition:
 - damaged control win: 2026-08-01;
 - 2026-06-27 control NONBINARY became pointwise WIN;
 - 29/29 expected fits completed in ~10.1 seconds;
-- final-date candidate identity, ranking, training-date set, and probabilities reproduced stored legal LODO state within 1e-10;
-- both focused test runs passed 10/10;
+- final-date parity passed;
 - validation reads 0;
 - lockbox reads 0;
 - no relational work, gate tuning, Live/model mutation, or promotion occurred;
 - WNBA stop: `BLOCKED_USER_REVIEW_WNBA_3L_HISTORICAL_ASOF_POINTWISE_R2`.
 
-## Current status
+## Active user-authorized task
 
-No new execution is authorized.
+Execution tier: **R0_ARTIFACT_AUDIT**
 
-The causal pointwise procedure is now the leading 3L research method on historical-as-of procedural evidence. Its 29/30 selection churn with only one damaged control win means Chat/user must first decide whether pointwise itself should become the 3L research backbone before spending ~5.1 hours on relational witness regeneration.
+Read and execute exactly:
 
-Do not begin relational profiling, G1/G3, a new learner, 4L, FromDeep, validation, lockbox, or Live/model work until a new user-authorized Prime delegation is published here.
+`docs/coordination/wnba/codex/archive/2026-08-16_3l_pointwise_freeze_readiness_r0.md`
+
+Work-order publication commit:
+
+`5549fee8b08aa5adc17b2097c00b2fb7f9a4b093`
+
+Purpose:
+
+**Audit whether causal pointwise is fully specified and deterministic enough for a separate 3L research/depletion freeze decision; characterize the remaining five meaningful failure dates plus the known supply-impossible date; and inventory the exact already-generated 4L residual surface after frozen 2L + causal pointwise 3L exact-road depletion.**
+
+Expected starting WNBA commit:
+
+`5eb96d83996e3f65c2ce021a5a3897b43f63da04`
+
+Expected current WNBA stop:
+
+`BLOCKED_USER_REVIEW_WNBA_3L_HISTORICAL_ASOF_POINTWISE_R2`
+
+Critical constraints:
+
+- artifact analysis only;
+- no pointwise refit or replay;
+- no relational work;
+- no gate/threshold/predicate tuning;
+- no candidate regeneration;
+- no actual 3L freeze/promotion/install;
+- no 4L scoring/fitting/settlement optimization;
+- exact-road depletion only;
+- validation reads 0;
+- lockbox reads 0;
+- no Live/model mutation;
+- target runtime minutes.
+
+Codex must reconcile this user authorization through the existing `slip-builders` lane before any WNBA mutation or diagnostic artifact generation.
+
+## Required final stop
+
+`BLOCKED_USER_REVIEW_WNBA_3L_POINTWISE_FREEZE_READINESS_R0`
+
+After completion, do not freeze 3L, begin 4L research, begin relational work, begin FromDeep, open validation/lockbox, or mutate Live/model authority automatically. Commit/push the R0 evidence, stop, and return the final WNBA SHA for Chat/user review.
