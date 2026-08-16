@@ -180,3 +180,37 @@ Because the pointwise procedure changes selection on 29/30 dates yet damages onl
 Evidence restriction:
 
 This remains `HISTORICAL_ASOF_PROCEDURAL_EVIDENCE`, not untouched prospective or promotion authority. No 3L freeze, Live install, validation read, or lockbox read is authorized by this decision alone.
+
+## 2026-08-16 — Pointwise freeze-readiness / residual forensic R0 authorized
+
+User decision:
+
+The causal 24-6-0 historical-as-of pointwise result is solid enough to evaluate for a working 3L research/depletion freeze.
+
+Authorize one cheap `R0_ARTIFACT_AUDIT` only.
+
+Purpose:
+
+- verify the pointwise procedure is completely specified, deterministic, hash-bound, and freeze-ready;
+- anatomize the five meaningful remaining dates `2026-07-07`, `2026-07-28`, `2026-08-01`, `2026-08-08`, `2026-08-13`;
+- separately reconfirm `2026-07-08` as supply-impossible;
+- materialize the exact already-generated 4L availability surface after frozen 2L + causal pointwise 3L exact-road depletion;
+- determine whether the next decision should be to freeze 3L pointwise and open 4L research.
+
+Explicit boundaries:
+
+- no refit/replay;
+- no relational work;
+- no gate tuning;
+- no candidate generation;
+- no actual 3L freeze/promotion/install;
+- no 4L scoring/fitting/settlement optimization;
+- validation reads 0;
+- lockbox reads 0;
+- no Live/model mutation.
+
+Prime work order:
+
+`docs/coordination/wnba/codex/archive/2026-08-16_3l_pointwise_freeze_readiness_r0.md`
+
+The actual freeze remains a separate user/Chat decision after R0 review.
