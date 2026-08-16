@@ -1,6 +1,6 @@
 # WNBA Codex Prime
 
-Status: **NO ACTIVE EXECUTION DELEGATION**
+Status: **ACTIVE EXECUTION DELEGATION**
 
 This file is the narrow execution surface for Prime Delegation.
 
@@ -10,89 +10,88 @@ Codex must read this file from the dedicated local Prime mirror:
 
 `C:\Users\13142\Atlas\PrimeDelegation\docs\coordination\wnba\codex\CODEX_PRIME.md`
 
-Before any future execution, the mirror must be a valid clean Git worktree on branch `main` and must be fast-forwarded to current `origin/main` according to `docs/coordination/PRIME_TRANSPORT.md`.
+Before execution, the mirror must be a valid clean Git worktree on branch `main` and must be fast-forwarded to current `origin/main` according to `docs/coordination/PRIME_TRANSPORT.md`.
 
 Do **not** attempt to use or repair `C:\Users\13142\Atlas\.git` for Prime Delegation.
 
 ## Hard authority boundary
 
-Before acting, Codex must read and obey the actual WNBA governing controls required by WNBA `AGENTS.md`.
+Before acting, Codex must read and obey WNBA `AGENTS.md` and all governing controls required by the active `slip-builders` lane.
 
-While the WNBA Builder lane is active, `slip-builders` remains the sole workflow controller.
+This document does not create a second state machine, does not authorize Live/model/promotion changes, and must fail closed on any authority conflict.
 
-This document:
+## Experiment runway
 
-- does not create a second state machine;
-- does not authorize Builder progression on its own;
-- does not authorize Live/model/promotion changes;
-- does not convert `CHAT_AGENDA.md` ideas into permission;
-- must fail closed if it conflicts with WNBA authority.
+All future 4L / FromDeep research remains subject to `docs/coordination/PRIME_EXPERIMENT_RUNWAY.md` and the rule **Cheap runway before long takeoff.** This control-transition task does not authorize a 4L experiment.
 
-## Mandatory experiment runway
+## Validation doctrine
 
-All Prime research work must obey:
+Public/live slips are operational outputs only and are **never validation, lockbox, promotion, or statistical authority**.
 
-`docs/coordination/PRIME_EXPERIMENT_RUNWAY.md`
+After 4L and FromDeep are frozen, protected validation must occur first. If validation causes any method change, validation is consumed while lockbox stays sealed. The final lockbox may be opened only after the methods remain unchanged following validation.
 
-Core rule:
+New unevaluated dates may enter a later protected-evidence inventory only if pregame surface/state can be proven sealed before outcome and their outcomes were not consumed in development.
 
-> **Cheap runway before long takeoff.**
+## Standing result handoff
 
-Execution tiers:
-
-- `R0_ARTIFACT_AUDIT`
-- `R1_ACTIONABILITY_CANARY`
-- `R2_BOUNDED_PILOT`
-- `R3_FULL_EXPERIMENT`
-
-A runway task may never auto-escalate. Every higher tier requires a separate user-authorized Prime delegation after user/Chat review.
-
-## Standing result handoff protocol
-
-For every Prime-authorized task that creates or changes repository evidence/code and passes required validators/tests:
-
-1. stage only exact authorized paths;
-2. commit authorized target-repository changes;
-3. push the governing target branch;
-4. verify local HEAD == tracking ref == direct remote ref;
-5. leave the worktree clean;
-6. report final commit SHA and stop marker.
-
-If no permanent repository changes are produced, do not invent a commit.
-
-The preferred user handoff is the final SHA plus a short request for Chat review.
+For authorized tasks producing permanent repo evidence/code: exact-path stage, commit, push, verify local HEAD == tracking == direct remote, leave clean, and report final SHA + stop marker. Never use broad staging/destructive Git commands or touch the protected stash.
 
 ## Last completed delegation
 
 Execution tier: **R0_ARTIFACT_AUDIT**
 
-Task:
-
-`docs/coordination/wnba/codex/archive/2026-08-16_3l_pointwise_freeze_readiness_r0.md`
-
 WNBA result commit:
 
 `64ac175dc1a2ec75f39fa5f9f91af4caed711fc2`
 
-Chat review disposition:
+Disposition:
 
-- `POINTWISE_3L_RESEARCH_FREEZE_READY` accepted as advisory readiness;
-- causal pointwise procedure is fully specified, deterministic, hash-bound, and suitable for a separate research/depletion freeze decision;
+- `POINTWISE_3L_RESEARCH_FREEZE_READY`;
+- recommendation `FREEZE_3L_POINTWISE_THEN_OPEN_4L_RESEARCH`;
 - remaining failures: Jul07/Jul28/Aug08/Aug13 `TOP_RANK_DISCRIMINATION`, Aug01 `ALREADY_CORRECT_CONTROL_DAMAGE`, Jul08 `SUPPLY_IMPOSSIBLE`;
-- exact post-2L + post-pointwise-3L 4L residual contains 481 unique already-generated candidates across 30 dates;
-- 15/30 dates have zero legal 4L residual candidates;
-- residual inventory SHA-256: `5500a88c5d14c3a2e6d5f043decc1d88500678986035bce8a431560ac343bd09`;
-- no 3L freeze was executed;
-- no 4L scoring/fitting/grading occurred;
+- post-3L 4L structural inventory: 481 candidates / 30 dates / 15 zero-residual dates;
+- no freeze executed;
 - validation reads 0;
-- lockbox reads 0;
-- no Live/model mutation;
-- WNBA stop: `BLOCKED_USER_REVIEW_WNBA_3L_POINTWISE_FREEZE_READINESS_R0`.
+- lockbox reads 0.
 
-## Current status
+## Active user-authorized task
 
-No new execution is authorized.
+Execution class: **CONTROL_TRANSITION**
 
-Recommended next decision is a **separate explicit user authorization** to freeze causal pointwise as the working 3L research/depletion method and then open 4L research on the exact 481-candidate residual inventory. The prior 4L diagnostic surface is not current authority because exact pointwise 3L depletion materially changes availability and leaves 15 zero-residual dates.
+Read and execute exactly:
 
-Do not execute the 3L freeze, begin 4L research, begin relational work, begin FromDeep, open validation/lockbox, or mutate Live/model authority until a new user-authorized Prime delegation is published here.
+`docs/coordination/wnba/codex/archive/2026-08-16_3l_pointwise_research_freeze_and_open_4l.md`
+
+Work-order publication commit:
+
+`4f0d79b9adb36f4564570c42abf8e873485ef3ea`
+
+Purpose:
+
+**Freeze the causal pointwise procedure as the working WNBA 3L research/depletion backbone and advance the Builder lane to 4L research entry.**
+
+Expected starting WNBA commit:
+
+`64ac175dc1a2ec75f39fa5f9f91af4caed711fc2`
+
+Expected current WNBA stop:
+
+`BLOCKED_USER_REVIEW_WNBA_3L_POINTWISE_FREEZE_READINESS_R0`
+
+Critical constraints:
+
+- research/depletion freeze only; no Live/prospective/promotion authority;
+- bind the exact pointwise freeze candidate contract and exact-road depletion ledger;
+- open 4L workflow entry only; do not fit/score/rank/grade 4L;
+- preserve 481-candidate / 15-zero-residual-date structural inventory;
+- no relational execution;
+- no FromDeep work;
+- no validation or lockbox reads;
+- no public-slip result used as evaluation evidence;
+- no Live/model/minutes/calibration/allocator/QMC/dependence mutation.
+
+## Required final stop
+
+`BLOCKED_USER_REVIEW_WNBA_3L_POINTWISE_FROZEN_4L_RESEARCH_OPEN`
+
+After completion, do not auto-start 4L research. Commit/push authorized evidence, stop, and return the final WNBA SHA for Chat/user review.
