@@ -214,3 +214,44 @@ Prime work order:
 `docs/coordination/wnba/codex/archive/2026-08-16_3l_pointwise_freeze_readiness_r0.md`
 
 The actual freeze remains a separate user/Chat decision after R0 review.
+
+## 2026-08-16 — Pointwise freeze-readiness R0 accepted
+
+Reviewed WNBA result commit:
+
+`64ac175dc1a2ec75f39fa5f9f91af4caed711fc2`
+
+Decision:
+
+Accept `POINTWISE_3L_RESEARCH_FREEZE_READY` as a faithful advisory freeze-readiness result.
+
+The procedure is completely specified and hash-bound: strict `t<D` training partition, frozen 25-feature contract, fold-local missingness treatment, date-equal weighting, `StandardScaler -> LogisticRegression`, `C=1`, fixed solver/random state, exact tie order, cold-start Atlas control, selection seal before target truth, and exact-road depletion semantics.
+
+Remaining failure anatomy:
+
+- 2026-07-07: `TOP_RANK_DISCRIMINATION`; 24 winning residual candidates existed.
+- 2026-07-08: `SUPPLY_IMPOSSIBLE`; 0 winning residual candidates existed.
+- 2026-07-28: `TOP_RANK_DISCRIMINATION`; 28 winning residual candidates existed.
+- 2026-08-01: `ALREADY_CORRECT_CONTROL_DAMAGE`; control WIN, pointwise LOSS, 26 winning residual candidates existed.
+- 2026-08-08: `TOP_RANK_DISCRIMINATION`; 8 winning residual candidates existed.
+- 2026-08-13: `TOP_RANK_DISCRIMINATION`; 10 winning residual candidates existed.
+
+Current downstream 4L structural surface after frozen 2L + causal pointwise 3L exact-road depletion:
+
+- 481 unique already-generated candidates;
+- 30 dates represented;
+- 15 dates have zero residual candidates;
+- exact residual inventory SHA-256 `5500a88c5d14c3a2e6d5f043decc1d88500678986035bce8a431560ac343bd09`;
+- no 4L outcome fields retained and no 4L scoring/ranking/grading occurred.
+
+Strategic interpretation:
+
+The prior 4L diagnostic surface is no longer the current statistical surface. Exact causal pointwise 3L depletion materially changes 4L availability, including eliminating all legal 4L residual candidates on half of the 30 dates. Therefore any current 4L method research must begin from this exact post-pointwise residual inventory rather than reuse the earlier covered-control result as current evidence.
+
+Recommendation:
+
+`FREEZE_3L_POINTWISE_THEN_OPEN_4L_RESEARCH`.
+
+Authority restriction:
+
+This review does **not** execute the 3L research/depletion freeze and does not authorize 4L research, prospective claims, Live installation, validation reads, or lockbox reads. The actual freeze remains a separate explicit user authorization.
