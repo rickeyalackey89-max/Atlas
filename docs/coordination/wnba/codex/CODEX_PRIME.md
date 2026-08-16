@@ -28,6 +28,31 @@ This document:
 - does not convert `CHAT_AGENDA.md` ideas into permission;
 - must fail closed if it conflicts with WNBA authority.
 
+## Mandatory experiment runway
+
+All future Prime research work must obey:
+
+`docs/coordination/PRIME_EXPERIMENT_RUNWAY.md`
+
+Core rule:
+
+> **Cheap runway before long takeoff.**
+
+Every research delegation must declare one execution tier:
+
+- `R0_ARTIFACT_AUDIT`
+- `R1_ACTIONABILITY_CANARY`
+- `R2_BOUNDED_PILOT`
+- `R3_FULL_EXPERIMENT`
+
+An expensive `R3_FULL_EXPERIMENT` may not auto-follow a runway task. It requires a separate user-authorized Prime delegation after user/Chat review of the runway evidence.
+
+Before R2/R3, Codex must report the computational topology and projected wall-clock cost. Multi-arm experiments must prove that arm differences survive through shared gates/fallbacks at the action surface. If an artifact audit or canary shows that a shared gate mechanically suppresses the learner, stop and diagnose that mechanism rather than launching the expensive run.
+
+Long-running work must also expose passive progress/heartbeat, checkpoint, completion-sentinel, and process-exit observability so a completed/failed/stalled process is recognized promptly.
+
+Efficiency must never be obtained by weakening outcome blindness, global sealing, validation/lockbox protection, or other statistical controls.
+
 ## Standing result handoff protocol
 
 For every Prime-authorized task that creates or changes repository evidence/code and passes its required validators/tests:
