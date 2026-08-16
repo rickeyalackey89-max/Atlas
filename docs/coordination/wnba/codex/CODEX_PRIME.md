@@ -4,6 +4,16 @@ Status: **ACTIVE EXECUTION DELEGATION**
 
 This file is the narrow execution surface for Prime Delegation.
 
+## Prime transport prerequisite
+
+Codex must read this file from the dedicated local Prime mirror:
+
+`C:\Users\13142\Atlas\PrimeDelegation\docs\coordination\wnba\codex\CODEX_PRIME.md`
+
+Before execution, the mirror must be a valid clean Git worktree on branch `main` and must be fast-forwarded to current `origin/main` according to `docs/coordination/PRIME_TRANSPORT.md`.
+
+Do **not** attempt to use or repair `C:\Users\13142\Atlas\.git` for Prime Delegation.
+
 ## Hard authority boundary
 
 Before acting, Codex must read and obey the actual WNBA governing controls required by WNBA `AGENTS.md`.
@@ -24,7 +34,7 @@ Read and execute the exact delegation at:
 
 `docs/coordination/wnba/codex/archive/2026-08-16_3l_v2_learner_gate_decomposition.md`
 
-Delegation publication commit:
+Original delegation publication commit:
 
 `e0e767bebae00c6f61c5eb3f7b05ceb8cae585e7`
 

@@ -25,3 +25,17 @@ Each sport may have a namespace under `docs/coordination/<sport>/` with separate
 - `codex/` contains only execution-ready delegations.
 
 Never treat brainstorming or a parked Chat agenda item as Codex authorization.
+
+## Transport model
+
+The GitHub repository `rickeyalackey89-max/Atlas` on branch `main` is the durable remote record for Prime Delegation.
+
+Codex does **not** read Prime from `C:\Users\13142\Atlas` directly. That directory is a workspace root and is not a valid Prime Git worktree.
+
+Codex uses the dedicated sparse local mirror:
+
+`C:\Users\13142\Atlas\PrimeDelegation`
+
+Before an execution delegation, Codex must safely fast-forward that mirror to `origin/main`, then read the current `CODEX_PRIME.md`.
+
+See `PRIME_TRANSPORT.md` for bootstrap and sync rules.

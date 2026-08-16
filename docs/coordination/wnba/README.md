@@ -18,6 +18,20 @@ The WNBA repository remains authoritative for:
 
 Prime Delegation records context and user/Chat decisions only.
 
+## Local/remote transport
+
+Remote Prime record:
+
+`rickeyalackey89-max/Atlas` / `main`
+
+Codex local Prime mirror:
+
+`C:\Users\13142\Atlas\PrimeDelegation`
+
+The parent workspace `C:\Users\13142\Atlas` is not the Prime Git worktree. Do not repair or populate its empty `.git` directory for this purpose.
+
+Before Codex reads the active delegation, synchronize the dedicated Prime mirror using `../PRIME_TRANSPORT.md`.
+
 ## Chat read order
 
 When recovering or continuing WNBA strategy:
@@ -32,7 +46,7 @@ When recovering or continuing WNBA strategy:
 
 ## Codex read order
 
-Codex should read `codex/CODEX_PRIME.md` only after reading the actual WNBA governing controls required by WNBA `AGENTS.md`.
+Codex should read `codex/CODEX_PRIME.md` only after synchronizing Prime and reading the actual WNBA governing controls required by WNBA `AGENTS.md`.
 
 `CODEX_PRIME.md` may delegate one authorized task, but it cannot authorize progression beyond `slip-builders`, change Live/model authority, or convert Chat theory into execution permission.
 
