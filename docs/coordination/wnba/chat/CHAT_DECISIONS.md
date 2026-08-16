@@ -133,3 +133,34 @@ That consensus rule was identified after discovery settlement was visible. Its r
 Next decision required:
 
 Design an honest predeclared evaluation route for the agreement-gate hypothesis and compare it with a selective gate around the stored pointwise logistic. Do not open validation or lockbox, and do not launch another learner, without explicit user authorization.
+
+## 2026-08-16 — Prime experiment runway doctrine
+
+User directive:
+
+Research must be more deterministic, rigorous, efficient, and pragmatic. Multi-hour compute should not be the first mechanism used to discover design flaws that could have been exposed by a cheap diagnostic.
+
+Decision:
+
+Adopt `docs/coordination/PRIME_EXPERIMENT_RUNWAY.md` as mandatory Prime research doctrine.
+
+Core rule:
+
+> **Cheap runway before long takeoff.**
+
+Future research separates:
+
+- `R0_ARTIFACT_AUDIT`
+- `R1_ACTIONABILITY_CANARY`
+- `R2_BOUNDED_PILOT`
+- `R3_FULL_EXPERIMENT`
+
+An R0/R1/R2 runway can never auto-escalate into R3. Expensive work requires a second explicit user/Chat authorization after review of the runway evidence.
+
+Before R2/R3, Codex must state the computational topology, approximate fit count, measured pilot timing, projected wall-clock cost, resource/checkpoint behavior, and the exact information the full run is expected to add.
+
+Multi-arm experiments must prove during the runway that learner/arm differences survive shared gates/fallbacks at the final action surface. If a common gate mechanically suppresses the variants, stop and decompose the shared layer first.
+
+Long-running work must expose passive progress/heartbeat, completion-sentinel, and process-exit observability so completion/failure/stall is recognized promptly rather than remaining unnoticed for hours.
+
+Efficiency cannot weaken statistical rigor: no protected-data peeking, no serial heldout reaction where global sealing is required, and no post-hoc promotion.
