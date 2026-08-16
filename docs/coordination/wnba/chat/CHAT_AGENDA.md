@@ -17,10 +17,12 @@ Statuses:
 
 | ID | Topic | Status | Revisit trigger | Why retained |
 |---|---|---|---|---|
-| WNBA-3L-003 | V2 learner-vs-gate decomposition audit | NEXT_AUTHORIZED | Codex completes Prime Delegation diagnostic | V2 action results collapsed to control because nested thresholds frequently selected KEEP/INF; at least Jul06 and Jul31 had winning challengers identified before the gate |
-| WNBA-3L-004 | Selective use of prior pointwise logistic substitutions | PARKED | Gate decomposition complete | Prior pointwise logistic is still best stored 3L OOF result at 22-7+1; may deserve a selective/confidence gate rather than a full rerank |
-| WNBA-3L-005 | Further relational learner research | PARKED | Gate decomposition shows repeatable pre-gate challenger signal | Avoid another expensive relational sweep unless the existing sealed outputs justify it |
-| WNBA-3L-006 | Nonlinear/GBM local learner | REVISIT_ON_TRIGGER | Linear/relational methods exhausted with evidence and sample design supports honest OOS | High overfit risk on small WNBA date count; do not jump here casually |
+| WNBA-3L-003 | V2 learner-vs-gate decomposition audit | COMPLETE | Completed at WNBA commit `bc71d9442580fe69812d6dbad87545006aabdd4e` | Confirmed gate domination: A/D each had 2 beneficial challenger repairs and 1 harm pre-gate while `INF` blocked both beneficial actions |
+| WNBA-3L-007 | Predeclared cross-arm agreement gate | CANDIDATE_NEXT | User/Chat choose an honest evaluation route | Post-hoc A/B/D same-challenger + all-positive-margin pattern had 2 beneficial, 0 harmful, 13 neutral on 17 dates and repaired Jul06/Jul31; promising but not OOS because discovered after settlement |
+| WNBA-3L-008 | Honest gate evaluation authority | CANDIDATE_NEXT | Before any gate test is authorized | Decide prospectively vs leakage-safe regenerated cross-fit vs explicit unopened validation use; validation/lockbox remain 0 reads |
+| WNBA-3L-004 | Selective use of prior pointwise logistic substitutions | PARKED | Compare against agreement-gate design | Prior pointwise logistic remains best stored honest 3L OOF result at 22-7+1; broad rerank repaired four but damaged two and may deserve a selective/confidence gate |
+| WNBA-3L-005 | Further relational learner research | PARKED | Agreement/gating hypothesis is resolved or fails | Existing A/D learner information is useful locally; do not spend another multi-hour learner sweep before testing confidence/gating logic |
+| WNBA-3L-006 | Nonlinear/GBM local learner | REVISIT_ON_TRIGGER | Linear/relational and gate approaches exhausted with evidence and sample design supports honest OOS | High overfit risk on small WNBA date count; do not jump here casually |
 | WNBA-4L-001 | Retest context interaction on final post-3L residual surface | PARKED | 3L method frozen and exact depletion established | Prior covered-control context diagnostic was 14-1 but incomplete; actual 4L surface changes with final 3L |
 | WNBA-COMBO-001 | Combo-prop probability/math adjustments review | LATER | Core Builder work stabilizes or model-quality review is opened | Important previously discussed model-quality agenda; preserve so it is not forgotten |
 | WNBA-FD-001 | Current-stack FromDeep research | LATER | Core 2L/3L/4L reaches FromDeep boundary | Separate Demon-OVER specialist family; current context overlap insufficient |
