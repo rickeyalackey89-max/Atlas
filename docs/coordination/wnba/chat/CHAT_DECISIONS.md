@@ -80,29 +80,6 @@ Adopt Prime Delegation in the parent Atlas repo.
 - Prime Delegation never becomes operational/model/statistical authority.
 - parked and future agendas receive explicit revisit triggers so important ideas do not disappear.
 
-## 2026-08-16 — V2 learner-vs-gate decomposition authorized
-
-Decision:
-
-Authorize one cheap diagnostic using only already-sealed V2 OOS scores and already-open discovery settlement to separate learner challenger quality from override-gate behavior.
-
-The diagnostic must not refit A/B/C/D, rerun outer folds, tune/install a threshold, open validation/lockbox, or change Live/model authority.
-
-Required strategic questions include:
-
-- how many correct challengers each learner identified before gating;
-- how many beneficial repairs were blocked by `INF` versus finite thresholds;
-- the ungated challenger counterfactual for each arm;
-- beneficial/harmful/neutral score separation;
-- A/D and A/B/D consensus behavior;
-- comparison with the stored 22-7+1 pointwise logistic.
-
-Prime Delegation archive:
-
-`docs/coordination/wnba/codex/archive/2026-08-16_3l_v2_learner_gate_decomposition.md`
-
-This is diagnostic evidence only and cannot itself promote a post-hoc threshold.
-
 ## 2026-08-16 — V2 learner-vs-gate decomposition accepted
 
 Reviewed WNBA result commit:
@@ -113,32 +90,13 @@ Decision:
 
 Accept the primary diagnosis `V2_GATE_DOMINATED_USEFUL_CHALLENGER_SIGNAL` as the correct strategic interpretation of V2-A/D action failure.
 
-Evidence:
+Key evidence:
 
-- V2-A pre-gate challenger result: 22-8-0, repairing 2026-07-06 and 2026-07-31 while damaging 2026-08-01; `INF` on 27/30 dates; both beneficial challengers blocked by `INF`.
-- V2-D produced the same repair/damage pattern; `INF` on 29/30 dates; both beneficial challengers blocked by `INF`.
-- V2-B was net 0 with 2 repairs / 2 harms and remains weak/unstable.
-- V2-C produced 3 repairs / 2 harms but remains weak/unstable because its broader discrimination evidence was poor and its gate selected `INF` on 30/30 dates.
-- no architecture had a beneficial challenger blocked by a finite threshold.
-- A/B/D three-way challenger consensus with all three margins positive occurred on 17 discovery dates and, post hoc, contained 2 beneficial / 0 harmful / 13 neutral / 1 nonbinary / 1 supply-impossible classifications. The two repairs were 2026-07-06 and 2026-07-31.
-
-Strategic interpretation:
-
-The strongest new signal is not a single relational learner. It is **cross-arm agreement/disagreement as a possible confidence gate**. A/B/D positive consensus retrospectively isolates two repairs with no damaged control wins and would map the 20-9-1 control to 22-7-1 if it had been predeclared.
-
-Methodological restriction:
-
-That consensus rule was identified after discovery settlement was visible. Its retrospective result is development-consumed diagnostic evidence, not OOS evidence, and cannot be promoted or represented as a validated 22-7-1 method.
-
-Next decision required:
-
-Design an honest predeclared evaluation route for the agreement-gate hypothesis and compare it with a selective gate around the stored pointwise logistic. Do not open validation or lockbox, and do not launch another learner, without explicit user authorization.
+- V2-A pre-gate challenger result: 22-8-0, repairing 2026-07-06 and 2026-07-31 while damaging 2026-08-01; `INF` on 27/30 dates.
+- V2-D produced the same repair/damage pattern; `INF` on 29/30 dates.
+- A/B/D three-way positive consensus was promising post hoc but development-consumed, not OOS authority.
 
 ## 2026-08-16 — Prime experiment runway doctrine
-
-User directive:
-
-Research must be more deterministic, rigorous, efficient, and pragmatic. Multi-hour compute should not be the first mechanism used to discover design flaws that could have been exposed by a cheap diagnostic.
 
 Decision:
 
@@ -148,50 +106,19 @@ Core rule:
 
 > **Cheap runway before long takeoff.**
 
-Future research separates:
+Future research separates `R0_ARTIFACT_AUDIT`, `R1_ACTIONABILITY_CANARY`, `R2_BOUNDED_PILOT`, and `R3_FULL_EXPERIMENT`; runway tasks cannot auto-escalate.
 
-- `R0_ARTIFACT_AUDIT`
-- `R1_ACTIONABILITY_CANARY`
-- `R2_BOUNDED_PILOT`
-- `R3_FULL_EXPERIMENT`
-
-An R0/R1/R2 runway can never auto-escalate into R3. Expensive work requires a second explicit user/Chat authorization after review of the runway evidence.
-
-Before R2/R3, Codex must state the computational topology, approximate fit count, measured pilot timing, projected wall-clock cost, resource/checkpoint behavior, and the exact information the full run is expected to add.
-
-Multi-arm experiments must prove during the runway that learner/arm differences survive shared gates/fallbacks at the final action surface. If a common gate mechanically suppresses the variants, stop and decompose the shared layer first.
-
-Long-running work must expose passive progress/heartbeat, completion-sentinel, and process-exit observability so completion/failure/stall is recognized promptly rather than remaining unnoticed for hours.
-
-Efficiency cannot weaken statistical rigor: no protected-data peeking, no serial heldout reaction where global sealing is required, and no post-hoc promotion.
-
-## 2026-08-16 — Historical as-of gate procedure adopted
+## 2026-08-16 — Historical as-of procedure adopted
 
 Decision:
 
-Use historical as-of / walk-forward / prequential simulation as the preferred retrospective procedure for evaluating an adaptive 3L gate-learning algorithm.
+Use historical as-of / walk-forward / prequential simulation as the preferred retrospective procedure for adaptive 3L learning.
 
-For every historical target date `D`, the causal sequence must be:
+For every target date `D`:
 
-`settled history t<D -> train/update procedure -> freeze state -> expose D pregame surface -> freeze selection -> reveal D outcome -> append D to history`.
+`settled history t<D -> train/update -> freeze state -> expose D pregame surface -> freeze selection -> reveal D outcome -> append D`.
 
-The procedure may be fixed while learned state changes through time. No same-date or future-date information may affect D.
-
-Critical temporal-legality correction:
-
-Existing pointwise logistic and V2 relational results are grouped-date OOF/LODO evidence, but target-date exclusion alone does not make their stored predictions historical-as-of legal. If the model for D trained on any date later than D, that stored signal cannot be reused as a causal as-of input. The R0 audit must classify each base signal as reusable, prior-only regeneratable, or historically unavailable.
-
-Evidence-language restriction:
-
-Because the current gate/procedure family was designed after viewing discovery evidence, replay on those same dates can provide **historical as-of procedural evidence**, not pristine never-before-seen hypothesis evidence. Future dates after procedure freeze provide prospective evidence.
-
-User authorization:
-
-Authorize only an `R0_ARTIFACT_AUDIT` to formalize the time-arrow contract, audit base-signal temporal legality, define cold-start behavior, blueprint G1/G2/G3, and estimate causal replay cost. No fitting or historical replay is authorized at R0.
-
-Prime work order:
-
-`docs/coordination/wnba/codex/archive/2026-08-16_3l_historical_asof_gate_r0.md`
+Stored grouped-date OOF/LODO outputs are not automatically causal if later-than-D dates entered the fitted state.
 
 ## 2026-08-16 — Historical as-of gate R0 accepted
 
@@ -203,21 +130,53 @@ Decision:
 
 Accept `ASOF_GATE_PROCEDURE_FEASIBLE_BUT_REQUIRES_BASE_REGENERATION`.
 
-Key findings:
+Stored pointwise/V2 series require prior-only regeneration on 29/30 targets; sealed pretruth candidate/rank and frozen 2L depletion surfaces are reusable.
 
-- the R0 audit completed without fitting or replay in approximately 0.12 seconds;
-- stored pointwise and V2 LODO predictions are not reusable as a causal 30-date historical-as-of sequence because later-than-D training entered state on 29/30 targets;
-- the sealed pretruth 3L candidate/rank surface is historically reusable;
-- frozen 2L selection/exact-road depletion is reusable when outcome columns are excluded from D-time action;
-- G1 cross-arm agreement, G2 selective pointwise, and G3 pointwise-proposal/relational-witness architectures are all causally feasible if their learned states are regenerated from `H_D = {t<D}` only;
-- pointwise base regeneration is low-cost, projected about 1-5 minutes for the full legal sequence;
-- A/B/D prior-only relational regeneration is projected about 15-45 minutes for the full legal sequence with shared caching; G3 can share pointwise and relational states rather than duplicate fitting;
-- cold start is manageable: pointwise/G2 earliest legal target 2026-06-19; A/B/D nested/G1/G3 earliest legal target 2026-06-20; no future backfill allowed.
+## 2026-08-16 — Historical as-of gate R1 accepted as resource stop
 
-Strategic interpretation:
+Reviewed WNBA result commit:
 
-R0 passes the runway go/no-go gate for a small `R1_ACTIONABILITY_CANARY`. It does **not** justify R2/R3 yet and does not choose a gate predicate, threshold, or winning architecture.
+`6789f0a595bf3956f42146e8742005febd7cc080`
 
-Recommended R1 purpose:
+Decision:
 
-Prove prior-only base regeneration, causal state/selection sealing, cold-start behavior, signal variation, cache reuse, and measured per-target runtime on a small deterministic chronological surface without using R1 as a performance backtest.
+Accept the causal mechanism as working on the first three sealed targets, but do not authorize full relational regeneration because the final probe hit the 900-second watchdog.
+
+Measured projection moved full A/B/D and G3 to about 5.1 hours while pointwise-only remained cheap.
+
+## 2026-08-16 — Historical as-of pointwise R2 accepted
+
+Reviewed WNBA result commit:
+
+`5eb96d83996e3f65c2ce021a5a3897b43f63da04`
+
+Decision:
+
+Accept `POINTWISE_ASOF_POSITIVE_NET` as the strongest current 3L procedural evidence.
+
+Exact causal result:
+
+- pointwise: 24 WIN / 6 LOSS / 0 NONBINARY;
+- Atlas control: 20 WIN / 9 LOSS / 1 NONBINARY;
+- repaired control losses: 2026-06-20, 2026-07-03, 2026-07-06, 2026-07-31;
+- damaged control win: 2026-08-01;
+- 2026-06-27 control NONBINARY became pointwise WIN;
+- net beneficial-minus-harmful substitutions = +3;
+- selection changed on 29/30 dates;
+- 29/29 expected fits completed in about 10.1 seconds;
+- all training dates were strictly earlier than each target;
+- final 2026-08-13 candidate identity, deterministic ranking, exact training-date set, and all candidate probabilities reproduced stored legal LODO state within 1e-10;
+- both focused test runs passed 10/10;
+- validation reads 0; lockbox reads 0; no relational, Live/model, threshold, or promotion mutation.
+
+Important interpretation:
+
+The causal procedure is not simply reproducing the prior grouped-date OOF 22-7-1 result. It lost 2026-07-07 as a repair, gained 2026-06-20, no longer damaged 2026-07-02, retained 2026-08-01 as its only harmful substitution, and converted the 2026-06-27 control NONBINARY to a WIN.
+
+Strategic implication:
+
+Because the pointwise procedure changes selection on 29/30 dates yet damages only one control win, its role should be reconsidered as the potential **3L ranking backbone**, not merely a selective override challenger. Relational witnesses now have to prove incremental value over a causal 24-6-0 pointwise baseline before their ~5.1-hour regeneration cost is justified.
+
+Evidence restriction:
+
+This remains `HISTORICAL_ASOF_PROCEDURAL_EVIDENCE`, not untouched prospective or promotion authority. No 3L freeze, Live install, validation read, or lockbox read is authorized by this decision alone.
