@@ -1,6 +1,6 @@
 # WNBA Codex Prime
 
-Status: **ACTIVE EXECUTION DELEGATION**
+Status: **NO ACTIVE EXECUTION DELEGATION**
 
 This file is the narrow execution surface for Prime Delegation.
 
@@ -10,7 +10,7 @@ Codex must read this file from the dedicated local Prime mirror:
 
 `C:\Users\13142\Atlas\PrimeDelegation\docs\coordination\wnba\codex\CODEX_PRIME.md`
 
-Before execution, the mirror must be a valid clean Git worktree on branch `main` and must be fast-forwarded to current `origin/main` according to `docs/coordination/PRIME_TRANSPORT.md`.
+Before any future execution, the mirror must be a valid clean Git worktree on branch `main` and must be fast-forwarded to current `origin/main` according to `docs/coordination/PRIME_TRANSPORT.md`.
 
 Do **not** attempt to use or repair `C:\Users\13142\Atlas\.git` for Prime Delegation.
 
@@ -23,7 +23,7 @@ While the WNBA Builder lane is active, `slip-builders` remains the sole workflow
 This document:
 
 - does not create a second state machine;
-- does not authorize Builder progression outside the exact user-approved task;
+- does not authorize Builder progression on its own;
 - does not authorize Live/model/promotion changes;
 - does not convert `CHAT_AGENDA.md` ideas into permission;
 - must fail closed if it conflicts with WNBA authority.
@@ -62,48 +62,34 @@ If no permanent repository changes are produced, do not invent a commit.
 
 The preferred user handoff is the final SHA plus a short request for Chat review.
 
-## Active user-authorized task
+## Last completed delegation
 
 Execution tier: **R0_ARTIFACT_AUDIT**
 
-Read and execute exactly:
+Task:
 
 `docs/coordination/wnba/codex/archive/2026-08-16_3l_historical_asof_gate_r0.md`
 
-Work-order publication commit:
+WNBA result commit:
 
-`fce39c002ca9196f3070879980d557265896f6f3`
+`f2e40be6d1beff5db0e6ed1dc178a68d21f9b512`
 
-Purpose:
+Chat review disposition:
 
-**Audit and formalize a deterministic historical-as-of 3L gate-learning procedure before any replay or fitting is authorized.**
+- decision: `ASOF_GATE_PROCEDURE_FEASIBLE_BUT_REQUIRES_BASE_REGENERATION`;
+- sealed pretruth candidate/rank and frozen 2L exact-road surfaces are historically reusable;
+- stored pointwise and V2 LODO outputs are not causal historical-as-of inputs on 29/30 dates and must be regenerated using only `t < D` history;
+- G1/G2/G3 are all feasible under prior-only regeneration;
+- no fitting or replay occurred;
+- validation reads 0;
+- lockbox reads 0;
+- no Live/model mutation;
+- WNBA stop: `BLOCKED_USER_REVIEW_WNBA_3L_HISTORICAL_ASOF_GATE_R0`.
 
-Critical question:
+## Current status
 
-Existing pointwise/V2 LODO outputs must not be assumed time-causal. R0 must determine whether each base signal is reusable as-of, requires t<D regeneration, or is historically unavailable.
+No new execution is authorized.
 
-Candidate structures to formalize without selecting/tuning a winner:
+Recommended next tier is an `R1_ACTIONABILITY_CANARY` that proves prior-only regeneration, time-arrow sealing, cold-start handling, signal variation, and measured runtime on a small deterministic chronological surface before any bounded/full replay is considered.
 
-- G1 cross-arm agreement gate;
-- G2 selective pointwise gate;
-- G3 pointwise proposal + relational witness gate.
-
-Expected starting WNBA commit:
-
-`bc71d9442580fe69812d6dbad87545006aabdd4e`
-
-Expected current WNBA stop:
-
-`BLOCKED_USER_REVIEW_WNBA_3L_V2_LEARNER_GATE_DECOMPOSITION`
-
-No model fit, historical replay, candidate regeneration, threshold/predicate tuning, validation/lockbox read, 4L/FromDeep work, or Live/model mutation is authorized.
-
-Target runtime: minutes. If fitting/replay or unexpectedly expensive work would be required, stop and report instead of escalating.
-
-Codex must reconcile this user authorization through the existing `slip-builders` lane before any WNBA mutation or diagnostic artifact generation.
-
-## Required final stop
-
-`BLOCKED_USER_REVIEW_WNBA_3L_HISTORICAL_ASOF_GATE_R0`
-
-After completion, do not begin R1/R2/R3 automatically. Commit/push the R0 evidence, stop, and return the final WNBA SHA for Chat/user review.
+Do not begin R1/R2/R3, 4L, FromDeep, validation, or lockbox work until a new user-authorized Prime delegation is published here.
