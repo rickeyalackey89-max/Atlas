@@ -255,3 +255,51 @@ Recommendation:
 Authority restriction:
 
 This review does **not** execute the 3L research/depletion freeze and does not authorize 4L research, prospective claims, Live installation, validation reads, or lockbox reads. The actual freeze remains a separate explicit user authorization.
+
+## 2026-08-16 — 3L pointwise research/depletion freeze accepted
+
+Reviewed WNBA result commit:
+
+`2b1fca797eebefdb0da190099681460f22036eb1`
+
+Decision:
+
+Accept the control transition as faithful.
+
+- 3L causal pointwise status is `FROZEN_RESEARCH_DEPLETION_BACKBONE`.
+- scope is research/depletion only; development record remains 24-6-0 `HISTORICAL_ASOF_PROCEDURAL_EVIDENCE`.
+- no Live, prospective, promotion, or installation authority is created.
+- public/live slips are explicitly not evaluation authority.
+- exact-road depletion remains ordered canonical road equality only; no player-wide depletion.
+- 4L entry is open on the exact 481-candidate residual with 15 mandatory-abstention dates.
+- 4L research execution had not started at the transition stop.
+- validation reads 0; lockbox reads 0; no Live/model/FromDeep/relational execution.
+
+The active Builder pointer moved to `builder_s5_4l_research_entry_user_review` while preserving `four_leg_research_allowed=false` pending a separate runway authorization.
+
+## 2026-08-16 — Current 4L structural/forensic R0 authorized
+
+User/Chat sequence already established:
+
+Finish/freeze 4L, then finish/freeze FromDeep, then validate the completed frozen Builder stack; public slips never substitute for protected evaluation.
+
+Decision:
+
+Authorize one `R0_ARTIFACT_AUDIT` on the exact post-pointwise 4L residual before any learner is fit.
+
+Required causal/forensic structure:
+
+- bind the frozen 3L receipt and residual inventory SHA `5500a88c5d14c3a2e6d5f043decc1d88500678986035bce8a431560ac343bd09`;
+- Phase A reconstructs and physically seals the outcome-blind feature/control surface for exactly the 481 frozen candidate IDs;
+- recover the existing canonical Atlas control/order from pretruth authority only; never invent a new control;
+- only after Phase A seal may discovery/development 4L truth be joined;
+- separate 15 zero-residual dates as mandatory abstentions rather than losses;
+- on the 15 nonzero dates establish current control record, winning supply, ranking-failure versus supply-impossible anatomy, and best-winner rank/top-k coverage;
+- audit lineage, surface compatibility, and temporal legality of the prior 4L context diagnostic without refitting;
+- estimate compute topology for the cheapest justified next 4L method.
+
+No candidate generation, learner fit, sweep, context rerank, FromDeep, validation, lockbox, or Live/model mutation is authorized.
+
+Prime work order:
+
+`docs/coordination/wnba/codex/archive/2026-08-16_4l_post_pointwise_residual_r0.md`
