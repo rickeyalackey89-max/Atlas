@@ -1,6 +1,6 @@
 {
   "schema_version": "atlas_prime_delegation_wnba_current_state_v1",
-  "captured_at_ct": "2026-08-16T17:27:00-05:00",
+  "captured_at_ct": "2026-08-16T17:32:00-05:00",
   "snapshot_not_authority": true,
   "sport": "WNBA",
   "source_repository": "rickeyalackey89-max/Atlas-WNBA",
@@ -40,22 +40,8 @@
       "losses": 7
     },
     "3L": {
-      "status": "ACTIVE_RESEARCH_POINTWISE_R2_REVIEWED",
+      "status": "ACTIVE_RESEARCH_FREEZE_READINESS_R0_AUTHORIZED",
       "control": "20-9-1",
-      "ranking_failures": 8,
-      "supply_impossible_dates": ["2026-07-08"],
-      "prior_pointwise_logistic": "22-7-1 grouped-date OOF evidence",
-      "historical_asof_r0": {
-        "commit": "f2e40be6d1beff5db0e6ed1dc178a68d21f9b512",
-        "decision": "ASOF_GATE_PROCEDURE_FEASIBLE_BUT_REQUIRES_BASE_REGENERATION"
-      },
-      "historical_asof_r1": {
-        "commit": "6789f0a595bf3956f42146e8742005febd7cc080",
-        "primary_disposition": "R1_FAIL_RESOURCE_BOUND",
-        "causal_mechanism": "PASSED_ON_FIRST_THREE_SEALED_TARGETS",
-        "A_B_D_full_projection": "~5.1 hours",
-        "relational_execution_authorized": false
-      },
       "historical_asof_pointwise_r2": {
         "commit": "5eb96d83996e3f65c2ce021a5a3897b43f63da04",
         "diagnostic": "POINTWISE_ASOF_POSITIVE_NET",
@@ -74,18 +60,31 @@
         "validation_reads": 0,
         "lockbox_reads": 0
       },
-      "chat_interpretation": "CAUSAL_POINTWISE_IS_CURRENT_LEADING_3L_BACKBONE_CANDIDATE_RELATIONAL_MUST_EARN_INCREMENTAL_VALUE"
+      "freeze_readiness_r0_authorization": {
+        "execution_tier": "R0_ARTIFACT_AUDIT",
+        "prime_work_order": "docs/coordination/wnba/codex/archive/2026-08-16_3l_pointwise_freeze_readiness_r0.md",
+        "publication_commit": "5549fee8b08aa5adc17b2097c00b2fb7f9a4b093",
+        "scope": "freeze-contract completeness, six-loss forensic with five meaningful ranking/error dates plus Jul08 supply-impossible, and exact post-pointwise 4L residual availability inventory",
+        "actual_freeze_allowed": false,
+        "candidate_generation_allowed": false,
+        "four_leg_research_allowed": false,
+        "relational_allowed": false,
+        "validation_reads_allowed": 0,
+        "lockbox_reads_allowed": 0
+      },
+      "chat_interpretation": "CAUSAL_POINTWISE_IS_LEADING_3L_BACKBONE_CANDIDATE_PENDING_FREEZE_READINESS_AUDIT"
     },
     "4L": {
-      "status": "PARKED_PENDING_FINAL_3L_DEPLETION"
+      "status": "PARKED_PENDING_SEPARATE_3L_FREEZE_DECISION"
     },
     "FromDeep": {
       "status": "SEPARATE_UNCHANGED"
     }
   },
   "next_strategy": {
-    "status": "CANDIDATE_NEXT_NOT_CODEX_AUTHORIZED",
-    "topic": "Decide whether causal pointwise 24-6-0 should be frozen as the working 3L research backbone before spending on relational witnesses",
-    "required_stop": "BLOCKED_USER_REVIEW_WNBA_3L_HISTORICAL_ASOF_POINTWISE_R2"
+    "status": "R0_POINTWISE_FREEZE_READINESS_USER_AUTHORIZED",
+    "prime_work_order": "docs/coordination/wnba/codex/archive/2026-08-16_3l_pointwise_freeze_readiness_r0.md",
+    "topic": "Audit whether causal pointwise 24-6-0 is ready for a working 3L research/depletion freeze and inventory the exact downstream 4L residual surface",
+    "required_stop": "BLOCKED_USER_REVIEW_WNBA_3L_POINTWISE_FREEZE_READINESS_R0"
   }
 }
