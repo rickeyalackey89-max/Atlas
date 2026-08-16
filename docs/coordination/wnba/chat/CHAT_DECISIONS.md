@@ -192,3 +192,32 @@ Authorize only an `R0_ARTIFACT_AUDIT` to formalize the time-arrow contract, audi
 Prime work order:
 
 `docs/coordination/wnba/codex/archive/2026-08-16_3l_historical_asof_gate_r0.md`
+
+## 2026-08-16 — Historical as-of gate R0 accepted
+
+Reviewed WNBA result commit:
+
+`f2e40be6d1beff5db0e6ed1dc178a68d21f9b512`
+
+Decision:
+
+Accept `ASOF_GATE_PROCEDURE_FEASIBLE_BUT_REQUIRES_BASE_REGENERATION`.
+
+Key findings:
+
+- the R0 audit completed without fitting or replay in approximately 0.12 seconds;
+- stored pointwise and V2 LODO predictions are not reusable as a causal 30-date historical-as-of sequence because later-than-D training entered state on 29/30 targets;
+- the sealed pretruth 3L candidate/rank surface is historically reusable;
+- frozen 2L selection/exact-road depletion is reusable when outcome columns are excluded from D-time action;
+- G1 cross-arm agreement, G2 selective pointwise, and G3 pointwise-proposal/relational-witness architectures are all causally feasible if their learned states are regenerated from `H_D = {t<D}` only;
+- pointwise base regeneration is low-cost, projected about 1-5 minutes for the full legal sequence;
+- A/B/D prior-only relational regeneration is projected about 15-45 minutes for the full legal sequence with shared caching; G3 can share pointwise and relational states rather than duplicate fitting;
+- cold start is manageable: pointwise/G2 earliest legal target 2026-06-19; A/B/D nested/G1/G3 earliest legal target 2026-06-20; no future backfill allowed.
+
+Strategic interpretation:
+
+R0 passes the runway go/no-go gate for a small `R1_ACTIONABILITY_CANARY`. It does **not** justify R2/R3 yet and does not choose a gate predicate, threshold, or winning architecture.
+
+Recommended R1 purpose:
+
+Prove prior-only base regeneration, causal state/selection sealing, cold-start behavior, signal variation, cache reuse, and measured per-target runtime on a small deterministic chronological surface without using R1 as a performance backtest.
