@@ -53,8 +53,8 @@ Six of the eight repairable loss dates had a legal winner inside the current Atl
 Stored grouped-date OOF result:
 
 - 22 WIN / 7 LOSS / 1 NONBINARY
-- repaired four control losses
-- damaged two control wins
+- repaired 2026-07-03, 2026-07-06, 2026-07-07, 2026-07-31
+- damaged 2026-07-02 and 2026-08-01
 - candidate-wide within-date AUC approximately 0.492
 - date-constant `slate_game_count` has zero within-date ordering contribution
 
@@ -74,56 +74,78 @@ Accepted interpretation: V1 failed one narrow architecture; it did not prove pai
 
 ## Relational Sweep V2
 
-Commit reviewed: `879c1c4455821094f7ffc754a557a6097a2988ba`
+Original V2 commit:
 
-Official V2 settlement output:
+`879c1c4455821094f7ffc754a557a6097a2988ba`
 
-- V2-A: 20-9-1
-- V2-B: 20-9-1
-- V2-C: 20-9-1
-- V2-D: 20-9-1
+Official gated action output was 20-9-1 for all four arms and emitted `NO_RELATIONAL_SIGNAL_FOUND`.
 
-Official code labeled the comparative conclusion `NO_RELATIONAL_SIGNAL_FOUND`.
+That phrase is superseded for Chat strategy by the completed learner-vs-gate decomposition at:
 
-### Chat strategic correction
+`bc71d9442580fe69812d6dbad87545006aabdd4e`
 
-Do **not** treat that label as proof that relational signal is absent.
+Primary diagnostic conclusion:
 
-The experiment coupled two questions:
+`V2_GATE_DOMINATED_USEFUL_CHALLENGER_SIGNAL`
 
-1. can the learner identify a stronger challenger?
-2. will a nested override-threshold policy permit the challenger to replace Atlas rank #1?
+This is development-consumed post-settlement diagnostic evidence only. It does not promote a learner or gate.
 
-The threshold layer frequently selected `INF` / KEEP-ALL, collapsing the action result back to control.
+### Arm-level decomposition
 
-Concrete evidence:
+- V2-A ungated challenger counterfactual: 22-8-0; 2 beneficial substitutions, 1 harmful, net +1. Repairs: 2026-07-06 and 2026-07-31. Harm: 2026-08-01. `INF` gate on 27/30 dates; both beneficial challengers were blocked by `INF`.
+- V2-B: 21-9-0; 2 beneficial, 2 harmful, net 0. `INF` on 28/30. Disposition remains weak/unstable.
+- V2-C: 22-8-0; 3 beneficial, 2 harmful, net +1. Repairs: 2026-07-03, 2026-07-06, 2026-07-07. Harms: 2026-06-19 and 2026-07-02. `INF` on 30/30. Despite these local repairs, prior V2-C discrimination diagnostics were weak, so C remains weak/unstable rather than promoted.
+- V2-D: 22-8-0; 2 beneficial, 1 harmful, net +1. Repairs: 2026-07-06 and 2026-07-31. Harm: 2026-08-01. `INF` on 29/30; both beneficial challengers were blocked by `INF`.
 
-- 2026-07-06: V2-A and V2-D selected challenger `wnba_candidate_44e71fdfd5fab086425b647a`, which the earlier forensic identifies as the best-ranked winning candidate, but the threshold was `INF`, so the losing incumbent remained selected.
-- 2026-07-31: V2-A/V2-B/V2-D selected challenger `wnba_candidate_b2798bab67a1c202c9f7a4ac`, which the earlier forensic identifies as the best-ranked winning candidate, but the threshold was `INF`, so the losing incumbent remained selected.
+No finite threshold blocked a beneficial challenger in any arm. The dominant action failure was the nested `INF` / never-override gate.
 
-V2-A/D also showed date-balanced relational AUC above 0.55 on multiple surfaces. V2-A full residual AUC was ~0.558 and top-20 ~0.573; V2-D full residual ~0.559.
+### Consensus signal
 
-The V2 comparative classifier itself required both a discrimination signal and at least one **acted beneficial override** to emit `RELATIONAL_SIGNAL_EXISTS_BUT_UNSTABLE`. Because the gate suppressed beneficial actions, the code fell through to `NO_RELATIONAL_SIGNAL_FOUND` even when its own AUC condition identified relational discrimination.
+A and D selected the same challenger on 26/30 dates. On the 19 A/D-consensus dates where both incumbent-relative margins were positive, the challenger classifications were:
 
-Current Chat disposition:
+- 2 beneficial
+- 1 harmful
+- 14 neutral
+- 1 nonbinary
+- 1 supply-impossible
 
-`RELATIONAL_SIGNAL_WEAK_OR_UNSTABLE_AND_OVERRIDE_GATE_CONFOUNDED`
+The two repaired ranking failures were 2026-07-06 and 2026-07-31; the harmful date was 2026-08-01.
 
-This is a strategic interpretation only, not a new statistical authority or promotion.
+A/B/D selected the same challenger on 23/30 dates. On the 17 three-way-consensus dates where all three incumbent-relative margins were positive:
 
-V2-C is the weakest arm and is more directly negative: beneficial-override ROC AUC ~0.314 and PR AUC ~0.054 versus prevalence ~0.077.
+- 2 beneficial
+- 0 harmful
+- 13 neutral
+- 1 nonbinary
+- 1 supply-impossible
+
+Those two beneficial dates were again 2026-07-06 and 2026-07-31.
+
+This three-way positive-consensus pattern is strategically important because, if it had been a predeclared rule, those two repairs with no damaged control wins would move the 20-9-1 control to 22-7-1 while changing far fewer decisions than the prior pointwise logistic. **However, the rule was identified after discovery settlement was visible, so that 22-7-1 implication is post-hoc diagnostic only and must not be represented as OOS performance.**
+
+### Relationship to pointwise logistic
+
+The prior pointwise learner repaired four dates and damaged two. V2-A/D correctly identify only the 2026-07-06 and 2026-07-31 subset and share the 2026-08-01 damage; they do not identify a correct substitution that the pointwise learner missed. The pointwise learner additionally repairs 2026-07-03 and 2026-07-07.
+
+V2-C captures 2026-07-03, 2026-07-06, and 2026-07-07 but misses 2026-07-31 and introduces different damage on 2026-06-19 and 2026-07-02.
+
+Interpretation: the relational arms contain useful local challenger information, but no current arm is independently strong enough for promotion. The most promising new information is **cross-arm agreement/disagreement as a potential confidence signal**, not a claim that one relational learner has become the champion.
 
 ## Immediate research question
 
-Before another expensive learner run, decompose V2 learner quality from override-gate quality using the already-sealed OOS candidate scores and already-open discovery settlement.
+The decomposition is complete. Do not run another expensive learner automatically.
 
-No refit is required for the first diagnostic.
+The next strategic problem is to design an **honest predeclared selective gate experiment** that tests whether model agreement can convert relational challenger signal without damaging strong control wins.
 
-The next useful question is:
+Primary candidate hypothesis for discussion:
 
-**How often did each V2 architecture identify a winning challenger on control-loss dates before the threshold gate, and what was the counterfactual beneficial/harmful substitution frontier of the already-sealed OOS challenger scores?**
+`A/B/D same challenger + all three incumbent-relative margins positive -> candidate override condition`
 
-This diagnostic may guide a future predeclared gate or learner experiment but cannot itself promote a threshold selected after settlement.
+Secondary comparison hypothesis:
+
+selectively gate the stored pointwise logistic rather than using its broad rerank.
+
+Important methodological boundary: these exact gate ideas were informed by already-open discovery outcomes. Their retrospective discovery results have zero promotion authority. A future claim requires an honest evaluation route chosen before outcomes are read: prospective evidence, explicitly authorized unopened validation/lockbox use, or a newly generated leakage-safe cross-fit architecture. Validation and lockbox remain unopened pending explicit user authorization.
 
 ## 4L
 
