@@ -1,23 +1,19 @@
 {
   "schema_version": "atlas_prime_delegation_wnba_current_state_v1",
-  "captured_at_ct": "2026-08-17T14:11:00-05:00",
+  "captured_at_ct": "2026-08-17T14:16:00-05:00",
   "snapshot_not_authority": true,
   "sport": "WNBA",
   "source_repository": "rickeyalackey89-max/Atlas-WNBA",
   "source_branch": "builder-method-contract-v1",
   "source_head": "61f875e131058627e4adaf6697c54f09aa2a0539",
   "builder": {
-    "status": "BLOCKED_USER_REVIEW",
-    "current_stop": "BLOCKED_USER_REVIEW_WNBA_4L_PRECISION_FIRST_CHALLENGER_R2",
+    "status": "ACTIVE_USER_AUTHORIZED_FREEZE",
+    "current_target_repo_stop": "BLOCKED_USER_REVIEW_WNBA_4L_PRECISION_FIRST_CHALLENGER_R2",
+    "authorized_step": "4l_canonical_atlas_research_depletion_freeze",
+    "required_stop": "BLOCKED_USER_REVIEW_WNBA_4L_CANONICAL_ATLAS_FREEZE",
     "controller_skill": "slip-builders",
     "validation_reads": 0,
-    "lockbox_reads": 0,
-    "active_codex_execution": false
-  },
-  "governance": {
-    "workflow_efficiency_implementation_commit": "2d2f78e1ee9cb59f3c6687c1cad38ba1621272bf",
-    "governance_consistency_baseline_commit": "1bdebebfe6bcafda973bed3a3cf314336534eb4b",
-    "sealed_forensic_fast_path_status": "ACTIVE_AND_PROVEN"
+    "lockbox_reads": 0
   },
   "families": {
     "2L": {
@@ -30,7 +26,7 @@
       "historical_asof_record": "24-6-0"
     },
     "4L": {
-      "status": "CHALLENGER_REJECTED_CANONICAL_ATLAS_FREEZE_RECOMMENDED",
+      "status": "CANONICAL_ATLAS_RESEARCH_DEPLETION_FREEZE_AUTHORIZED_ACTIVE",
       "uniform_surface_commit": "fd0df85a70559d830cd2ae5e76a711453a9f4dca",
       "control_forensic_commit": "2d2b4f4db497ce6626d7ae30e6b0eeabc394863f",
       "incumbent_forensic_commit": "cd645ed1fdfe857ec2b84f21a9653e6c2977de2a",
@@ -42,51 +38,28 @@
         "nonbinary": 1,
         "binary_win_rate": 0.6363636364,
         "eligible_dates": 23,
-        "winner_available_dates": 23,
-        "ranking_failure_count": 8,
-        "no_winner_date_count": 0
+        "winner_available_dates": 23
       },
-      "challenger_r1": {
-        "target_date_count": 23,
-        "keep_atlas_count": 22,
-        "exact_consensus_override_count": 1,
-        "override_date": "2026-08-07",
-        "override_candidate_id": "wnba_candidate_06038f743829e7965ed64acb",
-        "override_atlas_rank": 16,
-        "same_date_target_outcome_before_selection_reads": 0
-      },
-      "challenger_r2": {
-        "evidence_label": "DEVELOPMENT_CONSUMED_SEALED_SELECTION_PERFORMANCE",
-        "selected_record": "14-8-1",
-        "selected_binary_win_rate": 0.6363636364,
-        "selected_minus_atlas_wins": 0,
-        "selected_minus_atlas_losses": 0,
-        "selected_minus_atlas_nonbinary": 0,
-        "sole_override_atlas_result": "WIN",
-        "sole_override_selected_result": "WIN",
-        "sole_override_effect": "NEUTRAL",
-        "grade_count": 1,
-        "fits": 0,
-        "candidate_generation_calls": 0,
-        "candidate_rescore_calls": 0,
-        "candidate_rerank_calls": 0,
-        "validation_reads": 0,
-        "lockbox_reads": 0,
-        "scientific_disposition": "PRECISION_FIRST_CHALLENGER_NO_INCREMENTAL_VALUE_REJECT"
-      },
-      "candidate_next": {
-        "name": "CANONICAL_ATLAS_4L_RESEARCH_DEPLETION_FREEZE",
-        "status": "CANDIDATE_NEXT_NOT_AUTHORIZED",
-        "method": "CANONICAL_FROZEN_ATLAS_RANK_1",
-        "development_record": "14-8-1",
+      "freeze": {
+        "work_order": "docs/coordination/wnba/codex/archive/2026-08-17_4l_canonical_atlas_research_depletion_freeze.md",
+        "work_order_publication_commit": "6d004bc66804ac536bb24feddca103a208ace8e8",
+        "method": "CANONICAL_ATLAS_RANK_1_ON_STATEFUL_POST_2L_POST_3L_DEPLETION_LINEAGE",
         "research_depletion_only": true,
-        "live_or_promotion_authority": false,
-        "challenger_promoted": false,
-        "auto_start": false
+        "live_authority": false,
+        "promotion_authority": false,
+        "prospective_performance_authority": false,
+        "public_slips_evaluation_authority": false,
+        "precision_first_challenger_promoted": false,
+        "wholesale_reranker_promoted": false,
+        "validation_reads_allowed": 0,
+        "lockbox_reads_allowed": 0,
+        "further_4l_learner_research_closed_unless_user_reopens": true,
+        "auto_start_fromdeep": false
       }
     },
     "FromDeep": {
-      "status": "ARCHITECTURE_AGREED_EXECUTION_NOT_AUTHORIZED"
+      "status": "ARCHITECTURE_AGREED_EXECUTION_NOT_AUTHORIZED",
+      "next_after_4l_freeze_acceptance": true
     }
   },
   "evaluation_doctrine": {
@@ -95,8 +68,8 @@
     "lockbox_reads": 0
   },
   "next_strategy": {
-    "status": "AWAITING_USER_DECISION",
-    "topic": "Authorize the canonical Atlas 4L research/depletion freeze, then open the agreed FromDeep discovery-only runway.",
-    "codex_execution_authorized": false
+    "status": "USER_AUTHORIZED_CODEX_EXECUTION_ACTIVE",
+    "topic": "Freeze canonical Atlas rank-1 as the 4L research/depletion backbone, reject non-incremental challenger/rerankers, then stop for review before FromDeep.",
+    "required_stop": "BLOCKED_USER_REVIEW_WNBA_4L_CANONICAL_ATLAS_FREEZE"
   }
 }
