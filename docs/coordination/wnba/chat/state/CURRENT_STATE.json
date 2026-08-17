@@ -1,6 +1,6 @@
 {
   "schema_version": "atlas_prime_delegation_wnba_current_state_v1",
-  "captured_at_ct": "2026-08-16T20:33:00-05:00",
+  "captured_at_ct": "2026-08-16T20:35:00-05:00",
   "snapshot_not_authority": true,
   "sport": "WNBA",
   "source_repository": "rickeyalackey89-max/Atlas-WNBA",
@@ -29,7 +29,7 @@
       "live_or_prospective_promotion_authority": false
     },
     "4L": {
-      "status": "R1_POINTWISE_CAUSAL_RUNWAY_REVIEWED",
+      "status": "R2_SEALED_POINTWISE_PERFORMANCE_USER_AUTHORIZED",
       "r0_commit": "d6cf1a561e660596cb28d1e2f557290b02b3d4d5",
       "r1_commit": "fbd986f967c4fb123349ce849bf0f9333ab15d60",
       "post_pointwise_residual": {
@@ -45,34 +45,31 @@
         "wins": 7,
         "losses": 7,
         "nonbinary": 1,
-        "ranking_failure_dates": {
-          "2026-06-17": {"best_winner_rank": 6},
-          "2026-07-22": {"best_winner_rank": 5},
-          "2026-08-06": {"best_winner_rank": 5}
-        },
+        "ranking_failure_dates": ["2026-06-17", "2026-07-22", "2026-08-06"],
         "supply_impossible_dates": ["2026-07-08", "2026-07-20", "2026-07-28", "2026-08-13"],
         "surface_ceiling_without_supply_change": "10-4-1"
       },
       "pointwise_r1": {
-        "execution_tier": "R1_ACTIONABILITY_CANARY",
         "completed_target_count": 15,
-        "expected_fitted_target_count": 14,
-        "fit_topology_exact": true,
+        "fitted_target_count": 14,
         "time_arrow_passed": true,
         "selection_churn": "12/15",
         "nondegenerate_fitted_targets": "14/14",
-        "actionability_observed": true,
         "elapsed_seconds": 5.75439,
-        "aggregate_performance_reported": false,
-        "context_used": false,
-        "validation_reads": 0,
-        "lockbox_reads": 0
+        "aggregate_performance_reported": false
       },
-      "next_candidate_step": {
-        "name": "SEALED_POINTWISE_PERFORMANCE_REVIEW",
-        "status": "CANDIDATE_NEXT_NOT_AUTHORIZED",
-        "refit_required": false,
-        "question": "Do the already-sealed causal pointwise selections improve materially over the 7-7-1 control, ideally by about +2 net wins, without excessive damage?"
+      "pointwise_r2_authorization": {
+        "execution_tier": "R2_BOUNDED_PILOT",
+        "prime_work_order": "docs/coordination/wnba/codex/archive/2026-08-16_4l_sealed_pointwise_performance_r2.md",
+        "publication_commit": "e9d0aadea1639f5663d68f4d2445a7c7307e5edc",
+        "refit_allowed": false,
+        "context_allowed": false,
+        "practical_bar": {
+          "minimum_available_date_wins": 9,
+          "minimum_net_wins_vs_control": 2
+        },
+        "validation_reads_allowed": 0,
+        "lockbox_reads_allowed": 0
       },
       "context_regeneration": {
         "projected_fit_count": 28,
@@ -102,8 +99,9 @@
     "lockbox_reads": 0
   },
   "next_strategy": {
-    "status": "CANDIDATE_NEXT_NOT_CODEX_AUTHORIZED",
-    "topic": "Grade the already-sealed 4L causal pointwise R1 selections against consumed discovery truth without refitting; then decide 4L freeze-readiness versus context regeneration",
-    "required_stop": "BLOCKED_USER_REVIEW_WNBA_4L_HISTORICAL_ASOF_POINTWISE_R1"
+    "status": "R2_4L_SEALED_PERFORMANCE_USER_AUTHORIZED",
+    "prime_work_order": "docs/coordination/wnba/codex/archive/2026-08-16_4l_sealed_pointwise_performance_r2.md",
+    "topic": "Grade already-sealed causal 4L pointwise selections without refitting and compare to canonical 7-7-1 control",
+    "required_stop": "BLOCKED_USER_REVIEW_WNBA_4L_SEALED_POINTWISE_PERFORMANCE_R2"
   }
 }
