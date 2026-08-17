@@ -1,85 +1,108 @@
 # WNBA Codex Prime
 
-Status: **NO ACTIVE EXECUTION DELEGATION**
+Status: **ACTIVE EXECUTION DELEGATION**
 
-Use the clean Prime mirror at `C:\Users\13142\Atlas\PrimeDelegation` and canonical WNBA root `C:\Users\13142\Atlas\WNBA`. Read WNBA `AGENTS.md`, active `slip-builders` controls, and current Builder governance before any future execution.
+Use the clean Prime mirror at `C:\Users\13142\Atlas\PrimeDelegation` and canonical WNBA root `C:\Users\13142\Atlas\WNBA`. Read WNBA `AGENTS.md`, active `slip-builders` controls, and current Builder governance before execution.
 
 ## Accepted 4L authority
 
-Uniform sealed 4L surface:
-
-`fd0df85a70559d830cd2ae5e76a711453a9f4dca`
-
-Canonical Atlas control forensic:
-
-`2d2b4f4db497ce6626d7ae30e6b0eeabc394863f`
-
-Accepted canonical Atlas result:
-
-- `14 WIN / 8 LOSS / 1 NONBINARY`
-- binary win rate `63.64%`
-- winner available `23/23`
-- all eight losses are ranking failures
-- validation reads `0`
-- lockbox reads `0`
-
-Incumbent-vs-first-winner forensic:
-
-`cd645ed1fdfe857ec2b84f21a9653e6c2977de2a`
-
-Precision-first challenger R1 selection seal:
-
-`c9b8ce32fc2557475d3d2f75af9e4feab3c7fe7b`
-
-R1 actionability:
-
-- 23 sealed target selections;
-- 22 `KEEP_ATLAS`;
-- one `CONSENSUS_OVERRIDE` on `2026-08-07`;
-- selected challenger `wnba_candidate_06038f743829e7965ed64acb`, frozen Atlas rank 16;
-- all selections sealed pretruth under strict historical-as-of `t<D`;
-- no target performance opened in R1.
-
-## Last completed delegation
-
-Task:
-
-`docs/coordination/wnba/codex/archive/2026-08-17_4l_precision_first_challenger_r2_performance_grade.md`
-
-WNBA result commit:
+Expected WNBA starting HEAD:
 
 `61f875e131058627e4adaf6697c54f09aa2a0539`
 
-Final stop:
+Expected Builder stop:
 
 `BLOCKED_USER_REVIEW_WNBA_4L_PRECISION_FIRST_CHALLENGER_R2`
 
-Accepted R2 result:
+Accepted canonical Atlas evidence:
 
-- R1 selected record = `14 WIN / 8 LOSS / 1 NONBINARY`;
-- binary win rate = `63.64%`;
-- selected-minus-Atlas = `0 WIN / 0 LOSS / 0 NONBINARY`;
-- sole Aug. 7 transition = Atlas rank-1 `WIN` -> consensus rank-16 `WIN`;
-- override effect = `NEUTRAL`;
-- grade count = 1;
-- fitting = 0;
-- candidate generation/rescoring/reranking = 0;
-- validation reads = 0;
-- lockbox reads = 0;
-- no Live/model/policy/publication mutation.
+- uniform stateful surface `fd0df85a70559d830cd2ae5e76a711453a9f4dca`;
+- complete-surface Atlas control `2d2b4f4db497ce6626d7ae30e6b0eeabc394863f`;
+- Atlas rank-1 = `14 WIN / 8 LOSS / 1 NONBINARY`, `63.64%` binary;
+- winner available `23/23` eligible development dates;
+- all eight Atlas losses are ranking failures on the sealed development surface;
+- precision-first challenger R1 `c9b8ce32fc2557475d3d2f75af9e4feab3c7fe7b` produced one override only;
+- challenger R2 `61f875e131058627e4adaf6697c54f09aa2a0539` finished `14-8-1`, identical to Atlas;
+- sole Aug. 7 override was `WIN -> WIN`, effect `NEUTRAL`;
+- validation reads `0`; lockbox reads `0`.
 
 Scientific disposition:
 
-`PRECISION_FIRST_CHALLENGER_NO_INCREMENTAL_VALUE_REJECT_FOR_4L_FREEZE`
+`FREEZE_CANONICAL_ATLAS_4L_RESEARCH_DEPLETION_METHOD_REJECT_CHALLENGER`
 
-The challenger architecture is not promoted. It produced no improvement over canonical Atlas and does not justify added 4L method complexity.
+## Active user-authorized task
 
-## Candidate next — NOT AUTHORIZED
+User authorization in Chat:
 
-Freeze canonical Atlas rank-1 as the 4L research/depletion method at the accepted `14-8-1` development-consumed baseline, preserving the uniform 23-date stateful surface/depletion lineage and explicitly rejecting the precision-first challenger as non-incremental.
+**“Sounds good to me, I'm ready to get done with this.”**
 
-No further 4L learner/re-ranker research is recommended unless Rick explicitly reopens it.
+Read and execute exactly:
 
-After the 4L freeze boundary is completed, the next strategic lane is the separately agreed FromDeep discovery-only runway.
+`docs/coordination/wnba/codex/archive/2026-08-17_4l_canonical_atlas_research_depletion_freeze.md`
 
-No Codex execution is authorized until Rick explicitly approves the 4L freeze work order.
+Work-order publication commit:
+
+`6d004bc66804ac536bb24feddca103a208ace8e8`
+
+Execution tier:
+
+`FREEZE_RESEARCH_DEPLETION_BACKBONE`
+
+## Frozen method to install as research/depletion authority
+
+```text
+current/sealed scored-leg Builder surface
+-> frozen 2L exact selected-leg removal
+-> frozen pointwise 3L selection + exact selected-leg removal
+-> canonical fresh 4L frontier under existing structural contract
+-> canonical outcome-free context annotation
+-> canonical Atlas 4L scoring on the full within-date population
+-> select canonical Atlas rank 1
+```
+
+Binding rules:
+
+- use repository-canonical exact selected-leg identity/equality;
+- no player-wide or signal-road-wide depletion;
+- no future lookahead/reservation;
+- preserve canonical generator, context annotation, Atlas scorer, percentile/midrank population, and tie-break semantics;
+- no pointwise/context/relational/precision-first challenger layer in the frozen 4L method;
+- honest abstention remains legal when structurally inapplicable or no legal canonical candidate exists;
+- challenger and wholesale rerankers remain preserved historical evidence only.
+
+## Authority boundary
+
+Freeze scope is **research/depletion only**.
+
+Required explicit flags/equivalent semantics:
+
+- research/depletion authority = true;
+- Live authority = false;
+- promotion authority = false;
+- prospective performance authority = false;
+- public slips are not evaluation authority;
+- validation reads = 0;
+- lockbox reads = 0;
+- precision-first challenger promoted = false;
+- further 4L learner/reranker research closed unless user explicitly reopens it.
+
+Do not run another performance grade. Do not fit, tune, regenerate for performance, redesign, run FromDeep, access protected evidence, or mutate Live/model/minutes/calibration/allocator/QMC/dependence/publication state.
+
+Use existing repo-owned Builder control/freeze machinery. Do not create parallel workflow authority.
+
+## Git completion
+
+After successful freeze/control validation:
+
+- exact-path stage only;
+- commit and push authorized WNBA freeze changes;
+- verify local HEAD == tracking == direct remote;
+- leave worktree clean;
+- preserve protected stash unchanged;
+- report final WNBA SHA, freeze/contract/receipt hashes, frozen method identity, and authority flags.
+
+## Required final stop
+
+`BLOCKED_USER_REVIEW_WNBA_4L_CANONICAL_ATLAS_FREEZE`
+
+No follow-on auto-start. FromDeep opens only after user/Chat review of the completed 4L freeze.
