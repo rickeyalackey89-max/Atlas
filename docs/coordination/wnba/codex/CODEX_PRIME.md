@@ -6,124 +6,142 @@ This file is the narrow execution surface for Prime Delegation.
 
 ## Prime transport prerequisite
 
-Codex must read this file from the dedicated local Prime mirror:
+Codex must read this file from:
 
 `C:\Users\13142\Atlas\PrimeDelegation\docs\coordination\wnba\codex\CODEX_PRIME.md`
 
-Before execution, the mirror must be a valid clean Git worktree on branch `main` and must be fast-forwarded to current `origin/main` according to `docs/coordination/PRIME_TRANSPORT.md`.
+Before execution, the Prime mirror must be a valid clean Git worktree on branch `main` and fast-forwarded to current `origin/main` according to `docs/coordination/PRIME_TRANSPORT.md`.
 
-Do **not** attempt to use or repair `C:\Users\13142\Atlas\.git` for Prime Delegation.
+Do **not** use or repair `C:\Users\13142\Atlas\.git` for Prime Delegation.
 
 ## Hard authority boundary
 
-Before acting, Codex must read and obey WNBA `AGENTS.md` and the current target-repo governing controls.
+Before acting, read and obey WNBA `AGENTS.md` and all current target-repo governing controls.
 
 Prime coordinates scope; it does not replace target-repo authority.
 
-The WNBA Builder lane remains paused at its current review stop during this operational task. Do not advance, repair, reinterpret, or grade Builder research as part of eval catch-up.
-
-## Validation doctrine
-
-Public/live eval artifacts are operational outputs. They are not automatically protected validation or lockbox evidence.
-
-The four catch-up evals authorized below may be created by the canonical operational pipeline, but this delegation does **not** authorize Builder research to consume those outcomes.
-
-## Standing result handoff
-
-For authorized permanent repo changes: exact-path stage only, commit/push if needed, verify local HEAD == tracking == direct remote, leave clean, and report final SHA + stop marker. Never broad-stage, use destructive Git commands, or touch the protected stash.
-
-If the canonical eval catch-up requires no source/control commit, do not invent one merely to produce a new WNBA SHA; report the existing WNBA HEAD plus the operational artifact/status paths.
-
-## Last completed delegation
-
-Execution tier: **R2_BOUNDED_PILOT**
-
-Task:
-
-`docs/coordination/wnba/codex/archive/2026-08-17_4l_uniform_stateful_candidate_surface_r2.md`
-
-WNBA result commit:
-
-`fd0df85a70559d830cd2ae5e76a711453a9f4dca`
-
-Accepted Chat review:
-
-- disposition `UNIFORM_23_DATE_STATEFUL_4L_SURFACE_R2_PASS`;
-- 23 structurally eligible 3+ game dates generated under one uniform stateful lineage;
-- 2,208 total candidates = 96 per eligible date;
-- all four R1 canary dates reproduced exact candidate identity/order/scorer hashes;
-- the authoritative sealed retry used 23 fresh generator calls; an earlier 22-date partial attempt failed before Aug. 13 because the strict outcome guard rejected authority-declared blank settlement column names, those partial streams were discarded, and no outcome leak occurred;
-- target outcome reads = 0, validation reads = 0, lockbox reads = 0;
-- no grading, fitting, tuning, freeze, FromDeep, Live/model mutation, publication, or promotion;
-- pretruth seal status `UNIFORM_OUTCOME_BLIND_23_DATE_4L_SURFACE_SEALED`;
-- Builder stop `BLOCKED_USER_REVIEW_WNBA_4L_UNIFORM_STATEFUL_SURFACE_R2`.
-
-The sealed R2 surface is accepted and must remain byte/hash unchanged during eval recovery.
-
-## Active user-authorized task
-
-Execution class: **OPERATIONAL_MAINTENANCE**
-
-Read and execute exactly:
-
-`docs/coordination/wnba/codex/archive/2026-08-17_wnba_eval_catchup_20260813_20260816.md`
-
-Work-order creation commit:
-
-`db829ccb64372232c872a267f7d8797f67d6bf18`
-
-Expected starting WNBA commit:
-
-`fd0df85a70559d830cd2ae5e76a711453a9f4dca`
-
-Builder stop to preserve:
+The WNBA Builder lane remains paused at:
 
 `BLOCKED_USER_REVIEW_WNBA_4L_UNIFORM_STATEFUL_SURFACE_R2`
 
+Do not advance, repair, reinterpret, grade, or consume Builder outcomes during this operational task.
+
+## Validation doctrine
+
+Operational Live-run eval creation is not automatically Builder development, protected validation, or lockbox evidence.
+
+Public/live slips are never scientific validation authority.
+
+Builder validation reads must remain `0` and lockbox reads must remain `0`.
+
+## Git / workspace contract
+
+Use only canonical WNBA root `C:\Users\13142\Atlas\WNBA` and its workspace guard.
+
+If no tracked source/control change is required, do not invent a WNBA commit.
+
+Never broad-stage, use destructive Git commands, or alter the protected stash.
+
+## Accepted 4L R2 state
+
+WNBA commit:
+
+`fd0df85a70559d830cd2ae5e76a711453a9f4dca`
+
+Accepted result:
+
+- disposition `UNIFORM_23_DATE_STATEFUL_4L_SURFACE_R2_PASS`;
+- 23 structurally eligible 3+ game dates;
+- 2,208 candidates = 96/date;
+- all four R1 canary identity/order/scorer hashes reproduced;
+- pretruth seal `UNIFORM_OUTCOME_BLIND_23_DATE_4L_SURFACE_SEALED`;
+- target outcome reads 0;
+- validation reads 0;
+- lockbox reads 0;
+- no grading/fitting/tuning/freeze/promotion authority.
+
+All sealed R2 files must remain byte/hash unchanged.
+
+## Last completed operational delegation
+
+Task:
+
+`docs/coordination/wnba/codex/archive/2026-08-17_wnba_eval_catchup_20260813_20260816.md`
+
+Prime start:
+
+`cbbe0c5f00d7a478f4d54908c913afc0f188a196`
+
+Result:
+
+The canonical scheduled wrapper was attempted once for each date `2026-08-13` through `2026-08-16` in chronological order and failed closed overall.
+
+Exact result anatomy:
+
+- `2026-08-13`: strict truth merged; scheduled games present; prior-day eval `skipped_missing_scored_run`, 0 runs; maintenance not reached.
+- `2026-08-14`: prior-day eval `complete`, 2 runs; waterfall completed but consumer performance unavailable; 4 hard alerts.
+- `2026-08-15`: prior-day eval `complete`, 1 run; waterfall completed but consumer performance unavailable; 2 hard alerts.
+- `2026-08-16`: strict truth merged; scheduled games present; prior-day eval `skipped_missing_scored_run`, 0 runs; maintenance not reached.
+
+Accepted Chat interpretation:
+
+- Aug. 14 and Aug. 15 core evals are complete and must not be rerun in the active task.
+- Aug. 13 and Aug. 16 scored Live-run directories exist; the scheduled wrapper called canonical prior-day eval with `--published-only`, so `skipped_missing_scored_run` means no scored run survived the publication filter, not necessarily no scored run exists.
+- Consumer-performance hard alerts on Aug. 14/Aug. 15 are a separate maintenance issue and do not invalidate their completed core evals.
+- Builder R2 remained unchanged and no newly settled outcome was consumed for Builder research.
+
+## Active user-authorized task
+
+Execution class: **OPERATIONAL_EVAL_RECOVERY**
+
+Read and execute exactly:
+
+`docs/coordination/wnba/codex/archive/2026-08-17_wnba_eval_completion_unpublished_live_runs_20260813_20260816.md`
+
+Work-order publication commit:
+
+`5542d44726f03168acbb7ee1b6844d9e6e28d83c`
+
+Expected WNBA HEAD:
+
+`fd0df85a70559d830cd2ae5e76a711453a9f4dca`
+
 Purpose:
 
-**Run the four missing canonical WNBA prior-day evals for 2026-08-13 through 2026-08-16 in chronological order. No preliminary diagnostic runway is required.**
+**Complete only the unresolved Aug. 13 and Aug. 16 core prior-day evals by evaluating existing matching scored Live runs without the scheduled wrapper's `--published-only` filter.**
 
-Canonical command pattern:
+Run exactly once:
 
 ```powershell
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts\run_prior_day_eval.ps1 -Date YYYY-MM-DD
+uv run python -m wnba.testing_cli eval prior-day --date 2026-08-13 --all-matching-runs --data-root data\wnba
+uv run python -m wnba.testing_cli eval prior-day --date 2026-08-16 --all-matching-runs --data-root data\wnba
 ```
-
-Run exactly for:
-
-- `2026-08-13`
-- `2026-08-14`
-- `2026-08-15`
-- `2026-08-16`
-
-The canonical wrapper owns strict ESPN truth refresh, all-matching published Live-run prior-day eval, off-day handling, normal rolling-corpus/waterfall/maintenance catch-up, dashboard performance refresh, and scheduled audit outputs.
 
 Critical constraints:
 
-- use the canonical WNBA repo/root and repository-owned wrapper;
-- do not invent an alternate evaluator;
-- preserve the active Builder review stop;
-- preserve the sealed 4L R2 surface bytes/hashes;
-- operational outcome settlement is authorized only through the canonical eval path;
-- do not grade R2 or inspect 4L wins/losses for research;
-- do not fit/tune any Builder method on 8/13–8/16;
-- do not decide protected-validation eligibility for these dates in this task;
-- do not run FromDeep or other Builder research;
-- do not open protected validation/lockbox evidence;
-- no Live model/calibration/minutes/allocator/QMC/dependence mutation;
-- no follow-on auto-start.
+- do **not** pass `--published-only`;
+- do not rerun Aug. 14 or Aug. 15;
+- do not rerun `scripts/run_prior_day_eval.ps1`;
+- use existing successfully merged canonical truth;
+- report exact evaluated run ids and each run's actual `runtime_publication.published` value;
+- never alter publication flags;
+- label evaluated unpublished runs `NONPUBLIC_LIVE_RUN_EVAL_OPERATIONAL_TRUTH_ONLY` in the final report;
+- do not run waterfall/public-performance/rolling-corpus/maintenance recovery in this task;
+- preserve all sealed 4L R2 bytes/hashes;
+- preserve Builder stop;
+- no Builder grading, learner fitting, FromDeep, Live/model mutation, validation, lockbox, or follow-on auto-start.
 
-Required completion report:
-
-For each date: wrapper exit status, strict truth status, prior-day eval status, matching published Live run count, off-day status if applicable, primary eval manifest/result path, daily-waterfall status, and any maintenance warning/failure.
-
-Then report whether all four dates completed, Builder stop remained unchanged, R2 seal remained unchanged, and no newly settled outcome was used for Builder research.
+Success requires both Aug. 13 and Aug. 16 `prior_day_eval_manifest.json` files to be `complete` with `run_count >= 1`.
 
 ## Required final stop
 
-`BLOCKED_USER_REVIEW_WNBA_EVAL_CATCHUP_20260813_20260816`
+`BLOCKED_USER_REVIEW_WNBA_EVAL_COMPLETION_20260813_20260816`
 
-## Next after catch-up — NOT AUTHORIZED
+## Next after success — NOT AUTHORIZED
 
-A separate Builder work order may later grade the sealed uniform 4L R2 surface using only explicitly authorized outcome evidence. Do not start that forensic automatically.
+Two separate future choices remain:
+
+1. operationally repair Aug. 14/Aug. 15 consumer-performance hard alerts if desired;
+2. separately authorize Builder grading of the accepted sealed 4L R2 surface.
+
+Neither is authorized by this task.
