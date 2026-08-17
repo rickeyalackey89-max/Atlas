@@ -1,17 +1,17 @@
 {
   "schema_version": "atlas_prime_delegation_wnba_current_state_v1",
-  "captured_at_ct": "2026-08-17T06:50:00-05:00",
+  "captured_at_ct": "2026-08-17T06:55:00-05:00",
   "snapshot_not_authority": true,
   "sport": "WNBA",
   "source_repository": "rickeyalackey89-max/Atlas-WNBA",
   "source_branch": "builder-method-contract-v1",
   "source_head": "1f71ec936e7b23a7f537336056eaf4ae4209e9c7",
   "builder": {
-    "status": "BLOCKED_USER_REVIEW",
+    "status": "ACTIVE_AUTHORIZED_EXECUTION",
     "active_stage_id": "builder_stage_5",
-    "active_step_id": "builder_s5_4l_stateful_generator_parity_repair_r1a_user_review",
-    "method_step_id": "4l_stateful_generator_parity_repair_r1a",
-    "completion_marker": "BLOCKED_USER_REVIEW_WNBA_4L_STATEFUL_GENERATOR_PARITY_REPAIR_R1A",
+    "active_step_id": "builder_s5_4l_uniform_stateful_candidate_surface_r2",
+    "method_step_id": "4l_uniform_stateful_candidate_surface_r2",
+    "completion_marker": "BLOCKED_USER_REVIEW_WNBA_4L_UNIFORM_STATEFUL_SURFACE_R2",
     "controller_skill": "slip-builders",
     "validation_reads": 0,
     "lockbox_reads": 0
@@ -29,7 +29,7 @@
       "live_or_prospective_promotion_authority": false
     },
     "4L": {
-      "status": "ACTIVE_RESEARCH_STATEFUL_GENERATOR_READY_FOR_UNIFORM_SURFACE_AUTHORIZATION",
+      "status": "R2_UNIFORM_STATEFUL_SURFACE_AUTHORIZED",
       "initial_materialized_surface_r0_commit": "d6cf1a561e660596cb28d1e2f557290b02b3d4d5",
       "pointwise_r1_commit": "fbd986f967c4fb123349ce849bf0f9333ab15d60",
       "pointwise_r2_commit": "b4d85ec3c6d28038831759be502019596c2eb187",
@@ -89,19 +89,35 @@
         "validation_reads": 0,
         "lockbox_reads": 0
       },
-      "candidate_next": {
-        "name": "UNIFORM_23_DATE_STATEFUL_4L_CANDIDATE_SURFACE",
-        "status": "CANDIDATE_NEXT_NOT_AUTHORIZED",
+      "uniform_stateful_surface_r2_authorization": {
+        "execution_tier": "R2_BOUNDED_PILOT",
+        "prime_work_order": "docs/coordination/wnba/codex/archive/2026-08-17_4l_uniform_stateful_candidate_surface_r2.md",
+        "publication_commit": "df3260c606a4e33f19ee8b5f08ddf29af0284388",
+        "expected_starting_wnba_commit": "1f71ec936e7b23a7f537336056eaf4ae4209e9c7",
         "eligible_date_count": 23,
+        "date_census_source": "SEALED_R0_PUBLIC_4L_FAMILY_ELIGIBLE_TRUE",
         "outcome_blind": true,
         "regenerate_all_eligible_dates": true,
         "patch_only_gap_dates": false,
-        "stateful_order": "SEALED_PREGAME_POOL_THEN_FROZEN_2L_EXACT_DEPLETION_THEN_FROZEN_3L_EXACT_DEPLETION_THEN_CANONICAL_4L_GENERATION",
-        "pretruth_seal_required_before_discovery_grading": true,
+        "generator_calls_expected": 23,
+        "double_full_surface_for_determinism": false,
+        "canary_continuity_dates": ["2026-06-19", "2026-06-28", "2026-07-09", "2026-08-07"],
+        "pretruth_seal_required": true,
         "learner_fitting_allowed": false,
         "grading_allowed": false,
+        "target_outcome_reads_allowed": 0,
         "validation_reads_allowed": 0,
-        "lockbox_reads_allowed": 0
+        "lockbox_reads_allowed": 0,
+        "surface_construction_cap_minutes": 20,
+        "required_stop": "BLOCKED_USER_REVIEW_WNBA_4L_UNIFORM_STATEFUL_SURFACE_R2"
+      },
+      "next_after_r2_if_passes": {
+        "status": "LATER_REQUIRES_SEPARATE_USER_AUTHORIZATION",
+        "name": "UNIFORM_23_DATE_ATLAS_CONTROL_FORENSIC",
+        "discovery_truth_role": "ALREADY_CONSUMED_DISCOVERY_ONLY",
+        "validation_reads_allowed": 0,
+        "lockbox_reads_allowed": 0,
+        "auto_start": false
       },
       "context_consensus": {
         "status": "PARKED_UNTIL_NEW_UNIFORM_23_DATE_SURFACE_AND_BASELINE",
@@ -141,8 +157,9 @@
     "lockbox_reads": 0
   },
   "next_strategy": {
-    "status": "CANDIDATE_NEXT_NOT_CODEX_AUTHORIZED",
-    "topic": "Build and pretruth-seal one uniform outcome-blind stateful 4L candidate surface across all 23 structurally eligible discovery dates before any new grading or learner work.",
-    "required_stop": "BLOCKED_USER_REVIEW_WNBA_4L_STATEFUL_GENERATOR_PARITY_REPAIR_R1A"
+    "status": "R2_UNIFORM_4L_SURFACE_AUTHORIZED_ACTIVE",
+    "prime_work_order": "docs/coordination/wnba/codex/archive/2026-08-17_4l_uniform_stateful_candidate_surface_r2.md",
+    "topic": "Build and pretruth-seal one uniform outcome-blind stateful 4L candidate surface across all 23 structurally eligible discovery dates.",
+    "required_stop": "BLOCKED_USER_REVIEW_WNBA_4L_UNIFORM_STATEFUL_SURFACE_R2"
   }
 }
