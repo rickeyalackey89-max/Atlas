@@ -1,8 +1,8 @@
 # WNBA FromDeep Agreed Architecture
 
-Status: **AGREED ARCHITECTURE — EXECUTION NOT YET AUTHORIZED**
+Status: **AGREED ARCHITECTURE — EXECUTION ONLY THROUGH EXPLICIT PRIME DELEGATION**
 
-This document records the user/Chat-agreed strategic architecture for the future WNBA FromDeep family. It is not Builder execution authority and does not supersede the WNBA `slip-builders` controller.
+This document records the user/Chat-agreed strategic architecture for WNBA FromDeep. It is not Builder execution authority and does not supersede the WNBA `slip-builders` controller.
 
 ## Purpose
 
@@ -21,7 +21,10 @@ The family is a sparse specialist. Precision matters more than coverage.
 ## Core family contract
 
 - Demon-tier **OVER** roads only.
-- Preserve market ownership. The existing 21-market separation remains the architectural skeleton; do not collapse all markets into one generic signal pool.
+- Preserve **market ownership**. Every canonical factual eligible Demon-OVER market present in the physically sealed discovery universe receives its own owner/policy lane unless repository-canonical normalization proves two source labels are aliases of the same market.
+- The legacy RP37 21-market list is historical structure only. It is neither a minimum nor a cap and cannot silently exclude factual current-stack markets.
+- Do not merge distinct markets merely because their statistics are related. For example, a combo market is not automatically owned by either component market, and quarter-specific markets are not automatically owned by full-game points.
+- The final owner count is derived only from the complete outcome-blind sealed discovery universe. Partial-date evidence may identify candidate additional owners but may not freeze the final count.
 - No minimum slate output count.
 - Honest abstention is a successful result when no supported signal exists.
 - Probability is not the primary eligibility mechanism. It may be used only after evidence-based signal eligibility as a secondary ranking, sanity, or tie-break input.
@@ -31,20 +34,40 @@ The family is a sparse specialist. Precision matters more than coverage.
 
 Start from the **full eligible scored Demon-OVER leg universe** on development/discovery dates.
 
+FromDeep is architecturally independent of core selected-leg depletion. Frozen 2L, 3L, and 4L gate sequencing but do not remove legs from the FromDeep research universe.
+
 Do not start from:
 
 - prior FromDeep releases;
 - public picks;
 - legs selected by a historical FromDeep policy;
-- only high-probability rows.
+- core-family leftovers;
+- only high-probability rows;
+- historically winning rows;
+- the legacy RP37 active/inactive market decisions.
 
-For each development date, reconstruct the pregame eligible Demon-OVER surface with all available pregame fields, physically seal that surface, and only then append settlement.
+For each development date, reconstruct the factual pregame eligible Demon-OVER surface with all available pregame fields, physically seal that surface, and only then append settlement.
 
 Conceptually each leg record is:
 
 `market + line/depth + player/context + projection + edge + probability + Atlas components + fragility + role/minutes/usage/context + outcome`
 
 Outcome must never define the candidate universe.
+
+## Market namespace derivation
+
+Before signal research, derive the market-owner namespace from the complete physically sealed outcome-blind Demon-OVER discovery surface.
+
+Rules:
+
+1. Start from the canonical market label actually carried by each factual eligible row.
+2. Build the union across the complete discovery surface.
+3. A source label may be normalized into another owner only when an existing repository-canonical market alias/equality contract proves that equivalence. Do not invent aliases for convenience.
+4. Any previously unknown or legacy-unlisted factual market remains a separate candidate owner until adjudicated.
+5. Emit zero-support owners only when they are part of a previously frozen canonical namespace being compared for lineage; the final FromDeep namespace itself is the factual sealed-universe union.
+6. Preserve the derived namespace and normalization mapping as a pretruth artifact before outcomes or signal statistics are opened.
+
+The Aug. 13 R0 preflight observed `blks_stls`, `quarters_with_3_points`, `quarters_with_4_points`, and `quarters_with_5_points` outside the legacy 21-market list. Those observations justify deriving the final namespace from the complete sealed universe; they do not by themselves prove that the final count is 25.
 
 ## First research question: win/loss forensic
 
@@ -129,16 +152,18 @@ FromDeep development is **discovery-only**.
 
 Do not reuse the legacy `builder_from_deep_research.py` candidate-development gate as-is because it mixes discovery and validation evidence when declaring candidate signals.
 
-Protected validation remains sealed until 2L, 3L, 4L, and FromDeep are all frozen. After frozen-stack validation, the lockbox may be opened only if no post-validation method changes occur.
+Legacy `rp37_from_deep_registry.py` may provide neutral implementation patterns or historical market labels, but its fixed 21-market namespace and activation logic are not statistical or namespace authority for the current FromDeep method.
+
+Protected validation remains sealed until 2L, 3L, 4L, and FromDeep are frozen. After frozen-stack validation, the lockbox may be opened only if no post-validation method changes occur.
 
 ## Expected outcome
 
 FromDeep is allowed to be sparse.
 
-A valid final method may support only a subset of the 21 markets and may populate on only a minority of slates. Unsupported markets remain inactive. A slate with zero qualified FromDeep legs is an honest abstention, not a failure.
+A valid final method may support only a subset of the derived factual market-owner namespace and may populate on only a minority of slates. Unsupported markets remain inactive. A slate with zero qualified FromDeep legs is an honest abstention, not a failure.
 
-## Planned runway after 4L is frozen
+## Planned runway
 
-`full Demon-OVER scored-leg census -> pretruth seal -> win/loss forensic -> market-specific signal atlas -> GREEN/RED/GRAY procedure -> historical-as-of registry evaluation -> freeze decision`
+`source/provenance repair -> full Demon-OVER scored-leg census -> market namespace + pretruth seal -> win/loss forensic -> market-specific signal atlas -> GREEN/RED/GRAY procedure -> historical-as-of registry evaluation -> freeze decision`
 
-Do not begin this runway until 4L is resolved and a separate user-authorized Prime delegation is published.
+Use the Prime cheap-runway doctrine before any expensive full-surface projection or learning operation.
