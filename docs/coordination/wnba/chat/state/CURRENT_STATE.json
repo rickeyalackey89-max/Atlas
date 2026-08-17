@@ -1,27 +1,26 @@
 {
   "schema_version": "atlas_prime_delegation_wnba_current_state_v1",
-  "captured_at_ct": "2026-08-17T11:56:00-05:00",
+  "captured_at_ct": "2026-08-17T12:11:00-05:00",
   "snapshot_not_authority": true,
   "sport": "WNBA",
   "source_repository": "rickeyalackey89-max/Atlas-WNBA",
   "source_branch": "builder-method-contract-v1",
   "source_head": "cd645ed1fdfe857ec2b84f21a9653e6c2977de2a",
   "builder": {
-    "status": "BLOCKED_USER_REVIEW",
-    "current_stop": "BLOCKED_USER_REVIEW_WNBA_4L_INCUMBENT_VS_FIRST_WINNER_FORENSIC_R0",
+    "status": "ACTIVE_USER_AUTHORIZED_EXECUTION",
+    "current_target_repo_stop": "BLOCKED_USER_REVIEW_WNBA_4L_INCUMBENT_VS_FIRST_WINNER_FORENSIC_R0",
+    "authorized_step": "4l_precision_first_incumbent_challenger_r1",
+    "required_stop": "BLOCKED_USER_REVIEW_WNBA_4L_PRECISION_FIRST_CHALLENGER_R1",
     "controller_skill": "slip-builders",
     "validation_reads": 0,
-    "lockbox_reads": 0,
-    "active_codex_execution": false
+    "lockbox_reads": 0
   },
   "governance": {
     "workflow_efficiency_implementation_commit": "2d2f78e1ee9cb59f3c6687c1cad38ba1621272bf",
     "governance_consistency_baseline_commit": "1bdebebfe6bcafda973bed3a3cf314336534eb4b",
-    "sealed_forensic_fast_path_status": "ACTIVE_AND_PROVEN_BY_FIRST_REAL_FORENSIC",
-    "single_full_preamble_per_forensic_row": true,
-    "control_delta_only_after_row_start": true,
-    "task_specific_forensic_controller_prohibited": true,
-    "shared_executor": "scripts/run_builder_sealed_artifact_forensic.py"
+    "sealed_forensic_fast_path_status": "ACTIVE",
+    "active_r1_uses_fast_path": false,
+    "reason": "R1 authorizes learner fitting and therefore uses normal non-fast-path Builder governance"
   },
   "families": {
     "2L": {
@@ -34,7 +33,7 @@
       "historical_asof_record": "24-6-0"
     },
     "4L": {
-      "status": "INCUMBENT_FORENSIC_COMPLETE_AWAITING_R1_OR_FREEZE_DECISION",
+      "status": "PRECISION_FIRST_CHALLENGER_R1_AUTHORIZED_ACTIVE",
       "r2_surface_commit": "fd0df85a70559d830cd2ae5e76a711453a9f4dca",
       "control_forensic_commit": "2d2b4f4db497ce6626d7ae30e6b0eeabc394863f",
       "incumbent_vs_first_winner_forensic_commit": "cd645ed1fdfe857ec2b84f21a9653e6c2977de2a",
@@ -46,65 +45,31 @@
         "eligible_dates": 23,
         "winner_available_dates": 23,
         "ranking_failure_count": 8,
-        "no_winner_date_count": 0,
-        "first_winning_ranks": [6, 23, 2, 4, 6, 3, 4, 74]
+        "no_winner_date_count": 0
       },
-      "incumbent_forensic": {
-        "evidence_label": "SEALED_ARTIFACT_DIAGNOSTIC",
-        "loss_incumbent_dates": 8,
-        "win_incumbent_dates": 14,
-        "nonbinary_report_only_dates": 1,
-        "learner_fits": 0,
-        "candidate_generation_calls": 0,
-        "candidate_rescore_calls": 0,
-        "candidate_rerank_calls": 0,
-        "challenger_execution_calls": 0,
-        "threshold_search_calls": 0,
-        "validation_reads": 0,
-        "lockbox_reads": 0,
-        "interpretation": "RECURRING_MISS_STRUCTURE_SUPPORTS_ONLY_PRECISION_FIRST_CONSERVATIVE_CHALLENGER_R1",
-        "key_structure": {
-          "loss_incumbent_atlas_score_median": 82.107552083334,
-          "win_incumbent_atlas_score_median": 86.177604166667,
-          "loss_incumbent_joint_qmc_median": 0.328002929688,
-          "win_incumbent_joint_qmc_median": 0.343627929688,
-          "loss_incumbent_max_minutes_fragility_median": 0.277480506226,
-          "win_incumbent_max_minutes_fragility_median": 0.173522937148,
-          "loss_incumbent_stability_component_median": 0.403645833334,
-          "win_incumbent_stability_component_median": 0.600260416666,
-          "loss_incumbent_weakest_link_component_median": 0.807291666666,
-          "win_incumbent_weakest_link_component_median": 0.8984375,
-          "first_winner_raw_qmc_lower_count": 7,
-          "first_winner_mean_probability_lower_count": 8,
-          "first_winner_mean_projection_edge_lower_count": 7,
-          "first_winner_mean_ev_lower_count": 7,
-          "first_winner_moves_toward_win_median_G_count": 7,
-          "first_winner_moves_toward_win_median_Q_count": 7,
-          "first_winner_moves_toward_win_median_S_count": 5
-        }
-      },
-      "candidate_next": {
-        "name": "PRECISION_FIRST_ATLAS_INCUMBENT_CHALLENGER_R1",
-        "status": "CANDIDATE_NEXT_NOT_AUTHORIZED",
+      "r1": {
+        "execution_tier": "R1_ACTIONABILITY_SELECTION_SEAL",
+        "prime_work_order": "docs/coordination/wnba/codex/archive/2026-08-17_4l_precision_first_incumbent_challenger_r1.md",
+        "publication_commit": "d491ff867ff82026f10e777d5a5e4d5289f46115",
         "base_action": "KEEP_CANONICAL_ATLAS_CONTROL",
-        "wholesale_reranking_allowed": false,
+        "challenger_universe": "FULL_SEALED_96_CANDIDATES_PER_DATE",
         "historical_asof_required": true,
-        "harmful_overrides_primary_cost": true,
-        "threshold_mining_from_observed_losses_allowed": false,
-        "auto_start": false
+        "learner_a": "FIXED_LINEAR_L2_LOGISTIC",
+        "learner_b": "FIXED_PAIRWISE_INTERACTION_L2_LOGISTIC",
+        "override_rule": "EXACT_SAME_NONINCUMBENT_NOMINEE_FROM_BOTH_LEARNERS",
+        "target_performance_grading_allowed": false,
+        "threshold_search_allowed": false,
+        "feature_search_allowed": false,
+        "hyperparameter_search_allowed": false,
+        "candidate_generation_allowed": false,
+        "atlas_rescore_or_rerank_allowed": false,
+        "validation_reads_allowed": 0,
+        "lockbox_reads_allowed": 0,
+        "auto_start_r2": false
       }
     },
     "FromDeep": {
       "status": "ARCHITECTURE_AGREED_EXECUTION_NOT_AUTHORIZED"
-    }
-  },
-  "operations": {
-    "eval_catchup_20260813_20260816": {
-      "status": "COMPLETE",
-      "builder_research_use_during_recovery": false
-    },
-    "consumer_performance_20260814_20260815": {
-      "status": "LATER_NOT_BLOCKING_4L"
     }
   },
   "evaluation_doctrine": {
@@ -113,8 +78,8 @@
     "lockbox_reads": 0
   },
   "next_strategy": {
-    "status": "AWAITING_USER_DECISION",
-    "topic": "Choose between one precision-first historical-as-of 4L incumbent/challenger R1 and freezing 4L at canonical Atlas 14-8-1.",
-    "codex_execution_authorized": false
+    "status": "USER_AUTHORIZED_CODEX_EXECUTION_ACTIVE",
+    "topic": "Run and seal the strict historical-as-of precision-first 4L challenger R1 selection surface without target-date performance grading.",
+    "required_stop": "BLOCKED_USER_REVIEW_WNBA_4L_PRECISION_FIRST_CHALLENGER_R1"
   }
 }
