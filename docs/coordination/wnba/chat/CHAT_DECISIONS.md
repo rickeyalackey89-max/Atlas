@@ -247,3 +247,26 @@ Prime work order:
 `docs/coordination/wnba/codex/archive/2026-08-16_4l_sealed_pointwise_performance_r2.md`
 
 Protected evaluation remains untouched: validation reads 0, lockbox reads 0. No FromDeep or Live/model work is authorized by this R2.
+
+## 2026-08-16 — FromDeep architecture agreed
+
+User/Chat decision:
+
+Adopt `docs/coordination/wnba/chat/FROMDEEP_ARCHITECTURE.md` as the agreed strategic architecture for future WNBA FromDeep research.
+
+Core architecture:
+
+- FromDeep is a sparse market-owned Demon-OVER signal specialist, not a highest-probability leftovers family.
+- Start from the full eligible scored Demon-OVER development universe, seal the pretruth surface, then attach settlement.
+- Preserve the existing 21-market ownership skeleton; do not pool all markets into one generic signal policy.
+- Audit what wins and loses and why before creating a selector, including line depth, edge, role/minutes/usage/context, fragility, Atlas components, and temporal stability where the corpus supports them.
+- Classify candidate road conditions conceptually as GREEN supported, RED veto, or GRAY unresolved/inactive.
+- Do not use raw hit rate alone; require support, date/player diversity where relevant, market-relative lift, uncertainty/reliability, and stability.
+- Signal eligibility comes before ranking. Probability may be only a secondary sanity/tie/ranking input after a leg qualifies by signal.
+- No minimum output count. Honest FromDeep abstention is valid when no supported signal exists.
+- Final development evaluation uses the same strict historical-as-of time arrow: only `t<D` settled evidence may define the registry used on date `D`.
+- FromDeep development is discovery-only. Do not reuse the legacy discovery+validation candidate-development gate as-is.
+
+Important boundary:
+
+This is an **agreed architecture, not execution authorization**. Exact GREEN/RED support thresholds, confidence method, and state-transition rules are intentionally not frozen yet; they must be derived and predeclared through discovery-only runway work after 4L is resolved.
