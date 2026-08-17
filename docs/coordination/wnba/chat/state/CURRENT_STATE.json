@@ -1,18 +1,20 @@
 {
   "schema_version": "atlas_prime_delegation_wnba_current_state_v1",
-  "captured_at_ct": "2026-08-17T18:13:00-05:00",
+  "captured_at_ct": "2026-08-17T18:20:00-05:00",
   "snapshot_not_authority": true,
   "sport": "WNBA",
   "source_repository": "rickeyalackey89-max/Atlas-WNBA",
   "source_branch": "builder-method-contract-v1",
   "source_head": "8e3f9d9e9d18fc814c30e232fc3d07411143deb9",
   "builder": {
-    "status": "BLOCKED_USER_REVIEW_FROMDEEP_R0A1_RESOURCE_GATE",
-    "current_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_R0A1_EXCLUSION_RESOURCE_CANARY",
+    "status": "ACTIVE_USER_AUTHORIZED_FROMDEEP_R0A2",
+    "current_target_repo_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_R0A1_EXCLUSION_RESOURCE_CANARY",
+    "authorized_step": "fromdeep_r0a2_retained_builder_card_binding_one_source_canary",
+    "required_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_R0A2_RETAINED_CARD_CANARY",
     "controller_skill": "slip-builders",
     "validation_reads": 0,
     "lockbox_reads": 0,
-    "active_codex_execution": false
+    "active_codex_execution": true
   },
   "families": {
     "2L": {
@@ -38,7 +40,7 @@
       "downstream_of_3l_if_3l_rebuilt": true
     },
     "FromDeep": {
-      "status": "R0A1_FAITHFUL_RESOURCE_FAILURE_AWAITING_COMPACT_ARTIFACT_DECISION",
+      "status": "R0A2_RETAINED_BUILDER_CARD_BINDING_CANARY_ACTIVE",
       "architecture_path": "docs/coordination/wnba/chat/FROMDEEP_ARCHITECTURE.md",
       "market_namespace_rule": "SUPPORTED_FULL_ROW_CANONICAL_MARKETS_UNION_ZERO_SUPPORT_CANONICAL_IDENTITIES_FROM_FORMALLY_PROVENANCE_EXCLUDED_DATES",
       "legacy_21_is_cap": false,
@@ -73,17 +75,8 @@
         "smallest_source_date": "2026-06-17",
         "smallest_source_compressed_bytes": 7348781,
         "accepted_measurement_count": 0,
-        "lower_median_executed": false,
-        "largest_executed": false,
-        "retry_executed": false,
         "full_projection_executed": false,
-        "outcome_reads": 0,
-        "truth_reads": 0,
-        "settlement_reads": 0,
-        "validation_reads": 0,
-        "lockbox_reads": 0,
-        "signal_mining": 0,
-        "fitting": 0
+        "outcome_truth_settlement_validation_lockbox_reads": 0
       },
       "implementation_observation": {
         "full_chain_capsule_character_scanner_is_not_resource_actionable": true,
@@ -95,14 +88,32 @@
           "retained_base_manifest.json"
         ]
       },
-      "candidate_next": {
-        "name": "FROMDEEP_R0A2_RETAINED_BUILDER_CARD_BINDING_AND_ONE_SOURCE_CANARY",
-        "status": "CANDIDATE_NEXT_NOT_AUTHORIZED",
-        "question": "Audit exact 38-date sealed member coverage for direct retained Builder-card bindings and test one deterministic smallest direct retained card without scanning the full-chain capsule.",
+      "r0a2": {
+        "status": "USER_AUTHORIZED_ACTIVE",
+        "work_order": "docs/coordination/wnba/codex/archive/2026-08-17_fromdeep_r0a2_retained_builder_card_binding_one_source_canary.md",
+        "publication_commit": "345bb9a71c91d1e5dc0f40625061f07e45721240",
+        "execution_tier": "R0A2_RETAINED_BUILDER_CARD_BINDING_AND_ONE_SOURCE_CANARY",
+        "expected_usable_member_count": 38,
+        "audit_goal": "PROVE_DIRECT_RETAINED_BUILDER_CARD_BINDING_COVERAGE_AND_ONE_SOURCE_ACTIONABILITY",
+        "direct_binding_requires_complete_hash_lineage": true,
+        "one_source_selection": "SMALLEST_VALID_DIRECT_RETAINED_BUILDER_CARD_BY_BOUND_BYTES_THEN_DATE_THEN_MEMBER_ID",
+        "first_canary_seconds_max": 60,
+        "deterministic_repeat_if_first_pass_under_60s": true,
+        "separate_hydration_vs_projector_timing": true,
         "capsule_parser_retry_allowed": false,
+        "bulk_hydration_allowed": false,
         "full_projection_allowed": false,
-        "outcome_truth_settlement_validation_lockbox_reads_allowed": 0
-      }
+        "r0b_allowed": false,
+        "outcome_reads_allowed": 0,
+        "truth_reads_allowed": 0,
+        "settlement_reads_allowed": 0,
+        "validation_reads_allowed": 0,
+        "lockbox_reads_allowed": 0,
+        "signal_mining_allowed": false,
+        "fitting_allowed": false,
+        "auto_start_r0b": false
+      },
+      "candidate_next": "R0B_USABLE_FACTUAL_DEMON_OVER_UNIVERSE_PRETRUTH_SEAL_IF_R0A2_ACTIONABILITY_PASSES_AND_USER_AUTHORIZES"
     }
   },
   "post_fromdeep_sequence": {
@@ -124,8 +135,8 @@
     "lockbox_reads": 0
   },
   "next_strategy": {
-    "status": "AWAITING_USER_DECISION",
-    "topic": "Authorize or decline a tiny retained Builder-card binding/actionability audit before any full FromDeep universe projection.",
-    "codex_execution_authorized": false
+    "status": "USER_AUTHORIZED_CODEX_EXECUTION_ACTIVE",
+    "topic": "Audit provenance-proven compact retained Builder-card coverage across the 38 usable FromDeep discovery members and test exactly one smallest direct retained card before any full universe projection.",
+    "required_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_R0A2_RETAINED_CARD_CANARY"
   }
 }
