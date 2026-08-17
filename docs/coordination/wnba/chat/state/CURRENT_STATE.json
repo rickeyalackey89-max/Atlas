@@ -1,17 +1,17 @@
 {
   "schema_version": "atlas_prime_delegation_wnba_current_state_v1",
-  "captured_at_ct": "2026-08-16T19:29:00-05:00",
+  "captured_at_ct": "2026-08-16T20:33:00-05:00",
   "snapshot_not_authority": true,
   "sport": "WNBA",
   "source_repository": "rickeyalackey89-max/Atlas-WNBA",
   "source_branch": "builder-method-contract-v1",
-  "source_head": "d6cf1a561e660596cb28d1e2f557290b02b3d4d5",
+  "source_head": "fbd986f967c4fb123349ce849bf0f9333ab15d60",
   "builder": {
     "status": "BLOCKED_USER_REVIEW",
     "active_stage_id": "builder_stage_5",
-    "active_step_id": "builder_s5_4l_post_pointwise_residual_r0_user_review",
-    "method_step_id": "4l_post_pointwise_residual_r0",
-    "completion_marker": "BLOCKED_USER_REVIEW_WNBA_4L_POST_POINTWISE_RESIDUAL_R0",
+    "active_step_id": "builder_s5_4l_historical_asof_pointwise_r1_user_review",
+    "method_step_id": "4l_historical_asof_pointwise_r1",
+    "completion_marker": "BLOCKED_USER_REVIEW_WNBA_4L_HISTORICAL_ASOF_POINTWISE_R1",
     "controller_skill": "slip-builders",
     "validation_reads": 0,
     "lockbox_reads": 0
@@ -29,8 +29,9 @@
       "live_or_prospective_promotion_authority": false
     },
     "4L": {
-      "status": "R1_POINTWISE_USER_AUTHORIZED",
+      "status": "R1_POINTWISE_CAUSAL_RUNWAY_REVIEWED",
       "r0_commit": "d6cf1a561e660596cb28d1e2f557290b02b3d4d5",
+      "r1_commit": "fbd986f967c4fb123349ce849bf0f9333ab15d60",
       "post_pointwise_residual": {
         "candidate_count": 481,
         "date_count": 30,
@@ -52,27 +53,37 @@
         "supply_impossible_dates": ["2026-07-08", "2026-07-20", "2026-07-28", "2026-08-13"],
         "surface_ceiling_without_supply_change": "10-4-1"
       },
-      "prior_context_diagnostic_status": "SURFACE_INCOMPATIBLE_HISTORICAL_ONLY",
-      "pointwise_r1_authorization": {
+      "pointwise_r1": {
         "execution_tier": "R1_ACTIONABILITY_CANARY",
-        "prime_work_order": "docs/coordination/wnba/codex/archive/2026-08-16_4l_historical_asof_pointwise_r1.md",
-        "publication_commit": "219ecbf986cf1ef35556ab22f7b7b4b2ab1f2e91",
-        "fixed_feature_count": 25,
-        "expected_production_fit_count": 14,
-        "runtime_bound": "<=5 minutes",
-        "aggregate_performance_allowed": false,
-        "context_allowed": false,
-        "validation_reads_allowed": 0,
-        "lockbox_reads_allowed": 0
+        "completed_target_count": 15,
+        "expected_fitted_target_count": 14,
+        "fit_topology_exact": true,
+        "time_arrow_passed": true,
+        "selection_churn": "12/15",
+        "nondegenerate_fitted_targets": "14/14",
+        "actionability_observed": true,
+        "elapsed_seconds": 5.75439,
+        "aggregate_performance_reported": false,
+        "context_used": false,
+        "validation_reads": 0,
+        "lockbox_reads": 0
+      },
+      "next_candidate_step": {
+        "name": "SEALED_POINTWISE_PERFORMANCE_REVIEW",
+        "status": "CANDIDATE_NEXT_NOT_AUTHORIZED",
+        "refit_required": false,
+        "question": "Do the already-sealed causal pointwise selections improve materially over the 7-7-1 control, ideally by about +2 net wins, without excessive damage?"
       },
       "context_regeneration": {
         "projected_fit_count": 28,
         "projected_wall_clock": "2-5 minutes",
-        "status": "PARKED_PENDING_POINTWISE_RESULT"
+        "status": "PARKED_PENDING_POINTWISE_PERFORMANCE"
       }
     },
     "FromDeep": {
-      "status": "LATER_AFTER_4L_RESEARCH_FREEZE"
+      "status": "LATER_AFTER_4L_RESEARCH_FREEZE",
+      "planned_research_direction": "DISCOVERY_ONLY_FULL_SCORED_DEMON_OVER_SIGNAL_ATLAS_WITH_MARKET_OWNERSHIP_AND_HONEST_ABSTENTION",
+      "legacy_discovery_plus_validation_candidate_gate_reuse_allowed": false
     }
   },
   "evaluation_doctrine": {
@@ -91,9 +102,8 @@
     "lockbox_reads": 0
   },
   "next_strategy": {
-    "status": "R1_4L_POINTWISE_USER_AUTHORIZED",
-    "prime_work_order": "docs/coordination/wnba/codex/archive/2026-08-16_4l_historical_asof_pointwise_r1.md",
-    "topic": "Prove strict t<D 4L pointwise actionability and cheap causal execution on the exact frozen residual before any aggregate performance verdict or context regeneration",
+    "status": "CANDIDATE_NEXT_NOT_CODEX_AUTHORIZED",
+    "topic": "Grade the already-sealed 4L causal pointwise R1 selections against consumed discovery truth without refitting; then decide 4L freeze-readiness versus context regeneration",
     "required_stop": "BLOCKED_USER_REVIEW_WNBA_4L_HISTORICAL_ASOF_POINTWISE_R1"
   }
 }
