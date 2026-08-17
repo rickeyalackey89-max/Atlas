@@ -1,19 +1,18 @@
 {
   "schema_version": "atlas_prime_delegation_wnba_current_state_v1",
-  "captured_at_ct": "2026-08-17T15:04:00-05:00",
+  "captured_at_ct": "2026-08-17T15:13:00-05:00",
   "snapshot_not_authority": true,
   "sport": "WNBA",
   "source_repository": "rickeyalackey89-max/Atlas-WNBA",
   "source_branch": "builder-method-contract-v1",
-  "source_head": "24c5e29c965f5e808d84470c16146bb18a0b0148",
+  "source_head": "c5d3886363d8cce9afceeb2cd5e94a43af6ab3fb",
   "builder": {
-    "status": "ACTIVE_USER_AUTHORIZED_FROMDEEP_R0_WITH_DEFERRED_CORE_LINEAGE_RISK",
-    "current_target_repo_stop": "BLOCKED_USER_REVIEW_WNBA_4L_CANONICAL_ATLAS_FREEZE",
-    "authorized_step": "fromdeep_scored_leg_universe_r0",
-    "required_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_SCORED_LEG_UNIVERSE_R0",
+    "status": "BLOCKED_USER_REVIEW_FROMDEEP_R0_SOURCE_AND_MARKET_PROVENANCE",
+    "current_target_repo_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_SCORED_LEG_UNIVERSE_R0",
     "controller_skill": "slip-builders",
     "validation_reads": 0,
-    "lockbox_reads": 0
+    "lockbox_reads": 0,
+    "active_codex_execution": false
   },
   "families": {
     "2L": {
@@ -35,33 +34,46 @@
       "method_id": "WNBA_4L_CANONICAL_ATLAS_RANK1_RESEARCH_DEPLETION_V1",
       "freeze_id": "ba6c1d31387759ba0da2d504e01c3029b2693d54a5c680e7b71972e807bd1133",
       "freeze_contract_sha256": "ca4199cc369e155621320a16df44a8ecc4c00925ebf372e269479a6d1da9dc13",
-      "control_receipt_sha256": "9219b44b99d6756969cce14fc79ed0c8e8d62620c60442f45fa72f002c335516",
       "development_record": "14-8-1",
-      "binary_win_rate": 0.6363636364,
       "research_depletion_only": true,
       "live_authority": false,
       "promotion_authority": false,
-      "prospective_performance_authority": false,
-      "challenger_promoted": false,
       "downstream_of_3l_if_3l_rebuilt": true
     },
     "FromDeep": {
-      "status": "SCORED_LEG_UNIVERSE_R0_ACTIVE",
-      "architecture_path": "docs/coordination/wnba/chat/FROMDEEP_ARCHITECTURE.md",
-      "work_order": "docs/coordination/wnba/codex/archive/2026-08-17_fromdeep_scored_leg_universe_r0.md",
-      "work_order_publication_commit": "3608dfe3b9d43a4deccdedcf09a0d55eac705727",
-      "execution_tier": "R0_ARTIFACT_AUDIT_AND_PRETRUTH_SEAL",
-      "universe": "FULL_FACTUAL_ELIGIBLE_SCORED_DEMON_OVER_DISCOVERY_LEGS",
+      "status": "R0_BLOCKED_SOURCE_AND_MARKET_PROVENANCE",
+      "r0_commit": "c5d3886363d8cce9afceeb2cd5e94a43af6ab3fb",
+      "r0_work_order": "docs/coordination/wnba/codex/archive/2026-08-17_fromdeep_scored_leg_universe_r0.md",
+      "r0_publication_commit": "3608dfe3b9d43a4deccdedcf09a0d55eac705727",
+      "discovery_member_count": 39,
+      "unique_discovery_date_count": 39,
+      "physically_present_full_row_source_count": 38,
+      "missing_full_row_source_count": 1,
+      "missing_source_date": "2026-08-13",
+      "original_capsule_compressed_bytes": 1999865607,
+      "original_capsule_compressed_gib": 1.863,
+      "full_projection_executed": false,
+      "pretruth_surface_written": false,
       "core_selected_leg_depletion_applied": false,
-      "independent_of_core_selection_lineage": true,
-      "market_owner_count": 21,
-      "outcome_reads_allowed": 0,
-      "validation_reads_allowed": 0,
-      "lockbox_reads_allowed": 0,
-      "signal_mining_allowed": false,
-      "green_red_gray_classification_allowed": false,
-      "fitting_allowed": false,
-      "auto_start_r1": false
+      "old_market_owner_count": 21,
+      "unmapped_market_count": 4,
+      "unmapped_markets": {
+        "blks_stls": 7,
+        "quarters_with_3_points": 11,
+        "quarters_with_4_points": 11,
+        "quarters_with_5_points": 5
+      },
+      "aug13_canonical_run_id": "live_20260813_173116",
+      "aug13_builder_card_sha256": "ce09ff65e08999de2be19a08108de9d3f60992a08944cd52a026d16be6d05f15",
+      "aug13_scored_legs_sha256": "c7cacd93256f1de8865194367423e2a0b772aca63a3446ec6812662240a1089e",
+      "outcome_reads": 0,
+      "truth_reads": 0,
+      "settlement_reads": 0,
+      "validation_reads": 0,
+      "lockbox_reads": 0,
+      "signal_mining": 0,
+      "fitting": 0,
+      "candidate_next": "R0A_EXACT_SOURCE_RECOVERY_MARKET_OWNER_ADJUDICATION_AND_RESOURCE_CANARY"
     }
   },
   "post_fromdeep_sequence": {
@@ -70,27 +82,12 @@
     "step_3_if_pass": "LOCKBOX_ONLY_IF_NO_POST_VALIDATION_METHOD_CHANGE",
     "step_3_if_material_fail": "ROOT_CAUSE_AND_ROLLBACK_TO_EARLIEST_AFFECTED_CAUSAL_FAMILY",
     "core_lineage_rollback_if_3l_implicated": "FROZEN_2L -> FRESH_POST_2L_3L_FRONTIER -> READJUDICATE_3L -> INVALIDATE_AND_REBUILD_TRUE_DOWNSTREAM_4L",
-    "fromdeep_rebuild_required_on_core_only_change": false,
-    "fromdeep_rebuild_trigger": "FROMDEEP_METHOD_OR_FULL_SCORED_LEG_SOURCE_OR_SHARED_UPSTREAM_MODEL_INPUT_CHANGE"
+    "fromdeep_rebuild_required_on_core_only_change": false
   },
   "future_sop": {
     "status": "PLANNED_AFTER_WNBA_VALIDATION_AND_ANY_ROLLBACK_LESSONS",
     "scope": "SPORT_AGNOSTIC_LINEAR_BUILDER_SOP",
-    "core_rule": "EVERY_DOWNSTREAM_CORE_FAMILY_STARTS_FROM_A_FRESH_LEGAL_FRONTIER_AFTER_EXACT_SELECTED_LEG_DEPLETION_OF_ALL_FROZEN_UPSTREAM_FAMILIES",
-    "required_stages": [
-      "FRESH_FRONTIER_RECONSTRUCTION",
-      "OUTCOME_BLIND_SUPPLY_AND_COVERAGE_AUDIT",
-      "PRETRUTH_SURFACE_SEAL",
-      "BOUNDED_METHOD_RESEARCH",
-      "HISTORICAL_ASOF_OR_APPROPRIATE_CAUSAL_EVALUATION",
-      "RESEARCH_DEPLETION_FREEZE",
-      "EXACT_SELECTED_LEG_DEPLETION",
-      "REPEAT_NEXT_FAMILY",
-      "INDEPENDENT_SPECIALIST_LANES_EXPLICITLY_DECLARE_THEIR_SOURCE_UNIVERSE",
-      "PROTECTED_COMPLETED_STACK_VALIDATION",
-      "EARLIEST_CAUSAL_ROLLBACK_ON_FAILURE",
-      "LOCKBOX_ONLY_AFTER_NO_CHANGE_VALIDATION_PASS"
-    ]
+    "core_rule": "EVERY_DOWNSTREAM_CORE_FAMILY_STARTS_FROM_A_FRESH_LEGAL_FRONTIER_AFTER_EXACT_SELECTED_LEG_DEPLETION_OF_ALL_FROZEN_UPSTREAM_FAMILIES"
   },
   "evaluation_doctrine": {
     "public_or_live_slips_are_validation": false,
@@ -98,8 +95,8 @@
     "lockbox_reads": 0
   },
   "next_strategy": {
-    "status": "USER_AUTHORIZED_CODEX_EXECUTION_ACTIVE",
-    "topic": "Finish FromDeep independently, freeze it, then validate the completed current-lineage stack. Use validation failures to trigger earliest-causal rollback rather than pausing FromDeep for the known 3L surface risk.",
-    "required_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_SCORED_LEG_UNIVERSE_R0"
+    "status": "AWAITING_USER_REVIEW",
+    "topic": "Accept the completed FromDeep R0 preflight and decide the bounded R0A source-recovery/market-owner-adjudication step. Do not rerun R0.",
+    "codex_execution_authorized": false
   }
 }
