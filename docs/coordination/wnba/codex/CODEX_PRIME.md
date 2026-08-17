@@ -16,135 +16,114 @@ Do **not** attempt to use or repair `C:\Users\13142\Atlas\.git` for Prime Delega
 
 ## Hard authority boundary
 
-Before acting, Codex must read and obey WNBA `AGENTS.md` and all governing controls required by the active `slip-builders` lane.
+Before acting, Codex must read and obey WNBA `AGENTS.md` and the current target-repo governing controls.
 
-This document does not create a second state machine, does not authorize Live/model/promotion changes, and must fail closed on any authority conflict.
+Prime coordinates scope; it does not replace target-repo authority.
 
-## Experiment runway
-
-All 4L / FromDeep research is subject to `docs/coordination/PRIME_EXPERIMENT_RUNWAY.md` and **Cheap runway before long takeoff**. No runway tier may auto-escalate.
+The WNBA Builder lane remains paused at its current review stop during this operational task. Do not advance, repair, reinterpret, or grade Builder research as part of eval catch-up.
 
 ## Validation doctrine
 
-Public/live slips are operational outputs only and are **never validation, lockbox, promotion, or statistical authority**.
+Public/live eval artifacts are operational outputs. They are not automatically protected validation or lockbox evidence.
 
-Builder sequence:
-
-`frozen 2L -> frozen 3L -> research/freeze 4L -> research/freeze FromDeep -> protected validation -> final lockbox if methods remain unchanged`.
-
-## Terminology guardrail
-
-Do not use `road` ambiguously in new 4L evidence.
-
-- **exact selected leg identity** = player + market + tier + side + line; this is the only upstream-depletion unit.
-- **signal road** = a conditional evidence bucket/rule such as probability/fragility/minutes/edge conditions. Signal roads are not depleted because one selected leg matched them.
-
-Never perform player-wide depletion or signal-road depletion unless a future explicit contract authorizes it.
+The four catch-up evals authorized below may be created by the canonical operational pipeline, but this delegation does **not** authorize Builder research to consume those outcomes.
 
 ## Standing result handoff
 
-For authorized tasks producing permanent repo evidence/code: exact-path stage, commit, push, verify local HEAD == tracking == direct remote, leave clean, and report final SHA + stop marker. Never use broad staging/destructive Git commands or touch the protected stash.
+For authorized permanent repo changes: exact-path stage only, commit/push if needed, verify local HEAD == tracking == direct remote, leave clean, and report final SHA + stop marker. Never broad-stage, use destructive Git commands, or touch the protected stash.
+
+If the canonical eval catch-up requires no source/control commit, do not invent one merely to produce a new WNBA SHA; report the existing WNBA HEAD plus the operational artifact/status paths.
 
 ## Last completed delegation
 
-Execution tier: **R1_ACTIONABILITY_REPAIR**
+Execution tier: **R2_BOUNDED_PILOT**
 
 Task:
 
-`docs/coordination/wnba/codex/archive/2026-08-16_4l_stateful_generator_parity_repair_r1a.md`
+`docs/coordination/wnba/codex/archive/2026-08-17_4l_uniform_stateful_candidate_surface_r2.md`
 
 WNBA result commit:
 
-`1f71ec936e7b23a7f537336056eaf4ae4209e9c7`
+`fd0df85a70559d830cd2ae5e76a711453a9f4dca`
 
 Accepted Chat review:
 
-- disposition `STATEFUL_4L_PARITY_REPAIR_R1A_PASS`;
-- prior stateful-generator R1 is rehabilitated as an actionability pass;
-- 12 common June 19 exact candidate identities reproduced;
-- raw Atlas scorer-input mismatches = 0;
-- symmetric context mismatches = 0 across 324 comparisons;
-- symmetric Atlas scorer mismatches = 0;
-- final exact-identity scorer-order parity = true;
-- prior canonical Atlas control remained representable;
-- generator-local original-rank mismatches are diagnostic only and did not alter final scorer order;
-- R1A candidate generation = 0;
-- target outcome reads = 0; validation reads = 0; lockbox reads = 0;
-- no fitting, grading, winner search, tuning, 4L freeze, FromDeep, Live/model/scorer/context-semantic mutation;
-- WNBA stop `BLOCKED_USER_REVIEW_WNBA_4L_STATEFUL_GENERATOR_PARITY_REPAIR_R1A`.
+- disposition `UNIFORM_23_DATE_STATEFUL_4L_SURFACE_R2_PASS`;
+- 23 structurally eligible 3+ game dates generated under one uniform stateful lineage;
+- 2,208 total candidates = 96 per eligible date;
+- all four R1 canary dates reproduced exact candidate identity/order/scorer hashes;
+- the authoritative sealed retry used 23 fresh generator calls; an earlier 22-date partial attempt failed before Aug. 13 because the strict outcome guard rejected authority-declared blank settlement column names, those partial streams were discarded, and no outcome leak occurred;
+- target outcome reads = 0, validation reads = 0, lockbox reads = 0;
+- no grading, fitting, tuning, freeze, FromDeep, Live/model mutation, publication, or promotion;
+- pretruth seal status `UNIFORM_OUTCOME_BLIND_23_DATE_4L_SURFACE_SEALED`;
+- Builder stop `BLOCKED_USER_REVIEW_WNBA_4L_UNIFORM_STATEFUL_SURFACE_R2`.
 
-## Accepted 4L stateful-generation conclusion
-
-The canonical/current 4L generator can operate deterministically **after** frozen 2L and frozen pointwise-3L exact-selected-leg depletion without semantic drift.
-
-The old 481-candidate / 15-nonzero-date residual is incomplete and must not be used as the final current 4L research authority.
+The sealed R2 surface is accepted and must remain byte/hash unchanged during eval recovery.
 
 ## Active user-authorized task
 
-Execution tier: **R2_BOUNDED_PILOT**
+Execution class: **OPERATIONAL_MAINTENANCE**
 
 Read and execute exactly:
 
-`docs/coordination/wnba/codex/archive/2026-08-17_4l_uniform_stateful_candidate_surface_r2.md`
+`docs/coordination/wnba/codex/archive/2026-08-17_wnba_eval_catchup_20260813_20260816.md`
 
-Work-order publication commit:
+Work-order creation commit:
 
-`df3260c606a4e33f19ee8b5f08ddf29af0284388`
+`db829ccb64372232c872a267f7d8797f67d6bf18`
 
 Expected starting WNBA commit:
 
-`1f71ec936e7b23a7f537336056eaf4ae4209e9c7`
+`fd0df85a70559d830cd2ae5e76a711453a9f4dca`
 
-Expected current WNBA stop:
-
-`BLOCKED_USER_REVIEW_WNBA_4L_STATEFUL_GENERATOR_PARITY_REPAIR_R1A`
-
-Purpose:
-
-**Build and pretruth-seal one uniform outcome-blind stateful 4L candidate surface across all and only the 23 structurally eligible 3+ game discovery dates.**
-
-Critical constraints:
-
-- derive the 23-date census from sealed residual-supply R0 authority and assert count = 23;
-- one uniform lineage across all 23 dates; do not patch only the eight old coverage gaps;
-- stateful order is sealed pregame pool -> frozen 2L exact-leg depletion -> frozen pointwise-3L exact-leg depletion -> canonical `fresh_four_leg_frontier` -> canonical context annotation -> canonical Atlas 4L scoring -> pretruth seal;
-- exact selected-leg depletion only; no player-wide or signal-road depletion;
-- generate each date once; do not double all 23 dates;
-- the four prior R1 canary dates (2026-06-19, 2026-06-28, 2026-07-09, 2026-08-07) must reproduce the already-sealed R1 candidate identity/order/scorer hashes under the same bound inputs;
-- preserve the full within-date candidate population when Atlas scorer percentile/midrank components are computed;
-- seal raw candidates, canonical context annotations, Atlas score ledger, per-date hashes, upstream depletion identities, contract/source hashes, and exact ordered 23-date census before any outcomes are opened;
-- no target outcome reads or grading;
-- no winner search;
-- no learner fitting or context-consensus;
-- no signal-road/threshold/gate/feature/hyperparameter/weight/depth tuning;
-- no 4L freeze/install/promotion/publication;
-- no FromDeep;
-- validation reads = 0;
-- lockbox reads = 0;
-- no Live/model/minutes/calibration/allocator/QMC/dependence/scorer/context-semantic mutation;
-- no follow-on auto-start.
-
-Resource contract:
-
-- expected generator calls = 23 single-pass calls;
-- learner fits = 0;
-- one date in memory at a time;
-- expected wall clock roughly 5–10 minutes including evidence overhead;
-- hard surface-construction cap = 20 minutes excluding focused tests/lint/validator cleanup;
-- heartbeat at least every 3 completed dates or every 2 minutes.
-
-## Required final stop
+Builder stop to preserve:
 
 `BLOCKED_USER_REVIEW_WNBA_4L_UNIFORM_STATEFUL_SURFACE_R2`
 
-Commit/push authorized evidence/code, verify local HEAD == tracking == direct remote, leave clean, preserve protected stash, and report final WNBA SHA + artifact paths + date/candidate census + R1 canary-continuity result + target/validation/lockbox reads + stop marker.
+Purpose:
 
-## Next if R2 passes — NOT AUTHORIZED BY THIS TASK
+**Run the four missing canonical WNBA prior-day evals for 2026-08-13 through 2026-08-16 in chronological order. No preliminary diagnostic runway is required.**
 
-A separate artifact-only forensic may then open **already-consumed discovery truth only** against the sealed uniform 23-date surface to establish the new canonical Atlas 4L baseline and supply/ranking anatomy.
+Canonical command pattern:
 
-That later forensic must not open protected validation or lockbox and must not automatically launch any learner. Context-consensus remains parked until the new uniform baseline proves ranking research is warranted.
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts\run_prior_day_eval.ps1 -Date YYYY-MM-DD
+```
 
-## FromDeep agreed architecture
+Run exactly for:
 
-`docs/coordination/wnba/chat/FROMDEEP_ARCHITECTURE.md` remains the agreed future design. FromDeep is a sparse market-owned Demon-OVER signal specialist built from a discovery-only full scored-leg census, GREEN/RED/GRAY signal roads, bad-road vetoes, probability secondary only, honest abstention, and strict historical-as-of evaluation. Execution remains unauthorized until 4L is resolved.
+- `2026-08-13`
+- `2026-08-14`
+- `2026-08-15`
+- `2026-08-16`
+
+The canonical wrapper owns strict ESPN truth refresh, all-matching published Live-run prior-day eval, off-day handling, normal rolling-corpus/waterfall/maintenance catch-up, dashboard performance refresh, and scheduled audit outputs.
+
+Critical constraints:
+
+- use the canonical WNBA repo/root and repository-owned wrapper;
+- do not invent an alternate evaluator;
+- preserve the active Builder review stop;
+- preserve the sealed 4L R2 surface bytes/hashes;
+- operational outcome settlement is authorized only through the canonical eval path;
+- do not grade R2 or inspect 4L wins/losses for research;
+- do not fit/tune any Builder method on 8/13–8/16;
+- do not decide protected-validation eligibility for these dates in this task;
+- do not run FromDeep or other Builder research;
+- do not open protected validation/lockbox evidence;
+- no Live model/calibration/minutes/allocator/QMC/dependence mutation;
+- no follow-on auto-start.
+
+Required completion report:
+
+For each date: wrapper exit status, strict truth status, prior-day eval status, matching published Live run count, off-day status if applicable, primary eval manifest/result path, daily-waterfall status, and any maintenance warning/failure.
+
+Then report whether all four dates completed, Builder stop remained unchanged, R2 seal remained unchanged, and no newly settled outcome was used for Builder research.
+
+## Required final stop
+
+`BLOCKED_USER_REVIEW_WNBA_EVAL_CATCHUP_20260813_20260816`
+
+## Next after catch-up — NOT AUTHORIZED
+
+A separate Builder work order may later grade the sealed uniform 4L R2 surface using only explicitly authorized outcome evidence. Do not start that forensic automatically.
