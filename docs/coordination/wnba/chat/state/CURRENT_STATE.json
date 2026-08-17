@@ -1,13 +1,13 @@
 {
   "schema_version": "atlas_prime_delegation_wnba_current_state_v1",
-  "captured_at_ct": "2026-08-17T14:44:00-05:00",
+  "captured_at_ct": "2026-08-17T15:04:00-05:00",
   "snapshot_not_authority": true,
   "sport": "WNBA",
   "source_repository": "rickeyalackey89-max/Atlas-WNBA",
   "source_branch": "builder-method-contract-v1",
   "source_head": "24c5e29c965f5e808d84470c16146bb18a0b0148",
   "builder": {
-    "status": "ACTIVE_USER_AUTHORIZED_FROMDEEP_R0",
+    "status": "ACTIVE_USER_AUTHORIZED_FROMDEEP_R0_WITH_DEFERRED_CORE_LINEAGE_RISK",
     "current_target_repo_stop": "BLOCKED_USER_REVIEW_WNBA_4L_CANONICAL_ATLAS_FREEZE",
     "authorized_step": "fromdeep_scored_leg_universe_r0",
     "required_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_SCORED_LEG_UNIVERSE_R0",
@@ -21,12 +21,16 @@
       "record": "32-7"
     },
     "3L": {
-      "status": "FROZEN_RESEARCH_DEPLETION_BACKBONE",
+      "status": "FROZEN_RESEARCH_DEPLETION_BACKBONE_WITH_KNOWN_SURFACE_COMPLETENESS_RISK",
       "freeze_commit": "2b1fca797eebefdb0da190099681460f22036eb1",
-      "historical_asof_record": "24-6-0"
+      "historical_asof_record": "24-6-0",
+      "tested_surface": "MATERIALIZED_BASE3_FILTERED_AFTER_FROZEN_2L_EXACT_SELECTED_LEG_DEPLETION",
+      "fresh_post_2l_frontier_completeness_proven": false,
+      "current_action": "PRESERVE_AND_DEFER_TO_PROTECTED_VALIDATION_ROOT_CAUSE_GATE",
+      "fromdeep_blocker": false
     },
     "4L": {
-      "status": "FROZEN_RESEARCH_DEPLETION_BACKBONE",
+      "status": "FROZEN_RESEARCH_DEPLETION_BACKBONE_CURRENT_LINEAGE",
       "freeze_commit": "24c5e29c965f5e808d84470c16146bb18a0b0148",
       "method_id": "WNBA_4L_CANONICAL_ATLAS_RANK1_RESEARCH_DEPLETION_V1",
       "freeze_id": "ba6c1d31387759ba0da2d504e01c3029b2693d54a5c680e7b71972e807bd1133",
@@ -39,7 +43,7 @@
       "promotion_authority": false,
       "prospective_performance_authority": false,
       "challenger_promoted": false,
-      "further_learner_research_closed_unless_user_reopens": true
+      "downstream_of_3l_if_3l_rebuilt": true
     },
     "FromDeep": {
       "status": "SCORED_LEG_UNIVERSE_R0_ACTIVE",
@@ -49,6 +53,7 @@
       "execution_tier": "R0_ARTIFACT_AUDIT_AND_PRETRUTH_SEAL",
       "universe": "FULL_FACTUAL_ELIGIBLE_SCORED_DEMON_OVER_DISCOVERY_LEGS",
       "core_selected_leg_depletion_applied": false,
+      "independent_of_core_selection_lineage": true,
       "market_owner_count": 21,
       "outcome_reads_allowed": 0,
       "validation_reads_allowed": 0,
@@ -59,6 +64,34 @@
       "auto_start_r1": false
     }
   },
+  "post_fromdeep_sequence": {
+    "step_1": "FREEZE_FROMDEEP",
+    "step_2": "PROTECTED_COMPLETED_STACK_VALIDATION",
+    "step_3_if_pass": "LOCKBOX_ONLY_IF_NO_POST_VALIDATION_METHOD_CHANGE",
+    "step_3_if_material_fail": "ROOT_CAUSE_AND_ROLLBACK_TO_EARLIEST_AFFECTED_CAUSAL_FAMILY",
+    "core_lineage_rollback_if_3l_implicated": "FROZEN_2L -> FRESH_POST_2L_3L_FRONTIER -> READJUDICATE_3L -> INVALIDATE_AND_REBUILD_TRUE_DOWNSTREAM_4L",
+    "fromdeep_rebuild_required_on_core_only_change": false,
+    "fromdeep_rebuild_trigger": "FROMDEEP_METHOD_OR_FULL_SCORED_LEG_SOURCE_OR_SHARED_UPSTREAM_MODEL_INPUT_CHANGE"
+  },
+  "future_sop": {
+    "status": "PLANNED_AFTER_WNBA_VALIDATION_AND_ANY_ROLLBACK_LESSONS",
+    "scope": "SPORT_AGNOSTIC_LINEAR_BUILDER_SOP",
+    "core_rule": "EVERY_DOWNSTREAM_CORE_FAMILY_STARTS_FROM_A_FRESH_LEGAL_FRONTIER_AFTER_EXACT_SELECTED_LEG_DEPLETION_OF_ALL_FROZEN_UPSTREAM_FAMILIES",
+    "required_stages": [
+      "FRESH_FRONTIER_RECONSTRUCTION",
+      "OUTCOME_BLIND_SUPPLY_AND_COVERAGE_AUDIT",
+      "PRETRUTH_SURFACE_SEAL",
+      "BOUNDED_METHOD_RESEARCH",
+      "HISTORICAL_ASOF_OR_APPROPRIATE_CAUSAL_EVALUATION",
+      "RESEARCH_DEPLETION_FREEZE",
+      "EXACT_SELECTED_LEG_DEPLETION",
+      "REPEAT_NEXT_FAMILY",
+      "INDEPENDENT_SPECIALIST_LANES_EXPLICITLY_DECLARE_THEIR_SOURCE_UNIVERSE",
+      "PROTECTED_COMPLETED_STACK_VALIDATION",
+      "EARLIEST_CAUSAL_ROLLBACK_ON_FAILURE",
+      "LOCKBOX_ONLY_AFTER_NO_CHANGE_VALIDATION_PASS"
+    ]
+  },
   "evaluation_doctrine": {
     "public_or_live_slips_are_validation": false,
     "validation_reads": 0,
@@ -66,7 +99,7 @@
   },
   "next_strategy": {
     "status": "USER_AUTHORIZED_CODEX_EXECUTION_ACTIVE",
-    "topic": "Audit and physically pretruth-seal the full 21-market Demon-OVER discovery leg universe before any FromDeep win/loss or signal-road research.",
+    "topic": "Finish FromDeep independently, freeze it, then validate the completed current-lineage stack. Use validation failures to trigger earliest-causal rollback rather than pausing FromDeep for the known 3L surface risk.",
     "required_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_SCORED_LEG_UNIVERSE_R0"
   }
 }
