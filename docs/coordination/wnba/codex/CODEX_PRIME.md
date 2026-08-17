@@ -47,96 +47,96 @@ For authorized tasks producing permanent repo evidence/code: exact-path stage, c
 
 ## Last completed delegation
 
-Execution tier: **R0_ARTIFACT_AUDIT**
+Execution tier: **R1_ACTIONABILITY_CANARY**
 
 Task:
 
-`docs/coordination/wnba/codex/archive/2026-08-16_4l_residual_leg_supply_coverage_r0.md`
+`docs/coordination/wnba/codex/archive/2026-08-16_4l_post_depletion_stateful_generator_r1.md`
 
 WNBA result commit:
 
-`978cca95d3701737232dc8e507e9a6ba7f04c301`
+`1e9930253ca3113842a687e188210321424c2d8a`
+
+Repository disposition:
+
+`STATEFUL_4L_GENERATOR_R1_FAIL_PARITY`
 
 Accepted Chat review:
 
-- disposition `CURRENT_4L_CANDIDATE_SURFACE_UNDERCOVERS_STRUCTURALLY_LEGAL_RESIDUAL_SUPPLY`;
-- 23/23 3+ game discovery slates retained a legal 4L witness after frozen 2L + frozen pointwise-3L exact-selected-leg depletion;
-- eight prior zero-materialized dates were candidate-surface coverage gaps: 2026-06-28, 2026-07-09, 2026-07-11, 2026-07-18, 2026-07-30, 2026-07-31, 2026-08-02, 2026-08-07;
-- seven true structural abstentions were all sub-three-game slates: 2026-07-03, 2026-07-05, 2026-07-07, 2026-07-12, 2026-07-29, 2026-08-01, 2026-08-08;
-- residual eligible-leg supply on 3+ game slates min/median/max = 217/730/1021;
-- no outcomes, validation, lockbox, fitting, candidate generation, Live/model mutation, freeze, or promotion;
-- WNBA stop `BLOCKED_USER_REVIEW_WNBA_4L_RESIDUAL_LEG_SUPPLY_COVERAGE_R0`.
+- canonical `fresh_four_leg_frontier` generated 96 legal candidates on all four authorized dates, twice;
+- identity/order/score hashes were deterministic across both passes;
+- all three former coverage-gap dates generated nonzero surfaces;
+- June 19 had 12 common exact candidate identities out of the 16 old materialized candidates;
+- prior canonical Atlas control remained representable;
+- target outcome reads 0, validation reads 0, lockbox reads 0;
+- no fitting, Live/model mutation, freeze, promotion, or 23-date generation;
+- the reported parity failure is **not accepted as generator failure** pending the active parity-harness repair.
 
-Strategic correction:
+## Accepted parity-harness diagnosis
 
-The old 481-candidate / 15-nonzero-date materialized residual is incomplete and cannot serve as the full current 4L research surface. The old 7-7-1 control and 5-9-1 pointwise result remain scoped evidence on that incomplete surface only. The old 9-5-1 ceiling is withdrawn.
+The prior parity adjudication had three methodological defects:
+
+1. It compared old **post-context-annotation** rows against new raw generated rows before the same annotation pipeline was applied. The 324 feature mismatches equal 12 common candidates × 27 fixed interaction-context fields and were dominated by expected-value-vs-null comparisons.
+2. It re-scored only the 12 common candidates and compared those percentile/midrank-based Atlas components to old scores produced from a different candidate population. `score_family_candidates` must be compared on the same candidate population on both sides.
+3. It required all 16 old June 19 candidates to reappear even though the Prime R1 work order explicitly stated exact-set equality was not required. Common-identity semantic parity plus prior-control representability was the authorized requirement.
+
+Therefore the active repair must adjudicate parity symmetrically without changing generator, scorer, or context semantics.
 
 ## Active user-authorized task
 
-Execution tier: **R1_ACTIONABILITY_CANARY**
+Execution tier: **R1_ACTIONABILITY_REPAIR**
 
 Read and execute exactly:
 
-`docs/coordination/wnba/codex/archive/2026-08-16_4l_post_depletion_stateful_generator_r1.md`
+`docs/coordination/wnba/codex/archive/2026-08-16_4l_stateful_generator_parity_repair_r1a.md`
 
 Work-order publication commit:
 
-`ec17e06506c7db9ff3e251823677cc3ee9c09dd3`
-
-Purpose:
-
-**Prove that the canonical/current WNBA 4L candidate-construction machinery can run after frozen 2L + frozen 3L exact-selected-leg depletion, generate deterministic legal pretruth candidates on representative coverage gaps, and preserve scoring/contract parity on an existing nonzero control date.**
+`92004b21338a286e48d0a5c00a18069a886ba268`
 
 Expected starting WNBA commit:
 
-`978cca95d3701737232dc8e507e9a6ba7f04c301`
+`1e9930253ca3113842a687e188210321424c2d8a`
 
 Expected current WNBA stop:
 
-`BLOCKED_USER_REVIEW_WNBA_4L_RESIDUAL_LEG_SUPPLY_COVERAGE_R0`
+`BLOCKED_USER_REVIEW_WNBA_4L_POST_DEPLETION_STATEFUL_GENERATOR_R1`
 
-Exact canary dates:
+Purpose:
 
-- `2026-06-28` — 4-game coverage gap, 229 residual legs;
-- `2026-07-09` — 3-game coverage gap, 702 residual legs;
-- `2026-08-07` — later 3-game coverage gap, 775 residual legs;
-- `2026-06-19` — earliest chronological 3-game existing-nonzero parity/control date, chosen structurally and not by outcome.
+**Repair only the June 19 parity harness using already-sealed R1 candidate evidence and determine whether the stateful generator R1 should be rehabilitated as an actionability pass.**
 
 Critical constraints:
 
-- stateful order is full outcome-free leg pool -> remove frozen 2L exact selected-leg identities -> remove frozen 3L exact selected-leg identities -> generate 4L candidates;
-- reuse canonical/current candidate-construction machinery; do not invent a parallel builder;
-- three coverage-gap dates must produce nonzero legal candidate surfaces or emit a precise generator/coverage blocker;
-- on 2026-06-19, overlapping exact candidate identities must preserve pretruth scoring semantics and the prior Atlas control candidate must remain representable if its four exact legs remain residual;
-- prove deterministic regeneration;
-- preserve unchanged 4L structural contract;
-- hard generation cap 15 minutes across the four authorized dates; heartbeat if generation itself exceeds 2 minutes;
-- no target outcome reads or grading;
-- no winner search;
-- no pointwise/context/relational/nonlinear learner fitting;
-- no signal-road/threshold/gate/feature/hyperparameter tuning;
-- no full 23-date generation;
-- no patching the eight gaps into the old surface as a final research surface;
-- no 4L freeze or promotion;
-- no FromDeep;
-- validation reads 0;
-- lockbox reads 0;
-- no Live/model/minutes/calibration/allocator/QMC/dependence mutation;
-- no follow-on auto-start.
+- preserve prior failed R1 evidence; write additive R1A evidence only;
+- do **not** generate/regenerate development-date candidate surfaces;
+- bind the sealed R1 candidate surface and old R0 pretruth authority exactly;
+- reproduce the expected 12 common June 19 exact identities or fail authority drift;
+- exact equality with all 16 old materialized candidates is not required;
+- compare actual raw Atlas scorer primitives before annotation;
+- apply the same canonical context annotation pipeline to both old and new common candidates, then compare the complete fixed interaction-context contract;
+- score the complete old common 12-candidate set and complete new common 12-candidate set separately using the same family/depletion semantics, then compare components/scores/final order by exact identity;
+- original generator-local rank may be diagnostic only, but may not silently excuse a changed final scorer order;
+- prior canonical Atlas control must remain representable;
+- no outcomes, grading, winner search, learner fitting, threshold/gate/signal-road tuning, 23-date generation, 4L freeze, FromDeep, validation, lockbox, Live/model mutation, or follow-on auto-start.
 
-If canonical generator reuse requires architectural changes, fail closed and report the blocker rather than inventing a replacement inside this R1.
+Required reads:
+
+- target outcome reads = 0
+- validation reads = 0
+- lockbox reads = 0
 
 ## Required final stop
 
-`BLOCKED_USER_REVIEW_WNBA_4L_POST_DEPLETION_STATEFUL_GENERATOR_R1`
+`BLOCKED_USER_REVIEW_WNBA_4L_STATEFUL_GENERATOR_PARITY_REPAIR_R1A`
 
-Commit/push authorized evidence/code, verify local HEAD == tracking == direct remote, leave clean, preserve protected stash, report final WNBA SHA + stop marker, and stop.
+After completion, commit/push authorized evidence/code, verify local HEAD == tracking == direct remote, leave clean, preserve protected stash, report final WNBA SHA + stop marker, and stop.
 
-## Next if R1 passes — NOT AUTHORIZED BY THIS TASK
+## Next if R1A passes — NOT AUTHORIZED BY THIS TASK
 
-A separately authorized outcome-blind regeneration should rebuild **all 23 eligible 3+ game dates** from the same post-depletion stateful generator so the new 4L surface has one uniform lineage. Do not patch only the eight historical gaps.
+A separately authorized outcome-blind regeneration should rebuild **all 23 eligible 3+ game dates** from the same stateful post-depletion generator so the new 4L surface has one uniform lineage. Do not patch only the eight historical gaps.
 
-Only after that new uniform candidate surface is sealed should discovery truth be opened separately to establish a new Atlas 4L baseline and determine whether a ranking learner is needed. Context-consensus remains parked until then.
+Only after that uniform surface is sealed should discovery truth be opened separately to establish the new Atlas 4L baseline and decide whether any ranking learner is needed. Context-consensus remains parked until then.
 
 ## FromDeep agreed architecture
 
