@@ -1,6 +1,6 @@
 # WNBA Codex Prime
 
-Status: **NO ACTIVE EXECUTION DELEGATION**
+Status: **ACTIVE EXECUTION DELEGATION**
 
 This file is the narrow execution surface for Prime Delegation.
 
@@ -10,7 +10,7 @@ Codex must read this file from the dedicated local Prime mirror:
 
 `C:\Users\13142\Atlas\PrimeDelegation\docs\coordination\wnba\codex\CODEX_PRIME.md`
 
-Before any future execution, the mirror must be a valid clean Git worktree on branch `main` and must be fast-forwarded to current `origin/main` according to `docs/coordination/PRIME_TRANSPORT.md`.
+Before execution, the mirror must be a valid clean Git worktree on branch `main` and must be fast-forwarded to current `origin/main` according to `docs/coordination/PRIME_TRANSPORT.md`.
 
 Do **not** attempt to use or repair `C:\Users\13142\Atlas\.git` for Prime Delegation.
 
@@ -59,25 +59,68 @@ WNBA result commit:
 
 `d6cf1a561e660596cb28d1e2f557290b02b3d4d5`
 
-Chat review disposition:
+Accepted result:
 
 - exact 481-candidate post-pointwise 4L pretruth feature/control surface sealed before development truth;
 - 15 nonzero residual dates and 15 mandatory-abstention dates;
 - canonical available-date control = 7 WIN / 7 LOSS / 1 NONBINARY;
 - ranking failures = 3: 2026-06-17 best winner rank 6, 2026-07-22 rank 5, 2026-08-06 rank 5;
 - supply-impossible losses = 4: 2026-07-08, 2026-07-20, 2026-07-28, 2026-08-13;
-- therefore current-surface maximum without changing candidate supply is 10 WIN / 4 LOSS / 1 NONBINARY if all three ranking failures were repaired;
-- prior context result classified `SURFACE_INCOMPATIBLE_HISTORICAL_ONLY` and cannot be reused as current evidence;
-- strict historical-as-of pointwise logistic is the cheapest next hypothesis: about 14 fits / 1-3 minutes;
-- prior-only context regeneration remains a separate later hypothesis: about 28 fits / 2-5 minutes;
+- current-surface ceiling without changing supply = 10 WIN / 4 LOSS / 1 NONBINARY;
+- prior context result = `SURFACE_INCOMPATIBLE_HISTORICAL_ONLY`;
+- pointwise is the cheapest next fixed hypothesis at ~14 fits / 1–3 minutes;
 - validation reads 0; lockbox reads 0;
-- no fitting, candidate regeneration, FromDeep, Live/model mutation, or protected evaluation occurred;
-- WNBA stop: `BLOCKED_USER_REVIEW_WNBA_4L_POST_POINTWISE_RESIDUAL_R0`.
+- no fitting, candidate regeneration, FromDeep, Live/model mutation, or protected evaluation;
+- WNBA stop `BLOCKED_USER_REVIEW_WNBA_4L_POST_POINTWISE_RESIDUAL_R0`.
 
-## Current status
+## Active user-authorized task
 
-No new execution is authorized.
+Execution tier: **R1_ACTIONABILITY_CANARY**
 
-Chat recommends testing the strict historical-as-of pointwise 4L hypothesis by itself before spending on context variants. Because only three current losses are rank-repairable, the key question is whether pointwise can produce at least +2 net wins without materially damaging the seven existing control wins.
+Read and execute exactly:
 
-Do not begin R1/R2/R3, context regeneration, FromDeep, validation, lockbox, or Live/model work until a new user-authorized Prime delegation is published here.
+`docs/coordination/wnba/codex/archive/2026-08-16_4l_historical_asof_pointwise_r1.md`
+
+Work-order publication commit:
+
+`219ecbf986cf1ef35556ab22f7b7b4b2ab1f2e91`
+
+Purpose:
+
+**Run the fixed pointwise architecture through the exact 4L post-pointwise residual in strict historical-as-of order to prove causal actionability, selection divergence, sealing, and cheap runtime before any aggregate performance verdict is authorized.**
+
+Expected starting WNBA commit:
+
+`d6cf1a561e660596cb28d1e2f557290b02b3d4d5`
+
+Expected current WNBA stop:
+
+`BLOCKED_USER_REVIEW_WNBA_4L_POST_POINTWISE_RESIDUAL_R0`
+
+Critical constraints:
+
+- exact frozen 481-candidate R0 feature/control surface only;
+- 15 mandatory abstentions remain untouched;
+- fixed 25-feature pointwise architecture only;
+- strict `t<D` training state;
+- canonical Atlas cold-start until prior two-class candidate support;
+- expected ~14 production fits, hard wall-clock cap 5 minutes;
+- no context features or context regeneration;
+- no hyperparameter search or gate/threshold;
+- selection must be sealed before target settlement access;
+- R1 must not emit aggregate pointwise W/L/NB, repair/damage counts, or a success verdict versus 7-7-1;
+- no R2/R3 auto-start;
+- no candidate generation/regeneration;
+- no FromDeep;
+- validation reads 0;
+- lockbox reads 0;
+- public slips are not evaluation authority;
+- no Live/model/minutes/calibration/allocator/QMC/dependence mutation.
+
+Codex must reconcile this user authorization through the existing `slip-builders` lane before permanent WNBA evidence generation.
+
+## Required final stop
+
+`BLOCKED_USER_REVIEW_WNBA_4L_HISTORICAL_ASOF_POINTWISE_R1`
+
+After completion, do not auto-start R2, context regeneration, FromDeep, protected evaluation, or Live/model work. Commit/push the authorized R1 evidence, stop, and return the final WNBA SHA for Chat/user review.
