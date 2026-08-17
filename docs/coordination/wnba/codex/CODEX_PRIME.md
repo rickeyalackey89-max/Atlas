@@ -57,8 +57,8 @@ Chat review disposition:
 - one beneficial substitution: 2026-08-06;
 - three harmful substitutions breaking control wins: 2026-06-19, 2026-07-02, 2026-07-06;
 - Jun17 and Jul22 ranking failures were not repaired;
-- all four supply-impossible dates remained losses as expected;
-- 15 mandatory abstentions stayed outside the denominator;
+- all four supply-impossible dates on the **currently materialized 481-candidate surface** remained losses as expected;
+- 15 zero-residual dates stayed outside the available-date denominator;
 - no refit, context execution, search, validation, lockbox, FromDeep, Live/model mutation, or 4L freeze occurred;
 - WNBA stop `BLOCKED_USER_REVIEW_WNBA_4L_SEALED_POINTWISE_PERFORMANCE_R2`.
 
@@ -68,11 +68,46 @@ The fixed 25-feature pointwise architecture is **rejected as a wholesale 4L rera
 
 The failure mode is over-aggressive displacement of strong Atlas incumbents. Example: on 2026-06-19 the pointwise learner selected Atlas rank 16 with predicted pointwise probability ~1.0 despite much weaker underlying Atlas/QMC/EV structure than the winning rank-1 control. Similar harmful displacement occurred on 2026-07-02 and 2026-07-06. The one useful 2026-08-06 substitution shows that selective challenger signal can still exist.
 
-Because 2026-06-17 is a legal cold-start loss, a strict learned historical-as-of 4L procedure can reach at most 9 wins on this fixed surface without changing candidate supply. The remaining useful target is therefore precision: protect the seven control wins while attempting to repair 2026-07-22 and 2026-08-06.
+## 4L supply interpretation guardrail
 
-## Candidate next method — NOT AUTHORIZED
+Do **not** equate `zero residual candidates in the existing 4L candidate corpus` with `no legal or worthwhile four-leg opportunity exists on the slate`.
 
-A precision-first **Atlas-incumbent + prior-only context consensus challenger** is the current candidate next architecture:
+The Builder is stateful. Frozen 2L consumes two exact roads and frozen 3L consumes three more exact roads before 4L. On a full three-game WNBA slate there may still be a broad scored-leg universe across roughly the full active player pool. The existing 481-row 4L residual is only the already-materialized candidate inventory after exact-road depletion; it is not yet proof that the underlying residual leg pool is exhausted.
+
+Therefore the 15 currently zero-residual dates must be interpreted as:
+
+`NO_MATERIALIZED_4L_CANDIDATE_AFTER_CURRENT_DEPLETION`
+
+until a separate artifact audit proves one of the following stronger states:
+
+- `TRUE_STRUCTURAL_ABSTENTION`: the residual scored-leg pool cannot form any legal 4L under the unchanged family contract;
+- `CANDIDATE_SURFACE_COVERAGE_GAP`: legal 4L combinations are feasible from residual scored legs but the current materialized candidate corpus failed to represent them;
+- `SIGNAL_ABSTENTION`: legal candidates can exist, but a later frozen 4L method finds no sufficiently strong signal and intentionally abstains;
+- `QUALIFIED_4L_AVAILABLE`: a legal, sufficiently supported 4L exists.
+
+A sparse 4L method is acceptable when scarcity is **real signal scarcity**. Sparse output caused by a prematurely truncated candidate surface is not acceptable evidence of abstention.
+
+User expectation for a full three-game slate is that more opportunity should generally exist than a tiny handful of dates, but this is a **diagnostic expectation, not a forced output quota**. If a future method acts on only a few full slates, it must explain whether the blocker is true leg supply, candidate-generation coverage, or lack of quality signal. Codex must never manufacture a 4L merely to satisfy coverage.
+
+## Candidate next prerequisite — NOT AUTHORIZED
+
+Before fitting the context-consensus challenger, the current candidate next step is an artifact-only **post-2L/post-3L residual leg-supply and candidate-coverage audit** across all relevant discovery dates.
+
+The future R0 should, without generating candidates or reading protected evidence:
+
+1. reconstruct the exact scored-leg pool remaining after frozen 2L and frozen pointwise-3L exact-road depletion;
+2. count residual eligible legs, unique players, games, markets, and any family-contract-relevant structural dimensions per date;
+3. determine whether at least one legal 4L combination is combinatorially feasible under the unchanged family contract;
+4. compare that feasibility with the already-materialized 4L candidate count;
+5. classify every zero-materialized-candidate date as true structural impossibility versus candidate-surface coverage gap;
+6. keep outcome quality separate from combinatorial availability;
+7. do not generate/regenerate 4L candidates in this audit.
+
+Only after that audit should Chat/user decide whether to authorize bounded candidate-surface expansion or proceed directly to the precision-first context-consensus ranking test.
+
+## Candidate context method — PARKED PENDING SUPPLY AUDIT
+
+A precision-first **Atlas-incumbent + prior-only context consensus challenger** remains the leading ranking architecture if the candidate surface is adequate:
 
 1. regenerate the already-defined `CONTEXT_AWARE_LINEAR` and `CONTEXT_AWARE_INTERACTION` learners strictly with settled `t<D` history only;
 2. keep canonical Atlas rank-1 as the default action;
@@ -82,7 +117,7 @@ A precision-first **Atlas-incumbent + prior-only context consensus challenger** 
 6. cold start remains Atlas;
 7. seal action before target truth.
 
-This is strategy only. A separate user-authorized Prime runway is required before any context fitting or performance evaluation.
+This is strategy only. A separate user-authorized Prime runway is required before any supply audit, context fitting, candidate generation, or performance evaluation.
 
 ## FromDeep agreed architecture
 
