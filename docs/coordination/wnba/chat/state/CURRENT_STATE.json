@@ -1,18 +1,20 @@
 {
   "schema_version": "atlas_prime_delegation_wnba_current_state_v1",
-  "captured_at_ct": "2026-08-17T15:51:00-05:00",
+  "captured_at_ct": "2026-08-17T16:05:00-05:00",
   "snapshot_not_authority": true,
   "sport": "WNBA",
   "source_repository": "rickeyalackey89-max/Atlas-WNBA",
   "source_branch": "builder-method-contract-v1",
   "source_head": "9d752a99700c5311fa71f325883e162829b0381a",
   "builder": {
-    "status": "BLOCKED_USER_REVIEW_FROMDEEP_R0A_SOURCE_PROVENANCE",
-    "current_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_R0A_PROVENANCE_NAMESPACE_CANARY",
+    "status": "ACTIVE_USER_AUTHORIZED_FROMDEEP_R0A1",
+    "current_target_repo_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_R0A_PROVENANCE_NAMESPACE_CANARY",
+    "authorized_step": "fromdeep_r0a1_provenance_exclusion_three_capsule_canary",
+    "required_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_R0A1_EXCLUSION_RESOURCE_CANARY",
     "controller_skill": "slip-builders",
     "validation_reads": 0,
     "lockbox_reads": 0,
-    "active_codex_execution": false
+    "active_codex_execution": true
   },
   "families": {
     "2L": {
@@ -38,9 +40,10 @@
       "downstream_of_3l_if_3l_rebuilt": true
     },
     "FromDeep": {
-      "status": "R0A_COMPLETE_SOURCE_PROVENANCE_BLOCK_REMAINS",
+      "status": "R0A1_PROVENANCE_EXCLUSION_RESOURCE_CANARY_ACTIVE",
       "architecture_path": "docs/coordination/wnba/chat/FROMDEEP_ARCHITECTURE.md",
-      "market_namespace_rule": "FINAL_OWNER_NAMESPACE_EQUALS_SORTED_UNIQUE_CANONICAL_MARKETS_AFTER_ONLY_REPOSITORY_CANONICAL_ALIAS_NORMALIZATION",
+      "architecture_provenance_exclusion_amendment_commit": "4bd330e04a0ef36e55857f794b043e583317a844",
+      "market_namespace_rule": "SUPPORTED_FULL_ROW_CANONICAL_MARKETS_UNION_ZERO_SUPPORT_CANONICAL_IDENTITIES_FROM_FORMALLY_PROVENANCE_EXCLUDED_DATES",
       "legacy_21_is_cap": false,
       "r0": {
         "commit": "c5d3886363d8cce9afceeb2cd5e94a43af6ab3fb",
@@ -52,12 +55,9 @@
       },
       "r0a": {
         "commit": "9d752a99700c5311fa71f325883e162829b0381a",
-        "status": "BLOCKED_SOURCE_PROVENANCE",
         "exact_aug13_builder_card_recovered": false,
         "exact_aug13_scored_legs_recovered": false,
         "semantic_regeneration_executed": false,
-        "archive_plausible_filename_count": 1489,
-        "exact_recovered_source_count": 0,
         "canonical_alias_proven_count": 0,
         "distinct_canonical_markets_adjudicated": [
           "blks_stls",
@@ -67,25 +67,39 @@
         ],
         "final_market_owner_count_frozen": false,
         "streaming_canary_executed": false,
-        "streaming_canary_reason": "INCOMPLETE_SOURCE_REGISTRY",
-        "outcome_reads": 0,
-        "truth_reads": 0,
-        "settlement_reads": 0,
-        "validation_reads": 0,
-        "lockbox_reads": 0,
-        "signal_mining": 0,
-        "fitting": 0
+        "outcome_truth_settlement_validation_lockbox_reads": 0
       },
-      "candidate_next": {
-        "name": "PROVENANCE_UNAVAILABLE_AUG13_EXCLUSION_AND_THREE_CAPSULE_CANARY",
-        "status": "CANDIDATE_NEXT_NOT_AUTHORIZED",
-        "proposed_usable_development_source_count": 38,
-        "aug13_exclusion_basis": "MISSING_REQUIRED_PREGAME_FULL_ROW_BYTES_INDEPENDENT_OF_OUTCOME",
+      "r0a1": {
+        "status": "USER_AUTHORIZED_ACTIVE",
+        "work_order": "docs/coordination/wnba/codex/archive/2026-08-17_fromdeep_r0a1_provenance_exclusion_three_capsule_canary.md",
+        "publication_commit": "9130ac030dde85f2cd667a9ec498f8e793612bf5",
+        "execution_tier": "R0A1_PROVENANCE_EXCLUSION_THREE_CAPSULE_RESOURCE_CANARY",
+        "usable_development_source_count": 38,
+        "provenance_excluded_date": "2026-08-13",
+        "exclusion_reason": "PROVENANCE_UNAVAILABLE_REQUIRED_PREGAME_FULL_ROW_BYTES",
         "semantic_regeneration_allowed": false,
-        "canary": "SMALLEST_LOWER_MEDIAN_LARGEST_OF_38_PHYSICAL_CAPSULES",
+        "excluded_date_statistical_support": 0,
+        "known_identity_only_markets_zero_support": [
+          "blks_stls",
+          "quarters_with_3_points",
+          "quarters_with_4_points",
+          "quarters_with_5_points"
+        ],
+        "canary_sources": "SMALLEST_LOWER_MEDIAN_ITEM_19_LARGEST_OF_38_BY_BOUND_COMPRESSED_BYTES",
+        "target_wall_minutes_max": 15,
+        "single_capsule_seconds_max": 300,
         "full_projection_allowed": false,
-        "outcome_truth_settlement_validation_lockbox_reads_allowed": 0
-      }
+        "final_owner_count_freeze_allowed": false,
+        "outcome_reads_allowed": 0,
+        "truth_reads_allowed": 0,
+        "settlement_reads_allowed": 0,
+        "validation_reads_allowed": 0,
+        "lockbox_reads_allowed": 0,
+        "signal_mining_allowed": false,
+        "fitting_allowed": false,
+        "auto_start_r0b": false
+      },
+      "candidate_next": "R0B_USABLE_38_DATE_FACTUAL_DEMON_OVER_UNIVERSE_PRETRUTH_SEAL_IF_R0A1_PASSES_AND_USER_AUTHORIZES"
     }
   },
   "post_fromdeep_sequence": {
@@ -107,8 +121,8 @@
     "lockbox_reads": 0
   },
   "next_strategy": {
-    "status": "AWAITING_USER_DECISION",
-    "topic": "Decide whether to predeclare Aug13 as provenance-unavailable for FromDeep development and run a three-capsule streaming canary over the 38 physically sealed sources before full R0B.",
-    "codex_execution_authorized": false
+    "status": "USER_AUTHORIZED_CODEX_EXECUTION_ACTIVE",
+    "topic": "Formally exclude Aug13 from FromDeep development for predeclared provenance failure, then time only the deterministic three-capsule streaming projector and conservatively project the later 38-date R0B cost.",
+    "required_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_R0A1_EXCLUSION_RESOURCE_CANARY"
   }
 }
