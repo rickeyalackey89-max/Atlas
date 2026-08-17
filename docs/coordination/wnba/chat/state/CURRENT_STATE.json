@@ -1,17 +1,17 @@
 {
   "schema_version": "atlas_prime_delegation_wnba_current_state_v1",
-  "captured_at_ct": "2026-08-16T18:30:00-05:00",
+  "captured_at_ct": "2026-08-16T19:24:00-05:00",
   "snapshot_not_authority": true,
   "sport": "WNBA",
   "source_repository": "rickeyalackey89-max/Atlas-WNBA",
   "source_branch": "builder-method-contract-v1",
-  "source_head": "2b1fca797eebefdb0da190099681460f22036eb1",
+  "source_head": "d6cf1a561e660596cb28d1e2f557290b02b3d4d5",
   "builder": {
     "status": "BLOCKED_USER_REVIEW",
     "active_stage_id": "builder_stage_5",
-    "active_step_id": "builder_s5_4l_research_entry_user_review",
-    "method_step_id": "4l_research_entry",
-    "completion_marker": "BLOCKED_USER_REVIEW_WNBA_3L_POINTWISE_FROZEN_4L_RESEARCH_OPEN",
+    "active_step_id": "builder_s5_4l_post_pointwise_residual_r0_user_review",
+    "method_step_id": "4l_post_pointwise_residual_r0",
+    "completion_marker": "BLOCKED_USER_REVIEW_WNBA_4L_POST_POINTWISE_RESIDUAL_R0",
     "controller_skill": "slip-builders",
     "validation_reads": 0,
     "lockbox_reads": 0
@@ -24,29 +24,46 @@
     "3L": {
       "status": "FROZEN_RESEARCH_DEPLETION_BACKBONE",
       "freeze_commit": "2b1fca797eebefdb0da190099681460f22036eb1",
-      "freeze_id": "92ab8089b01f763d84ae2ccc28b0b6ef666092033cc701c8042cba49bc8dfb1a",
-      "pointwise_r2_commit": "5eb96d83996e3f65c2ce021a5a3897b43f63da04",
       "historical_asof_record": "24-6-0",
-      "evidence_language": "HISTORICAL_ASOF_PROCEDURAL_EVIDENCE",
       "research_depletion_only": true,
-      "live_or_prospective_promotion_authority": false,
-      "public_slips_are_evaluation_authority": false
+      "live_or_prospective_promotion_authority": false
     },
     "4L": {
-      "status": "R0_STRUCTURAL_FORENSIC_USER_AUTHORIZED",
+      "status": "R0_STRUCTURAL_FORENSIC_REVIEWED",
+      "r0_commit": "d6cf1a561e660596cb28d1e2f557290b02b3d4d5",
       "post_pointwise_residual": {
         "candidate_count": 481,
         "date_count": 30,
-        "zero_residual_date_count": 15,
-        "nonzero_residual_date_count": 15,
+        "mandatory_abstention_date_count": 15,
+        "available_date_count": 15,
         "inventory_sha256": "5500a88c5d14c3a2e6d5f043decc1d88500678986035bce8a431560ac343bd09",
-        "depletion_semantics": "exact_road_identity_only"
+        "pretruth_feature_control_sha256": "d29fd94cada8bd4ba5012b473bb5d55bec3170394e2224076c0a15079218568d"
       },
-      "prior_context_diagnostic_status": "HISTORICAL_ONLY_PENDING_LINEAGE_AUDIT",
-      "research_entry_open": true,
-      "learner_fit_authorized": false,
-      "prime_r0_work_order": "docs/coordination/wnba/codex/archive/2026-08-16_4l_post_pointwise_residual_r0.md",
-      "prime_r0_publication_commit": "d9a9a8f10ca50fd960d67e84ee4a2610fa78817d"
+      "canonical_control": {
+        "record": "7-7-1",
+        "wins": 7,
+        "losses": 7,
+        "nonbinary": 1,
+        "ranking_failure_dates": {
+          "2026-06-17": {"best_winner_rank": 6},
+          "2026-07-22": {"best_winner_rank": 5},
+          "2026-08-06": {"best_winner_rank": 5}
+        },
+        "supply_impossible_dates": ["2026-07-08", "2026-07-20", "2026-07-28", "2026-08-13"],
+        "surface_ceiling_without_supply_change": "10-4-1"
+      },
+      "prior_context_diagnostic_status": "SURFACE_INCOMPATIBLE_HISTORICAL_ONLY",
+      "next_candidate_method": {
+        "name": "STRICT_HISTORICAL_ASOF_POINTWISE_LOGISTIC_4L",
+        "projected_fit_count": 14,
+        "projected_wall_clock": "1-3 minutes",
+        "status": "CANDIDATE_NEXT_NOT_AUTHORIZED"
+      },
+      "context_regeneration": {
+        "projected_fit_count": 28,
+        "projected_wall_clock": "2-5 minutes",
+        "status": "PARKED_PENDING_POINTWISE_RESULT"
+      }
     },
     "FromDeep": {
       "status": "LATER_AFTER_4L_RESEARCH_FREEZE"
@@ -64,15 +81,13 @@
       "protected_validation",
       "final_lockbox_if_no_post_validation_method_change"
     ],
-    "new_date_eligibility": "requires provable pregame surface/state seal before outcome and no consumed outcome",
     "validation_reads": 0,
     "lockbox_reads": 0
   },
   "next_strategy": {
-    "status": "R0_4L_STRUCTURAL_FORENSIC_USER_AUTHORIZED",
-    "prime_work_order": "docs/coordination/wnba/codex/archive/2026-08-16_4l_post_pointwise_residual_r0.md",
-    "publication_commit": "d9a9a8f10ca50fd960d67e84ee4a2610fa78817d",
-    "topic": "Seal exact post-pointwise 4L pretruth feature/control surface, then establish current discovery control/supply anatomy and audit prior context legality before any fit",
+    "status": "CANDIDATE_NEXT_NOT_CODEX_AUTHORIZED",
+    "topic": "Test strict historical-as-of pointwise logistic on the frozen 4L residual by itself before any context regeneration",
+    "success_question": "Can prior-only pointwise produce at least +2 net wins over the 7-7-1 control without changing candidate supply or materially damaging existing control wins?",
     "required_stop": "BLOCKED_USER_REVIEW_WNBA_4L_POST_POINTWISE_RESIDUAL_R0"
   }
 }
