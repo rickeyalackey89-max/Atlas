@@ -9,7 +9,7 @@ Statuses: `ACTIVE`, `NEXT_AUTHORIZED`, `CANDIDATE_NEXT`, `LATER`, `PARKED`, `REV
 | ID | Topic | Status | Revisit trigger | Why retained |
 |---|---|---|---|---|
 | WNBA-3L-003 | V2 learner-vs-gate decomposition audit | COMPLETE | Completed at `bc71d9442580fe69812d6dbad87545006aabdd4e` | Gate domination diagnosed; relational work parked unless it earns incremental value over frozen causal pointwise |
-| WNBA-3L-009 | Historical as-of gate R0 audit | COMPLETE | Completed at `f2e40be6d1beff5dbad87545006aabdd4e` | Established strict `t<D` legality and regeneration requirements |
+| WNBA-3L-009 | Historical as-of gate R0 audit | COMPLETE | Completed at `f2e40be6d1beff5db0e6ed1dc178a68d21f9b512` | Established strict `t<D` legality and regeneration requirements |
 | WNBA-3L-011 | Historical as-of gate R1 canary | COMPLETE | Completed at `6789f0a595bf3956f42146e8742005febd7cc080` | Causal machinery passed; relational topology projected ~5.1h |
 | WNBA-3L-012 | Full causal pointwise benchmark | COMPLETE | Completed at `5eb96d83996e3f65c2ce021a5a3897b43f63da04` | 24-6-0 strict historical-as-of, 29 fits in ~10.1s |
 | WNBA-3L-015 | Pointwise freeze-readiness R0 | COMPLETE | Completed at `64ac175dc1a2ec75f39fa5f9f91af4caed711fc2` | `POINTWISE_3L_RESEARCH_FREEZE_READY` |
