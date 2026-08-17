@@ -1,6 +1,6 @@
 # WNBA Codex Prime
 
-Status: **ACTIVE EXECUTION DELEGATION**
+Status: **NO ACTIVE EXECUTION DELEGATION**
 
 This file is the narrow execution surface for Prime Delegation.
 
@@ -10,7 +10,7 @@ Codex must read this file from the dedicated local Prime mirror:
 
 `C:\Users\13142\Atlas\PrimeDelegation\docs\coordination\wnba\codex\CODEX_PRIME.md`
 
-Before execution, the mirror must be a valid clean Git worktree on branch `main` and must be fast-forwarded to current `origin/main` according to `docs/coordination/PRIME_TRANSPORT.md`.
+Before any future execution, the mirror must be a valid clean Git worktree on branch `main` and must be fast-forwarded to current `origin/main` according to `docs/coordination/PRIME_TRANSPORT.md`.
 
 Do **not** attempt to use or repair `C:\Users\13142\Atlas\.git` for Prime Delegation.
 
@@ -49,78 +49,48 @@ For authorized tasks producing permanent repo evidence/code: exact-path stage, c
 
 ## Last completed delegation
 
-Execution tier: **R0_ARTIFACT_AUDIT**
+Execution tier: **R1_ACTIONABILITY_CANARY**
 
 Task:
 
-`docs/coordination/wnba/codex/archive/2026-08-16_4l_post_pointwise_residual_r0.md`
+`docs/coordination/wnba/codex/archive/2026-08-16_4l_historical_asof_pointwise_r1.md`
 
 WNBA result commit:
 
-`d6cf1a561e660596cb28d1e2f557290b02b3d4d5`
+`fbd986f967c4fb123349ce849bf0f9333ab15d60`
 
-Accepted result:
+Chat review disposition:
 
-- exact 481-candidate post-pointwise 4L pretruth feature/control surface sealed before development truth;
-- 15 nonzero residual dates and 15 mandatory-abstention dates;
-- canonical available-date control = 7 WIN / 7 LOSS / 1 NONBINARY;
-- ranking failures = 3: 2026-06-17 best winner rank 6, 2026-07-22 rank 5, 2026-08-06 rank 5;
-- supply-impossible losses = 4: 2026-07-08, 2026-07-20, 2026-07-28, 2026-08-13;
-- current-surface ceiling without changing supply = 10 WIN / 4 LOSS / 1 NONBINARY;
-- prior context result = `SURFACE_INCOMPATIBLE_HISTORICAL_ONLY`;
-- pointwise is the cheapest next fixed hypothesis at ~14 fits / 1–3 minutes;
+- R1 causal/actionability runway PASSED;
+- exact 481-candidate frozen 4L residual preserved;
+- all 15 nonzero-residual target dates completed;
+- 15 mandatory-abstention dates remained untouched;
+- one canonical Atlas cold start on 2026-06-17;
+- 14 expected prior-only fitted target states were completed, with cached/frozen-state reuse allowed by the sealed implementation;
+- strict `t<D` time arrow passed;
+- selections sealed before each target settlement append;
+- 12/15 selections differed from canonical Atlas control;
+- 14/14 fitted target rankings were nondegenerate;
+- causal actionability observed = true;
+- wall clock ~5.75 seconds under the 300-second cap;
+- aggregate pointwise/control grading, repair/damage interpretation, and performance verdict were intentionally not emitted;
+- context features/regeneration were not used;
 - validation reads 0; lockbox reads 0;
-- no fitting, candidate regeneration, FromDeep, Live/model mutation, or protected evaluation;
-- WNBA stop `BLOCKED_USER_REVIEW_WNBA_4L_POST_POINTWISE_RESIDUAL_R0`.
+- no candidate regeneration, FromDeep, Live/model mutation, threshold/gate, or promotion work;
+- WNBA stop `BLOCKED_USER_REVIEW_WNBA_4L_HISTORICAL_ASOF_POINTWISE_R1`.
 
-## Active user-authorized task
+## Current status
 
-Execution tier: **R1_ACTIONABILITY_CANARY**
+No new execution is authorized.
 
-Read and execute exactly:
+The 4L pointwise selections are now causally sealed and sufficiently nondegenerate to justify a separate cheap performance review. The next candidate task should grade the already-sealed R1 selections against already-consumed discovery truth, compare them with the 7-7-1 canonical control, identify repairs/damages/neutral changes, and decide whether pointwise reaches a practical freeze bar or whether the parked prior-only context variants still merit testing.
 
-`docs/coordination/wnba/codex/archive/2026-08-16_4l_historical_asof_pointwise_r1.md`
+That next review should require no learner refit unless a fail-closed integrity check proves an artifact is missing. It must not open validation/lockbox or begin FromDeep automatically.
 
-Work-order publication commit:
+## FromDeep strategic doctrine for later
 
-`219ecbf986cf1ef35556ab22f7b7b4b2ab1f2e91`
+After 4L is resolved, FromDeep should be rebuilt as a sparse market-owned Demon-OVER signal specialist rather than a highest-probability leftovers family.
 
-Purpose:
+Development should begin from the full eligible scored Demon-OVER leg universe, seal the pretruth surface, then append development settlement and audit what wins/loses and why by market. Candidate roads should be classified from evidence into supported/unsupported/unresolved signal states, with no minimum output count and honest abstention when no supported signal exists. Probability may be a secondary ranking/sanity input only after signal eligibility.
 
-**Run the fixed pointwise architecture through the exact 4L post-pointwise residual in strict historical-as-of order to prove causal actionability, selection divergence, sealing, and cheap runtime before any aggregate performance verdict is authorized.**
-
-Expected starting WNBA commit:
-
-`d6cf1a561e660596cb28d1e2f557290b02b3d4d5`
-
-Expected current WNBA stop:
-
-`BLOCKED_USER_REVIEW_WNBA_4L_POST_POINTWISE_RESIDUAL_R0`
-
-Critical constraints:
-
-- exact frozen 481-candidate R0 feature/control surface only;
-- 15 mandatory abstentions remain untouched;
-- fixed 25-feature pointwise architecture only;
-- strict `t<D` training state;
-- canonical Atlas cold-start until prior two-class candidate support;
-- expected ~14 production fits, hard wall-clock cap 5 minutes;
-- no context features or context regeneration;
-- no hyperparameter search or gate/threshold;
-- selection must be sealed before target settlement access;
-- R1 must not emit aggregate pointwise W/L/NB, repair/damage counts, or a success verdict versus 7-7-1;
-- no R2/R3 auto-start;
-- no candidate generation/regeneration;
-- no FromDeep;
-- validation reads 0;
-- lockbox reads 0;
-- public slips are not evaluation authority;
-- no Live/model/minutes/calibration/allocator/QMC/dependence mutation.
-
-Codex must reconcile this user authorization through the existing `slip-builders` lane before permanent WNBA evidence generation.
-
-## Required final stop
-
-`BLOCKED_USER_REVIEW_WNBA_4L_HISTORICAL_ASOF_POINTWISE_R1`
-
-After completion, do not auto-start R2, context regeneration, FromDeep, protected evaluation, or Live/model work. Commit/push the authorized R1 evidence, stop, and return the final WNBA SHA for Chat/user review.
+Do not reuse the legacy `builder_from_deep_research.py` development workflow as-is because it mixes discovery + validation evidence when declaring development candidate signals. Protected validation must remain sealed until 2L/3L/4L/FromDeep are frozen.
