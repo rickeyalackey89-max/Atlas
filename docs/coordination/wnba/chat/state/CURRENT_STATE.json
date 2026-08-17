@@ -1,6 +1,6 @@
 {
   "schema_version": "atlas_prime_delegation_wnba_current_state_v1",
-  "captured_at_ct": "2026-08-17T08:48:00-05:00",
+  "captured_at_ct": "2026-08-17T09:25:00-05:00",
   "snapshot_not_authority": true,
   "sport": "WNBA",
   "source_repository": "rickeyalackey89-max/Atlas-WNBA",
@@ -29,32 +29,15 @@
       "live_or_prospective_promotion_authority": false
     },
     "4L": {
-      "status": "UNIFORM_STATEFUL_SURFACE_R2_SEALED_AWAITING_POST_EVAL_REVIEW",
-      "initial_materialized_surface_r0_commit": "d6cf1a561e660596cb28d1e2f557290b02b3d4d5",
-      "pointwise_r1_commit": "fbd986f967c4fb123349ce849bf0f9333ab15d60",
-      "pointwise_r2_commit": "b4d85ec3c6d28038831759be502019596c2eb187",
-      "residual_supply_r0_commit": "978cca95d3701737232dc8e507e9a6ba7f04c301",
-      "stateful_generator_r1_commit": "1e9930253ca3113842a687e188210321424c2d8a",
-      "stateful_generator_parity_repair_r1a_commit": "1f71ec936e7b23a7f537336056eaf4ae4209e9c7",
+      "status": "UNIFORM_STATEFUL_SURFACE_R2_SEALED_AWAITING_OPERATIONAL_EVAL_RECOVERY",
       "uniform_stateful_surface_r2_commit": "fd0df85a70559d830cd2ae5e76a711453a9f4dca",
-      "depletion_semantics": {
-        "depleted_unit": "EXACT_SELECTED_LEG_IDENTITY",
-        "identity_fields": ["player", "market", "tier", "side", "line"],
-        "player_wide_depletion": false,
-        "signal_road_depletion": false
-      },
       "uniform_stateful_surface_r2": {
         "disposition": "UNIFORM_23_DATE_STATEFUL_4L_SURFACE_R2_PASS",
         "eligible_date_count": 23,
         "candidate_count": 2208,
         "candidate_count_each_date": 96,
         "canary_continuity": "PASS",
-        "canary_dates": ["2026-06-19", "2026-06-28", "2026-07-09", "2026-08-07"],
         "pretruth_seal_status": "UNIFORM_OUTCOME_BLIND_23_DATE_4L_SURFACE_SEALED",
-        "authoritative_surface_generator_calls": 23,
-        "prior_failed_attempt_generator_calls": 22,
-        "failed_attempt_partial_streams_discarded": true,
-        "failed_attempt_reason": "AUG13_AUTHORITY_DECLARED_BLANK_SETTLEMENT_COLUMN_NAMES_REJECTED_BY_STRICT_OUTCOME_GUARD",
         "target_outcome_reads": 0,
         "validation_reads": 0,
         "lockbox_reads": 0,
@@ -64,7 +47,7 @@
         "promotion_authority": false
       },
       "next_builder_forensic": {
-        "status": "LATER_REQUIRES_SEPARATE_USER_AUTHORIZATION_AFTER_EVAL_CATCHUP",
+        "status": "LATER_REQUIRES_SEPARATE_USER_AUTHORIZATION_AFTER_EVAL_RECOVERY",
         "name": "UNIFORM_23_DATE_ATLAS_CONTROL_FORENSIC",
         "auto_start": false
       },
@@ -89,37 +72,70 @@
   },
   "operations": {
     "eval_catchup_20260813_20260816": {
-      "status": "USER_AUTHORIZED_ACTIVE",
+      "status": "COMPLETE_PARTIAL_CORE_EVAL",
       "execution_class": "OPERATIONAL_MAINTENANCE",
-      "prime_work_order": "docs/coordination/wnba/codex/archive/2026-08-17_wnba_eval_catchup_20260813_20260816.md",
       "target_dates": ["2026-08-13", "2026-08-14", "2026-08-15", "2026-08-16"],
-      "execution_order": "CHRONOLOGICAL",
-      "canonical_wrapper": "scripts/run_prior_day_eval.ps1",
+      "results": {
+        "2026-08-13": {
+          "truth_merged": true,
+          "prior_day_eval_status": "skipped_missing_scored_run",
+          "run_count": 0,
+          "cause_interpretation": "NO_SCORED_RUN_SURVIVED_PUBLISHED_ONLY_FILTER"
+        },
+        "2026-08-14": {
+          "truth_merged": true,
+          "prior_day_eval_status": "complete",
+          "run_count": 2,
+          "consumer_performance": "unavailable",
+          "hard_alert_count": 4
+        },
+        "2026-08-15": {
+          "truth_merged": true,
+          "prior_day_eval_status": "complete",
+          "run_count": 1,
+          "consumer_performance": "unavailable",
+          "hard_alert_count": 2
+        },
+        "2026-08-16": {
+          "truth_merged": true,
+          "prior_day_eval_status": "skipped_missing_scored_run",
+          "run_count": 0,
+          "cause_interpretation": "NO_SCORED_RUN_SURVIVED_PUBLISHED_ONLY_FILTER"
+        }
+      },
+      "builder_research_use_of_new_outcomes": false
+    },
+    "eval_completion_20260813_20260816": {
+      "status": "USER_AUTHORIZED_ACTIVE",
+      "execution_class": "OPERATIONAL_EVAL_RECOVERY",
+      "prime_work_order": "docs/coordination/wnba/codex/archive/2026-08-17_wnba_eval_completion_unpublished_live_runs_20260813_20260816.md",
+      "target_dates": ["2026-08-13", "2026-08-16"],
+      "canonical_evaluator": "wnba.testing_cli eval prior-day",
+      "all_matching_runs": true,
+      "published_only": false,
+      "rerun_aug14": false,
+      "rerun_aug15": false,
+      "publication_flags_mutable": false,
+      "consumer_performance_maintenance_in_scope": false,
       "builder_stop_must_remain": "BLOCKED_USER_REVIEW_WNBA_4L_UNIFORM_STATEFUL_SURFACE_R2",
       "r2_surface_mutation_allowed": false,
       "builder_research_use_of_new_outcomes_allowed": false,
-      "auto_start_builder_forensic": false,
-      "required_stop": "BLOCKED_USER_REVIEW_WNBA_EVAL_CATCHUP_20260813_20260816"
+      "validation_reads_allowed": 0,
+      "lockbox_reads_allowed": 0,
+      "required_stop": "BLOCKED_USER_REVIEW_WNBA_EVAL_COMPLETION_20260813_20260816"
     }
   },
   "evaluation_doctrine": {
     "public_or_live_slips_are_validation": false,
     "operational_eval_creation_equals_builder_consumption": false,
-    "planned_sequence": [
-      "frozen_2L",
-      "frozen_3L",
-      "research_and_freeze_4L",
-      "research_and_freeze_FromDeep",
-      "protected_validation",
-      "final_lockbox_if_no_post_validation_method_change"
-    ],
+    "nonpublic_live_run_eval_creates_publication_authority": false,
     "validation_reads": 0,
     "lockbox_reads": 0
   },
   "next_strategy": {
-    "status": "OPERATIONAL_EVAL_CATCHUP_USER_AUTHORIZED_ACTIVE",
-    "prime_work_order": "docs/coordination/wnba/codex/archive/2026-08-17_wnba_eval_catchup_20260813_20260816.md",
-    "topic": "Run the four missing canonical WNBA prior-day evals for 2026-08-13 through 2026-08-16 while preserving the sealed 4L R2 surface and Builder review stop.",
-    "required_stop": "BLOCKED_USER_REVIEW_WNBA_EVAL_CATCHUP_20260813_20260816"
+    "status": "OPERATIONAL_EVAL_RECOVERY_USER_AUTHORIZED_ACTIVE",
+    "prime_work_order": "docs/coordination/wnba/codex/archive/2026-08-17_wnba_eval_completion_unpublished_live_runs_20260813_20260816.md",
+    "topic": "Complete only the unresolved Aug13 and Aug16 core prior-day evals from existing scored Live runs without the published-only filter; preserve actual publication status and sealed Builder R2.",
+    "required_stop": "BLOCKED_USER_REVIEW_WNBA_EVAL_COMPLETION_20260813_20260816"
   }
 }
