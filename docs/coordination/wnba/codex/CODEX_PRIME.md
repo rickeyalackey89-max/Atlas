@@ -4,101 +4,120 @@ Status: **ACTIVE EXECUTION DELEGATION**
 
 ## Prime transport
 
-Use the clean sparse mirror at:
+Use the clean sparse mirror at `C:\Users\13142\Atlas\PrimeDelegation` and fast-forward `main` under `docs/coordination/PRIME_TRANSPORT.md`.
 
-`C:\Users\13142\Atlas\PrimeDelegation`
+Use only canonical WNBA root `C:\Users\13142\Atlas\WNBA`.
 
-Fast-forward `main` according to `docs/coordination/PRIME_TRANSPORT.md`. Do not use or repair `C:\Users\13142\Atlas\.git`.
+Read and obey WNBA `AGENTS.md`, the active `slip-builders` controls, and `WNBA_BUILDER_WORKFLOW_EFFICIENCY_AMENDMENT_V1.md` after the pending governance consistency cleanup is committed.
 
-## Target authority
+## Accepted state
 
-Use canonical WNBA root:
+Accepted uniform 4L control forensic:
 
-`C:\Users\13142\Atlas\WNBA`
+- WNBA commit `2d2b4f4db497ce6626d7ae30e6b0eeabc394863f`;
+- Atlas rank-1 = `14 WIN / 8 LOSS / 1 NONBINARY`;
+- binary win rate `63.64%`;
+- winner available `23/23`;
+- all eight losses are ranking failures;
+- no-winner dates = 0;
+- validation reads = 0;
+- lockbox reads = 0.
 
-Read and obey WNBA `AGENTS.md` and the active `slip-builders` controls before any Builder action. Prime coordinates scope only.
+Workflow-efficiency implementation is pushed at:
 
-Current accepted WNBA HEAD:
+`2d2f78e1ee9cb59f3c6687c1cad38ba1621272bf`
 
-`fd0df85a70559d830cd2ae5e76a711453a9f4dca`
-
-Current Builder stop:
-
-`BLOCKED_USER_REVIEW_WNBA_4L_UNIFORM_STATEFUL_SURFACE_R2`
-
-The accepted R2 surface is:
-
-- 23 eligible dates;
-- 2,208 candidates;
-- 96 candidates/date;
-- uniform post-depletion lineage;
-- pretruth seal `UNIFORM_OUTCOME_BLIND_23_DATE_4L_SURFACE_SEALED`;
-- validation reads 0;
-- lockbox reads 0.
-
-All sealed R2 bytes/hashes must remain unchanged.
+The user has additionally authorized a very small governance-text consistency cleanup after that commit and explicitly requested that those governance changes be committed and pushed before the next scientific task.
 
 ## Active user-authorized task
 
-User authorization: `go`
-
 Read and execute exactly:
 
-`docs/coordination/wnba/codex/archive/2026-08-17_4l_uniform_atlas_control_forensic_r0.md`
+`docs/coordination/wnba/codex/archive/2026-08-17_4l_incumbent_vs_first_winner_forensic_r0.md`
 
 Work-order publication commit:
 
-`a1cb1e6ff82686902470469944a205869263f5f2`
+`66671f05dfd0b335c91387d97b77a77a886a3b1c`
 
-Execution tier:
+Execution tier: `R0_ARTIFACT_FORENSIC`
 
-`R0_ARTIFACT_FORENSIC`
+Machine class: `SEALED_ARTIFACT_FORENSIC`
 
-Purpose:
+Scientific question:
 
-Establish the canonical Atlas 4L control baseline and loss/rank anatomy on the exact sealed R2 surface before any learner decision.
+> Do the eight Atlas rank-1 4L losses exhibit recurring outcome-free distinctions from the fourteen Atlas rank-1 wins and from their exact first winning alternatives, sufficient to justify a later conservative incumbent/challenger R1?
 
-Required boundaries:
+## Mandatory Git prerequisite
 
-- reconcile any stale Prime hash only through the existing governed Builder controller; never manually rewrite control hashes;
-- bind the exact R2 seal and sealed Atlas ordering;
-- classify outcome-consumption authority for all 23 dates before reading outcomes;
-- grade only `DEVELOPMENT_CONSUMED_ALLOWED` dates;
-- withhold any unconsumed/protected/unclear date without opening its Builder candidate outcomes;
-- `2026-08-13` was unconsumed at R2 seal time, so operational eval creation alone does not authorize Builder use;
-- canonical control = exact sealed Atlas rank-1 candidate;
-- no candidate regeneration;
-- no learner fitting;
-- no reranking experiment;
-- no tuning of thresholds, gates, signals, weights, support, features, or candidate depth;
-- no FromDeep;
-- no 4L freeze/install/promotion;
-- no Live/model mutation;
+Before scientific activation, finish the already-authorized governance cleanup in the canonical WNBA worktree.
+
+Expected cleanup paths only:
+
+- `AGENTS.md`
+- `docs/model_development/builder_method_contract/SLIP_BUILDERS_SKILL_AMENDMENT_WNBA_V1.md`
+
+If and only if the dirty set is exactly those paths:
+
+- review;
+- run narrow governance/control tests;
+- exact-path stage;
+- commit;
+- push;
+- verify local == tracking == direct remote;
+- record the resulting `governance_baseline_sha`;
+- require clean worktree before forensic activation.
+
+Any additional dirty path blocks execution. Do not mix governance cleanup and forensic evidence in one commit.
+
+## Fast-path requirements
+
+- one scientific row;
+- one full preamble at active-row start only;
+- use `BUILDER CONTROL DELTA` only if a governing fact changes;
+- no task-specific `control_builder_<task>.py` controller;
+- prefer shared `run_builder_sealed_artifact_forensic.py` machinery;
+- a minimal reusable extension to the shared generic executor/spec is allowed only if needed to express the fixed incumbent-vs-comparator descriptive analysis and does not change scientific semantics.
+
+## Scientific boundaries
+
+Bind the exact sealed R2 annotated surface and accepted control-forensic artifacts.
+
+Primary population:
+
+- 14 Atlas control WIN dates;
+- 8 Atlas control LOSS dates;
+- 1 NONBINARY date report-only.
+
+For each LOSS date compare frozen Atlas rank-1 against the exact first winner already identified by the accepted control forensic. Do not search for another winner.
+
+Analyze only already-sealed outcome-free R2 features. Report descriptive distributions, paired deltas, categorical transitions, score/QMC/probability/EV/fragility geometry, and raw recurrence counts.
+
+Do **not** fit, learn thresholds, create signal-road rules, rerank, rescore, regenerate, optimize historical wins, run a challenger, run FromDeep, freeze/promote 4L, mutate Live/model/publication state, or access validation/lockbox.
+
+Required counts:
+
 - validation reads = 0;
 - lockbox reads = 0;
-- no follow-on auto-start.
+- learner fits = 0;
+- candidate generation/rescoring/reranking = 0.
 
-Required report:
+## Git completion
 
-- 23-date consumption census;
-- graded and withheld counts;
-- Atlas control WIN / LOSS / NONBINARY record on graded dates;
-- ranking-failure count;
-- no-winning-candidate-on-sealed-surface count;
-- winner-availability ceiling;
-- first-winning-rank min / median / max and rank-band counts;
-- artifact paths;
-- final WNBA SHA and ref equality;
-- clean worktree and protected stash status.
+The governance cleanup commit must remain separate from the forensic commit.
 
-Evidence class:
+For forensic evidence/shared generic infrastructure: exact-path stage, commit, push, verify local == tracking == direct remote, leave clean, preserve protected stash.
 
-`DEVELOPMENT_CONSUMED_SEALED_SURFACE_CONTROL_FORENSIC`
+Report:
+
+1. `governance_baseline_sha`;
+2. final forensic WNBA SHA;
+3. artifact paths;
+4. descriptive recurrence packet;
+5. protected read counts;
+6. final stop.
 
 ## Required final stop
 
-`BLOCKED_USER_REVIEW_WNBA_4L_UNIFORM_CONTROL_FORENSIC_R0`
+`BLOCKED_USER_REVIEW_WNBA_4L_INCUMBENT_VS_FIRST_WINNER_FORENSIC_R0`
 
-## Next step
-
-Not authorized. Rick/Chat review the forensic before any ranking research or 4L freeze decision.
+No follow-on auto-start.
