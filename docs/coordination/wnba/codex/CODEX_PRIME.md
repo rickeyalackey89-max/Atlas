@@ -1,6 +1,6 @@
 # WNBA Codex Prime
 
-Status: **ACTIVE EXECUTION DELEGATION**
+Status: **NO ACTIVE EXECUTION DELEGATION**
 
 This file is the narrow execution surface for Prime Delegation.
 
@@ -10,7 +10,7 @@ Codex must read this file from the dedicated local Prime mirror:
 
 `C:\Users\13142\Atlas\PrimeDelegation\docs\coordination\wnba\codex\CODEX_PRIME.md`
 
-Before execution, the mirror must be a valid clean Git worktree on branch `main` and must be fast-forwarded to current `origin/main` according to `docs/coordination/PRIME_TRANSPORT.md`.
+Before any future execution, the mirror must be a valid clean Git worktree on branch `main` and must be fast-forwarded to current `origin/main` according to `docs/coordination/PRIME_TRANSPORT.md`.
 
 Do **not** attempt to use or repair `C:\Users\13142\Atlas\.git` for Prime Delegation.
 
@@ -22,16 +22,7 @@ This document does not create a second state machine, does not authorize Live/mo
 
 ## Experiment runway
 
-All 4L / FromDeep research is subject to `docs/coordination/PRIME_EXPERIMENT_RUNWAY.md` and the rule **Cheap runway before long takeoff.**
-
-Execution tiers:
-
-- `R0_ARTIFACT_AUDIT`
-- `R1_ACTIONABILITY_CANARY`
-- `R2_BOUNDED_PILOT`
-- `R3_FULL_EXPERIMENT`
-
-No runway task may auto-escalate.
+All 4L / FromDeep research is subject to `docs/coordination/PRIME_EXPERIMENT_RUNWAY.md` and **Cheap runway before long takeoff**. No runway tier may auto-escalate.
 
 ## Validation doctrine
 
@@ -41,92 +32,58 @@ Builder sequence:
 
 `frozen 2L -> frozen 3L -> research/freeze 4L -> research/freeze FromDeep -> protected validation -> final lockbox if methods remain unchanged`.
 
-New unevaluated dates may enter a later protected-evidence inventory only if pregame surface/state can be proven sealed before outcome and their outcomes were not consumed in development.
-
 ## Standing result handoff
 
 For authorized tasks producing permanent repo evidence/code: exact-path stage, commit, push, verify local HEAD == tracking == direct remote, leave clean, and report final SHA + stop marker. Never use broad staging/destructive Git commands or touch the protected stash.
 
 ## Last completed delegation
 
-Execution tier: **R1_ACTIONABILITY_CANARY**
+Execution tier: **R2_BOUNDED_PILOT**
 
 Task:
 
-`docs/coordination/wnba/codex/archive/2026-08-16_4l_historical_asof_pointwise_r1.md`
+`docs/coordination/wnba/codex/archive/2026-08-16_4l_sealed_pointwise_performance_r2.md`
 
 WNBA result commit:
 
-`fbd986f967c4fb123349ce849bf0f9333ab15d60`
+`b4d85ec3c6d28038831759be502019596c2eb187`
 
-Accepted result:
+Chat review disposition:
 
-- all 15 nonzero-residual 4L targets completed;
-- 14 strict prior-only fitted target states plus one canonical Atlas cold start;
-- strict `t<D` time arrow passed;
-- 12/15 selections changed from Atlas control;
-- 14/14 fitted target rankings were nondegenerate;
-- 15 mandatory-abstention dates remained untouched;
-- runtime ~5.75 seconds;
-- selections were sealed before each target settlement append;
-- aggregate grading intentionally withheld;
-- validation reads 0; lockbox reads 0;
-- no context, candidate regeneration, FromDeep, threshold/gate, Live/model mutation, or promotion work;
-- WNBA stop `BLOCKED_USER_REVIEW_WNBA_4L_HISTORICAL_ASOF_POINTWISE_R1`.
+- `POINTWISE_4L_PRACTICAL_BAR_NOT_MET`;
+- sealed causal pointwise = 5 WIN / 9 LOSS / 1 NONBINARY;
+- canonical Atlas control = 7 WIN / 7 LOSS / 1 NONBINARY;
+- net wins versus control = -2;
+- one beneficial substitution: 2026-08-06;
+- three harmful substitutions breaking control wins: 2026-06-19, 2026-07-02, 2026-07-06;
+- Jun17 and Jul22 ranking failures were not repaired;
+- all four supply-impossible dates remained losses as expected;
+- 15 mandatory abstentions stayed outside the denominator;
+- no refit, context execution, search, validation, lockbox, FromDeep, Live/model mutation, or 4L freeze occurred;
+- WNBA stop `BLOCKED_USER_REVIEW_WNBA_4L_SEALED_POINTWISE_PERFORMANCE_R2`.
 
-## Active user-authorized task
+## Strategic interpretation
 
-Execution tier: **R2_BOUNDED_PILOT**
+The fixed 25-feature pointwise architecture is **rejected as a wholesale 4L reranker**. This does not reject 4L itself.
 
-Read and execute exactly:
+The failure mode is over-aggressive displacement of strong Atlas incumbents. Example: on 2026-06-19 the pointwise learner selected Atlas rank 16 with predicted pointwise probability ~1.0 despite much weaker underlying Atlas/QMC/EV structure than the winning rank-1 control. Similar harmful displacement occurred on 2026-07-02 and 2026-07-06. The one useful 2026-08-06 substitution shows that selective challenger signal can still exist.
 
-`docs/coordination/wnba/codex/archive/2026-08-16_4l_sealed_pointwise_performance_r2.md`
+Because 2026-06-17 is a legal cold-start loss, a strict learned historical-as-of 4L procedure can reach at most 9 wins on this fixed surface without changing candidate supply. The remaining useful target is therefore precision: protect the seven control wins while attempting to repair 2026-07-22 and 2026-08-06.
 
-Work-order publication commit:
+## Candidate next method — NOT AUTHORIZED
 
-`e9d0aadea1639f5663d68f4d2445a7c7307e5edc`
+A precision-first **Atlas-incumbent + prior-only context consensus challenger** is the current candidate next architecture:
 
-Purpose:
+1. regenerate the already-defined `CONTEXT_AWARE_LINEAR` and `CONTEXT_AWARE_INTERACTION` learners strictly with settled `t<D` history only;
+2. keep canonical Atlas rank-1 as the default action;
+3. expose each context learner's top challenger independently;
+4. override Atlas only if both fixed context learners nominate the exact same challenger; otherwise KEEP Atlas;
+5. no margin threshold, hyperparameter tuning, outcome-aware gate fitting, or pointwise participation;
+6. cold start remains Atlas;
+7. seal action before target truth.
 
-**Grade the already-sealed causal 4L pointwise R1 selections against already-consumed discovery truth with zero refitting, compare to the canonical 7-7-1 control, and determine whether pointwise meets the predeclared practical bar or whether context still merits testing.**
+This is strategy only. A separate user-authorized Prime runway is required before any context fitting or performance evaluation.
 
-Expected starting WNBA commit:
+## FromDeep agreed architecture
 
-`fbd986f967c4fb123349ce849bf0f9333ab15d60`
-
-Expected current WNBA stop:
-
-`BLOCKED_USER_REVIEW_WNBA_4L_HISTORICAL_ASOF_POINTWISE_R1`
-
-Critical constraints:
-
-- grading only; no pointwise refit or selection reconstruction;
-- exact sealed R1 selection ledger only;
-- 15 mandatory abstentions remain outside the available-date performance denominator;
-- emit pointwise/control W-L-NB plus repairs/damages/neutrals/nonbinary transitions;
-- explicitly report the three R0 ranking-failure dates and four supply-impossible dates;
-- predeclared practical bar: at least 9 WIN on 15 available dates and at least +2 net WIN versus 7-win control;
-- no threshold/gate/feature/hyperparameter search;
-- no context regeneration;
-- no 4L freeze execution;
-- no FromDeep;
-- validation reads 0;
-- lockbox reads 0;
-- no Live/model/minutes/calibration/allocator/QMC/dependence mutation;
-- no R3 or follow-on auto-start.
-
-Codex must reconcile this authorization through the existing `slip-builders` lane before permanent WNBA evidence generation.
-
-## Required final stop
-
-`BLOCKED_USER_REVIEW_WNBA_4L_SEALED_POINTWISE_PERFORMANCE_R2`
-
-Commit/push the authorized evidence, verify local HEAD == tracking == direct remote, leave clean, preserve the protected stash, report final WNBA SHA, and stop.
-
-## FromDeep strategic doctrine for later
-
-After 4L is resolved, FromDeep should be rebuilt as a sparse market-owned Demon-OVER signal specialist rather than a highest-probability leftovers family.
-
-Development should begin from the full eligible scored Demon-OVER leg universe, seal the pretruth surface, then append development settlement and audit what wins/loses and why by market. Candidate roads should be classified from evidence into supported/unsupported/unresolved signal states, with no minimum output count and honest abstention when no supported signal exists. Probability may be a secondary ranking/sanity input only after signal eligibility.
-
-Do not reuse the legacy `builder_from_deep_research.py` development workflow as-is because it mixes discovery + validation evidence when declaring development candidate signals. Protected validation must remain sealed until 2L/3L/4L/FromDeep are frozen.
+`docs/coordination/wnba/chat/FROMDEEP_ARCHITECTURE.md` remains the agreed future design. FromDeep is a sparse market-owned Demon-OVER signal specialist built from a discovery-only full scored-leg census, GREEN/RED/GRAY signal states, bad-road vetoes, probability secondary only, honest abstention, and strict historical-as-of evaluation. Execution remains unauthorized until 4L is resolved.
