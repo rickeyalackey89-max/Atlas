@@ -1,6 +1,6 @@
 # WNBA Codex Prime
 
-Status: **ACTIVE EXECUTION DELEGATION**
+Status: **NO ACTIVE EXECUTION DELEGATION**
 
 This file is the narrow execution surface for Prime Delegation.
 
@@ -10,7 +10,7 @@ Codex must read this file from the dedicated local Prime mirror:
 
 `C:\Users\13142\Atlas\PrimeDelegation\docs\coordination\wnba\codex\CODEX_PRIME.md`
 
-Before execution, the mirror must be a valid clean Git worktree on branch `main` and must be fast-forwarded to current `origin/main` according to `docs/coordination/PRIME_TRANSPORT.md`.
+Before any future execution, the mirror must be a valid clean Git worktree on branch `main` and must be fast-forwarded to current `origin/main` according to `docs/coordination/PRIME_TRANSPORT.md`.
 
 Do **not** attempt to use or repair `C:\Users\13142\Atlas\.git` for Prime Delegation.
 
@@ -49,72 +49,35 @@ For authorized tasks producing permanent repo evidence/code: exact-path stage, c
 
 ## Last completed delegation
 
-Execution class: **CONTROL_TRANSITION**
-
-WNBA result commit:
-
-`2b1fca797eebefdb0da190099681460f22036eb1`
-
-Accepted result:
-
-- 3L causal pointwise is `FROZEN_RESEARCH_DEPLETION_BACKBONE` only;
-- development record remains 24-6-0 historical-as-of procedural evidence;
-- no Live/prospective/promotion authority;
-- exact-road depletion only, no player-wide depletion;
-- bound residual 4L inventory SHA-256 `5500a88c5d14c3a2e6d5f043decc1d88500678986035bce8a431560ac343bd09`;
-- 481 residual 4L candidates across 30 dates;
-- 15 mandatory-abstention dates with zero residual candidates;
-- 4L workflow entry open, research execution not started;
-- relational work parked;
-- validation reads 0;
-- lockbox reads 0;
-- no Live/model/FromDeep/4L research execution;
-- WNBA stop `BLOCKED_USER_REVIEW_WNBA_3L_POINTWISE_FROZEN_4L_RESEARCH_OPEN`.
-
-## Active user-authorized task
-
 Execution tier: **R0_ARTIFACT_AUDIT**
 
-Read and execute exactly:
+Task:
 
 `docs/coordination/wnba/codex/archive/2026-08-16_4l_post_pointwise_residual_r0.md`
 
-Work-order publication commit:
+WNBA result commit:
 
-`d9a9a8f10ca50fd960d67e84ee4a2610fa78817d`
+`d6cf1a561e660596cb28d1e2f557290b02b3d4d5`
 
-Purpose:
+Chat review disposition:
 
-**Establish the exact current 4L candidate/feature/control surface and development control/supply anatomy on the frozen post-3L residual before any 4L learner is authorized.**
+- exact 481-candidate post-pointwise 4L pretruth feature/control surface sealed before development truth;
+- 15 nonzero residual dates and 15 mandatory-abstention dates;
+- canonical available-date control = 7 WIN / 7 LOSS / 1 NONBINARY;
+- ranking failures = 3: 2026-06-17 best winner rank 6, 2026-07-22 rank 5, 2026-08-06 rank 5;
+- supply-impossible losses = 4: 2026-07-08, 2026-07-20, 2026-07-28, 2026-08-13;
+- therefore current-surface maximum without changing candidate supply is 10 WIN / 4 LOSS / 1 NONBINARY if all three ranking failures were repaired;
+- prior context result classified `SURFACE_INCOMPATIBLE_HISTORICAL_ONLY` and cannot be reused as current evidence;
+- strict historical-as-of pointwise logistic is the cheapest next hypothesis: about 14 fits / 1-3 minutes;
+- prior-only context regeneration remains a separate later hypothesis: about 28 fits / 2-5 minutes;
+- validation reads 0; lockbox reads 0;
+- no fitting, candidate regeneration, FromDeep, Live/model mutation, or protected evaluation occurred;
+- WNBA stop: `BLOCKED_USER_REVIEW_WNBA_4L_POST_POINTWISE_RESIDUAL_R0`.
 
-Expected starting WNBA commit:
+## Current status
 
-`2b1fca797eebefdb0da190099681460f22036eb1`
+No new execution is authorized.
 
-Expected current WNBA stop:
+Chat recommends testing the strict historical-as-of pointwise 4L hypothesis by itself before spending on context variants. Because only three current losses are rank-repairable, the key question is whether pointwise can produce at least +2 net wins without materially damaging the seven existing control wins.
 
-`BLOCKED_USER_REVIEW_WNBA_3L_POINTWISE_FROZEN_4L_RESEARCH_OPEN`
-
-Critical constraints:
-
-- bind exact frozen 3L receipt and exact 481-candidate residual inventory;
-- two-phase R0: seal outcome-blind 4L feature/control surface first, then read discovery/development truth only;
-- recover existing canonical Atlas control semantics; never invent a new control;
-- classify mandatory abstention, supply-impossible, ranking failure, and nonbinary separately;
-- audit prior 4L context diagnostic lineage and current-surface/temporal legality without refitting;
-- estimate compute topology for plausible next methods without fitting;
-- no candidate generation/regeneration;
-- no 4L learner fit, sweep, new scoring formula, or context rerank;
-- no FromDeep or relational work;
-- validation reads 0;
-- lockbox reads 0;
-- no Live/model/minutes/calibration/allocator/QMC/dependence mutation;
-- target runtime minutes.
-
-Codex must reconcile this authorization through the existing `slip-builders` lane before permanent WNBA evidence generation.
-
-## Required final stop
-
-`BLOCKED_USER_REVIEW_WNBA_4L_POST_POINTWISE_RESIDUAL_R0`
-
-After completion, do not auto-start R1/R2/R3, 4L fitting, FromDeep, protected evaluation, or Live/model work. Commit/push the authorized R0 evidence, stop, and return the final WNBA SHA for Chat/user review.
+Do not begin R1/R2/R3, context regeneration, FromDeep, validation, lockbox, or Live/model work until a new user-authorized Prime delegation is published here.
