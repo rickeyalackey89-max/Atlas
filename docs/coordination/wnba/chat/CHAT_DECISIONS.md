@@ -187,15 +187,16 @@ Reviewed WNBA result commit:
 
 Decision:
 
-Accept the exact current 4L residual/control anatomy.
+Accept the exact current 4L residual/control anatomy as evidence on the then-materialized surface only.
 
 - 481 candidates on the post-pointwise residual;
-- 15 available dates plus 15 mandatory abstentions;
-- canonical Atlas control on available dates: 7 WIN / 7 LOSS / 1 NONBINARY;
-- ranking failures: 2026-06-17 (best winner rank 6), 2026-07-22 (rank 5), 2026-08-06 (rank 5);
-- supply-impossible losses: 2026-07-08, 2026-07-20, 2026-07-28, 2026-08-13;
-- current-surface ceiling without changing candidate supply: 10-4-1;
+- 15 nonzero materialized dates;
+- canonical Atlas control on those dates: 7 WIN / 7 LOSS / 1 NONBINARY;
+- ranking failures: 2026-06-17, 2026-07-22, 2026-08-06;
+- four additional losses were supply-impossible only on that materialized surface;
 - prior context diagnostics are `SURFACE_INCOMPATIBLE_HISTORICAL_ONLY`.
+
+Later residual-supply R0 proved this was not a complete 4L opportunity surface.
 
 ## 2026-08-16 — 4L strict historical-as-of pointwise R1 accepted
 
@@ -205,48 +206,32 @@ Reviewed WNBA result commit:
 
 Decision:
 
-Accept the R1 causal/actionability runway as passed.
+Accept the R1 causal/actionability runway as passed on the incomplete materialized surface.
 
-- all 15 available targets completed;
-- 14 strict prior-only fitted target states plus one canonical Atlas cold start;
-- strict `t<D` time arrow passed;
-- 12/15 selections changed from control;
-- 14/14 fitted target rankings were nondegenerate;
-- 15 mandatory abstentions remained untouched;
-- runtime about 5.75 seconds;
-- selections sealed before target settlement append;
-- aggregate performance intentionally not emitted;
-- validation reads 0; lockbox reads 0; no context, FromDeep, threshold/gate, candidate regeneration, or Live/model work.
+- 15 targets completed;
+- 14 strict prior-only fitted states plus one Atlas cold start;
+- strict `t<D` passed;
+- 12/15 selection churn;
+- 14/14 fitted rankings nondegenerate;
+- validation/lockbox 0.
 
-## 2026-08-16 — 4L sealed pointwise performance R2 authorized
+## 2026-08-16 — 4L sealed pointwise performance R2 rejected
 
-User authorization:
+Reviewed WNBA result commit:
 
-Proceed with grading the already-sealed R1 selections.
+`b4d85ec3c6d28038831759be502019596c2eb187`
 
 Decision:
 
-Authorize one `R2_BOUNDED_PILOT` that performs **grading only**. No pointwise refit, selection reconstruction, context regeneration, threshold search, feature selection, or candidate regeneration is permitted.
+Reject the fixed 25-feature pointwise learner as a wholesale 4L reranker on the incomplete materialized surface.
 
-Required comparison:
+- pointwise = 5 WIN / 9 LOSS / 1 NONBINARY;
+- canonical control = 7 WIN / 7 LOSS / 1 NONBINARY;
+- net wins = -2;
+- repaired only 2026-08-06;
+- broke control wins on 2026-06-19, 2026-07-02, and 2026-07-06.
 
-- exact 15 sealed pointwise target selections versus the canonical 7-7-1 control on the same available dates;
-- preserve 15 mandatory abstention dates outside the performance denominator;
-- report pointwise W/L/NB, repaired ranking failures, broken control wins, neutral substitutions, nonbinary transitions, and beneficial-minus-harmful substitutions;
-- explicitly report behavior on the three ranking-failure dates and four supply-impossible dates.
-
-Predeclared practical bar:
-
-- at least 9 wins on 15 available dates; and
-- at least +2 net wins versus the 7-win control.
-
-Meeting the bar supports a later freeze-readiness decision only; it does not automatically freeze 4L.
-
-Prime work order:
-
-`docs/coordination/wnba/codex/archive/2026-08-16_4l_sealed_pointwise_performance_r2.md`
-
-Protected evaluation remains untouched: validation reads 0, lockbox reads 0. No FromDeep or Live/model work is authorized by this R2.
+This rejects that reranker, not the 4L family.
 
 ## 2026-08-16 — FromDeep architecture agreed
 
@@ -256,80 +241,93 @@ Adopt `docs/coordination/wnba/chat/FROMDEEP_ARCHITECTURE.md` as the agreed strat
 
 Core architecture:
 
-- FromDeep is a sparse market-owned Demon-OVER signal specialist, not a highest-probability leftovers family.
-- Start from the full eligible scored Demon-OVER development universe, seal the pretruth surface, then attach settlement.
-- Preserve the existing 21-market ownership skeleton; do not pool all markets into one generic signal policy.
-- Audit what wins and loses and why before creating a selector, including line depth, edge, role/minutes/usage/context, fragility, Atlas components, and temporal stability where the corpus supports them.
-- Classify candidate road conditions conceptually as GREEN supported, RED veto, or GRAY unresolved/inactive.
-- Do not use raw hit rate alone; require support, date/player diversity where relevant, market-relative lift, uncertainty/reliability, and stability.
-- Signal eligibility comes before ranking. Probability may be only a secondary sanity/tie/ranking input after a leg qualifies by signal.
-- No minimum output count. Honest FromDeep abstention is valid when no supported signal exists.
-- Final development evaluation uses the same strict historical-as-of time arrow: only `t<D` settled evidence may define the registry used on date `D`.
-- FromDeep development is discovery-only. Do not reuse the legacy discovery+validation candidate-development gate as-is.
+- sparse market-owned Demon-OVER signal specialist;
+- full eligible scored Demon-OVER discovery census pretruth-sealed before settlement;
+- preserve 21-market ownership;
+- GREEN supported / RED veto / GRAY unresolved signal roads;
+- support/reliability/stability rather than raw hit rate alone;
+- probability secondary only after signal eligibility;
+- no minimum output count; honest abstention valid;
+- strict historical-as-of development;
+- discovery-only development; legacy discovery+validation gate not reusable as-is.
 
-Important boundary:
+This is architecture, not execution authorization.
 
-This is an **agreed architecture, not execution authorization**. Exact GREEN/RED support thresholds, confidence method, and state-transition rules are intentionally not frozen yet; they must be derived and predeclared through discovery-only runway work after 4L is resolved.
-
-## 2026-08-16 — 4L pointwise R2 rejected and supply interpretation corrected
-
-Reviewed WNBA result commit:
-
-`b4d85ec3c6d28038831759be502019596c2eb187`
+## 2026-08-16 — 4L depletion terminology and supply interpretation corrected
 
 Decision:
 
-Reject the fixed 25-feature pointwise learner as a wholesale 4L reranker.
+Distinguish:
 
-Exact sealed performance:
+- **exact selected leg identity** = player + market + tier + side + line; this is the only upstream depletion unit;
+- **signal road** = conditional evidence bucket/rule such as probability + fragility + minutes/edge conditions.
 
-- pointwise = 5 WIN / 9 LOSS / 1 NONBINARY;
-- canonical control = 7 WIN / 7 LOSS / 1 NONBINARY;
-- net wins = -2;
-- repaired only 2026-08-06;
-- broke control wins on 2026-06-19, 2026-07-02, and 2026-07-06.
+Do not perform player-wide or signal-road depletion.
 
-This rejects the method, not the 4L family.
+Zero materialized 4L candidates do not prove true abstention from the underlying post-2L/post-3L leg pool.
 
-Supply interpretation correction:
+## 2026-08-16 — 4L residual leg-supply + candidate-coverage R0 accepted
 
-The earlier phrase `mandatory abstention` applied only to dates where the **already-materialized 4L candidate inventory** had zero residual candidates after upstream depletion. It did not prove the underlying post-2L/post-3L scored-leg surface lacked four legal remaining legs.
+Reviewed WNBA result commit:
 
-From this point forward distinguish:
+`978cca95d3701737232dc8e507e9a6ba7f04c301`
 
-- **exact selected leg identity**: the specific player + market + tier + side + line selected upstream and removed from the next family pool;
-- **signal road**: a conditional evidence bucket/rule such as probability + fragility + minutes/edge conditions.
+Decision:
 
-Only exact selected leg identities are depleted across stateful families. Do not deplete an entire player or a signal road because one upstream leg was selected.
+Accept `CURRENT_4L_CANDIDATE_SURFACE_UNDERCOVERS_STRUCTURALLY_LEGAL_RESIDUAL_SUPPLY`.
 
-The 15 zero-materialized dates are therefore provisional `NO_MATERIALIZED_4L_CANDIDATE_AFTER_CURRENT_DEPLETION` dates until an underlying residual-leg audit establishes whether each is a true structural abstention or a candidate-surface coverage gap.
+Outcome-blind result:
 
-User expectation:
+- 30 dates audited;
+- 23 were 3+ game public-4L-eligible slates;
+- all 23 retained a legal 4L witness after exact frozen 2L + frozen pointwise-3L selected-leg depletion;
+- 15 dates had nonzero old materialized surfaces;
+- eight prior zero-materialized dates were coverage gaps: 2026-06-28, 2026-07-09, 2026-07-11, 2026-07-18, 2026-07-30, 2026-07-31, 2026-08-02, 2026-08-07;
+- seven true structural abstentions were all two-game slates: 2026-07-03, 2026-07-05, 2026-07-07, 2026-07-12, 2026-07-29, 2026-08-01, 2026-08-08;
+- residual eligible-leg supply on 3+ game slates min/median/max = 217/730/1021;
+- outcome reads 0, validation reads 0, lockbox reads 0.
 
-On a full three-game WNBA slate, after using only two exact selected legs for 2L and three exact selected legs for 3L, substantial underlying leg/player supply may remain. Sparse 4L output is acceptable only when scarcity is real; it must not be caused by an unnecessarily narrow prebuilt candidate surface. This expectation is diagnostic, not a forced fill quota.
+Strategic consequence:
 
-## 2026-08-16 — 4L residual leg-supply + candidate-coverage R0 authorized
+The old 481-candidate / 15-date materialized surface is incomplete. The old 7-7-1 control and 5-9-1 pointwise result remain scoped historical evidence only. The previously discussed 9-5-1 ceiling is withdrawn.
+
+Do not patch only the eight missing dates. A future full candidate surface must use one uniform stateful post-depletion lineage across all 23 eligible dates.
+
+## 2026-08-16 — Post-depletion stateful 4L generator R1 authorized
 
 User decision:
 
-Continue with the cheap supply audit before the parked context-consensus learner.
-
-Authorize one `R0_ARTIFACT_AUDIT` only.
+Proceed with a tiny generator/actionability canary before full regeneration.
 
 Prime work order:
 
-`docs/coordination/wnba/codex/archive/2026-08-16_4l_residual_leg_supply_coverage_r0.md`
+`docs/coordination/wnba/codex/archive/2026-08-16_4l_post_depletion_stateful_generator_r1.md`
+
+Publication commit:
+
+`ec17e06506c7db9ff3e251823677cc3ee9c09dd3`
+
+Authorized canary dates:
+
+- 2026-06-28 — 4-game coverage gap, 229 residual legs;
+- 2026-07-09 — 3-game coverage gap, 702 residual legs;
+- 2026-08-07 — later 3-game coverage gap, 775 residual legs;
+- 2026-06-19 — earliest chronological 3-game date with an existing nonzero materialized 4L surface, used only for pretruth parity/control.
 
 Required question:
 
-After removing only the exact selected leg identities consumed by frozen 2L and frozen 3L, does the underlying sealed pregame leg surface still support legal 4L construction on dates where the old materialized candidate inventory was empty?
+Can the canonical/current 4L candidate-construction machinery run **after** frozen 2L and frozen 3L exact-selected-leg depletion, generate deterministic nonzero legal candidate surfaces on the three coverage-gap canaries, and preserve contract/scoring parity on the existing nonzero control date?
 
-Required distinctions:
+Boundaries:
 
-- `TRUE_STRUCTURAL_ABSTENTION`
-- `CANDIDATE_SURFACE_COVERAGE_GAP`
-- `MATERIALIZED_SURFACE_NONZERO`
-
-The audit is outcome-blind for feasibility and must not generate/regenerate candidates, fit learners, grade new witness combinations, run context, touch FromDeep, open validation/lockbox, or mutate Live/model state.
-
-No follow-on candidate expansion or context ranking may auto-start. User/Chat review is mandatory after the R0 result.
+- target outcome reads 0;
+- no candidate grading or winner search;
+- no learner fitting or tuning;
+- no full 23-date generation;
+- no context/pointwise ranking;
+- no 4L freeze/promotion;
+- no FromDeep;
+- validation reads 0;
+- lockbox reads 0;
+- no Live/model mutation;
+- mandatory user/Chat review stop after R1.
