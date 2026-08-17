@@ -270,3 +270,66 @@ Core architecture:
 Important boundary:
 
 This is an **agreed architecture, not execution authorization**. Exact GREEN/RED support thresholds, confidence method, and state-transition rules are intentionally not frozen yet; they must be derived and predeclared through discovery-only runway work after 4L is resolved.
+
+## 2026-08-16 — 4L pointwise R2 rejected and supply interpretation corrected
+
+Reviewed WNBA result commit:
+
+`b4d85ec3c6d28038831759be502019596c2eb187`
+
+Decision:
+
+Reject the fixed 25-feature pointwise learner as a wholesale 4L reranker.
+
+Exact sealed performance:
+
+- pointwise = 5 WIN / 9 LOSS / 1 NONBINARY;
+- canonical control = 7 WIN / 7 LOSS / 1 NONBINARY;
+- net wins = -2;
+- repaired only 2026-08-06;
+- broke control wins on 2026-06-19, 2026-07-02, and 2026-07-06.
+
+This rejects the method, not the 4L family.
+
+Supply interpretation correction:
+
+The earlier phrase `mandatory abstention` applied only to dates where the **already-materialized 4L candidate inventory** had zero residual candidates after upstream depletion. It did not prove the underlying post-2L/post-3L scored-leg surface lacked four legal remaining legs.
+
+From this point forward distinguish:
+
+- **exact selected leg identity**: the specific player + market + tier + side + line selected upstream and removed from the next family pool;
+- **signal road**: a conditional evidence bucket/rule such as probability + fragility + minutes/edge conditions.
+
+Only exact selected leg identities are depleted across stateful families. Do not deplete an entire player or a signal road because one upstream leg was selected.
+
+The 15 zero-materialized dates are therefore provisional `NO_MATERIALIZED_4L_CANDIDATE_AFTER_CURRENT_DEPLETION` dates until an underlying residual-leg audit establishes whether each is a true structural abstention or a candidate-surface coverage gap.
+
+User expectation:
+
+On a full three-game WNBA slate, after using only two exact selected legs for 2L and three exact selected legs for 3L, substantial underlying leg/player supply may remain. Sparse 4L output is acceptable only when scarcity is real; it must not be caused by an unnecessarily narrow prebuilt candidate surface. This expectation is diagnostic, not a forced fill quota.
+
+## 2026-08-16 — 4L residual leg-supply + candidate-coverage R0 authorized
+
+User decision:
+
+Continue with the cheap supply audit before the parked context-consensus learner.
+
+Authorize one `R0_ARTIFACT_AUDIT` only.
+
+Prime work order:
+
+`docs/coordination/wnba/codex/archive/2026-08-16_4l_residual_leg_supply_coverage_r0.md`
+
+Required question:
+
+After removing only the exact selected leg identities consumed by frozen 2L and frozen 3L, does the underlying sealed pregame leg surface still support legal 4L construction on dates where the old materialized candidate inventory was empty?
+
+Required distinctions:
+
+- `TRUE_STRUCTURAL_ABSTENTION`
+- `CANDIDATE_SURFACE_COVERAGE_GAP`
+- `MATERIALIZED_SURFACE_NONZERO`
+
+The audit is outcome-blind for feasibility and must not generate/regenerate candidates, fit learners, grade new witness combinations, run context, touch FromDeep, open validation/lockbox, or mutate Live/model state.
+
+No follow-on candidate expansion or context ranking may auto-start. User/Chat review is mandatory after the R0 result.
