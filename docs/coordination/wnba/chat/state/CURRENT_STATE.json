@@ -1,22 +1,25 @@
 {
   "schema_version": "atlas_prime_delegation_wnba_current_state_v1",
-  "captured_at_ct": "2026-08-17T12:56:00-05:00",
+  "captured_at_ct": "2026-08-17T13:03:00-05:00",
   "snapshot_not_authority": true,
   "sport": "WNBA",
   "source_repository": "rickeyalackey89-max/Atlas-WNBA",
   "source_branch": "builder-method-contract-v1",
   "source_head": "c9b8ce32fc2557475d3d2f75af9e4feab3c7fe7b",
   "builder": {
-    "status": "BLOCKED_USER_REVIEW",
-    "current_stop": "BLOCKED_USER_REVIEW_WNBA_4L_PRECISION_FIRST_CHALLENGER_R1",
+    "status": "ACTIVE_USER_AUTHORIZED_SEALED_PERFORMANCE_GRADE",
+    "current_target_repo_stop": "BLOCKED_USER_REVIEW_WNBA_4L_PRECISION_FIRST_CHALLENGER_R1",
+    "authorized_step": "4l_precision_first_challenger_r2_performance_grade",
+    "required_stop": "BLOCKED_USER_REVIEW_WNBA_4L_PRECISION_FIRST_CHALLENGER_R2",
     "controller_skill": "slip-builders",
+    "machine_test_class": "SEALED_ARTIFACT_FORENSIC",
     "validation_reads": 0,
-    "lockbox_reads": 0,
-    "active_codex_execution": false
+    "lockbox_reads": 0
   },
   "governance": {
     "workflow_efficiency_implementation_commit": "2d2f78e1ee9cb59f3c6687c1cad38ba1621272bf",
-    "governance_consistency_baseline_commit": "1bdebebfe6bcafda973bed3a3cf314336534eb4b"
+    "governance_consistency_baseline_commit": "1bdebebfe6bcafda973bed3a3cf314336534eb4b",
+    "sealed_forensic_fast_path_status": "ACTIVE"
   },
   "families": {
     "2L": {
@@ -29,7 +32,7 @@
       "historical_asof_record": "24-6-0"
     },
     "4L": {
-      "status": "PRECISION_FIRST_CHALLENGER_R1_COMPLETE_AWAITING_R2_OR_FREEZE_DECISION",
+      "status": "PRECISION_FIRST_CHALLENGER_R2_PERFORMANCE_GRADE_ACTIVE",
       "uniform_surface_commit": "fd0df85a70559d830cd2ae5e76a711453a9f4dca",
       "control_forensic_commit": "2d2b4f4db497ce6626d7ae30e6b0eeabc394863f",
       "incumbent_forensic_commit": "cd645ed1fdfe857ec2b84f21a9653e6c2977de2a",
@@ -39,37 +42,33 @@
         "losses": 8,
         "nonbinary": 1,
         "binary_win_rate": 0.6363636364,
-        "eligible_dates": 23,
-        "winner_available_dates": 23
+        "eligible_dates": 23
       },
       "r1": {
-        "scientific_status": "R1_ACTIONABILITY_PASS_ONE_EXACT_CONSENSUS_OVERRIDE_PERFORMANCE_UNOPENED",
         "target_date_count": 23,
-        "candidate_count": 2208,
-        "feature_count": 87,
         "keep_atlas_count": 22,
         "exact_consensus_override_count": 1,
         "override_date": "2026-08-07",
         "override_candidate_id": "wnba_candidate_06038f743829e7965ed64acb",
         "override_atlas_rank": 16,
-        "same_date_target_outcome_before_selection_reads": 0,
         "target_performance_reported": false,
-        "learner_fit_count_final_attempt": 28,
-        "execution_attempt_count": 2,
-        "cumulative_attempt_learner_fit_count": 56,
-        "retry_reason": "IMPLEMENTATION_ONLY_FINAL_SERIALIZATION_REPAIR_EXACT_PRETRUTH_SELECTION_REPLAY",
         "validation_reads": 0,
         "lockbox_reads": 0
       },
-      "candidate_next": {
-        "name": "PRECISION_FIRST_CHALLENGER_R2_PERFORMANCE_GRADING",
-        "status": "CANDIDATE_NEXT_NOT_AUTHORIZED",
-        "purpose": "Grade the exact sealed 23-date R1 ledger and determine the effect of the single consensus override versus canonical Atlas 14-8-1.",
+      "r2": {
+        "status": "USER_AUTHORIZED_ACTIVE",
+        "work_order": "docs/coordination/wnba/codex/archive/2026-08-17_4l_precision_first_challenger_r2_performance_grade.md",
+        "work_order_publication_commit": "b8d18855906dd64bde2b09ca7e842f0d3979995a",
+        "execution_tier": "R2_SEALED_PERFORMANCE_GRADE",
+        "purpose": "Grade the exact sealed R1 ledger and classify the sole override versus canonical Atlas 14-8-1.",
         "fitting_allowed": false,
         "new_selection_allowed": false,
+        "candidate_generation_rescore_rerank_allowed": false,
+        "threshold_feature_hyperparameter_search_allowed": false,
         "validation_reads_allowed": 0,
         "lockbox_reads_allowed": 0,
-        "auto_start": false
+        "freeze_install_promotion_allowed": false,
+        "auto_start_follow_on": false
       }
     },
     "FromDeep": {
@@ -82,8 +81,8 @@
     "lockbox_reads": 0
   },
   "next_strategy": {
-    "status": "AWAITING_USER_DECISION",
-    "topic": "Authorize the tiny artifact-only 4L R2 grade, or stop challenger research and freeze canonical Atlas.",
-    "codex_execution_authorized": false
+    "status": "USER_AUTHORIZED_CODEX_EXECUTION_ACTIVE",
+    "topic": "Grade the sealed 4L precision-first R1 selection ledger and determine whether its single override improves, harms, or leaves Atlas unchanged.",
+    "required_stop": "BLOCKED_USER_REVIEW_WNBA_4L_PRECISION_FIRST_CHALLENGER_R2"
   }
 }
