@@ -1,53 +1,109 @@
 # WNBA Codex Prime
 
-Status: **NO ACTIVE EXECUTION DELEGATION**
+Status: **ACTIVE EXECUTION DELEGATION**
 
-Use the clean Prime mirror at `C:\Users\13142\Atlas\PrimeDelegation` and canonical WNBA root `C:\Users\13142\Atlas\WNBA`. Read WNBA `AGENTS.md`, active `slip-builders` controls, and current Builder governance before any future execution.
+Use the clean Prime mirror at `C:\Users\13142\Atlas\PrimeDelegation` and canonical WNBA root `C:\Users\13142\Atlas\WNBA`. Read WNBA `AGENTS.md`, active `slip-builders` controls, and current Builder governance before execution.
 
-## Accepted governance
+## Accepted 4L authority
 
-- workflow-efficiency implementation `2d2f78e1ee9cb59f3c6687c1cad38ba1621272bf`
-- governance consistency cleanup `1bdebebfe6bcafda973bed3a3cf314336534eb4b`
+Expected WNBA starting HEAD:
 
-## Accepted 4L baseline
+`c9b8ce32fc2557475d3d2f75af9e4feab3c7fe7b`
 
-- uniform sealed surface `fd0df85a70559d830cd2ae5e76a711453a9f4dca`
-- canonical Atlas control forensic `2d2b4f4db497ce6626d7ae30e6b0eeabc394863f`
-- Atlas control `14 WIN / 8 LOSS / 1 NONBINARY`, 63.64% binary
-- winner available 23/23; all 8 losses are ranking failures
-- incumbent-vs-first-winner forensic `cd645ed1fdfe857ec2b84f21a9653e6c2977de2a`
+Expected Builder stop:
 
-## Last completed delegation
+`BLOCKED_USER_REVIEW_WNBA_4L_PRECISION_FIRST_CHALLENGER_R1`
 
-Task: `docs/coordination/wnba/codex/archive/2026-08-17_4l_precision_first_incumbent_challenger_r1.md`
+Accepted canonical Atlas control:
 
-WNBA result commit: `c9b8ce32fc2557475d3d2f75af9e4feab3c7fe7b`
+- `14 WIN / 8 LOSS / 1 NONBINARY`
+- binary win rate `63.64%`
+- 23 eligible dates
+- winner available 23/23
 
-Final stop: `BLOCKED_USER_REVIEW_WNBA_4L_PRECISION_FIRST_CHALLENGER_R1`
+Accepted R1 selection seal:
 
-Accepted R1 actionability result:
-
-- 23 dates x 96 candidates = 2,208, no regeneration/rescoring/reranking
-- 87 deterministic numeric outcome-free features
-- 22 `KEEP_ATLAS`, 1 `CONSENSUS_OVERRIDE`
-- sole override: `2026-08-07`, candidate `wnba_candidate_06038f743829e7965ed64acb`, frozen Atlas rank 16
-- all 23 selections sealed pretruth; target performance remains unopened
+- 23 target dates × 96 candidates/date
+- 22 `KEEP_ATLAS`
+- exactly 1 `CONSENSUS_OVERRIDE`
+- override date `2026-08-07`
+- selected candidate `wnba_candidate_06038f743829e7965ed64acb`
+- frozen Atlas rank 16
+- all 23 selections sealed pretruth
+- target performance remains unopened by R1
 - same-date target outcome reads before selection = 0
-- validation reads = 0; lockbox reads = 0
-- final attempt used 28 learner fits and 14.399242 seconds
-- a final serialization-only `implementation_divergence` caused one exact retry; the retry was required to reproduce the same 23 pretruth receipts, with no architecture/feature/model change and no outcome opening
-- 56 cumulative attempted fits therefore reflect two identical 28-fit executions, not model search
+- validation reads 0; lockbox reads 0
 
-Scientific disposition: `R1_ACTIONABILITY_PASS_ONE_EXACT_CONSENSUS_OVERRIDE_PERFORMANCE_UNOPENED`.
+Do not infer the override result from earlier artifacts before the authorized R2 grade.
 
-Do not infer the outcome of the Aug. 7 override from prior artifacts. That is R2 performance grading.
+## Active user-authorized task
 
-## Candidate next — NOT AUTHORIZED
+User authorization: **“Let's do it”**
 
-A tiny artifact-only R2 may bind the sealed R1 selection ledger and already-consumed discovery truth, report R1 W/L/NB and the exact effect of the single override versus Atlas 14-8-1, then stop.
+Read and execute exactly:
 
-R2 must perform no fitting, threshold search, reranking, regeneration, FromDeep, validation/lockbox access, Live/model mutation, freeze, install, or promotion.
+`docs/coordination/wnba/codex/archive/2026-08-17_4l_precision_first_challenger_r2_performance_grade.md`
 
-If the sole override is beneficial, review challenger freeze-readiness. If harmful or non-improving, reject the challenger and freeze canonical Atlas at 14-8-1 unless Rick explicitly chooses further research.
+Work-order publication commit:
 
-No Codex execution is authorized until Rick explicitly approves R2.
+`b8d18855906dd64bde2b09ca7e842f0d3979995a`
+
+Execution tier:
+
+`R2_SEALED_PERFORMANCE_GRADE`
+
+Preferred machine class:
+
+`SEALED_ARTIFACT_FORENSIC`
+
+Scientific question:
+
+> What is the performance of the already-sealed R1 23-date selection ledger, and did the sole pretruth consensus override improve, harm, or leave unchanged canonical Atlas `14-8-1`?
+
+## Required procedure
+
+- bind the exact R1 selected-candidate seal, selection ledger, pretruth receipts, and actionability summary;
+- bind the accepted uniform R2 surface only as needed to recover exact selected-leg identities;
+- confirm all 23 dates are development-consumed before reading performance;
+- settle each sealed selection with the accepted immutable exact-selected-leg adapter over sealed discovery leg truth;
+- grade exactly once;
+- compare R1 W/L/NB versus Atlas `14-8-1` on the identical 23-date population;
+- report the exact one-date control→R1 result transition and classify the sole override as `BENEFICIAL_OVERRIDE`, `HARMFUL_OVERRIDE`, or `NEUTRAL_OVERRIDE` under the predeclared win-count rule;
+- stop for user/Chat review.
+
+## Hard boundaries
+
+- no refitting;
+- no new selection;
+- no candidate generation/rescoring/reranking;
+- no feature/threshold/hyperparameter/weight/margin/signal-road search;
+- no challenger redesign;
+- no FromDeep;
+- no 4L freeze/install/promotion/publication in this task;
+- validation reads = 0;
+- lockbox reads = 0;
+- no Live/model/minutes/calibration/allocator/QMC/dependence/policy/publication mutation;
+- no follow-on auto-start.
+
+Use the streamlined sealed-artifact forensic lifecycle. One full preamble at row start; subsequent unchanged subordinate commands use no repeated full preamble. Do not create a task-specific controller.
+
+Commit/push any authorized compact R2 evidence/shared reusable infrastructure with exact-path staging; verify local HEAD == tracking == direct remote; leave clean; preserve protected stash.
+
+## Required report
+
+- R1 W/L/NB and binary win rate;
+- Atlas `14/8/1` and binary win rate;
+- net WIN delta;
+- changed-selection count = 1;
+- beneficial/harmful/neutral override counts;
+- exact Aug. 7 Atlas result → R1 result transition and selected Atlas rank;
+- truth-support census;
+- zero fitting/search/protected-read/mutation counters;
+- artifact paths/hashes;
+- final WNBA SHA and ref equality.
+
+## Required final stop
+
+`BLOCKED_USER_REVIEW_WNBA_4L_PRECISION_FIRST_CHALLENGER_R2`
+
+R2 does not itself freeze 4L. No follow-on auto-start.
