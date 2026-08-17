@@ -1,6 +1,6 @@
 # WNBA Codex Prime
 
-Status: **NO ACTIVE EXECUTION DELEGATION**
+Status: **ACTIVE EXECUTION DELEGATION**
 
 This file is the narrow execution surface for Prime Delegation.
 
@@ -10,7 +10,7 @@ Codex must read this file from the dedicated local Prime mirror:
 
 `C:\Users\13142\Atlas\PrimeDelegation\docs\coordination\wnba\codex\CODEX_PRIME.md`
 
-Before any future execution, the mirror must be a valid clean Git worktree on branch `main` and must be fast-forwarded to current `origin/main` according to `docs/coordination/PRIME_TRANSPORT.md`.
+Before execution, the mirror must be a valid clean Git worktree on branch `main` and must be fast-forwarded to current `origin/main` according to `docs/coordination/PRIME_TRANSPORT.md`.
 
 Do **not** attempt to use or repair `C:\Users\13142\Atlas\.git` for Prime Delegation.
 
@@ -61,14 +61,14 @@ Accepted Chat review:
 
 - disposition `STATEFUL_4L_PARITY_REPAIR_R1A_PASS`;
 - prior stateful-generator R1 is rehabilitated as an actionability pass;
-- 12 common June 19 exact candidate identities reproduced exactly;
+- 12 common June 19 exact candidate identities reproduced;
 - raw Atlas scorer-input mismatches = 0;
-- symmetric context mismatches = 0 across 324 comparisons (12 candidates × 27 fixed interaction-context fields);
+- symmetric context mismatches = 0 across 324 comparisons;
 - symmetric Atlas scorer mismatches = 0;
-- final exact-identity scorer order parity = true;
+- final exact-identity scorer-order parity = true;
 - prior canonical Atlas control remained representable;
-- generator-local original-rank mismatches = 12 and are diagnostic only; they did not alter final scorer order;
-- candidate generation/regeneration = 0 in R1A;
+- generator-local original-rank mismatches are diagnostic only and did not alter final scorer order;
+- R1A candidate generation = 0;
 - target outcome reads = 0; validation reads = 0; lockbox reads = 0;
 - no fitting, grading, winner search, tuning, 4L freeze, FromDeep, Live/model/scorer/context-semantic mutation;
 - WNBA stop `BLOCKED_USER_REVIEW_WNBA_4L_STATEFUL_GENERATOR_PARITY_REPAIR_R1A`.
@@ -77,28 +77,73 @@ Accepted Chat review:
 
 The canonical/current 4L generator can operate deterministically **after** frozen 2L and frozen pointwise-3L exact-selected-leg depletion without semantic drift.
 
-The earlier R1 `FAIL_PARITY` was a parity-harness failure, not a generator failure. R1A repaired the adjudication without changing generator, scorer, or context semantics.
+The old 481-candidate / 15-nonzero-date residual is incomplete and must not be used as the final current 4L research authority.
 
-The old 481-candidate / 15-nonzero-date residual remains incomplete. Current 4L research must not return to that mixed/pre-materialized surface as final authority.
+## Active user-authorized task
 
-## Candidate next step — NOT AUTHORIZED
+Execution tier: **R2_BOUNDED_PILOT**
 
-The next candidate is one outcome-blind **uniform 23-date stateful 4L candidate-surface regeneration**.
+Read and execute exactly:
 
-Required architecture if later authorized:
+`docs/coordination/wnba/codex/archive/2026-08-17_4l_uniform_stateful_candidate_surface_r2.md`
 
-1. use all and only the 23 discovery dates with slate game count >= 3;
-2. start from each sealed pregame scored-leg/Builder-Card surface;
-3. remove frozen 2L exact selected-leg identities;
-4. remove frozen pointwise-3L exact selected-leg identities;
-5. invoke the same canonical `fresh_four_leg_frontier` post-depletion generator;
-6. preserve the unchanged 4L structural contract and Atlas scoring/context semantics proven by R1/R1A;
-7. build one uniform lineage for all 23 eligible dates — do not patch only the eight historical gaps;
-8. seal the complete candidate surface pretruth before any discovery outcomes are opened.
+Work-order publication commit:
 
-This candidate-surface step remains outcome-blind. It must not grade candidates, fit learners, tune roads/gates/thresholds, run context-consensus, freeze 4L, execute FromDeep, or read validation/lockbox.
+`df3260c606a4e33f19ee8b5f08ddf29af0284388`
 
-After the uniform surface is sealed, a separate user-authorized forensic may open already-consumed discovery truth to establish the new canonical Atlas 4L baseline and determine whether ranking research is actually needed.
+Expected starting WNBA commit:
+
+`1f71ec936e7b23a7f537336056eaf4ae4209e9c7`
+
+Expected current WNBA stop:
+
+`BLOCKED_USER_REVIEW_WNBA_4L_STATEFUL_GENERATOR_PARITY_REPAIR_R1A`
+
+Purpose:
+
+**Build and pretruth-seal one uniform outcome-blind stateful 4L candidate surface across all and only the 23 structurally eligible 3+ game discovery dates.**
+
+Critical constraints:
+
+- derive the 23-date census from sealed residual-supply R0 authority and assert count = 23;
+- one uniform lineage across all 23 dates; do not patch only the eight old coverage gaps;
+- stateful order is sealed pregame pool -> frozen 2L exact-leg depletion -> frozen pointwise-3L exact-leg depletion -> canonical `fresh_four_leg_frontier` -> canonical context annotation -> canonical Atlas 4L scoring -> pretruth seal;
+- exact selected-leg depletion only; no player-wide or signal-road depletion;
+- generate each date once; do not double all 23 dates;
+- the four prior R1 canary dates (2026-06-19, 2026-06-28, 2026-07-09, 2026-08-07) must reproduce the already-sealed R1 candidate identity/order/scorer hashes under the same bound inputs;
+- preserve the full within-date candidate population when Atlas scorer percentile/midrank components are computed;
+- seal raw candidates, canonical context annotations, Atlas score ledger, per-date hashes, upstream depletion identities, contract/source hashes, and exact ordered 23-date census before any outcomes are opened;
+- no target outcome reads or grading;
+- no winner search;
+- no learner fitting or context-consensus;
+- no signal-road/threshold/gate/feature/hyperparameter/weight/depth tuning;
+- no 4L freeze/install/promotion/publication;
+- no FromDeep;
+- validation reads = 0;
+- lockbox reads = 0;
+- no Live/model/minutes/calibration/allocator/QMC/dependence/scorer/context-semantic mutation;
+- no follow-on auto-start.
+
+Resource contract:
+
+- expected generator calls = 23 single-pass calls;
+- learner fits = 0;
+- one date in memory at a time;
+- expected wall clock roughly 5–10 minutes including evidence overhead;
+- hard surface-construction cap = 20 minutes excluding focused tests/lint/validator cleanup;
+- heartbeat at least every 3 completed dates or every 2 minutes.
+
+## Required final stop
+
+`BLOCKED_USER_REVIEW_WNBA_4L_UNIFORM_STATEFUL_SURFACE_R2`
+
+Commit/push authorized evidence/code, verify local HEAD == tracking == direct remote, leave clean, preserve protected stash, and report final WNBA SHA + artifact paths + date/candidate census + R1 canary-continuity result + target/validation/lockbox reads + stop marker.
+
+## Next if R2 passes — NOT AUTHORIZED BY THIS TASK
+
+A separate artifact-only forensic may then open **already-consumed discovery truth only** against the sealed uniform 23-date surface to establish the new canonical Atlas 4L baseline and supply/ranking anatomy.
+
+That later forensic must not open protected validation or lockbox and must not automatically launch any learner. Context-consensus remains parked until the new uniform baseline proves ranking research is warranted.
 
 ## FromDeep agreed architecture
 
