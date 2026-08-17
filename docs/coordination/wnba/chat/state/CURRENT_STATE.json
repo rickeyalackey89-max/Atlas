@@ -1,17 +1,17 @@
 {
   "schema_version": "atlas_prime_delegation_wnba_current_state_v1",
-  "captured_at_ct": "2026-08-16T20:40:00-05:00",
+  "captured_at_ct": "2026-08-16T21:00:00-05:00",
   "snapshot_not_authority": true,
   "sport": "WNBA",
   "source_repository": "rickeyalackey89-max/Atlas-WNBA",
   "source_branch": "builder-method-contract-v1",
-  "source_head": "fbd986f967c4fb123349ce849bf0f9333ab15d60",
+  "source_head": "b4d85ec3c6d28038831759be502019596c2eb187",
   "builder": {
     "status": "BLOCKED_USER_REVIEW",
     "active_stage_id": "builder_stage_5",
-    "active_step_id": "builder_s5_4l_historical_asof_pointwise_r1_user_review",
-    "method_step_id": "4l_historical_asof_pointwise_r1",
-    "completion_marker": "BLOCKED_USER_REVIEW_WNBA_4L_HISTORICAL_ASOF_POINTWISE_R1",
+    "active_step_id": "builder_s5_4l_sealed_pointwise_performance_r2_user_review",
+    "method_step_id": "4l_sealed_pointwise_performance_r2",
+    "completion_marker": "BLOCKED_USER_REVIEW_WNBA_4L_SEALED_POINTWISE_PERFORMANCE_R2",
     "controller_skill": "slip-builders",
     "validation_reads": 0,
     "lockbox_reads": 0
@@ -29,16 +29,16 @@
       "live_or_prospective_promotion_authority": false
     },
     "4L": {
-      "status": "R2_SEALED_POINTWISE_PERFORMANCE_USER_AUTHORIZED",
+      "status": "ACTIVE_RESEARCH_POINTWISE_REJECTED_CONTEXT_CANDIDATE_NEXT",
       "r0_commit": "d6cf1a561e660596cb28d1e2f557290b02b3d4d5",
       "r1_commit": "fbd986f967c4fb123349ce849bf0f9333ab15d60",
+      "r2_commit": "b4d85ec3c6d28038831759be502019596c2eb187",
       "post_pointwise_residual": {
         "candidate_count": 481,
         "date_count": 30,
         "mandatory_abstention_date_count": 15,
         "available_date_count": 15,
-        "inventory_sha256": "5500a88c5d14c3a2e6d5f043decc1d88500678986035bce8a431560ac343bd09",
-        "pretruth_feature_control_sha256": "d29fd94cada8bd4ba5012b473bb5d55bec3170394e2224076c0a15079218568d"
+        "inventory_sha256": "5500a88c5d14c3a2e6d5f043decc1d88500678986035bce8a431560ac343bd09"
       },
       "canonical_control": {
         "record": "7-7-1",
@@ -46,35 +46,33 @@
         "losses": 7,
         "nonbinary": 1,
         "ranking_failure_dates": ["2026-06-17", "2026-07-22", "2026-08-06"],
-        "supply_impossible_dates": ["2026-07-08", "2026-07-20", "2026-07-28", "2026-08-13"],
-        "surface_ceiling_without_supply_change": "10-4-1"
+        "supply_impossible_dates": ["2026-07-08", "2026-07-20", "2026-07-28", "2026-08-13"]
       },
-      "pointwise_r1": {
-        "completed_target_count": 15,
-        "fitted_target_count": 14,
-        "time_arrow_passed": true,
-        "selection_churn": "12/15",
-        "nondegenerate_fitted_targets": "14/14",
-        "elapsed_seconds": 5.75439,
-        "aggregate_performance_reported": false
+      "pointwise_r2": {
+        "disposition": "POINTWISE_4L_PRACTICAL_BAR_NOT_MET",
+        "record": "5-9-1",
+        "net_wins_vs_control": -2,
+        "beneficial_substitutions": 1,
+        "harmful_substitutions": 3,
+        "repaired_dates": ["2026-08-06"],
+        "broken_control_win_dates": ["2026-06-19", "2026-07-02", "2026-07-06"],
+        "full_pointwise_rerank_status": "REJECTED_FOR_4L"
       },
-      "pointwise_r2_authorization": {
-        "execution_tier": "R2_BOUNDED_PILOT",
-        "prime_work_order": "docs/coordination/wnba/codex/archive/2026-08-16_4l_sealed_pointwise_performance_r2.md",
-        "publication_commit": "e9d0aadea1639f5663d68f4d2445a7c7307e5edc",
-        "refit_allowed": false,
-        "context_allowed": false,
-        "practical_bar": {
-          "minimum_available_date_wins": 9,
-          "minimum_net_wins_vs_control": 2
-        },
-        "validation_reads_allowed": 0,
-        "lockbox_reads_allowed": 0
+      "strict_learned_method_ceiling": {
+        "record": "9-5-1",
+        "reason": "2026-06-17 is legal cold start; four additional losses are supply-impossible",
+        "required_repairs_to_hit_9_wins": ["2026-07-22", "2026-08-06"],
+        "required_control_win_damage": 0
       },
-      "context_regeneration": {
-        "projected_fit_count": 28,
-        "projected_wall_clock": "2-5 minutes",
-        "status": "PARKED_PENDING_POINTWISE_PERFORMANCE"
+      "candidate_next_architecture": {
+        "name": "ATLAS_INCUMBENT_PRIOR_ONLY_CONTEXT_CONSENSUS",
+        "status": "CANDIDATE_NEXT_NOT_AUTHORIZED",
+        "base_action": "KEEP_CANONICAL_ATLAS_CONTROL",
+        "learners": ["CONTEXT_AWARE_LINEAR", "CONTEXT_AWARE_INTERACTION"],
+        "training_partition": "strict settled t<D only",
+        "override_rule": "override only when both fixed context learners nominate the exact same challenger",
+        "threshold_tuning": false,
+        "pointwise_used": false
       }
     },
     "FromDeep": {
@@ -82,24 +80,17 @@
       "architecture_path": "docs/coordination/wnba/chat/FROMDEEP_ARCHITECTURE.md",
       "architecture_status": "AGREED",
       "family_role": "SPARSE_MARKET_OWNED_DEMON_OVER_SIGNAL_SPECIALIST",
-      "development_universe": "FULL_ELIGIBLE_SCORED_DEMON_OVER_DISCOVERY_UNIVERSE_PRETRUTH_SEALED_BEFORE_SETTLEMENT",
-      "market_ownership": "PRESERVE_21_MARKET_SEPARATION_NO_GENERIC_CROSS_MARKET_POOL",
-      "signal_states": ["GREEN_SUPPORTED", "RED_VETO", "GRAY_UNRESOLVED_INACTIVE"],
-      "primary_eligibility": "EVIDENCE_BASED_SIGNAL_MATCH_WITH_NO_RED_VETO",
+      "development_evidence_role": "DISCOVERY_ONLY",
       "probability_role": "SECONDARY_AFTER_SIGNAL_ELIGIBILITY_ONLY",
       "minimum_output_count": 0,
       "honest_abstention_allowed": true,
-      "historical_evaluation": "STRICT_T_LESS_THAN_D_MARKET_REGISTRY_UPDATE_AND_SELECTION_SEAL_BEFORE_TARGET_TRUTH",
-      "development_evidence_role": "DISCOVERY_ONLY",
       "legacy_discovery_plus_validation_candidate_gate_reuse_allowed": false,
       "thresholds_frozen": false,
-      "threshold_note": "Exact support, reliability/confidence and GREEN/RED transition thresholds must be derived and predeclared in future discovery-only runway work after 4L is resolved.",
       "execution_authorized": false
     }
   },
   "evaluation_doctrine": {
     "public_or_live_slips_are_validation": false,
-    "public_slip_role": "OPERATIONAL_OUTPUT_ONLY",
     "planned_sequence": [
       "frozen_2L",
       "frozen_3L",
@@ -113,9 +104,8 @@
     "lockbox_reads": 0
   },
   "next_strategy": {
-    "status": "R2_4L_SEALED_PERFORMANCE_USER_AUTHORIZED",
-    "prime_work_order": "docs/coordination/wnba/codex/archive/2026-08-16_4l_sealed_pointwise_performance_r2.md",
-    "topic": "Grade already-sealed causal 4L pointwise selections without refitting and compare to canonical 7-7-1 control",
+    "status": "CANDIDATE_NEXT_NOT_CODEX_AUTHORIZED",
+    "topic": "Test a strict prior-only Atlas-incumbent context-consensus challenger rather than another wholesale 4L reranker",
     "required_stop": "BLOCKED_USER_REVIEW_WNBA_4L_SEALED_POINTWISE_PERFORMANCE_R2"
   }
 }
