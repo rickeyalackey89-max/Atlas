@@ -1,6 +1,6 @@
 # WNBA Codex Prime
 
-Status: **ACTIVE EXECUTION DELEGATION**
+Status: **NO ACTIVE EXECUTION DELEGATION**
 
 This file is the narrow execution surface for Prime Delegation.
 
@@ -10,7 +10,7 @@ Codex must read this file from the dedicated local Prime mirror:
 
 `C:\Users\13142\Atlas\PrimeDelegation\docs\coordination\wnba\codex\CODEX_PRIME.md`
 
-Before execution, the mirror must be a valid clean Git worktree on branch `main` and must be fast-forwarded to current `origin/main` according to `docs/coordination/PRIME_TRANSPORT.md`.
+Before any future execution, the mirror must be a valid clean Git worktree on branch `main` and must be fast-forwarded to current `origin/main` according to `docs/coordination/PRIME_TRANSPORT.md`.
 
 Do **not** attempt to use or repair `C:\Users\13142\Atlas\.git` for Prime Delegation.
 
@@ -47,106 +47,67 @@ For authorized tasks producing permanent repo evidence/code: exact-path stage, c
 
 ## Last completed delegation
 
-Execution tier: **R2_BOUNDED_PILOT**
+Execution tier: **R0_ARTIFACT_AUDIT**
 
 Task:
 
-`docs/coordination/wnba/codex/archive/2026-08-16_4l_sealed_pointwise_performance_r2.md`
+`docs/coordination/wnba/codex/archive/2026-08-16_4l_residual_leg_supply_coverage_r0.md`
 
 WNBA result commit:
 
-`b4d85ec3c6d28038831759be502019596c2eb187`
+`978cca95d3701737232dc8e507e9a6ba7f04c301`
 
-Accepted Chat review:
+Chat review disposition:
 
-- pointwise = 5 WIN / 9 LOSS / 1 NONBINARY;
-- canonical control = 7 WIN / 7 LOSS / 1 NONBINARY;
-- pointwise net wins = -2;
-- repaired 2026-08-06 only;
-- broke control wins on 2026-06-19, 2026-07-02, and 2026-07-06;
-- fixed 25-feature pointwise architecture rejected as a wholesale 4L reranker;
-- no validation, lockbox, FromDeep, Live/model mutation, or 4L freeze occurred;
-- WNBA stop `BLOCKED_USER_REVIEW_WNBA_4L_SEALED_POINTWISE_PERFORMANCE_R2`.
+- `CURRENT_4L_CANDIDATE_SURFACE_UNDERCOVERS_STRUCTURALLY_LEGAL_RESIDUAL_SUPPLY` accepted;
+- 30 dates audited outcome-blind;
+- 23 dates were 3+ game public-4L-eligible slates;
+- every one of those 23 dates had a legal residual 4L witness after frozen 2L + frozen pointwise-3L exact-selected-leg depletion;
+- 15 dates had nonzero materialized 4L candidate surfaces;
+- 8 prior zero-materialized dates were reclassified as `CANDIDATE_SURFACE_COVERAGE_GAP`;
+- 7 prior zero-materialized dates were confirmed `TRUE_STRUCTURAL_ABSTENTION`, all because the slate had fewer than 3 games under the unchanged public 4L family contract;
+- the 8 coverage-gap dates are 2026-06-28, 2026-07-09, 2026-07-11, 2026-07-18, 2026-07-30, 2026-07-31, 2026-08-02, 2026-08-07;
+- the 7 true structural abstention dates are 2026-07-03, 2026-07-05, 2026-07-07, 2026-07-12, 2026-07-29, 2026-08-01, 2026-08-08;
+- residual structurally eligible leg supply on 3+ game slates was min/median/max 217/730/1021;
+- no outcome, validation, or lockbox reads; no fitting, candidate generation, Live/model mutation, freeze, or promotion;
+- WNBA stop `BLOCKED_USER_REVIEW_WNBA_4L_RESIDUAL_LEG_SUPPLY_COVERAGE_R0`.
 
-## 4L supply interpretation correction
+## Strategic correction after R0
 
-The current 481-row residual is an **already-materialized candidate surface**, not proof of all legal post-2L/post-3L combinations available from the underlying scored-leg pool.
+The prior 481-candidate materialized residual is not an adequate current 4L research surface.
 
-The 15 dates with zero materialized 4L candidates must not be called true abstentions until the active R0 proves the underlying residual leg pool cannot construct a legal 4L.
+The old 15-date control result (7-7-1) and pointwise result (5-9-1) remain valid only as evidence on that incomplete materialized surface. They do **not** define a complete 4L opportunity denominator, and the previously discussed 9-5-1 learned-method ceiling is withdrawn because eight structurally legal 3+ game dates were absent from the materialized candidate surface.
 
-Valid structural classes for this audit are:
+The correct eligible slate denominator for current 4L discovery research is now structurally 23 dates, with seven sub-three-game dates as true family-contract abstentions. Legal feasibility does not imply quality signal or mandatory publication.
 
-- `TRUE_STRUCTURAL_ABSTENTION`
-- `CANDIDATE_SURFACE_COVERAGE_GAP`
-- `MATERIALIZED_SURFACE_NONZERO`
+## Candidate next architecture — NOT AUTHORIZED
 
-Sparse 4L output is acceptable when scarcity is real. Sparse output caused by a prematurely narrow materialized candidate surface is not evidence of signal abstention.
+The current candidate next step is a tiny **post-depletion stateful 4L candidate-generator R1 canary**, before any ranking learner.
 
-The user expects a full three-game WNBA slate to often retain substantial opportunity after only two exact selected 2L legs and three exact selected 3L legs are consumed. Treat that as a diagnostic expectation, **not a forced fill quota**.
+Core architecture:
 
-## Active user-authorized task
+1. frozen 2L selection occurs;
+2. remove only its exact selected leg identities;
+3. frozen causal pointwise 3L selection occurs from the residual pool;
+4. remove only its exact selected leg identities;
+5. only then invoke the canonical/current 4L candidate-construction machinery on the remaining scored-leg pool;
+6. preserve the unchanged 4L structural contract and pretruth scoring semantics;
+7. do not use outcomes to generate, filter, rank, or select candidates.
 
-Execution tier: **R0_ARTIFACT_AUDIT**
+Do not merely append replacement candidates to the eight gap dates. If the canary passes, the next full surface should regenerate one uniform post-depletion 4L candidate surface for **all 23 eligible 3+ game dates** so the research surface has one consistent lineage.
 
-Read and execute exactly:
+Suggested R1 canary dates are selected only for structural/resource diversity, not outcomes:
 
-`docs/coordination/wnba/codex/archive/2026-08-16_4l_residual_leg_supply_coverage_r0.md`
+- `2026-06-28`: 4-game coverage-gap date, 229 residual structurally eligible legs;
+- `2026-07-09`: 3-game coverage-gap date, 702 residual legs;
+- `2026-08-07`: later 3-game coverage-gap date, 775 residual legs;
+- plus one existing nonzero 3-game parity/control date to verify the stateful invocation does not silently change the family contract or scoring semantics.
 
-Work-order publication commit:
+R1 purpose should be to identify/reuse the canonical candidate generator, prove it can operate after upstream depletion, emit deterministic nonzero legal candidate surfaces on the gap canaries, preserve contract/parity on the nonzero control date, and measure runtime/resource topology.
 
-`7ebd252d26e4996e1840742f8512985d0f952ffe`
+No outcome grading, signal-road tuning, context learner, pointwise rerank, validation, lockbox, FromDeep, Live/model mutation, freeze, or promotion belongs in that canary.
 
-Purpose:
-
-**Audit the full underlying post-2L/post-3L residual leg pool outcome-blind, determine legal 4L feasibility by date, and distinguish true structural abstention from current candidate-surface undercoverage before any next learner is fit.**
-
-Expected starting WNBA commit:
-
-`b4d85ec3c6d28038831759be502019596c2eb187`
-
-Expected current WNBA stop:
-
-`BLOCKED_USER_REVIEW_WNBA_4L_SEALED_POINTWISE_PERFORMANCE_R2`
-
-Critical constraints:
-
-- bind frozen 2L and frozen pointwise-3L selected-leg identities exactly;
-- remove only exact selected leg identities, never whole players or signal roads;
-- reconstruct underlying outcome-free residual scored-leg supply from existing sealed authority;
-- derive and report the unchanged 4L structural contract from WNBA authority before feasibility counting;
-- classify every audited date as true structural abstention, candidate-surface coverage gap, or nonzero materialized surface;
-- separately summarize 3-game-or-larger slates;
-- deterministic bounded feasibility search/witnesses only; no expensive exhaustive enumeration required;
-- no candidate generation/regeneration;
-- no new witness grading or winner search;
-- no pointwise/context fitting;
-- no thresholds/gates/hyperparameter search;
-- no 4L freeze;
-- no FromDeep;
-- validation reads 0;
-- lockbox reads 0;
-- no Live/model/minutes/calibration/allocator/QMC/dependence mutation;
-- no follow-on auto-start.
-
-Codex must reconcile this authorization through the existing `slip-builders` lane before permanent WNBA evidence generation.
-
-## Required final stop
-
-`BLOCKED_USER_REVIEW_WNBA_4L_RESIDUAL_LEG_SUPPLY_COVERAGE_R0`
-
-After completion, commit/push authorized evidence/code, verify local HEAD == tracking == direct remote, leave clean, preserve protected stash, report final WNBA SHA + stop marker, and stop.
-
-## Candidate context method — PARKED PENDING R0
-
-If and only if the current materialized surface is adequate, the leading ranking candidate remains an Atlas-incumbent prior-only context-consensus challenger:
-
-1. strict settled `t<D` regeneration of the fixed linear and interaction context learners;
-2. canonical Atlas control is incumbent;
-3. override only if both fixed context learners nominate the same challenger;
-4. no threshold tuning;
-5. no pointwise participation.
-
-This is not authorized by the active R0.
+After a successful canary, a separately authorized full outcome-blind regeneration should build the uniform 23-date stateful 4L candidate surface. Only then should discovery truth be opened in a separate step to establish the new canonical Atlas 4L baseline and supply/ranking anatomy. Context-consensus ranking remains parked until that new baseline exists.
 
 ## FromDeep agreed architecture
 
