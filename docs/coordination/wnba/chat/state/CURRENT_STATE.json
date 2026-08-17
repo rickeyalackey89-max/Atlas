@@ -1,6 +1,6 @@
 {
   "schema_version": "atlas_prime_delegation_wnba_current_state_v1",
-  "captured_at_ct": "2026-08-16T20:35:00-05:00",
+  "captured_at_ct": "2026-08-16T20:40:00-05:00",
   "snapshot_not_authority": true,
   "sport": "WNBA",
   "source_repository": "rickeyalackey89-max/Atlas-WNBA",
@@ -78,9 +78,23 @@
       }
     },
     "FromDeep": {
-      "status": "LATER_AFTER_4L_RESEARCH_FREEZE",
-      "planned_research_direction": "DISCOVERY_ONLY_FULL_SCORED_DEMON_OVER_SIGNAL_ATLAS_WITH_MARKET_OWNERSHIP_AND_HONEST_ABSTENTION",
-      "legacy_discovery_plus_validation_candidate_gate_reuse_allowed": false
+      "status": "ARCHITECTURE_AGREED_EXECUTION_NOT_AUTHORIZED",
+      "architecture_path": "docs/coordination/wnba/chat/FROMDEEP_ARCHITECTURE.md",
+      "architecture_status": "AGREED",
+      "family_role": "SPARSE_MARKET_OWNED_DEMON_OVER_SIGNAL_SPECIALIST",
+      "development_universe": "FULL_ELIGIBLE_SCORED_DEMON_OVER_DISCOVERY_UNIVERSE_PRETRUTH_SEALED_BEFORE_SETTLEMENT",
+      "market_ownership": "PRESERVE_21_MARKET_SEPARATION_NO_GENERIC_CROSS_MARKET_POOL",
+      "signal_states": ["GREEN_SUPPORTED", "RED_VETO", "GRAY_UNRESOLVED_INACTIVE"],
+      "primary_eligibility": "EVIDENCE_BASED_SIGNAL_MATCH_WITH_NO_RED_VETO",
+      "probability_role": "SECONDARY_AFTER_SIGNAL_ELIGIBILITY_ONLY",
+      "minimum_output_count": 0,
+      "honest_abstention_allowed": true,
+      "historical_evaluation": "STRICT_T_LESS_THAN_D_MARKET_REGISTRY_UPDATE_AND_SELECTION_SEAL_BEFORE_TARGET_TRUTH",
+      "development_evidence_role": "DISCOVERY_ONLY",
+      "legacy_discovery_plus_validation_candidate_gate_reuse_allowed": false,
+      "thresholds_frozen": false,
+      "threshold_note": "Exact support, reliability/confidence and GREEN/RED transition thresholds must be derived and predeclared in future discovery-only runway work after 4L is resolved.",
+      "execution_authorized": false
     }
   },
   "evaluation_doctrine": {
