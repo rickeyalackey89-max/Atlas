@@ -1,26 +1,22 @@
 {
   "schema_version": "atlas_prime_delegation_wnba_current_state_v1",
-  "captured_at_ct": "2026-08-17T12:11:00-05:00",
+  "captured_at_ct": "2026-08-17T12:56:00-05:00",
   "snapshot_not_authority": true,
   "sport": "WNBA",
   "source_repository": "rickeyalackey89-max/Atlas-WNBA",
   "source_branch": "builder-method-contract-v1",
-  "source_head": "cd645ed1fdfe857ec2b84f21a9653e6c2977de2a",
+  "source_head": "c9b8ce32fc2557475d3d2f75af9e4feab3c7fe7b",
   "builder": {
-    "status": "ACTIVE_USER_AUTHORIZED_EXECUTION",
-    "current_target_repo_stop": "BLOCKED_USER_REVIEW_WNBA_4L_INCUMBENT_VS_FIRST_WINNER_FORENSIC_R0",
-    "authorized_step": "4l_precision_first_incumbent_challenger_r1",
-    "required_stop": "BLOCKED_USER_REVIEW_WNBA_4L_PRECISION_FIRST_CHALLENGER_R1",
+    "status": "BLOCKED_USER_REVIEW",
+    "current_stop": "BLOCKED_USER_REVIEW_WNBA_4L_PRECISION_FIRST_CHALLENGER_R1",
     "controller_skill": "slip-builders",
     "validation_reads": 0,
-    "lockbox_reads": 0
+    "lockbox_reads": 0,
+    "active_codex_execution": false
   },
   "governance": {
     "workflow_efficiency_implementation_commit": "2d2f78e1ee9cb59f3c6687c1cad38ba1621272bf",
-    "governance_consistency_baseline_commit": "1bdebebfe6bcafda973bed3a3cf314336534eb4b",
-    "sealed_forensic_fast_path_status": "ACTIVE",
-    "active_r1_uses_fast_path": false,
-    "reason": "R1 authorizes learner fitting and therefore uses normal non-fast-path Builder governance"
+    "governance_consistency_baseline_commit": "1bdebebfe6bcafda973bed3a3cf314336534eb4b"
   },
   "families": {
     "2L": {
@@ -33,39 +29,47 @@
       "historical_asof_record": "24-6-0"
     },
     "4L": {
-      "status": "PRECISION_FIRST_CHALLENGER_R1_AUTHORIZED_ACTIVE",
-      "r2_surface_commit": "fd0df85a70559d830cd2ae5e76a711453a9f4dca",
+      "status": "PRECISION_FIRST_CHALLENGER_R1_COMPLETE_AWAITING_R2_OR_FREEZE_DECISION",
+      "uniform_surface_commit": "fd0df85a70559d830cd2ae5e76a711453a9f4dca",
       "control_forensic_commit": "2d2b4f4db497ce6626d7ae30e6b0eeabc394863f",
-      "incumbent_vs_first_winner_forensic_commit": "cd645ed1fdfe857ec2b84f21a9653e6c2977de2a",
+      "incumbent_forensic_commit": "cd645ed1fdfe857ec2b84f21a9653e6c2977de2a",
+      "challenger_r1_commit": "c9b8ce32fc2557475d3d2f75af9e4feab3c7fe7b",
       "canonical_control": {
         "wins": 14,
         "losses": 8,
         "nonbinary": 1,
         "binary_win_rate": 0.6363636364,
         "eligible_dates": 23,
-        "winner_available_dates": 23,
-        "ranking_failure_count": 8,
-        "no_winner_date_count": 0
+        "winner_available_dates": 23
       },
       "r1": {
-        "execution_tier": "R1_ACTIONABILITY_SELECTION_SEAL",
-        "prime_work_order": "docs/coordination/wnba/codex/archive/2026-08-17_4l_precision_first_incumbent_challenger_r1.md",
-        "publication_commit": "d491ff867ff82026f10e777d5a5e4d5289f46115",
-        "base_action": "KEEP_CANONICAL_ATLAS_CONTROL",
-        "challenger_universe": "FULL_SEALED_96_CANDIDATES_PER_DATE",
-        "historical_asof_required": true,
-        "learner_a": "FIXED_LINEAR_L2_LOGISTIC",
-        "learner_b": "FIXED_PAIRWISE_INTERACTION_L2_LOGISTIC",
-        "override_rule": "EXACT_SAME_NONINCUMBENT_NOMINEE_FROM_BOTH_LEARNERS",
-        "target_performance_grading_allowed": false,
-        "threshold_search_allowed": false,
-        "feature_search_allowed": false,
-        "hyperparameter_search_allowed": false,
-        "candidate_generation_allowed": false,
-        "atlas_rescore_or_rerank_allowed": false,
+        "scientific_status": "R1_ACTIONABILITY_PASS_ONE_EXACT_CONSENSUS_OVERRIDE_PERFORMANCE_UNOPENED",
+        "target_date_count": 23,
+        "candidate_count": 2208,
+        "feature_count": 87,
+        "keep_atlas_count": 22,
+        "exact_consensus_override_count": 1,
+        "override_date": "2026-08-07",
+        "override_candidate_id": "wnba_candidate_06038f743829e7965ed64acb",
+        "override_atlas_rank": 16,
+        "same_date_target_outcome_before_selection_reads": 0,
+        "target_performance_reported": false,
+        "learner_fit_count_final_attempt": 28,
+        "execution_attempt_count": 2,
+        "cumulative_attempt_learner_fit_count": 56,
+        "retry_reason": "IMPLEMENTATION_ONLY_FINAL_SERIALIZATION_REPAIR_EXACT_PRETRUTH_SELECTION_REPLAY",
+        "validation_reads": 0,
+        "lockbox_reads": 0
+      },
+      "candidate_next": {
+        "name": "PRECISION_FIRST_CHALLENGER_R2_PERFORMANCE_GRADING",
+        "status": "CANDIDATE_NEXT_NOT_AUTHORIZED",
+        "purpose": "Grade the exact sealed 23-date R1 ledger and determine the effect of the single consensus override versus canonical Atlas 14-8-1.",
+        "fitting_allowed": false,
+        "new_selection_allowed": false,
         "validation_reads_allowed": 0,
         "lockbox_reads_allowed": 0,
-        "auto_start_r2": false
+        "auto_start": false
       }
     },
     "FromDeep": {
@@ -78,8 +82,8 @@
     "lockbox_reads": 0
   },
   "next_strategy": {
-    "status": "USER_AUTHORIZED_CODEX_EXECUTION_ACTIVE",
-    "topic": "Run and seal the strict historical-as-of precision-first 4L challenger R1 selection surface without target-date performance grading.",
-    "required_stop": "BLOCKED_USER_REVIEW_WNBA_4L_PRECISION_FIRST_CHALLENGER_R1"
+    "status": "AWAITING_USER_DECISION",
+    "topic": "Authorize the tiny artifact-only 4L R2 grade, or stop challenger research and freeze canonical Atlas.",
+    "codex_execution_authorized": false
   }
 }
