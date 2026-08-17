@@ -52,21 +52,9 @@ Chat review decision:
 
 Do not adopt that phrase as the strategic scientific conclusion.
 
-Reason:
-
-- V2-A/D produced >0.55 date-balanced relational AUC on multiple surfaces.
-- V2-A/D identified the exact best-ranked winning challenger on 2026-07-06, but an `INF` threshold prevented the repair.
-- V2-A/B/D identified the exact best-ranked winning challenger on 2026-07-31, but an `INF` threshold prevented the repair.
-- the comparative classifier required both a discrimination signal and an **acted** beneficial override to emit its unstable-signal state.
-- therefore the learner signal and override-policy transfer were confounded.
-
 Strategic disposition:
 
 `RELATIONAL_SIGNAL_WEAK_OR_UNSTABLE_AND_OVERRIDE_GATE_CONFOUNDED`
-
-This does not promote any V2 architecture.
-
-Next research should first decompose pre-gate challenger quality from threshold/gate quality using already-sealed OOS outputs.
 
 ## 2026-08-16 — Prime Delegation
 
@@ -78,7 +66,6 @@ Adopt Prime Delegation in the parent Atlas repo.
 - Codex receives narrow execution-ready delegations only.
 - WNBA `slip-builders` remains sole Builder workflow controller.
 - Prime Delegation never becomes operational/model/statistical authority.
-- parked and future agendas receive explicit revisit triggers so important ideas do not disappear.
 
 ## 2026-08-16 — V2 learner-vs-gate decomposition accepted
 
@@ -88,13 +75,7 @@ Reviewed WNBA result commit:
 
 Decision:
 
-Accept the primary diagnosis `V2_GATE_DOMINATED_USEFUL_CHALLENGER_SIGNAL` as the correct strategic interpretation of V2-A/D action failure.
-
-Key evidence:
-
-- V2-A pre-gate challenger result: 22-8-0, repairing 2026-07-06 and 2026-07-31 while damaging 2026-08-01; `INF` on 27/30 dates.
-- V2-D produced the same repair/damage pattern; `INF` on 29/30 dates.
-- A/B/D three-way positive consensus was promising post hoc but development-consumed, not OOS authority.
+Accept `V2_GATE_DOMINATED_USEFUL_CHALLENGER_SIGNAL` as the correct strategic interpretation of V2-A/D action failure. Relational work remains unpromoted.
 
 ## 2026-08-16 — Prime experiment runway doctrine
 
@@ -106,19 +87,15 @@ Core rule:
 
 > **Cheap runway before long takeoff.**
 
-Future research separates `R0_ARTIFACT_AUDIT`, `R1_ACTIONABILITY_CANARY`, `R2_BOUNDED_PILOT`, and `R3_FULL_EXPERIMENT`; runway tasks cannot auto-escalate.
-
 ## 2026-08-16 — Historical as-of procedure adopted
 
 Decision:
 
-Use historical as-of / walk-forward / prequential simulation as the preferred retrospective procedure for adaptive 3L learning.
+Use historical as-of / walk-forward / prequential simulation as the preferred retrospective procedure for adaptive Builder learning.
 
 For every target date `D`:
 
 `settled history t<D -> train/update -> freeze state -> expose D pregame surface -> freeze selection -> reveal D outcome -> append D`.
-
-Stored grouped-date OOF/LODO outputs are not automatically causal if later-than-D dates entered the fitted state.
 
 ## 2026-08-16 — Historical as-of gate R0 accepted
 
@@ -130,8 +107,6 @@ Decision:
 
 Accept `ASOF_GATE_PROCEDURE_FEASIBLE_BUT_REQUIRES_BASE_REGENERATION`.
 
-Stored pointwise/V2 series require prior-only regeneration on 29/30 targets; sealed pretruth candidate/rank and frozen 2L depletion surfaces are reusable.
-
 ## 2026-08-16 — Historical as-of gate R1 accepted as resource stop
 
 Reviewed WNBA result commit:
@@ -140,9 +115,7 @@ Reviewed WNBA result commit:
 
 Decision:
 
-Accept the causal mechanism as working on the first three sealed targets, but do not authorize full relational regeneration because the final probe hit the 900-second watchdog.
-
-Measured projection moved full A/B/D and G3 to about 5.1 hours while pointwise-only remained cheap.
+Accept the causal mechanism as working on the first three sealed targets, but do not authorize full relational regeneration because the final probe hit the watchdog and projected full A/B/D/G3 to about 5.1 hours.
 
 ## 2026-08-16 — Historical as-of pointwise R2 accepted
 
@@ -161,59 +134,13 @@ Exact causal result:
 - repaired control losses: 2026-06-20, 2026-07-03, 2026-07-06, 2026-07-31;
 - damaged control win: 2026-08-01;
 - 2026-06-27 control NONBINARY became pointwise WIN;
-- net beneficial-minus-harmful substitutions = +3;
 - selection changed on 29/30 dates;
-- 29/29 expected fits completed in about 10.1 seconds;
-- all training dates were strictly earlier than each target;
-- final 2026-08-13 candidate identity, deterministic ranking, exact training-date set, and all candidate probabilities reproduced stored legal LODO state within 1e-10;
-- both focused test runs passed 10/10;
-- validation reads 0; lockbox reads 0; no relational, Live/model, threshold, or promotion mutation.
-
-Important interpretation:
-
-The causal procedure is not simply reproducing the prior grouped-date OOF 22-7-1 result. It lost 2026-07-07 as a repair, gained 2026-06-20, no longer damaged 2026-07-02, retained 2026-08-01 as its only harmful substitution, and converted the 2026-06-27 control NONBINARY to a WIN.
-
-Strategic implication:
-
-Because the pointwise procedure changes selection on 29/30 dates yet damages only one control win, its role should be reconsidered as the potential **3L ranking backbone**, not merely a selective override challenger. Relational witnesses now have to prove incremental value over a causal 24-6-0 pointwise baseline before their ~5.1-hour regeneration cost is justified.
+- strict prior-only time arrow passed;
+- validation reads 0; lockbox reads 0.
 
 Evidence restriction:
 
-This remains `HISTORICAL_ASOF_PROCEDURAL_EVIDENCE`, not untouched prospective or promotion authority. No 3L freeze, Live install, validation read, or lockbox read is authorized by this decision alone.
-
-## 2026-08-16 — Pointwise freeze-readiness / residual forensic R0 authorized
-
-User decision:
-
-The causal 24-6-0 historical-as-of pointwise result is solid enough to evaluate for a working 3L research/depletion freeze.
-
-Authorize one cheap `R0_ARTIFACT_AUDIT` only.
-
-Purpose:
-
-- verify the pointwise procedure is completely specified, deterministic, hash-bound, and freeze-ready;
-- anatomize the five meaningful remaining dates `2026-07-07`, `2026-07-28`, `2026-08-01`, `2026-08-08`, `2026-08-13`;
-- separately reconfirm `2026-07-08` as supply-impossible;
-- materialize the exact already-generated 4L availability surface after frozen 2L + causal pointwise 3L exact-road depletion;
-- determine whether the next decision should be to freeze 3L pointwise and open 4L research.
-
-Explicit boundaries:
-
-- no refit/replay;
-- no relational work;
-- no gate tuning;
-- no candidate generation;
-- no actual 3L freeze/promotion/install;
-- no 4L scoring/fitting/settlement optimization;
-- validation reads 0;
-- lockbox reads 0;
-- no Live/model mutation.
-
-Prime work order:
-
-`docs/coordination/wnba/codex/archive/2026-08-16_3l_pointwise_freeze_readiness_r0.md`
-
-The actual freeze remains a separate user/Chat decision after R0 review.
+This remains `HISTORICAL_ASOF_PROCEDURAL_EVIDENCE`, not untouched prospective or promotion authority.
 
 ## 2026-08-16 — Pointwise freeze-readiness R0 accepted
 
@@ -225,36 +152,16 @@ Decision:
 
 Accept `POINTWISE_3L_RESEARCH_FREEZE_READY` as a faithful advisory freeze-readiness result.
 
-The procedure is completely specified and hash-bound: strict `t<D` training partition, frozen 25-feature contract, fold-local missingness treatment, date-equal weighting, `StandardScaler -> LogisticRegression`, `C=1`, fixed solver/random state, exact tie order, cold-start Atlas control, selection seal before target truth, and exact-road depletion semantics.
-
-Remaining failure anatomy:
-
-- 2026-07-07: `TOP_RANK_DISCRIMINATION`; 24 winning residual candidates existed.
-- 2026-07-08: `SUPPLY_IMPOSSIBLE`; 0 winning residual candidates existed.
-- 2026-07-28: `TOP_RANK_DISCRIMINATION`; 28 winning residual candidates existed.
-- 2026-08-01: `ALREADY_CORRECT_CONTROL_DAMAGE`; control WIN, pointwise LOSS, 26 winning residual candidates existed.
-- 2026-08-08: `TOP_RANK_DISCRIMINATION`; 8 winning residual candidates existed.
-- 2026-08-13: `TOP_RANK_DISCRIMINATION`; 10 winning residual candidates existed.
-
 Current downstream 4L structural surface after frozen 2L + causal pointwise 3L exact-road depletion:
 
 - 481 unique already-generated candidates;
 - 30 dates represented;
 - 15 dates have zero residual candidates;
-- exact residual inventory SHA-256 `5500a88c5d14c3a2e6d5f043decc1d88500678986035bce8a431560ac343bd09`;
-- no 4L outcome fields retained and no 4L scoring/ranking/grading occurred.
-
-Strategic interpretation:
-
-The prior 4L diagnostic surface is no longer the current statistical surface. Exact causal pointwise 3L depletion materially changes 4L availability, including eliminating all legal 4L residual candidates on half of the 30 dates. Therefore any current 4L method research must begin from this exact post-pointwise residual inventory rather than reuse the earlier covered-control result as current evidence.
+- exact residual inventory SHA-256 `5500a88c5d14c3a2e6d5f043decc1d88500678986035bce8a431560ac343bd09`.
 
 Recommendation:
 
 `FREEZE_3L_POINTWISE_THEN_OPEN_4L_RESEARCH`.
-
-Authority restriction:
-
-This review does **not** execute the 3L research/depletion freeze and does not authorize 4L research, prospective claims, Live installation, validation reads, or lockbox reads. The actual freeze remains a separate explicit user authorization.
 
 ## 2026-08-16 — 3L pointwise research/depletion freeze accepted
 
@@ -267,39 +174,76 @@ Decision:
 Accept the control transition as faithful.
 
 - 3L causal pointwise status is `FROZEN_RESEARCH_DEPLETION_BACKBONE`.
-- scope is research/depletion only; development record remains 24-6-0 `HISTORICAL_ASOF_PROCEDURAL_EVIDENCE`.
-- no Live, prospective, promotion, or installation authority is created.
+- scope is research/depletion only; no Live, prospective, promotion, or installation authority is created.
 - public/live slips are explicitly not evaluation authority.
 - exact-road depletion remains ordered canonical road equality only; no player-wide depletion.
 - 4L entry is open on the exact 481-candidate residual with 15 mandatory-abstention dates.
-- 4L research execution had not started at the transition stop.
-- validation reads 0; lockbox reads 0; no Live/model/FromDeep/relational execution.
 
-The active Builder pointer moved to `builder_s5_4l_research_entry_user_review` while preserving `four_leg_research_allowed=false` pending a separate runway authorization.
+## 2026-08-16 — Current 4L structural/forensic R0 accepted
 
-## 2026-08-16 — Current 4L structural/forensic R0 authorized
+Reviewed WNBA result commit:
 
-User/Chat sequence already established:
-
-Finish/freeze 4L, then finish/freeze FromDeep, then validate the completed frozen Builder stack; public slips never substitute for protected evaluation.
+`d6cf1a561e660596cb28d1e2f557290b02b3d4d5`
 
 Decision:
 
-Authorize one `R0_ARTIFACT_AUDIT` on the exact post-pointwise 4L residual before any learner is fit.
+Accept the exact current 4L residual/control anatomy.
 
-Required causal/forensic structure:
+- 481 candidates on the post-pointwise residual;
+- 15 available dates plus 15 mandatory abstentions;
+- canonical Atlas control on available dates: 7 WIN / 7 LOSS / 1 NONBINARY;
+- ranking failures: 2026-06-17 (best winner rank 6), 2026-07-22 (rank 5), 2026-08-06 (rank 5);
+- supply-impossible losses: 2026-07-08, 2026-07-20, 2026-07-28, 2026-08-13;
+- current-surface ceiling without changing candidate supply: 10-4-1;
+- prior context diagnostics are `SURFACE_INCOMPATIBLE_HISTORICAL_ONLY`.
 
-- bind the frozen 3L receipt and residual inventory SHA `5500a88c5d14c3a2e6d5f043decc1d88500678986035bce8a431560ac343bd09`;
-- Phase A reconstructs and physically seals the outcome-blind feature/control surface for exactly the 481 frozen candidate IDs;
-- recover the existing canonical Atlas control/order from pretruth authority only; never invent a new control;
-- only after Phase A seal may discovery/development 4L truth be joined;
-- separate 15 zero-residual dates as mandatory abstentions rather than losses;
-- on the 15 nonzero dates establish current control record, winning supply, ranking-failure versus supply-impossible anatomy, and best-winner rank/top-k coverage;
-- audit lineage, surface compatibility, and temporal legality of the prior 4L context diagnostic without refitting;
-- estimate compute topology for the cheapest justified next 4L method.
+## 2026-08-16 — 4L strict historical-as-of pointwise R1 accepted
 
-No candidate generation, learner fit, sweep, context rerank, FromDeep, validation, lockbox, or Live/model mutation is authorized.
+Reviewed WNBA result commit:
+
+`fbd986f967c4fb123349ce849bf0f9333ab15d60`
+
+Decision:
+
+Accept the R1 causal/actionability runway as passed.
+
+- all 15 available targets completed;
+- 14 strict prior-only fitted target states plus one canonical Atlas cold start;
+- strict `t<D` time arrow passed;
+- 12/15 selections changed from control;
+- 14/14 fitted target rankings were nondegenerate;
+- 15 mandatory abstentions remained untouched;
+- runtime about 5.75 seconds;
+- selections sealed before target settlement append;
+- aggregate performance intentionally not emitted;
+- validation reads 0; lockbox reads 0; no context, FromDeep, threshold/gate, candidate regeneration, or Live/model work.
+
+## 2026-08-16 — 4L sealed pointwise performance R2 authorized
+
+User authorization:
+
+Proceed with grading the already-sealed R1 selections.
+
+Decision:
+
+Authorize one `R2_BOUNDED_PILOT` that performs **grading only**. No pointwise refit, selection reconstruction, context regeneration, threshold search, feature selection, or candidate regeneration is permitted.
+
+Required comparison:
+
+- exact 15 sealed pointwise target selections versus the canonical 7-7-1 control on the same available dates;
+- preserve 15 mandatory abstention dates outside the performance denominator;
+- report pointwise W/L/NB, repaired ranking failures, broken control wins, neutral substitutions, nonbinary transitions, and beneficial-minus-harmful substitutions;
+- explicitly report behavior on the three ranking-failure dates and four supply-impossible dates.
+
+Predeclared practical bar:
+
+- at least 9 wins on 15 available dates; and
+- at least +2 net wins versus the 7-win control.
+
+Meeting the bar supports a later freeze-readiness decision only; it does not automatically freeze 4L.
 
 Prime work order:
 
-`docs/coordination/wnba/codex/archive/2026-08-16_4l_post_pointwise_residual_r0.md`
+`docs/coordination/wnba/codex/archive/2026-08-16_4l_sealed_pointwise_performance_r2.md`
+
+Protected evaluation remains untouched: validation reads 0, lockbox reads 0. No FromDeep or Live/model work is authorized by this R2.
