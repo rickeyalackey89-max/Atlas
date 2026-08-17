@@ -1,6 +1,6 @@
 {
   "schema_version": "atlas_prime_delegation_wnba_current_state_v1",
-  "captured_at_ct": "2026-08-17T09:25:00-05:00",
+  "captured_at_ct": "2026-08-17T09:36:00-05:00",
   "snapshot_not_authority": true,
   "sport": "WNBA",
   "source_repository": "rickeyalackey89-max/Atlas-WNBA",
@@ -29,7 +29,7 @@
       "live_or_prospective_promotion_authority": false
     },
     "4L": {
-      "status": "UNIFORM_STATEFUL_SURFACE_R2_SEALED_AWAITING_OPERATIONAL_EVAL_RECOVERY",
+      "status": "UNIFORM_STATEFUL_SURFACE_R2_SEALED_READY_FOR_BASELINE_AUTHORIZATION",
       "uniform_stateful_surface_r2_commit": "fd0df85a70559d830cd2ae5e76a711453a9f4dca",
       "uniform_stateful_surface_r2": {
         "disposition": "UNIFORM_23_DATE_STATEFUL_4L_SURFACE_R2_PASS",
@@ -38,17 +38,23 @@
         "candidate_count_each_date": 96,
         "canary_continuity": "PASS",
         "pretruth_seal_status": "UNIFORM_OUTCOME_BLIND_23_DATE_4L_SURFACE_SEALED",
-        "target_outcome_reads": 0,
+        "target_outcome_reads_at_seal": 0,
         "validation_reads": 0,
         "lockbox_reads": 0,
         "fitting_executed": false,
         "grading_executed": false,
         "freeze_authority": false,
-        "promotion_authority": false
+        "promotion_authority": false,
+        "seal_unchanged_through_eval_recovery": true
       },
       "next_builder_forensic": {
-        "status": "LATER_REQUIRES_SEPARATE_USER_AUTHORIZATION_AFTER_EVAL_RECOVERY",
+        "status": "CANDIDATE_NEXT_NOT_AUTHORIZED",
         "name": "UNIFORM_23_DATE_ATLAS_CONTROL_FORENSIC",
+        "purpose": "Grade the accepted sealed R2 surface against explicitly authorized development-consumed discovery truth to establish the complete-surface Atlas 4L baseline and loss/rank anatomy before any learner decision.",
+        "surface_regeneration_allowed": false,
+        "learner_fitting_allowed": false,
+        "validation_reads_allowed": 0,
+        "lockbox_reads_allowed": 0,
         "auto_start": false
       },
       "context_consensus": {
@@ -72,57 +78,81 @@
   },
   "operations": {
     "eval_catchup_20260813_20260816": {
-      "status": "COMPLETE_PARTIAL_CORE_EVAL",
-      "execution_class": "OPERATIONAL_MAINTENANCE",
-      "target_dates": ["2026-08-13", "2026-08-14", "2026-08-15", "2026-08-16"],
+      "status": "COMPLETE",
+      "execution_class": "OPERATIONAL_MAINTENANCE_AND_EVAL_RECOVERY",
+      "all_four_dates_core_eval_complete": true,
       "results": {
         "2026-08-13": {
-          "truth_merged": true,
-          "prior_day_eval_status": "skipped_missing_scored_run",
-          "run_count": 0,
-          "cause_interpretation": "NO_SCORED_RUN_SURVIVED_PUBLISHED_ONLY_FILTER"
+          "prior_day_eval_status": "complete",
+          "run_count": 1,
+          "runs": [
+            {
+              "run_id": "live_20260813_124632",
+              "runtime_publication_published": false,
+              "evaluated_rows": 1626,
+              "settled_rows": 1626,
+              "evidence_label": "NONPUBLIC_LIVE_RUN_EVAL_OPERATIONAL_TRUTH_ONLY"
+            }
+          ]
         },
         "2026-08-14": {
-          "truth_merged": true,
           "prior_day_eval_status": "complete",
           "run_count": 2,
           "consumer_performance": "unavailable",
-          "hard_alert_count": 4
+          "hard_alert_count": 4,
+          "core_eval_complete": true
         },
         "2026-08-15": {
-          "truth_merged": true,
           "prior_day_eval_status": "complete",
           "run_count": 1,
           "consumer_performance": "unavailable",
-          "hard_alert_count": 2
+          "hard_alert_count": 2,
+          "core_eval_complete": true
         },
         "2026-08-16": {
-          "truth_merged": true,
-          "prior_day_eval_status": "skipped_missing_scored_run",
-          "run_count": 0,
-          "cause_interpretation": "NO_SCORED_RUN_SURVIVED_PUBLISHED_ONLY_FILTER"
+          "prior_day_eval_status": "complete",
+          "run_count": 3,
+          "evaluated_rows": 3909,
+          "settled_rows": 3895,
+          "unsupported_market_unsettled_rows": 14,
+          "runs": [
+            {
+              "run_id": "live_20260816_130150",
+              "run_manifest_present": false,
+              "evaluated_rows": 1691,
+              "settled_rows": 1685,
+              "evidence_label": "NONPUBLIC_LIVE_RUN_EVAL_OPERATIONAL_TRUTH_ONLY"
+            },
+            {
+              "run_id": "live_20260816_155113",
+              "run_manifest_present": false,
+              "evaluated_rows": 1686,
+              "settled_rows": 1680,
+              "evidence_label": "NONPUBLIC_LIVE_RUN_EVAL_OPERATIONAL_TRUTH_ONLY"
+            },
+            {
+              "run_id": "live_20260816_173118",
+              "run_manifest_present": false,
+              "evaluated_rows": 532,
+              "settled_rows": 530,
+              "evidence_label": "NONPUBLIC_LIVE_RUN_EVAL_OPERATIONAL_TRUTH_ONLY"
+            }
+          ]
         }
       },
-      "builder_research_use_of_new_outcomes": false
+      "builder_research_use_of_new_outcomes": false,
+      "builder_stop_unchanged": true,
+      "r2_seal_unchanged": true,
+      "validation_reads": 0,
+      "lockbox_reads": 0,
+      "wnba_head": "fd0df85a70559d830cd2ae5e76a711453a9f4dca",
+      "tracked_commit_required": false
     },
-    "eval_completion_20260813_20260816": {
-      "status": "USER_AUTHORIZED_ACTIVE",
-      "execution_class": "OPERATIONAL_EVAL_RECOVERY",
-      "prime_work_order": "docs/coordination/wnba/codex/archive/2026-08-17_wnba_eval_completion_unpublished_live_runs_20260813_20260816.md",
-      "target_dates": ["2026-08-13", "2026-08-16"],
-      "canonical_evaluator": "wnba.testing_cli eval prior-day",
-      "all_matching_runs": true,
-      "published_only": false,
-      "rerun_aug14": false,
-      "rerun_aug15": false,
-      "publication_flags_mutable": false,
-      "consumer_performance_maintenance_in_scope": false,
-      "builder_stop_must_remain": "BLOCKED_USER_REVIEW_WNBA_4L_UNIFORM_STATEFUL_SURFACE_R2",
-      "r2_surface_mutation_allowed": false,
-      "builder_research_use_of_new_outcomes_allowed": false,
-      "validation_reads_allowed": 0,
-      "lockbox_reads_allowed": 0,
-      "required_stop": "BLOCKED_USER_REVIEW_WNBA_EVAL_COMPLETION_20260813_20260816"
+    "consumer_performance_20260814_20260815": {
+      "status": "LATER_NOT_BLOCKING_CORE_EVAL_RECOVERY",
+      "hard_alerts_present": true,
+      "builder_blocking": false,
+      "user_authorization_required_to_repair": true
     }
   },
   "evaluation_doctrine": {
@@ -133,9 +163,9 @@
     "lockbox_reads": 0
   },
   "next_strategy": {
-    "status": "OPERATIONAL_EVAL_RECOVERY_USER_AUTHORIZED_ACTIVE",
-    "prime_work_order": "docs/coordination/wnba/codex/archive/2026-08-17_wnba_eval_completion_unpublished_live_runs_20260813_20260816.md",
-    "topic": "Complete only the unresolved Aug13 and Aug16 core prior-day evals from existing scored Live runs without the published-only filter; preserve actual publication status and sealed Builder R2.",
-    "required_stop": "BLOCKED_USER_REVIEW_WNBA_EVAL_COMPLETION_20260813_20260816"
+    "status": "CANDIDATE_NEXT_NOT_CODEX_AUTHORIZED",
+    "topic": "Establish the canonical Atlas 4L baseline on the accepted sealed 23-date/2,208-candidate surface before deciding whether any ranking learner is needed.",
+    "candidate_name": "UNIFORM_23_DATE_ATLAS_CONTROL_FORENSIC",
+    "required_user_action": "EXPLICIT_AUTHORIZATION"
   }
 }
