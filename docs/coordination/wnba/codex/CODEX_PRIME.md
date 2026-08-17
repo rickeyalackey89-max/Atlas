@@ -1,45 +1,119 @@
 # WNBA Codex Prime
 
-Status: **NO ACTIVE EXECUTION DELEGATION — UPSTREAM 3L LINEAGE REVIEW HOLD**
+Status: **ACTIVE EXECUTION DELEGATION**
 
-Use the clean Prime mirror at `C:\Users\13142\Atlas\PrimeDelegation` and canonical WNBA root `C:\Users\13142\Atlas\WNBA`. Read WNBA `AGENTS.md`, active `slip-builders` controls, and current Builder governance before any future execution.
+Use the clean Prime mirror at `C:\Users\13142\Atlas\PrimeDelegation` and canonical WNBA root `C:\Users\13142\Atlas\WNBA`. Read WNBA `AGENTS.md`, active `slip-builders` controls, current Builder governance, and the agreed FromDeep architecture before execution.
 
-## Immediate hold
+## Accepted frozen/core state
 
-Do **not** execute the previously published FromDeep scored-leg-universe R0 work order until Rick/Chat resolve an upstream 3L candidate-surface lineage concern.
+2L:
 
-No FromDeep execution is currently authorized.
+- method `WNBA_2L_ORIGINAL_FROZEN_RANK_V1_1`
+- frozen and unchanged.
 
-## Confirmed lineage concern
+3L:
 
-Direct repository review established that the frozen 3L research path did **not** use the same fresh post-depletion reconstruction pattern later required for 4L.
+- method `WNBA_3L_CAUSAL_POINTWISE_RESEARCH_DEPLETION_V1`
+- accepted historical-as-of result `24 WIN / 6 LOSS / 0 NONBINARY`
+- research/depletion freeze remains preserved.
 
-The integrated candidate implementation performs 3L as:
+4L:
+
+- WNBA freeze commit `24c5e29c965f5e808d84470c16146bb18a0b0148`
+- method `WNBA_4L_CANONICAL_ATLAS_RANK1_RESEARCH_DEPLETION_V1`
+- freeze ID `ba6c1d31387759ba0da2d504e01c3029b2693d54a5c680e7b71972e807bd1133`
+- freeze contract SHA-256 `ca4199cc369e155621320a16df44a8ecc4c00925ebf372e269479a6d1da9dc13`
+- status `FROZEN_RESEARCH_DEPLETION_BACKBONE`
+- development evidence `14 WIN / 8 LOSS / 1 NONBINARY`, 63.64% binary
+- precision-first challenger rejected as non-incremental
+- no Live/promotion/prospective authority.
+
+Validation reads remain `0`; lockbox reads remain `0`.
+
+## Known deferred core-lineage risk — NOT A FROMDEEP BLOCKER
+
+Direct repository review established that the historical/frozen 3L path used:
 
 `existing member candidates_by_family["3"] -> remove frozen 2L exact selected-leg identities -> score/rank residual`
 
-while 4L is explicitly constructed with `fresh_four_leg_frontier(...)` after actual 2L + 3L depletion.
+rather than freshly reconstructing the complete legal 3L frontier from the scored-leg surface after frozen 2L depletion.
 
-The 3L freeze/readiness evidence also records candidate regeneration as absent.
+Therefore:
 
-Therefore the accepted 3L pointwise record `24-6-0` is proven only on the previously materialized post-2L-filtered 3L surface. It has not yet been proven that this materialized surface covers the full structurally legal 3L opportunity set obtainable from the scored-leg universe after frozen 2L exact-selected-leg depletion.
+- the accepted 3L `24-6-0` evidence remains valid on its tested materialized surface;
+- full post-2L 3L candidate-supply completeness is not proven;
+- the committed 3L and 4L freezes remain preserved authority for the current tested lineage;
+- this risk is deferred to completed-stack protected validation and any subsequent root-cause adjudication;
+- do **not** run the proposed 3L supply audit now unless Rick separately reauthorizes it.
 
-## Scientific consequence
+If protected validation later identifies a material core-stack problem and the 3L lineage is implicated, the rollback point is immediately after frozen 2L: freshly reconstruct 3L, rerun/adjudicate the frozen 3L procedure, then invalidate/rebuild every true downstream core derivative including 4L as required.
 
-- Do not discard the existing 3L evidence; it remains valid on its tested surface.
-- Do not yet treat 3L candidate-supply completeness as proven.
-- Because frozen 4L depletion depends on the exact selected 3L legs, a material 3L surface correction could alter downstream 4L opportunity/selection lineage.
-- The committed 4L freeze remains preserved evidence and must not be mutated or replaced without a separate user-authorized adjudication, but frozen-stack validation readiness is suspended pending this review.
-- FromDeep itself is architecturally independent of core selected-leg depletion, but its execution sequence remains paused because the user wants the core stack methodologically closed first.
+FromDeep is architecturally independent of core selected-leg depletion. A later 3L/4L selection change does not by itself invalidate FromDeep unless FromDeep's own full scored-leg source surface, shared upstream model inputs, or method changes.
 
-## Candidate next — NOT AUTHORIZED
+## Active user-authorized task — RESUMED
 
-A cheap outcome-blind 3L post-2L supply/coverage audit should answer:
+Rick explicitly directed that the 3L concern **must not pause FromDeep** and that the sequence should be:
 
-> Starting from the complete scored-leg discovery surface and removing only the frozen 2L exact selected-leg identities, does every applicable date retain a legal 3L frontier beyond the already-materialized base3 candidates, and how much identity/coverage differs from the historical 3L surface?
+`finish FromDeep -> freeze FromDeep -> protected completed-stack validation -> rollback/rebuild only if validation exposes a material issue`.
 
-Recommended first step is structural/actionability only: no outcomes, no learner fitting, no 3L reselection, no 4L rebuild, no validation/lockbox, no Live/model mutation.
+Execute the already-published work order exactly:
 
-If the fresh legal 3L frontier is identity-equivalent to the tested materialized surface, current 3L/4L freezes are rehabilitated immediately. If it differs materially, stop for Rick/Chat review before any 3L rerun or downstream 4L rebuild.
+`docs/coordination/wnba/codex/archive/2026-08-17_fromdeep_scored_leg_universe_r0.md`
 
-No Codex execution is authorized until Rick explicitly approves that audit or chooses another path.
+Work-order publication commit:
+
+`3608dfe3b9d43a4deccdedcf09a0d55eac705727`
+
+Execution tier:
+
+`R0_ARTIFACT_AUDIT_AND_PRETRUTH_SEAL`
+
+Required final stop:
+
+`BLOCKED_USER_REVIEW_WNBA_FROMDEEP_SCORED_LEG_UNIVERSE_R0`
+
+## Scientific question
+
+Can the current discovery corpus reconstruct and physically seal the complete factual eligible scored Demon-tier OVER pregame leg universe, preserving all 21 market owners and the pregame fields required for later signal-atlas research, without opening any outcome evidence?
+
+## Critical FromDeep semantics
+
+FromDeep is **not a downstream leftovers family**.
+
+Its R0 universe starts from the full factual eligible scored Demon-OVER discovery leg surface. Do not remove legs because they were selected by frozen 2L, 3L, or 4L. Core freezes gate sequencing only.
+
+Do not start from old FromDeep releases, public picks, prior signal matches, probability-cut rows, historically winning rows, or old RP37 active/inactive decisions.
+
+Preserve exactly 21 canonical market owners. Emit zero-support owners explicitly. Any factual eligible Demon-OVER market outside the canonical 21 is an unmapped-market audit block; do not coerce or drop it.
+
+## Outcome boundary
+
+This R0 is strictly outcome-blind:
+
+- outcome/truth/settlement reads = 0
+- validation reads = 0
+- lockbox reads = 0
+- no performance computation
+- no signal-road mining
+- no GREEN/RED/GRAY classification
+- no support/reliability/threshold selection
+- no fitting or ML
+- no FromDeep selections
+
+Legacy `builder_from_deep_research.py` is not statistical authority because it combines discovery and validation. Legacy `rp37_from_deep_registry.py` may provide neutral 21-market constants/patterns only; its activation logic is not authority.
+
+## Required R0 outputs
+
+Produce and bind:
+
+- canonical discovery member/date/source census;
+- deterministic full Demon-OVER row-level pregame surface;
+- 21-market census with rows/dates/players/teams and zero-support owners;
+- unmapped-market audit;
+- pregame feature-availability matrix overall and by market;
+- physical outcome-free pretruth surface seal with source hashes and explicit statement that core depletion was not applied;
+- zero protected/outcome-read counters;
+- resource/runtime report;
+- final WNBA SHA/ref equality, clean worktree, protected stash preserved.
+
+No follow-on auto-start. Chat/user review R0 before any win/loss forensic or signal-atlas work.
