@@ -1,16 +1,16 @@
 {
   "schema_version": "atlas_prime_delegation_wnba_current_state_v1",
-  "captured_at_ct": "2026-08-17T14:16:00-05:00",
+  "captured_at_ct": "2026-08-17T14:44:00-05:00",
   "snapshot_not_authority": true,
   "sport": "WNBA",
   "source_repository": "rickeyalackey89-max/Atlas-WNBA",
   "source_branch": "builder-method-contract-v1",
-  "source_head": "61f875e131058627e4adaf6697c54f09aa2a0539",
+  "source_head": "24c5e29c965f5e808d84470c16146bb18a0b0148",
   "builder": {
-    "status": "ACTIVE_USER_AUTHORIZED_FREEZE",
-    "current_target_repo_stop": "BLOCKED_USER_REVIEW_WNBA_4L_PRECISION_FIRST_CHALLENGER_R2",
-    "authorized_step": "4l_canonical_atlas_research_depletion_freeze",
-    "required_stop": "BLOCKED_USER_REVIEW_WNBA_4L_CANONICAL_ATLAS_FREEZE",
+    "status": "ACTIVE_USER_AUTHORIZED_FROMDEEP_R0",
+    "current_target_repo_stop": "BLOCKED_USER_REVIEW_WNBA_4L_CANONICAL_ATLAS_FREEZE",
+    "authorized_step": "fromdeep_scored_leg_universe_r0",
+    "required_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_SCORED_LEG_UNIVERSE_R0",
     "controller_skill": "slip-builders",
     "validation_reads": 0,
     "lockbox_reads": 0
@@ -26,40 +26,37 @@
       "historical_asof_record": "24-6-0"
     },
     "4L": {
-      "status": "CANONICAL_ATLAS_RESEARCH_DEPLETION_FREEZE_AUTHORIZED_ACTIVE",
-      "uniform_surface_commit": "fd0df85a70559d830cd2ae5e76a711453a9f4dca",
-      "control_forensic_commit": "2d2b4f4db497ce6626d7ae30e6b0eeabc394863f",
-      "incumbent_forensic_commit": "cd645ed1fdfe857ec2b84f21a9653e6c2977de2a",
-      "challenger_r1_commit": "c9b8ce32fc2557475d3d2f75af9e4feab3c7fe7b",
-      "challenger_r2_commit": "61f875e131058627e4adaf6697c54f09aa2a0539",
-      "canonical_control": {
-        "wins": 14,
-        "losses": 8,
-        "nonbinary": 1,
-        "binary_win_rate": 0.6363636364,
-        "eligible_dates": 23,
-        "winner_available_dates": 23
-      },
-      "freeze": {
-        "work_order": "docs/coordination/wnba/codex/archive/2026-08-17_4l_canonical_atlas_research_depletion_freeze.md",
-        "work_order_publication_commit": "6d004bc66804ac536bb24feddca103a208ace8e8",
-        "method": "CANONICAL_ATLAS_RANK_1_ON_STATEFUL_POST_2L_POST_3L_DEPLETION_LINEAGE",
-        "research_depletion_only": true,
-        "live_authority": false,
-        "promotion_authority": false,
-        "prospective_performance_authority": false,
-        "public_slips_evaluation_authority": false,
-        "precision_first_challenger_promoted": false,
-        "wholesale_reranker_promoted": false,
-        "validation_reads_allowed": 0,
-        "lockbox_reads_allowed": 0,
-        "further_4l_learner_research_closed_unless_user_reopens": true,
-        "auto_start_fromdeep": false
-      }
+      "status": "FROZEN_RESEARCH_DEPLETION_BACKBONE",
+      "freeze_commit": "24c5e29c965f5e808d84470c16146bb18a0b0148",
+      "method_id": "WNBA_4L_CANONICAL_ATLAS_RANK1_RESEARCH_DEPLETION_V1",
+      "freeze_id": "ba6c1d31387759ba0da2d504e01c3029b2693d54a5c680e7b71972e807bd1133",
+      "freeze_contract_sha256": "ca4199cc369e155621320a16df44a8ecc4c00925ebf372e269479a6d1da9dc13",
+      "control_receipt_sha256": "9219b44b99d6756969cce14fc79ed0c8e8d62620c60442f45fa72f002c335516",
+      "development_record": "14-8-1",
+      "binary_win_rate": 0.6363636364,
+      "research_depletion_only": true,
+      "live_authority": false,
+      "promotion_authority": false,
+      "prospective_performance_authority": false,
+      "challenger_promoted": false,
+      "further_learner_research_closed_unless_user_reopens": true
     },
     "FromDeep": {
-      "status": "ARCHITECTURE_AGREED_EXECUTION_NOT_AUTHORIZED",
-      "next_after_4l_freeze_acceptance": true
+      "status": "SCORED_LEG_UNIVERSE_R0_ACTIVE",
+      "architecture_path": "docs/coordination/wnba/chat/FROMDEEP_ARCHITECTURE.md",
+      "work_order": "docs/coordination/wnba/codex/archive/2026-08-17_fromdeep_scored_leg_universe_r0.md",
+      "work_order_publication_commit": "3608dfe3b9d43a4deccdedcf09a0d55eac705727",
+      "execution_tier": "R0_ARTIFACT_AUDIT_AND_PRETRUTH_SEAL",
+      "universe": "FULL_FACTUAL_ELIGIBLE_SCORED_DEMON_OVER_DISCOVERY_LEGS",
+      "core_selected_leg_depletion_applied": false,
+      "market_owner_count": 21,
+      "outcome_reads_allowed": 0,
+      "validation_reads_allowed": 0,
+      "lockbox_reads_allowed": 0,
+      "signal_mining_allowed": false,
+      "green_red_gray_classification_allowed": false,
+      "fitting_allowed": false,
+      "auto_start_r1": false
     }
   },
   "evaluation_doctrine": {
@@ -69,7 +66,7 @@
   },
   "next_strategy": {
     "status": "USER_AUTHORIZED_CODEX_EXECUTION_ACTIVE",
-    "topic": "Freeze canonical Atlas rank-1 as the 4L research/depletion backbone, reject non-incremental challenger/rerankers, then stop for review before FromDeep.",
-    "required_stop": "BLOCKED_USER_REVIEW_WNBA_4L_CANONICAL_ATLAS_FREEZE"
+    "topic": "Audit and physically pretruth-seal the full 21-market Demon-OVER discovery leg universe before any FromDeep win/loss or signal-road research.",
+    "required_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_SCORED_LEG_UNIVERSE_R0"
   }
 }
