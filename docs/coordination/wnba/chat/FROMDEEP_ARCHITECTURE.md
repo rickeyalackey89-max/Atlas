@@ -21,10 +21,9 @@ The family is a sparse specialist. Precision matters more than coverage.
 ## Core family contract
 
 - Demon-tier **OVER** roads only.
-- Preserve **market ownership**. Every canonical factual eligible Demon-OVER market present in the physically sealed discovery universe receives its own owner/policy lane unless repository-canonical normalization proves two source labels are aliases of the same market.
+- Preserve **market ownership**. Every canonical factual eligible Demon-OVER market admitted by the outcome-blind discovery authority receives its own owner/policy lane unless repository-canonical normalization proves two source labels are aliases of the same market.
 - The legacy RP37 21-market list is historical structure only. It is neither a minimum nor a cap and cannot silently exclude factual current-stack markets.
 - Do not merge distinct markets merely because their statistics are related. For example, a combo market is not automatically owned by either component market, and quarter-specific markets are not automatically owned by full-game points.
-- The final owner count is derived only from the complete outcome-blind sealed discovery universe. Partial-date evidence may identify candidate additional owners but may not freeze the final count.
 - No minimum slate output count.
 - Honest abstention is a successful result when no supported signal exists.
 - Probability is not the primary eligibility mechanism. It may be used only after evidence-based signal eligibility as a secondary ranking, sanity, or tie-break input.
@@ -32,7 +31,7 @@ The family is a sparse specialist. Precision matters more than coverage.
 
 ## Development universe
 
-Start from the **full eligible scored Demon-OVER leg universe** on development/discovery dates.
+Start from the **full eligible scored Demon-OVER leg universe** on usable development/discovery dates.
 
 FromDeep is architecturally independent of core selected-leg depletion. Frozen 2L, 3L, and 4L gate sequencing but do not remove legs from the FromDeep research universe.
 
@@ -46,28 +45,51 @@ Do not start from:
 - historically winning rows;
 - the legacy RP37 active/inactive market decisions.
 
-For each development date, reconstruct the factual pregame eligible Demon-OVER surface with all available pregame fields, physically seal that surface, and only then append settlement.
+For each usable development date, reconstruct the factual pregame eligible Demon-OVER surface with all available pregame fields, physically seal that surface, and only then append settlement.
 
-Conceptually each leg record is:
+Conceptually each supported leg record is:
 
 `market + line/depth + player/context + projection + edge + probability + Atlas components + fragility + role/minutes/usage/context + outcome`
 
 Outcome must never define the candidate universe.
 
-## Market namespace derivation
+## Provenance-unavailable development exclusions
 
-Before signal research, derive the market-owner namespace from the complete physically sealed outcome-blind Demon-OVER discovery surface.
+A discovery date may be excluded from FromDeep development only when the required pregame full-row source bytes cannot be recovered under a bounded, documented, outcome-blind provenance search.
 
 Rules:
 
-1. Start from the canonical market label actually carried by each factual eligible row.
-2. Build the union across the complete discovery surface.
-3. A source label may be normalized into another owner only when an existing repository-canonical market alias/equality contract proves that equivalence. Do not invent aliases for convenience.
-4. Any previously unknown or legacy-unlisted factual market remains a separate candidate owner until adjudicated.
-5. Emit zero-support owners only when they are part of a previously frozen canonical namespace being compared for lineage; the final FromDeep namespace itself is the factual sealed-universe union.
-6. Preserve the derived namespace and normalization mapping as a pretruth artifact before outcomes or signal statistics are opened.
+1. The exclusion decision must be made before any FromDeep outcome, settlement, hit-rate, signal-road, or performance use for that date.
+2. The missing source must be bound by whatever exact canonical provenance remains available, including expected path/hash/run identity when known.
+3. Semantic regeneration, replay substitution, imputation, or reconstruction of missing pregame rows is forbidden unless a later separate method change explicitly reopens the universe and invalidates downstream FromDeep evidence.
+4. A provenance-excluded date contributes **zero** support, wins, losses, feature observations, market baselines, temporal evidence, historical-as-of training evidence, or target-date evaluation evidence.
+5. The exclusion and its reason must remain explicit in every universe/registry seal derived from that development corpus.
+6. The exclusion must never be justified by or revisited because of the realized result on that date.
+7. If the exact missing pregame bytes are later recovered after FromDeep research has consumed the reduced universe, they are not silently added. Incorporating them is a method/universe change requiring invalidation and re-adjudication of downstream FromDeep evidence.
 
-The Aug. 13 R0 preflight observed `blks_stls`, `quarters_with_3_points`, `quarters_with_4_points`, and `quarters_with_5_points` outside the legacy 21-market list. Those observations justify deriving the final namespace from the complete sealed universe; they do not by themselves prove that the final count is 25.
+For the current WNBA runway, Aug. 13 may be declared a provenance-unavailable development exclusion only under the already-completed R0/R0A evidence that its exact full-row pregame sources could not be recovered without semantic regeneration.
+
+## Market namespace derivation
+
+Before signal research, derive and seal the market-owner namespace outcome-blind.
+
+The final namespace is the union of:
+
+1. canonical market identities carried by factual eligible Demon-OVER rows in the physically sealed **usable full-row** discovery universe; and
+2. canonical market identities independently proven by sealed outcome-blind identity/provenance artifacts on any formally provenance-excluded discovery date.
+
+The second class is retained as explicit **zero-support owner lanes** unless the same canonical market also appears on a usable full-row date.
+
+Rules:
+
+1. Start from the canonical market label actually carried by each factual eligible row or independently sealed factual eligible identity.
+2. Build the union across the admitted outcome-blind discovery authority.
+3. A source label may be normalized into another owner only when an existing repository-canonical market alias/equality contract proves that equivalence. Do not invent aliases for convenience.
+4. Any previously unknown or legacy-unlisted factual market remains a separate owner until repository-canonical equality proves otherwise.
+5. Zero-support owner lanes may not receive wins, losses, hit rates, reliability, GREEN/RED state, or selection authority merely because their identity is known. They remain GRAY/inactive until supported full-row evidence exists under the frozen procedure.
+6. Preserve the derived namespace, support class, normalization mapping, and provenance exclusions as pretruth artifacts before outcomes or signal statistics are opened.
+
+The Aug. 13 R0/R0A evidence observed and canonically adjudicated `blks_stls`, `quarters_with_3_points`, `quarters_with_4_points`, and `quarters_with_5_points` as distinct canonical markets outside the legacy 21-market list. If Aug. 13 is formally excluded for provenance, those markets remain zero-support owner lanes unless they also appear in the usable full-row discovery universe.
 
 ## First research question: win/loss forensic
 
@@ -133,9 +155,9 @@ Signal determines **whether the leg is allowed into FromDeep**. Probability may 
 
 Once the signal-learning procedure is fully specified, evaluate it causally.
 
-For each target date `D`:
+For each usable target date `D`:
 
-1. use only settled Demon-OVER development evidence from `t < D`;
+1. use only settled Demon-OVER development evidence from usable dates `t < D`;
 2. update the market-owned GREEN/GRAY/RED registry under the frozen procedure;
 3. freeze registry state;
 4. expose date `D` pregame Demon-OVER surface;
@@ -144,7 +166,7 @@ For each target date `D`:
 7. reveal `D` settlement;
 8. append `D` to history.
 
-Nothing originating on or after `D` may influence `D`.
+Nothing originating on or after `D` may influence `D`. Formally provenance-excluded dates are skipped entirely and never appended to history.
 
 ## Development/validation boundary
 
@@ -160,10 +182,10 @@ Protected validation remains sealed until 2L, 3L, 4L, and FromDeep are frozen. A
 
 FromDeep is allowed to be sparse.
 
-A valid final method may support only a subset of the derived factual market-owner namespace and may populate on only a minority of slates. Unsupported markets remain inactive. A slate with zero qualified FromDeep legs is an honest abstention, not a failure.
+A valid final method may support only a subset of the derived factual market-owner namespace and may populate on only a minority of slates. Unsupported and zero-support markets remain inactive. A slate with zero qualified FromDeep legs is an honest abstention, not a failure.
 
 ## Planned runway
 
-`source/provenance repair -> full Demon-OVER scored-leg census -> market namespace + pretruth seal -> win/loss forensic -> market-specific signal atlas -> GREEN/RED/GRAY procedure -> historical-as-of registry evaluation -> freeze decision`
+`source/provenance adjudication -> usable Demon-OVER scored-leg census -> market namespace + pretruth seal -> win/loss forensic -> market-specific signal atlas -> GREEN/RED/GRAY procedure -> historical-as-of registry evaluation -> freeze decision`
 
 Use the Prime cheap-runway doctrine before any expensive full-surface projection or learning operation.
