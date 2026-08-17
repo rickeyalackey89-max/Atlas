@@ -1,6 +1,6 @@
 # WNBA Codex Prime
 
-Status: **NO ACTIVE EXECUTION DELEGATION**
+Status: **ACTIVE EXECUTION DELEGATION**
 
 This file is the narrow execution surface for Prime Delegation.
 
@@ -10,7 +10,7 @@ Codex must read this file from the dedicated local Prime mirror:
 
 `C:\Users\13142\Atlas\PrimeDelegation\docs\coordination\wnba\codex\CODEX_PRIME.md`
 
-Before any future execution, the mirror must be a valid clean Git worktree on branch `main` and must be fast-forwarded to current `origin/main` according to `docs/coordination/PRIME_TRANSPORT.md`.
+Before execution, the mirror must be a valid clean Git worktree on branch `main` and must be fast-forwarded to current `origin/main` according to `docs/coordination/PRIME_TRANSPORT.md`.
 
 Do **not** attempt to use or repair `C:\Users\13142\Atlas\.git` for Prime Delegation.
 
@@ -59,33 +59,69 @@ WNBA result commit:
 
 `fbd986f967c4fb123349ce849bf0f9333ab15d60`
 
-Chat review disposition:
+Accepted result:
 
-- R1 causal/actionability runway PASSED;
-- exact 481-candidate frozen 4L residual preserved;
-- all 15 nonzero-residual target dates completed;
-- 15 mandatory-abstention dates remained untouched;
-- one canonical Atlas cold start on 2026-06-17;
-- 14 expected prior-only fitted target states were completed, with cached/frozen-state reuse allowed by the sealed implementation;
+- all 15 nonzero-residual 4L targets completed;
+- 14 strict prior-only fitted target states plus one canonical Atlas cold start;
 - strict `t<D` time arrow passed;
-- selections sealed before each target settlement append;
-- 12/15 selections differed from canonical Atlas control;
+- 12/15 selections changed from Atlas control;
 - 14/14 fitted target rankings were nondegenerate;
-- causal actionability observed = true;
-- wall clock ~5.75 seconds under the 300-second cap;
-- aggregate pointwise/control grading, repair/damage interpretation, and performance verdict were intentionally not emitted;
-- context features/regeneration were not used;
+- 15 mandatory-abstention dates remained untouched;
+- runtime ~5.75 seconds;
+- selections were sealed before each target settlement append;
+- aggregate grading intentionally withheld;
 - validation reads 0; lockbox reads 0;
-- no candidate regeneration, FromDeep, Live/model mutation, threshold/gate, or promotion work;
+- no context, candidate regeneration, FromDeep, threshold/gate, Live/model mutation, or promotion work;
 - WNBA stop `BLOCKED_USER_REVIEW_WNBA_4L_HISTORICAL_ASOF_POINTWISE_R1`.
 
-## Current status
+## Active user-authorized task
 
-No new execution is authorized.
+Execution tier: **R2_BOUNDED_PILOT**
 
-The 4L pointwise selections are now causally sealed and sufficiently nondegenerate to justify a separate cheap performance review. The next candidate task should grade the already-sealed R1 selections against already-consumed discovery truth, compare them with the 7-7-1 canonical control, identify repairs/damages/neutral changes, and decide whether pointwise reaches a practical freeze bar or whether the parked prior-only context variants still merit testing.
+Read and execute exactly:
 
-That next review should require no learner refit unless a fail-closed integrity check proves an artifact is missing. It must not open validation/lockbox or begin FromDeep automatically.
+`docs/coordination/wnba/codex/archive/2026-08-16_4l_sealed_pointwise_performance_r2.md`
+
+Work-order publication commit:
+
+`e9d0aadea1639f5663d68f4d2445a7c7307e5edc`
+
+Purpose:
+
+**Grade the already-sealed causal 4L pointwise R1 selections against already-consumed discovery truth with zero refitting, compare to the canonical 7-7-1 control, and determine whether pointwise meets the predeclared practical bar or whether context still merits testing.**
+
+Expected starting WNBA commit:
+
+`fbd986f967c4fb123349ce849bf0f9333ab15d60`
+
+Expected current WNBA stop:
+
+`BLOCKED_USER_REVIEW_WNBA_4L_HISTORICAL_ASOF_POINTWISE_R1`
+
+Critical constraints:
+
+- grading only; no pointwise refit or selection reconstruction;
+- exact sealed R1 selection ledger only;
+- 15 mandatory abstentions remain outside the available-date performance denominator;
+- emit pointwise/control W-L-NB plus repairs/damages/neutrals/nonbinary transitions;
+- explicitly report the three R0 ranking-failure dates and four supply-impossible dates;
+- predeclared practical bar: at least 9 WIN on 15 available dates and at least +2 net WIN versus 7-win control;
+- no threshold/gate/feature/hyperparameter search;
+- no context regeneration;
+- no 4L freeze execution;
+- no FromDeep;
+- validation reads 0;
+- lockbox reads 0;
+- no Live/model/minutes/calibration/allocator/QMC/dependence mutation;
+- no R3 or follow-on auto-start.
+
+Codex must reconcile this authorization through the existing `slip-builders` lane before permanent WNBA evidence generation.
+
+## Required final stop
+
+`BLOCKED_USER_REVIEW_WNBA_4L_SEALED_POINTWISE_PERFORMANCE_R2`
+
+Commit/push the authorized evidence, verify local HEAD == tracking == direct remote, leave clean, preserve the protected stash, report final WNBA SHA, and stop.
 
 ## FromDeep strategic doctrine for later
 
