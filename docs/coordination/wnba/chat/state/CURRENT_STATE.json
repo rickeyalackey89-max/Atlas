@@ -1,44 +1,83 @@
 {
   "schema_version": "atlas_prime_delegation_wnba_current_state_v1",
-  "captured_at_ct": "2026-08-17T09:40:00-05:00",
+  "captured_at_ct": "2026-08-17T10:51:00-05:00",
   "snapshot_not_authority": true,
   "sport": "WNBA",
   "source_repository": "rickeyalackey89-max/Atlas-WNBA",
   "source_branch": "builder-method-contract-v1",
-  "source_head": "fd0df85a70559d830cd2ae5e76a711453a9f4dca",
+  "known_remote_head_before_pending_governance_cleanup": "2d2f78e1ee9cb59f3c6687c1cad38ba1621272bf",
   "builder": {
-    "status": "ACTIVE_USER_AUTHORIZED_FORENSIC",
-    "current_target_repo_stop": "BLOCKED_USER_REVIEW_WNBA_4L_UNIFORM_STATEFUL_SURFACE_R2",
-    "authorized_step": "4l_uniform_atlas_control_forensic_r0",
-    "required_stop": "BLOCKED_USER_REVIEW_WNBA_4L_UNIFORM_CONTROL_FORENSIC_R0",
+    "status": "ACTIVE_USER_AUTHORIZED_FAST_PATH_FORENSIC",
     "controller_skill": "slip-builders",
+    "machine_test_class": "SEALED_ARTIFACT_FORENSIC",
+    "active_work_order": "docs/coordination/wnba/codex/archive/2026-08-17_4l_incumbent_vs_first_winner_forensic_r0.md",
+    "required_stop": "BLOCKED_USER_REVIEW_WNBA_4L_INCUMBENT_VS_FIRST_WINNER_FORENSIC_R0",
     "validation_reads": 0,
     "lockbox_reads": 0
   },
   "families": {
-    "2L": {"status": "FROZEN", "record": "32-7"},
-    "3L": {"status": "FROZEN_RESEARCH_DEPLETION_BACKBONE", "freeze_commit": "2b1fca797eebefdb0da190099681460f22036eb1"},
-    "4L": {
-      "status": "CONTROL_FORENSIC_R0_ACTIVE",
-      "r2_commit": "fd0df85a70559d830cd2ae5e76a711453a9f4dca",
-      "r2_date_count": 23,
-      "r2_candidate_count": 2208,
-      "r2_candidates_per_date": 96,
-      "r2_seal": "UNIFORM_OUTCOME_BLIND_23_DATE_4L_SURFACE_SEALED",
-      "active_work_order": "docs/coordination/wnba/codex/archive/2026-08-17_4l_uniform_atlas_control_forensic_r0.md",
-      "work_order_commit": "a1cb1e6ff82686902470469944a205869263f5f2",
-      "learner_fitting_allowed": false,
-      "surface_regeneration_allowed": false
+    "2L": {
+      "status": "FROZEN",
+      "record": "32-7"
     },
-    "FromDeep": {"status": "ARCHITECTURE_AGREED_EXECUTION_NOT_AUTHORIZED"}
+    "3L": {
+      "status": "FROZEN_RESEARCH_DEPLETION_BACKBONE",
+      "freeze_commit": "2b1fca797eebefdb0da190099681460f22036eb1",
+      "historical_asof_record": "24-6-0"
+    },
+    "4L": {
+      "status": "INCUMBENT_VS_FIRST_WINNER_FORENSIC_AUTHORIZED",
+      "r2_surface_commit": "fd0df85a70559d830cd2ae5e76a711453a9f4dca",
+      "control_forensic_commit": "2d2b4f4db497ce6626d7ae30e6b0eeabc394863f",
+      "workflow_efficiency_commit": "2d2f78e1ee9cb59f3c6687c1cad38ba1621272bf",
+      "canonical_control": {
+        "wins": 14,
+        "losses": 8,
+        "nonbinary": 1,
+        "binary_win_rate": 0.6363636364,
+        "winner_available_dates": 23,
+        "eligible_dates": 23,
+        "ranking_failure_count": 8,
+        "no_winner_date_count": 0
+      },
+      "active_question": "Do the eight Atlas rank-1 losses have recurring outcome-free distinctions from the fourteen Atlas wins and from their exact first winning alternatives that justify a conservative challenger R1?",
+      "learner_fitting_allowed": false,
+      "threshold_search_allowed": false,
+      "candidate_generation_rescoring_reranking_allowed": false,
+      "follow_on_auto_start": false
+    },
+    "FromDeep": {
+      "status": "ARCHITECTURE_AGREED_EXECUTION_NOT_AUTHORIZED"
+    }
+  },
+  "governance": {
+    "sealed_forensic_efficiency_amendment_status": "IMPLEMENTED_PENDING_SMALL_TEXT_CONSISTENCY_COMMIT",
+    "pending_cleanup_expected_paths": [
+      "AGENTS.md",
+      "docs/model_development/builder_method_contract/SLIP_BUILDERS_SKILL_AMENDMENT_WNBA_V1.md"
+    ],
+    "cleanup_must_commit_and_push_before_scientific_activation": true,
+    "cleanup_commit_must_be_separate_from_forensic_commit": true,
+    "no_task_specific_controller": true,
+    "single_preamble_fast_path": true
   },
   "operations": {
-    "eval_catchup_20260813_20260816": {"status": "COMPLETE", "builder_research_use": false},
-    "consumer_performance_20260814_20260815": {"status": "LATER_NOT_BLOCKING_4L_FORENSIC"}
+    "eval_catchup_20260813_20260816": {
+      "status": "COMPLETE",
+      "builder_research_use_during_recovery": false
+    },
+    "consumer_performance_20260814_20260815": {
+      "status": "LATER_NOT_BLOCKING_4L"
+    }
+  },
+  "evaluation_doctrine": {
+    "public_or_live_slips_are_validation": false,
+    "validation_reads": 0,
+    "lockbox_reads": 0
   },
   "next_strategy": {
     "status": "USER_AUTHORIZED_CODEX_EXECUTION_ACTIVE",
-    "topic": "Run the sealed-surface Atlas 4L control forensic under the active work order and stop for review.",
-    "required_stop": "BLOCKED_USER_REVIEW_WNBA_4L_UNIFORM_CONTROL_FORENSIC_R0"
+    "topic": "Commit/push the already-authorized governance text cleanup, then run the sealed incumbent-vs-first-winner descriptive forensic and stop for review.",
+    "required_stop": "BLOCKED_USER_REVIEW_WNBA_4L_INCUMBENT_VS_FIRST_WINNER_FORENSIC_R0"
   }
 }
