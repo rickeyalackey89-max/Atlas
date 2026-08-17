@@ -1,6 +1,6 @@
 {
   "schema_version": "atlas_prime_delegation_wnba_current_state_v1",
-  "captured_at_ct": "2026-08-16T19:24:00-05:00",
+  "captured_at_ct": "2026-08-16T19:29:00-05:00",
   "snapshot_not_authority": true,
   "sport": "WNBA",
   "source_repository": "rickeyalackey89-max/Atlas-WNBA",
@@ -29,7 +29,7 @@
       "live_or_prospective_promotion_authority": false
     },
     "4L": {
-      "status": "R0_STRUCTURAL_FORENSIC_REVIEWED",
+      "status": "R1_POINTWISE_USER_AUTHORIZED",
       "r0_commit": "d6cf1a561e660596cb28d1e2f557290b02b3d4d5",
       "post_pointwise_residual": {
         "candidate_count": 481,
@@ -53,11 +53,17 @@
         "surface_ceiling_without_supply_change": "10-4-1"
       },
       "prior_context_diagnostic_status": "SURFACE_INCOMPATIBLE_HISTORICAL_ONLY",
-      "next_candidate_method": {
-        "name": "STRICT_HISTORICAL_ASOF_POINTWISE_LOGISTIC_4L",
-        "projected_fit_count": 14,
-        "projected_wall_clock": "1-3 minutes",
-        "status": "CANDIDATE_NEXT_NOT_AUTHORIZED"
+      "pointwise_r1_authorization": {
+        "execution_tier": "R1_ACTIONABILITY_CANARY",
+        "prime_work_order": "docs/coordination/wnba/codex/archive/2026-08-16_4l_historical_asof_pointwise_r1.md",
+        "publication_commit": "219ecbf986cf1ef35556ab22f7b7b4b2ab1f2e91",
+        "fixed_feature_count": 25,
+        "expected_production_fit_count": 14,
+        "runtime_bound": "<=5 minutes",
+        "aggregate_performance_allowed": false,
+        "context_allowed": false,
+        "validation_reads_allowed": 0,
+        "lockbox_reads_allowed": 0
       },
       "context_regeneration": {
         "projected_fit_count": 28,
@@ -85,9 +91,9 @@
     "lockbox_reads": 0
   },
   "next_strategy": {
-    "status": "CANDIDATE_NEXT_NOT_CODEX_AUTHORIZED",
-    "topic": "Test strict historical-as-of pointwise logistic on the frozen 4L residual by itself before any context regeneration",
-    "success_question": "Can prior-only pointwise produce at least +2 net wins over the 7-7-1 control without changing candidate supply or materially damaging existing control wins?",
-    "required_stop": "BLOCKED_USER_REVIEW_WNBA_4L_POST_POINTWISE_RESIDUAL_R0"
+    "status": "R1_4L_POINTWISE_USER_AUTHORIZED",
+    "prime_work_order": "docs/coordination/wnba/codex/archive/2026-08-16_4l_historical_asof_pointwise_r1.md",
+    "topic": "Prove strict t<D 4L pointwise actionability and cheap causal execution on the exact frozen residual before any aggregate performance verdict or context regeneration",
+    "required_stop": "BLOCKED_USER_REVIEW_WNBA_4L_HISTORICAL_ASOF_POINTWISE_R1"
   }
 }
