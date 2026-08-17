@@ -1,17 +1,17 @@
 {
   "schema_version": "atlas_prime_delegation_wnba_current_state_v1",
-  "captured_at_ct": "2026-08-16T23:58:00-05:00",
+  "captured_at_ct": "2026-08-17T06:50:00-05:00",
   "snapshot_not_authority": true,
   "sport": "WNBA",
   "source_repository": "rickeyalackey89-max/Atlas-WNBA",
   "source_branch": "builder-method-contract-v1",
-  "source_head": "1e9930253ca3113842a687e188210321424c2d8a",
+  "source_head": "1f71ec936e7b23a7f537336056eaf4ae4209e9c7",
   "builder": {
-    "status": "R1A_PARITY_REPAIR_USER_AUTHORIZED",
+    "status": "BLOCKED_USER_REVIEW",
     "active_stage_id": "builder_stage_5",
-    "active_step_id": "builder_s5_4l_stateful_generator_parity_repair_r1a",
+    "active_step_id": "builder_s5_4l_stateful_generator_parity_repair_r1a_user_review",
     "method_step_id": "4l_stateful_generator_parity_repair_r1a",
-    "completion_marker": "BLOCKED_USER_REVIEW_WNBA_4L_POST_DEPLETION_STATEFUL_GENERATOR_R1",
+    "completion_marker": "BLOCKED_USER_REVIEW_WNBA_4L_STATEFUL_GENERATOR_PARITY_REPAIR_R1A",
     "controller_skill": "slip-builders",
     "validation_reads": 0,
     "lockbox_reads": 0
@@ -29,26 +29,18 @@
       "live_or_prospective_promotion_authority": false
     },
     "4L": {
-      "status": "ACTIVE_RESEARCH_STATEFUL_GENERATOR_PARITY_REPAIR",
+      "status": "ACTIVE_RESEARCH_STATEFUL_GENERATOR_READY_FOR_UNIFORM_SURFACE_AUTHORIZATION",
       "initial_materialized_surface_r0_commit": "d6cf1a561e660596cb28d1e2f557290b02b3d4d5",
       "pointwise_r1_commit": "fbd986f967c4fb123349ce849bf0f9333ab15d60",
       "pointwise_r2_commit": "b4d85ec3c6d28038831759be502019596c2eb187",
       "residual_supply_r0_commit": "978cca95d3701737232dc8e507e9a6ba7f04c301",
       "stateful_generator_r1_commit": "1e9930253ca3113842a687e188210321424c2d8a",
+      "stateful_generator_parity_repair_r1a_commit": "1f71ec936e7b23a7f537336056eaf4ae4209e9c7",
       "depletion_semantics": {
         "depleted_unit": "EXACT_SELECTED_LEG_IDENTITY",
         "identity_fields": ["player", "market", "tier", "side", "line"],
-        "legacy_exact_road_field_means": "EXACT_SELECTED_LEG_IDENTITY",
         "player_wide_depletion": false,
-        "signal_road_depletion": false,
-        "signal_road_definition": "CONDITIONAL_EVIDENCE_BUCKET_OR_RULE_SUCH_AS_PROBABILITY_FRAGILITY_MINUTES_EDGE_CONDITIONS"
-      },
-      "initial_materialized_surface": {
-        "candidate_count": 481,
-        "nonzero_materialized_date_count": 15,
-        "zero_materialized_date_count": 15,
-        "coverage_adequate": false,
-        "scope_note": "Historical incomplete materialized surface; not current complete 4L opportunity authority."
+        "signal_road_depletion": false
       },
       "residual_supply_r0": {
         "disposition": "CURRENT_4L_CANDIDATE_SURFACE_UNDERCOVERS_STRUCTURALLY_LEGAL_RESIDUAL_SUPPLY",
@@ -58,95 +50,58 @@
         "legal_witness_date_count": 23,
         "candidate_surface_coverage_gap_count": 8,
         "true_structural_abstention_count": 7,
-        "coverage_gap_dates": [
-          "2026-06-28",
-          "2026-07-09",
-          "2026-07-11",
-          "2026-07-18",
-          "2026-07-30",
-          "2026-07-31",
-          "2026-08-02",
-          "2026-08-07"
-        ],
-        "true_structural_abstention_dates": [
-          "2026-07-03",
-          "2026-07-05",
-          "2026-07-07",
-          "2026-07-12",
-          "2026-07-29",
-          "2026-08-01",
-          "2026-08-08"
-        ],
-        "structural_abstention_reason": "PUBLIC_4L_REQUIRES_AT_LEAST_3_GAMES",
         "three_plus_slate_residual_leg_supply": {
           "minimum": 217,
           "median": 730,
           "maximum": 1021
-        },
-        "outcome_reads": 0,
-        "validation_reads": 0,
-        "lockbox_reads": 0
+        }
       },
       "historical_incomplete_surface_results": {
         "canonical_control_record": "7-7-1",
         "pointwise_record": "5-9-1",
         "pointwise_disposition": "REJECTED_AS_WHOLESALE_4L_RERANKER",
-        "scope_note": "Valid only on the old 15-date materialized candidate surface; not a complete 23-eligible-slate 4L evaluation."
-      },
-      "withdrawn_assumption": {
-        "old_strict_learned_method_ceiling": "9-5-1",
-        "status": "WITHDRAWN_AFTER_SUPPLY_R0"
+        "scope_note": "Valid only on the old incomplete 15-date materialized candidate surface."
       },
       "stateful_generator_r1": {
         "repository_disposition": "STATEFUL_4L_GENERATOR_R1_FAIL_PARITY",
-        "chat_interpretation": "GENERATOR_ACTIONABILITY_SUCCEEDED_PARITY_HARNESS_MIS_SPECIFIED_PENDING_REPAIR",
-        "canary_dates": [
-          "2026-06-28",
-          "2026-07-09",
-          "2026-08-07",
-          "2026-06-19"
-        ],
+        "final_chat_interpretation_after_r1a": "STATEFUL_GENERATOR_ACTIONABILITY_PASS",
+        "canary_date_count": 4,
         "candidate_count_each_date": 96,
         "two_pass_determinism": true,
         "coverage_gap_dates_nonzero": true,
-        "june19_old_materialized_candidate_count": 16,
         "june19_common_exact_candidate_identity_count": 12,
-        "june19_prior_control_representable": true,
-        "reported_context_feature_mismatch_count": 324,
-        "reported_scorer_mismatch_count": 110,
-        "outcome_reads": 0,
+        "june19_prior_control_representable": true
+      },
+      "parity_repair_r1a": {
+        "disposition": "STATEFUL_4L_PARITY_REPAIR_R1A_PASS",
+        "r1_actionability_rehabilitated": true,
+        "common_identity_count": 12,
+        "raw_scorer_input_mismatch_count": 0,
+        "context_field_count": 27,
+        "context_comparison_count": 324,
+        "context_mismatch_count": 0,
+        "scorer_mismatch_count": 0,
+        "final_scorer_order_equal": true,
+        "original_rank_mismatch_count": 12,
+        "prior_control_representable": true,
+        "candidate_generation_executed": false,
+        "target_outcome_reads": 0,
         "validation_reads": 0,
         "lockbox_reads": 0
       },
-      "parity_harness_diagnosis": {
-        "context_asymmetry": "OLD_POST_ANNOTATION_VS_NEW_RAW_PRE_ANNOTATION",
-        "context_mismatch_shape": "12_COMMON_CANDIDATES_X_27_INTERACTION_CONTEXT_FIELDS",
-        "scorer_asymmetry": "OLD_SCORES_FROM_DIFFERENT_POOL_VS_NEW_COMMON_12_ONLY",
-        "scorer_architecture": "WITHIN_POOL_PERCENTILE_MIDRANK",
-        "unauthorized_full_set_requirement": true,
-        "original_work_order_exact_set_equality_required": false
-      },
-      "parity_repair_r1a_authorization": {
-        "execution_tier": "R1_ACTIONABILITY_REPAIR",
-        "prime_work_order": "docs/coordination/wnba/codex/archive/2026-08-16_4l_stateful_generator_parity_repair_r1a.md",
-        "publication_commit": "92004b21338a286e48d0a5c00a18069a886ba268",
-        "purpose": "Re-adjudicate June19 common-candidate parity symmetrically using already-sealed R1 evidence without new candidate generation.",
-        "new_candidate_generation_allowed": false,
-        "expected_common_identity_count": 12,
-        "exact_16_of_16_representation_required": false,
-        "symmetric_context_annotation_required": true,
-        "same_population_scorer_comparison_required": true,
-        "outcome_reads_allowed": 0,
-        "validation_reads_allowed": 0,
-        "lockbox_reads_allowed": 0,
-        "learner_fitting_allowed": false
-      },
-      "uniform_full_surface_if_r1a_passes": {
-        "status": "LATER_REQUIRES_SEPARATE_USER_AUTHORIZATION",
+      "candidate_next": {
+        "name": "UNIFORM_23_DATE_STATEFUL_4L_CANDIDATE_SURFACE",
+        "status": "CANDIDATE_NEXT_NOT_AUTHORIZED",
         "eligible_date_count": 23,
+        "outcome_blind": true,
         "regenerate_all_eligible_dates": true,
         "patch_only_gap_dates": false,
-        "reason": "Avoid mixed candidate-generation lineage."
+        "stateful_order": "SEALED_PREGAME_POOL_THEN_FROZEN_2L_EXACT_DEPLETION_THEN_FROZEN_3L_EXACT_DEPLETION_THEN_CANONICAL_4L_GENERATION",
+        "pretruth_seal_required_before_discovery_grading": true,
+        "learner_fitting_allowed": false,
+        "grading_allowed": false,
+        "validation_reads_allowed": 0,
+        "lockbox_reads_allowed": 0
       },
       "context_consensus": {
         "status": "PARKED_UNTIL_NEW_UNIFORM_23_DATE_SURFACE_AND_BASELINE",
@@ -161,7 +116,6 @@
     "FromDeep": {
       "status": "ARCHITECTURE_AGREED_EXECUTION_NOT_AUTHORIZED",
       "architecture_path": "docs/coordination/wnba/chat/FROMDEEP_ARCHITECTURE.md",
-      "architecture_status": "AGREED",
       "family_role": "SPARSE_MARKET_OWNED_DEMON_OVER_SIGNAL_SPECIALIST",
       "development_evidence_role": "DISCOVERY_ONLY",
       "probability_role": "SECONDARY_AFTER_SIGNAL_ELIGIBILITY_ONLY",
@@ -187,9 +141,8 @@
     "lockbox_reads": 0
   },
   "next_strategy": {
-    "status": "R1A_4L_PARITY_REPAIR_USER_AUTHORIZED",
-    "prime_work_order": "docs/coordination/wnba/codex/archive/2026-08-16_4l_stateful_generator_parity_repair_r1a.md",
-    "topic": "Repair June19 parity adjudication using sealed R1 candidate evidence only; no new generation.",
+    "status": "CANDIDATE_NEXT_NOT_CODEX_AUTHORIZED",
+    "topic": "Build and pretruth-seal one uniform outcome-blind stateful 4L candidate surface across all 23 structurally eligible discovery dates before any new grading or learner work.",
     "required_stop": "BLOCKED_USER_REVIEW_WNBA_4L_STATEFUL_GENERATOR_PARITY_REPAIR_R1A"
   }
 }
