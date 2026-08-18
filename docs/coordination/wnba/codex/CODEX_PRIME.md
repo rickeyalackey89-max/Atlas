@@ -1,8 +1,8 @@
 # WNBA Codex Prime
 
-Status: **ACTIVE EXECUTION DELEGATION — FROMDEEP R0B2 STORAGE-RECOVERED RESUME**
+Status: **ACTIVE EXECUTION DELEGATION — FROMDEEP R0B2 STORAGE-RECOVERED RESUME + KEEP-IT-TIDY HOUSEKEEPING**
 
-Use the clean Prime mirror at `C:\Users\13142\Atlas\PrimeDelegation` and canonical WNBA root `C:\Users\13142\Atlas\WNBA`. Read WNBA `AGENTS.md`, active `slip-builders` controls, current Builder governance, `PRIME_EXPERIMENT_RUNWAY.md`, and the amended FromDeep architecture before execution.
+Use the clean Prime mirror at `C:\Users\13142\Atlas\PrimeDelegation` and canonical WNBA root `C:\Users\13142\Atlas\WNBA`. Read WNBA `AGENTS.md`, active `slip-builders` controls, current Builder governance, `PRIME_EXPERIMENT_RUNWAY.md`, `PRIME_STORAGE_HOUSEKEEPING.md`, and the amended FromDeep architecture before execution.
 
 ## Accepted core state
 
@@ -58,13 +58,29 @@ R0B1 at `ed10f1a...`:
 
 These are storage-safety process receipts only. They do not change the R0B scientific method or FromDeep architecture.
 
-## Storage recovery completed outside Builder research
+## Storage recovery and new automatic housekeeping authority
 
-The user reports `7.762 GiB` free on `C:` after additional non-Builder cleanup/offload. The user states active WNBA artifacts were preserved, WNBA is clean at `ed10f1a...`, and the protected stash is untouched.
+The user reports `7.762 GiB` free on `C:` after additional non-Builder cleanup/offload. This report is not Builder evidence; Codex must freshly measure actual free C-drive space before retained-card reads.
 
-This report is not Builder evidence. Codex must freshly measure actual free C-drive space immediately before any retained-card row read.
+The user has now explicitly authorized automatic stale-data housekeeping so repeated storage-only Builder interruptions do not recur.
 
-The broader historical WNBA cleanup remains deferred until Builder work is complete. Do not perform cleanup in this delegation.
+Mandatory durable protocol:
+
+`docs/coordination/PRIME_STORAGE_HOUSEKEEPING.md`
+
+Active R0B2 housekeeping amendment:
+
+`docs/coordination/wnba/codex/archive/2026-08-18_fromdeep_r0b2_keep_it_tidy_housekeeping_amendment.md`
+
+This amendment **supersedes only** the original R0B2 work order's `no cleanup operation` / `do not perform cleanup` restriction. All scientific, protected-evidence, Git-safety, and review boundaries remain unchanged.
+
+Before the final R0B2 storage measurement, Codex must resolve and read the installed `keep-it-tidy` skill. If that skill cannot be resolved/read, fail closed rather than inventing a destructive substitute.
+
+Use `keep-it-tidy` to remove/offload stale non-authority material unrelated to current testing and the immediate Live/replay/corpus path. Preserve the full keep-set in `PRIME_STORAGE_HOUSEKEEPING.md` and the R0B2 amendment, including current/frozen Builder evidence, protected stash, tracked repo files, immediate Live/replay/corpus data, the 38 retained Builder Cards/source bindings, protected validation/lockbox data, current model/Live authority, active task restart artifacts, and Git history.
+
+Record pre/post free space and bytes reclaimed/offloaded. Aim for `hard gate + 2 GiB` free when safe stale material exists. The unchanged hard R0B2 start gate is still `free_c_gib >= 7.0`.
+
+If safe housekeeping cannot reach the hard gate, fail closed before any retained-card/member read.
 
 ## Active user-authorized task — R0B2 resume
 
@@ -72,11 +88,19 @@ User authorization in Chat:
 
 > “Please resume and I will give Codex the go ahead.”
 
+Housekeeping authorization in Chat:
+
+> “You need to make sure you give codex the go ahead to remove all stale data unrelated to our testing or immediate live/replay/corpus data by using the keep-it-tidy skill so these long breaks do not happen anymore. Those skills should be used automatically or in the control documents.”
+
 Read and execute exactly:
 
 `docs/coordination/wnba/codex/archive/2026-08-18_fromdeep_r0b2_storage_recovered_resume.md`
 
-Work-order publication commit:
+plus the active scope amendment:
+
+`docs/coordination/wnba/codex/archive/2026-08-18_fromdeep_r0b2_keep_it_tidy_housekeeping_amendment.md`
+
+Original R0B2 publication commit:
 
 `1ffbf9d196bee676db8b687112f451635b0b683e`
 
@@ -101,14 +125,16 @@ Expected Builder stop:
 1. Treat `R0B2` as an execution-attempt label only; R0B science is unchanged.
 2. Verify both prior fail-closed R0B attempts remain ancestral and preserve their receipts/history.
 3. Rebind only Prime transport/control/storage-attempt state required to advance from the terminal R0B1 review row.
-4. Freshly measure `C:` immediately before any retained-card row read.
-5. Require measured `free_c_gib >= 7.0`; preserve the existing `6.0 GiB` reserve and `~1.0 GiB` expected peak assumption.
-6. If storage is below the gate, fail closed with zero card/member reads and do not clean anything.
-7. If storage passes, execute the exact same outcome-blind 38-member R0B projection/pretruth-seal contract.
-8. Preserve the exact R0A3 regression parity on `2026-06-18`.
-9. Stop for user/Chat review before settlement join, signal research, or any performance work.
+4. Read `PRIME_STORAGE_HOUSEKEEPING.md` and resolve/read `keep-it-tidy`.
+5. Run authorized housekeeping against stale non-authority material before the final resource preflight.
+6. Freshly measure `C:` after housekeeping and immediately before retained-card row reads.
+7. Require measured `free_c_gib >= 7.0`; preserve the existing `6.0 GiB` reserve and `~1.0 GiB` expected peak assumption.
+8. If storage is below the hard gate after safe housekeeping is exhausted, fail closed with zero card/member reads.
+9. If storage passes, execute the exact same outcome-blind 38-member R0B projection/pretruth-seal contract.
+10. Preserve the exact R0A3 regression parity on `2026-06-18`.
+11. Stop for user/Chat review before settlement join, signal research, or any performance work.
 
-Prefer the existing R0B scientific implementation byte-for-byte. New code is limited to minimal legal control/transport/storage-attempt rebinding.
+Prefer the existing R0B scientific implementation byte-for-byte. New code is limited to minimal legal control/transport/storage-attempt rebinding and the operational housekeeping integration required by the active amendment.
 
 ## Hard boundaries
 
@@ -117,7 +143,10 @@ Prefer the existing R0B scientific implementation byte-for-byte. New code is lim
 - settlement reads = `0`
 - validation reads = `0`
 - lockbox reads = `0`
-- no cleanup operation
+- housekeeping only through the authorized `keep-it-tidy` path and Prime housekeeping protocol
+- no deletion/offload of current testing or immediate Live/replay/corpus inputs
+- no deletion/offload of current/frozen Builder evidence, protected stash, protected evidence, source bindings, current model/Live authority, Git history, or ambiguous authority material
+- no `git clean`, `git reset --hard`, force push, broad staging, or protected-stash mutation
 - no settlement join
 - no hit-rate/performance computation
 - no win/loss forensic
@@ -135,9 +164,9 @@ Prefer the existing R0B scientific implementation byte-for-byte. New code is lim
 - no validation/lockbox/new-date evidence
 - no follow-on auto-start
 
-Target total wall time remains `<=15 minutes`; any single retained-card projector above `60s` fails closed.
+Target total wall time remains `<=15 minutes` for R0B scientific execution; housekeeping time is operational and should be bounded by the `keep-it-tidy` skill rather than used to weaken scientific limits. Any single retained-card projector above `60s` fails closed.
 
-Commit/push only exact authorized WNBA evidence/minimal resume-control infrastructure with exact-path staging. Verify local HEAD == tracking == direct remote, worktree clean, protected stash unchanged, and both prior R0B storage-stop commits remain ancestral.
+Commit/push only exact authorized WNBA evidence/minimal resume-control infrastructure with exact-path staging. Housekeeping outside tracked repo authority does not create statistical evidence. Verify local HEAD == tracking == direct remote, worktree clean, protected stash unchanged, and both prior R0B storage-stop commits remain ancestral.
 
 ## Required final stop
 
