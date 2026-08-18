@@ -1,22 +1,20 @@
 {
   "schema_version": "atlas_prime_delegation_wnba_current_state_v1",
-  "captured_at_ct": "2026-08-18T11:12:00-05:00",
+  "captured_at_ct": "2026-08-18T12:12:00-05:00",
   "snapshot_not_authority": true,
   "sport": "WNBA",
   "source_repository": "rickeyalackey89-max/Atlas-WNBA",
   "source_branch": "builder-method-contract-v1",
-  "source_head": "73e6fb0ab1129086c81bbd7c547bc555d0e5517e",
+  "source_head": "50be4d1fa5e2289d065e2f9d1b21c1448a2d6921",
   "builder": {
-    "status": "ACTIVE_USER_AUTHORIZED_FROMDEEP_R0C_DISCOVERY_SETTLEMENT_FORENSIC_CANARY",
-    "current_target_repo_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_R0B_UNIVERSE_PRETRUTH_SEAL",
-    "authorized_step": "fromdeep_r0c_discovery_settlement_binding_win_loss_forensic_canary",
-    "required_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_R0C_DISCOVERY_SETTLEMENT_FORENSIC_CANARY",
+    "status": "BLOCKED_USER_REVIEW_FROMDEEP_R0C_IDENTITY_LINEAGE_DIAGNOSTIC_ACCEPTED",
+    "current_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_R0C_DISCOVERY_SETTLEMENT_FORENSIC_CANARY",
     "controller_skill": "slip-builders",
     "operational_housekeeping_protocol": "docs/coordination/PRIME_STORAGE_HOUSEKEEPING.md",
     "operational_housekeeping_skill": "keep-it-tidy",
     "validation_reads": 0,
     "lockbox_reads": 0,
-    "active_codex_execution": true
+    "active_codex_execution": false
   },
   "families": {
     "2L": {
@@ -42,7 +40,7 @@
       "downstream_of_3l_if_3l_rebuilt": true
     },
     "FromDeep": {
-      "status": "R0C_DISCOVERY_SETTLEMENT_BINDING_AND_BOUNDED_FORENSIC_ACTIVE",
+      "status": "R0C_IDENTITY_LINEAGE_DIAGNOSTIC_COMPLETE_AWAITING_USER_AUTHORIZATION_FOR_DIRECT_SETTLEMENT_CANARY",
       "architecture_path": "docs/coordination/wnba/chat/FROMDEEP_ARCHITECTURE.md",
       "usable_development_source_count": 38,
       "provenance_excluded_date": "2026-08-13",
@@ -51,59 +49,58 @@
         "commit": "73e6fb0ab1129086c81bbd7c547bc555d0e5517e",
         "status": "PASS_FULL_38_MEMBER_NATIVE_PROJECTION_WITHIN_GATES",
         "pretruth_seal_status": "SEALED_EXACT_FACTUAL_DEMON_OVER_UNIVERSE_OUTCOME_BLIND",
-        "receipt_id": "65b19489d428e971ef5e2c71880e6c97ccb42cac7f9b44a922be566909fad525",
         "member_count": 38,
-        "retained_card_bytes_processed": 605890891,
         "eligible_demon_over_rows": 20626,
         "supported_market_owner_count": 27,
         "full_row_supported_owner_count": 27,
-        "provenance_only_zero_support_owner_count": 0,
-        "r0a3_reference_exactly_reproduced": true,
-        "scientific_runner_changed_from_r0b1_start": false,
-        "core_selected_leg_depletion_applied": false,
         "outcome_reads": 0,
         "truth_reads": 0,
         "settlement_reads": 0,
         "validation_reads": 0,
         "lockbox_reads": 0
       },
-      "settlement_partition": {
-        "discovery_date_count": 39,
-        "r0c_exact_settlement_date_count": 38,
-        "r0c_excluded_discovery_date": "2026-08-13",
-        "validation_dates": ["2026-08-04", "2026-08-10"],
-        "lockbox_dates": ["2026-08-11", "2026-08-12"],
-        "validation_truth_allowed": false,
-        "lockbox_truth_allowed": false,
-        "prepared_discovery_join_contract_status": "PREPARED_NOT_EXECUTED"
-      },
       "r0c": {
-        "status": "USER_AUTHORIZED_ACTIVE",
-        "work_order": "docs/coordination/wnba/codex/archive/2026-08-18_fromdeep_r0c_discovery_settlement_binding_win_loss_forensic_canary.md",
-        "publication_commit": "4cfc3b248deb464a5d25914b00218e4a34fb7c09",
-        "execution_tier": "R0C_DISCOVERY_SETTLEMENT_BINDING_AND_WIN_LOSS_FORENSIC_CANARY",
-        "starting_wnba_head": "73e6fb0ab1129086c81bbd7c547bc555d0e5517e",
-        "expected_active_row": "builder_s5_fromdeep_r0b2_storage_recovered_resume_user_review",
-        "discovery_outcome_access_authorized": true,
-        "settlement_scope": "EXACT_38_R0B_SOURCE_DATES_ONLY",
-        "line_semantics_proof_required": true,
-        "preoutcome_scope_seal_required": true,
-        "forensic_markets": [
-          "points",
-          "three_pointers_made",
-          "blks_stls",
-          "quarters_with_3_points"
+        "commit": "50be4d1fa5e2289d065e2f9d1b21c1448a2d6921",
+        "status": "ACCEPTED_IDENTITY_LINEAGE_ACTIONABILITY_DIAGNOSTIC",
+        "repository_success_marker": "PASS_R0C_DISCOVERY_SETTLEMENT_BINDING_AND_BOUNDED_FORENSIC_COMPLETE",
+        "chat_interpretation": "EXACT_ACCOUNTING_PASS_BUT_FULL_UNIVERSE_SETTLEMENT_NOT_ACTIONABLE_ON_BUILDER_CARD_ROW_ID",
+        "r0b_membership_rows_verified": 20626,
+        "r0b_members_verified": 38,
+        "discovery_settlement_records_read": 1032,
+        "builder_card_row_id_overlap": 0,
+        "matched_settlement_rows": 0,
+        "unmatched_rows": 20626,
+        "gradable_rate": 0.0,
+        "line_semantics_status": "PASS_CANONICAL_STRING_TO_NUMERIC_SETTLEMENT_SEMANTICS",
+        "line_rows": 20626,
+        "line_numeric_strings": 20626,
+        "line_missing": 0,
+        "line_ambiguous": 0,
+        "canonical_discovery_leg_truth_identity": [
+          "game_date",
+          "exact_road"
         ],
-        "forensic_mode": "DESCRIPTIVE_ONLY_NO_THRESHOLD_OR_FEATURE_SELECTION",
-        "green_red_gray_allowed": false,
-        "threshold_search_allowed": false,
-        "feature_selection_allowed": false,
-        "fitting_allowed": false,
-        "selection_allowed": false,
-        "market_activation_allowed": false,
-        "validation_reads_allowed": 0,
-        "lockbox_reads_allowed": 0,
-        "auto_start_follow_on": false
+        "canonical_exact_road_components": [
+          "canonical_participant_or_combo_tuple",
+          "market",
+          "tier",
+          "direction",
+          "canonical_line"
+        ],
+        "old_discovery_leg_truth_total_rows": 1052,
+        "r0c_allowed_38_date_discovery_leg_truth_rows": 1032,
+        "old_leg_truth_is_full_r0b_universe": false,
+        "reference_date_2026_06_18_old_leg_truth_rows": 24,
+        "reference_date_2026_06_18_r0b_rows": 187,
+        "validation_reads": 0,
+        "lockbox_reads": 0,
+        "aug13_contribution": 0,
+        "feature_ranking_executed": false,
+        "threshold_search_executed": false,
+        "green_red_gray_executed": false,
+        "fitting_executed": false,
+        "selection_executed": false,
+        "live_model_policy_publication_mutation": false
       },
       "housekeeping_policy": {
         "status": "MANDATORY_AUTOMATIC_OPERATIONAL_HOUSEKEEPING",
@@ -120,7 +117,17 @@
         "preserve_git_history": true,
         "fail_closed_if_authority_ambiguous": true
       },
-      "candidate_next": "R0D_PREDECLARED_MARKET_OWNED_SIGNAL_ROAD_GRAMMAR_AND_DISCOVERY_GREEN_RED_GRAY_DERIVATION_ONLY_AFTER_R0C_USER_REVIEW"
+      "candidate_next": {
+        "name": "FROMDEEP_R0C1_DIRECT_FULL_UNIVERSE_SETTLEMENT_ACTIONABILITY_CANARY",
+        "status": "CANDIDATE_NEXT_NOT_AUTHORIZED",
+        "purpose": "On a tiny deterministic set of already-development-consumed R0B dates, settle exact sealed R0B rows directly through repository-canonical _TruthIndex + _evaluate_leg while proving protected validation/lockbox rows are physically unread and using game_date + exact_road overlap with the old canonical leg-truth package only as parity evidence.",
+        "method_change": false,
+        "r0b_surface_change": false,
+        "validation_reads_allowed": 0,
+        "lockbox_reads_allowed": 0,
+        "signal_or_performance_research_allowed": false,
+        "auto_start": false
+      }
     }
   },
   "post_fromdeep_sequence": {
@@ -141,8 +148,8 @@
     "lockbox_reads": 0
   },
   "next_strategy": {
-    "status": "USER_AUTHORIZED_CODEX_EXECUTION_ACTIVE",
-    "topic": "Bind development-consumed discovery settlement to the frozen 20,626-row R0B universe, prove canonical line semantics, and run the four-market descriptive win/loss forensic canary with protected validation/lockbox still sealed.",
-    "required_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_R0C_DISCOVERY_SETTLEMENT_FORENSIC_CANARY"
+    "status": "AWAITING_USER_AUTHORIZATION",
+    "topic": "Authorize or decline a tiny direct-settlement actionability canary that labels exact sealed R0B rows through canonical _TruthIndex + _evaluate_leg without touching protected validation/lockbox.",
+    "codex_execution_authorized": false
   }
 }
