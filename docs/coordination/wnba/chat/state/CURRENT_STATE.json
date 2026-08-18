@@ -1,20 +1,22 @@
 {
   "schema_version": "atlas_prime_delegation_wnba_current_state_v1",
-  "captured_at_ct": "2026-08-18T11:05:00-05:00",
+  "captured_at_ct": "2026-08-18T11:12:00-05:00",
   "snapshot_not_authority": true,
   "sport": "WNBA",
   "source_repository": "rickeyalackey89-max/Atlas-WNBA",
   "source_branch": "builder-method-contract-v1",
   "source_head": "73e6fb0ab1129086c81bbd7c547bc555d0e5517e",
   "builder": {
-    "status": "BLOCKED_USER_REVIEW_FROMDEEP_R0B_PRETRUTH_UNIVERSE_ACCEPTED",
-    "current_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_R0B_UNIVERSE_PRETRUTH_SEAL",
+    "status": "ACTIVE_USER_AUTHORIZED_FROMDEEP_R0C_DISCOVERY_SETTLEMENT_FORENSIC_CANARY",
+    "current_target_repo_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_R0B_UNIVERSE_PRETRUTH_SEAL",
+    "authorized_step": "fromdeep_r0c_discovery_settlement_binding_win_loss_forensic_canary",
+    "required_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_R0C_DISCOVERY_SETTLEMENT_FORENSIC_CANARY",
     "controller_skill": "slip-builders",
     "operational_housekeeping_protocol": "docs/coordination/PRIME_STORAGE_HOUSEKEEPING.md",
     "operational_housekeeping_skill": "keep-it-tidy",
     "validation_reads": 0,
     "lockbox_reads": 0,
-    "active_codex_execution": false
+    "active_codex_execution": true
   },
   "families": {
     "2L": {
@@ -40,40 +42,11 @@
       "downstream_of_3l_if_3l_rebuilt": true
     },
     "FromDeep": {
-      "status": "R0B_PRETRUTH_UNIVERSE_SEALED_AWAITING_USER_AUTHORIZATION_FOR_DISCOVERY_SETTLEMENT_FORENSIC",
+      "status": "R0C_DISCOVERY_SETTLEMENT_BINDING_AND_BOUNDED_FORENSIC_ACTIVE",
       "architecture_path": "docs/coordination/wnba/chat/FROMDEEP_ARCHITECTURE.md",
-      "market_namespace_rule": "SUPPORTED_FULL_ROW_CANONICAL_MARKETS_UNION_PROVENANCE_IDENTITIES_IF_NEEDED",
-      "legacy_21_is_cap": false,
       "usable_development_source_count": 38,
       "provenance_excluded_date": "2026-08-13",
       "provenance_excluded_date_statistical_contribution": 0,
-      "r0a2": {
-        "commit": "433bd153c11463493a7bd1b0e50687d356bdf345",
-        "valid_direct_binding_count": 38,
-        "invalid_direct_binding_count": 0,
-        "total_bound_retained_card_bytes": 605890891
-      },
-      "r0a3": {
-        "commit": "e099482bfb40559c01c0895419e6b1be142fbc7f",
-        "status": "PASS_NATIVE_RETAINED_CARD_ACTIONABLE_EXACT_PARITY",
-        "first_projector_seconds": 0.727446700038854,
-        "repeat_exact_parity": true,
-        "protected_reads": 0
-      },
-      "r0b_storage_attempts": {
-        "initial": {
-          "commit": "485c3a0f768c9888abd265e52737984d7ee86767",
-          "status": "FAIL_CLOSED_STORAGE_PREFLIGHT",
-          "members_opened": 0,
-          "protected_reads": 0
-        },
-        "r0b1": {
-          "commit": "ed10f1a493195ccaabb79b6b6d539db85659496a",
-          "status": "FAIL_CLOSED_STORAGE_PREFLIGHT",
-          "members_opened": 0,
-          "protected_reads": 0
-        }
-      },
       "r0b2": {
         "commit": "73e6fb0ab1129086c81bbd7c547bc555d0e5517e",
         "status": "PASS_FULL_38_MEMBER_NATIVE_PROJECTION_WITHIN_GATES",
@@ -85,30 +58,52 @@
         "supported_market_owner_count": 27,
         "full_row_supported_owner_count": 27,
         "provenance_only_zero_support_owner_count": 0,
-        "former_aug13_provenance_only_markets_now_supported_elsewhere": [
-          "blks_stls",
-          "quarters_with_3_points",
-          "quarters_with_4_points",
-          "quarters_with_5_points"
-        ],
-        "canonical_normalizations_applied": [],
         "r0a3_reference_exactly_reproduced": true,
         "scientific_runner_changed_from_r0b1_start": false,
         "core_selected_leg_depletion_applied": false,
-        "operation_seconds_before_seal": 435.6041102000163,
-        "max_member_seconds": 22.979847300041,
-        "full_chain_capsule_scans": 0,
-        "slow_parser_reruns": 0,
         "outcome_reads": 0,
         "truth_reads": 0,
         "settlement_reads": 0,
         "validation_reads": 0,
-        "lockbox_reads": 0,
-        "outcomes_opened": false,
-        "signal_or_performance_research_executed": false,
-        "fitting_executed": false,
-        "ranking_or_selection_executed": false,
-        "live_model_publication_mutation": false
+        "lockbox_reads": 0
+      },
+      "settlement_partition": {
+        "discovery_date_count": 39,
+        "r0c_exact_settlement_date_count": 38,
+        "r0c_excluded_discovery_date": "2026-08-13",
+        "validation_dates": ["2026-08-04", "2026-08-10"],
+        "lockbox_dates": ["2026-08-11", "2026-08-12"],
+        "validation_truth_allowed": false,
+        "lockbox_truth_allowed": false,
+        "prepared_discovery_join_contract_status": "PREPARED_NOT_EXECUTED"
+      },
+      "r0c": {
+        "status": "USER_AUTHORIZED_ACTIVE",
+        "work_order": "docs/coordination/wnba/codex/archive/2026-08-18_fromdeep_r0c_discovery_settlement_binding_win_loss_forensic_canary.md",
+        "publication_commit": "4cfc3b248deb464a5d25914b00218e4a34fb7c09",
+        "execution_tier": "R0C_DISCOVERY_SETTLEMENT_BINDING_AND_WIN_LOSS_FORENSIC_CANARY",
+        "starting_wnba_head": "73e6fb0ab1129086c81bbd7c547bc555d0e5517e",
+        "expected_active_row": "builder_s5_fromdeep_r0b2_storage_recovered_resume_user_review",
+        "discovery_outcome_access_authorized": true,
+        "settlement_scope": "EXACT_38_R0B_SOURCE_DATES_ONLY",
+        "line_semantics_proof_required": true,
+        "preoutcome_scope_seal_required": true,
+        "forensic_markets": [
+          "points",
+          "three_pointers_made",
+          "blks_stls",
+          "quarters_with_3_points"
+        ],
+        "forensic_mode": "DESCRIPTIVE_ONLY_NO_THRESHOLD_OR_FEATURE_SELECTION",
+        "green_red_gray_allowed": false,
+        "threshold_search_allowed": false,
+        "feature_selection_allowed": false,
+        "fitting_allowed": false,
+        "selection_allowed": false,
+        "market_activation_allowed": false,
+        "validation_reads_allowed": 0,
+        "lockbox_reads_allowed": 0,
+        "auto_start_follow_on": false
       },
       "housekeeping_policy": {
         "status": "MANDATORY_AUTOMATIC_OPERATIONAL_HOUSEKEEPING",
@@ -123,24 +118,9 @@
         "preserve_validation_lockbox": true,
         "preserve_source_bindings": true,
         "preserve_git_history": true,
-        "fail_closed_if_authority_ambiguous": true,
-        "last_r0b2_cleanup": {
-          "exact_duplicate_files_removed": 14099,
-          "verified_physical_bytes_reclaimed": 3693178880,
-          "tracked_files_changed": 0,
-          "protected_inputs_changed": 0,
-          "protected_stash_changed": false
-        }
+        "fail_closed_if_authority_ambiguous": true
       },
-      "candidate_next": {
-        "name": "FROMDEEP_R0C_DISCOVERY_SETTLEMENT_BINDING_AND_WIN_LOSS_FORENSIC_CANARY",
-        "status": "CANDIDATE_NEXT_NOT_AUTHORIZED",
-        "purpose": "Bind development-consumed discovery settlement to the sealed R0B universe and perform a bounded market-owned win/loss forensic before any GREEN/RED/GRAY thresholding or signal-atlas freeze.",
-        "discovery_outcome_access_required": true,
-        "protected_validation_reads_allowed": 0,
-        "lockbox_reads_allowed": 0,
-        "auto_start": false
-      }
+      "candidate_next": "R0D_PREDECLARED_MARKET_OWNED_SIGNAL_ROAD_GRAMMAR_AND_DISCOVERY_GREEN_RED_GRAY_DERIVATION_ONLY_AFTER_R0C_USER_REVIEW"
     }
   },
   "post_fromdeep_sequence": {
@@ -161,8 +141,8 @@
     "lockbox_reads": 0
   },
   "next_strategy": {
-    "status": "AWAITING_USER_AUTHORIZATION",
-    "topic": "Design and authorize the first bounded FromDeep discovery settlement-binding / market-owned win-loss forensic against the sealed 20,626-row pretruth universe.",
-    "codex_execution_authorized": false
+    "status": "USER_AUTHORIZED_CODEX_EXECUTION_ACTIVE",
+    "topic": "Bind development-consumed discovery settlement to the frozen 20,626-row R0B universe, prove canonical line semantics, and run the four-market descriptive win/loss forensic canary with protected validation/lockbox still sealed.",
+    "required_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_R0C_DISCOVERY_SETTLEMENT_FORENSIC_CANARY"
   }
 }
