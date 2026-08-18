@@ -1,18 +1,20 @@
 {
   "schema_version": "atlas_prime_delegation_wnba_current_state_v1",
-  "captured_at_ct": "2026-08-17T21:35:00-05:00",
+  "captured_at_ct": "2026-08-17T21:55:00-05:00",
   "snapshot_not_authority": true,
   "sport": "WNBA",
   "source_repository": "rickeyalackey89-max/Atlas-WNBA",
   "source_branch": "builder-method-contract-v1",
   "source_head": "485c3a0f768c9888abd265e52737984d7ee86767",
   "builder": {
-    "status": "BLOCKED_USER_REVIEW_FROMDEEP_R0B_STORAGE_HEADROOM",
-    "current_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_R0B_UNIVERSE_PRETRUTH_SEAL",
+    "status": "ACTIVE_USER_AUTHORIZED_FROMDEEP_R0B1_STORAGE_RECOVERED_RESUME",
+    "current_target_repo_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_R0B_UNIVERSE_PRETRUTH_SEAL",
+    "authorized_step": "fromdeep_r0b1_storage_recovered_resume_same_scientific_method",
+    "required_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_R0B_UNIVERSE_PRETRUTH_SEAL",
     "controller_skill": "slip-builders",
     "validation_reads": 0,
     "lockbox_reads": 0,
-    "active_codex_execution": false
+    "active_codex_execution": true
   },
   "families": {
     "2L": {
@@ -38,7 +40,7 @@
       "downstream_of_3l_if_3l_rebuilt": true
     },
     "FromDeep": {
-      "status": "R0B_STORAGE_PREFLIGHT_FAIL_CLOSED_AWAITING_HEADROOM_DECISION",
+      "status": "R0B1_STORAGE_RECOVERED_RESUME_ACTIVE_SAME_SCIENTIFIC_METHOD",
       "architecture_path": "docs/coordination/wnba/chat/FROMDEEP_ARCHITECTURE.md",
       "market_namespace_rule": "SUPPORTED_FULL_ROW_CANONICAL_MARKETS_UNION_ZERO_SUPPORT_CANONICAL_IDENTITIES_FROM_FORMALLY_PROVENANCE_EXCLUDED_DATES",
       "legacy_21_is_cap": false,
@@ -59,7 +61,7 @@
         "repeat_exact_parity": true,
         "protected_reads": 0
       },
-      "r0b": {
+      "r0b_initial_attempt": {
         "commit": "485c3a0f768c9888abd265e52737984d7ee86767",
         "status": "FAIL_CLOSED_STORAGE_PREFLIGHT",
         "failure_classification": "faithful_candidate_failure",
@@ -76,15 +78,42 @@
         "scientific_universe_claimed": false,
         "outcome_truth_settlement_validation_lockbox_reads": 0
       },
-      "candidate_next": {
-        "name": "R0B_STORAGE_HEADROOM_RECOVERY_OR_MANUAL_FREE_SPACE_THEN_FRESH_R0B_RESUME",
-        "status": "CANDIDATE_NEXT_NOT_AUTHORIZED",
-        "preferred_minimum_free_c_gib": 7.5,
+      "storage_recovery": {
+        "user_reported_free_c_gib": 7.30,
+        "scientific_state_change": false,
+        "builder_evidence_execution": false,
+        "active_wnba_artifacts_preserved": true,
+        "fresh_execution_measurement_required": true,
         "hard_preflight_minimum_free_c_gib": 7.0,
-        "science_change_required": false,
-        "r0b_method_change_required": false,
-        "alternative": "READ_ONLY_C_DRIVE_RECLAIMABLE_SPACE_AUDIT_IF_USER_REQUESTS_CODEX_HELP"
-      }
+        "reserve_gib_unchanged": 6.0,
+        "additional_cleanup_authorized": false
+      },
+      "r0b1": {
+        "status": "USER_AUTHORIZED_ACTIVE",
+        "work_order": "docs/coordination/wnba/codex/archive/2026-08-17_fromdeep_r0b1_storage_recovered_resume.md",
+        "publication_commit": "da10cc29171d36d75598a8a5920e8161f332d590",
+        "execution_tier": "R0B1_STORAGE_RECOVERED_RESUME_SAME_SCIENTIFIC_METHOD",
+        "starting_wnba_head": "485c3a0f768c9888abd265e52737984d7ee86767",
+        "science_change_allowed": false,
+        "method_change_allowed": false,
+        "fresh_storage_measurement_required": true,
+        "required_start_gib": 7.0,
+        "reserve_gib": 6.0,
+        "target_wall_minutes_max": 15,
+        "single_member_seconds_max": 60,
+        "outcome_reads_allowed": 0,
+        "truth_reads_allowed": 0,
+        "settlement_reads_allowed": 0,
+        "validation_reads_allowed": 0,
+        "lockbox_reads_allowed": 0,
+        "signal_mining_allowed": false,
+        "performance_computation_allowed": false,
+        "fitting_allowed": false,
+        "selection_allowed": false,
+        "cleanup_allowed": false,
+        "auto_start_follow_on": false
+      },
+      "candidate_next": "BOUNDED_DISCOVERY_SETTLEMENT_JOIN_WIN_LOSS_FORENSIC_CANARY_ONLY_AFTER_SUCCESSFUL_R0B_PRETRUTH_SEAL_AND_USER_REVIEW"
     }
   },
   "post_fromdeep_sequence": {
@@ -105,8 +134,8 @@
     "lockbox_reads": 0
   },
   "next_strategy": {
-    "status": "AWAITING_USER_STORAGE_DECISION",
-    "topic": "Restore C-drive headroom to at least 7.0 GiB (preferably 7.5-8.0 GiB), then publish a fresh R0B resume delegation with unchanged science; or authorize a read-only Codex storage audit to identify safe reclaimable space.",
-    "codex_execution_authorized": false
+    "status": "USER_AUTHORIZED_CODEX_EXECUTION_ACTIVE",
+    "topic": "Freshly remeasure C-drive headroom and, only if >=7.0 GiB, resume the exact unchanged outcome-blind 38-date FromDeep R0B universe/pretruth seal from WNBA 485c3a0f.",
+    "required_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_R0B_UNIVERSE_PRETRUTH_SEAL"
   }
 }
