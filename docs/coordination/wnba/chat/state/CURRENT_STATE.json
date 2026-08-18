@@ -1,18 +1,20 @@
 {
   "schema_version": "atlas_prime_delegation_wnba_current_state_v1",
-  "captured_at_ct": "2026-08-18T17:17:00-05:00",
+  "captured_at_ct": "2026-08-18T17:19:00-05:00",
   "snapshot_not_authority": true,
   "sport": "WNBA",
   "source_repository": "rickeyalackey89-max/Atlas-WNBA",
   "source_branch": "builder-method-contract-v1",
   "source_head": "14adb68eedd7cf3f44f7baa3edadd0a8b8801c6e",
   "builder": {
-    "status": "BLOCKED_USER_REVIEW_FROMDEEP_ANATOMY_PREDECLARED_PARTITION_MISMATCH",
+    "status": "ACTIVE_USER_AUTHORIZED_FROMDEEP_ANATOMY_PARTITION_CORRECTION_AND_COMPLETE",
     "current_target_repo_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_MARKET_OWNED_DESCRIPTIVE_SIGNAL_ANATOMY_R0",
+    "authorized_step": "fromdeep_anatomy_partition_correction_and_complete",
+    "required_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_ANATOMY_PARTITION_CORRECTION_AND_COMPLETE",
     "controller_skill": "slip-builders",
     "validation_reads": 0,
     "lockbox_reads": 0,
-    "active_codex_execution": false
+    "active_codex_execution": true
   },
   "families": {
     "2L": {
@@ -36,7 +38,7 @@
       "promotion_authority": false
     },
     "FromDeep": {
-      "status": "DESCRIPTIVE_ANATOMY_R0_PARTITION_CONSTANT_CORRECTION_REQUIRES_USER_AUTHORIZATION",
+      "status": "ANATOMY_PARTITION_CORRECTION_AND_COMPLETE_USER_AUTHORIZED_ACTIVE",
       "independent_of_core_depletion": true,
       "uses_2l_or_3l_depleted_pool": false,
       "core_selected_leg_depletion_applied": false,
@@ -87,28 +89,29 @@
         "unsupported_market": 622,
         "missing_player_game_truth": 71,
         "sums_to_total": true,
-        "prior_chat_expected_win_loss_rows": 19420,
-        "prior_chat_expected_push_rows": 14,
-        "prior_chat_expectation_was_wrong": true,
-        "exact_reconciliation": {
-          "old_raw_binary_rows": 19919,
-          "old_raw_binary_losses": 15614,
-          "canonical_losses": 15127,
-          "canonical_void_rows_in_old_raw_loss_count": 487,
-          "canonical_void_rows_in_old_push_nonbinary_bucket": 12,
-          "canonical_push_rows": 2,
-          "old_push_nonbinary_bucket": 14
-        },
         "scientific_failure": false,
         "label_surface_mutation_required": false
       },
-      "candidate_next": {
-        "name": "FROMDEEP_ANATOMY_PARTITION_CORRECTION_AND_COMPLETE",
-        "status": "CANDIDATE_NEXT_NOT_AUTHORIZED",
-        "purpose": "Reuse the completed outcome-blind source/type seals, correct only the predeclared canonical state constants to WIN 4305 / LOSS 15127 / VOID 499 / PUSH 2 / unsupported 622 / missing 71, and complete the same unranked 27-market descriptive anatomy without another scientific canary.",
+      "anatomy_partition_correction": {
+        "status": "USER_AUTHORIZED_ACTIVE",
+        "work_order": "docs/coordination/wnba/codex/archive/2026-08-18_fromdeep_anatomy_partition_correction_and_complete.md",
+        "publication_commit": "643a403e29624518e642298294db4dc5134dbe61",
+        "codex_prime_activation_commit": "b75297494373f7dd6bd62ab753302c230427bdb1",
+        "execution_tier": "R0_ARTIFACT_AUDIT",
         "starting_wnba_head": "14adb68eedd7cf3f44f7baa3edadd0a8b8801c6e",
-        "repeat_38_card_source_pass_required": false,
-        "repeat_only_if_bound_artifact_invalid": true,
+        "expected_current_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_MARKET_OWNED_DESCRIPTIVE_SIGNAL_ANATOMY_R0",
+        "reuse_preoutcome_scope_seal": true,
+        "reuse_field_type_seal": true,
+        "reuse_38_source_scalar_checkpoints": true,
+        "repeat_source_pass_allowed": false,
+        "correct_partition": {
+          "win": 4305,
+          "loss": 15127,
+          "void": 499,
+          "push": 2,
+          "unsupported_market": 622,
+          "missing_player_game_truth": 71
+        },
         "field_ranking_allowed": false,
         "feature_selection_allowed": false,
         "threshold_search_allowed": false,
@@ -119,7 +122,12 @@
         "validation_reads_allowed": 0,
         "lockbox_reads_allowed": 0,
         "aug13_reads_allowed": 0,
-        "core_or_redistribution_work_allowed": false
+        "core_or_redistribution_work_allowed": false,
+        "required_success_markers": [
+          "PASS_FROMDEEP_MARKET_OWNED_DESCRIPTIVE_SIGNAL_ANATOMY_R0",
+          "PASS_FROMDEEP_ANATOMY_PARTITION_CORRECTION_AND_COMPLETE"
+        ],
+        "required_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_ANATOMY_PARTITION_CORRECTION_AND_COMPLETE"
       }
     }
   },
@@ -131,8 +139,9 @@
     "sequence_policy": "NO_MIDSTREAM_BACKTRACKING_FROM_FROMDEEP_INTO_CORE_FAMILIES"
   },
   "next_strategy": {
-    "status": "AWAITING_USER_AUTHORIZATION",
-    "topic": "Correct only the anatomy predeclared canonical partition and complete the same 27-market descriptive anatomy from the already-sealed source/type artifacts. No new scientific canary and no core-family work.",
-    "codex_execution_authorized": false
+    "status": "USER_AUTHORIZED_CODEX_EXECUTION_ACTIVE",
+    "topic": "Reuse the sealed anatomy source/type artifacts, correct only the canonical settlement-state partition constants, and complete the full unranked 27-market FromDeep descriptive anatomy. No new scientific canary and no core-family work.",
+    "codex_execution_authorized": true,
+    "required_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_ANATOMY_PARTITION_CORRECTION_AND_COMPLETE"
   }
 }
