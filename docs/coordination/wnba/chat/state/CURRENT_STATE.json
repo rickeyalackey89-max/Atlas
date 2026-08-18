@@ -1,18 +1,20 @@
 {
   "schema_version": "atlas_prime_delegation_wnba_current_state_v1",
-  "captured_at_ct": "2026-08-17T20:36:00-05:00",
+  "captured_at_ct": "2026-08-17T20:49:00-05:00",
   "snapshot_not_authority": true,
   "sport": "WNBA",
   "source_repository": "rickeyalackey89-max/Atlas-WNBA",
   "source_branch": "builder-method-contract-v1",
   "source_head": "e099482bfb40559c01c0895419e6b1be142fbc7f",
   "builder": {
-    "status": "BLOCKED_USER_REVIEW_FROMDEEP_R0A3_ACCEPTED_R0B_NOT_AUTHORIZED",
-    "current_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_R0A3_NATIVE_RETAINED_CARD_PARITY_CANARY",
+    "status": "ACTIVE_USER_AUTHORIZED_FROMDEEP_R0B",
+    "current_target_repo_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_R0A3_NATIVE_RETAINED_CARD_PARITY_CANARY",
+    "authorized_step": "fromdeep_r0b_usable_38_date_factual_demon_over_universe_pretruth_seal",
+    "required_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_R0B_UNIVERSE_PRETRUTH_SEAL",
     "controller_skill": "slip-builders",
     "validation_reads": 0,
     "lockbox_reads": 0,
-    "active_codex_execution": false
+    "active_codex_execution": true
   },
   "families": {
     "2L": {
@@ -38,16 +40,14 @@
       "downstream_of_3l_if_3l_rebuilt": true
     },
     "FromDeep": {
-      "status": "R0A3_NATIVE_RETAINED_CARD_ACTIONABILITY_PASS_AWAITING_R0B_USER_AUTHORIZATION",
+      "status": "R0B_FULL_OUTCOME_BLIND_UNIVERSE_PRETRUTH_SEAL_ACTIVE",
       "architecture_path": "docs/coordination/wnba/chat/FROMDEEP_ARCHITECTURE.md",
       "market_namespace_rule": "SUPPORTED_FULL_ROW_CANONICAL_MARKETS_UNION_ZERO_SUPPORT_CANONICAL_IDENTITIES_FROM_FORMALLY_PROVENANCE_EXCLUDED_DATES",
       "legacy_21_is_cap": false,
       "usable_development_source_count": 38,
       "provenance_excluded_date": "2026-08-13",
       "provenance_excluded_date_statistical_contribution": 0,
-      "r0": {
-        "commit": "c5d3886363d8cce9afceeb2cd5e94a43af6ab3fb"
-      },
+      "r0": {"commit": "c5d3886363d8cce9afceeb2cd5e94a43af6ab3fb"},
       "r0a": {
         "commit": "9d752a99700c5311fa71f325883e162829b0381a",
         "distinct_canonical_provenance_only_markets": [
@@ -65,42 +65,49 @@
         "commit": "433bd153c11463493a7bd1b0e50687d356bdf345",
         "valid_direct_binding_count": 38,
         "invalid_direct_binding_count": 0,
-        "total_bound_retained_card_bytes": 605890891,
+        "total_bound_retained_card_bytes": 605890891
+      },
+      "r0a3": {
+        "commit": "e099482bfb40559c01c0895419e6b1be142fbc7f",
+        "status": "PASS_NATIVE_RETAINED_CARD_ACTIONABLE_EXACT_PARITY",
         "reference_date": "2026-06-18",
-        "reference_card_bytes": 5108222,
         "reference_card_sha256": "0bb694a5e511d34bcddc32104686252e26b0495694476f6cec3a99766a548456",
         "reference_rows": 684,
         "reference_eligible_demon_over_rows": 187,
         "reference_feature_field_count": 933,
         "reference_availability_summary_sha256": "2b6b596ef9b8be19b76cfedacde5f096010d59c3ceb8740e821a0a683f2b58b2",
-        "reference_projector_output_sha256": "61e284e6fd0ff42e1f9476f5c4b0c8243f940d0fe03e7616213f8318395b2ced"
-      },
-      "r0a3": {
-        "commit": "e099482bfb40559c01c0895419e6b1be142fbc7f",
-        "status": "PASS_NATIVE_RETAINED_CARD_ACTIONABLE_EXACT_PARITY",
-        "flat_row_mapping_count": 684,
-        "scalar_value_count": 638172,
-        "nested_value_count": 0,
-        "prohibited_outcome_field_count": 0,
-        "eligible_demon_over_rows": 187,
-        "feature_field_count": 933,
-        "availability_summary_sha256": "2b6b596ef9b8be19b76cfedacde5f096010d59c3ceb8740e821a0a683f2b58b2",
-        "projector_output_sha256": "61e284e6fd0ff42e1f9476f5c4b0c8243f940d0fe03e7616213f8318395b2ced",
+        "reference_projector_output_sha256": "61e284e6fd0ff42e1f9476f5c4b0c8243f940d0fe03e7616213f8318395b2ced",
         "first_projector_seconds": 0.727446700038854,
-        "repeat_projector_seconds": 0.6735191999468952,
         "repeat_exact_parity": true,
-        "actionability_pass": true,
-        "protected_reads": 0,
-        "r0b_executed": false
+        "protected_reads": 0
       },
-      "candidate_next": {
-        "name": "FROMDEEP_R0B_USABLE_38_DATE_FACTUAL_DEMON_OVER_UNIVERSE_PRETRUTH_SEAL",
-        "status": "CANDIDATE_NEXT_NOT_AUTHORIZED",
-        "purpose": "Project all 38 hash-bound retained Builder Cards with the exact R0A3-native semantics, derive the complete supported canonical market union plus zero-support provenance-only owners, physically pretruth-seal the eligible Demon-OVER universe and feature matrices, then stop before outcomes.",
-        "protected_reads_allowed": 0,
-        "signal_or_performance_research_allowed": false,
-        "auto_start": false
-      }
+      "r0b": {
+        "status": "USER_AUTHORIZED_ACTIVE",
+        "work_order": "docs/coordination/wnba/codex/archive/2026-08-17_fromdeep_r0b_usable_38_date_universe_pretruth_seal.md",
+        "publication_commit": "20b63989d3b5f5171263f67e82f9a4da25d8fbb5",
+        "execution_tier": "R0B_FULL_OUTCOME_BLIND_UNIVERSE_PRETRUTH_SEAL",
+        "source_count": 38,
+        "source_path": "R0A2_PROVEN_DIRECT_RETAINED_BUILDER_CARDS",
+        "parser": "R0A3_NATIVE_GZIP_STANDARD_JSON",
+        "core_selected_leg_depletion_applied": false,
+        "physical_seal_design": "IMMUTABLE_SOURCE_CARD_BINDINGS_PLUS_ELIGIBLE_ROW_MEMBERSHIP_AND_COMPLETE_ROW_CONTENT_HASH_LEDGER",
+        "freeze_factual_market_owner_namespace": true,
+        "full_projection_allowed": true,
+        "target_wall_minutes_max": 15,
+        "single_member_seconds_max": 60,
+        "outcome_reads_allowed": 0,
+        "truth_reads_allowed": 0,
+        "settlement_reads_allowed": 0,
+        "validation_reads_allowed": 0,
+        "lockbox_reads_allowed": 0,
+        "signal_mining_allowed": false,
+        "performance_computation_allowed": false,
+        "green_red_gray_allowed": false,
+        "fitting_allowed": false,
+        "selection_allowed": false,
+        "auto_start_follow_on": false
+      },
+      "candidate_next": "BOUNDED_DISCOVERY_SETTLEMENT_JOIN_WIN_LOSS_FORENSIC_CANARY_AFTER_R0B_USER_REVIEW"
     }
   },
   "post_fromdeep_sequence": {
@@ -121,8 +128,8 @@
     "lockbox_reads": 0
   },
   "next_strategy": {
-    "status": "AWAITING_USER_AUTHORIZATION",
-    "topic": "Authorize or decline the full outcome-blind 38-date FromDeep R0B universe/pretruth seal now that native retained-card actionability has exact fidelity parity.",
-    "codex_execution_authorized": false
+    "status": "USER_AUTHORIZED_CODEX_EXECUTION_ACTIVE",
+    "topic": "Project and physically pretruth-seal the complete usable 38-date factual Demon-OVER FromDeep universe and factual market-owner namespace with zero outcome/protected reads.",
+    "required_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_R0B_UNIVERSE_PRETRUTH_SEAL"
   }
 }
