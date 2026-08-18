@@ -1,20 +1,22 @@
 {
   "schema_version": "atlas_prime_delegation_wnba_current_state_v1",
-  "captured_at_ct": "2026-08-18T12:12:00-05:00",
+  "captured_at_ct": "2026-08-18T12:41:00-05:00",
   "snapshot_not_authority": true,
   "sport": "WNBA",
   "source_repository": "rickeyalackey89-max/Atlas-WNBA",
   "source_branch": "builder-method-contract-v1",
   "source_head": "50be4d1fa5e2289d065e2f9d1b21c1448a2d6921",
   "builder": {
-    "status": "BLOCKED_USER_REVIEW_FROMDEEP_R0C_IDENTITY_LINEAGE_DIAGNOSTIC_ACCEPTED",
-    "current_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_R0C_DISCOVERY_SETTLEMENT_FORENSIC_CANARY",
+    "status": "ACTIVE_USER_AUTHORIZED_FROMDEEP_R0C1_DIRECT_SETTLEMENT_ACTIONABILITY_CANARY",
+    "current_target_repo_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_R0C_DISCOVERY_SETTLEMENT_FORENSIC_CANARY",
+    "authorized_step": "fromdeep_r0c1_direct_full_universe_settlement_actionability_canary",
+    "required_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_R0C1_DIRECT_SETTLEMENT_ACTIONABILITY_CANARY",
     "controller_skill": "slip-builders",
     "operational_housekeeping_protocol": "docs/coordination/PRIME_STORAGE_HOUSEKEEPING.md",
     "operational_housekeeping_skill": "keep-it-tidy",
     "validation_reads": 0,
     "lockbox_reads": 0,
-    "active_codex_execution": false
+    "active_codex_execution": true
   },
   "families": {
     "2L": {
@@ -40,7 +42,7 @@
       "downstream_of_3l_if_3l_rebuilt": true
     },
     "FromDeep": {
-      "status": "R0C_IDENTITY_LINEAGE_DIAGNOSTIC_COMPLETE_AWAITING_USER_AUTHORIZATION_FOR_DIRECT_SETTLEMENT_CANARY",
+      "status": "R0C1_DIRECT_SETTLEMENT_ACTIONABILITY_CANARY_USER_AUTHORIZED_ACTIVE",
       "architecture_path": "docs/coordination/wnba/chat/FROMDEEP_ARCHITECTURE.md",
       "usable_development_source_count": 38,
       "provenance_excluded_date": "2026-08-13",
@@ -102,8 +104,37 @@
         "selection_executed": false,
         "live_model_policy_publication_mutation": false
       },
+      "r0c1": {
+        "status": "USER_AUTHORIZED_ACTIVE",
+        "work_order": "docs/coordination/wnba/codex/archive/2026-08-18_fromdeep_r0c1_direct_settlement_actionability_canary.md",
+        "publication_commit": "702a162abc48dea0d861ae962ce3794887d94086",
+        "codex_prime_activation_commit": "0207916cfca06bd38157de6a040eae71a6d18dae",
+        "execution_tier": "R1_ACTIONABILITY_CANARY",
+        "starting_wnba_head": "50be4d1fa5e2289d065e2f9d1b21c1448a2d6921",
+        "expected_current_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_R0C_DISCOVERY_SETTLEMENT_FORENSIC_CANARY",
+        "canary_dates": [
+          "2026-06-18",
+          "2026-07-15"
+        ],
+        "expected_r0b_rows_by_date": {
+          "2026-06-18": 187,
+          "2026-07-15": 241
+        },
+        "maximum_canary_rows": 428,
+        "direct_evaluator": "_TruthIndex + _evaluate_leg",
+        "old_label_identity_use": "PARITY_ONLY_GAME_DATE_PLUS_EXACT_ROAD",
+        "monolithic_truth_read_then_filter_allowed": false,
+        "validation_reads_allowed": 0,
+        "lockbox_reads_allowed": 0,
+        "aug13_contribution_allowed": 0,
+        "signal_or_performance_research_allowed": false,
+        "full_38_date_settlement_allowed": false,
+        "auto_start_follow_on": false,
+        "required_success_disposition": "PASS_R0C1_DIRECT_SETTLEMENT_ACTIONABILITY_CANARY",
+        "required_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_R0C1_DIRECT_SETTLEMENT_ACTIONABILITY_CANARY"
+      },
       "housekeeping_policy": {
-        "status": "MANDATORY_AUTOMATIC_OPERATIONAL_HOUSEKEEPING",
+        "status": "MANDATORY_AUTOMATIC_OPERATIONAL_HOUSEKEEPING_FOR_EXPENSIVE_WORK",
         "global_protocol": "docs/coordination/PRIME_STORAGE_HOUSEKEEPING.md",
         "skill": "keep-it-tidy",
         "automatic_before_expensive_storage_preflight": true,
@@ -117,15 +148,10 @@
         "preserve_git_history": true,
         "fail_closed_if_authority_ambiguous": true
       },
-      "candidate_next": {
-        "name": "FROMDEEP_R0C1_DIRECT_FULL_UNIVERSE_SETTLEMENT_ACTIONABILITY_CANARY",
-        "status": "CANDIDATE_NEXT_NOT_AUTHORIZED",
-        "purpose": "On a tiny deterministic set of already-development-consumed R0B dates, settle exact sealed R0B rows directly through repository-canonical _TruthIndex + _evaluate_leg while proving protected validation/lockbox rows are physically unread and using game_date + exact_road overlap with the old canonical leg-truth package only as parity evidence.",
-        "method_change": false,
-        "r0b_surface_change": false,
-        "validation_reads_allowed": 0,
-        "lockbox_reads_allowed": 0,
-        "signal_or_performance_research_allowed": false,
+      "next_if_r0c1_passes": {
+        "name": "FROMDEEP_FULL_38_DATE_DIRECT_SETTLEMENT_PASS",
+        "status": "NOT_AUTHORIZED",
+        "purpose": "Settle the entire frozen 20,626-row R0B development universe through the R0C1-proven canonical evaluator and produce the full labeled FromDeep discovery surface.",
         "auto_start": false
       }
     }
@@ -148,8 +174,8 @@
     "lockbox_reads": 0
   },
   "next_strategy": {
-    "status": "AWAITING_USER_AUTHORIZATION",
-    "topic": "Authorize or decline a tiny direct-settlement actionability canary that labels exact sealed R0B rows through canonical _TruthIndex + _evaluate_leg without touching protected validation/lockbox.",
-    "codex_execution_authorized": false
+    "status": "USER_AUTHORIZED_CODEX_EXECUTION_ACTIVE",
+    "topic": "Prove direct canonical settlement on two small already-consumed R0B dates using physically date-scoped truth and old game_date + exact_road labels only as parity evidence.",
+    "required_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_R0C1_DIRECT_SETTLEMENT_ACTIONABILITY_CANARY"
   }
 }
