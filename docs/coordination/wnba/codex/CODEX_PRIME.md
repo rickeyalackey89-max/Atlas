@@ -1,6 +1,6 @@
 # WNBA Codex Prime
 
-Status: **NO ACTIVE EXECUTION DELEGATION — FROMDEEP ANATOMY R0 BLOCKED ONLY ON PREDECLARED PARTITION MISMATCH / USER REVIEW REQUIRED**
+Status: **ACTIVE USER-AUTHORIZED EXECUTION — FROMDEEP ANATOMY PARTITION CORRECTION AND COMPLETE**
 
 Use the clean Prime mirror at `C:\Users\13142\Atlas\PrimeDelegation` and canonical WNBA root `C:\Users\13142\Atlas\WNBA`. Target-repository authority and the active `slip-builders` lane remain governing.
 
@@ -23,21 +23,19 @@ Full settlement completion:
 
 `dfd55223fbb8ed9b0d7ef4af544ecf911adc78f5`
 
-Accepted facts:
+Fixed facts:
 
 - 38 provenance-valid discovery source dates;
 - 20,626 exact sealed Demon-OVER rows;
 - 27 factual market owners;
-- 38 hash-bound settlement checkpoints;
-- 20,626 unique final labels, 0 duplicate labels, 0 silent drops;
-- unchanged canonical `_TruthIndex + _evaluate_leg` settlement semantics;
+- 20,626 unique final labels, 0 duplicates, 0 silent drops;
+- sealed label SHA-256 `cb99773e91ce403adff3fb5171b28f2692dcbc039367909ba8ae0facb306db23`;
 - validation reads = 0;
 - lockbox reads = 0;
 - Aug. 13 reads/contribution = 0;
-- core-family selected-leg depletion is not applied to FromDeep;
-- no core redistribution work has been opened.
+- core selected-leg depletion is not applied to FromDeep.
 
-## Last attempted task — descriptive signal anatomy R0
+## Prior anatomy R0 attempt — accepted implementation stop
 
 WNBA result commit:
 
@@ -47,77 +45,90 @@ Repository stop:
 
 `BLOCKED_USER_REVIEW_WNBA_FROMDEEP_MARKET_OWNED_DESCRIPTIVE_SIGNAL_ANATOMY_R0`
 
-Repository disposition:
+No anatomy PASS was claimed. The failure occurred only because Chat had predeclared the wrong canonical settlement-state partition. Descriptive aggregation did **not** start.
 
-Fail-closed predeclared partition mismatch. No descriptive aggregation started and no PASS was claimed.
+Reusable artifacts completed before the failure:
 
-Accepted execution facts:
+- full 38-card pre-outcome source pass;
+- all 38 source-scalar checkpoints/cache;
+- outcome-blind field admission/type seal;
+- canonical settlement-state audit.
 
-- the complete 38-card pre-outcome source pass completed;
-- the outcome-blind field/type seal completed before label access;
-- the sealed label file SHA remained `cb99773e91ce403adff3fb5171b28f2692dcbc039367909ba8ae0facb306db23`;
-- validation reads = 0;
-- lockbox reads = 0;
-- Aug. 13 reads/contribution = 0;
-- signal roads, GREEN/RED/GRAY, fitting, ranking, selection, redistribution, Live/model/policy/publication work = 0;
-- focused tests passed.
+These artifacts must be hash-verified and reused. Do not repeat the expensive source pass if they remain valid.
 
-## Canonical settlement-state partition — corrected
+## Correct canonical settlement-state partition
 
-Chat's prior predeclared partition was wrong. The sealed canonical state audit is authoritative for anatomy eligibility:
+The sealed audit at `14adb68...` is authoritative:
 
-- total rows = `20,626`;
+- total = `20,626`;
 - `WIN` = `4,305`;
 - `LOSS` = `15,127`;
-- canonical WIN + LOSS = `19,432`;
+- WIN + LOSS anatomy population = `19,432`;
 - `VOID` = `499`;
 - `PUSH` = `2`;
 - `UNGRADABLE_UNSUPPORTED_MARKET` = `622`;
 - `UNGRADABLE_MISSING_TRUTH` = `71`.
 
-These counts sum exactly to 20,626.
+The prior `19,420` WIN+LOSS and `14` PUSH expectations are retired. Do not mutate or regenerate the label surface.
 
-### Why the prior 19,420 / 14 expectation was wrong
+## ACTIVE USER-AUTHORIZED TASK — anatomy partition correction and complete
 
-The full-settlement aggregate helper had reported:
+Prime work order:
 
-- raw-result binary rows = `19,919`;
-- raw-result binary losses = `15,614`;
-- push/nonbinary classification = `14`;
-- canonical VOID rows = `499`.
+`docs/coordination/wnba/codex/archive/2026-08-18_fromdeep_anatomy_partition_correction_and_complete.md`
 
-The prior Chat calculation incorrectly subtracted all 499 VOID rows from 19,919 and treated all 14 push/nonbinary rows as canonical PUSH.
+Work-order publication commit:
 
-The exact reconciliation is:
+`643a403e29624518e642298294db4dc5134dbe61`
 
-- `487` canonical VOID rows had already been included in the old raw-result loss count: `15,614 - 15,127 = 487`;
-- the remaining `12` canonical VOID rows were already included in the old push/nonbinary bucket;
-- canonical PUSH itself is only `2` rows;
-- therefore `487 + 12 = 499` canonical VOID rows and `2 + 12 = 14` old push/nonbinary-classification rows.
+User authorization:
 
-So canonical anatomy eligibility is `19,919 - 487 = 19,432`, not 19,420.
+> “go”
 
-This is a predeclared-constant error in the anatomy work order, not a label-surface, settlement, truth, or FromDeep scientific failure. Do not mutate or regenerate the 20,626 labels.
+Execution tier:
 
-## Candidate next — NOT AUTHORIZED
+`R0_ARTIFACT_AUDIT`
 
-`FROMDEEP_ANATOMY_PARTITION_CORRECTION_AND_COMPLETE`
+Expected WNBA starting HEAD:
 
-Purpose:
+`14adb68eedd7cf3f44f7baa3edadd0a8b8801c6e`
 
-Resume the same descriptive anatomy R0 from WNBA `14adb68eedd7cf3f44f7baa3edadd0a8b8801c6e`, accepting the exact sealed canonical state partition above and completing the already-authorized 27-market unranked anatomy without adding another scientific canary.
+Expected current WNBA stop:
 
-Required design:
+`BLOCKED_USER_REVIEW_WNBA_FROMDEEP_MARKET_OWNED_DESCRIPTIVE_SIGNAL_ANATOMY_R0`
 
-1. Reuse/hash-verify the completed pre-outcome scope seal, 38 source-scalar checkpoints/cache, and outcome-blind field/type seal from `14adb68...`; do not repeat the expensive source pass unless a bound artifact is invalid.
-2. Bind the unchanged 20,626-row sealed label surface from `dfd55223...`.
-3. Replace only the incorrect predeclared partition constants with the audited canonical values: WIN 4,305; LOSS 15,127; VOID 499; PUSH 2; unsupported 622; missing 71.
-4. Require exact 20,626-row state accounting before descriptive aggregation.
-5. Run independent WIN-vs-LOSS descriptives across all 27 market owners using only `settlement_state in {WIN, LOSS}`.
-6. Preserve VOID/PUSH/unsupported/missing rows as separate support/coverage evidence and never coerce them to losses.
-7. Preserve the already-sealed outcome-blind field admission/type decisions.
-8. No field ranking, feature selection, cutpoint/interval search, signal-road construction, GREEN/RED/GRAY assignment, fitting, ranking, selection, market activation, or FromDeep freeze.
-9. No 2L/3L/4L, depletion, redistribution, validation, lockbox, or Live/model/policy/publication work.
-10. Stop for user/Chat review after the full 27-market descriptive anatomy is sealed.
+### Exact task
 
-No Codex execution is currently authorized.
+Correct only the predeclared canonical partition constants and complete the same already-authorized 27-market unranked descriptive anatomy from the sealed/cached artifacts.
+
+Required execution:
+
+1. Sync Prime and reconcile exact WNBA Builder-lane authority under `slip-builders` only.
+2. Hash-verify and reuse the prior anatomy pre-outcome scope seal, field/type seal, and all 38 source-scalar checkpoints/cache from `14adb68...`.
+3. Fail closed if any required bound artifact drifts; do not silently rerun the 38-card source pass.
+4. Bind the unchanged 20,626-row label surface from `dfd55223...`.
+5. Require the corrected exact state partition: WIN 4,305 / LOSS 15,127 / VOID 499 / PUSH 2 / unsupported 622 / missing 71 = 20,626.
+6. Use only `settlement_state in {WIN, LOSS}` for winner-vs-loser anatomy.
+7. Preserve VOID/PUSH/unsupported/missing rows as separate coverage evidence.
+8. Complete independent descriptive anatomy for all 27 market owners using only the already-sealed field admission/type grammar.
+9. Report market baselines, support/missingness, numeric/boolean/categorical neutral descriptives, and participant/date concentration exactly as specified in the work order.
+10. Keep output unranked. No feature selection, cutpoint/bin/threshold search, signal roads, GREEN/RED/GRAY, fitting, ranking, selection, market activation, historical-as-of FromDeep selection, or FromDeep freeze.
+11. validation reads = 0; lockbox reads = 0; Aug. 13 reads/contribution = 0.
+12. No 2L/3L/4L, depletion, redistribution, Live/model/policy/publication work.
+13. Run focused tests and Builder control validation; exact-path commit/push; verify local HEAD == tracking == direct remote; stop.
+
+## Required success dispositions
+
+`PASS_FROMDEEP_MARKET_OWNED_DESCRIPTIVE_SIGNAL_ANATOMY_R0`
+
+and
+
+`PASS_FROMDEEP_ANATOMY_PARTITION_CORRECTION_AND_COMPLETE`
+
+## Required final stop
+
+`BLOCKED_USER_REVIEW_WNBA_FROMDEEP_ANATOMY_PARTITION_CORRECTION_AND_COMPLETE`
+
+## Next if this passes — NOT AUTHORIZED
+
+Chat/user may review the sealed 27-market anatomy and then predeclare a bounded market-owned signal-road/reliability grammar. Do not auto-start signal construction, GREEN/RED/GRAY assignment, historical-as-of selection, FromDeep freeze, core redistribution, protected validation, or lockbox work.
