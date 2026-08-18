@@ -1,18 +1,20 @@
 {
   "schema_version": "atlas_prime_delegation_wnba_current_state_v1",
-  "captured_at_ct": "2026-08-18T15:48:00-05:00",
+  "captured_at_ct": "2026-08-18T15:53:00-05:00",
   "snapshot_not_authority": true,
   "sport": "WNBA",
   "source_repository": "rickeyalackey89-max/Atlas-WNBA",
   "source_branch": "builder-method-contract-v1",
   "source_head": "dfd55223fbb8ed9b0d7ef4af544ecf911adc78f5",
   "builder": {
-    "status": "BLOCKED_USER_REVIEW_FROMDEEP_FULL_SETTLEMENT_COMPLETE",
+    "status": "ACTIVE_USER_AUTHORIZED_FROMDEEP_MARKET_OWNED_DESCRIPTIVE_SIGNAL_ANATOMY_R0",
     "current_target_repo_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_FULL_SETTLEMENT_IMPLEMENTATION_REPAIR_AND_COMPLETE",
+    "authorized_step": "fromdeep_market_owned_descriptive_signal_anatomy_r0",
+    "required_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_MARKET_OWNED_DESCRIPTIVE_SIGNAL_ANATOMY_R0",
     "controller_skill": "slip-builders",
     "validation_reads": 0,
     "lockbox_reads": 0,
-    "active_codex_execution": false
+    "active_codex_execution": true
   },
   "families": {
     "2L": {
@@ -37,7 +39,7 @@
       "promotion_authority": false
     },
     "FromDeep": {
-      "status": "FULL_DISCOVERY_LABEL_SURFACE_COMPLETE_AWAITING_USER_AUTHORIZATION_FOR_DESCRIPTIVE_SIGNAL_ANATOMY",
+      "status": "MARKET_OWNED_DESCRIPTIVE_SIGNAL_ANATOMY_R0_USER_AUTHORIZED_ACTIVE",
       "independent_of_core_depletion": true,
       "uses_2l_or_3l_depleted_pool": false,
       "core_selected_leg_depletion_applied": false,
@@ -51,63 +53,59 @@
         "eligible_demon_over_rows": 20626,
         "supported_market_owner_count": 27
       },
-      "r0c1": {
-        "commit": "48d1d04b2027ef3ca7b6cd6446b4c1de1d95176b",
-        "chat_interpretation": "DIRECT_CANONICAL_SETTLEMENT_ACTIONABILITY_SUPPORTED",
-        "direct_evaluator": "wnba.evaluation.live_prior_day._TruthIndex+_evaluate_leg"
-      },
-      "full_settlement_attempt": {
-        "commit": "4787d9a1ce55a1ab8252d601a15bb4719895972e",
-        "repository_disposition": "implementation_divergence",
-        "attempt_evaluator_calls": 9796,
-        "scientific_failure": false
-      },
       "full_settlement_complete": {
         "commit": "dfd55223fbb8ed9b0d7ef4af544ecf911adc78f5",
-        "repository_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_FULL_SETTLEMENT_IMPLEMENTATION_REPAIR_AND_COMPLETE",
         "success_markers": [
           "PASS_FROMDEEP_FULL_38_DATE_DIRECT_SETTLEMENT_LABEL_SURFACE",
           "PASS_FROMDEEP_FULL_SETTLEMENT_IMPLEMENTATION_REPAIR_AND_COMPLETE"
         ],
-        "source_dates": 38,
-        "source_rows": 20626,
-        "market_owners": 27,
         "final_unique_labels": 20626,
+        "date_checkpoints": 38,
+        "market_owners": 27,
         "duplicate_labels": 0,
         "silent_drops": 0,
-        "date_checkpoints": 38,
-        "all_sources_finality_preflighted_before_evaluator_call_1": true,
-        "refresh_required": false,
-        "repair_run_evaluator_calls": 20626,
-        "prior_failed_attempt_evaluator_calls_process_history_only": 9796,
-        "binary_gradable_rows": 19919,
-        "binary_wins": 4305,
-        "binary_losses": 15614,
-        "raw_unfiltered_demon_over_binary_win_fraction": 0.216125307495,
-        "pushes_nonbinary": 14,
-        "unsupported_market": 622,
-        "missing_player_game_truth": 71,
-        "other_canonical_statuses": 0,
-        "unsupported_market_truth_coverage_note": "ALL_622_UNSUPPORTED_ROWS_ARE_QUARTER_THRESHOLD_MARKETS_WITH_INCOMPLETE_CANONICAL_EVENT_TRUTH",
         "validation_reads": 0,
         "lockbox_reads": 0,
         "aug13_reads": 0,
-        "old_package_reads": 0,
-        "monolithic_truth_opens": 0,
-        "core_or_redistribution_mutation": false,
-        "signal_research_executed": false
+        "sealed_label_file_sha256": "cb99773e91ce403adff3fb5171b28f2692dcbc039367909ba8ae0facb306db23",
+        "label_surface_seal_sha256": "f9b7fe63a9897a0b1c5b6cb62987565b59133d27eaa1c5cd87d8bb308ce35e47"
       },
-      "candidate_next": {
-        "name": "FROMDEEP_MARKET_OWNED_DESCRIPTIVE_SIGNAL_ANATOMY_R0",
-        "status": "CANDIDATE_NEXT_NOT_AUTHORIZED",
-        "purpose": "Describe market-owned winner-versus-loser pregame anatomy on the complete sealed discovery label surface without ranking fields, choosing thresholds, constructing signals, assigning GREEN_RED_GRAY, fitting, ranking, or selecting FromDeep legs.",
-        "binary_outcomes_only_for_win_loss_descriptives": true,
-        "unsupported_missing_push_rows_preserved_as_coverage_evidence": true,
+      "settlement_state_semantics_correction": {
+        "status": "ANATOMY_MUST_USE_CANONICAL_SETTLEMENT_STATE_NOT_RAW_RESULT_CENSUS",
+        "sealed_labels_mutated": false,
+        "prior_reported_binary_rows": 19919,
+        "canonical_win_loss_rows_expected": 19420,
+        "canonical_void_rows": 499,
+        "canonical_push_rows": 14,
+        "canonical_unsupported_market_rows": 622,
+        "canonical_missing_player_game_truth_rows": 71,
+        "reason": "full-settlement census helper classified raw result before canonical settlement_state, while repository _settlement_state gives VOID precedence for DNP/void rows"
+      },
+      "descriptive_anatomy_r0": {
+        "status": "USER_AUTHORIZED_ACTIVE",
+        "work_order": "docs/coordination/wnba/codex/archive/2026-08-18_fromdeep_market_owned_descriptive_signal_anatomy_r0.md",
+        "publication_commit": "fcd87c05ba533c2fa4b15eae27a8d830a34b01c6",
+        "codex_prime_activation_commit": "0b98ffece8be1a3c27c4696976554d1cc8f82f53",
+        "execution_tier": "R2_FULL_SURFACE_DESCRIPTIVE_ANATOMY",
+        "starting_wnba_head": "dfd55223fbb8ed9b0d7ef4af544ecf911adc78f5",
+        "expected_current_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_FULL_SETTLEMENT_IMPLEMENTATION_REPAIR_AND_COMPLETE",
+        "market_owner_count": 27,
+        "win_loss_eligibility": "settlement_state_IN_WIN_LOSS_ONLY",
+        "field_typing_frozen_outcome_blind_before_label_comparison": true,
+        "field_ranking_allowed": false,
+        "feature_selection_allowed": false,
+        "threshold_search_allowed": false,
+        "signal_road_construction_allowed": false,
+        "green_red_gray_allowed": false,
+        "fitting_allowed": false,
+        "selection_allowed": false,
         "validation_reads_allowed": 0,
         "lockbox_reads_allowed": 0,
         "aug13_reads_allowed": 0,
         "core_or_redistribution_work_allowed": false,
-        "auto_start": false
+        "auto_start_follow_on": false,
+        "required_success": "PASS_FROMDEEP_MARKET_OWNED_DESCRIPTIVE_SIGNAL_ANATOMY_R0",
+        "required_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_MARKET_OWNED_DESCRIPTIVE_SIGNAL_ANATOMY_R0"
       }
     }
   },
@@ -119,8 +117,9 @@
     "sequence_policy": "NO_MIDSTREAM_BACKTRACKING_FROM_FROMDEEP_INTO_CORE_FAMILIES"
   },
   "next_strategy": {
-    "status": "AWAITING_USER_AUTHORIZATION",
-    "topic": "Review the completed 20,626-row FromDeep label surface and, if approved, authorize descriptive market-owned win/loss signal anatomy. Stay exclusively on FromDeep.",
-    "codex_execution_authorized": false
+    "status": "USER_AUTHORIZED_CODEX_EXECUTION_ACTIVE",
+    "topic": "Describe all 27 FromDeep market-owner WIN-vs-LOSS pregame anatomies from the complete sealed discovery surface, using canonical settlement_state and an outcome-blind field-type seal. No signal mining or core-family work.",
+    "codex_execution_authorized": true,
+    "required_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_MARKET_OWNED_DESCRIPTIVE_SIGNAL_ANATOMY_R0"
   }
 }
