@@ -22,6 +22,8 @@ R0A: `9d752a99700c5311fa71f325883e162829b0381a`.
 
 R0A1: `8e3f9d9e9d18fc814c30e232fc3d07411143deb9`.
 
+R0A2: `433bd153c11463493a7bd1b0e50687d356bdf345`.
+
 Accepted facts:
 
 - 39 discovery dates exist in authority;
@@ -30,21 +32,23 @@ Accepted facts:
 - semantic regeneration is forbidden;
 - the legacy RP37 owner count of 21 is not a cap;
 - `blks_stls`, `quarters_with_3_points`, `quarters_with_4_points`, and `quarters_with_5_points` are distinct canonical markets with zero proven aliases;
-- R0A1 failed faithfully because the full-chain capsule scanner exceeded `300s` on the smallest ~7.35 MB compressed capsule before producing one accepted measurement;
-- no retry, lower-median, largest, full projection, R0B, signal research, outcomes, validation, lockbox, Live, or model mutation occurred.
+- R0A1 proved the full-chain character scanner is not resource-actionable;
+- R0A2 proved **38/38** usable members have valid immutable direct retained Builder-card bindings, totaling `605,890,891` bound bytes;
+- R0A2 selected the smallest direct retained card on `2026-06-18`, member `live_20260618_182656__2026-06-18`, bytes `5,108,222`, SHA-256 `0bb694a5e511d34bcddc32104686252e26b0495694476f6cec3a99766a548456`;
+- R0A2 hydration took about `0.67s`, while the retained-card projector took about `76.11s` for 684 rows / 187 eligible Demon-OVER rows / 933 fields;
+- R0A2 stopped faithfully because first-card total exceeded its 60-second gate; no repeat, capsule scan, full projection, R0B, outcomes, validation, lockbox, Live, or model mutation occurred.
 
-The R0A1 resource failure is extraction-path evidence only, not evidence against FromDeep.
+R0A2 sealed deterministic reference:
 
-## Existing compact-artifact opportunity
+- rows `684`
+- eligible Demon-OVER rows `187`
+- feature field count `933`
+- availability-summary SHA-256 `2b6b596ef9b8be19b76cfedacde5f096010d59c3ceb8740e821a0a683f2b58b2`
+- projector-output SHA-256 `61e284e6fd0ff42e1f9476f5c4b0c8243f940d0fe03e7616213f8318395b2ced`
 
-Repository low-footprint corpus machinery already writes reusable outcome-blind retained Builder base artifacts where present, including:
+## Implementation diagnosis
 
-- `low_footprint_v1/builder_card.json.gz`;
-- `low_footprint_v1/retained_builder_card_manifest.json`;
-- member-level `builder_card_manifest.json`;
-- member-level `retained_base_manifest.json` with `retained_base_bindings` and authoritative member/capsule lineage.
-
-A valid direct retained Builder Card may be used only when the complete member-freeze/hash chain proves the exact artifact. Never infer a path or regenerate a card.
+The compact retained-card path is scientifically/provenance viable, but the current R0A2 projector still uses the custom character-by-character JSON scanner inherited from R0A1. That scanner is unnecessary for a compact, hash-bound retained Builder Card and is now the next bounded implementation question.
 
 ## Active user-authorized task
 
@@ -54,42 +58,39 @@ User authorization in Chat:
 
 Read and execute exactly:
 
-`docs/coordination/wnba/codex/archive/2026-08-17_fromdeep_r0a2_retained_builder_card_binding_one_source_canary.md`
+`docs/coordination/wnba/codex/archive/2026-08-17_fromdeep_r0a3_native_retained_card_parity_canary.md`
 
 Work-order publication commit:
 
-`345bb9a71c91d1e5dc0f40625061f07e45721240`
+`d3e9350a4e240efa5ca406483c06b83ab3e9a843`
 
 Execution tier:
 
-`R0A2_RETAINED_BUILDER_CARD_BINDING_AND_ONE_SOURCE_CANARY`
+`R0A3_NATIVE_RETAINED_CARD_PARSER_PARITY_CANARY`
 
 Expected WNBA starting HEAD:
 
-`8e3f9d9e9d18fc814c30e232fc3d07411143deb9`
+`433bd153c11463493a7bd1b0e50687d356bdf345`
 
 Expected Builder stop:
 
-`BLOCKED_USER_REVIEW_WNBA_FROMDEEP_R0A1_EXCLUSION_RESOURCE_CANARY`
+`BLOCKED_USER_REVIEW_WNBA_FROMDEEP_R0A2_RETAINED_CARD_CANARY`
 
-## Scientific question
+Required final stop:
 
-> Across the exact 38 usable FromDeep discovery dates, how many canonical sealed members already expose an immutable direct retained Builder-card artifact with explicit hash lineage to the authoritative member/capsule freeze, and can the FromDeep outcome-blind projector process one such direct retained card quickly and deterministically without scanning the full-chain capsule?
+`BLOCKED_USER_REVIEW_WNBA_FROMDEEP_R0A3_NATIVE_RETAINED_CARD_PARITY_CANARY`
 
-## Required operation
+## R0A3 operation
 
-1. Freeze/serialize the exact 38-date member census before any row-level card read.
-2. Audit all 38 sealed members for direct retained Builder-card bindings.
-3. Accept a direct card only with explicit member/surface freeze -> retained base/Builder-card manifest -> exact path/bytes/SHA-256 lineage and pre-settlement/outcome-blind authority.
-4. Report valid binding count, invalid/missing count, affected dates, exact failure reasons, and total bound retained-card bytes.
-5. If at least one valid direct binding exists, sort valid retained cards by bound artifact bytes ascending, tie-break date/member id, and select exactly the smallest.
-6. Run the outcome-blind FromDeep projector on that direct retained card only. Do **not** reopen or character-scan its full-chain capsule.
-7. Separate storage hydration/open latency from projector runtime where applicable.
-8. If the first direct-card canary completes within `60s`, immediately repeat exactly once and require exact row/count/market/topology/output-hash parity.
-9. If the first direct-card canary exceeds `60s`, preserve the faithful measurement and stop without retry.
-10. Stop for user/Chat review. Do not start R0B.
+Use **exactly the same R0A2-selected retained card** and its sealed deterministic reference. Replace only the compact-card decoding path with native `gzip` + standard JSON decoding; do not use the character scanner.
 
-Target total wall time: `<=15 minutes`.
+Before using the fast outcome-boundary scan, prove every row is a mapping whose values are JSON scalars only. Then scan every row key through the repository-canonical explicit prohibited outcome/settlement field contract. If any nested value exists, fail closed rather than weakening the existing recursive contract.
+
+Apply the exact same Demon-OVER eligibility, market identity, missingness, value typing, and feature-topology semantics as R0A2. Require exact parity for row count, eligible count, market list, field count, availability-summary SHA, and projector-output SHA.
+
+Report separate timings for native decode, flatness/outcome boundary, eligibility/topology aggregation, deterministic hashing, and total projector time.
+
+If first native projector has exact R0A2 parity and completes in `<=30s`, repeat exactly once and require exact deterministic parity. Stop after the canary; **R0B remains unauthorized**.
 
 ## Hard boundaries
 
@@ -98,9 +99,11 @@ Target total wall time: `<=15 minutes`.
 - settlement reads = 0
 - validation reads = 0
 - lockbox reads = 0
-- no full-chain capsule-parser retry
-- no full 38-date row projection
-- no bulk hydration of all retained cards
+- no full-chain capsule scan
+- no slow R0A2 parser rerun
+- no second source/date
+- no bulk hydration
+- no full 38-date projection
 - no R0B
 - no signal-road mining
 - no GREEN/RED/GRAY classification
@@ -109,18 +112,10 @@ Target total wall time: `<=15 minutes`.
 - no feature selection
 - no fitting/ML
 - no FromDeep selections
-- no final market-owner-count freeze
-- no Aug. 13 source synthesis or exclusion change
-- no 2L/3L/4L method research or mutation
+- no final owner-count freeze
+- no Aug. 13 change/synthesis
+- no 2L/3L/4L work
 - no Live/model/minutes/calibration/allocator/QMC/dependence/policy/publication mutation
 - no follow-on auto-start
 
-Use existing repository-owned low-footprint/member-binding utilities and neutral reusable helpers wherever possible. A minimal reusable direct-card reader adaptation is allowed only to read a provenance-proven retained Builder Card without reopening the full-chain capsule; it may not change row eligibility, market normalization, feature values, or FromDeep architecture.
-
-Commit/push only authorized WNBA evidence/minimal reusable infrastructure with exact-path staging. Verify local HEAD == tracking == direct remote, leave the worktree clean, and preserve the protected stash unchanged.
-
-## Required final stop
-
-`BLOCKED_USER_REVIEW_WNBA_FROMDEEP_R0A2_RETAINED_CARD_CANARY`
-
-R0B remains separately user-authorized only.
+Commit/push only exact authorized WNBA evidence/minimal reusable parser infrastructure with exact-path staging. Verify local HEAD == tracking == direct remote, leave worktree clean, and preserve protected stash unchanged.
