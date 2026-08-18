@@ -1,111 +1,163 @@
 # WNBA Codex Prime
 
-Status: **NO ACTIVE EXECUTION DELEGATION — FROMDEEP R0B PRETRUTH UNIVERSE ACCEPTED / NEXT SCIENTIFIC GATE REQUIRES USER AUTHORIZATION**
+Status: **ACTIVE EXECUTION DELEGATION — FROMDEEP R0C DISCOVERY SETTLEMENT + WIN/LOSS FORENSIC CANARY**
 
-Use the clean Prime mirror at `C:\Users\13142\Atlas\PrimeDelegation` and canonical WNBA root `C:\Users\13142\Atlas\WNBA`. Target-repository authority and the active `slip-builders` lane remain governing.
+Use the clean Prime mirror at `C:\Users\13142\Atlas\PrimeDelegation` and canonical WNBA root `C:\Users\13142\Atlas\WNBA`. Read WNBA `AGENTS.md`, the active `slip-builders` controls, current Builder governance, `PRIME_EXPERIMENT_RUNWAY.md`, `PRIME_STORAGE_HOUSEKEEPING.md`, `FROMDEEP_ARCHITECTURE.md`, and the active R0C work order before execution.
 
 ## Accepted core state
 
 - 2L remains frozen as `WNBA_2L_ORIGINAL_FROZEN_RANK_V1_1`, discovery result `32-7`.
-- 3L remains `FROZEN_RESEARCH_DEPLETION_BACKBONE`, historical-as-of evidence `24-6-0` on the tested materialized post-2L-filtered surface. Fresh post-2L frontier completeness remains a known validation/root-cause risk, not a FromDeep blocker.
-- 4L remains frozen on current lineage at WNBA `24c5e29c965f5e808d84470c16146bb18a0b0148` as `WNBA_4L_CANONICAL_ATLAS_RANK1_RESEARCH_DEPLETION_V1`, development result `14-8-1`.
+- 3L remains `FROZEN_RESEARCH_DEPLETION_BACKBONE`, historical-as-of evidence `24-6-0` on its tested materialized post-2L-filtered surface. Fresh post-2L frontier completeness remains a known validation/root-cause risk, not a FromDeep blocker.
+- 4L remains frozen at WNBA `24c5e29c965f5e808d84470c16146bb18a0b0148` as `WNBA_4L_CANONICAL_ATLAS_RANK1_RESEARCH_DEPLETION_V1`, development result `14-8-1`.
 - No Builder architecture has Live/promotion/prospective authority.
 - Protected validation reads remain `0`; lockbox reads remain `0`.
 
-## Accepted FromDeep runway
+## Accepted FromDeep state through R0B
 
 - R0: `c5d3886363d8cce9afceeb2cd5e94a43af6ab3fb`
 - R0A: `9d752a99700c5311fa71f325883e162829b0381a`
 - R0A1: `8e3f9d9e9d18fc814c30e232fc3d07411143deb9`
 - R0A2: `433bd153c11463493a7bd1b0e50687d356bdf345`
 - R0A3: `e099482bfb40559c01c0895419e6b1be142fbc7f`
-- initial R0B storage stop: `485c3a0f768c9888abd265e52737984d7ee86767`
-- R0B1 storage stop: `ed10f1a493195ccaabb79b6b6d539db85659496a`
 - successful R0B2 pretruth universe seal: `73e6fb0ab1129086c81bbd7c547bc555d0e5517e`
 
-## Accepted R0B2 result
+R0B accepted facts:
 
-Reviewed WNBA result commit:
+- exact `38` usable retained Builder Cards;
+- `605,890,891` bound source bytes processed;
+- exact `20,626` eligible Demon-OVER rows sealed;
+- `27` factual market owners;
+- all `27` are `FULL_ROW_SUPPORTED`;
+- zero provenance-only owner lanes remain;
+- `2026-08-13` remains excluded from FromDeep development contribution because its required full-row provenance is unavailable;
+- R0A3 exact parity passed;
+- core-family depletion was not applied;
+- R0B scientific runner remained unchanged through successful execution;
+- outcome/truth/settlement/validation/lockbox reads all remained `0` through R0B;
+- no signal research, fitting, ranking, selection, Live/model/publication mutation, or follow-on execution occurred.
 
-`73e6fb0ab1129086c81bbd7c547bc555d0e5517e`
-
-Final stop:
+R0B final stop:
 
 `BLOCKED_USER_REVIEW_WNBA_FROMDEEP_R0B_UNIVERSE_PRETRUTH_SEAL`
 
-Accepted disposition:
+## Current settlement authority
 
-`PASS_FULL_38_MEMBER_NATIVE_PROJECTION_WITHIN_GATES`
+The current Builder partition identifies:
 
-Scientific/evidence class:
+- discovery: `39` dates total;
+- validation: `2026-08-04`, `2026-08-10`;
+- lockbox: `2026-08-11`, `2026-08-12`.
 
-`PROCESS_ONLY_PRETRUTH_UNIVERSE_SEAL` — no performance or signal authority.
+The existing `discovery_label_join_contract_v1_1.json` is `PREPARED_NOT_EXECUTED`, with validation and lockbox truth explicitly forbidden.
 
-Exact accepted facts:
+R0C narrows discovery settlement further to **exactly the 38 R0B source dates**. `2026-08-13` must not contribute or be opened for FromDeep R0C because it is not present in the sealed R0B full-row universe.
 
-- all `38` provenance-valid retained Builder Cards were processed;
-- bound retained-card bytes processed: `605,890,891`;
-- total eligible Demon-OVER rows sealed: `20,626`;
-- factual market-owner namespace frozen at `27` owners;
-- all `27` owners are `FULL_ROW_SUPPORTED` on usable retained-card evidence;
-- therefore the former Aug. 13 provenance-only identities `blks_stls`, `quarters_with_3_points`, `quarters_with_4_points`, and `quarters_with_5_points` are independently supported elsewhere and no longer remain zero-support lanes;
-- provenance-only zero-support owner count: `0`;
-- no canonical normalization/alias coercion was applied;
-- `2026-08-13` remains excluded from FromDeep development statistical contribution because its required full-row source provenance is unavailable; this exclusion is unchanged;
-- exact R0A3 reference parity on `2026-06-18` passed;
-- core selected-leg depletion was not applied, preserving FromDeep independent-universe semantics;
-- scientific runner `src/wnba/evaluation/builder_fromdeep_r0b_universe_pretruth_seal.py` was unchanged from R0B1 start to successful R0B2 commit;
-- total scientific operation before seal: about `435.60s`;
-- maximum member time: about `22.98s`, below the `60s` member gate;
-- simultaneously hydrated retained cards max: `1`;
-- full-chain capsule scans: `0`;
-- slow-parser reruns: `0`;
-- outcomes opened: `false`;
-- outcome reads `0`, truth reads `0`, settlement reads `0`, validation reads `0`, lockbox reads `0`;
-- fitting, candidate generation, signal/performance research, ranking/selection, Live/model/publication mutation, and automatic follow-on all remained `false`.
+Repository settlement references include:
 
-Bound pretruth artifacts include:
+- `src/wnba/evaluation/builder_discovery_labels.py`;
+- canonical `_evaluate_leg` semantics in `src/wnba/evaluation/live_prior_day.py`.
 
-- `FROMDEEP_R0B_SOURCE_CENSUS.json`
-- `FROMDEEP_R0B_MEMBER_PROJECTION_LEDGER.csv`
-- `FROMDEEP_R0B_ELIGIBLE_ROW_MEMBERSHIP.json.gz`
-- `FROMDEEP_R0B_MARKET_NAMESPACE.json`
-- `FROMDEEP_R0B_PER_MARKET_CENSUS.json`
-- `FROMDEEP_R0B_FEATURE_AVAILABILITY_OVERALL.json`
-- `FROMDEEP_R0B_FEATURE_AVAILABILITY_BY_MARKET.json`
-- `FROMDEEP_R0B_PRETRUTH_SEAL.json`
-- `FROMDEEP_R0B_RESOURCE_SUMMARY.json`
-- `final_receipt.json`
+Do not invent a new settlement identity or market alias.
 
-Pretruth seal status:
+## Active user-authorized task — FromDeep R0C
 
-`SEALED_EXACT_FACTUAL_DEMON_OVER_UNIVERSE_OUTCOME_BLIND`
+User authorization in Chat:
 
-## Operational housekeeping doctrine
+> “I agree”
 
-`docs/coordination/PRIME_STORAGE_HOUSEKEEPING.md` remains mandatory operational pre-run doctrine for future expensive Builder/replay/corpus/model work.
+Read and execute exactly:
 
-The successful R0B2 attempt used installed `keep-it-tidy` housekeeping before resource preflight. It removed `14,099` verified duplicate stale non-authority files, physically reclaiming `3,693,178,880` bytes (~`3.44 GiB`) without tracked-file, protected-input, protected-stash, or scientific-state mutation.
+`docs/coordination/wnba/codex/archive/2026-08-18_fromdeep_r0c_discovery_settlement_binding_win_loss_forensic_canary.md`
 
-This housekeeping evidence is operational only and has no statistical authority.
+Work-order publication commit:
 
-## Current user-review gate
+`4cfc3b248deb464a5d25914b00218e4a34fb7c09`
 
-There is **no active Codex execution authorization**.
+Execution tier:
 
-The next scientific question is no longer infrastructure or universe construction. R0B has physically sealed the full factual development universe. The next candidate step is to open only the already-consumed discovery settlement needed to determine win/loss labels for this sealed universe and perform the first bounded, market-owned win/loss forensic needed to design the later GREEN/RED/GRAY signal atlas.
+`R0C_DISCOVERY_SETTLEMENT_BINDING_AND_WIN_LOSS_FORENSIC_CANARY`
 
-That next operation would intentionally consume discovery outcomes/settlement and therefore requires a new Prime work order and explicit user authorization. It must not touch protected validation or lockbox.
+Expected WNBA starting HEAD:
 
-## Candidate next — NOT AUTHORIZED
+`73e6fb0ab1129086c81bbd7c547bc555d0e5517e`
 
-`FROMDEEP_R0C_DISCOVERY_SETTLEMENT_BINDING_AND_WIN_LOSS_FORENSIC_CANARY`
+Expected active Builder row:
 
-Expected purpose:
+`builder_s5_fromdeep_r0b2_storage_recovered_resume_user_review`
 
-1. prove deterministic one-to-one settlement binding for the sealed R0B membership ledger using development-consumed discovery outcomes only;
-2. quantify gradable/nonbinary/unmatched rows and market/date coverage before broad signal mining;
-3. run a bounded market-owned win/loss forensic sufficient to inspect where wins/losses separate on approved pregame fields;
-4. do **not** yet freeze GREEN/RED/GRAY thresholds, fit a selector, rank FromDeep legs, open validation/lockbox, or mutate Live.
+Expected current stop:
 
-The exact R0C runway design must be reviewed by Chat and authorized by the user before publication/execution.
+`BLOCKED_USER_REVIEW_WNBA_FROMDEEP_R0B_UNIVERSE_PRETRUTH_SEAL`
+
+Required final stop:
+
+`BLOCKED_USER_REVIEW_WNBA_FROMDEEP_R0C_DISCOVERY_SETTLEMENT_FORENSIC_CANARY`
+
+## R0C required operation
+
+1. Verify the exact R0B seal, membership ledger, source bindings, owner namespace, field topology, current date partition, and prepared discovery-label join contract.
+2. Run automatic `keep-it-tidy` housekeeping under `PRIME_STORAGE_HOUSEKEEPING.md` before the final resource gate; do not touch current R0B evidence, immediate Live/replay/corpus inputs, source bindings, protected evidence, protected stash, or Git history.
+3. Before the first outcome read, serialize an R0C scope seal containing the exact 38 R0B dates, explicit Aug. 13 exclusion, protected validation/lockbox dates, the four predeclared forensic markets, and the field-permission authority.
+4. Resolve `line` semantics before using line descriptively: report raw source type/missingness across all sealed rows, trace repository-canonical numeric settlement interpretation, and prove parity on a deterministic outcome-independent cross-market sample. Do not invent a new numeric line contract or select line thresholds.
+5. Reconstruct only the frozen R0B membership rows from the 38 hash-bound retained Cards, verify complete-row hashes, and bind repository-canonical discovery settlement one-to-one by source row identity.
+6. Account for every sealed row as binary win, binary loss, push/nonbinary, unsettled, unmatched, or explicit unsupported settlement status. No silent drops.
+7. Validation and lockbox dates must remain absent from settlement outputs and reads. Aug. 13 contributes zero and must remain absent.
+8. Only after settlement binding passes, run the descriptive forensic canary on the four predeclared market owners:
+   - `points`;
+   - `three_pointers_made`;
+   - `blks_stls`;
+   - `quarters_with_3_points`.
+9. For those markets, report win/loss descriptive support/missingness and source-type-appropriate field summaries across approved pregame fields only.
+10. Do not rank fields, choose features, search thresholds, construct signal roads, assign GREEN/RED/GRAY, fit a model, activate a market, rank/select FromDeep legs, or touch Live.
+11. Stop for user/Chat review.
+
+## Evidence authority
+
+R0C intentionally opens **development-consumed discovery outcomes only**.
+
+Allowed:
+
+- exact 38-date R0B discovery truth/settlement access;
+- descriptive binary win/loss forensic for the four predeclared owners.
+
+Required to remain zero:
+
+- validation reads = `0`;
+- lockbox reads = `0`;
+- new/prospective protected-date reads = `0`.
+
+R0C evidence is `development_consumed_discovery_forensic`, not validation, promotion, prospective, or Live authority.
+
+## Resource gate
+
+Target R0C wall time: `<=15 minutes` excluding routine housekeeping.
+
+- no full-chain capsule scan;
+- no old slow parser;
+- retained Cards one at a time if re-read is required;
+- unexpected resource escalation fails closed;
+- emit heartbeat/progress if useful.
+
+## Hard boundaries
+
+- do not modify or regenerate the R0B pretruth seal/universe;
+- do not apply core selected-leg depletion;
+- no Aug. 13 settlement contribution;
+- no validation/lockbox access;
+- no new-date evidence;
+- no threshold/cutpoint/interval search;
+- no GREEN/RED/GRAY;
+- no feature selection;
+- no fitting/ML;
+- no FromDeep ranking/selection;
+- no owner activation/freeze;
+- no 2L/3L/4L work;
+- no Live/model/minutes/calibration/allocator/QMC/dependence/policy/publication mutation;
+- no public slips as evidence;
+- no follow-on auto-start.
+
+Use exact-path Git staging only. Preserve the protected stash. Verify local HEAD == tracking == direct remote and leave the WNBA worktree clean.
+
+## Next if this passes — NOT AUTHORIZED
+
+A later R0D may predeclare the market-owned signal-road grammar and discovery-only GREEN/RED/GRAY derivation procedure. R0C does not authorize R0D, historical-as-of FromDeep evaluation, selection, protected validation, lockbox, or Live installation.
