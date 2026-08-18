@@ -1,8 +1,8 @@
 # WNBA Codex Prime
 
-Status: **NO ACTIVE EXECUTION DELEGATION — FROMDEEP R0B STORAGE PREFLIGHT USER REVIEW**
+Status: **ACTIVE EXECUTION DELEGATION — FROMDEEP R0B1 STORAGE-RECOVERED RESUME**
 
-Use the clean Prime mirror at `C:\Users\13142\Atlas\PrimeDelegation` and canonical WNBA root `C:\Users\13142\Atlas\WNBA`. Current target-repository authority remains governing.
+Use the clean Prime mirror at `C:\Users\13142\Atlas\PrimeDelegation` and canonical WNBA root `C:\Users\13142\Atlas\WNBA`. Read WNBA `AGENTS.md`, active `slip-builders` controls, current Builder governance, `PRIME_EXPERIMENT_RUNWAY.md`, and the amended FromDeep architecture before execution.
 
 ## Accepted core state
 
@@ -21,7 +21,7 @@ Validation reads remain `0`; lockbox reads remain `0`.
 - R0A1: `8e3f9d9e9d18fc814c30e232fc3d07411143deb9`
 - R0A2: `433bd153c11463493a7bd1b0e50687d356bdf345`
 - R0A3: `e099482bfb40559c01c0895419e6b1be142fbc7f`
-- R0B storage-preflight result: `485c3a0f768c9888abd265e52737984d7ee86767`
+- first R0B storage-preflight attempt: `485c3a0f768c9888abd265e52737984d7ee86767`
 
 Standing FromDeep facts:
 
@@ -32,18 +32,10 @@ Standing FromDeep facts:
 - total retained-card bytes = `605,890,891`;
 - the legacy RP37 owner count of 21 is not a namespace cap;
 - `blks_stls`, `quarters_with_3_points`, `quarters_with_4_points`, and `quarters_with_5_points` are distinct canonical markets with zero proven aliases and remain explicit owner lanes;
-- R0A3 proved native retained-card projection is fidelity-equivalent and resource-actionable: ~`0.727s` first projector, ~`0.674s` exact repeat, with exact R0A2 count/market/topology/hash parity;
+- R0A3 native retained-card projection is exact-parity and resource-actionable;
 - no outcome/truth/settlement/validation/lockbox evidence has been opened during FromDeep runway work.
 
-## Last completed delegation — R0B storage preflight
-
-Prime work order:
-
-`docs/coordination/wnba/codex/archive/2026-08-17_fromdeep_r0b_usable_38_date_universe_pretruth_seal.md`
-
-Publication commit:
-
-`20b63989d3b5f5171263f67e82f9a4da25d8fbb5`
+## Accepted first R0B attempt
 
 WNBA result commit:
 
@@ -53,40 +45,102 @@ Final stop:
 
 `BLOCKED_USER_REVIEW_WNBA_FROMDEEP_R0B_UNIVERSE_PRETRUTH_SEAL`
 
-Accepted disposition:
+Disposition:
 
 `faithful_candidate_failure` — `INSUFFICIENT_C_DRIVE_HEADROOM`.
 
-Exact storage facts:
+The first R0B attempt stopped **before any retained Builder Card was opened**.
 
-- free C-drive headroom: `4.722 GiB`;
-- storage-preflight required start: `7.0 GiB`;
-- shortfall: `2.278 GiB`;
-- safety reserve: `6.0 GiB`;
-- estimated R0B peak task footprint: `1.0 GiB`;
-- estimated final R0B artifacts: `0.5 GiB`;
-- retained input corpus is read from Drive Streaming and is not duplicated into Git;
-- member projection started: `false`;
-- members opened: `0`;
-- retained-card bytes processed: `0`;
-- pretruth seal created: `false`;
-- scientific universe claimed: `false`;
-- outcome/truth/settlement/validation/lockbox reads all `0`;
-- no signal research, fitting, selection, Live/model/publication mutation, or follow-on execution.
+Measured then:
 
-Scientific interpretation:
+- free C-drive headroom `4.722 GiB`;
+- required start `7.0 GiB`;
+- shortfall `2.278 GiB`;
+- safety reserve `6.0 GiB`;
+- expected R0B peak task footprint `~1.0 GiB`;
+- expected final artifacts `~0.5 GiB`.
 
-The R0B method and source lineage remain valid and untested at full scale. The stop is a storage-safety gate only. The `7.0 GiB` threshold is not an estimate that R0B itself needs seven GiB; it is the bounded `~1.0 GiB` expected task peak plus a `6.0 GiB` C-drive safety reserve. Do not weaken that reserve, delete evidence, move authoritative sources, or change R0B science merely to make the gate pass without separate user/Chat authorization.
+The prior fail-closed receipt is immutable evidence at commit `485c3a0f...`; do not rewrite Git history.
 
-## Candidate next — NOT AUTHORIZED
+## Storage recovery completed outside Builder research
 
-Preferred path:
+The user reports cleanup completed with approximately `7.30 GiB` free on `C:` after archiving/removing inactive historical session logs and clearing reproducible caches. The user states active WNBA artifacts were preserved and WNBA remains clean at `485c3a0f...`.
 
-1. restore C-drive free space to at least `7.0 GiB` before R0B starts; practically target at least `7.5–8.0 GiB` to avoid borderline drift;
-2. do not delete or move protected stash, WNBA scientific evidence, sealed source bindings, model/Live authority, or repository history;
-3. once headroom is restored, publish a fresh R0B resume/retry delegation starting from WNBA `485c3a0f768c9888abd265e52737984d7ee86767`, re-run storage/source/control preflight, then execute the same already-authorized scientific R0B method with zero outcome/protected reads;
-4. the prior fail-closed receipt remains preserved and is not overwritten.
+This is **not** Builder evidence and does not change scientific state. Codex must measure actual free space again; do not trust the reported number as the execution gate.
 
-If Rick prefers Codex to help find space rather than cleaning it manually, the alternative candidate is a **read-only C-drive headroom audit** limited to identifying reclaimable non-authority material such as task-owned scratch, caches, temp files, generated logs, or other disposable artifacts. Such an audit must not delete, move, compress, or alter anything without a separate explicit authorization.
+The broader historical WNBA cleanup is deferred until Builder work is finished. Do not perform any additional cleanup in this delegation.
 
-No Codex execution is currently authorized. R0B must not be retried until either sufficient headroom exists or Rick separately authorizes a different storage strategy.
+## Active user-authorized task — R0B1 resume
+
+User authorization in Chat:
+
+> “Please resume and I will give Codex the go ahead.”
+
+Read and execute exactly:
+
+`docs/coordination/wnba/codex/archive/2026-08-17_fromdeep_r0b1_storage_recovered_resume.md`
+
+Work-order publication commit:
+
+`da10cc29171d36d75598a8a5920e8161f332d590`
+
+Execution tier:
+
+`R0B1_STORAGE_RECOVERED_RESUME_SAME_SCIENTIFIC_METHOD`
+
+Expected WNBA starting HEAD:
+
+`485c3a0f768c9888abd265e52737984d7ee86767`
+
+Expected Builder stop:
+
+`BLOCKED_USER_REVIEW_WNBA_FROMDEEP_R0B_UNIVERSE_PRETRUTH_SEAL`
+
+## Required resume behavior
+
+1. Treat `R0B1` as an execution-attempt label only. The R0B scientific method is unchanged.
+2. Verify the prior fail-closed R0B receipt/storage-preflight hashes from `485c3a0f...` before any attempt-local replacement.
+3. Rebind only Prime transport/control/storage-attempt state needed to resume from the current user-review row.
+4. Freshly measure `C:` immediately before any retained-card row read.
+5. Require measured `free_c_gib >= 7.0`; preserve the existing `6.0 GiB` safety reserve and `~1.0 GiB` expected peak assumption.
+6. If storage is below the gate, fail closed again with zero card/member reads.
+7. If storage passes, execute the exact same outcome-blind 38-member R0B projection/seal contract already authorized.
+8. Preserve R0A3 regression parity on `2026-06-18`.
+9. Stop for user/Chat review before any settlement join or signal research.
+
+A minimal control/transport resume helper and transport/config rebinding are allowed. Prefer the existing R0B scientific implementation byte-for-byte. Do not change projection, eligibility, identity, namespace, feature, or seal semantics.
+
+## Hard boundaries
+
+- outcome reads = `0`
+- truth reads = `0`
+- settlement reads = `0`
+- validation reads = `0`
+- lockbox reads = `0`
+- no cleanup operation
+- no settlement join
+- no hit-rate/performance computation
+- no win/loss forensic
+- no GREEN/RED/GRAY classification
+- no signal/bucket mining
+- no support/reliability threshold selection
+- no feature selection
+- no fitting/ML
+- no FromDeep ranking or selection
+- no full-chain capsule scan
+- no slow parser rerun
+- no Aug. 13 synthesis
+- no 2L/3L/4L mutation
+- no Live/model/minutes/calibration/allocator/QMC/dependence/policy/publication mutation
+- no validation/lockbox/new-date evidence
+- no follow-on auto-start
+
+Target total wall time remains `<=15 minutes`; any single retained-card projector above `60s` fails closed.
+
+Commit/push only exact authorized WNBA evidence/minimal resume-control infrastructure with exact-path staging. Verify local HEAD == tracking == direct remote, worktree clean, protected stash unchanged, and prior `485c3a0f...` remains in history.
+
+Required final stop:
+
+`BLOCKED_USER_REVIEW_WNBA_FROMDEEP_R0B_UNIVERSE_PRETRUTH_SEAL`
+
+No follow-on research is authorized.
