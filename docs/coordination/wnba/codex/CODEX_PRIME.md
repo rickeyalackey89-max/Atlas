@@ -1,6 +1,6 @@
 # WNBA Codex Prime
 
-Status: **ACTIVE USER-AUTHORIZED EXECUTION — FROMDEEP FULL SETTLEMENT IMPLEMENTATION REPAIR AND COMPLETE**
+Status: **NO ACTIVE EXECUTION DELEGATION — FROMDEEP FULL LABEL SURFACE COMPLETE / DESCRIPTIVE SIGNAL ANATOMY REQUIRES USER AUTHORIZATION**
 
 Use the clean Prime mirror at `C:\Users\13142\Atlas\PrimeDelegation` and canonical WNBA root `C:\Users\13142\Atlas\WNBA`. Target-repository authority and the active `slip-builders` lane remain governing.
 
@@ -10,6 +10,7 @@ Use the clean Prime mirror at `C:\Users\13142\Atlas\PrimeDelegation` and canonic
 - FromDeep is independent of 2L/3L/4L depletion and uses the full eligible Demon-OVER universe.
 - Do not reopen core redistribution/depletion while FromDeep is in progress.
 - After FromDeep is frozen, separately revisit the 2L -> 3L redistribution/non-redistribution architecture.
+- Complete/freeze or reject that core redistribution decision without using protected validation to tune it.
 - Protected validation comes only after both FromDeep and the core redistribution decision are complete.
 
 ## Accepted FromDeep universe
@@ -34,110 +35,81 @@ R0C1 result:
 
 The unchanged canonical evaluator `_TruthIndex + _evaluate_leg` is accepted as actionable for exact sealed FromDeep rows. The old GOBLIN/STANDARD label package is not a success gate for the Demon universe.
 
-## Failed full-settlement implementation attempt
+## Full-settlement implementation repair — COMPLETE
 
 WNBA result commit:
 
-`4787d9a1ce55a1ab8252d601a15bb4719895972e`
+`dfd55223fbb8ed9b0d7ef4af544ecf911adc78f5`
 
 Repository stop:
 
-`BLOCKED_USER_REVIEW_WNBA_FROMDEEP_FULL_38_DATE_DIRECT_SETTLEMENT_LABEL_SURFACE`
+`BLOCKED_USER_REVIEW_WNBA_FROMDEEP_FULL_SETTLEMENT_IMPLEMENTATION_REPAIR_AND_COMPLETE`
 
-Failure classification:
+Accepted success markers:
 
-`implementation_divergence`
+- `PASS_FROMDEEP_FULL_38_DATE_DIRECT_SETTLEMENT_LABEL_SURFACE`
+- `PASS_FROMDEEP_FULL_SETTLEMENT_IMPLEMENTATION_REPAIR_AND_COMPLETE`
 
-Accepted facts:
+Accepted execution facts:
 
-- pre-outcome scope sealed all 38 admitted dates, 20,626 rows, and 27 markets;
-- 22 dates through `2026-07-15` completed;
-- 9,796 exact evaluator calls completed;
+- all 38 admitted discovery dates were source-finality preflighted before evaluator call 1;
+- no exact-date refresh was required;
+- 38/38 hash-bound per-date checkpoints completed;
+- 20,626 repair-run evaluator calls produced 20,626 unique final sealed label records;
+- duplicate final label records = 0;
+- silent drops = 0;
+- 27 market owners represented;
+- prior failed-attempt 9,796 evaluator calls are preserved separately as process history only;
 - validation reads = 0;
 - lockbox reads = 0;
 - Aug. 13 reads/contribution = 0;
-- no old label package, monolithic protected truth, core-family, redistribution, validation, lockbox, or Live work occurred;
-- the runner selected the latest exact-date source before checking full game-status finality;
-- July 16 therefore selected a non-uniform-final status snapshot and failed before evaluating that date;
-- completed labels were held only in memory, so the 9,796 labels were not checkpointed;
-- this is not a scientific FromDeep failure and does not invalidate deterministic re-evaluation of already-consumed discovery rows.
+- monolithic truth opens = 0;
+- old discovery-label package reads = 0;
+- core-family/depletion/redistribution mutation = 0;
+- fitting/ranking/selection/Live/model/policy/publication mutation = 0.
 
-## ACTIVE USER-AUTHORIZED TASK — implementation repair and completion
+### Complete label-surface census
 
-Prime work order:
+Across the 20,626 frozen Demon-OVER rows:
 
-`docs/coordination/wnba/codex/archive/2026-08-18_fromdeep_full_settlement_implementation_repair_and_complete.md`
+- binary gradable rows: `19,919` (`96.5722874042%`);
+- binary wins: `4,305`;
+- binary losses: `15,614`;
+- push/nonbinary classification: `14`;
+- canonical `unsupported_market`: `622`;
+- `missing_player_game_truth`: `71`;
+- other canonical statuses: `0`.
 
-Work-order publication commit:
+The raw binary win fraction of the **unfiltered full Demon-OVER universe** is about `21.61%` (4,305 / 19,919). This is a corpus baseline, **not FromDeep selector performance**. FromDeep is intentionally a sparse signal specialist; the purpose of the next stages is to identify supported winning roads and veto losing/unstable roads rather than rank this entire raw universe.
 
-`fa1b3599fe45f49b7a7d77c084405377bd6e4d9a`
+All `622` unsupported-market rows belong to the three quarter-threshold markets whose canonical event truth is incomplete on many dates:
 
-User authorization:
+- `quarters_with_3_points`: 347 rows, 38 binary gradable, 304 unsupported;
+- `quarters_with_4_points`: 266 rows, 32 binary gradable, 229 unsupported;
+- `quarters_with_5_points`: 104 rows, 13 binary gradable, 89 unsupported.
 
-> “ok”
+These statuses remain truth-coverage facts, not losses and not signal evidence.
 
-Execution tier:
+## Candidate next — NOT AUTHORIZED
 
-`R1_ACTIONABILITY_REPAIR`
+`FROMDEEP_MARKET_OWNED_DESCRIPTIVE_SIGNAL_ANATOMY_R0`
 
-Expected WNBA starting HEAD:
+Purpose:
 
-`4787d9a1ce55a1ab8252d601a15bb4719895972e`
+Use the complete frozen/sealed direct-settlement label surface to describe, market by market, how binary winners and binary losers differ across the approved pregame Builder fields before any signal grammar, thresholds, GREEN/RED/GRAY states, fitting, or FromDeep selection is designed.
 
-Expected current WNBA stop:
+Expected design:
 
-`BLOCKED_USER_REVIEW_WNBA_FROMDEEP_FULL_38_DATE_DIRECT_SETTLEMENT_LABEL_SURFACE`
+1. Bind exactly to WNBA `dfd55223fbb8ed9b0d7ef4af544ecf911adc78f5`, the 20,626-row label seal, and immutable R0B source rows.
+2. Preserve all 27 factual market-owner lanes independently.
+3. Use only binary gradable rows for win-vs-loss outcome descriptives; preserve unsupported/missing/push rows separately as coverage/accounting evidence and never coerce them to losses.
+4. For each market, report support, unique dates, unique players/participants where appropriate, and concentration so one player/date cluster cannot masquerade as a signal.
+5. Describe approved pregame field anatomy where actually supported: line/depth, projection/edge, probability as explanatory only, role/minutes/usage/opportunity, fragility, Atlas components, injury/availability/context, and other outcome-free Builder fields allowed by the current field contract.
+6. Numeric fields: deterministic winner/loss support, missingness, median/IQR and other already-standard neutral descriptives.
+7. Boolean/categorical fields: support and outcome counts/rates by factual value, with identity/leakage fields excluded.
+8. Preserve market-level baseline win rates as context; do not compare raw hit rate alone without support and coverage.
+9. Do **not** rank fields, choose features, search cutpoints/intervals, construct signal roads, assign GREEN/RED/GRAY, fit/train, rank/select legs, or freeze/activate markets.
+10. Do not access validation, lockbox, Aug. 13, core-family redistribution/depletion, or Live/model/policy/publication surfaces.
+11. Stop for user/Chat review after the descriptive anatomy is sealed.
 
-### Exact task
-
-Repair only the full-settlement implementation and complete the same frozen 20,626-row / 38-date FromDeep label surface. Do not create another scientific canary or alter the scientific method.
-
-Required execution:
-
-1. Reconcile target Builder-lane authority under `slip-builders` only.
-2. Inventory every physically exact-date ESPN candidate source for all 38 admitted discovery dates before any evaluator call.
-3. Inspect complete game-status sets and select the latest **fully-final** exact-date source for each date, not merely the latest source.
-4. If an admitted discovery date has no existing fully-final exact-date source, a bounded exact-date ESPN refresh is authorized for that admitted discovery date only after the missing-final-source inventory is sealed. Validation, lockbox, and Aug. 13 refreshes are forbidden.
-5. Require all 38 source selections to pass physical isolation and finality before evaluator call 1.
-6. Preserve the exact frozen R0B universe and unchanged `_TruthIndex + _evaluate_leg` semantics.
-7. Evaluate in chronological order and atomically checkpoint/hash-bind each completed date immediately after it finishes.
-8. Resume only from hash-verified complete date checkpoints after any later interruption.
-9. Final exact-once means **one unique final sealed label per frozen R0B row**. The prior failed attempt's 9,796 calls are process-history evidence, not duplicate scientific observations.
-10. Final success requires exactly 20,626 unique label records, 38 unique date checkpoints, 27 market owners, zero duplicate identities, and zero silent drops.
-11. Preserve canonical binary/nonbinary/unsupported/missing-truth statuses exactly.
-12. validation reads = 0; lockbox reads = 0; Aug. 13 reads/contribution = 0; old package opens = 0; monolithic protected truth opens = 0.
-13. Run focused tests and Builder control validation; exact-path commit/push; verify local HEAD == tracking == direct remote; stop.
-
-### Required success dispositions
-
-`PASS_FROMDEEP_FULL_38_DATE_DIRECT_SETTLEMENT_LABEL_SURFACE`
-
-and
-
-`PASS_FROMDEEP_FULL_SETTLEMENT_IMPLEMENTATION_REPAIR_AND_COMPLETE`
-
-### Explicitly unauthorized
-
-Do not:
-
-- alter/regenerate R0B;
-- change canonical settlement semantics;
-- add another scientific canary;
-- run feature anatomy or feature ranking;
-- mine thresholds or build signal roads;
-- assign GREEN/RED/GRAY;
-- fit/train;
-- rank/select or freeze FromDeep;
-- mutate 2L/3L/4L;
-- research core depletion or redistribution;
-- access protected validation or lockbox;
-- mutate Live/model/minutes/allocator/calibration/QMC/dependence/policy/publication;
-- auto-start the next FromDeep step.
-
-## Required final stop
-
-`BLOCKED_USER_REVIEW_WNBA_FROMDEEP_FULL_SETTLEMENT_IMPLEMENTATION_REPAIR_AND_COMPLETE`
-
-## Next if this passes — NOT AUTHORIZED
-
-Continue **forward within FromDeep** to descriptive market-owned win/loss anatomy using the complete sealed label surface. Do not reopen core redistribution until FromDeep is finished and frozen.
+No Codex execution is currently authorized.
