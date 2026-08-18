@@ -1,6 +1,6 @@
 # WNBA Codex Prime
 
-Status: **NO ACTIVE EXECUTION DELEGATION — FROMDEEP R0C1 DIRECT SETTLEMENT ACTIONABILITY ACCEPTED BY CHAT / FULL 38-DATE SETTLEMENT REQUIRES USER AUTHORIZATION**
+Status: **ACTIVE USER-AUTHORIZED EXECUTION — FROMDEEP FULL 38-DATE DIRECT SETTLEMENT LABEL SURFACE**
 
 Use the clean Prime mirror at `C:\Users\13142\Atlas\PrimeDelegation` and canonical WNBA root `C:\Users\13142\Atlas\WNBA`. Target-repository authority and the active `slip-builders` lane remain governing.
 
@@ -26,93 +26,131 @@ Fixed facts:
 - Aug. 13 excluded from FromDeep statistical contribution because exact full-row provenance is unavailable;
 - core-family depletion is not applied to FromDeep.
 
-## R0C identity-lineage diagnostic
+## Accepted R0C / R0C1 interpretation
 
-WNBA commit:
+R0C result:
 
 `50be4d1fa5e2289d065e2f9d1b21c1448a2d6921`
 
-Accepted interpretation:
-
-- the old canonical discovery leg-truth package cannot label the full FromDeep R0B universe;
-- `builder_card_row_id` is cross-lineage incompatible;
-- the old package is a prior Builder-exposed GOBLIN/STANDARD surface, not the full Demon surface;
-- repository-native direct settlement already exists through `src/wnba/evaluation/live_prior_day.py` `_TruthIndex + _evaluate_leg`.
-
-## Last completed delegation — FromDeep R0C1
-
-Prime work order:
-
-`docs/coordination/wnba/codex/archive/2026-08-18_fromdeep_r0c1_direct_settlement_actionability_canary.md`
-
-WNBA result commit:
+R0C1 result:
 
 `48d1d04b2027ef3ca7b6cd6446b4c1de1d95176b`
 
-Repository final stop:
+Accepted facts:
+
+- the old canonical discovery leg-truth package cannot label the full Demon FromDeep universe;
+- `builder_card_row_id` is cross-lineage incompatible with that old package;
+- the old package is a prior GOBLIN/STANDARD Builder-exposed surface and is retired as a success gate for FromDeep Demon settlement;
+- repository-native direct settlement exists through unchanged `src/wnba/evaluation/live_prior_day.py` `_TruthIndex + _evaluate_leg`;
+- R0C1 evaluated all 428 exact sealed canary rows through that evaluator;
+- 414/428 were binary gradable; 68 wins / 346 losses; 14 canonical `unsupported_market`; missing player-game truth = 0;
+- both canary dates were nondegenerate;
+- validation reads = 0; lockbox reads = 0; Aug. 13 reads = 0;
+- R0C1 repository gate failure came only from a structurally impossible legacy overlap parity requirement and does not negate direct settlement actionability.
+
+## ACTIVE USER-AUTHORIZED TASK — Full 38-date direct settlement label surface
+
+Prime work order:
+
+`docs/coordination/wnba/codex/archive/2026-08-18_fromdeep_full_38_date_direct_settlement_label_surface.md`
+
+Work-order publication commit:
+
+`b9b1a8614691c2deeabb9acf721c1a193d2997d0`
+
+User authorization:
+
+> “agreed! finally some good news. I'm ready to move forward with this and then we have to validate this immediatley following to make sure our 2L-3L non-redistribution pool does not tank the slips.”
+
+Execution tier:
+
+`R0_ARTIFACT_AUDIT`
+
+Expected WNBA starting HEAD:
+
+`48d1d04b2027ef3ca7b6cd6446b4c1de1d95176b`
+
+Expected current WNBA stop:
 
 `BLOCKED_USER_REVIEW_WNBA_FROMDEEP_R0C1_DIRECT_SETTLEMENT_ACTIONABILITY_CANARY`
 
-Repository gate disposition:
+### Exact question
 
-`faithful_candidate_failure`
+For each exact row in the frozen 20,626-row R0B Demon-OVER universe, what canonical settlement result does unchanged Atlas `_TruthIndex + _evaluate_leg` produce when truth is read only through physically date-scoped development-discovery sources?
 
-Chat strategic interpretation:
+### Required execution
 
-**Accept direct canonical settlement actionability. Reject the old-package overlap requirement as a structurally inapplicable auxiliary parity gate, not as evidence that direct settlement failed.**
+1. Sync Prime and reconcile exact WNBA Builder-lane authority.
+2. Activate only the full-settlement Builder Stage-5 row under `slip-builders`.
+3. Before truth access, reverify the exact R0B pretruth seal, 38-member source census, and 20,626-row membership.
+4. Seal the exact 38 admitted dates and per-date row counts before outcomes.
+5. Prove zero intersection with protected validation/lockbox dates and keep Aug. 13 absent.
+6. Use the R0C1-proven physically date-scoped truth topology one admitted date at a time. Do not load a monolithic truth store containing protected rows and filter afterward.
+7. Prepare each R0B row with the already-proven discovery-label preparation semantics.
+8. Call unchanged `_TruthIndex + _evaluate_leg` exactly once per sealed row.
+9. Write exactly one label record per R0B row and preserve canonical statuses exactly: win, loss, push/nonbinary, unsupported-market, missing-player-game-truth, or any other existing evaluator status.
+10. Preserve quarter-threshold `unsupported_market` whenever canonical event truth is incomplete; do not invent binary truth.
+11. Require exact accounting: 20,626 source rows, 20,626 evaluator calls, 20,626 label records, no duplicates, no silent drops.
+12. Report overall, by-date, and all-27-market census plus gradable coverage.
+13. Seal/hash the complete label surface against the immutable R0B universe.
+14. Run focused tests and Builder-lane validation; exact-path commit/push; verify local HEAD == tracking == direct remote; stop.
 
-Exact R0C1 findings:
+### Protected boundary
 
-- exact sealed rows evaluated: `428`;
-- canonical evaluator calls: `428`;
-- binary gradable rows: `414` (`96.7289719626%`);
-- wins: `68`;
-- losses: `346`;
-- pushes: `0`;
-- missing player-game truth: `0`;
-- unsupported-market rows: `14`;
-- 2026-06-18: `187/187` gradable, `40` wins / `147` losses;
-- 2026-07-15: `227/241` gradable, `28` wins / `199` losses / `14` unsupported-market;
-- both dates produced nondegenerate direct settlement through unchanged `_TruthIndex + _evaluate_leg`;
-- truth was physically date-scoped to the two authorized discovery dates;
+Required:
+
 - validation reads = `0`;
 - lockbox reads = `0`;
-- Aug. 13 reads/contribution = `0`;
-- fitting, signal research, ranking, selection, Live/model/policy/publication mutation = `0`.
+- Aug. 13 reads/contribution = `0`.
 
-The hard parity gate failed because its factual precondition was false:
+If physical date isolation cannot be proven for any admitted member, fail closed before that member's truth is opened.
 
-- all `428` R0B canary rows are `DEMON`;
-- the `48` authorized old-package rows on those dates are `GOBLIN` or `STANDARD`;
-- therefore exact `game_date + exact_road` overlap is `0`;
-- even after ignoring tier for diagnostic inspection, exact line overlap remained `0`;
-- no identity rule was weakened and no adapter was invented.
+### Old package is not part of this gate
 
-This does not undermine the direct-settlement result. The canary's primary engineering question — whether exact sealed R0B rows can be settled by the unchanged canonical evaluator under a physically safe discovery-only truth boundary — was answered **yes**.
+Do not require or use:
 
-The `14` unsupported rows do not represent missing player-game truth. Under the current canonical evaluator, supported quarter-threshold markets intentionally return `unsupported_market` when `quarter_event_truth_complete` is false. A full labeling pass must preserve that status rather than inventing truth or forcing a binary result.
+- old 1,052-row discovery-leg-truth overlap;
+- `builder_card_row_id` cross-lineage matching;
+- `game_date + exact_road` legacy overlap;
+- tier-agnostic line overlap;
+- invented adapters.
 
-## Candidate next — NOT AUTHORIZED
+The full label surface is created directly from the R0B rows themselves, so same-lineage row identity/source hashes may bind labels back to R0B.
 
-`FROMDEEP_FULL_38_DATE_DIRECT_SETTLEMENT_LABEL_SURFACE`
+### Explicitly unauthorized
 
-Purpose:
+Do not:
 
-Directly settle the entire frozen 38-date / 20,626-row R0B development universe through the now-actionable unchanged `_TruthIndex + _evaluate_leg` path and produce the complete FromDeep discovery label surface.
+- regenerate or alter R0B;
+- change evaluator/market semantics;
+- run field forensic or feature ranking;
+- mine thresholds or construct signal roads;
+- assign GREEN/RED/GRAY;
+- fit/train;
+- rank/select FromDeep legs;
+- freeze/activate FromDeep markets;
+- alter 2L/3L/4L or depletion/redistribution behavior;
+- access protected validation or lockbox;
+- mutate Live/model/minutes/allocator/calibration/QMC/dependence/policy/publication;
+- auto-start the next FromDeep research step;
+- auto-start protected validation.
 
-Expected design:
+### Required success disposition
 
-1. Preserve the R0B pretruth seal and exact 20,626-row membership unchanged.
-2. Use only the 38 provenance-valid FromDeep discovery dates; Aug. 13 remains excluded.
-3. Preserve physical protection against validation and lockbox reads; both counts must remain zero.
-4. Prepare each sealed R0B row with the already-proven discovery-label preparation semantics.
-5. Call unchanged `_TruthIndex + _evaluate_leg` once per sealed row.
-6. Preserve exact outcome classes: win, loss, push/nonbinary, unsupported-market, missing truth, or other canonical nonbinary status; do not manufacture binary labels.
-7. Report exact census overall, by date, and by all 27 market owners, including gradable coverage.
-8. Do **not** require overlap with the old GOBLIN/STANDARD label package. That package is no longer a gate for the Demon universe.
-9. Do not run field forensic, thresholds, GREEN/RED/GRAY, fitting, ranking, selection, validation, lockbox, or Live/model/policy/publication mutation.
-10. Stop for user/Chat review after the full label surface is sealed.
+`PASS_FROMDEEP_FULL_38_DATE_DIRECT_SETTLEMENT_LABEL_SURFACE`
 
-If accepted, the next scientific step after that settlement surface is descriptive market-owned win/loss anatomy before any signal-road grammar.
+### Required final stop
 
-No Codex execution is currently authorized.
+`BLOCKED_USER_REVIEW_WNBA_FROMDEEP_FULL_38_DATE_DIRECT_SETTLEMENT_LABEL_SURFACE`
+
+## Validation priority after FromDeep freeze — NOT PART OF THIS EXECUTION
+
+The user explicitly requires protected completed-stack validation immediately after the FromDeep method is frozen, with special attention to whether the frozen core contract
+
+`2L -> exact selected-leg depletion -> 3L -> exact selected-leg depletion -> 4L`
+
+without future-family redistribution/reservation materially harms downstream slip performance.
+
+Do **not** spend validation now. FromDeep still must proceed from this label surface through descriptive signal anatomy, frozen signal-road procedure, historical-as-of evaluation, and a freeze decision first.
+
+Once FromDeep is frozen, protected validation becomes the immediate next strategic priority. A material validation failure must be root-caused to the earliest affected family/supply/routing layer rather than tuned against validation outcomes.
