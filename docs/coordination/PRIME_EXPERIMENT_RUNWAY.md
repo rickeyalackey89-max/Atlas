@@ -163,6 +163,18 @@ For work expected to run unattended, the execution wrapper/controller should emi
 
 A process that has already completed or failed must not remain silently unattended for hours merely because Codex has not noticed the terminal state.
 
+## Mandatory storage housekeeping before expensive work
+
+Before every expensive Builder, replay, corpus, model-training, or large evidence operation, Codex must read and apply `docs/coordination/PRIME_STORAGE_HOUSEKEEPING.md`.
+
+Where the Codex environment exposes an installed `keep-it-tidy` skill, Codex must resolve and read that skill and use it for the housekeeping operation. Do not invent a substitute destructive cleanup routine when the skill cannot be resolved.
+
+Housekeeping occurs **before** the final storage/resource preflight. It is operational maintenance, not scientific evidence.
+
+A low-space measurement should not automatically force a multi-turn research interruption while safe stale non-authority material remains reclaimable under the housekeeping protocol. The scientific work order's hard resource gate remains unchanged and must still pass after housekeeping.
+
+Prime work orders for expensive operations should bind the housekeeping protocol explicitly and state any task-specific protected keep-set additions.
+
 ## Stop-fast conditions
 
 Stop before expensive execution when any of these is demonstrated:
