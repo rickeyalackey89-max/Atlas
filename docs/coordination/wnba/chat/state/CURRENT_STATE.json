@@ -1,18 +1,20 @@
 {
   "schema_version": "atlas_prime_delegation_wnba_current_state_v1",
-  "captured_at_ct": "2026-08-18T15:12:00-05:00",
+  "captured_at_ct": "2026-08-18T15:16:00-05:00",
   "snapshot_not_authority": true,
   "sport": "WNBA",
   "source_repository": "rickeyalackey89-max/Atlas-WNBA",
   "source_branch": "builder-method-contract-v1",
   "source_head": "4787d9a1ce55a1ab8252d601a15bb4719895972e",
   "builder": {
-    "status": "BLOCKED_USER_REVIEW_FROMDEEP_FULL_SETTLEMENT_IMPLEMENTATION_DIVERGENCE",
+    "status": "ACTIVE_USER_AUTHORIZED_FROMDEEP_FULL_SETTLEMENT_IMPLEMENTATION_REPAIR_AND_COMPLETE",
     "current_target_repo_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_FULL_38_DATE_DIRECT_SETTLEMENT_LABEL_SURFACE",
+    "authorized_step": "fromdeep_full_settlement_implementation_repair_and_complete",
+    "required_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_FULL_SETTLEMENT_IMPLEMENTATION_REPAIR_AND_COMPLETE",
     "controller_skill": "slip-builders",
     "validation_reads": 0,
     "lockbox_reads": 0,
-    "active_codex_execution": false
+    "active_codex_execution": true
   },
   "families": {
     "2L": {
@@ -37,7 +39,7 @@
       "promotion_authority": false
     },
     "FromDeep": {
-      "status": "FULL_SETTLEMENT_IMPLEMENTATION_REPAIR_REQUIRES_USER_AUTHORIZATION",
+      "status": "FULL_SETTLEMENT_IMPLEMENTATION_REPAIR_USER_AUTHORIZED_ACTIVE",
       "independent_of_core_depletion": true,
       "uses_2l_or_3l_depleted_pool": false,
       "core_selected_leg_depletion_applied": false,
@@ -69,33 +71,40 @@
         "attempt_evaluator_calls": 9796,
         "failure_before_date_evaluation": "2026-07-16",
         "failure_reason": "LATEST_EXACT_DATE_SOURCE_SELECTED_WITHOUT_PREFLIGHTING_FINAL_STATUS",
-        "selected_july16_feature_manifest": "data/wnba/runtime_state/espn_gamelogs/g0716_terminal_retry_20260718_truth_refresh_espn_gamelogs_feature_manifest.json",
-        "selected_july16_expected_game_status_rows": 2,
         "labels_checkpointed": false,
         "validation_reads": 0,
         "lockbox_reads": 0,
         "aug13_reads": 0,
-        "old_package_reads": 0,
-        "monolithic_truth_opens": 0,
         "scientific_failure": false
       },
-      "candidate_next": {
-        "name": "FROMDEEP_FULL_SETTLEMENT_IMPLEMENTATION_REPAIR_AND_COMPLETE",
-        "status": "CANDIDATE_NEXT_NOT_AUTHORIZED",
+      "implementation_repair": {
+        "status": "USER_AUTHORIZED_ACTIVE",
+        "work_order": "docs/coordination/wnba/codex/archive/2026-08-18_fromdeep_full_settlement_implementation_repair_and_complete.md",
+        "publication_commit": "fa1b3599fe45f49b7a7d77c084405377bd6e4d9a",
+        "codex_prime_activation_commit": "b6aea3e425587bae4b812d7c0c9f286dd7fdc83d",
+        "execution_tier": "R1_ACTIONABILITY_REPAIR",
+        "starting_wnba_head": "4787d9a1ce55a1ab8252d601a15bb4719895972e",
+        "expected_current_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_FULL_38_DATE_DIRECT_SETTLEMENT_LABEL_SURFACE",
         "scientific_question_changes": false,
-        "required_repairs": [
-          "PREFLIGHT_ALL_38_DATE_STATUS_SOURCES_BEFORE_ANY_EVALUATOR_CALL",
-          "SELECT_LATEST_FULLY_FINAL_EXACT_DATE_SOURCE_NOT_MERELY_LATEST_SOURCE",
-          "PER_DATE_HASH_BOUND_LABEL_CHECKPOINTS",
-          "FINAL_EXACT_ONCE_MEANS_ONE_UNIQUE_FINAL_LABEL_PER_R0B_ROW",
-          "REPORT_PRIOR_FAILED_ATTEMPT_CALLS_SEPARATELY"
-        ],
-        "expected_final_label_rows": 20626,
+        "new_scientific_canary_allowed": false,
+        "preflight_all_38_finality_before_evaluator_call_1": true,
+        "source_selection": "LATEST_FULLY_FINAL_PHYSICALLY_EXACT_DATE_SOURCE",
+        "bounded_exact_date_refresh_if_no_final_source": true,
+        "per_date_hash_bound_checkpoints_required": true,
+        "resume_from_verified_checkpoints": true,
+        "final_exact_once_definition": "ONE_UNIQUE_FINAL_SEALED_LABEL_PER_R0B_ROW",
+        "prior_failed_attempt_calls_reported_separately": 9796,
+        "expected_final_unique_labels": 20626,
+        "expected_date_checkpoints": 38,
+        "expected_market_owners": 27,
         "validation_reads_allowed": 0,
         "lockbox_reads_allowed": 0,
         "aug13_reads_allowed": 0,
         "core_or_redistribution_work_allowed": false,
-        "signal_research_allowed": false
+        "signal_research_allowed": false,
+        "required_scientific_success": "PASS_FROMDEEP_FULL_38_DATE_DIRECT_SETTLEMENT_LABEL_SURFACE",
+        "required_repair_success": "PASS_FROMDEEP_FULL_SETTLEMENT_IMPLEMENTATION_REPAIR_AND_COMPLETE",
+        "required_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_FULL_SETTLEMENT_IMPLEMENTATION_REPAIR_AND_COMPLETE"
       }
     }
   },
@@ -107,8 +116,9 @@
     "sequence_policy": "NO_MIDSTREAM_BACKTRACKING_FROM_FROMDEEP_INTO_CORE_FAMILIES"
   },
   "next_strategy": {
-    "status": "AWAITING_USER_AUTHORIZATION",
-    "topic": "Repair only the full-settlement implementation: fully-final exact-date source preflight/selection plus resumable per-date checkpoints, then complete the same 20,626-row label surface. No new scientific canary and no core-family work.",
-    "codex_execution_authorized": false
+    "status": "USER_AUTHORIZED_CODEX_EXECUTION_ACTIVE",
+    "topic": "Repair only the full-settlement implementation, preflight fully-final exact-date sources for all 38 dates, add resumable per-date checkpoints, and complete the same 20,626-row FromDeep label surface. No new scientific canary and no core-family work.",
+    "codex_execution_authorized": true,
+    "required_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_FULL_SETTLEMENT_IMPLEMENTATION_REPAIR_AND_COMPLETE"
   }
 }
