@@ -1,6 +1,6 @@
 # WNBA Codex Prime
 
-Status: **NO ACTIVE EXECUTION DELEGATION — FROMDEEP R0C ACCEPTED AS IDENTITY-LINEAGE DIAGNOSTIC / NEXT ACTION REQUIRES USER AUTHORIZATION**
+Status: **ACTIVE USER-AUTHORIZED EXECUTION — FROMDEEP R0C1 DIRECT SETTLEMENT ACTIONABILITY CANARY**
 
 Use the clean Prime mirror at `C:\Users\13142\Atlas\PrimeDelegation` and canonical WNBA root `C:\Users\13142\Atlas\WNBA`. Target-repository authority and the active `slip-builders` lane remain governing.
 
@@ -27,99 +27,136 @@ Accepted R0B facts:
 - Aug. 13 remains excluded from FromDeep statistical contribution because required full-row provenance is unavailable;
 - core-family depletion was not applied;
 - exact R0A3 parity passed;
-- R0B runner stayed unchanged;
-- outcome/truth/settlement/validation/lockbox reads were all 0 through R0B.
+- R0B outcome/truth/settlement/validation/lockbox reads were all 0.
 
-Mandatory operational housekeeping remains:
-
-`docs/coordination/PRIME_STORAGE_HOUSEKEEPING.md`
-
-Use installed `keep-it-tidy` before expensive storage/resource gates, preserving current/frozen evidence, immediate Live/replay/corpus inputs, source bindings, protected stash, protected validation/lockbox, current model/Live authority, and Git history.
-
-## Last completed delegation — FromDeep R0C
-
-Prime work order:
-
-`docs/coordination/wnba/codex/archive/2026-08-18_fromdeep_r0c_discovery_settlement_binding_win_loss_forensic_canary.md`
-
-Publication commit:
-
-`4cfc3b248deb464a5d25914b00218e4a34fb7c09`
+## Accepted R0C interpretation
 
 WNBA result commit:
 
 `50be4d1fa5e2289d065e2f9d1b21c1448a2d6921`
 
-Final stop:
+R0C is accepted as a faithful identity-lineage/actionability diagnostic, not as successful full-universe settlement or win/loss forensic evidence.
+
+Accepted findings:
+
+- all 20,626 sealed R0B rows and all 38 retained cards were reverified;
+- all 20,626 `line` values are numeric strings with zero missing/ambiguous values under repository-canonical numeric semantics;
+- only the 38 authorized discovery settlement segments were opened: 1,032 canonical settlement records;
+- exact `builder_card_row_id` overlap was 0, uniformly across all 38 dates;
+- no adapter or invented identity was created;
+- validation reads = 0;
+- lockbox reads = 0;
+- Aug. 13 contribution = 0.
+
+The identity-lineage interpretation is now fixed:
+
+- canonical discovery leg-truth identity is `game_date + exact_road`;
+- `exact_road` is canonical participant/combo identity + market + tier + direction + canonical line;
+- the old canonical discovery leg-truth package is not a full R0B universe and cannot label all 20,626 FromDeep rows;
+- repository-native settlement machinery already exists in `src/wnba/evaluation/live_prior_day.py` as `_TruthIndex + _evaluate_leg`;
+- `src/wnba/evaluation/builder_discovery_labels.py` demonstrates the existing discovery-only preparation/settlement pattern.
+
+## ACTIVE USER-AUTHORIZED TASK — FromDeep R0C1
+
+Prime work order:
+
+`docs/coordination/wnba/codex/archive/2026-08-18_fromdeep_r0c1_direct_settlement_actionability_canary.md`
+
+Work-order publication commit:
+
+`702a162abc48dea0d861ae962ce3794887d94086`
+
+User authorization:
+
+> “Ok, so lets do that”
+
+Execution tier:
+
+`R1_ACTIONABILITY_CANARY`
+
+Expected WNBA starting HEAD:
+
+`50be4d1fa5e2289d065e2f9d1b21c1448a2d6921`
+
+Expected current WNBA stop:
 
 `BLOCKED_USER_REVIEW_WNBA_FROMDEEP_R0C_DISCOVERY_SETTLEMENT_FORENSIC_CANARY`
 
-Repository marker:
+### Exact question
 
-`PASS_R0C_DISCOVERY_SETTLEMENT_BINDING_AND_BOUNDED_FORENSIC_COMPLETE`
+Can exact sealed R0B rows be directly settled through unchanged repository-canonical `_TruthIndex + _evaluate_leg` semantics on a tiny deterministic development-consumed slice, while old `game_date + exact_road` labels are used only as overlap parity evidence and protected validation/lockbox truth remains physically unread?
 
-Chat disposition:
+### Fixed canary dates
 
-**Accept R0C as a faithful identity-lineage/actionability diagnostic, not as successful full-universe settlement or win/loss forensic evidence.**
+- `2026-06-18` — 187 sealed R0B rows; known old canonical leg-truth overlap exists on this date.
+- `2026-07-15` — 241 sealed R0B rows.
 
-Exact accepted findings:
+Maximum canary membership: 428 rows.
 
-- all 20,626 sealed R0B rows were reverified against source-row hashes;
-- all 38 retained cards were verified;
-- line semantics are resolved: every one of the 20,626 `line` values is a numeric string, zero missing, zero ambiguous, and repository-canonical `_optional_float` / `_float` interpretation passes;
-- R0C read only the 38 authorized discovery settlement segments: 1,032 canonical settlement records;
-- validation reads = 0;
-- lockbox reads = 0;
-- Aug. 13 settlement reads/contribution = 0;
-- exact `builder_card_row_id` overlap between R0B membership and the 1,032 canonical settlement records was 0;
-- therefore matched R0B settlement rows = 0 and gradable rate = 0%;
-- no adapter, alias, threshold, signal road, feature selection, fitting, GREEN/RED/GRAY state, FromDeep selection, Live/model/policy/publication mutation, or follow-on was invented;
-- 29 focused tests and 37 broader regression tests passed; worktree/remote/stash controls passed.
+Do not substitute dates after truth access.
 
-## Identity-lineage interpretation
+### Critical protected boundary
 
-The zero `builder_card_row_id` overlap is systematic across all 38 dates and is **not evidence that R0B truth is unavailable**.
+Validation:
 
-The existing canonical discovery leg-truth corpus was explicitly repaired/normalized on:
+- `2026-08-04`
+- `2026-08-10`
 
-`game_date + exact_road`
+Lockbox:
 
-not on Builder Card row ID.
+- `2026-08-11`
+- `2026-08-12`
 
-Repository-native exact-road identity is:
+Validation reads must remain `0`.
+Lockbox reads must remain `0`.
+Aug. 13 reads/contribution must remain `0`.
 
-`canonical participant (or combo tuple) + market + tier + direction + canonical line`
+Reading a monolithic all-season truth file and filtering protected dates afterward does **not** satisfy the R0C1 boundary. Use physically date-scoped discovery truth/source bytes for the two canary dates only. If repository truth topology cannot preserve that boundary, fail closed.
 
-and the canonical discovery leg-truth contract stores both `exact_road` and `builder_card_row_id` while declaring `game_date + exact_road` as the identity fields.
+### Required execution
 
-However, the old canonical discovery leg-truth package is **not a full R0B universe**. It is the canonical leg truth for the prior candidate-surface corpus. Example: on 2026-06-18 the old package has 24 canonical leg-truth rows while R0B has 187 eligible Demon-OVER rows. Therefore merely changing the R0C join to `exact_road` cannot be assumed to settle all 20,626 R0B rows.
+1. Sync Prime and reconcile target WNBA authority.
+2. Activate only the exact R0C1 Builder Stage 5 row under `slip-builders`; do not invoke legacy phase control.
+3. Before truth access, bind/reverify exact R0B membership for 2026-06-18 and 2026-07-15 and seal the canary row/hash scope.
+4. Resolve physically safe date-scoped canonical truth for only those two dates.
+5. Prepare sealed R0B rows using the existing discovery-label preparation semantics.
+6. Call unchanged `_TruthIndex + _evaluate_leg` on every canary row.
+7. Report direct settlement census by date/status.
+8. On old-package overlap only, compare via `game_date + exact_road` and require exact result/status parity plus canonical numeric actual-value parity.
+9. Run focused tests/validator, exact-path commit/push, verify local HEAD == tracking == direct remote, and stop.
 
-Canonical repository settlement machinery already exists in:
+### Success disposition
 
-- `src/wnba/evaluation/live_prior_day.py` — `_TruthIndex` and `_evaluate_leg`;
-- `src/wnba/evaluation/builder_discovery_labels.py` — discovery-only settlement pattern.
+`PASS_R0C1_DIRECT_SETTLEMENT_ACTIONABILITY_CANARY`
 
-All 27 R0B market owners are present in the repository-supported settlement market contract.
+Success requires direct nondegenerate settlement on both dates, at least one old-package overlapping road, exact parity on every overlap, and zero protected reads.
 
-## Candidate next — NOT AUTHORIZED
+### Explicitly unauthorized
 
-`FROMDEEP_R0C1_DIRECT_FULL_UNIVERSE_SETTLEMENT_ACTIONABILITY_CANARY`
+Do not:
 
-Purpose:
+- settle the full 38-date / 20,626-row universe;
+- change R0B;
+- use `builder_card_row_id` as cross-lineage settlement authority;
+- treat the old 1,052-row package as full-universe FromDeep truth;
+- perform win/loss field forensic;
+- mine thresholds or features;
+- build signal roads;
+- assign GREEN/RED/GRAY;
+- fit/train;
+- rank/select FromDeep legs;
+- activate/freeze FromDeep markets;
+- mutate 2L/3L/4L;
+- mutate Live/model/minutes/allocator/calibration/QMC/dependence/policy/publication;
+- access validation/lockbox;
+- auto-start the full settlement pass.
 
-Prove, on a small deterministic set of already-development-consumed R0B dates, that the exact sealed R0B rows can be settled directly through repository-canonical `_TruthIndex + _evaluate_leg` semantics without using `builder_card_row_id` as cross-lineage authority and without opening validation/lockbox.
+## Required final stop
 
-Expected bounded design:
+`BLOCKED_USER_REVIEW_WNBA_FROMDEEP_R0C1_DIRECT_SETTLEMENT_ACTIONABILITY_CANARY`
 
-1. Preserve the R0B 20,626-row seal unchanged.
-2. Predeclare a tiny deterministic date/market canary before truth access.
-3. Resolve a physically safe discovery-only truth path that cannot read validation/lockbox rows; if the available truth source cannot enforce that boundary, fail closed.
-4. Reconstruct exact sealed R0B source rows and call the unchanged repository-canonical settlement machinery directly.
-5. Use `game_date + exact_road` overlap with the existing 1,032-row discovery leg-truth package only as parity evidence on overlapping roads, not as full-universe authority.
-6. Report settled / push / unsupported / missing-truth coverage and exact parity on overlap.
-7. Do not perform field forensic, threshold search, GREEN/RED/GRAY derivation, feature selection, fitting, ranking, selection, validation, lockbox, or Live mutation.
-8. Stop for user/Chat review.
+## Next if this passes — NOT AUTHORIZED
 
-If this canary proves direct settlement actionability, a later separately authorized full 38-date settlement pass may label the frozen R0B universe before descriptive signal-road research resumes.
+A later separately user-authorized task may directly settle the entire frozen 38-date / 20,626-row R0B development universe through the proven canonical evaluator and produce the full labeled FromDeep discovery surface.
 
-No Codex execution is currently authorized.
+No follow-on is authorized by R0C1.
