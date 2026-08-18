@@ -1,20 +1,18 @@
 {
   "schema_version": "atlas_prime_delegation_wnba_current_state_v1",
-  "captured_at_ct": "2026-08-18T14:02:00-05:00",
+  "captured_at_ct": "2026-08-18T15:12:00-05:00",
   "snapshot_not_authority": true,
   "sport": "WNBA",
   "source_repository": "rickeyalackey89-max/Atlas-WNBA",
   "source_branch": "builder-method-contract-v1",
-  "source_head": "48d1d04b2027ef3ca7b6cd6446b4c1de1d95176b",
+  "source_head": "4787d9a1ce55a1ab8252d601a15bb4719895972e",
   "builder": {
-    "status": "ACTIVE_USER_AUTHORIZED_FROMDEEP_FULL_38_DATE_DIRECT_SETTLEMENT_LABEL_SURFACE",
-    "current_target_repo_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_R0C1_DIRECT_SETTLEMENT_ACTIONABILITY_CANARY",
-    "authorized_step": "fromdeep_full_38_date_direct_settlement_label_surface",
-    "required_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_FULL_38_DATE_DIRECT_SETTLEMENT_LABEL_SURFACE",
+    "status": "BLOCKED_USER_REVIEW_FROMDEEP_FULL_SETTLEMENT_IMPLEMENTATION_DIVERGENCE",
+    "current_target_repo_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_FULL_38_DATE_DIRECT_SETTLEMENT_LABEL_SURFACE",
     "controller_skill": "slip-builders",
     "validation_reads": 0,
     "lockbox_reads": 0,
-    "active_codex_execution": true
+    "active_codex_execution": false
   },
   "families": {
     "2L": {
@@ -26,7 +24,7 @@
       "freeze_commit": "2b1fca797eebefdb0da190099681460f22036eb1",
       "historical_asof_record": "24-6-0",
       "fresh_post_2l_frontier_completeness_proven": false,
-      "current_action": "PRESERVE_UNCHANGED_WHILE_FROMDEEP_FINISHES_THEN_REVISIT_CORE_REDISTRIBUTION_AFTER_FROMDEEP_FREEZE",
+      "current_action": "PRESERVE_UNCHANGED_WHILE_FROMDEEP_FINISHES",
       "fromdeep_blocker": false
     },
     "4L": {
@@ -39,96 +37,78 @@
       "promotion_authority": false
     },
     "FromDeep": {
-      "status": "FULL_38_DATE_DIRECT_SETTLEMENT_LABEL_SURFACE_USER_AUTHORIZED_ACTIVE",
-      "architecture_path": "docs/coordination/wnba/chat/FROMDEEP_ARCHITECTURE.md",
+      "status": "FULL_SETTLEMENT_IMPLEMENTATION_REPAIR_REQUIRES_USER_AUTHORIZATION",
       "independent_of_core_depletion": true,
       "uses_2l_or_3l_depleted_pool": false,
       "core_selected_leg_depletion_applied": false,
       "sequence_rule": "FINISH_FROMDEEP_END_TO_END_WITHOUT_REOPENING_CORE_REDISTRIBUTION_MIDSTREAM",
       "usable_development_source_count": 38,
       "provenance_excluded_date": "2026-08-13",
-      "provenance_excluded_date_statistical_contribution": 0,
       "r0b2": {
         "commit": "73e6fb0ab1129086c81bbd7c547bc555d0e5517e",
         "status": "SEALED_EXACT_FACTUAL_DEMON_OVER_UNIVERSE_OUTCOME_BLIND",
         "member_count": 38,
         "eligible_demon_over_rows": 20626,
-        "supported_market_owner_count": 27,
-        "full_row_supported_owner_count": 27,
-        "validation_reads": 0,
-        "lockbox_reads": 0
-      },
-      "r0c": {
-        "commit": "50be4d1fa5e2289d065e2f9d1b21c1448a2d6921",
-        "status": "ACCEPTED_IDENTITY_LINEAGE_ACTIONABILITY_DIAGNOSTIC",
-        "old_leg_truth_is_full_r0b_universe": false,
-        "validation_reads": 0,
-        "lockbox_reads": 0
+        "supported_market_owner_count": 27
       },
       "r0c1": {
         "commit": "48d1d04b2027ef3ca7b6cd6446b4c1de1d95176b",
-        "repository_disposition": "faithful_candidate_failure",
-        "chat_interpretation": "DIRECT_CANONICAL_SETTLEMENT_ACTIONABILITY_SUPPORTED_LEGACY_OVERLAP_PARITY_GATE_STRUCTURALLY_INAPPLICABLE",
-        "sealed_rows": 428,
-        "evaluator_calls": 428,
-        "gradable_rows": 414,
-        "gradable_rate": 0.967289719626,
-        "binary_wins": 68,
-        "binary_losses": 346,
-        "pushes_nonbinary": 0,
-        "missing_player_game_truth": 0,
-        "unsupported_market": 14,
-        "direct_evaluator": "wnba.evaluation.live_prior_day._TruthIndex+_evaluate_leg",
-        "truth_boundary": "PHYSICALLY_DATE_SCOPED_TWO_DISCOVERY_DATES_ONLY",
+        "chat_interpretation": "DIRECT_CANONICAL_SETTLEMENT_ACTIONABILITY_SUPPORTED",
+        "direct_evaluator": "wnba.evaluation.live_prior_day._TruthIndex+_evaluate_leg"
+      },
+      "full_settlement_attempt": {
+        "commit": "4787d9a1ce55a1ab8252d601a15bb4719895972e",
+        "repository_disposition": "implementation_divergence",
+        "repository_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_FULL_38_DATE_DIRECT_SETTLEMENT_LABEL_SURFACE",
+        "preoutcome_scope_sealed": true,
+        "sealed_dates": 38,
+        "sealed_rows": 20626,
+        "sealed_markets": 27,
+        "completed_dates": 22,
+        "completed_through_date": "2026-07-15",
+        "attempt_evaluator_calls": 9796,
+        "failure_before_date_evaluation": "2026-07-16",
+        "failure_reason": "LATEST_EXACT_DATE_SOURCE_SELECTED_WITHOUT_PREFLIGHTING_FINAL_STATUS",
+        "selected_july16_feature_manifest": "data/wnba/runtime_state/espn_gamelogs/g0716_terminal_retry_20260718_truth_refresh_espn_gamelogs_feature_manifest.json",
+        "selected_july16_expected_game_status_rows": 2,
+        "labels_checkpointed": false,
         "validation_reads": 0,
         "lockbox_reads": 0,
         "aug13_reads": 0,
-        "legacy_overlap_gate_retired_for_demon_universe": true
+        "old_package_reads": 0,
+        "monolithic_truth_opens": 0,
+        "scientific_failure": false
       },
-      "full_settlement": {
-        "status": "USER_AUTHORIZED_ACTIVE",
-        "work_order": "docs/coordination/wnba/codex/archive/2026-08-18_fromdeep_full_38_date_direct_settlement_label_surface.md",
-        "publication_commit": "b9b1a8614691c2deeabb9acf721c1a193d2997d0",
-        "codex_prime_activation_commit": "53bb1e4750611c75bf1752902168c0bba37adf74",
-        "execution_tier": "R0_ARTIFACT_AUDIT",
-        "starting_wnba_head": "48d1d04b2027ef3ca7b6cd6446b4c1de1d95176b",
-        "expected_current_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_R0C1_DIRECT_SETTLEMENT_ACTIONABILITY_CANARY",
-        "expected_source_members": 38,
-        "expected_source_rows": 20626,
-        "expected_market_owners": 27,
-        "direct_evaluator": "wnba.evaluation.live_prior_day._TruthIndex+_evaluate_leg",
-        "physically_date_scoped_truth_required": true,
-        "old_package_overlap_required": false,
+      "candidate_next": {
+        "name": "FROMDEEP_FULL_SETTLEMENT_IMPLEMENTATION_REPAIR_AND_COMPLETE",
+        "status": "CANDIDATE_NEXT_NOT_AUTHORIZED",
+        "scientific_question_changes": false,
+        "required_repairs": [
+          "PREFLIGHT_ALL_38_DATE_STATUS_SOURCES_BEFORE_ANY_EVALUATOR_CALL",
+          "SELECT_LATEST_FULLY_FINAL_EXACT_DATE_SOURCE_NOT_MERELY_LATEST_SOURCE",
+          "PER_DATE_HASH_BOUND_LABEL_CHECKPOINTS",
+          "FINAL_EXACT_ONCE_MEANS_ONE_UNIQUE_FINAL_LABEL_PER_R0B_ROW",
+          "REPORT_PRIOR_FAILED_ATTEMPT_CALLS_SEPARATELY"
+        ],
+        "expected_final_label_rows": 20626,
         "validation_reads_allowed": 0,
         "lockbox_reads_allowed": 0,
-        "aug13_contribution_allowed": 0,
-        "field_forensic_allowed": false,
-        "signal_or_performance_research_allowed": false,
-        "fitting_allowed": false,
-        "selection_allowed": false,
-        "auto_start_follow_on": false,
-        "required_success_disposition": "PASS_FROMDEEP_FULL_38_DATE_DIRECT_SETTLEMENT_LABEL_SURFACE",
-        "required_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_FULL_38_DATE_DIRECT_SETTLEMENT_LABEL_SURFACE"
+        "aug13_reads_allowed": 0,
+        "core_or_redistribution_work_allowed": false,
+        "signal_research_allowed": false
       }
     }
   },
   "post_fromdeep_sequence": {
-    "step_1": "FINISH_AND_FREEZE_FROMDEEP_AFTER_FULL_LABEL_SURFACE_DESCRIPTIVE_SIGNAL_ANATOMY_SIGNAL_ROAD_PROCEDURE_AND_HISTORICAL_ASOF_EVALUATION",
+    "step_1": "FINISH_AND_FREEZE_FROMDEEP",
     "step_2": "REOPEN_CORE_2L_TO_3L_REDISTRIBUTION_NONREDISTRIBUTION_RESEARCH_ONLY_AFTER_FROMDEEP_IS_FINISHED",
-    "step_3": "COMPLETE_AND_FREEZE_OR_REJECT_ANY_CORE_REDISTRIBUTION_CHANGE_WITHOUT_USING_PROTECTED_VALIDATION_TO_TUNE_IT",
-    "step_4": "PROTECTED_COMPLETED_STACK_VALIDATION_ONLY_AFTER_FROMDEEP_AND_CORE_REDISTRIBUTION_DECISIONS_ARE_COMPLETE",
+    "step_3": "COMPLETE_CORE_REDISTRIBUTION_DECISION",
+    "step_4": "PROTECTED_COMPLETED_STACK_VALIDATION",
     "sequence_policy": "NO_MIDSTREAM_BACKTRACKING_FROM_FROMDEEP_INTO_CORE_FAMILIES"
   },
-  "evaluation_doctrine": {
-    "public_or_live_slips_are_validation": false,
-    "validation_reads": 0,
-    "lockbox_reads": 0,
-    "validation_must_wait_until_fromdeep_frozen": true,
-    "validation_must_wait_until_core_redistribution_decision_complete": true
-  },
   "next_strategy": {
-    "status": "USER_AUTHORIZED_CODEX_EXECUTION_ACTIVE",
-    "topic": "Construct and seal the complete 20,626-row FromDeep discovery label surface through unchanged direct canonical settlement with zero protected reads. Do not reopen core redistribution while FromDeep is in progress.",
-    "required_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_FULL_38_DATE_DIRECT_SETTLEMENT_LABEL_SURFACE"
+    "status": "AWAITING_USER_AUTHORIZATION",
+    "topic": "Repair only the full-settlement implementation: fully-final exact-date source preflight/selection plus resumable per-date checkpoints, then complete the same 20,626-row label surface. No new scientific canary and no core-family work.",
+    "codex_execution_authorized": false
   }
 }
