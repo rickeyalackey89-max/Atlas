@@ -1,22 +1,20 @@
 {
   "schema_version": "atlas_prime_delegation_wnba_current_state_v1",
-  "captured_at_ct": "2026-08-18T09:46:00-05:00",
+  "captured_at_ct": "2026-08-18T11:05:00-05:00",
   "snapshot_not_authority": true,
   "sport": "WNBA",
   "source_repository": "rickeyalackey89-max/Atlas-WNBA",
   "source_branch": "builder-method-contract-v1",
-  "source_head": "ed10f1a493195ccaabb79b6b6d539db85659496a",
+  "source_head": "73e6fb0ab1129086c81bbd7c547bc555d0e5517e",
   "builder": {
-    "status": "ACTIVE_USER_AUTHORIZED_FROMDEEP_R0B2_STORAGE_RECOVERED_RESUME_WITH_HOUSEKEEPING",
-    "current_target_repo_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_R0B_UNIVERSE_PRETRUTH_SEAL",
-    "authorized_step": "fromdeep_r0b2_storage_recovered_resume_same_scientific_method",
-    "required_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_R0B_UNIVERSE_PRETRUTH_SEAL",
+    "status": "BLOCKED_USER_REVIEW_FROMDEEP_R0B_PRETRUTH_UNIVERSE_ACCEPTED",
+    "current_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_R0B_UNIVERSE_PRETRUTH_SEAL",
     "controller_skill": "slip-builders",
     "operational_housekeeping_protocol": "docs/coordination/PRIME_STORAGE_HOUSEKEEPING.md",
     "operational_housekeeping_skill": "keep-it-tidy",
     "validation_reads": 0,
     "lockbox_reads": 0,
-    "active_codex_execution": true
+    "active_codex_execution": false
   },
   "families": {
     "2L": {
@@ -42,9 +40,9 @@
       "downstream_of_3l_if_3l_rebuilt": true
     },
     "FromDeep": {
-      "status": "R0B2_STORAGE_RECOVERED_RESUME_ACTIVE_SAME_SCIENTIFIC_METHOD_WITH_KEEP_IT_TIDY",
+      "status": "R0B_PRETRUTH_UNIVERSE_SEALED_AWAITING_USER_AUTHORIZATION_FOR_DISCOVERY_SETTLEMENT_FORENSIC",
       "architecture_path": "docs/coordination/wnba/chat/FROMDEEP_ARCHITECTURE.md",
-      "market_namespace_rule": "SUPPORTED_FULL_ROW_CANONICAL_MARKETS_UNION_ZERO_SUPPORT_CANONICAL_IDENTITIES_FROM_FORMALLY_PROVENANCE_EXCLUDED_DATES",
+      "market_namespace_rule": "SUPPORTED_FULL_ROW_CANONICAL_MARKETS_UNION_PROVENANCE_IDENTITIES_IF_NEEDED",
       "legacy_21_is_cap": false,
       "usable_development_source_count": 38,
       "provenance_excluded_date": "2026-08-13",
@@ -59,54 +57,65 @@
         "commit": "e099482bfb40559c01c0895419e6b1be142fbc7f",
         "status": "PASS_NATIVE_RETAINED_CARD_ACTIONABLE_EXACT_PARITY",
         "first_projector_seconds": 0.727446700038854,
-        "repeat_projector_seconds": 0.6735191999468952,
         "repeat_exact_parity": true,
         "protected_reads": 0
       },
-      "r0b_initial_attempt": {
-        "commit": "485c3a0f768c9888abd265e52737984d7ee86767",
-        "status": "FAIL_CLOSED_STORAGE_PREFLIGHT",
-        "free_c_gib": 4.722,
-        "required_start_gib": 7.0,
-        "members_opened": 0,
-        "protected_reads": 0
+      "r0b_storage_attempts": {
+        "initial": {
+          "commit": "485c3a0f768c9888abd265e52737984d7ee86767",
+          "status": "FAIL_CLOSED_STORAGE_PREFLIGHT",
+          "members_opened": 0,
+          "protected_reads": 0
+        },
+        "r0b1": {
+          "commit": "ed10f1a493195ccaabb79b6b6d539db85659496a",
+          "status": "FAIL_CLOSED_STORAGE_PREFLIGHT",
+          "members_opened": 0,
+          "protected_reads": 0
+        }
       },
-      "r0b1": {
-        "commit": "ed10f1a493195ccaabb79b6b6d539db85659496a",
-        "status": "FAIL_CLOSED_STORAGE_PREFLIGHT",
-        "failure_classification": "faithful_candidate_failure",
-        "failure_reason": "INSUFFICIENT_C_DRIVE_HEADROOM",
-        "free_c_gib": 4.843159,
-        "required_start_gib": 7.0,
-        "shortfall_gib": 2.156841,
-        "reserve_gib": 6.0,
-        "receipt_id": "9e06881425bc71ad1db78cbb7fb827ff9ee9d729b2d9d6eb4c7d86fae00408b0",
-        "member_projection_started": false,
-        "members_opened": 0,
-        "pretruth_seal_created": false,
-        "scientific_universe_claimed": false,
-        "outcome_truth_settlement_validation_lockbox_reads": 0
-      },
-      "storage_recovery": {
-        "user_reported_free_c_gib": 7.762,
-        "scientific_state_change": false,
-        "builder_evidence_execution": false,
-        "active_wnba_artifacts_preserved": true,
-        "fresh_execution_measurement_required": true,
-        "hard_preflight_minimum_free_c_gib": 7.0,
-        "reserve_gib_unchanged": 6.0,
-        "broader_historical_cleanup_deferred_until_builder_completion": true
+      "r0b2": {
+        "commit": "73e6fb0ab1129086c81bbd7c547bc555d0e5517e",
+        "status": "PASS_FULL_38_MEMBER_NATIVE_PROJECTION_WITHIN_GATES",
+        "pretruth_seal_status": "SEALED_EXACT_FACTUAL_DEMON_OVER_UNIVERSE_OUTCOME_BLIND",
+        "receipt_id": "65b19489d428e971ef5e2c71880e6c97ccb42cac7f9b44a922be566909fad525",
+        "member_count": 38,
+        "retained_card_bytes_processed": 605890891,
+        "eligible_demon_over_rows": 20626,
+        "supported_market_owner_count": 27,
+        "full_row_supported_owner_count": 27,
+        "provenance_only_zero_support_owner_count": 0,
+        "former_aug13_provenance_only_markets_now_supported_elsewhere": [
+          "blks_stls",
+          "quarters_with_3_points",
+          "quarters_with_4_points",
+          "quarters_with_5_points"
+        ],
+        "canonical_normalizations_applied": [],
+        "r0a3_reference_exactly_reproduced": true,
+        "scientific_runner_changed_from_r0b1_start": false,
+        "core_selected_leg_depletion_applied": false,
+        "operation_seconds_before_seal": 435.6041102000163,
+        "max_member_seconds": 22.979847300041,
+        "full_chain_capsule_scans": 0,
+        "slow_parser_reruns": 0,
+        "outcome_reads": 0,
+        "truth_reads": 0,
+        "settlement_reads": 0,
+        "validation_reads": 0,
+        "lockbox_reads": 0,
+        "outcomes_opened": false,
+        "signal_or_performance_research_executed": false,
+        "fitting_executed": false,
+        "ranking_or_selection_executed": false,
+        "live_model_publication_mutation": false
       },
       "housekeeping_policy": {
-        "status": "USER_AUTHORIZED_AUTOMATIC_OPERATIONAL_HOUSEKEEPING",
+        "status": "MANDATORY_AUTOMATIC_OPERATIONAL_HOUSEKEEPING",
         "global_protocol": "docs/coordination/PRIME_STORAGE_HOUSEKEEPING.md",
-        "active_amendment": "docs/coordination/wnba/codex/archive/2026-08-18_fromdeep_r0b2_keep_it_tidy_housekeeping_amendment.md",
         "skill": "keep-it-tidy",
-        "skill_must_resolve_and_be_read": true,
         "automatic_before_expensive_storage_preflight": true,
         "cleanup_is_scientific_evidence": false,
-        "desired_free_space_above_hard_gate_gib": 2.0,
-        "hard_gate_unchanged_gib": 7.0,
         "preserve_current_testing": true,
         "preserve_immediate_live_replay_corpus": true,
         "preserve_current_frozen_builder_evidence": true,
@@ -114,38 +123,24 @@
         "preserve_validation_lockbox": true,
         "preserve_source_bindings": true,
         "preserve_git_history": true,
-        "fail_closed_if_authority_ambiguous": true
+        "fail_closed_if_authority_ambiguous": true,
+        "last_r0b2_cleanup": {
+          "exact_duplicate_files_removed": 14099,
+          "verified_physical_bytes_reclaimed": 3693178880,
+          "tracked_files_changed": 0,
+          "protected_inputs_changed": 0,
+          "protected_stash_changed": false
+        }
       },
-      "r0b2": {
-        "status": "USER_AUTHORIZED_ACTIVE",
-        "work_order": "docs/coordination/wnba/codex/archive/2026-08-18_fromdeep_r0b2_storage_recovered_resume.md",
-        "housekeeping_amendment": "docs/coordination/wnba/codex/archive/2026-08-18_fromdeep_r0b2_keep_it_tidy_housekeeping_amendment.md",
-        "publication_commit": "1ffbf9d196bee676db8b687112f451635b0b683e",
-        "execution_tier": "R0B2_STORAGE_RECOVERED_RESUME_SAME_SCIENTIFIC_METHOD",
-        "starting_wnba_head": "ed10f1a493195ccaabb79b6b6d539db85659496a",
-        "expected_active_row": "builder_s5_fromdeep_r0b1_storage_recovered_resume_user_review",
-        "science_change_allowed": false,
-        "method_change_allowed": false,
-        "housekeeping_allowed": true,
-        "housekeeping_required_before_final_storage_preflight": true,
-        "housekeeping_skill": "keep-it-tidy",
-        "fresh_storage_measurement_required": true,
-        "required_start_gib": 7.0,
-        "reserve_gib": 6.0,
-        "target_wall_minutes_max": 15,
-        "single_member_seconds_max": 60,
-        "outcome_reads_allowed": 0,
-        "truth_reads_allowed": 0,
-        "settlement_reads_allowed": 0,
-        "validation_reads_allowed": 0,
+      "candidate_next": {
+        "name": "FROMDEEP_R0C_DISCOVERY_SETTLEMENT_BINDING_AND_WIN_LOSS_FORENSIC_CANARY",
+        "status": "CANDIDATE_NEXT_NOT_AUTHORIZED",
+        "purpose": "Bind development-consumed discovery settlement to the sealed R0B universe and perform a bounded market-owned win/loss forensic before any GREEN/RED/GRAY thresholding or signal-atlas freeze.",
+        "discovery_outcome_access_required": true,
+        "protected_validation_reads_allowed": 0,
         "lockbox_reads_allowed": 0,
-        "signal_mining_allowed": false,
-        "performance_computation_allowed": false,
-        "fitting_allowed": false,
-        "selection_allowed": false,
-        "auto_start_follow_on": false
-      },
-      "candidate_next": "BOUNDED_DISCOVERY_SETTLEMENT_JOIN_WIN_LOSS_FORENSIC_CANARY_ONLY_AFTER_SUCCESSFUL_R0B_PRETRUTH_SEAL_AND_USER_REVIEW"
+        "auto_start": false
+      }
     }
   },
   "post_fromdeep_sequence": {
@@ -166,8 +161,8 @@
     "lockbox_reads": 0
   },
   "next_strategy": {
-    "status": "USER_AUTHORIZED_CODEX_EXECUTION_ACTIVE",
-    "topic": "Run keep-it-tidy operational housekeeping against stale non-authority material, then freshly measure C-drive headroom and, only if >=7.0 GiB, execute the exact unchanged outcome-blind 38-date FromDeep R0B universe/pretruth seal from WNBA ed10f1a.",
-    "required_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_R0B_UNIVERSE_PRETRUTH_SEAL"
+    "status": "AWAITING_USER_AUTHORIZATION",
+    "topic": "Design and authorize the first bounded FromDeep discovery settlement-binding / market-owned win-loss forensic against the sealed 20,626-row pretruth universe.",
+    "codex_execution_authorized": false
   }
 }
