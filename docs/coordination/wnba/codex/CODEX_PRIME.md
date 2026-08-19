@@ -1,6 +1,6 @@
 # WNBA Codex Prime
 
-Status: **ACTIVE EXECUTION DELEGATION — FROMDEEP SPECIALIST-3 CAUSAL FREEZE READINESS R1**
+Status: **ACTIVE EXECUTION DELEGATION — FROMDEEP 27-CANDIDATE-ROAD CAUSAL AUDIT R1**
 
 Use the clean Prime mirror at `C:\Users\13142\Atlas\PrimeDelegation` and canonical WNBA root `C:\Users\13142\Atlas\WNBA`.
 
@@ -12,89 +12,111 @@ Current pushed target SHA:
 
 `bf7475530320f7f90eaf1604982f9df14bfeb7c6`
 
+## Correction of the superseded Specialist-3 delegation
+
+Do **not** execute `WNBA_FROMDEEP_SPECIALIST3_CAUSAL_FREEZE_READINESS_R1`.
+
+That delegation was created from a Chat interpretation error that reduced the R0 candidate set to one top road in each of three markets.
+
+The R0 human report actually preserves:
+
+- 8 exact `SPECIALIST_GRADE_CURRENT_CANDIDATE` road IDs;
+- 19 exact `SPARSE_HIGH_PRECISION_WATCHLIST` road IDs;
+- 6 separate `DECAYING` evidence-class finalists.
+
+The 8 specialist roads being concentrated in three markets does not mean only three road identities remain. The watchlist class is sparse high-precision evidence, not rejection. For the FromDeep product, low firing frequency is expected.
+
+The R0 diagnostic sparse union also does not justify the Specialist-3 reduction: it selected one best non-decaying road per market solely for density diagnosis and excluded other candidate roads by design.
+
 ## Accepted predecessor
 
 Recent Precision Roads R0 is accepted complete at `bf7475530320f7f90eaf1604982f9df14bfeb7c6`.
 
-Accepted result:
+Accepted census:
 
-- 14,615 roads graded;
+- 14,615 graded roads;
 - 3,665 screen-qualified;
 - 220 Pareto-valid;
 - 33 finalists;
-- 8 specialist-grade finalists across exactly 3 markets;
-- 19 sparse high-precision watchlist finalists;
+- 8 specialist-grade candidate roads;
+- 19 sparse high-precision watchlist roads;
 - 6 decaying evidence-class finalists;
-- specialist markets: `fg_attempted`, `free_throws_attempted`, `free_throws_made`;
-- watchlist evidence remains preserved but inactive for the next freeze candidate;
-- the eight-road non-decaying diagnostic union was too broad for the FromDeep product;
-- analyzer ~29.6 seconds; protected/validation/lockbox/Aug.13/heldout/fitting/Live access all zero.
+- analyzer about 29.6 seconds;
+- protected/validation/lockbox/Aug.13/heldout/fitting/Live access all zero.
 
-## Binding cross-sport product doctrine and names
+## Binding product doctrine and names
 
 Read and bind:
 
 - `docs/coordination/ATLAS_DEMON_SPECIALIST_PRODUCT_DOCTRINE.md`
 - `docs/coordination/ATLAS_DEMON_SPECIALIST_PRODUCT_NAMES.md`
 
-Shared product names:
+WNBA/NBA/CBB: **FromDeep**; MLB: **BigSwings**; NFL: **HailMarys**.
 
-- WNBA / NBA / CBB: **FromDeep**;
-- MLB: **BigSwings**;
-- NFL: **HailMarys**.
+These are the same sparse precision-first Demon single-leg flex/add-on concept, normally 0-3-ish fires per run/slate with honest abstention.
 
-These are the same Atlas Demon-specialist product contract: sparse, current, precision-first single-leg flex/add-on picks, normally 0-3-ish per run/slate with honest abstention.
-
-## Active mission
+## Active replacement mission
 
 Read and execute:
 
-`docs/coordination/wnba/codex/archive/2026-08-19_fromdeep_specialist3_causal_freeze_readiness_r1.md`
+`docs/coordination/wnba/codex/archive/2026-08-19_fromdeep_27_candidate_roads_causal_audit_r1.md`
 
 Publication commit:
 
-`38e2a7e215ce4e51cbab023480c128a3db3b0a8a`
+`da071254176ec888bd556f23e17c7303996451e9`
 
 Mission ID:
 
-`WNBA_FROMDEEP_SPECIALIST3_CAUSAL_FREEZE_READINESS_R1`
+`WNBA_FROMDEEP_27_CANDIDATE_ROADS_CAUSAL_AUDIT_R1`
 
-## Frozen development candidate
+## Exact candidate authority
 
-Use exactly the top-ranked specialist-grade road from each of the three specialist markets:
+Audit **all 27 exact road IDs** specified in the work order:
 
-1. `fg_attempted` — `ROAD:18640a5f6a16e42a154fa86447c2a441da42a0c0201e11dd82f4b2f0b4133ad1`
-2. `free_throws_attempted` — `ROAD:653545eeb14ceac07a037a21b4f741dd85ccefadc135552cdec4b872563525e0`
-3. `free_throws_made` — `ROAD:6e42214971a4b68b8a0448170d7d4df19234866611e120e66c7bff7705da4a07`
+- all 8 R0 specialist-grade candidate roads;
+- all 19 R0 sparse high-precision watchlist roads.
 
-Do not substitute watchlist roads, aliases, second/third-ranked roads, or newly generated roads.
+Do not replace that set with one road per market.
 
-The FTA/FTM trajectory label does not override their specialist-grade status; their current-window precision remains strong enough to deserve the causal replay.
+Do not add the 6 R0 `DECAYING` evidence-class finalists.
+
+Do not generate new roads.
 
 ## Mission in one sentence
 
-**Replay these three frozen specialist road identities causally using only prior July/August pregame quantile information, determine market-by-market freeze readiness, and verify that the pass-only union naturally behaves like a 0-3-ish FromDeep product without an artificial top-N cap.**
+**Replay the complete 27-road R0 candidate set causally with prior-only July/August thresholds, preserve sparse high-precision roads instead of mechanically rejecting them for low volume, identify equivalence/overlap, and report which exact road identities genuinely retain current precision and what deduplicated candidate-level firing density they imply.**
 
-## Critical execution rules
+## Key interpretation rules
 
 - July/August is the active product regime.
-- June is background/stress only and contributes zero threshold/pass/fail authority.
-- Numeric quantile thresholds are realized from prior current-regime pregame values only.
-- Outcomes grade selections only after each target date is sealed.
-- No new road discovery.
-- No gate changes.
-- No watchlist promotion.
-- No model fitting/tuning/calibration.
-- No probability ranking/cap.
-- No new generalized engine.
+- Latest 10 usable dates are the primary current-traction window.
+- June is background/stress only and has zero threshold/inclusion/ranking authority.
+- Low support is not automatically bad: this product is supposed to fire rarely.
+- Evidence strength and precision must be reported separately.
+- Numeric quantiles are realized from prior `t<D` pregame values only.
+- Outcomes grade only after target selections are sealed.
+- Group alias/equivalent road surfaces but preserve all original road IDs.
+- Deduplicate candidate-level fires so multiple matching roads do not become multiple copies of the same FromDeep pick.
 
-Use the work order's predeclared market and union freeze-readiness screens exactly.
+## No new research branch
+
+Do not:
+
+- add/remove gates;
+- search thresholds;
+- enumerate new road combinations;
+- fit/tune/calibrate a model;
+- reopen Commons R0/full condition discovery;
+- impose a probability top-N cap;
+- alter core 2L/3L/4L;
+- mutate Live/model/publication/promotion state;
+- open validation or lockbox.
 
 ## Workflow
 
-One full Builder preamble at parent mission activation. Subagents inherit it.
+One parent Builder preamble. Subagents inherit it.
 
-No repeated governance cycles for ordinary implementation, focused tests, replay, audit, or reporting.
+No repeated governance cycles for ordinary implementation, replay, overlap analysis, focused tests, audit, or reporting.
 
 Target parent mission <=30 minutes; hard workflow boundary 45 minutes.
 
@@ -110,14 +132,12 @@ Heldout/protected evidence: prohibited.
 
 Live/model/publication/promotion mutation: prohibited.
 
-Core 2L/3L/4L changes: prohibited.
-
-Do not auto-open protected validation even if the candidate passes.
+Fitting/training/tuning/calibration: prohibited.
 
 ## Completion
 
 Required final stop:
 
-`BLOCKED_USER_REVIEW_WNBA_FROMDEEP_SPECIALIST3_CAUSAL_FREEZE_READINESS_R1_COMPLETE`
+`BLOCKED_USER_REVIEW_WNBA_FROMDEEP_27_CANDIDATE_ROADS_CAUSAL_AUDIT_R1_COMPLETE`
 
-Return the exact pass/watchlist/fail set, pass-only union performance/density, every sealed selected single, and wall-clock versus runner time. Do not auto-start another research branch.
+Return all 27 road results, equivalence/overlap clusters, deduplicated candidate-level union diagnostics, every sealed selected single, and mission wall-clock versus runner time. Do not auto-freeze or auto-open validation.
