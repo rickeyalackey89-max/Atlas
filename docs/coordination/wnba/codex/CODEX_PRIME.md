@@ -1,6 +1,6 @@
 # WNBA Codex Prime
 
-Status: **ACTIVE USER-AUTHORIZED EXECUTION — FROMDEEP SIGNAL GRAMMAR / RELIABILITY CONTRACT R0**
+Status: **NO ACTIVE EXECUTION DELEGATION — FROMDEEP SIGNAL GRAMMAR / RELIABILITY CONTRACT R0 ACCEPTED FOR CHAT REVIEW**
 
 Use the clean Prime mirror at `C:\Users\13142\Atlas\PrimeDelegation` and canonical WNBA root `C:\Users\13142\Atlas\WNBA`. Target-repository authority and the active `slip-builders` lane remain governing.
 
@@ -13,7 +13,7 @@ Use the clean Prime mirror at `C:\Users\13142\Atlas\PrimeDelegation` and canonic
 - Complete/freeze or reject that core redistribution decision without using protected validation to tune it.
 - Protected validation comes only after both FromDeep and the core redistribution decision are complete.
 
-## Accepted FromDeep evidence through descriptive anatomy
+## Accepted FromDeep evidence through signal-grammar fidelity
 
 R0B2 pretruth seal:
 
@@ -27,126 +27,79 @@ Completed corrected descriptive anatomy:
 
 `06317138e247412a56a4c31cf10bac2f8e4975c8`
 
+Completed signal grammar/reliability fidelity:
+
+`51665c31090d51b727a3cedb0834ad7eb41ed0d2`
+
 Accepted fixed facts:
 
 - 38 provenance-valid discovery source dates;
 - 20,626 exact sealed Demon-OVER rows;
 - 27 factual market owners;
-- 20,626 unique final labels, 0 duplicates, 0 silent drops;
 - canonical partition: WIN 4,305 / LOSS 15,127 / VOID 499 / PUSH 2 / unsupported 622 / missing truth 71;
 - canonical WIN+LOSS anatomy population = 19,432;
-- 19,845 unranked market-field descriptive records;
-- the 38 source checkpoints were reused/hash-verified; no original retained cards reopened in the correction/completion;
-- no signal roads, GREEN/RED/GRAY, fitting, ranking, selection, redistribution, validation, lockbox, or Live mutation occurred;
-- validation reads = 0;
-- lockbox reads = 0;
-- Aug. 13 reads/contribution = 0.
+- 19,845 unranked market-field descriptive records from anatomy;
+- V1 grammar fidelity PASS with outcome reads = 0, validation reads = 0, lockbox reads = 0;
+- V1 field-permission manifest contains 25,218 market-field records: 8,040 predicate-eligible and 17,178 excluded;
+- eligible semantic-family record counts: LINE_DEPTH 357, PROJECTION_EDGE 508, ROLE_OPPORTUNITY 2,949, FRAGILITY_UNCERTAINTY 204, AVAILABILITY_CONTEXT 2,159, ATLAS_COMPONENT 54, OTHER_APPROVED_PREGAME 1,809;
+- no real signal roads, GREEN/RED/GRAY assignment, fitting, ranking, selection, redistribution, protected evaluation, or Live mutation has occurred.
 
 Accepted repository stop:
 
-`BLOCKED_USER_REVIEW_WNBA_FROMDEEP_ANATOMY_PARTITION_CORRECTION_AND_COMPLETE`
+`BLOCKED_USER_REVIEW_WNBA_FROMDEEP_SIGNAL_GRAMMAR_RELIABILITY_CONTRACT_R0`
 
-## Agreed signal method predeclaration
+## Frozen V1 signal method
 
 Prime strategic contract:
 
 `docs/coordination/wnba/chat/FROMDEEP_SIGNAL_GRAMMAR_V1.md`
 
-Strategy publication commit:
-
-`f6d68165658b65da7d4428a3af2817c7f5cafa98`
-
-Core frozen method rules include:
+Core method rules remain frozen unless the user explicitly reopens them before real signal evidence is consumed:
 
 - market-owned Demon-OVER signal roads only;
 - probability excluded from signal eligibility and reserved for later secondary ranking only;
-- one- or two-predicate roads, no OR or 3+ interactions;
-- fixed as-of quantile numeric grammar only;
+- one- or two-predicate roads, conjunction only, no OR or 3+ interactions;
+- fixed market-local historical-as-of quantile numeric grammar only;
 - boolean/categorical equality only;
 - outcome/identity/provenance/historical-hit-rate/missingness predicates prohibited;
-- bounded semantic field families;
-- 24 rows / 8 dates / 6 participants plus 25% top-date and top-participant concentration floors for GREEN/RED state;
+- bounded semantic field families with ambiguous/unmapped fields excluded;
+- breadth floor: 24 rows / 8 dates / 6 participants, top-date and top-participant support share <= 25%;
 - two-sided 95% Wilson reliability with fixed z;
 - deterministic chronological early/late stability check;
-- GREEN requires 90% strict + 90% date-balanced and strong market-relative Wilson separation;
-- RED is conservative and requires strong negative market-relative Wilson separation in both temporal halves;
+- GREEN requires >=90% strict and >=90% date-balanced plus strong market-relative Wilson separation and positive temporal halves;
+- RED is conservative and requires strong negative market-relative Wilson separation and negative temporal halves;
 - all other roads remain GRAY;
-- existing final FromDeep market evidence floor remains 90/90 with >=24 historical-as-of selections across >=8 target dates per activated market;
+- final per-market activation floor remains 90% strict + 90% date-balanced with >=24 historical-as-of selections across >=8 target dates;
 - zero active markets and honest abstention remain legal.
 
-## ACTIVE USER-AUTHORIZED TASK — signal grammar / reliability contract R0
+## Candidate next — NOT AUTHORIZED
 
-Prime work order:
+Candidate method step:
 
-`docs/coordination/wnba/codex/archive/2026-08-18_fromdeep_signal_grammar_reliability_contract_r0.md`
+`FROMDEEP_MARKET_OWNED_SIGNAL_ATLAS_R1`
 
-Work-order publication commit:
+Scientific purpose:
 
-`3401a65803e213319025dbaa65b0a2295bf47c68`
+> Apply the frozen V1 grammar to the development-consumed FromDeep discovery corpus and determine whether supported market-owned GREEN/RED road structure exists before any target-date selection procedure is evaluated.
 
-User authorization:
+If later authorized, the task should:
 
-> “I agree with this”
+1. start from WNBA `51665c31090d51b727a3cedb0834ad7eb41ed0d2` and the current user-review stop;
+2. bind the frozen grammar contract and outcome-blind field-permission manifest exactly;
+3. before opening settlement labels, build a complete outcome-blind Tier-A template/cost census using all 27 market owners and the fixed grammar; no top-N or performance-based truncation;
+4. numeric predicate matching must use market-local historical-as-of prior-only quantiles for each evidence date; categorical eligibility/cardinality must also be prior-only; no whole-corpus threshold leakage;
+5. after the pre-outcome surface/resource seal passes, open only accepted discovery WIN/LOSS labels; keep VOID/PUSH/unsupported/missing outside signal performance;
+6. grade every Tier-A primitive under the frozen breadth, concentration, baseline, Wilson, and temporal rules;
+7. construct Tier-B pairs only from Tier-A primitives that pass the frozen precursor, with different fields and semantic families and no two OTHER_APPROVED_PREGAME predicates;
+8. grade the complete admissible Tier-B surface; no candidate truncation by outcome, hit rate, or rank;
+9. classify all evaluated roads GREEN/RED/GRAY under the frozen V1 state rules and report a complete market-owned atlas with support, date/participant breadth, concentration, Wilson intervals, and temporal halves;
+10. report candidate counts and resource/runtime accounting so combinatorial scale is explicit;
+11. do not use probability to determine road state;
+12. do not yet select target-date FromDeep legs, rank eligible legs, activate/freeze markets, or run historical-as-of target-date performance;
+13. validation reads = 0; lockbox reads = 0; Aug. 13 contribution = 0;
+14. no 2L/3L/4L, redistribution, Live/model/policy/publication mutation;
+15. stop for user/Chat review.
 
-Execution tier:
+The candidate task should fail closed before outcome access if the complete frozen candidate surface cannot be evaluated within the declared resource contract. Runtime optimization is allowed later; scientific truncation is not.
 
-`R0_ARTIFACT_AUDIT`
-
-Expected WNBA starting HEAD:
-
-`06317138e247412a56a4c31cf10bac2f8e4975c8`
-
-Expected current WNBA stop:
-
-`BLOCKED_USER_REVIEW_WNBA_FROMDEEP_ANATOMY_PARTITION_CORRECTION_AND_COMPLETE`
-
-### Exact task
-
-Materialize the exact agreed V1 signal grammar/reliability contract in the WNBA repository, build the outcome-blind field-permission manifest from already-sealed pregame field/type metadata, prove contract behavior with synthetic/control fidelity tests, commit/push, and stop.
-
-### Critical boundary
-
-This is **not** real signal discovery.
-
-Do not read or use the settlement label surface, market outcome baselines, WIN/LOSS field descriptives, or any protected truth to choose fields, thresholds, or states. Do not construct or grade a real signal road.
-
-Permitted reads are limited to governing Builder control, Prime method docs, existing target product contract, pre-outcome namespace/scope/field-type artifacts, repository schema metadata, and synthetic fixtures.
-
-### Required outputs
-
-At minimum bind:
-
-- machine-readable V1 grammar/reliability contract;
-- requirement-to-code/fidelity matrix;
-- complete outcome-blind field-permission manifest with semantic-family/exclusion reasons;
-- compact unranked field-permission summary;
-- positive/adversarial synthetic fidelity tests;
-- final receipt.
-
-### Prohibited actions
-
-No:
-
-- real candidate-road generation;
-- real GREEN/RED/GRAY assignment;
-- outcome-statistic access;
-- threshold search or field ranking by performance;
-- fitting;
-- historical-as-of performance run;
-- FromDeep selections or market activation;
-- 2L/3L/4L or redistribution work;
-- validation, lockbox, or Aug. 13 truth;
-- Live/model/policy/publication mutation;
-- follow-on auto-start.
-
-## Required success disposition
-
-`PASS_FROMDEEP_SIGNAL_GRAMMAR_RELIABILITY_CONTRACT_R0`
-
-## Required final stop
-
-`BLOCKED_USER_REVIEW_WNBA_FROMDEEP_SIGNAL_GRAMMAR_RELIABILITY_CONTRACT_R0`
-
-## Next if this passes — NOT AUTHORIZED
-
-Chat/user may review the field-permission manifest and fidelity receipt, then decide whether to authorize a separate bounded signal-road discovery/actionability task. Do not auto-start it.
+No Codex execution is authorized until the user explicitly approves this next step.
