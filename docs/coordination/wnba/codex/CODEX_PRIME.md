@@ -1,6 +1,6 @@
 # WNBA Codex Prime
 
-Status: **ACTIVE EXECUTION DELEGATION — FROMDEEP SAFE HISTORICAL-AS-OF SIGNAL VIABILITY R1**
+Status: **ACTIVE EXECUTION DELEGATION — WORKFLOW RECOVERY + FROMDEEP SAFE R1 RESUME**
 
 Use the clean Prime mirror at `C:\Users\13142\Atlas\PrimeDelegation` and canonical WNBA root `C:\Users\13142\Atlas\WNBA`.
 
@@ -8,104 +8,87 @@ Target repository: `rickeyalackey89-max/Atlas-WNBA`
 
 Target branch: `builder-method-contract-v1`
 
-Starting pushed target SHA: `c6567354fcfc07d99089b989cc97d0303975bb5c`
+Last accepted pushed target SHA before the paused local R1 work:
 
-## Accepted predecessor
+`c6567354fcfc07d99089b989cc97d0303975bb5c`
 
-The bounded-autonomy governance reset + FromDeep feature inventory is accepted complete at `c6567354fcfc07d99089b989cc97d0303975bb5c`.
+## User pause and replacement delegation
 
-Accepted inventory facts:
+The user explicitly paused the in-progress SAFE historical-as-of R1 because the workflow was still repeatedly revisiting governance/control around tiny tests and subagent work.
 
-- 38 dates;
-- 20,626 sealed Demon-OVER candidate rows;
-- 27 markets;
-- 25,218 unranked market-by-feature records;
-- SAFE `1,509`;
-- UNCERTAIN `10,893`;
-- EXCLUDED `12,816`;
-- inventory SHA-256 `320d6c7134f51ad5e022dfc57657666f527e9fb6732e5967891d0f71d2d816a7`;
-- final receipt SHA-256 `0a14500acac7efcf50beda2e7966eae50a65eabaf02ba1972aeaad0f446b08cc`;
-- outcome/protected/validation/lockbox/Aug.13/Live reads all zero.
+Do **not** continue under the prior execution wording.
 
-The prior exhaustive/materialized R1 at `a9d136...` remains rejected execution architecture/resource evidence only.
+Do **not** reset/discard the current local R1 worktree merely because the last accepted pushed SHA is `c656735...`.
 
-## Active mission
+Read and execute the replacement mission:
 
-Read and execute:
-
-`docs/coordination/wnba/codex/archive/2026-08-19_fromdeep_safe_historical_asof_signal_viability_r1.md`
-
-Original mission publication commit:
-
-`5c09566596e9a70cffcee6870c27997873f33a32`
-
-### Binding product-semantics clarification
-
-Also read and bind:
-
-`docs/coordination/wnba/chat/FROMDEEP_PRODUCT_INTEGRATION_CONTRACT.md`
+`docs/coordination/wnba/codex/archive/2026-08-19_workflow_recovery_and_fromdeep_safe_asof_resume.md`
 
 Publication commit:
 
-`4b0897e96c90f17be9aebe747f7215cc2454cd5a`
+`4733bc06c7ae4c6313c2e4bcea0f876c3ea68ad8`
 
-This clarification is authoritative for terminology/product interpretation inside the active mission:
+Updated governing Prime doctrine:
 
-- **FromDeep is not a slip and does not construct a slip.**
-- FromDeep produces **zero, one, or more qualified single-leg picks**.
-- Those picks may later become optional flex/add-on candidates available to the actual core slip-family construction process.
-- Core Builder families construct the actual multi-leg slips.
-- The active `final_probability` rank-1 result is diagnostic only; it does **not** cap FromDeep at one pick per market/date or slate and does not replace the complete eligible single-leg surface.
-- Do not implement any concept of a multi-leg `FromDeep slip`.
-- Product attachment/routing of FromDeep single legs into core slips is a later user/Chat decision, not part of this mission.
+`docs/coordination/PRIME_BOUNDED_AUTONOMOUS_MISSIONS.md`
 
-No scientific signal rule changes because of this clarification.
+Doctrine update commit:
 
-## Governing doctrines
+`1c70ad42e9f09494b2e451dfcb4a3dcd4e674b43`
 
-- `docs/coordination/PRIME_BOUNDED_AUTONOMOUS_MISSIONS.md`
-- `docs/coordination/PRIME_EXPERIMENT_RUNWAY.md`
-- `docs/coordination/wnba/chat/FROMDEEP_SIGNAL_GRAMMAR_V1.md` where not narrowed by the active work order.
+The prior R1 work order remains the frozen scientific-method authority where the replacement mission says to resume it:
 
-## Mission summary
+`docs/coordination/wnba/codex/archive/2026-08-19_fromdeep_safe_historical_asof_signal_viability_r1.md`
 
-Codex will:
+Product semantics remain binding:
 
-1. use only `SAFE` market-feature records as predicate authority;
-2. run strict historical-as-of `t<D` registry construction on the sealed development corpus;
-3. build/grade complete Tier A first;
-4. form Tier B only from actual precursor-passing Tier-A primitives;
-5. use compact/streamed execution rather than pair-by-row materialization;
-6. freeze GREEN/RED/GRAY and single-leg eligibility before each target-date settlement reveal;
-7. preserve and grade the complete eligible single-leg surface after seal;
-8. also report the fixed rank-1 eligible-row diagnostic using existing `final_probability`, explicitly as a diagnostic rather than a product cap;
-9. report which markets meet or miss the current 90/90 + 24 selections / 8 target-date activation floor and why.
+`docs/coordination/wnba/chat/FROMDEEP_PRODUCT_INTEGRATION_CONTRACT.md`
 
-`UNCERTAIN` fields remain quarantined and may not enter signal discovery.
+## Critical workflow instruction
 
-## Autonomous execution
+The user wants the full Builder preamble. Emit it **once** for the parent replacement mission.
 
-This is one bounded mission. Codex may perform multiple subordinate engineering tasks, test/fix loops, profiling, compact executor work and independent non-conflicting work in parallel.
+All subagents inherit that preamble and mission envelope.
 
-Do not stop after individual tests, parser fixes, utilities, profiling or representation improvements that preserve exact science.
+A `control`, `topology`, `engine design`, `semantics`, `testing`, or other subagent is **not** a new mission activation.
 
-Proceed automatically from topology -> implementation -> Tier-A grading -> actual precursor-admissible Tier-B grading -> historical target application -> final report while inside the mission envelope.
+Do not emit/reason through the full governance preamble again for:
 
-## Hard stops
+- a tiny test;
+- parser/representation/row-identity repair;
+- another file inspection;
+- profiling/topology work;
+- small utilities;
+- test reruns;
+- subagent lifecycle/context compaction;
+- ordinary debugging that preserves scientific meaning.
 
-Return only at a genuine decision boundary, including:
+Use `BUILDER CONTROL DELTA` only for a real change in the closed governing-fact set defined by the updated Prime doctrine and reconciled target governance.
 
-- SAFE/UNCERTAIN/EXCLUDED authority change;
-- primitive/operator/quantile or GREEN/RED/precursor/breadth method change;
-- new transforms/interactions beyond frozen V1;
-- changing the predeclared rank diagnostic;
-- inventing a FromDeep single-leg output cap/policy or core-slip attachment rule;
-- validation/lockbox/protected evidence;
-- new fitting/tuning/model work;
-- Live/runtime/publication/promotion mutation;
-- destructive/risky operation;
-- resource escalation beyond the declared envelope after compact alternatives;
-- evidence invalidating the mission premise.
+Full control validation is mission-level: activation, first transition into a newly authorized evidence class, actual governing-fact change, final completion/hard boundary. Not per command/test/date/file/subagent.
+
+## Mission sequence
+
+One authorization covers both phases with no intermediate user stop:
+
+1. **workflow recovery** — reconcile target WNBA governance/control behavior to the mission-level/subagent-inheritance semantics, preserve the paused local worktree, and adjudicate the reported premature settlement-file SHA-read anomaly once;
+2. **R1 resume** — continue the existing local SAFE historical-as-of implementation from scientifically valid paused work and complete the authorized evidence packet.
+
+Do not restart R1 from scratch unless the preserved local implementation is actually unusable for a stated technical reason.
+
+## Scientific method remains unchanged
+
+- `SAFE` predicates only;
+- strict historical-as-of `t<D`;
+- complete Tier A first;
+- Tier B only from actual precursor-passing Tier-A primitives;
+- compact/streamed execution;
+- GREEN/RED/GRAY prior-only registry;
+- complete eligible FromDeep **single-leg** surface;
+- rank-1 probability result diagnostic only, never a product cap;
+- FromDeep is not a slip and constructs no multi-leg slip.
+
+`UNCERTAIN` and `EXCLUDED` predicates remain prohibited.
 
 Validation reads: `0` permitted.
 
@@ -113,12 +96,20 @@ Lockbox reads: `0` permitted.
 
 Aug. 13 contribution: `0` permitted.
 
-Live/model mutation: prohibited.
+Live/model/publication/promotion mutation: prohibited.
 
-## Completion
+No new fitting/tuning/model work is authorized.
 
-Required final stop:
+## Timing/accounting correction
+
+The prior inventory receipt's ~99.84-second runtime was the inventory runner, **not** the total Codex mission elapsed time. The user reports that mission ran from roughly midnight until about 4:15 AM.
+
+For this replacement mission, record mission-start time at activation and report total Codex wall-clock elapsed separately from scientific runner/kernel time. Do not conflate them again.
+
+## Final stop
+
+On successful workflow recovery and R1 completion:
 
 `BLOCKED_USER_REVIEW_WNBA_FROMDEEP_SAFE_ASOF_SIGNAL_VIABILITY_R1_COMPLETE`
 
-Return the causal market-by-market signal evidence, complete eligible single-leg surface, and rank-1 diagnostic to Chat/user. Do not invent final FromDeep output-count rules, attach FromDeep legs to core slips, open validation/lockbox, or reopen core redistribution after this mission.
+Return one concise final mission report. Do not start a new scientific/product decision afterward.
