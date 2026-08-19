@@ -1,6 +1,6 @@
 # WNBA Codex Prime
 
-Status: **ACTIVE EXECUTION DELEGATION — FROMDEEP WIN-vs-LOSS COMMONS R0**
+Status: **ACTIVE EXECUTION DELEGATION — FROMDEEP COMMONS SELECTOR V1 DEVELOPMENT REPLAY**
 
 Use the clean Prime mirror at `C:\Users\13142\Atlas\PrimeDelegation` and canonical WNBA root `C:\Users\13142\Atlas\WNBA`.
 
@@ -10,38 +10,32 @@ Target branch: `builder-method-contract-v1`
 
 Current pushed target SHA:
 
-`a51557bf416910d0150f9847bee87e15add257dc`
+`02f8b7143012c879df55078fb7017ed9635382ea`
 
 ## Accepted predecessor
 
-The SAFE historical-as-of R1 is accepted complete at `a51557bf416910d0150f9847bee87e15add257dc`.
+The WIN-vs-LOSS Commons R0 is accepted complete at target commit `02f8b7143012c879df55078fb7017ed9635382ea`.
 
-Accepted scientific interpretation:
-
-- the exact SAFE-only V1 one/two-predicate GREEN/RED/GRAY eligibility method faithfully produced `NO_VIABLE_SIGNAL_STRUCTURE`;
-- this rejects that exact method as a useful FromDeep positive-selector path;
-- it does **not** prove that winning Demon legs have no useful pregame commonalities;
-- preserve the completed evaluator and evidence; do not rerun, rewrite, delete, or generalize it during the active mission.
-
-Headline predecessor evidence:
+Accepted result:
 
 - 38 dates / 27 markets / 20,626 rows;
-- WIN 4,305 / LOSS 15,127 / VOID 499 / PUSH 2 / UNSUPPORTED 622 / MISSING 71;
-- Tier A GREEN 0 / RED 1,516 / GRAY 98,552;
-- Tier B GREEN 0 / RED 0 / GRAY 23,408;
-- eligible rows 0;
-- total engine wall ~1,111.05 seconds;
-- total parent mission elapsed ~3h14m28s.
+- 4,305 WIN / 15,127 LOSS binary evidence;
+- 19 markets = `POSITIVE_COMMONS_PRESENT`;
+- 8 markets = `INSUFFICIENT_EVIDENCE`;
+- no selector was selected, fitted, frozen, promoted, validated, or opened against lockbox/Live;
+- runner ~101.95 seconds; parent mission ~45 minutes.
+
+This result supersedes the earlier assumption that the old SAFE-only GREEN-road failure meant there was no useful commonality. The commons packet shows meaningful market-specific favorable and negative structure.
 
 ## Active user-authorized mission
 
 Read and execute:
 
-`docs/coordination/wnba/codex/archive/2026-08-19_fromdeep_win_loss_commons_r0.md`
+`docs/coordination/wnba/codex/archive/2026-08-19_fromdeep_commons_selector_v1_development_replay.md`
 
 Prime publication commit:
 
-`6e6342d781be289a3b827e1004a2b2219fe50bbd`
+`371b15f7ca5ba058366823c8c8c1e4974f9a61a5`
 
 Governing coordination doctrine:
 
@@ -53,78 +47,84 @@ Product semantics remain:
 
 ## Mission in one sentence
 
-**Use the already-settled Demon-OVER development corpus to show, market by market, what winning legs have in common, what losing legs have in common, and which small transparent commonalities deserve one later deterministic historical-as-of selector test.**
+**Freeze the simple Commons R0 primary positive + primary veto rule for all 19 positive markets, apply those rules strictly historical-as-of using prior-only numeric quantiles, and report every qualified FromDeep single leg without building another engine or road atlas.**
 
-## Critical scope correction
+## Critical method rule
 
-This is descriptive discovery, not another signal-atlas experiment.
+Use all 19 positive markets. Do not cherry-pick a subset by discovery hit rate.
 
-Do not build a new engine.
+Use exactly the primary positive qualifier and primary veto named in each Commons R0 market summary. The eight insufficient-evidence markets abstain.
 
-Do not rerun R1.
+For numeric rules, freeze `field + operator + quantile symbol`; recompute the literal q10/q25/q50/q75/q90 from prior `t<D` pregame candidate values only. Do not carry full-corpus literal thresholds backward in time.
 
-Do not construct exhaustive Tier A/Tier B roads.
+Market/date cold start: at least 24 prior binary rows, 8 prior dates, and 6 prior participants/combo identities.
 
-Do not demand a primitive independently hit the old 90/90 GREEN gate before it may be described as useful information.
+Candidate qualification:
 
-Analyze individual feature separation first. Only inspect small pairwise intersections among individually informative conditions.
+`QUALIFIED = positive_condition_matches AND NOT veto_condition_matches`
 
-The output must contain understandable basketball information.
+Missing positive value -> not qualified. Missing veto value -> veto does not match.
 
-## Feature authority for this discovery packet
+No old 90/90 GREEN/Wilson/temporal-road gate is applied to candidate qualification. The existing 90/90 + 24 selections / 8 dates target is reported only as a diagnostic reference.
 
-- `SAFE` pregame fields are allowed.
-- Previously `UNCERTAIN` fields may be analyzed when the uncertainty is only catalog/semantic/namespace authority and pregame availability is already established.
-- Fields with unresolved timing, outcome/postgame derivation, identity/provenance meaning, future information, or other hard leakage risk remain excluded.
-- Model probability/confidence may be reported separately as context but may not replace basketball-feature commonality discovery or become the mission's selector.
+## Product semantics
 
-Report exactly which previously-UNCERTAIN fields were admitted and why.
+FromDeep is not a slip.
 
-## Expected outputs
+Preserve all qualified single-leg rows. Zero, one, or multiple singles per slate are allowed.
 
-Per market, report:
+No probability ranking/cap is authorized in this mission. No core-slip attachment/routing rule is authorized.
 
-- baseline WIN rate;
-- strongest favorable WIN-vs-LOSS commonalities;
-- strongest negative/veto commonalities;
-- support, WIN rate, lift/damage, unique dates, unique participants, and concentration;
-- only small pairwise intersections among the individually strongest commonalities;
-- whether preserved R1 RED structure actually describes losing candidate contexts;
-- one discovery disposition: `POSITIVE_COMMONS_PRESENT`, `VETO_STRUCTURE_ONLY`, `MIXED_WEAK_STRUCTURE`, `NO_MEANINGFUL_COMMONALITY`, or `INSUFFICIENT_EVIDENCE`;
-- a plain-language sentence describing what a future deterministic selector for that market would need to test.
+## Evidence interpretation
 
-Return both a human-readable report and compact machine-readable artifact.
+The rule identities were discovered on the same development corpus. Therefore this replay is development-consumed procedural/performance evidence, not untouched OOS confirmation.
 
-## Workflow and resource rule
+If the simple selector is promising, Chat/user may freeze it for later protected validation with the completed stack. Validation and lockbox remain sealed now.
 
-One full Builder preamble at parent mission activation. Subagents inherit it.
+## Execution / workflow
 
-No repeated control cycles for ordinary aggregation, file inspection, small fixes, or focused tests.
-
-Target total parent mission: <=45 minutes.
-
-If the required packet is not essentially complete by 60 minutes, stop and report the actual blocker instead of inventing more infrastructure.
-
-No checkpoint framework. No storage-cleanup ceremony. No giant test suite.
-
-## Hard boundaries
+Prefer direct replay from the already-sealed development artifacts/checkpoints.
 
 Do not:
 
-- select/freeze a final FromDeep rule;
-- tune thresholds;
-- fit a learner/model;
-- run a new historical-as-of performance experiment;
-- use validation or lockbox;
-- use Aug. 13;
-- mutate Live/model/publication/promotion state;
-- alter core 2L/3L/4L methods;
-- invent a FromDeep output-count or slip-attachment rule.
+- build a new engine;
+- rerun Commons R0;
+- rerun SAFE Tier A/Tier B road construction;
+- regenerate source boards when sealed rows already contain the required features;
+- add second/third commons or pairwise intersections;
+- fit/tune a model;
+- change any of the 19 frozen positive/veto identities;
+- add any of the 8 insufficient markets;
+- mutate Live/model/publication/promotion state.
+
+One full Builder preamble at parent mission activation. Subagents inherit it. No repeated control cycles for ordinary inspection, small fixes, or focused tests.
+
+Target parent mission <=45 minutes. Hard workflow boundary 75 minutes.
+
+## Required report
+
+Per market and overall:
+
+- target dates eligible after cold start;
+- qualified single count;
+- WIN / LOSS / nonbinary counts;
+- strict binary WIN rate;
+- date-balanced WIN rate;
+- unique dates and participants;
+- same-market baseline on exact selected target dates and lift;
+- qualified singles per target-date distribution;
+- positive match count;
+- veto removal count and post-seal WIN rate of removed otherwise-positive rows;
+- early/later stability;
+- markets producing no singles;
+- diagnostic status versus 90/90 + 24 selections / 8 dates.
+
+Return every sealed qualified single in a machine-readable artifact plus one concise human-readable summary.
 
 ## Completion
 
 Required final stop:
 
-`BLOCKED_USER_REVIEW_WNBA_FROMDEEP_WIN_LOSS_COMMONS_R0_COMPLETE`
+`BLOCKED_USER_REVIEW_WNBA_FROMDEEP_COMMONS_SELECTOR_V1_DEVELOPMENT_REPLAY_COMPLETE`
 
-At that stop, Chat/user will read the actual commons evidence, choose the simple deterministic selector, freeze it, and then reuse the existing historical-as-of evaluator once for the performance test.
+Do not auto-start another research branch afterward. Return the selector replay evidence to Chat/user for the freeze/revise/reject decision.
