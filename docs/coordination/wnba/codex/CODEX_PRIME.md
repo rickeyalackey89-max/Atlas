@@ -1,146 +1,86 @@
 # WNBA Codex Prime
 
-Status: **NO ACTIVE EXECUTION DELEGATION — FROMDEEP R1 RESOURCE/WORKFLOW REDESIGN REVIEW**
+Status: **ACTIVE EXECUTION DELEGATION — BOUNDED AUTONOMY RESET + FROMDEEP FEATURE INVENTORY**
 
-Use the clean Prime mirror at `C:\Users\13142\Atlas\PrimeDelegation` and canonical WNBA root `C:\Users\13142\Atlas\WNBA`. Target-repository authority and the active `slip-builders` lane remain governing.
+Use the clean Prime mirror at `C:\Users\13142\Atlas\PrimeDelegation` and canonical WNBA root `C:\Users\13142\Atlas\WNBA`.
 
-## Fixed strategic sequence
+Target repository: `rickeyalackey89-max/Atlas-WNBA`
 
-- Finish FromDeep end-to-end first.
-- FromDeep is independent of 2L/3L/4L depletion and uses the full eligible Demon-OVER universe.
-- Do not reopen core redistribution/depletion while FromDeep is in progress.
-- After FromDeep is frozen, separately revisit the 2L -> 3L redistribution/non-redistribution architecture.
-- Complete/freeze or reject that core redistribution decision without using protected validation to tune it.
-- Protected validation comes only after both FromDeep and the core redistribution decision are complete.
+Target branch: `builder-method-contract-v1`
 
-## Accepted FromDeep authority before R1
+Starting pushed target SHA: `a9d136bb2c6e6b94bdcebbd6dfc58971e1bc75c6`
 
-R0B2 pretruth seal:
+## Active user-authorized mission
 
-`73e6fb0ab1129086c81bbd7c547bc555d0e5517e`
+Read and execute:
 
-Full settlement completion:
+`docs/coordination/wnba/codex/archive/2026-08-19_bounded_autonomy_governance_fromdeep_feature_inventory.md`
 
-`dfd55223fbb8ed9b0d7ef4af544ecf911adc78f5`
+Prime publication commit for that mission:
 
-Completed corrected descriptive anatomy:
+`8f30ea13f27e8ed116f06c0dde40f113c764e668`
 
-`06317138e247412a56a4c31cf10bac2f8e4975c8`
+Governing Prime coordination doctrine:
 
-Completed signal grammar/reliability fidelity:
+`docs/coordination/PRIME_BOUNDED_AUTONOMOUS_MISSIONS.md`
 
-`51665c31090d51b727a3cedb0834ad7eb41ed0d2`
+Doctrine publication commit:
 
-Frozen facts remain:
+`b90674b0c740a79e82ceae2493b9e52861187025`
 
-- 38 provenance-valid discovery dates;
-- 20,626 exact Demon-OVER rows;
-- 27 market owners;
-- canonical partition WIN 4,305 / LOSS 15,127 / VOID 499 / PUSH 2 / unsupported 622 / missing truth 71;
-- validation reads = 0;
-- lockbox reads = 0;
-- Aug. 13 contribution = 0.
-
-## R1 resource/workflow stop — accepted evidence only
-
-WNBA pushed result commit:
-
-`a9d136bb2c6e6b94bdcebbd6dfc58971e1bc75c6`
-
-User-directed stop after the R1 workflow became excessively expensive/ceremonial.
-
-Scientific outcomes opened: `0`.
-
-Live reads: `0`.
-
-No GREEN/RED/GRAY census or scientific disposition exists.
-
-Useful outcome-blind topology evidence from the sealed preoutcome resource artifact:
-
-- raw Tier-A primitives: `65,384`;
-- canonical/deduped Tier-A primitives: `19,214`;
-- naive complete Tier-B upper-bound topology: `5,438,320` roads;
-- measured Phase-A primitive-match evaluations: `80,849,561`;
-- projected naive peak bytes: `175,451,099,900`;
-- projected total wall time: about `183,037` seconds;
-- resource gate: FAIL;
-- outcome inputs resolved: `0`.
-
-Interpretation:
-
-`R1_IMPLEMENTATION_TOPOLOGY_DESIGN_FAILURE_NOT_FROMDEEP_SCIENTIFIC_FAILURE`
-
-The failure does not invalidate FromDeep, the frozen V1 signal grammar, the settlement surface, or the descriptive anatomy. It proves that the naive materialized/exhaustive R1 execution design is outside the intended R2 class.
-
-## Important target-control discrepancy
-
-At pushed WNBA `a9d136...`, the resource artifact records the blocked resource condition, but `docs/model_development/ACTIVE_BUILDER_LANE.json` and `builder_state.json` still report the R1 scientific row as active with outcome access permitted.
-
-Therefore:
-
-- **do not execute the target R1 row merely because the target control pointer still says active**;
-- the user explicitly stopped the task;
-- Prime has no active Codex execution authorization;
-- any later target-control reconciliation must be a separate user-authorized control action or be included narrowly in the next explicitly authorized work order;
-- no labels, validation, lockbox, Live, core-family, or follow-on work may run from this state.
-
-## Workflow correction — mandatory going forward
-
-Governing Prime doctrine:
+Prime experiment runway remains governing:
 
 `docs/coordination/PRIME_EXPERIMENT_RUNWAY.md`
 
-The 2026-08-19 amendment makes topology-before-implementation mandatory.
+## Mission sequence
 
-For combinatorial Builder research:
+One authorization covers both phases:
 
-1. use existing sealed artifacts to calculate primitive/candidate/pair topology first;
-2. report structural-impossibility counts and compact/streamed resource estimates before building large runners/checkpoint systems;
-3. do not reread unchanged governance stacks repeatedly when hashes remain bound;
-4. do not perform storage cleanup until topology proves the intended experiment is worth running;
-5. distinguish intrinsic scientific complexity from accidental materialization cost;
-6. structural impossibility under frozen breadth/support rules may be pruned outcome-blind and is not scientific truncation;
-7. where Tier-B is defined only from Tier-A precursor-pass roads, stage cost and execution in that same order rather than assuming every Tier-A primitive becomes a Tier-B parent.
+1. repair WNBA Builder governance/control semantics so the unit of work is a bounded autonomous mission rather than a command/test;
+2. after Phase 1 validates, **continue automatically without an intermediate user-review stop** into the FromDeep candidate-feature / historical-as-of inventory.
 
-## Candidate redesign — NOT AUTHORIZED
+Codex may perform multiple subordinate engineering tasks, focused test/fix loops, and independent non-conflicting/read-only work in parallel inside the mission envelope.
 
-A future user-authorized redesign should preserve the frozen V1 grammar unless separately reopened.
+Do not stop after every test, parser repair, file inspection, utility creation, profiling step, or ordinary implementation retry when scientific meaning and governing facts are unchanged.
 
-Preferred staged runway:
+## Scientific state preserved
 
-### R1A — outcome-blind topology / compact-executor feasibility
+Accepted FromDeep facts before the rejected R1 architecture:
 
-Target: seconds to a few minutes.
+- 38 provenance-valid discovery dates;
+- 20,626 exact Demon-OVER candidate rows;
+- 27 market owners;
+- full canonical settlement surface complete;
+- descriptive anatomy complete;
+- signal grammar fidelity completed at `51665c31090d51b727a3cedb0834ad7eb41ed0d2`;
+- validation reads `0`;
+- lockbox reads `0`;
+- Aug. 13 contribution `0`.
 
-Using existing sealed Phase-A/topology artifacts where possible, report by market:
+The pushed R1 commit `a9d136...` is preserved as resource/workflow evidence only. Its exhaustive/materialized design is rejected. No GREEN/RED/GRAY scientific disposition was produced and no scientific outcomes were opened during that R1 attempt.
 
-- canonical Tier-A count;
-- structural support/date/participant impossibility eliminations that are legal without outcomes;
-- exact remaining Tier-A topology;
-- naive Tier-B upper bound;
-- compact bitset/streaming memory estimate;
-- measured tiny-kernel intersection throughput;
-- no new large implementation framework.
+Do **not** optimize or resume the 5.4-million-road R1 architecture.
 
-### R1B — complete Tier-A development grading
+## Hard stops
 
-Only after separate authorization.
+Return to user/Chat only at a real decision boundary, including:
 
-- open accepted development labels;
-- grade the complete structurally viable Tier-A surface;
-- apply the already-frozen precursor exactly;
-- report the actual precursor-pass Tier-A count by market;
-- compute the actual legal Tier-B topology and resource receipt;
-- stop for user review before Tier-B if materially large.
+- scientific/method/candidate/feature/threshold/interaction/ranking scope change;
+- validation, lockbox, or new protected outcome access;
+- new fitting/tuning/training authority;
+- Live/model/publication/promotion mutation;
+- destructive/risky operation outside ordinary exact-path work;
+- resource escalation outside the active mission envelope;
+- evidence invalidating the mission premise.
 
-### R1C — exact precursor-admissible Tier-B grading
+The target repo remains authoritative for canonical workspace, exact-path Git safety, one Builder controller, model state, protected data, and Live state. The active mission explicitly authorizes the governance/control reconciliation necessary to make those target controls consistent with the user-approved bounded-autonomy operating model.
 
-Only if R1B proves the actual surface fits a competent compact/streamed execution design and the user separately authorizes it.
+## Completion
 
-No top-N, hit-rate, lift, or outcome-based truncation is authorized by this redesign.
+Complete both mission phases and return one final report.
 
-## Current control
+Required final stop:
 
-No Codex execution is authorized.
+`BLOCKED_USER_REVIEW_WNBA_FROMDEEP_FEATURE_INVENTORY_COMPLETE`
 
-Do not auto-start R1A, R1B, R1C, historical-as-of FromDeep evaluation, core redistribution, protected validation, or lockbox work.
+Do not automatically begin signal-road discovery, threshold search, interactions, GREEN/RED/GRAY classification, historical-as-of registry evaluation, FromDeep slip construction, core redistribution, protected validation, or lockbox work after the inventory.
