@@ -1,6 +1,6 @@
 # WNBA Codex Prime
 
-Status: **ACTIVE EXECUTION DELEGATION — FROMDEEP COMMONS SELECTOR V1 DEVELOPMENT REPLAY**
+Status: **ACTIVE RESUME — FROMDEEP COMMONS SELECTOR V1 ORACLE CORRECTION + COMPLETION**
 
 Use the clean Prime mirror at `C:\Users\13142\Atlas\PrimeDelegation` and canonical WNBA root `C:\Users\13142\Atlas\WNBA`.
 
@@ -8,123 +8,101 @@ Target repository: `rickeyalackey89-max/Atlas-WNBA`
 
 Target branch: `builder-method-contract-v1`
 
-Current pushed target SHA:
+Current pushed target SHA remains:
 
 `02f8b7143012c879df55078fb7017ed9635382ea`
 
-## Accepted predecessor
+## Parent mission
 
-The WIN-vs-LOSS Commons R0 is accepted complete at target commit `02f8b7143012c879df55078fb7017ed9635382ea`.
-
-Accepted result:
-
-- 38 dates / 27 markets / 20,626 rows;
-- 4,305 WIN / 15,127 LOSS binary evidence;
-- 19 markets = `POSITIVE_COMMONS_PRESENT`;
-- 8 markets = `INSUFFICIENT_EVIDENCE`;
-- no selector was selected, fitted, frozen, promoted, validated, or opened against lockbox/Live;
-- runner ~101.95 seconds; parent mission ~45 minutes.
-
-This result supersedes the earlier assumption that the old SAFE-only GREEN-road failure meant there was no useful commonality. The commons packet shows meaningful market-specific favorable and negative structure.
-
-## Active user-authorized mission
-
-Read and execute:
+The active parent mission remains:
 
 `docs/coordination/wnba/codex/archive/2026-08-19_fromdeep_commons_selector_v1_development_replay.md`
 
-Prime publication commit:
+Original publication commit:
 
 `371b15f7ca5ba058366823c8c8c1e4974f9a61a5`
 
-Governing coordination doctrine:
+The parent mission's scientific method is unchanged:
 
-`docs/coordination/PRIME_BOUNDED_AUTONOMOUS_MISSIONS.md`
+- all 19 Commons-positive markets;
+- exactly one primary favorable common + one primary veto per market;
+- numeric thresholds realized from prior-only market pregame quantiles;
+- eight insufficient-evidence markets abstain;
+- `QUALIFIED = positive_match AND NOT veto_match`;
+- preserve every qualified FromDeep single leg;
+- no probability ranking/cap;
+- no new engine, road atlas, learner, or product-routing rule.
 
-Product semantics remain:
+## Accepted fail-closed blocker
 
-`docs/coordination/wnba/chat/FROMDEEP_PRODUCT_INTEGRATION_CONTRACT.md`
+The first formal replay reached the expected fail-closed oracle gate only because a stale floating-point expected literal differed from the independently confirmed actual date-balanced value by approximately `2.175e-13`.
 
-## Mission in one sentence
+Accepted scientific census from the blocked replay:
 
-**Freeze the simple Commons R0 primary positive + primary veto rule for all 19 positive markets, apply those rules strictly historical-as-of using prior-only numeric quantiles, and report every qualified FromDeep single leg without building another engine or road atlas.**
+- selections: `498`;
+- WIN: `250`;
+- LOSS: `238`;
+- nonbinary: `10`;
+- actual date-balanced rate: `0.4998200128508496`;
+- stale expected literal: `0.4998200128506321`.
 
-## Critical method rule
+The scientific census matched, two independent recomputations confirmed the result, and no scientific transition/commit/push occurred after the mismatch. Protected/validation/lockbox/Aug.13/heldout/Live/fitting access remained zero.
 
-Use all 19 positive markets. Do not cherry-pick a subset by discovery hit rate.
+## Binding correction authorization
 
-Use exactly the primary positive qualifier and primary veto named in each Commons R0 market summary. The eight insufficient-evidence markets abstain.
+Read and bind:
 
-For numeric rules, freeze `field + operator + quantile symbol`; recompute the literal q10/q25/q50/q75/q90 from prior `t<D` pregame candidate values only. Do not carry full-corpus literal thresholds backward in time.
+`docs/coordination/wnba/codex/archive/2026-08-19_fromdeep_commons_selector_v1_oracle_correction_authorization.md`
 
-Market/date cold start: at least 24 prior binary rows, 8 prior dates, and 6 prior participants/combo identities.
+Publication commit:
 
-Candidate qualification:
+`bfcaa8a60e34b45fd08bf4193665185efd4361ab`
 
-`QUALIFIED = positive_condition_matches AND NOT veto_condition_matches`
+This amendment authorizes **exactly one correction formal replay** in the same parent mission.
 
-Missing positive value -> not qualified. Missing veto value -> veto does not match.
+Allowed corrections only:
 
-No old 90/90 GREEN/Wilson/temporal-road gate is applied to candidate qualification. The existing 90/90 + 24 selections / 8 dates target is reported only as a diagnostic reference.
+1. replace stale expected date-balanced oracle `0.4998200128506321` with canonical independently confirmed `0.4998200128508496`;
+2. amend truthful accounting so final totals are:
+   - formal replays `2`;
+   - independent recomputations `2`;
+   - total full evaluations `4`;
+3. resync only bindings affected by those corrections;
+4. run one correction replay;
+5. if scientifically identical and validator-clean, audit, transition, exact-path commit and push.
 
-## Product semantics
+If the correction replay changes the scientific census, stop. Do not change the selector to force a pass.
 
-FromDeep is not a slip.
+## Workflow instruction
 
-Preserve all qualified single-leg rows. Zero, one, or multiple singles per slate are allowed.
+This is a `BUILDER CONTROL DELTA`, **not a new mission activation**.
 
-No probability ranking/cap is authorized in this mission. No core-slip attachment/routing rule is authorized.
+Do not repeat the full parent-mission preamble.
 
-## Evidence interpretation
+Do not restart implementation, rerun Commons discovery, reopen broad governance, add checkpoints, or perform extra full evaluations.
 
-The rule identities were discovered on the same development corpus. Therefore this replay is development-consumed procedural/performance evidence, not untouched OOS confirmation.
+Validate the amended binding once and resume from the preserved worktree.
 
-If the simple selector is promising, Chat/user may freeze it for later protected validation with the completed stack. Validation and lockbox remain sealed now.
+## Hard boundaries remain unchanged
 
-## Execution / workflow
+Validation reads: `0` permitted.
 
-Prefer direct replay from the already-sealed development artifacts/checkpoints.
+Lockbox reads: `0` permitted.
 
-Do not:
+Aug. 13 contribution: `0` permitted.
 
-- build a new engine;
-- rerun Commons R0;
-- rerun SAFE Tier A/Tier B road construction;
-- regenerate source boards when sealed rows already contain the required features;
-- add second/third commons or pairwise intersections;
-- fit/tune a model;
-- change any of the 19 frozen positive/veto identities;
-- add any of the 8 insufficient markets;
-- mutate Live/model/publication/promotion state.
+Heldout/protected evidence: prohibited.
 
-One full Builder preamble at parent mission activation. Subagents inherit it. No repeated control cycles for ordinary inspection, small fixes, or focused tests.
+Live/model/publication/promotion mutation: prohibited.
 
-Target parent mission <=45 minutes. Hard workflow boundary 75 minutes.
+Fitting/tuning: prohibited.
 
-## Required report
-
-Per market and overall:
-
-- target dates eligible after cold start;
-- qualified single count;
-- WIN / LOSS / nonbinary counts;
-- strict binary WIN rate;
-- date-balanced WIN rate;
-- unique dates and participants;
-- same-market baseline on exact selected target dates and lift;
-- qualified singles per target-date distribution;
-- positive match count;
-- veto removal count and post-seal WIN rate of removed otherwise-positive rows;
-- early/later stability;
-- markets producing no singles;
-- diagnostic status versus 90/90 + 24 selections / 8 dates.
-
-Return every sealed qualified single in a machine-readable artifact plus one concise human-readable summary.
+Core 2L/3L/4L changes: prohibited.
 
 ## Completion
 
-Required final stop:
+Required final stop remains:
 
 `BLOCKED_USER_REVIEW_WNBA_FROMDEEP_COMMONS_SELECTOR_V1_DEVELOPMENT_REPLAY_COMPLETE`
 
-Do not auto-start another research branch afterward. Return the selector replay evidence to Chat/user for the freeze/revise/reject decision.
+Return the final replay evidence and every qualified single-leg artifact. Do not auto-start another research branch afterward.
