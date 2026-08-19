@@ -1,20 +1,20 @@
 {
   "schema_version": "atlas_prime_delegation_wnba_current_state_v1",
-  "captured_at_ct": "2026-08-18T20:21:00-05:00",
+  "captured_at_ct": "2026-08-18T20:30:00-05:00",
   "snapshot_not_authority": true,
   "sport": "WNBA",
   "source_repository": "rickeyalackey89-max/Atlas-WNBA",
   "source_branch": "builder-method-contract-v1",
   "source_head": "51665c31090d51b727a3cedb0834ad7eb41ed0d2",
   "builder": {
-    "status": "BLOCKED_USER_REVIEW",
+    "status": "ACTIVE_USER_AUTHORIZED_FROMDEEP_MARKET_OWNED_SIGNAL_ATLAS_R1",
     "current_target_repo_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_SIGNAL_GRAMMAR_RELIABILITY_CONTRACT_R0",
-    "authorized_step": null,
-    "required_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_SIGNAL_GRAMMAR_RELIABILITY_CONTRACT_R0",
+    "authorized_step": "fromdeep_market_owned_signal_atlas_r1",
+    "required_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_MARKET_OWNED_SIGNAL_ATLAS_R1",
     "controller_skill": "slip-builders",
     "validation_reads": 0,
     "lockbox_reads": 0,
-    "active_codex_execution": false
+    "active_codex_execution": true
   },
   "families": {
     "2L": {
@@ -38,7 +38,7 @@
       "promotion_authority": false
     },
     "FromDeep": {
-      "status": "SIGNAL_GRAMMAR_RELIABILITY_CONTRACT_R0_COMPLETE_USER_REVIEW",
+      "status": "MARKET_OWNED_SIGNAL_ATLAS_R1_USER_AUTHORIZED_ACTIVE",
       "independent_of_core_depletion": true,
       "uses_2l_or_3l_depleted_pool": false,
       "core_selected_leg_depletion_applied": false,
@@ -77,11 +77,7 @@
         "status": "PASS",
         "market_count": 27,
         "admitted_market_field_records": 19845,
-        "source_pass_reused": true,
-        "original_retained_cards_opened": 0,
         "signal_road_work_executed": false,
-        "green_red_gray_executed": false,
-        "fitting_ranking_selection_executed": false,
         "validation_reads": 0,
         "lockbox_reads": 0,
         "aug13_reads": 0
@@ -104,43 +100,48 @@
       },
       "signal_grammar_r0": {
         "commit": "51665c31090d51b727a3cedb0834ad7eb41ed0d2",
-        "status": "PASS_USER_REVIEW",
+        "status": "PASS_ACCEPTED",
         "success_marker": "PASS_FROMDEEP_SIGNAL_GRAMMAR_RELIABILITY_CONTRACT_R0",
         "market_count": 27,
         "market_field_record_count": 25218,
         "predicate_eligible_market_field_count": 8040,
         "excluded_market_field_count": 17178,
-        "semantic_family_record_counts": {
-          "LINE_DEPTH": 357,
-          "PROJECTION_EDGE": 508,
-          "ROLE_OPPORTUNITY": 2949,
-          "FRAGILITY_UNCERTAINTY": 204,
-          "AVAILABILITY_CONTEXT": 2159,
-          "ATLAS_COMPONENT": 54,
-          "OTHER_APPROVED_PREGAME": 1809,
-          "EXCLUDED": 17178
-        },
         "outcome_reads": 0,
         "real_signal_roads_constructed": 0,
         "green_red_gray_assignments": 0,
-        "fitting_executed": false,
-        "performance_evaluation_executed": false,
         "validation_reads": 0,
         "lockbox_reads": 0,
-        "live_mutation": false,
         "repository_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_SIGNAL_GRAMMAR_RELIABILITY_CONTRACT_R0"
       },
-      "candidate_next": {
-        "method_step": "FROMDEEP_MARKET_OWNED_SIGNAL_ATLAS_R1",
-        "status": "NOT_AUTHORIZED",
-        "purpose": "Apply the frozen V1 grammar to development-consumed discovery evidence, grade complete Tier-A and precursor-admissible Tier-B roads, and produce the first real market-owned GREEN/RED/GRAY signal atlas without target-date selection.",
-        "preoutcome_candidate_cost_seal_required": true,
-        "full_candidate_surface_required": true,
+      "signal_atlas_r1": {
+        "status": "USER_AUTHORIZED_ACTIVE",
+        "work_order": "docs/coordination/wnba/codex/archive/2026-08-18_fromdeep_market_owned_signal_atlas_r1.md",
+        "publication_commit": "a4b8b72e979e6a045274213db35e8bcc4011e92c",
+        "codex_prime_activation_commit": "0e84041ab7957c46b21af7b30a2ce0aa0984dcf9",
+        "execution_tier": "R2_BOUNDED_PILOT",
+        "starting_wnba_head": "51665c31090d51b727a3cedb0834ad7eb41ed0d2",
+        "expected_current_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_SIGNAL_GRAMMAR_RELIABILITY_CONTRACT_R0",
+        "scientific_scope": "development_consumed_complete_market_owned_green_red_gray_signal_atlas_only",
+        "preoutcome_primitive_surface_seal_required": true,
+        "future_threshold_leakage_allowed": false,
+        "tier_a_full_surface_required": true,
+        "tier_b_precursor_complete_surface_required": true,
         "performance_truncation_allowed": false,
-        "historical_asof_target_selection_allowed": false,
+        "probability_signal_eligibility_allowed": false,
+        "target_date_fromdeep_selection_allowed": false,
+        "market_activation_or_freeze_allowed": false,
         "validation_reads_allowed": 0,
         "lockbox_reads_allowed": 0,
-        "core_or_redistribution_work_allowed": false
+        "aug13_truth_reads_allowed": 0,
+        "core_or_redistribution_work_allowed": false,
+        "live_or_publication_mutation_allowed": false,
+        "required_success_marker": "PASS_FROMDEEP_MARKET_OWNED_SIGNAL_ATLAS_R1",
+        "required_scientific_dispositions": [
+          "V1_SUPPORTED_GREEN_STRUCTURE_PRESENT",
+          "V1_NO_GREEN_SUPPORTED_RED_STRUCTURE_PRESENT",
+          "V1_NO_SUPPORTED_DECISIVE_ROAD_STRUCTURE"
+        ],
+        "required_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_MARKET_OWNED_SIGNAL_ATLAS_R1"
       }
     }
   },
@@ -152,9 +153,10 @@
     "sequence_policy": "NO_MIDSTREAM_BACKTRACKING_FROM_FROMDEEP_INTO_CORE_FAMILIES"
   },
   "next_strategy": {
-    "status": "AWAITING_USER_AUTHORIZATION",
-    "topic": "Review the passed V1 field-permission/fidelity surface, then if authorized run the first real market-owned signal atlas under the frozen V1 grammar. No target-date FromDeep selection yet.",
+    "status": "USER_AUTHORIZED_CODEX_EXECUTION_ACTIVE",
+    "topic": "Run the first complete real market-owned FromDeep signal atlas under the frozen V1 grammar. Pre-outcome primitive/cost seal first, then complete Tier-A and precursor-admissible Tier-B GREEN/RED/GRAY grading. No target-date FromDeep selection yet.",
     "candidate_method_step": "FROMDEEP_MARKET_OWNED_SIGNAL_ATLAS_R1",
-    "codex_execution_authorized": false
+    "codex_execution_authorized": true,
+    "required_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_MARKET_OWNED_SIGNAL_ATLAS_R1"
   }
 }
