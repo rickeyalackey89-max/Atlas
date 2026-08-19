@@ -1,6 +1,6 @@
 # WNBA Codex Prime
 
-Status: **ACTIVE EXECUTION DELEGATION — WORKFLOW RECOVERY + FROMDEEP SAFE R1 RESUME**
+Status: **ACTIVE EXECUTION DELEGATION — FROMDEEP WIN-vs-LOSS COMMONS R0**
 
 Use the clean Prime mirror at `C:\Users\13142\Atlas\PrimeDelegation` and canonical WNBA root `C:\Users\13142\Atlas\WNBA`.
 
@@ -8,108 +8,123 @@ Target repository: `rickeyalackey89-max/Atlas-WNBA`
 
 Target branch: `builder-method-contract-v1`
 
-Last accepted pushed target SHA before the paused local R1 work:
+Current pushed target SHA:
 
-`c6567354fcfc07d99089b989cc97d0303975bb5c`
+`a51557bf416910d0150f9847bee87e15add257dc`
 
-## User pause and replacement delegation
+## Accepted predecessor
 
-The user explicitly paused the in-progress SAFE historical-as-of R1 because the workflow was still repeatedly revisiting governance/control around tiny tests and subagent work.
+The SAFE historical-as-of R1 is accepted complete at `a51557bf416910d0150f9847bee87e15add257dc`.
 
-Do **not** continue under the prior execution wording.
+Accepted scientific interpretation:
 
-Do **not** reset/discard the current local R1 worktree merely because the last accepted pushed SHA is `c656735...`.
+- the exact SAFE-only V1 one/two-predicate GREEN/RED/GRAY eligibility method faithfully produced `NO_VIABLE_SIGNAL_STRUCTURE`;
+- this rejects that exact method as a useful FromDeep positive-selector path;
+- it does **not** prove that winning Demon legs have no useful pregame commonalities;
+- preserve the completed evaluator and evidence; do not rerun, rewrite, delete, or generalize it during the active mission.
 
-Read and execute the replacement mission:
+Headline predecessor evidence:
 
-`docs/coordination/wnba/codex/archive/2026-08-19_workflow_recovery_and_fromdeep_safe_asof_resume.md`
+- 38 dates / 27 markets / 20,626 rows;
+- WIN 4,305 / LOSS 15,127 / VOID 499 / PUSH 2 / UNSUPPORTED 622 / MISSING 71;
+- Tier A GREEN 0 / RED 1,516 / GRAY 98,552;
+- Tier B GREEN 0 / RED 0 / GRAY 23,408;
+- eligible rows 0;
+- total engine wall ~1,111.05 seconds;
+- total parent mission elapsed ~3h14m28s.
 
-Publication commit:
+## Active user-authorized mission
 
-`4733bc06c7ae4c6313c2e4bcea0f876c3ea68ad8`
+Read and execute:
 
-Updated governing Prime doctrine:
+`docs/coordination/wnba/codex/archive/2026-08-19_fromdeep_win_loss_commons_r0.md`
+
+Prime publication commit:
+
+`6e6342d781be289a3b827e1004a2b2219fe50bbd`
+
+Governing coordination doctrine:
 
 `docs/coordination/PRIME_BOUNDED_AUTONOMOUS_MISSIONS.md`
 
-Doctrine update commit:
-
-`1c70ad42e9f09494b2e451dfcb4a3dcd4e674b43`
-
-The prior R1 work order remains the frozen scientific-method authority where the replacement mission says to resume it:
-
-`docs/coordination/wnba/codex/archive/2026-08-19_fromdeep_safe_historical_asof_signal_viability_r1.md`
-
-Product semantics remain binding:
+Product semantics remain:
 
 `docs/coordination/wnba/chat/FROMDEEP_PRODUCT_INTEGRATION_CONTRACT.md`
 
-## Critical workflow instruction
+## Mission in one sentence
 
-The user wants the full Builder preamble. Emit it **once** for the parent replacement mission.
+**Use the already-settled Demon-OVER development corpus to show, market by market, what winning legs have in common, what losing legs have in common, and which small transparent commonalities deserve one later deterministic historical-as-of selector test.**
 
-All subagents inherit that preamble and mission envelope.
+## Critical scope correction
 
-A `control`, `topology`, `engine design`, `semantics`, `testing`, or other subagent is **not** a new mission activation.
+This is descriptive discovery, not another signal-atlas experiment.
 
-Do not emit/reason through the full governance preamble again for:
+Do not build a new engine.
 
-- a tiny test;
-- parser/representation/row-identity repair;
-- another file inspection;
-- profiling/topology work;
-- small utilities;
-- test reruns;
-- subagent lifecycle/context compaction;
-- ordinary debugging that preserves scientific meaning.
+Do not rerun R1.
 
-Use `BUILDER CONTROL DELTA` only for a real change in the closed governing-fact set defined by the updated Prime doctrine and reconciled target governance.
+Do not construct exhaustive Tier A/Tier B roads.
 
-Full control validation is mission-level: activation, first transition into a newly authorized evidence class, actual governing-fact change, final completion/hard boundary. Not per command/test/date/file/subagent.
+Do not demand a primitive independently hit the old 90/90 GREEN gate before it may be described as useful information.
 
-## Mission sequence
+Analyze individual feature separation first. Only inspect small pairwise intersections among individually informative conditions.
 
-One authorization covers both phases with no intermediate user stop:
+The output must contain understandable basketball information.
 
-1. **workflow recovery** — reconcile target WNBA governance/control behavior to the mission-level/subagent-inheritance semantics, preserve the paused local worktree, and adjudicate the reported premature settlement-file SHA-read anomaly once;
-2. **R1 resume** — continue the existing local SAFE historical-as-of implementation from scientifically valid paused work and complete the authorized evidence packet.
+## Feature authority for this discovery packet
 
-Do not restart R1 from scratch unless the preserved local implementation is actually unusable for a stated technical reason.
+- `SAFE` pregame fields are allowed.
+- Previously `UNCERTAIN` fields may be analyzed when the uncertainty is only catalog/semantic/namespace authority and pregame availability is already established.
+- Fields with unresolved timing, outcome/postgame derivation, identity/provenance meaning, future information, or other hard leakage risk remain excluded.
+- Model probability/confidence may be reported separately as context but may not replace basketball-feature commonality discovery or become the mission's selector.
 
-## Scientific method remains unchanged
+Report exactly which previously-UNCERTAIN fields were admitted and why.
 
-- `SAFE` predicates only;
-- strict historical-as-of `t<D`;
-- complete Tier A first;
-- Tier B only from actual precursor-passing Tier-A primitives;
-- compact/streamed execution;
-- GREEN/RED/GRAY prior-only registry;
-- complete eligible FromDeep **single-leg** surface;
-- rank-1 probability result diagnostic only, never a product cap;
-- FromDeep is not a slip and constructs no multi-leg slip.
+## Expected outputs
 
-`UNCERTAIN` and `EXCLUDED` predicates remain prohibited.
+Per market, report:
 
-Validation reads: `0` permitted.
+- baseline WIN rate;
+- strongest favorable WIN-vs-LOSS commonalities;
+- strongest negative/veto commonalities;
+- support, WIN rate, lift/damage, unique dates, unique participants, and concentration;
+- only small pairwise intersections among the individually strongest commonalities;
+- whether preserved R1 RED structure actually describes losing candidate contexts;
+- one discovery disposition: `POSITIVE_COMMONS_PRESENT`, `VETO_STRUCTURE_ONLY`, `MIXED_WEAK_STRUCTURE`, `NO_MEANINGFUL_COMMONALITY`, or `INSUFFICIENT_EVIDENCE`;
+- a plain-language sentence describing what a future deterministic selector for that market would need to test.
 
-Lockbox reads: `0` permitted.
+Return both a human-readable report and compact machine-readable artifact.
 
-Aug. 13 contribution: `0` permitted.
+## Workflow and resource rule
 
-Live/model/publication/promotion mutation: prohibited.
+One full Builder preamble at parent mission activation. Subagents inherit it.
 
-No new fitting/tuning/model work is authorized.
+No repeated control cycles for ordinary aggregation, file inspection, small fixes, or focused tests.
 
-## Timing/accounting correction
+Target total parent mission: <=45 minutes.
 
-The prior inventory receipt's ~99.84-second runtime was the inventory runner, **not** the total Codex mission elapsed time. The user reports that mission ran from roughly midnight until about 4:15 AM.
+If the required packet is not essentially complete by 60 minutes, stop and report the actual blocker instead of inventing more infrastructure.
 
-For this replacement mission, record mission-start time at activation and report total Codex wall-clock elapsed separately from scientific runner/kernel time. Do not conflate them again.
+No checkpoint framework. No storage-cleanup ceremony. No giant test suite.
 
-## Final stop
+## Hard boundaries
 
-On successful workflow recovery and R1 completion:
+Do not:
 
-`BLOCKED_USER_REVIEW_WNBA_FROMDEEP_SAFE_ASOF_SIGNAL_VIABILITY_R1_COMPLETE`
+- select/freeze a final FromDeep rule;
+- tune thresholds;
+- fit a learner/model;
+- run a new historical-as-of performance experiment;
+- use validation or lockbox;
+- use Aug. 13;
+- mutate Live/model/publication/promotion state;
+- alter core 2L/3L/4L methods;
+- invent a FromDeep output-count or slip-attachment rule.
 
-Return one concise final mission report. Do not start a new scientific/product decision afterward.
+## Completion
+
+Required final stop:
+
+`BLOCKED_USER_REVIEW_WNBA_FROMDEEP_WIN_LOSS_COMMONS_R0_COMPLETE`
+
+At that stop, Chat/user will read the actual commons evidence, choose the simple deterministic selector, freeze it, and then reuse the existing historical-as-of evaluator once for the performance test.
