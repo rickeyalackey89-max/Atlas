@@ -12,9 +12,7 @@ Starting pushed target SHA: `c6567354fcfc07d99089b989cc97d0303975bb5c`
 
 ## Accepted predecessor
 
-The bounded-autonomy governance reset + FromDeep feature inventory mission is accepted complete at target commit:
-
-`c6567354fcfc07d99089b989cc97d0303975bb5c`
+The bounded-autonomy governance reset + FromDeep feature inventory is accepted complete at `c6567354fcfc07d99089b989cc97d0303975bb5c`.
 
 Accepted inventory facts:
 
@@ -31,48 +29,65 @@ Accepted inventory facts:
 
 The prior exhaustive/materialized R1 at `a9d136...` remains rejected execution architecture/resource evidence only.
 
-## Active user-authorized mission
+## Active mission
 
 Read and execute:
 
 `docs/coordination/wnba/codex/archive/2026-08-19_fromdeep_safe_historical_asof_signal_viability_r1.md`
 
-Prime publication commit:
+Original mission publication commit:
 
 `5c09566596e9a70cffcee6870c27997873f33a32`
 
-Governing Prime coordination doctrines:
+### Binding product-semantics clarification
+
+Also read and bind:
+
+`docs/coordination/wnba/chat/FROMDEEP_PRODUCT_INTEGRATION_CONTRACT.md`
+
+Publication commit:
+
+`4b0897e96c90f17be9aebe747f7215cc2454cd5a`
+
+This clarification is authoritative for terminology/product interpretation inside the active mission:
+
+- **FromDeep is not a slip and does not construct a slip.**
+- FromDeep produces **zero, one, or more qualified single-leg picks**.
+- Those picks may later become optional flex/add-on candidates available to the actual core slip-family construction process.
+- Core Builder families construct the actual multi-leg slips.
+- The active `final_probability` rank-1 result is diagnostic only; it does **not** cap FromDeep at one pick per market/date or slate and does not replace the complete eligible single-leg surface.
+- Do not implement any concept of a multi-leg `FromDeep slip`.
+- Product attachment/routing of FromDeep single legs into core slips is a later user/Chat decision, not part of this mission.
+
+No scientific signal rule changes because of this clarification.
+
+## Governing doctrines
 
 - `docs/coordination/PRIME_BOUNDED_AUTONOMOUS_MISSIONS.md`
 - `docs/coordination/PRIME_EXPERIMENT_RUNWAY.md`
-
-Retained method authority where not narrowed by the active work order:
-
-- `docs/coordination/wnba/chat/FROMDEEP_SIGNAL_GRAMMAR_V1.md`
+- `docs/coordination/wnba/chat/FROMDEEP_SIGNAL_GRAMMAR_V1.md` where not narrowed by the active work order.
 
 ## Mission summary
-
-The next experiment is the actual causal FromDeep signal test, not another static giant atlas.
 
 Codex will:
 
 1. use only `SAFE` market-feature records as predicate authority;
 2. run strict historical-as-of `t<D` registry construction on the sealed development corpus;
 3. build/grade complete Tier A first;
-4. form Tier B only from the **actual precursor-passing** Tier-A primitives for that target-date prior history;
+4. form Tier B only from actual precursor-passing Tier-A primitives;
 5. use compact/streamed execution rather than pair-by-row materialization;
-6. freeze GREEN/RED/GRAY and eligibility before each target-date settlement reveal;
-7. grade all eligible rows after seal;
-8. also seal one fixed diagnostic rank-1 eligible row per market/date using existing `final_probability` only after signal eligibility;
+6. freeze GREEN/RED/GRAY and single-leg eligibility before each target-date settlement reveal;
+7. preserve and grade the complete eligible single-leg surface after seal;
+8. also report the fixed rank-1 eligible-row diagnostic using existing `final_probability`, explicitly as a diagnostic rather than a product cap;
 9. report which markets meet or miss the current 90/90 + 24 selections / 8 target-date activation floor and why.
 
-`UNCERTAIN` fields remain quarantined. They may be summarized by reason but may not enter signal discovery.
+`UNCERTAIN` fields remain quarantined and may not enter signal discovery.
 
 ## Autonomous execution
 
 This is one bounded mission. Codex may perform multiple subordinate engineering tasks, test/fix loops, profiling, compact executor work and independent non-conflicting work in parallel.
 
-Do not stop after individual tests, parser fixes, utility creation, profiling, representation changes that preserve exact science, or subordinate milestones.
+Do not stop after individual tests, parser fixes, utilities, profiling or representation improvements that preserve exact science.
 
 Proceed automatically from topology -> implementation -> Tier-A grading -> actual precursor-admissible Tier-B grading -> historical target application -> final report while inside the mission envelope.
 
@@ -83,7 +98,8 @@ Return only at a genuine decision boundary, including:
 - SAFE/UNCERTAIN/EXCLUDED authority change;
 - primitive/operator/quantile or GREEN/RED/precursor/breadth method change;
 - new transforms/interactions beyond frozen V1;
-- ranking-diagnostic change;
+- changing the predeclared rank diagnostic;
+- inventing a FromDeep single-leg output cap/policy or core-slip attachment rule;
 - validation/lockbox/protected evidence;
 - new fitting/tuning/model work;
 - Live/runtime/publication/promotion mutation;
@@ -105,4 +121,4 @@ Required final stop:
 
 `BLOCKED_USER_REVIEW_WNBA_FROMDEEP_SAFE_ASOF_SIGNAL_VIABILITY_R1_COMPLETE`
 
-Do not automatically build final multi-leg FromDeep slips, open validation/lockbox, or reopen core redistribution after this mission. Return the causal market-by-market signal/rank diagnostic evidence to Chat/user for the final product-method decision.
+Return the causal market-by-market signal evidence, complete eligible single-leg surface, and rank-1 diagnostic to Chat/user. Do not invent final FromDeep output-count rules, attach FromDeep legs to core slips, open validation/lockbox, or reopen core redistribution after this mission.
