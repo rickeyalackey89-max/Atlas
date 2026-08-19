@@ -22,18 +22,27 @@ The R0 human report explicitly preserves:
 - **19 `SPARSE_HIGH_PRECISION_WATCHLIST` road IDs**;
 - **6 separate `DECAYING` evidence-class finalists**.
 
-The fact that the 8 specialist-grade roads occur in three markets does **not** reduce the candidate set to three roads. The watchlist label is also not a rejection: for a deliberately sparse 0-3-ish Demon specialist, a road may be high precision but have insufficient recent support to receive the stronger evidence-class label.
+The fact that the 8 specialist-grade roads occur in three markets does **not** reduce the candidate set to three roads. The watchlist label is also not a rejection: a road may be high precision but have low firing frequency, and low firing frequency is not itself a product defect.
 
-The R0 diagnostic sparse union is not authority for narrowing to three roads. It selected one best **non-decaying** road per represented market for a density diagnostic and therefore answered a different question.
+The R0 diagnostic sparse union is not authority for narrowing candidate output. It selected one best **non-decaying** road per represented market for a density diagnostic and therefore answered a different question.
 
 ## Binding cross-sport product doctrine
 
-Read and bind:
+Read and bind the latest versions of:
 
 - `docs/coordination/ATLAS_DEMON_SPECIALIST_PRODUCT_DOCTRINE.md`
 - `docs/coordination/ATLAS_DEMON_SPECIALIST_PRODUCT_NAMES.md`
 
-WNBA FromDeep is a sparse precision specialist. Low firing frequency is expected and low-support high-precision roads are scientifically relevant rather than automatically undesirable.
+Critical output-count correction:
+
+**FromDeep is signal-driven, not count-driven.**
+
+- If zero distinct candidates clear real roads, output is zero.
+- If three distinct candidates clear real roads, output is three.
+- If ten distinct candidates clear real roads, all ten remain valid potential outputs.
+- There is no `0-3` cap, target, density gate, quota, probability top-N suppression, or count-based rejection authority.
+
+Historically sparse output may emerge naturally because roads are selective, but count is an observed consequence of the method, not a criterion used to discard qualified candidates.
 
 ## Exact candidate-road authority
 
@@ -76,9 +85,9 @@ Do not add the six `DECAYING` evidence-class finalists in this mission. Do not a
 
 ## Scientific question
 
-**When all 27 exact specialist-grade/watchlist road identities from R0 are replayed under the same strict prior-only July/August time arrow, which roads actually preserve current precision, which are redundant/equivalent, which fail causally, and what sparse candidate-level union do the surviving roads imply?**
+**When all 27 exact specialist-grade/watchlist road identities from R0 are replayed under the same strict prior-only July/August time arrow, which roads actually preserve current precision, which are redundant/equivalent, which fail causally, and which distinct Demon candidates genuinely clear at least one retained road?**
 
-This is a causal audit of the entire R0 candidate set, not a freeze of three hand-picked roads.
+This is a causal audit of the entire R0 candidate set. It is not a count-optimization exercise.
 
 ## Time arrow and recency
 
@@ -88,7 +97,7 @@ This is a causal audit of the entire R0 candidate set, not a freeze of three han
 - For target date `D`, numeric quantiles are realized only from admitted pregame values at `t < D` within the relevant market/field context.
 - Outcomes grade only after the target selections are sealed.
 
-Use the simplest faithful cold-start requirement needed for prior-only quantile realization. Do **not** invent a high support requirement that mechanically removes the sparse watchlist roads before they can be audited; report insufficient prior quantile support transparently when it genuinely occurs.
+Use the simplest faithful cold-start requirement needed for prior-only quantile realization. Do **not** invent a high support requirement that mechanically removes sparse watchlist roads before they can be audited; report insufficient prior quantile support transparently when it genuinely occurs.
 
 ## Road-level causal audit
 
@@ -107,7 +116,7 @@ For every one of the 27 road IDs report:
 - fires/date distribution;
 - whether the road has improved, held, decayed, or become inactive under causal realization.
 
-Do not require a road to have broad support merely because conventional classifier evaluation prefers larger samples. Sparse firing is part of this product. State evidence strength separately from observed precision.
+Do not require a road to have broad support merely because conventional classifier evaluation prefers larger samples. State evidence strength separately from observed precision.
 
 ## Equivalence and overlap audit
 
@@ -127,7 +136,7 @@ Create deduplicated candidate-level diagnostics, where one player/market/side/li
 Report at minimum:
 
 1. union of all 27 candidate roads;
-2. union of only roads whose causal latest-10 precision remains >= 0.75 when gradeable;
+2. union of roads whose causal latest-10 precision remains >= 0.75 when gradeable;
 3. union of roads with insufficient latest-10 support but no causal loss and at least 4 active-regime binary wins/selections, kept as a separate sparse-evidence diagnostic rather than silently rejected.
 
 These are diagnostics, not final frozen selectors.
@@ -139,11 +148,11 @@ For each union report:
 - baseline lift;
 - zero-inclusive fires/date;
 - median, q90, max;
-- percent of dates with 0, 1, 2, 3, and >3 unique fires;
+- percentage of dates with each observed unique-fire count;
 - duplicate road-match collapse count;
 - markets contributing fires.
 
-Do not impose a probability top-N cap to make density look sparse.
+**Density metrics are descriptive only.** A date with more than three distinct genuine qualifiers is not a failure and must not cause candidate removal. Do not impose a probability top-N cap or any other count-based cutoff.
 
 ## Decision packet, not automatic freeze
 
@@ -156,6 +165,8 @@ Return a concise final classification of each equivalence cluster/road as one of
 - `CAUSAL_INACTIVE_INSUFFICIENT_FIRE`
 
 These labels are descriptive for user/Chat review. Do not freeze a final FromDeep road set and do not open validation automatically.
+
+A road/candidate must never be rejected **solely** because the overall run already contains some number of other valid Demon candidates.
 
 ## No new discovery
 
