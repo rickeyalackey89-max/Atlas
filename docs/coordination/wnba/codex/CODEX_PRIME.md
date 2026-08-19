@@ -1,6 +1,6 @@
 # WNBA Codex Prime
 
-Status: **ACTIVE RESUME — FROMDEEP COMMONS SELECTOR V1 ORACLE CORRECTION + COMPLETION**
+Status: **ACTIVE EXECUTION DELEGATION — FROMDEEP RECENT PRECISION ROADS R0**
 
 Use the clean Prime mirror at `C:\Users\13142\Atlas\PrimeDelegation` and canonical WNBA root `C:\Users\13142\Atlas\WNBA`.
 
@@ -8,101 +8,154 @@ Target repository: `rickeyalackey89-max/Atlas-WNBA`
 
 Target branch: `builder-method-contract-v1`
 
-Current pushed target SHA remains:
+Current pushed target SHA:
 
-`02f8b7143012c879df55078fb7017ed9635382ea`
+`dabd1d0b20e0aa07138c15ba28df9f37fc7d65af`
 
-## Parent mission
+## Accepted predecessor
 
-The active parent mission remains:
+The Commons Selector V1 development replay is accepted complete at `dabd1d0b20e0aa07138c15ba28df9f37fc7d65af`.
 
-`docs/coordination/wnba/codex/archive/2026-08-19_fromdeep_commons_selector_v1_development_replay.md`
+Accepted result:
 
-Original publication commit:
+- 498 qualified singles;
+- 250 WIN / 238 LOSS / 10 nonbinary;
+- strict rate `51.2295%`;
+- date-balanced rate `49.9820%`;
+- exact-date baseline `22.3278%`;
+- raw strict lift `+28.9017 pp`;
+- 29 selected dates / 83 participants;
+- no protected, validation, lockbox, Aug.13, heldout, Live, fitting, or automatic follow-on access.
 
-`371b15f7ca5ba058366823c8c8c1e4974f9a61a5`
+Interpretation:
 
-The parent mission's scientific method is unchanged:
+The broad selector proved that the Commons carry meaningful information but is far too broad to be the FromDeep product. FromDeep is a sparse precision specialist, not a 498-selection broad classifier.
 
-- all 19 Commons-positive markets;
-- exactly one primary favorable common + one primary veto per market;
-- numeric thresholds realized from prior-only market pregame quantiles;
-- eight insufficient-evidence markets abstain;
-- `QUALIFIED = positive_match AND NOT veto_match`;
-- preserve every qualified FromDeep single leg;
-- no probability ranking/cap;
-- no new engine, road atlas, learner, or product-routing rule.
-
-## Accepted fail-closed blocker
-
-The first formal replay reached the expected fail-closed oracle gate only because a stale floating-point expected literal differed from the independently confirmed actual date-balanced value by approximately `2.175e-13`.
-
-Accepted scientific census from the blocked replay:
-
-- selections: `498`;
-- WIN: `250`;
-- LOSS: `238`;
-- nonbinary: `10`;
-- actual date-balanced rate: `0.4998200128508496`;
-- stale expected literal: `0.4998200128506321`.
-
-The scientific census matched, two independent recomputations confirmed the result, and no scientific transition/commit/push occurred after the mismatch. Protected/validation/lockbox/Aug.13/heldout/Live/fitting access remained zero.
-
-## Binding correction authorization
+## Binding product doctrine and names
 
 Read and bind:
 
-`docs/coordination/wnba/codex/archive/2026-08-19_fromdeep_commons_selector_v1_oracle_correction_authorization.md`
+- `docs/coordination/ATLAS_DEMON_SPECIALIST_PRODUCT_DOCTRINE.md`
+- `docs/coordination/ATLAS_DEMON_SPECIALIST_PRODUCT_NAMES.md`
+
+Shared Atlas product semantics:
+
+- WNBA / NBA / CBB: **FromDeep**;
+- MLB: **BigSwings**;
+- NFL: **HailMarys**;
+- CFB uses the same specialist contract; its display name remains unbound until the user explicitly names it.
+
+These are the same cross-sport product concept: normally `0-3-ish` narrow, highest-conviction aggressive-line single-leg flex/add-on picks per run/slate, with zero a valid output.
+
+## Active mission
+
+Read and execute:
+
+`docs/coordination/wnba/codex/archive/2026-08-19_fromdeep_recent_precision_roads_r0.md`
 
 Publication commit:
 
-`bfcaa8a60e34b45fd08bf4193665185efd4361ab`
+`bce7ea61784a3af0b5825e9ca457e230ac076faa`
 
-This amendment authorizes **exactly one correction formal replay** in the same parent mission.
+Mission ID:
 
-Allowed corrections only:
+`WNBA_FROMDEEP_RECENT_PRECISION_ROADS_R0`
 
-1. replace stale expected date-balanced oracle `0.4998200128506321` with canonical independently confirmed `0.4998200128508496`;
-2. amend truthful accounting so final totals are:
-   - formal replays `2`;
-   - independent recomputations `2`;
-   - total full evaluations `4`;
-3. resync only bindings affected by those corrections;
-4. run one correction replay;
-5. if scientifically identical and validator-clean, audit, transition, exact-path commit and push.
+## Mission in one sentence
 
-If the correction replay changes the scientific census, stop. Do not change the selector to force a pass.
+**Using the already-produced Commons/replay evidence, discover the narrowest current-regime multi-gate market roads closest to Aug. 19 that can support a truly sparse FromDeep product; July/August drives discovery and June is background/stress only.**
 
-## Workflow instruction
+## Critical product correction
 
-This is a `BUILDER CONTROL DELTA`, **not a new mission activation**.
+Do not optimize broad coverage.
 
-Do not repeat the full parent-mission preamble.
+Do not try to make every market fire.
 
-Do not restart implementation, rerun Commons discovery, reopen broad governance, add checkpoints, or perform extra full evaluations.
+Do not treat ~51% broad selection performance as the target.
 
-Validate the amended binding once and resume from the preserved worktree.
+Extremely narrow roads are allowed, including conjunctions of up to eight meaningful favorable/veto gates, when each gate is pregame, defensible, and materially contributes to specialist precision.
 
-## Hard boundaries remain unchanged
+The expected final product behavior is usually 0-3-ish fires per run/slate. This mission does not impose an arbitrary top-N cap; it determines whether the roads themselves are sparse enough.
+
+## Recency rule
+
+Active discovery regime:
+
+`2026-07-01` through `2026-08-09` usable settled development dates.
+
+Current traction window:
+
+latest 10 usable dates within that regime, derived from the sealed corpus.
+
+June:
+
+background/stress reporting only. June may not drive discovery, support minima, road ranking, gate addition/removal, or current-regime rejection.
+
+Closer-to-Live evidence is more decision-relevant. Improving late performance is not automatically instability; it may represent Atlas gaining traction on the moving market.
+
+## Bounded road search
+
+Use only the already-produced Commons R0 shortlists:
+
+- up to five favorable commons per market;
+- up to five negative/veto commons per market;
+- collapse exact duplicates/aliases;
+- maximum 1-8 gates per road;
+- fixed Commons quantile/category landmarks only;
+- negative commons enter as NOT-veto gates;
+- bounded shortlist combinations only.
+
+Do not reopen the full 52,488-condition universe and do not build another atlas or generalized engine.
+
+## Specialist-grade screen
+
+The work order's frozen discovery screen governs.
+
+Key intent:
+
+- strong current precision;
+- meaningful lift over contemporaneous Demon baseline;
+- real date/player breadth;
+- high abstention/selectivity;
+- recent traction weighted more heavily than stale history;
+- no ornamental gates.
+
+A market may return no road.
+
+## Workflow
+
+One parent Builder preamble. Subagents inherit it.
+
+No repeated governance cycles for ordinary aggregation, bounded combination enumeration, small fixes, reporting, or focused tests.
+
+Target total parent mission <=45 minutes; hard workflow boundary 60 minutes.
+
+No checkpoint framework. No storage-cleanup ceremony. No giant generic test expansion.
+
+## Hard boundaries
 
 Validation reads: `0` permitted.
 
 Lockbox reads: `0` permitted.
 
-Aug. 13 contribution: `0` permitted.
+Aug.13 contribution: `0` permitted.
 
 Heldout/protected evidence: prohibited.
 
 Live/model/publication/promotion mutation: prohibited.
 
-Fitting/tuning: prohibited.
+Fitting/training/tuning/calibration: prohibited.
 
 Core 2L/3L/4L changes: prohibited.
 
+Final FromDeep selector freeze: prohibited in this mission.
+
+Do not auto-start a replay or validation after completion.
+
 ## Completion
 
-Required final stop remains:
+Required final stop:
 
-`BLOCKED_USER_REVIEW_WNBA_FROMDEEP_COMMONS_SELECTOR_V1_DEVELOPMENT_REPLAY_COMPLETE`
+`BLOCKED_USER_REVIEW_WNBA_FROMDEEP_RECENT_PRECISION_ROADS_R0_COMPLETE`
 
-Return the final replay evidence and every qualified single-leg artifact. Do not auto-start another research branch afterward.
+Return the current-regime road packet, sparse-union firing density, finalist roads, watchlist roads, no-road markets, and mission wall time versus analyzer runtime to Chat/user for the freeze decision.
