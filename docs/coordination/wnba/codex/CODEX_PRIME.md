@@ -1,6 +1,6 @@
 # WNBA Codex Prime
 
-Status: **ACTIVE USER-AUTHORIZED EXECUTION — FROMDEEP MARKET-OWNED SIGNAL ATLAS R1**
+Status: **NO ACTIVE EXECUTION DELEGATION — FROMDEEP R1 RESOURCE/WORKFLOW REDESIGN REVIEW**
 
 Use the clean Prime mirror at `C:\Users\13142\Atlas\PrimeDelegation` and canonical WNBA root `C:\Users\13142\Atlas\WNBA`. Target-repository authority and the active `slip-builders` lane remain governing.
 
@@ -13,7 +13,7 @@ Use the clean Prime mirror at `C:\Users\13142\Atlas\PrimeDelegation` and canonic
 - Complete/freeze or reject that core redistribution decision without using protected validation to tune it.
 - Protected validation comes only after both FromDeep and the core redistribution decision are complete.
 
-## Accepted FromDeep evidence through signal-grammar fidelity
+## Accepted FromDeep authority before R1
 
 R0B2 pretruth seal:
 
@@ -31,104 +31,116 @@ Completed signal grammar/reliability fidelity:
 
 `51665c31090d51b727a3cedb0834ad7eb41ed0d2`
 
-Accepted fixed facts:
+Frozen facts remain:
 
-- 38 provenance-valid discovery source dates;
-- 20,626 exact sealed Demon-OVER rows;
-- 27 factual market owners;
-- canonical partition: WIN 4,305 / LOSS 15,127 / VOID 499 / PUSH 2 / unsupported 622 / missing truth 71;
-- canonical WIN+LOSS anatomy population = 19,432;
-- V1 grammar fidelity PASS with outcome reads = 0, validation reads = 0, lockbox reads = 0;
-- V1 field-permission manifest contains 25,218 market-field records: 8,040 predicate-eligible and 17,178 excluded;
-- no real signal road, GREEN/RED/GRAY state, fitting, ranking, selection, redistribution, protected evaluation, or Live mutation occurred before this R1 authorization.
+- 38 provenance-valid discovery dates;
+- 20,626 exact Demon-OVER rows;
+- 27 market owners;
+- canonical partition WIN 4,305 / LOSS 15,127 / VOID 499 / PUSH 2 / unsupported 622 / missing truth 71;
+- validation reads = 0;
+- lockbox reads = 0;
+- Aug. 13 contribution = 0.
 
-Accepted current WNBA stop:
+## R1 resource/workflow stop — accepted evidence only
 
-`BLOCKED_USER_REVIEW_WNBA_FROMDEEP_SIGNAL_GRAMMAR_RELIABILITY_CONTRACT_R0`
+WNBA pushed result commit:
 
-## Frozen V1 signal method
+`a9d136bb2c6e6b94bdcebbd6dfc58971e1bc75c6`
 
-Prime strategic contract:
+User-directed stop after the R1 workflow became excessively expensive/ceremonial.
 
-`docs/coordination/wnba/chat/FROMDEEP_SIGNAL_GRAMMAR_V1.md`
+Scientific outcomes opened: `0`.
 
-The V1 method is frozen for R1. Do not tune it because of R1 outcomes.
+Live reads: `0`.
 
-Core rules:
+No GREEN/RED/GRAY census or scientific disposition exists.
 
-- market-owned Demon-OVER signal roads only;
-- probability excluded from signal eligibility and reserved for later secondary ranking only;
-- one- or two-predicate roads, conjunction only, no OR or 3+ interactions;
-- numeric predicates only from the fixed q10/q25/q50/q75/q90 symbolic grid;
-- boolean/categorical equality only;
-- outcome/identity/provenance/historical-hit-rate/missingness predicates prohibited;
-- breadth floor: 24 rows / 8 dates / 6 participants, top-date and top-participant support share <= 25%;
-- two-sided 95% Wilson reliability with fixed z;
-- deterministic chronological early/late stability check;
-- GREEN requires >=90% strict + >=90% date-balanced plus market-relative Wilson separation and positive temporal halves;
-- RED requires conservative negative market-relative Wilson separation and negative temporal halves;
-- all other roads remain GRAY;
-- zero decisive roads is a legal scientific result.
+Useful outcome-blind topology evidence from the sealed preoutcome resource artifact:
 
-## ACTIVE USER-AUTHORIZED TASK — market-owned signal atlas R1
+- raw Tier-A primitives: `65,384`;
+- canonical/deduped Tier-A primitives: `19,214`;
+- naive complete Tier-B upper-bound topology: `5,438,320` roads;
+- measured Phase-A primitive-match evaluations: `80,849,561`;
+- projected naive peak bytes: `175,451,099,900`;
+- projected total wall time: about `183,037` seconds;
+- resource gate: FAIL;
+- outcome inputs resolved: `0`.
 
-Prime work order:
+Interpretation:
 
-`docs/coordination/wnba/codex/archive/2026-08-18_fromdeep_market_owned_signal_atlas_r1.md`
+`R1_IMPLEMENTATION_TOPOLOGY_DESIGN_FAILURE_NOT_FROMDEEP_SCIENTIFIC_FAILURE`
 
-Work-order publication commit:
+The failure does not invalidate FromDeep, the frozen V1 signal grammar, the settlement surface, or the descriptive anatomy. It proves that the naive materialized/exhaustive R1 execution design is outside the intended R2 class.
 
-`a4b8b72e979e6a045274213db35e8bcc4011e92c`
+## Important target-control discrepancy
 
-User authorization:
+At pushed WNBA `a9d136...`, the resource artifact records the blocked resource condition, but `docs/model_development/ACTIVE_BUILDER_LANE.json` and `builder_state.json` still report the R1 scientific row as active with outcome access permitted.
 
-> “Ok, lets do it”
+Therefore:
 
-Execution tier:
+- **do not execute the target R1 row merely because the target control pointer still says active**;
+- the user explicitly stopped the task;
+- Prime has no active Codex execution authorization;
+- any later target-control reconciliation must be a separate user-authorized control action or be included narrowly in the next explicitly authorized work order;
+- no labels, validation, lockbox, Live, core-family, or follow-on work may run from this state.
 
-`R2_BOUNDED_PILOT`
+## Workflow correction — mandatory going forward
 
-Expected WNBA starting HEAD:
+Governing Prime doctrine:
 
-`51665c31090d51b727a3cedb0834ad7eb41ed0d2`
+`docs/coordination/PRIME_EXPERIMENT_RUNWAY.md`
 
-Expected current WNBA stop:
+The 2026-08-19 amendment makes topology-before-implementation mandatory.
 
-`BLOCKED_USER_REVIEW_WNBA_FROMDEEP_SIGNAL_GRAMMAR_RELIABILITY_CONTRACT_R0`
+For combinatorial Builder research:
 
-### Exact scientific purpose
+1. use existing sealed artifacts to calculate primitive/candidate/pair topology first;
+2. report structural-impossibility counts and compact/streamed resource estimates before building large runners/checkpoint systems;
+3. do not reread unchanged governance stacks repeatedly when hashes remain bound;
+4. do not perform storage cleanup until topology proves the intended experiment is worth running;
+5. distinguish intrinsic scientific complexity from accidental materialization cost;
+6. structural impossibility under frozen breadth/support rules may be pruned outcome-blind and is not scientific truncation;
+7. where Tier-B is defined only from Tier-A precursor-pass roads, stage cost and execution in that same order rather than assuming every Tier-A primitive becomes a Tier-B parent.
 
-Apply the frozen V1 grammar to the development-consumed 38-date / 27-market discovery corpus and determine whether supported GREEN and/or RED market-owned road structure exists. This is signal discovery only; it is not target-date FromDeep selection/performance.
+## Candidate redesign — NOT AUTHORIZED
 
-### Required execution sequence
+A future user-authorized redesign should preserve the frozen V1 grammar unless separately reopened.
 
-1. Reconcile Builder-lane authority under `slip-builders` only and bind all accepted predecessor hashes.
-2. Before R1 opens settlement labels, build/verify the R1 requirement-to-code matrix, complete outcome-blind Tier-A symbolic road universe, causal pregame primitive match surface, dedup map, Tier-B upper-bound topology, and R2 resource/cost seal.
-3. Numeric match status for row date `D` must use only same-market nonmissing rows from dates `< D`; same-date/future rows may not influence an earlier threshold.
-4. Categorical cardinality must use dates `< D`; a first-seen category on `D` is cold and does not receive hindsight road authority on `D`.
-5. If the complete frozen surface cannot fit the declared bounded resource contract, stop before outcome access. No top-N or scientific truncation and no automatic R3 escalation.
-6. After the pre-outcome/resource gate passes, open only the accepted discovery label surface and use only canonical WIN/LOSS for signal performance. Preserve VOID/PUSH/unsupported/missing as nonperformance coverage facts.
-7. Grade every canonical Tier-A road under the exact frozen breadth, concentration, market-baseline, Wilson and temporal rules.
-8. Construct Tier-B only from Tier-A precursor-pass primitives, enforcing different fields/families and the OTHER+OTHER prohibition.
-9. Seal the exact Tier-B candidate list/cost before Tier-B grading. If the full Tier-B surface exceeds remaining R2 capacity, checkpoint and stop rather than truncate.
-10. If safe, grade every canonical Tier-B road and classify the complete atlas GREEN/RED/GRAY.
-11. Keep all output lexical/unranked. Report counts, support, breadth, concentration, Wilson intervals, temporal halves, failure reasons, and resource accounting for all 27 markets.
-12. Emit exactly one scientific disposition: `V1_SUPPORTED_GREEN_STRUCTURE_PRESENT`, `V1_NO_GREEN_SUPPORTED_RED_STRUCTURE_PRESENT`, or `V1_NO_SUPPORTED_DECISIVE_ROAD_STRUCTURE`.
-13. Do not select target-date FromDeep legs, calculate final selected-leg performance, activate/freeze markets, rank eligible legs, build slips, or start historical-as-of target-date evaluation.
-14. validation reads = 0; lockbox reads = 0; Aug. 13 reads/contribution = 0.
-15. No 2L/3L/4L, depletion, redistribution, model/probability/minutes/calibration/allocator/QMC/dependence, Live, policy, publication, or promotion mutation.
-16. Run required focused/adversarial tests plus Builder lane validation; commit/push exact authorized paths; verify local HEAD == tracking == direct remote; stop.
+Preferred staged runway:
 
-## Required execution success marker
+### R1A — outcome-blind topology / compact-executor feasibility
 
-`PASS_FROMDEEP_MARKET_OWNED_SIGNAL_ATLAS_R1`
+Target: seconds to a few minutes.
 
-The PASS means the frozen R1 procedure executed faithfully and completely. It does not require a GREEN road.
+Using existing sealed Phase-A/topology artifacts where possible, report by market:
 
-## Required final stop
+- canonical Tier-A count;
+- structural support/date/participant impossibility eliminations that are legal without outcomes;
+- exact remaining Tier-A topology;
+- naive Tier-B upper bound;
+- compact bitset/streaming memory estimate;
+- measured tiny-kernel intersection throughput;
+- no new large implementation framework.
 
-`BLOCKED_USER_REVIEW_WNBA_FROMDEEP_MARKET_OWNED_SIGNAL_ATLAS_R1`
+### R1B — complete Tier-A development grading
 
-## Next if this passes — NOT AUTHORIZED
+Only after separate authorization.
 
-User/Chat may review the complete road atlas and then decide whether to authorize strict historical-as-of target-date registry/selection evaluation. Do not auto-start that step, do not reopen core redistribution, and do not touch protected validation or lockbox.
+- open accepted development labels;
+- grade the complete structurally viable Tier-A surface;
+- apply the already-frozen precursor exactly;
+- report the actual precursor-pass Tier-A count by market;
+- compute the actual legal Tier-B topology and resource receipt;
+- stop for user review before Tier-B if materially large.
+
+### R1C — exact precursor-admissible Tier-B grading
+
+Only if R1B proves the actual surface fits a competent compact/streamed execution design and the user separately authorizes it.
+
+No top-N, hit-rate, lift, or outcome-based truncation is authorized by this redesign.
+
+## Current control
+
+No Codex execution is authorized.
+
+Do not auto-start R1A, R1B, R1C, historical-as-of FromDeep evaluation, core redistribution, protected validation, or lockbox work.
