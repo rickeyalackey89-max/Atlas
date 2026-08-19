@@ -1,6 +1,6 @@
 {
   "schema_version": "atlas_prime_delegation_wnba_current_state_v1",
-  "captured_at_ct": "2026-08-19T08:19:00-05:00",
+  "captured_at_ct": "2026-08-19T08:28:00-05:00",
   "snapshot_not_authority": true,
   "sport": "WNBA",
   "source_repository": "rickeyalackey89-max/Atlas-WNBA",
@@ -20,7 +20,9 @@
   "prime_mission": {
     "mission_id": "WNBA_FROMDEEP_SAFE_HISTORICAL_ASOF_SIGNAL_VIABILITY_R1",
     "work_order": "docs/coordination/wnba/codex/archive/2026-08-19_fromdeep_safe_historical_asof_signal_viability_r1.md",
-    "publication_commit": "5c09566596e9a70cffcee6870c27997873f33a32",
+    "original_publication_commit": "5c09566596e9a70cffcee6870c27997873f33a32",
+    "product_integration_contract": "docs/coordination/wnba/chat/FROMDEEP_PRODUCT_INTEGRATION_CONTRACT.md",
+    "product_integration_contract_commit": "4b0897e96c90f17be9aebe747f7215cc2454cd5a",
     "bounded_autonomy_doctrine": "docs/coordination/PRIME_BOUNDED_AUTONOMOUS_MISSIONS.md",
     "runway_doctrine": "docs/coordination/PRIME_EXPERIMENT_RUNWAY.md",
     "parallel_independent_subtasks_allowed": true,
@@ -55,6 +57,17 @@
       "uses_2l_or_3l_depleted_pool": false,
       "core_selected_leg_depletion_applied": false,
       "sequence_rule": "FINISH_FROMDEEP_END_TO_END_WITHOUT_REOPENING_CORE_REDISTRIBUTION_MIDSTREAM",
+      "product_contract": {
+        "is_slip": false,
+        "output_form": "ZERO_ONE_OR_MORE_QUALIFIED_SINGLE_LEG_PICKS",
+        "core_slip_role": "OPTIONAL_FLEX_OR_ADD_ON_CANDIDATE_SURFACE_FOR_LATER_CORE_SLIP_CONSTRUCTION",
+        "core_families_construct_multi_leg_slips": true,
+        "exactly_one_pick_required": false,
+        "rank1_diagnostic_is_output_cap": false,
+        "attachment_or_routing_policy_status": "LATER_USER_CHAT_DECISION",
+        "authority_path": "docs/coordination/wnba/chat/FROMDEEP_PRODUCT_INTEGRATION_CONTRACT.md",
+        "authority_commit": "4b0897e96c90f17be9aebe747f7215cc2454cd5a"
+      },
       "r0b2": {
         "commit": "73e6fb0ab1129086c81bbd7c547bc555d0e5517e",
         "status": "SEALED_EXACT_FACTUAL_DEMON_OVER_UNIVERSE_OUTCOME_BLIND",
@@ -142,7 +155,9 @@
         "tier_a_complete_before_tier_b": true,
         "tier_b_parents": "ACTUAL_PRECURSOR_PASS_TIER_A_ONLY",
         "static_full_corpus_signal_atlas_required_first": false,
+        "primary_action_surface": "COMPLETE_ELIGIBLE_SINGLE_LEG_ROWS_AFTER_GREEN_AND_RED",
         "secondary_rank_diagnostic": "FINAL_PROBABILITY_DESCENDING_AFTER_SIGNAL_ELIGIBILITY_ONLY",
+        "secondary_rank_diagnostic_role": "DIAGNOSTIC_ONLY_NOT_PRODUCT_OUTPUT_CAP",
         "validation_reads_allowed": 0,
         "lockbox_reads_allowed": 0,
         "aug13_contribution_allowed": 0,
@@ -151,7 +166,7 @@
     }
   },
   "post_fromdeep_sequence": {
-    "step_1": "FINISH_AND_FREEZE_FROMDEEP",
+    "step_1": "FINISH_AND_FREEZE_FROMDEEP_SINGLE_LEG_OUTPUT_METHOD",
     "step_2": "REOPEN_CORE_2L_TO_3L_REDISTRIBUTION_NONREDISTRIBUTION_RESEARCH_ONLY_AFTER_FROMDEEP_IS_FINISHED",
     "step_3": "COMPLETE_AND_FREEZE_OR_REJECT_CORE_REDISTRIBUTION_DECISION_WITHOUT_VALIDATION_TUNING",
     "step_4": "PROTECTED_COMPLETED_STACK_VALIDATION",
@@ -159,7 +174,7 @@
   },
   "next_strategy": {
     "status": "USER_AUTHORIZED_CODEX_EXECUTION_ACTIVE",
-    "topic": "Run the actual causal FromDeep signal viability test directly on the SAFE feature surface: complete prior-only Tier A, actual precursor-admissible Tier B only, strict t<D registry application, then fixed post-eligibility probability rank-1 diagnostic. No giant static atlas and no uncertain fields.",
+    "topic": "Run the causal FromDeep SAFE-surface signal viability test and return the complete eligible single-leg pick surface plus a rank-1 diagnostic. FromDeep is not a slip; final zero/one/many single-leg output policy and optional flex/add-on attachment into core slip construction are later decisions.",
     "candidate_method_step": "WNBA_FROMDEEP_SAFE_HISTORICAL_ASOF_SIGNAL_VIABILITY_R1",
     "codex_execution_authorized": true,
     "required_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_SAFE_ASOF_SIGNAL_VIABILITY_R1_COMPLETE"
