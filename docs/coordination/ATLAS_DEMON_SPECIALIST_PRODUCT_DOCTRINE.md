@@ -12,28 +12,36 @@ The Atlas Demon specialist is **not** a broad picks family and is not expected t
 
 Its purpose is:
 
-> **Return only Atlas's narrowest, strongest, highest-conviction Demon single-leg opportunities for the current run, and abstain when the evidence is not strong enough.**
+> **Return every Demon single-leg opportunity that clears a genuine frozen specialist signal, and abstain when no candidate clears one.**
 
-The expected operating behavior is usually **0-3-ish single-leg picks per run/slate**. This is a product sparsity target, not a forced minimum and not an arbitrary hard cap. Zero is a successful output when no candidate has a genuine specialist signal. If a method routinely emits many candidates, treat that as evidence that the selector is too broad for the Demon specialist role.
+Output count is a consequence of signal, not an objective.
+
+- Zero qualified candidates means zero output.
+- One qualified candidate means one output.
+- Ten qualified candidates means ten outputs.
+- There is no arbitrary top-N cap, target count, or count-based suppression rule.
+
+A historically common sparse output pattern may still emerge naturally because specialist roads are narrow, but that is descriptive, not governing. The selector must never discard a genuinely qualified candidate merely to preserve scarcity or an expected pick count.
 
 ## Precision dominates coverage
 
 For Demon specialist work:
 
-- precision is more important than coverage;
-- abstention is preferred to a mediocre pick;
+- precision is more important than broad coverage;
+- abstention is preferred to a weak or unqualified pick;
 - the goal is not to lift an entire Demon pool from a weak baseline to a merely acceptable broad hit rate;
-- a broad ~50% selector may contain useful information but is not itself the intended specialist product;
-- the final selector should isolate only unusually strong candidates;
-- unsupported or weak markets may remain inactive indefinitely.
+- a broad ~50% selector may contain useful information but is not itself the intended specialist method;
+- the final selector should isolate only candidates that actually satisfy strong market-owned evidence;
+- unsupported or weak markets may remain inactive indefinitely;
+- **qualified output must not be suppressed solely because too many candidates qualified on a particular run.**
 
 The question is not:
 
-> "What are some solid Demon picks?"
+> "How many Demon picks should Atlas return?"
 
 The question is:
 
-> **"Which 0-3-ish Demon legs, if any, have enough current Atlas evidence that we are willing to call them our strongest aggressive-line opportunities on this run?"**
+> **"Which Demon legs, if any, truly clear the specialist signal for this run?"**
 
 ## Narrow multi-gate roads are allowed and expected
 
@@ -74,6 +82,7 @@ Demon behavior is market-specific.
 - Some markets may support positive qualification roads; others may only support strong vetoes; others may remain inactive.
 - Harder markets may require more gates and fire less often.
 - A market that does not currently demonstrate specialist-grade precision should abstain rather than be included to increase output volume.
+- If multiple markets or multiple candidates independently clear genuine roads on the same run, all distinct qualified candidates remain eligible to fire.
 
 ## Discovery sequence
 
@@ -88,7 +97,7 @@ The default Demon research sequence across sports is:
 7. permit multi-gate conjunctions when necessary for specialist precision;
 8. replay/freeze causally under the sport's historical-as-of or equivalent time-arrow procedure;
 9. validate the frozen method on protected evidence before promotion;
-10. at runtime, emit only the sparse specialist singles that clear the frozen current method.
+10. at runtime, emit **every distinct candidate** that clears the frozen specialist method.
 
 Do not begin with an exhaustive symbolic road atlas when a direct win/loss-commonality analysis can answer the product question more efficiently.
 
@@ -96,15 +105,11 @@ Do not begin with an exhaustive symbolic road atlas when a direct win/loss-commo
 
 Signal eligibility comes first.
 
-Probability, EV, confidence, or other Atlas model outputs may help rank or break ties **after** specialist signal qualification, but they should not turn a nonqualified Demon candidate into a specialist pick unless the sport-specific frozen method explicitly establishes that role.
+Probability, EV, confidence, or other Atlas model outputs may help rank or break ties **only when a separate frozen product rule truly requires ordering among already-qualified candidates**. Ranking must not be used to suppress otherwise-qualified Demon candidates merely to force a desired output count.
 
-If more candidates qualify than the normal sparse product behavior can reasonably support, do not silently publish a broad list. Review whether:
+Deduplicate only genuine duplicate manifestations of the same candidate identity/road surface. Do not treat two different qualified players or markets as duplicates simply because the run already has several picks.
 
-- the roads are too broad;
-- multiple candidates are effectively duplicates/correlated manifestations of one signal;
-- a frozen secondary ranking/tie-break policy is needed.
-
-The desired user-facing effect is scarcity: when FromDeep / the Demon specialist fires, it should mean something.
+The desired user-facing effect is meaning, not artificial scarcity: when FromDeep / BigSwings / HailMarys fires, each returned pick should have a real specialist road behind it.
 
 ## Cross-sport continuity rule
 
@@ -112,6 +117,6 @@ This doctrine is not WNBA-specific.
 
 When Atlas moves to MLB, NFL, CFB, or another sport, Chat/Prime/Codex should **not rediscover the product definition from scratch**. The sport-specific task is to discover the market-owned winning/losing commons and narrow roads appropriate to that sport while preserving this same specialist philosophy:
 
-**sparse, current, market-owned, precision-first, abstention-friendly, and only firing on genuine signal.**
+**current, market-owned, precision-first, abstention-friendly, and signal-driven with no arbitrary output-count suppression.**
 
 Any future Prime delegation concerning Demon-tier specialist selection should bind this doctrine unless the user explicitly supersedes it.
