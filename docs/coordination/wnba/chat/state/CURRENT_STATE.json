@@ -1,15 +1,15 @@
 {
   "schema_version": "atlas_prime_delegation_wnba_current_state_v1",
-  "captured_at_ct": "2026-08-19T14:29:00-05:00",
+  "captured_at_ct": "2026-08-19T15:58:00-05:00",
   "snapshot_not_authority": true,
   "sport": "WNBA",
   "source_repository": "rickeyalackey89-max/Atlas-WNBA",
   "source_branch": "builder-method-contract-v1",
   "source_head": "02f8b7143012c879df55078fb7017ed9635382ea",
   "builder": {
-    "status": "USER_AUTHORIZED_FROMDEEP_COMMONS_SELECTOR_V1_DEVELOPMENT_REPLAY_READY",
-    "current_target_repo_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_WIN_LOSS_COMMONS_R0_COMPLETE",
-    "authorized_step": "WNBA_FROMDEEP_COMMONS_SELECTOR_V1_DEVELOPMENT_REPLAY",
+    "status": "COMMONS_SELECTOR_V1_ORACLE_CORRECTION_AUTHORIZED_RESUME_READY",
+    "current_target_repo_stop": "ACTIVE_FAIL_CLOSED_ORACLE_GATE_NO_TRANSITION",
+    "authorized_step": "WNBA_FROMDEEP_COMMONS_SELECTOR_V1_DEVELOPMENT_REPLAY_ORACLE_CORRECTION_RESUME",
     "required_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_COMMONS_SELECTOR_V1_DEVELOPMENT_REPLAY_COMPLETE",
     "controller_skill": "slip-builders",
     "validation_reads": 0,
@@ -20,15 +20,15 @@
   "prime_mission": {
     "mission_id": "WNBA_FROMDEEP_COMMONS_SELECTOR_V1_DEVELOPMENT_REPLAY",
     "work_order": "docs/coordination/wnba/codex/archive/2026-08-19_fromdeep_commons_selector_v1_development_replay.md",
-    "publication_commit": "371b15f7ca5ba058366823c8c8c1e4974f9a61a5",
-    "bounded_autonomy_doctrine": "docs/coordination/PRIME_BOUNDED_AUTONOMOUS_MISSIONS.md",
-    "product_contract": "docs/coordination/wnba/chat/FROMDEEP_PRODUCT_INTEGRATION_CONTRACT.md",
-    "one_parent_mission_preamble": true,
-    "subagents_inherit_parent_preamble": true,
-    "per_command_review_required": false,
-    "per_test_review_required": false,
-    "target_parent_mission_minutes": 45,
-    "hard_workflow_review_minutes": 75,
+    "oracle_correction_amendment": "docs/coordination/wnba/codex/archive/2026-08-19_fromdeep_commons_selector_v1_oracle_correction_authorization.md",
+    "oracle_correction_publication_commit": "bfcaa8a60e34b45fd08bf4193665185efd4361ab",
+    "same_parent_mission_resume": true,
+    "repeat_full_parent_preamble": false,
+    "required_control_delta": "ORACLE_LITERAL_AND_EVALUATION_ACCOUNTING_ONLY",
+    "correction_formal_replays_authorized": 1,
+    "final_expected_formal_replay_count": 2,
+    "final_expected_independent_recomputation_count": 2,
+    "final_expected_total_full_evaluations": 4,
     "final_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_COMMONS_SELECTOR_V1_DEVELOPMENT_REPLAY_COMPLETE"
   },
   "families": {
@@ -39,85 +39,57 @@
     "3L": {
       "status": "FROZEN_RESEARCH_DEPLETION_BACKBONE_WITH_KNOWN_SURFACE_COMPLETENESS_RISK",
       "freeze_commit": "2b1fca797eebefdb0da190099681460f22036eb1",
-      "historical_asof_record": "24-6-0",
-      "current_action": "PRESERVE_UNCHANGED_WHILE_FROMDEEP_FINISHES"
+      "historical_asof_record": "24-6-0"
     },
     "4L": {
       "status": "FROZEN_RESEARCH_DEPLETION_BACKBONE_CURRENT_LINEAGE",
       "freeze_commit": "24c5e29c965f5e808d84470c16146bb18a0b0148",
-      "method_id": "WNBA_4L_CANONICAL_ATLAS_RANK1_RESEARCH_DEPLETION_V1",
       "development_record": "14-8-1"
     },
     "FromDeep": {
-      "status": "COMMONS_SELECTOR_V1_DEVELOPMENT_REPLAY_AUTHORIZED",
-      "independent_of_core_depletion": true,
+      "status": "COMMONS_SELECTOR_V1_CORRECTION_REPLAY_AUTHORIZED",
       "product_contract": {
         "is_slip": false,
         "output_form": "ZERO_ONE_OR_MORE_QUALIFIED_SINGLE_LEG_PICKS",
-        "core_slip_role": "OPTIONAL_FLEX_OR_ADD_ON_CANDIDATE_SURFACE_FOR_LATER_CORE_SLIP_CONSTRUCTION",
         "rank1_diagnostic_is_output_cap": false
-      },
-      "development_surface": {
-        "date_count": 38,
-        "candidate_row_count": 20626,
-        "market_count": 27,
-        "win": 4305,
-        "loss": 15127,
-        "void": 499,
-        "push": 2,
-        "unsupported": 622,
-        "missing": 71,
-        "aug13_contribution": 0
-      },
-      "safe_asof_signal_viability_r1": {
-        "commit": "a51557bf416910d0150f9847bee87e15add257dc",
-        "status": "COMPLETE_FAITHFUL_CANDIDATE_FAILURE",
-        "scientific_disposition": "NO_VIABLE_SIGNAL_STRUCTURE",
-        "interpretation": "REJECT_EXACT_SAFE_ONLY_V1_GREEN_ROAD_SELECTOR_NOT_FROMDEEP_CONCEPT"
       },
       "win_loss_commons_r0": {
         "commit": "02f8b7143012c879df55078fb7017ed9635382ea",
         "status": "PASS_ACCEPTED",
         "positive_markets": 19,
-        "insufficient_markets": 8,
-        "admitted_field_records": 11744,
-        "fixed_conditions": 52488,
-        "final_shortlist_pairs": 362,
-        "runner_seconds": 101.95,
-        "parent_mission_minutes": 45,
-        "selector_selected": false,
-        "validation_reads": 0,
-        "lockbox_reads": 0,
-        "live_reads": 0
+        "insufficient_markets": 8
       },
       "commons_selector_v1": {
-        "status": "USER_AUTHORIZED_READY",
-        "positive_market_count": 19,
-        "insufficient_market_count": 8,
-        "market_policy": "USE_ALL_19_FIXED_SCREEN_PASSERS_NO_DISCOVERY_RATE_CHERRY_PICK",
-        "rule_per_positive_market": "COMMONS_R0_PRIMARY_POSITIVE_PLUS_PRIMARY_VETO",
-        "numeric_threshold_semantics": "PRIOR_ONLY_MARKET_PREGAME_QUANTILE_SYMBOL",
-        "categorical_threshold_semantics": "EXACT_FROZEN_VALUE",
-        "cold_start": {
-          "min_binary_rows": 24,
-          "min_prior_dates": 8,
-          "min_prior_participants": 6
+        "scientific_method_status": "FROZEN_UNCHANGED",
+        "blocked_replay_scientific_census": {
+          "selections": 498,
+          "win": 250,
+          "loss": 238,
+          "nonbinary": 10,
+          "date_balanced_rate_actual": 0.4998200128508496,
+          "date_balanced_rate_stale_oracle": 0.4998200128506321,
+          "approx_absolute_delta": 2.175e-13
         },
-        "qualification_rule": "POSITIVE_MATCH_AND_NOT_VETO_MATCH",
-        "preserve_all_qualified_singles": true,
-        "probability_ranking_or_cap": false,
-        "development_evidence_class": "DEVELOPMENT_CONSUMED_NOT_UNTOUCHED_OOS",
-        "new_engine_allowed": false,
+        "blocked_replay_interpretation": "STALE_FLOATING_POINT_ORACLE_LITERAL_NOT_SCIENTIFIC_METHOD_FAILURE",
+        "independent_recomputations_completed": 2,
+        "formal_replays_completed": 1,
+        "total_full_evaluations_completed": 3,
+        "one_correction_replay_authorized": true,
+        "selector_change_allowed": false,
+        "candidate_population_change_allowed": false,
+        "metric_computation_change_allowed": false,
         "validation_reads_allowed": 0,
         "lockbox_reads_allowed": 0,
+        "aug13_contribution_allowed": 0,
+        "heldout_reads_allowed": 0,
         "live_mutation_allowed": false
       }
     }
   },
   "next_strategy": {
-    "status": "USER_AUTHORIZED_CODEX_EXECUTION_READY",
-    "topic": "Replay the simple frozen Commons V1 selector across development history: all 19 positive markets, one primary positive + one primary veto each, numeric thresholds realized from prior-only pregame quantiles, all qualified single legs preserved. No new engine or road atlas.",
-    "candidate_method_step": "WNBA_FROMDEEP_COMMONS_SELECTOR_V1_DEVELOPMENT_REPLAY",
+    "status": "USER_AUTHORIZED_CORRECTION_REPLAY_READY_FOR_CODEX_SYNC",
+    "topic": "Correct only the stale date-balanced oracle literal and truthful evaluation-count accounting, perform exactly one correction formal replay, and if the exact scientific census reproduces, finish the existing Commons Selector V1 development-replay mission and return every qualified single leg.",
+    "candidate_method_step": "WNBA_FROMDEEP_COMMONS_SELECTOR_V1_DEVELOPMENT_REPLAY_ORACLE_CORRECTION_RESUME",
     "codex_execution_authorized": true,
     "active_codex_execution": false,
     "required_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_COMMONS_SELECTOR_V1_DEVELOPMENT_REPLAY_COMPLETE"
