@@ -1,58 +1,36 @@
 {
   "schema_version": "atlas_prime_delegation_wnba_current_state_v1",
-  "captured_at_ct": "2026-08-19T09:12:00-05:00",
+  "captured_at_ct": "2026-08-19T12:48:00-05:00",
   "snapshot_not_authority": true,
   "sport": "WNBA",
   "source_repository": "rickeyalackey89-max/Atlas-WNBA",
   "source_branch": "builder-method-contract-v1",
-  "source_head": "c6567354fcfc07d99089b989cc97d0303975bb5c",
+  "source_head": "a51557bf416910d0150f9847bee87e15add257dc",
   "builder": {
-    "status": "USER_PAUSED_R1_FOR_WORKFLOW_RECOVERY_REPLACEMENT_DELEGATION_READY",
-    "current_target_repo_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_FEATURE_INVENTORY_COMPLETE",
-    "authorized_step": "WNBA_WORKFLOW_RECOVERY_AND_FROMDEEP_SAFE_ASOF_RESUME",
-    "required_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_SAFE_ASOF_SIGNAL_VIABILITY_R1_COMPLETE",
+    "status": "USER_AUTHORIZED_FROMDEEP_WIN_LOSS_COMMONS_R0_READY",
+    "current_target_repo_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_SAFE_ASOF_SIGNAL_VIABILITY_R1_COMPLETE",
+    "authorized_step": "WNBA_FROMDEEP_WIN_LOSS_COMMONS_R0",
+    "required_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_WIN_LOSS_COMMONS_R0_COMPLETE",
     "controller_skill": "slip-builders",
     "validation_reads": 0,
     "lockbox_reads": 0,
     "active_codex_execution": false,
-    "execution_authorized_after_prime_sync": true,
-    "target_control_discrepancy": null
+    "execution_authorized_after_prime_sync": true
   },
   "prime_mission": {
-    "mission_id": "WNBA_WORKFLOW_RECOVERY_AND_FROMDEEP_SAFE_ASOF_RESUME",
-    "work_order": "docs/coordination/wnba/codex/archive/2026-08-19_workflow_recovery_and_fromdeep_safe_asof_resume.md",
-    "publication_commit": "4733bc06c7ae4c6313c2e4bcea0f876c3ea68ad8",
+    "mission_id": "WNBA_FROMDEEP_WIN_LOSS_COMMONS_R0",
+    "work_order": "docs/coordination/wnba/codex/archive/2026-08-19_fromdeep_win_loss_commons_r0.md",
+    "publication_commit": "6e6342d781be289a3b827e1004a2b2219fe50bbd",
+    "codex_prime_commit": "73748c8d7272a5cbb3391ccb10efaaa86768a798",
     "bounded_autonomy_doctrine": "docs/coordination/PRIME_BOUNDED_AUTONOMOUS_MISSIONS.md",
-    "bounded_autonomy_doctrine_commit": "1c70ad42e9f09494b2e451dfcb4a3dcd4e674b43",
-    "scientific_method_work_order": "docs/coordination/wnba/codex/archive/2026-08-19_fromdeep_safe_historical_asof_signal_viability_r1.md",
     "product_contract": "docs/coordination/wnba/chat/FROMDEEP_PRODUCT_INTEGRATION_CONTRACT.md",
-    "phases": [
-      "WORKFLOW_RECOVERY_TARGET_GOVERNANCE_RECONCILIATION",
-      "RECOVER_AND_COMPLETE_FROMDEEP_SAFE_HISTORICAL_ASOF_R1"
-    ],
-    "intermediate_user_stop_between_phases": false,
     "one_parent_mission_preamble": true,
     "subagents_inherit_parent_preamble": true,
     "per_command_review_required": false,
     "per_test_review_required": false,
-    "per_subagent_preamble_required": false,
-    "per_target_date_control_reactivation_required": false,
-    "mission_elapsed_time_accounting_required": true,
-    "final_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_SAFE_ASOF_SIGNAL_VIABILITY_R1_COMPLETE"
-  },
-  "workflow_recovery": {
-    "reason": "USER_REJECTS_REPEATED_GOVERNANCE_CONTROL_CYCLES_AROUND_TINY_TESTS_AND_SUBAGENTS",
-    "preamble_policy": "FULL_13_FIELD_PREAMBLE_ENCOURAGED_ONCE_PER_PARENT_MISSION",
-    "control_delta_policy": "ONLY_REAL_GOVERNING_FACT_CHANGES",
-    "governing_fact_closed_set_authority": "docs/coordination/PRIME_BOUNDED_AUTONOMOUS_MISSIONS.md",
-    "preserve_paused_local_worktree": true,
-    "reset_stash_broad_cleanup_authorized": false,
-    "new_parallel_controller_authorized": false,
-    "premature_settlement_sha_read_reported": true,
-    "premature_settlement_sha_read_interpretation": "REPORTED_BYTE_HASH_ACCESS_ONLY_PENDING_CODEX_CONFIRMATION_NO_PARSED_OR_SEMANTIC_OUTCOME_USE",
-    "prior_inventory_runner_seconds": 99.84,
-    "prior_inventory_total_codex_elapsed_user_report": "approximately 4h15m from roughly midnight to 04:15 local",
-    "timing_lesson": "RUNNER_RUNTIME_MUST_NOT_BE_REPORTED_AS_TOTAL_CODEX_MISSION_TIME"
+    "target_parent_mission_minutes": 45,
+    "hard_workflow_review_minutes": 60,
+    "final_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_WIN_LOSS_COMMONS_R0_COMPLETE"
   },
   "families": {
     "2L": {
@@ -63,110 +41,85 @@
       "status": "FROZEN_RESEARCH_DEPLETION_BACKBONE_WITH_KNOWN_SURFACE_COMPLETENESS_RISK",
       "freeze_commit": "2b1fca797eebefdb0da190099681460f22036eb1",
       "historical_asof_record": "24-6-0",
-      "current_action": "PRESERVE_UNCHANGED_WHILE_FROMDEEP_FINISHES",
-      "fromdeep_blocker": false
+      "current_action": "PRESERVE_UNCHANGED_WHILE_FROMDEEP_FINISHES"
     },
     "4L": {
       "status": "FROZEN_RESEARCH_DEPLETION_BACKBONE_CURRENT_LINEAGE",
       "freeze_commit": "24c5e29c965f5e808d84470c16146bb18a0b0148",
       "method_id": "WNBA_4L_CANONICAL_ATLAS_RANK1_RESEARCH_DEPLETION_V1",
-      "development_record": "14-8-1",
-      "research_depletion_only": true,
-      "live_authority": false,
-      "promotion_authority": false
+      "development_record": "14-8-1"
     },
     "FromDeep": {
-      "status": "SAFE_HISTORICAL_ASOF_R1_PAUSED_FOR_WORKFLOW_RECOVERY_THEN_RESUME_AUTHORIZED",
+      "status": "WIN_LOSS_COMMONS_DISCOVERY_AUTHORIZED",
       "independent_of_core_depletion": true,
-      "uses_2l_or_3l_depleted_pool": false,
-      "core_selected_leg_depletion_applied": false,
       "product_contract": {
         "is_slip": false,
         "output_form": "ZERO_ONE_OR_MORE_QUALIFIED_SINGLE_LEG_PICKS",
         "core_slip_role": "OPTIONAL_FLEX_OR_ADD_ON_CANDIDATE_SURFACE_FOR_LATER_CORE_SLIP_CONSTRUCTION",
-        "core_families_construct_multi_leg_slips": true,
-        "exactly_one_pick_required": false,
-        "rank1_diagnostic_is_output_cap": false,
-        "attachment_or_routing_policy_status": "LATER_USER_CHAT_DECISION"
+        "rank1_diagnostic_is_output_cap": false
       },
-      "r0b2": {
-        "commit": "73e6fb0ab1129086c81bbd7c547bc555d0e5517e",
-        "status": "SEALED_EXACT_FACTUAL_DEMON_OVER_UNIVERSE_OUTCOME_BLIND",
-        "member_count": 38,
-        "eligible_demon_over_rows": 20626,
-        "supported_market_owner_count": 27
-      },
-      "full_settlement_complete": {
-        "commit": "dfd55223fbb8ed9b0d7ef4af544ecf911adc78f5",
-        "final_unique_labels": 20626,
-        "duplicate_labels": 0,
-        "silent_drops": 0,
-        "sealed_label_file_sha256": "cb99773e91ce403adff3fb5171b28f2692dcbc039367909ba8ae0facb306db23",
-        "validation_reads": 0,
-        "lockbox_reads": 0,
-        "aug13_reads": 0
-      },
-      "canonical_settlement_state_partition": {
-        "total_rows": 20626,
-        "win": 4305,
-        "loss": 15127,
-        "win_loss_rows": 19432,
-        "void": 499,
-        "push": 2,
-        "unsupported_market": 622,
-        "missing_player_game_truth": 71
-      },
-      "feature_inventory_r0": {
-        "commit": "c6567354fcfc07d99089b989cc97d0303975bb5c",
-        "status": "PASS_ACCEPTED",
+      "development_surface": {
         "date_count": 38,
         "candidate_row_count": 20626,
         "market_count": 27,
-        "market_field_record_count": 25218,
+        "win": 4305,
+        "loss": 15127,
+        "void": 499,
+        "push": 2,
+        "unsupported": 622,
+        "missing": 71,
+        "aug13_contribution": 0
+      },
+      "feature_inventory_r0": {
+        "commit": "c6567354fcfc07d99089b989cc97d0303975bb5c",
         "safe": 1509,
         "uncertain": 10893,
         "excluded": 12816,
-        "inventory_sha256": "320d6c7134f51ad5e022dfc57657666f527e9fb6732e5967891d0f71d2d816a7",
-        "runner_wall_seconds": 99.84,
-        "total_codex_mission_wall_seconds": null
+        "inventory_sha256": "320d6c7134f51ad5e022dfc57657666f527e9fb6732e5967891d0f71d2d816a7"
       },
       "safe_asof_signal_viability_r1": {
-        "scientific_status": "METHOD_STILL_USER_AUTHORIZED_UNCHANGED",
-        "execution_status": "PAUSED_LOCAL_WORK_TO_BE_RECOVERED_AFTER_WORKFLOW_RECONCILIATION",
-        "predicate_surface": "SAFE_ONLY",
-        "safe_market_field_records": 1509,
-        "strict_historical_asof": true,
-        "tier_a_complete_before_tier_b": true,
-        "tier_b_parents": "ACTUAL_PRECURSOR_PASS_TIER_A_ONLY",
-        "primary_action_surface": "COMPLETE_ELIGIBLE_SINGLE_LEG_ROWS_AFTER_GREEN_AND_RED",
-        "secondary_rank_diagnostic": "FINAL_PROBABILITY_DESCENDING_AFTER_SIGNAL_ELIGIBILITY_ONLY",
-        "secondary_rank_diagnostic_role": "DIAGNOSTIC_ONLY_NOT_PRODUCT_OUTPUT_CAP",
+        "commit": "a51557bf416910d0150f9847bee87e15add257dc",
+        "status": "COMPLETE_FAITHFUL_CANDIDATE_FAILURE",
+        "scientific_disposition": "NO_VIABLE_SIGNAL_STRUCTURE",
+        "tier_a_green": 0,
+        "tier_a_red": 1516,
+        "tier_a_gray": 98552,
+        "tier_b_green": 0,
+        "tier_b_red": 0,
+        "tier_b_gray": 23408,
+        "eligible_rows": 0,
+        "rank1_rows": 0,
+        "markets_missed_support": 22,
+        "markets_structurally_unavailable": 5,
+        "engine_wall_seconds": 1111.05,
+        "parent_mission_elapsed": "3h14m28s",
+        "interpretation": "REJECT_EXACT_SAFE_ONLY_V1_GREEN_ROAD_SELECTOR_NOT_FROMDEEP_CONCEPT"
+      },
+      "win_loss_commons_r0": {
+        "status": "USER_AUTHORIZED_READY",
+        "objective": "DESCRIBE_WHAT_WINNING_DEMON_OVER_LEGS_HAVE_IN_COMMON_VERSUS_LOSSES_BY_MARKET",
+        "safe_fields_allowed": true,
+        "uncertain_semantic_or_catalog_only_fields_may_be_analyzed_if_pregame_proven": true,
+        "hard_leakage_identity_provenance_postgame_fields_allowed": false,
+        "individual_feature_analysis_first": true,
+        "pairwise_intersections_only_after_individual_evidence": true,
+        "max_favorable_shortlist_per_market": 5,
+        "max_negative_shortlist_per_market": 5,
+        "new_engine_allowed": false,
+        "historical_asof_rerun_allowed": false,
+        "new_model_fitting_allowed": false,
         "validation_reads_allowed": 0,
         "lockbox_reads_allowed": 0,
-        "aug13_contribution_allowed": 0,
-        "live_mutation_allowed": false,
-        "paused_local_observations_not_accepted_evidence": {
-          "canonical_tier_a_road_states_across_target_cells": "approximately 103000",
-          "breadth_capable_states": 50819,
-          "concentration_preoutcome_prune": "NOT_ALLOWED_BECAUSE_WIN_LOSS_FILTERING_CAN_CHANGE_CONCENTRATION",
-          "reported_labels_opened": false
-        }
+        "live_mutation_allowed": false
       }
     }
   },
-  "post_fromdeep_sequence": {
-    "step_1": "FINISH_AND_FREEZE_FROMDEEP_SINGLE_LEG_OUTPUT_METHOD",
-    "step_2": "REOPEN_CORE_2L_TO_3L_REDISTRIBUTION_NONREDISTRIBUTION_RESEARCH_ONLY_AFTER_FROMDEEP_IS_FINISHED",
-    "step_3": "COMPLETE_AND_FREEZE_OR_REJECT_CORE_REDISTRIBUTION_DECISION_WITHOUT_VALIDATION_TUNING",
-    "step_4": "PROTECTED_COMPLETED_STACK_VALIDATION",
-    "sequence_policy": "NO_MIDSTREAM_BACKTRACKING_FROM_FROMDEEP_INTO_CORE_FAMILIES"
-  },
   "next_strategy": {
-    "status": "USER_AUTHORIZED_REPLACEMENT_DELEGATION_READY_FOR_CODEX_SYNC",
-    "topic": "First repair the workflow so one parent mission preamble is inherited by subagents and control cycles occur only on real governing-fact changes; then automatically recover and complete the already-authorized SAFE historical-as-of FromDeep R1 without restarting valid local work.",
-    "candidate_method_step": "WNBA_WORKFLOW_RECOVERY_AND_FROMDEEP_SAFE_ASOF_RESUME",
+    "status": "USER_AUTHORIZED_CODEX_EXECUTION_READY",
+    "topic": "Produce a market-owned WIN-vs-LOSS commonality packet from the already-settled Demon-OVER corpus: individual favorable and negative basketball commons first, then only small pairwise intersections among the strongest individual conditions. No new engine, no exhaustive roads, no historical-as-of rerun.",
+    "candidate_method_step": "WNBA_FROMDEEP_WIN_LOSS_COMMONS_R0",
     "codex_execution_authorized": true,
     "active_codex_execution": false,
-    "required_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_SAFE_ASOF_SIGNAL_VIABILITY_R1_COMPLETE"
+    "required_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_WIN_LOSS_COMMONS_R0_COMPLETE"
   }
 }
