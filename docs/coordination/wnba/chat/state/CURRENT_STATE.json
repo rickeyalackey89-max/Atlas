@@ -1,20 +1,21 @@
 {
   "schema_version": "atlas_prime_delegation_wnba_current_state_v1",
-  "captured_at_ct": "2026-08-18T20:30:00-05:00",
+  "captured_at_ct": "2026-08-19T00:36:00-05:00",
   "snapshot_not_authority": true,
   "sport": "WNBA",
   "source_repository": "rickeyalackey89-max/Atlas-WNBA",
   "source_branch": "builder-method-contract-v1",
-  "source_head": "51665c31090d51b727a3cedb0834ad7eb41ed0d2",
+  "source_head": "a9d136bb2c6e6b94bdcebbd6dfc58971e1bc75c6",
   "builder": {
-    "status": "ACTIVE_USER_AUTHORIZED_FROMDEEP_MARKET_OWNED_SIGNAL_ATLAS_R1",
-    "current_target_repo_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_SIGNAL_GRAMMAR_RELIABILITY_CONTRACT_R0",
-    "authorized_step": "fromdeep_market_owned_signal_atlas_r1",
-    "required_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_MARKET_OWNED_SIGNAL_ATLAS_R1",
+    "status": "BLOCKED_USER_REVIEW_FROMDEEP_R1_RESOURCE_WORKFLOW_REDESIGN",
+    "current_target_repo_stop": "BLOCKED_RESOURCE_REVIEW_WNBA_FROMDEEP_MARKET_OWNED_SIGNAL_ATLAS_R1",
+    "authorized_step": null,
+    "required_stop": "BLOCKED_RESOURCE_REVIEW_WNBA_FROMDEEP_MARKET_OWNED_SIGNAL_ATLAS_R1",
     "controller_skill": "slip-builders",
     "validation_reads": 0,
     "lockbox_reads": 0,
-    "active_codex_execution": true
+    "active_codex_execution": false,
+    "target_control_discrepancy": "WNBA a9d136 ACTIVE_BUILDER_LANE and builder_state still encode active R1/outcome access even though user explicitly stopped at the resource-review boundary"
   },
   "families": {
     "2L": {
@@ -38,7 +39,7 @@
       "promotion_authority": false
     },
     "FromDeep": {
-      "status": "MARKET_OWNED_SIGNAL_ATLAS_R1_USER_AUTHORIZED_ACTIVE",
+      "status": "R1_RESOURCE_WORKFLOW_REDESIGN_USER_REVIEW",
       "independent_of_core_depletion": true,
       "uses_2l_or_3l_depleted_pool": false,
       "core_selected_leg_depletion_applied": false,
@@ -77,7 +78,6 @@
         "status": "PASS",
         "market_count": 27,
         "admitted_market_field_records": 19845,
-        "signal_road_work_executed": false,
         "validation_reads": 0,
         "lockbox_reads": 0,
         "aug13_reads": 0
@@ -110,38 +110,40 @@
         "real_signal_roads_constructed": 0,
         "green_red_gray_assignments": 0,
         "validation_reads": 0,
-        "lockbox_reads": 0,
-        "repository_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_SIGNAL_GRAMMAR_RELIABILITY_CONTRACT_R0"
+        "lockbox_reads": 0
       },
       "signal_atlas_r1": {
-        "status": "USER_AUTHORIZED_ACTIVE",
-        "work_order": "docs/coordination/wnba/codex/archive/2026-08-18_fromdeep_market_owned_signal_atlas_r1.md",
-        "publication_commit": "a4b8b72e979e6a045274213db35e8bcc4011e92c",
-        "codex_prime_activation_commit": "0e84041ab7957c46b21af7b30a2ce0aa0984dcf9",
+        "commit": "a9d136bb2c6e6b94bdcebbd6dfc58971e1bc75c6",
+        "status": "BLOCKED_RESOURCE_REVIEW_REDESIGN_REQUIRED",
         "execution_tier": "R2_BOUNDED_PILOT",
-        "starting_wnba_head": "51665c31090d51b727a3cedb0834ad7eb41ed0d2",
-        "expected_current_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_SIGNAL_GRAMMAR_RELIABILITY_CONTRACT_R0",
-        "scientific_scope": "development_consumed_complete_market_owned_green_red_gray_signal_atlas_only",
-        "preoutcome_primitive_surface_seal_required": true,
-        "future_threshold_leakage_allowed": false,
-        "tier_a_full_surface_required": true,
-        "tier_b_precursor_complete_surface_required": true,
-        "performance_truncation_allowed": false,
-        "probability_signal_eligibility_allowed": false,
-        "target_date_fromdeep_selection_allowed": false,
-        "market_activation_or_freeze_allowed": false,
-        "validation_reads_allowed": 0,
-        "lockbox_reads_allowed": 0,
-        "aug13_truth_reads_allowed": 0,
-        "core_or_redistribution_work_allowed": false,
-        "live_or_publication_mutation_allowed": false,
-        "required_success_marker": "PASS_FROMDEEP_MARKET_OWNED_SIGNAL_ATLAS_R1",
-        "required_scientific_dispositions": [
-          "V1_SUPPORTED_GREEN_STRUCTURE_PRESENT",
-          "V1_NO_GREEN_SUPPORTED_RED_STRUCTURE_PRESENT",
-          "V1_NO_SUPPORTED_DECISIVE_ROAD_STRUCTURE"
-        ],
-        "required_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_MARKET_OWNED_SIGNAL_ATLAS_R1"
+        "scientific_disposition_produced": false,
+        "green_red_gray_census_produced": false,
+        "outcome_inputs_resolved": 0,
+        "live_reads": 0,
+        "validation_reads": 0,
+        "lockbox_reads": 0,
+        "raw_tier_a_count": 65384,
+        "canonical_tier_a_count": 19214,
+        "naive_tier_b_upper_bound": 5438320,
+        "primitive_match_evaluation_count": 80849561,
+        "projected_peak_bytes": 175451099900,
+        "projected_total_seconds": 183036.91665506669,
+        "resource_gate_pass": false,
+        "failure_interpretation": "IMPLEMENTATION_TOPOLOGY_DESIGN_FAILURE_NOT_FROMDEEP_SCIENTIFIC_FAILURE",
+        "frozen_v1_grammar_invalidated": false,
+        "label_surface_invalidated": false,
+        "anatomy_invalidated": false
+      },
+      "redesign_candidate": {
+        "status": "NOT_AUTHORIZED",
+        "workflow_doctrine": "TOPOLOGY_BEFORE_IMPLEMENTATION",
+        "r1a": "OUTCOME_BLIND_TIER_A_STRUCTURAL_TOPOLOGY_AND_COMPACT_EXECUTOR_FEASIBILITY",
+        "r1b": "COMPLETE_STRUCTURALLY_VIABLE_TIER_A_GRADING_THEN_ACTUAL_PRECURSOR_PASS_TIER_B_TOPOLOGY",
+        "r1c": "EXACT_PRECURSOR_ADMISSIBLE_TIER_B_GRADING_ONLY_IF_R1B_RESOURCE_RECEIPT_PASSES",
+        "scientific_top_n_allowed": false,
+        "outcome_based_truncation_allowed": false,
+        "structural_impossibility_pruning_allowed": true,
+        "compact_streamed_execution_required_before_resource_failure_claim": true
       }
     }
   },
@@ -153,10 +155,9 @@
     "sequence_policy": "NO_MIDSTREAM_BACKTRACKING_FROM_FROMDEEP_INTO_CORE_FAMILIES"
   },
   "next_strategy": {
-    "status": "USER_AUTHORIZED_CODEX_EXECUTION_ACTIVE",
-    "topic": "Run the first complete real market-owned FromDeep signal atlas under the frozen V1 grammar. Pre-outcome primitive/cost seal first, then complete Tier-A and precursor-admissible Tier-B GREEN/RED/GRAY grading. No target-date FromDeep selection yet.",
-    "candidate_method_step": "FROMDEEP_MARKET_OWNED_SIGNAL_ATLAS_R1",
-    "codex_execution_authorized": true,
-    "required_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_MARKET_OWNED_SIGNAL_ATLAS_R1"
+    "status": "AWAITING_USER_REVIEW_AND_REDESIGN_AUTHORIZATION",
+    "topic": "Do not continue naive R1. If user approves, begin with a tiny outcome-blind topology/compact-executor feasibility step before any further scientific implementation or outcome access.",
+    "candidate_method_step": "FROMDEEP_SIGNAL_ATLAS_R1A_TOPOLOGY_COMPACT_EXECUTOR_FEASIBILITY",
+    "codex_execution_authorized": false
   }
 }
