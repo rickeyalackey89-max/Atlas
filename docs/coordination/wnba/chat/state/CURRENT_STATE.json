@@ -1,16 +1,16 @@
 {
   "schema_version": "atlas_prime_delegation_wnba_current_state_v1",
-  "captured_at_ct": "2026-08-19T16:36:00-05:00",
+  "captured_at_ct": "2026-08-19T18:08:00-05:00",
   "snapshot_not_authority": true,
   "sport": "WNBA",
   "source_repository": "rickeyalackey89-max/Atlas-WNBA",
   "source_branch": "builder-method-contract-v1",
-  "source_head": "dabd1d0b20e0aa07138c15ba28df9f37fc7d65af",
+  "source_head": "bf7475530320f7f90eaf1604982f9df14bfeb7c6",
   "builder": {
-    "status": "USER_AUTHORIZED_FROMDEEP_RECENT_PRECISION_ROADS_R0_READY",
-    "current_target_repo_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_COMMONS_SELECTOR_V1_DEVELOPMENT_REPLAY_COMPLETE",
-    "authorized_step": "WNBA_FROMDEEP_RECENT_PRECISION_ROADS_R0",
-    "required_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_RECENT_PRECISION_ROADS_R0_COMPLETE",
+    "status": "USER_AUTHORIZED_FROMDEEP_SPECIALIST3_CAUSAL_FREEZE_READINESS_R1_READY",
+    "current_target_repo_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_RECENT_PRECISION_ROADS_R0_COMPLETE",
+    "authorized_step": "WNBA_FROMDEEP_SPECIALIST3_CAUSAL_FREEZE_READINESS_R1",
+    "required_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_SPECIALIST3_CAUSAL_FREEZE_READINESS_R1_COMPLETE",
     "controller_skill": "slip-builders",
     "validation_reads": 0,
     "lockbox_reads": 0,
@@ -19,10 +19,8 @@
   },
   "cross_sport_demon_specialist": {
     "doctrine": "docs/coordination/ATLAS_DEMON_SPECIALIST_PRODUCT_DOCTRINE.md",
-    "doctrine_commit": "16cc014574ad2a76aed51ee5fc44a29aea869eba",
     "names_contract": "docs/coordination/ATLAS_DEMON_SPECIALIST_PRODUCT_NAMES.md",
-    "names_contract_commit": "5bc85b4e6f3373cc15850f86b18f61be9a1a52b8",
-    "shared_product_contract": "SPARSE_HIGHEST_CONVICTION_DEMON_SINGLE_LEG_FLEX_ADDS_NORMAL_0_TO_3ISH_ABSTENTION_VALID",
+    "shared_product_contract": "SPARSE_CURRENT_PRECISION_FIRST_SINGLE_LEG_FLEX_ADD_ON_NORMAL_0_TO_3ISH_ABSTENTION_VALID",
     "names": {
       "WNBA": "FromDeep",
       "NBA": "FromDeep",
@@ -33,22 +31,15 @@
     }
   },
   "prime_mission": {
-    "mission_id": "WNBA_FROMDEEP_RECENT_PRECISION_ROADS_R0",
-    "work_order": "docs/coordination/wnba/codex/archive/2026-08-19_fromdeep_recent_precision_roads_r0.md",
-    "publication_commit": "bce7ea61784a3af0b5825e9ca457e230ac076faa",
-    "codex_prime_commit": "c3a2648a923ad52f7ebd143374a4794f0a63a63c",
+    "mission_id": "WNBA_FROMDEEP_SPECIALIST3_CAUSAL_FREEZE_READINESS_R1",
+    "work_order": "docs/coordination/wnba/codex/archive/2026-08-19_fromdeep_specialist3_causal_freeze_readiness_r1.md",
+    "publication_commit": "38e2a7e215ce4e51cbab023480c128a3db3b0a8a",
+    "codex_prime_commit": "79d55e5b958a33717088959cd77ed8d4a3955783",
     "one_parent_mission_preamble": true,
     "subagents_inherit_parent_preamble": true,
-    "per_command_review_required": false,
-    "per_test_review_required": false,
-    "active_discovery_regime": "2026-07-01_THROUGH_2026-08-09_USABLE_DATES_ONLY",
-    "current_traction_window": "LATEST_10_USABLE_DATES_IN_ACTIVE_REGIME",
-    "june_role": "BACKGROUND_STRESS_ONLY_NOT_DISCOVERY_OR_RANKING_AUTHORITY",
-    "max_gates_per_road": 8,
-    "candidate_gate_source": "COMMONS_R0_TOP_5_FAVORABLE_PLUS_TOP_5_VETO_PER_MARKET_COLLAPSED",
-    "target_parent_mission_minutes": 45,
-    "hard_workflow_review_minutes": 60,
-    "final_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_RECENT_PRECISION_ROADS_R0_COMPLETE"
+    "target_parent_mission_minutes": 30,
+    "hard_workflow_review_minutes": 45,
+    "final_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_SPECIALIST3_CAUSAL_FREEZE_READINESS_R1_COMPLETE"
   },
   "families": {
     "2L": {
@@ -66,68 +57,71 @@
       "development_record": "14-8-1"
     },
     "FromDeep": {
-      "status": "RECENT_PRECISION_ROADS_R0_AUTHORIZED",
+      "status": "SPECIALIST3_CAUSAL_FREEZE_READINESS_AUTHORIZED",
       "product_contract": {
         "is_slip": false,
         "output_form": "ZERO_TO_THREEISH_HIGHEST_CONVICTION_SINGLE_LEG_FLEX_CANDIDATES_NORMAL_EXPECTATION",
         "zero_is_successful_abstention": true,
-        "broad_coverage_is_objective": false,
         "precision_dominates_coverage": true,
-        "narrow_multi_gate_roads_allowed": true,
-        "max_discovery_gates_current_mission": 8
-      },
-      "win_loss_commons_r0": {
-        "commit": "02f8b7143012c879df55078fb7017ed9635382ea",
-        "status": "PASS_ACCEPTED",
-        "positive_markets": 19,
-        "insufficient_markets": 8
-      },
-      "commons_selector_v1_development_replay": {
-        "commit": "dabd1d0b20e0aa07138c15ba28df9f37fc7d65af",
-        "status": "PASS_ACCEPTED_AS_BROAD_INFORMATION_LIFT_NOT_PRODUCT_SELECTOR",
-        "qualified_singles": 498,
-        "win": 250,
-        "loss": 238,
-        "nonbinary": 10,
-        "strict_rate": 0.512295081967,
-        "date_balanced_rate": 0.499820012851,
-        "exact_selected_market_date_baseline": 0.223278460468,
-        "raw_strict_lift": 0.289016621499,
-        "selected_dates": 29,
-        "selected_participants": 83,
-        "interpretation": "COMMONS_CARRY_SIGNAL_BUT_ONE_POSITIVE_PLUS_ONE_VETO_IS_TOO_BROAD_FOR_FROMDEEP_PRODUCT"
+        "artificial_top_n_cap_allowed": false
       },
       "recent_precision_roads_r0": {
-        "status": "USER_AUTHORIZED_READY",
-        "active_regime_start": "2026-07-01",
-        "active_regime_end": "2026-08-09",
-        "latest_10_usable_dates_primary_traction": true,
-        "june_background_only": true,
-        "specialist_grade_active_min_binary": 8,
-        "specialist_grade_active_min_dates": 5,
-        "specialist_grade_active_min_participants": 5,
-        "specialist_grade_active_min_strict": 0.60,
-        "specialist_grade_active_min_lift": 0.20,
-        "current_window_min_binary_when_gradeable": 5,
-        "current_window_min_dates_when_gradeable": 4,
-        "current_window_min_strict": 0.70,
-        "current_window_min_date_balanced": 0.70,
-        "sparse_watchlist_min_strict": 0.80,
-        "final_selector_freeze_allowed": false,
+        "commit": "bf7475530320f7f90eaf1604982f9df14bfeb7c6",
+        "status": "PASS_ACCEPTED",
+        "roads_graded": 14615,
+        "screen_qualified": 3665,
+        "pareto_valid": 220,
+        "finalists": 33,
+        "specialist_finalists": 8,
+        "watchlist_finalists": 19,
+        "decaying_evidence_class_finalists": 6,
+        "specialist_markets": [
+          "fg_attempted",
+          "free_throws_attempted",
+          "free_throws_made"
+        ],
+        "diagnostic_nondecaying_union_too_broad": true,
+        "latest10_union_max_fires": 9,
+        "latest10_union_median_fires": 2.5,
+        "latest10_union_percent_over_3": 0.4
+      },
+      "specialist3_freeze_candidate": {
+        "market_count": 3,
+        "roads": {
+          "fg_attempted": "ROAD:18640a5f6a16e42a154fa86447c2a441da42a0c0201e11dd82f4b2f0b4133ad1",
+          "free_throws_attempted": "ROAD:653545eeb14ceac07a037a21b4f741dd85ccefadc135552cdec4b872563525e0",
+          "free_throws_made": "ROAD:6e42214971a4b68b8a0448170d7d4df19234866611e120e66c7bff7705da4a07"
+        },
+        "road_substitution_allowed": false,
+        "watchlist_roads_active": false,
+        "new_road_discovery_allowed": false,
+        "active_regime": "2026-07-01_THROUGH_2026-08-09_USABLE_DATES",
+        "june_role": "BACKGROUND_ONLY_ZERO_PASS_FAIL_OR_THRESHOLD_AUTHORITY",
+        "prior_only_numeric_quantiles": true,
+        "market_freeze_min_binary": 5,
+        "market_freeze_min_dates": 4,
+        "market_freeze_min_participants": 4,
+        "market_freeze_min_active_strict": 0.65,
+        "market_freeze_min_active_lift": 0.20,
+        "current_min_binary_when_gradeable": 4,
+        "current_min_dates_when_gradeable": 3,
+        "current_min_strict": 0.70,
+        "current_min_date_balanced": 0.70,
+        "union_latest10_median_max": 1.5,
+        "union_latest10_q90_max": 3,
+        "union_latest10_max_fires": 3,
         "validation_reads_allowed": 0,
         "lockbox_reads_allowed": 0,
-        "aug13_contribution_allowed": 0,
-        "heldout_reads_allowed": 0,
         "live_mutation_allowed": false
       }
     }
   },
   "next_strategy": {
     "status": "USER_AUTHORIZED_CODEX_EXECUTION_READY",
-    "topic": "Use July/August current-regime WIN-vs-LOSS evidence and only the bounded Commons shortlists to discover extremely narrow market-owned multi-gate FromDeep roads that prioritize recent precision and natural 0-3-ish firing density; June is background only. Return roads for user/Chat review without freezing, replaying, validating, or promoting them.",
-    "candidate_method_step": "WNBA_FROMDEEP_RECENT_PRECISION_ROADS_R0",
+    "topic": "Replay only the three top-ranked specialist-grade recent precision roads causally with prior July/August feature quantiles, classify each road freeze-ready/watchlist/fail, then verify that the pass-only union naturally produces sparse 0-3-ish FromDeep output without ranking caps. No validation or new discovery yet.",
+    "candidate_method_step": "WNBA_FROMDEEP_SPECIALIST3_CAUSAL_FREEZE_READINESS_R1",
     "codex_execution_authorized": true,
     "active_codex_execution": false,
-    "required_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_RECENT_PRECISION_ROADS_R0_COMPLETE"
+    "required_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_SPECIALIST3_CAUSAL_FREEZE_READINESS_R1_COMPLETE"
   }
 }
