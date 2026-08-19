@@ -12,7 +12,7 @@ Current pushed target SHA:
 
 `bf7475530320f7f90eaf1604982f9df14bfeb7c6`
 
-## Correction of the superseded Specialist-3 delegation
+## Superseded delegation
 
 Do **not** execute `WNBA_FROMDEEP_SPECIALIST3_CAUSAL_FREEZE_READINESS_R1`.
 
@@ -24,9 +24,33 @@ The R0 human report actually preserves:
 - 19 exact `SPARSE_HIGH_PRECISION_WATCHLIST` road IDs;
 - 6 separate `DECAYING` evidence-class finalists.
 
-The 8 specialist roads being concentrated in three markets does not mean only three road identities remain. The watchlist class is sparse high-precision evidence, not rejection. For the FromDeep product, low firing frequency is expected.
+The 8 specialist roads being concentrated in three markets does not mean only three road identities remain. The watchlist class is high-precision sparse evidence, not rejection.
 
-The R0 diagnostic sparse union also does not justify the Specialist-3 reduction: it selected one best non-decaying road per market solely for density diagnosis and excluded other candidate roads by design.
+## Binding product doctrine and names
+
+Read and bind the latest versions of:
+
+- `docs/coordination/ATLAS_DEMON_SPECIALIST_PRODUCT_DOCTRINE.md`
+- `docs/coordination/ATLAS_DEMON_SPECIALIST_PRODUCT_NAMES.md`
+
+Shared product names:
+
+- WNBA / NBA / CBB: **FromDeep**;
+- MLB: **BigSwings**;
+- NFL: **HailMarys**.
+
+### Critical output-count correction
+
+The specialist product is **signal-driven, not count-driven**.
+
+- zero genuine qualifiers => zero output;
+- one genuine qualifier => one output;
+- ten genuine qualifiers => ten outputs;
+- no arbitrary `0-3` cap, target, density rejection, probability top-N suppression, or count-based elimination is allowed.
+
+Historically sparse output may emerge because the roads are narrow, but output count is descriptive only. A distinct candidate that genuinely clears a retained specialist road must not be eliminated merely because other candidates also qualified on that run.
+
+Deduplicate only exact duplicate manifestations of the same candidate identity.
 
 ## Accepted predecessor
 
@@ -44,16 +68,7 @@ Accepted census:
 - analyzer about 29.6 seconds;
 - protected/validation/lockbox/Aug.13/heldout/fitting/Live access all zero.
 
-## Binding product doctrine and names
-
-Read and bind:
-
-- `docs/coordination/ATLAS_DEMON_SPECIALIST_PRODUCT_DOCTRINE.md`
-- `docs/coordination/ATLAS_DEMON_SPECIALIST_PRODUCT_NAMES.md`
-
-WNBA/NBA/CBB: **FromDeep**; MLB: **BigSwings**; NFL: **HailMarys**.
-
-These are the same sparse precision-first Demon single-leg flex/add-on concept, normally 0-3-ish fires per run/slate with honest abstention.
+The prior eight-road density diagnostic is evidence about observed count only. It is **not** authority to reject genuine qualifiers because a date has more than three fires.
 
 ## Active replacement mission
 
@@ -61,9 +76,9 @@ Read and execute:
 
 `docs/coordination/wnba/codex/archive/2026-08-19_fromdeep_27_candidate_roads_causal_audit_r1.md`
 
-Publication commit:
+Latest work-order revision commit:
 
-`da071254176ec888bd556f23e17c7303996451e9`
+`2b2c07bc45e390c47979d1dd9051a65338ef9600`
 
 Mission ID:
 
@@ -71,7 +86,7 @@ Mission ID:
 
 ## Exact candidate authority
 
-Audit **all 27 exact road IDs** specified in the work order:
+Audit all 27 exact road IDs specified in the work order:
 
 - all 8 R0 specialist-grade candidate roads;
 - all 19 R0 sparse high-precision watchlist roads.
@@ -84,19 +99,19 @@ Do not generate new roads.
 
 ## Mission in one sentence
 
-**Replay the complete 27-road R0 candidate set causally with prior-only July/August thresholds, preserve sparse high-precision roads instead of mechanically rejecting them for low volume, identify equivalence/overlap, and report which exact road identities genuinely retain current precision and what deduplicated candidate-level firing density they imply.**
+**Replay the complete 27-road R0 candidate set causally with prior-only July/August thresholds, preserve high-precision low-frequency roads, identify equivalence/overlap, and report which exact road identities genuinely retain current precision and which distinct Demon candidates clear them—without any count-based suppression.**
 
 ## Key interpretation rules
 
 - July/August is the active product regime.
 - Latest 10 usable dates are the primary current-traction window.
 - June is background/stress only and has zero threshold/inclusion/ranking authority.
-- Low support is not automatically bad: this product is supposed to fire rarely.
-- Evidence strength and precision must be reported separately.
+- Low support is not automatically bad; evidence strength and precision are separate facts.
 - Numeric quantiles are realized from prior `t<D` pregame values only.
 - Outcomes grade only after target selections are sealed.
 - Group alias/equivalent road surfaces but preserve all original road IDs.
-- Deduplicate candidate-level fires so multiple matching roads do not become multiple copies of the same FromDeep pick.
+- Deduplicate exact candidate-level duplicates so multiple matching roads do not become multiple copies of one FromDeep pick.
+- **Do not reject a distinct qualifying candidate because the slate already has 3, 5, 10, or any other number of qualifiers.**
 
 ## No new research branch
 
@@ -108,6 +123,7 @@ Do not:
 - fit/tune/calibrate a model;
 - reopen Commons R0/full condition discovery;
 - impose a probability top-N cap;
+- impose an output-count cap or density pass/fail gate;
 - alter core 2L/3L/4L;
 - mutate Live/model/publication/promotion state;
 - open validation or lockbox.
@@ -140,4 +156,4 @@ Required final stop:
 
 `BLOCKED_USER_REVIEW_WNBA_FROMDEEP_27_CANDIDATE_ROADS_CAUSAL_AUDIT_R1_COMPLETE`
 
-Return all 27 road results, equivalence/overlap clusters, deduplicated candidate-level union diagnostics, every sealed selected single, and mission wall-clock versus runner time. Do not auto-freeze or auto-open validation.
+Return all 27 road results, equivalence/overlap clusters, deduplicated candidate-level union diagnostics, every sealed selected single, and mission wall-clock versus runner time. Density is descriptive only. Do not auto-freeze or auto-open validation.
