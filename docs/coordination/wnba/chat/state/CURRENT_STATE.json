@@ -1,16 +1,16 @@
 {
   "schema_version": "atlas_prime_delegation_wnba_current_state_v1",
-  "captured_at_ct": "2026-08-18T17:19:00-05:00",
+  "captured_at_ct": "2026-08-18T19:06:00-05:00",
   "snapshot_not_authority": true,
   "sport": "WNBA",
   "source_repository": "rickeyalackey89-max/Atlas-WNBA",
   "source_branch": "builder-method-contract-v1",
-  "source_head": "14adb68eedd7cf3f44f7baa3edadd0a8b8801c6e",
+  "source_head": "06317138e247412a56a4c31cf10bac2f8e4975c8",
   "builder": {
-    "status": "ACTIVE_USER_AUTHORIZED_FROMDEEP_ANATOMY_PARTITION_CORRECTION_AND_COMPLETE",
-    "current_target_repo_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_MARKET_OWNED_DESCRIPTIVE_SIGNAL_ANATOMY_R0",
-    "authorized_step": "fromdeep_anatomy_partition_correction_and_complete",
-    "required_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_ANATOMY_PARTITION_CORRECTION_AND_COMPLETE",
+    "status": "ACTIVE_USER_AUTHORIZED_FROMDEEP_SIGNAL_GRAMMAR_RELIABILITY_CONTRACT_R0",
+    "current_target_repo_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_ANATOMY_PARTITION_CORRECTION_AND_COMPLETE",
+    "authorized_step": "fromdeep_signal_grammar_reliability_contract_r0",
+    "required_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_SIGNAL_GRAMMAR_RELIABILITY_CONTRACT_R0",
     "controller_skill": "slip-builders",
     "validation_reads": 0,
     "lockbox_reads": 0,
@@ -38,7 +38,7 @@
       "promotion_authority": false
     },
     "FromDeep": {
-      "status": "ANATOMY_PARTITION_CORRECTION_AND_COMPLETE_USER_AUTHORIZED_ACTIVE",
+      "status": "SIGNAL_GRAMMAR_RELIABILITY_CONTRACT_R0_USER_AUTHORIZED_ACTIVE",
       "independent_of_core_depletion": true,
       "uses_2l_or_3l_depleted_pool": false,
       "core_selected_leg_depletion_applied": false,
@@ -60,74 +60,84 @@
         "lockbox_reads": 0,
         "aug13_reads": 0
       },
-      "descriptive_anatomy_attempt": {
-        "commit": "14adb68eedd7cf3f44f7baa3edadd0a8b8801c6e",
-        "repository_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_MARKET_OWNED_DESCRIPTIVE_SIGNAL_ANATOMY_R0",
-        "pass_claimed": false,
-        "failure_scope": "PREDECLARED_CANONICAL_SETTLEMENT_STATE_PARTITION_MISMATCH",
-        "descriptive_aggregation_started": false,
-        "preoutcome_38_card_source_pass_complete": true,
-        "outcome_blind_field_type_seal_complete": true,
-        "canonical_state_audit_complete": true,
-        "field_type_or_source_cache_reusable_if_hash_verified": true,
-        "validation_reads": 0,
-        "lockbox_reads": 0,
-        "aug13_reads": 0,
-        "signal_road_work_executed": false,
-        "green_red_gray_executed": false,
-        "fitting_ranking_selection_executed": false,
-        "core_redistribution_work_executed": false
-      },
-      "canonical_settlement_state_partition": {
-        "status": "AUDITED_FROM_SEALED_LABELS",
-        "total_rows": 20626,
-        "win": 4305,
-        "loss": 15127,
-        "win_loss_rows": 19432,
-        "void": 499,
-        "push": 2,
-        "unsupported_market": 622,
-        "missing_player_game_truth": 71,
-        "sums_to_total": true,
-        "scientific_failure": false,
-        "label_surface_mutation_required": false
-      },
-      "anatomy_partition_correction": {
-        "status": "USER_AUTHORIZED_ACTIVE",
-        "work_order": "docs/coordination/wnba/codex/archive/2026-08-18_fromdeep_anatomy_partition_correction_and_complete.md",
-        "publication_commit": "643a403e29624518e642298294db4dc5134dbe61",
-        "codex_prime_activation_commit": "b75297494373f7dd6bd62ab753302c230427bdb1",
-        "execution_tier": "R0_ARTIFACT_AUDIT",
-        "starting_wnba_head": "14adb68eedd7cf3f44f7baa3edadd0a8b8801c6e",
-        "expected_current_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_MARKET_OWNED_DESCRIPTIVE_SIGNAL_ANATOMY_R0",
-        "reuse_preoutcome_scope_seal": true,
-        "reuse_field_type_seal": true,
-        "reuse_38_source_scalar_checkpoints": true,
-        "repeat_source_pass_allowed": false,
-        "correct_partition": {
+      "descriptive_anatomy_complete": {
+        "commit": "06317138e247412a56a4c31cf10bac2f8e4975c8",
+        "status": "ACCEPTED_COMPLETE",
+        "repository_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_ANATOMY_PARTITION_CORRECTION_AND_COMPLETE",
+        "success_markers": [
+          "PASS_FROMDEEP_MARKET_OWNED_DESCRIPTIVE_SIGNAL_ANATOMY_R0",
+          "PASS_FROMDEEP_ANATOMY_PARTITION_CORRECTION_AND_COMPLETE"
+        ],
+        "canonical_partition": {
+          "total_rows": 20626,
           "win": 4305,
           "loss": 15127,
+          "win_loss_rows": 19432,
           "void": 499,
           "push": 2,
           "unsupported_market": 622,
           "missing_player_game_truth": 71
         },
-        "field_ranking_allowed": false,
-        "feature_selection_allowed": false,
-        "threshold_search_allowed": false,
-        "signal_road_construction_allowed": false,
-        "green_red_gray_allowed": false,
+        "market_count": 27,
+        "admitted_market_field_records": 19845,
+        "reused_source_checkpoints": 38,
+        "original_retained_cards_opened": 0,
+        "signal_roads_executed": false,
+        "green_red_gray_executed": false,
+        "fitting_ranking_selection_executed": false,
+        "redistribution_executed": false,
+        "validation_reads": 0,
+        "lockbox_reads": 0,
+        "aug13_reads": 0
+      },
+      "signal_grammar_v1": {
+        "status": "USER_CHAT_AGREED_PREDECLARATION",
+        "prime_strategy_path": "docs/coordination/wnba/chat/FROMDEEP_SIGNAL_GRAMMAR_V1.md",
+        "prime_strategy_commit": "f6d68165658b65da7d4428a3af2817c7f5cafa98",
+        "max_predicates_per_road": 2,
+        "numeric_quantile_grid": [
+          "<=q10",
+          "<=q25",
+          "<=q50",
+          ">=q50",
+          ">=q75",
+          ">=q90"
+        ],
+        "probability_predicates_allowed": false,
+        "identity_predicates_allowed": false,
+        "historical_hit_rate_predicates_allowed": false,
+        "min_binary_support": 24,
+        "min_unique_dates": 8,
+        "min_unique_participants": 6,
+        "max_top1_date_share": 0.25,
+        "max_top1_participant_share": 0.25,
+        "confidence_method": "two_sided_95pct_wilson",
+        "green_strict_rate": 0.9,
+        "green_date_balanced_rate": 0.9,
+        "red_policy": "conservative_market_relative_negative_only",
+        "gray_policy": "all_unresolved_or_insufficient_or_unstable_without_reliable_negative_evidence",
+        "historical_asof_required": true
+      },
+      "signal_grammar_r0": {
+        "status": "USER_AUTHORIZED_ACTIVE",
+        "work_order": "docs/coordination/wnba/codex/archive/2026-08-18_fromdeep_signal_grammar_reliability_contract_r0.md",
+        "publication_commit": "3401a65803e213319025dbaa65b0a2295bf47c68",
+        "codex_prime_activation_commit": "70df1709554ff96841ba0c62245d5199961af11a",
+        "execution_tier": "R0_ARTIFACT_AUDIT",
+        "starting_wnba_head": "06317138e247412a56a4c31cf10bac2f8e4975c8",
+        "expected_current_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_ANATOMY_PARTITION_CORRECTION_AND_COMPLETE",
+        "outcome_reads_allowed": 0,
+        "real_signal_generation_allowed": false,
+        "real_green_red_gray_allowed": false,
         "fitting_allowed": false,
-        "selection_allowed": false,
+        "historical_asof_performance_allowed": false,
         "validation_reads_allowed": 0,
         "lockbox_reads_allowed": 0,
-        "aug13_reads_allowed": 0,
+        "aug13_truth_reads_allowed": 0,
         "core_or_redistribution_work_allowed": false,
-        "required_success_markers": [
-          "PASS_FROMDEEP_MARKET_OWNED_DESCRIPTIVE_SIGNAL_ANATOMY_R0",
-          "PASS_FROMDEEP_ANATOMY_PARTITION_CORRECTION_AND_COMPLETE"
-        ],
-        "required_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_ANATOMY_PARTITION_CORRECTION_AND_COMPLETE"
+        "live_or_publication_mutation_allowed": false,
+        "required_success_marker": "PASS_FROMDEEP_SIGNAL_GRAMMAR_RELIABILITY_CONTRACT_R0",
+        "required_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_SIGNAL_GRAMMAR_RELIABILITY_CONTRACT_R0"
       }
     }
   },
@@ -140,8 +150,8 @@
   },
   "next_strategy": {
     "status": "USER_AUTHORIZED_CODEX_EXECUTION_ACTIVE",
-    "topic": "Reuse the sealed anatomy source/type artifacts, correct only the canonical settlement-state partition constants, and complete the full unranked 27-market FromDeep descriptive anatomy. No new scientific canary and no core-family work.",
+    "topic": "Materialize and fidelity-test the frozen FromDeep V1 market-owned signal grammar/reliability contract and an outcome-blind field-permission manifest. No real signal discovery yet.",
     "codex_execution_authorized": true,
-    "required_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_ANATOMY_PARTITION_CORRECTION_AND_COMPLETE"
+    "required_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_SIGNAL_GRAMMAR_RELIABILITY_CONTRACT_R0"
   }
 }
