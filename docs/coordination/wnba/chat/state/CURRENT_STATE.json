@@ -1,21 +1,37 @@
 {
   "schema_version": "atlas_prime_delegation_wnba_current_state_v1",
-  "captured_at_ct": "2026-08-19T00:36:00-05:00",
+  "captured_at_ct": "2026-08-19T01:01:00-05:00",
   "snapshot_not_authority": true,
   "sport": "WNBA",
   "source_repository": "rickeyalackey89-max/Atlas-WNBA",
   "source_branch": "builder-method-contract-v1",
   "source_head": "a9d136bb2c6e6b94bdcebbd6dfc58971e1bc75c6",
   "builder": {
-    "status": "BLOCKED_USER_REVIEW_FROMDEEP_R1_RESOURCE_WORKFLOW_REDESIGN",
+    "status": "ACTIVE_USER_AUTHORIZED_BOUNDED_AUTONOMOUS_MISSION",
     "current_target_repo_stop": "BLOCKED_RESOURCE_REVIEW_WNBA_FROMDEEP_MARKET_OWNED_SIGNAL_ATLAS_R1",
-    "authorized_step": null,
-    "required_stop": "BLOCKED_RESOURCE_REVIEW_WNBA_FROMDEEP_MARKET_OWNED_SIGNAL_ATLAS_R1",
+    "authorized_step": "WNBA_BOUNDED_AUTONOMY_RESET_FROMDEEP_FEATURE_INVENTORY_R0",
+    "required_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_FEATURE_INVENTORY_COMPLETE",
     "controller_skill": "slip-builders",
     "validation_reads": 0,
     "lockbox_reads": 0,
-    "active_codex_execution": false,
-    "target_control_discrepancy": "WNBA a9d136 ACTIVE_BUILDER_LANE and builder_state still encode active R1/outcome access even though user explicitly stopped at the resource-review boundary"
+    "active_codex_execution": true,
+    "target_control_discrepancy": "WNBA a9d136 ACTIVE_BUILDER_LANE and builder_state still encode the aborted R1 as active/outcome-authorized; reconciliation is explicitly included in the active mission"
+  },
+  "prime_mission": {
+    "mission_id": "WNBA_BOUNDED_AUTONOMY_RESET_FROMDEEP_FEATURE_INVENTORY_R0",
+    "work_order": "docs/coordination/wnba/codex/archive/2026-08-19_bounded_autonomy_governance_fromdeep_feature_inventory.md",
+    "publication_commit": "8f30ea13f27e8ed116f06c0dde40f113c764e668",
+    "doctrine": "docs/coordination/PRIME_BOUNDED_AUTONOMOUS_MISSIONS.md",
+    "doctrine_commit": "b90674b0c740a79e82ceae2493b9e52861187025",
+    "phases": [
+      "BOUNDED_AUTONOMY_GOVERNANCE_AND_CONTROL_RESET",
+      "FROMDEEP_CANDIDATE_FEATURE_HISTORICAL_ASOF_INVENTORY"
+    ],
+    "intermediate_user_stop_between_phases": false,
+    "parallel_independent_subtasks_allowed": true,
+    "per_command_review_required": false,
+    "per_test_review_required": false,
+    "final_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_FEATURE_INVENTORY_COMPLETE"
   },
   "families": {
     "2L": {
@@ -39,7 +55,7 @@
       "promotion_authority": false
     },
     "FromDeep": {
-      "status": "R1_RESOURCE_WORKFLOW_REDESIGN_USER_REVIEW",
+      "status": "BOUNDED_AUTONOMY_RESET_AND_FEATURE_INVENTORY_AUTHORIZED",
       "independent_of_core_depletion": true,
       "uses_2l_or_3l_depleted_pool": false,
       "core_selected_leg_depletion_applied": false,
@@ -82,40 +98,20 @@
         "lockbox_reads": 0,
         "aug13_reads": 0
       },
-      "signal_grammar_v1": {
-        "status": "FROZEN_PREDECLARATION",
-        "prime_strategy_path": "docs/coordination/wnba/chat/FROMDEEP_SIGNAL_GRAMMAR_V1.md",
-        "prime_strategy_commit": "f6d68165658b65da7d4428a3af2817c7f5cafa98",
-        "max_predicates_per_road": 2,
-        "probability_predicates_allowed": false,
-        "min_binary_support": 24,
-        "min_unique_dates": 8,
-        "min_unique_participants": 6,
-        "max_top1_date_share": 0.25,
-        "max_top1_participant_share": 0.25,
-        "confidence_method": "two_sided_95pct_wilson",
-        "green_strict_rate": 0.9,
-        "green_date_balanced_rate": 0.9,
-        "historical_asof_required": true
-      },
       "signal_grammar_r0": {
         "commit": "51665c31090d51b727a3cedb0834ad7eb41ed0d2",
-        "status": "PASS_ACCEPTED",
-        "success_marker": "PASS_FROMDEEP_SIGNAL_GRAMMAR_RELIABILITY_CONTRACT_R0",
+        "status": "PASS_ACCEPTED_HISTORICAL_PREDECLARATION_EVIDENCE",
         "market_count": 27,
         "market_field_record_count": 25218,
         "predicate_eligible_market_field_count": 8040,
         "excluded_market_field_count": 17178,
         "outcome_reads": 0,
         "real_signal_roads_constructed": 0,
-        "green_red_gray_assignments": 0,
-        "validation_reads": 0,
-        "lockbox_reads": 0
+        "green_red_gray_assignments": 0
       },
       "signal_atlas_r1": {
         "commit": "a9d136bb2c6e6b94bdcebbd6dfc58971e1bc75c6",
-        "status": "BLOCKED_RESOURCE_REVIEW_REDESIGN_REQUIRED",
-        "execution_tier": "R2_BOUNDED_PILOT",
+        "status": "REJECTED_EXECUTION_ARCHITECTURE_RESOURCE_EVIDENCE_ONLY",
         "scientific_disposition_produced": false,
         "green_red_gray_census_produced": false,
         "outcome_inputs_resolved": 0,
@@ -129,21 +125,19 @@
         "projected_peak_bytes": 175451099900,
         "projected_total_seconds": 183036.91665506669,
         "resource_gate_pass": false,
-        "failure_interpretation": "IMPLEMENTATION_TOPOLOGY_DESIGN_FAILURE_NOT_FROMDEEP_SCIENTIFIC_FAILURE",
-        "frozen_v1_grammar_invalidated": false,
-        "label_surface_invalidated": false,
-        "anatomy_invalidated": false
+        "failure_interpretation": "IMPLEMENTATION_TOPOLOGY_DESIGN_FAILURE_NOT_FROMDEEP_SCIENTIFIC_FAILURE"
       },
-      "redesign_candidate": {
-        "status": "NOT_AUTHORIZED",
-        "workflow_doctrine": "TOPOLOGY_BEFORE_IMPLEMENTATION",
-        "r1a": "OUTCOME_BLIND_TIER_A_STRUCTURAL_TOPOLOGY_AND_COMPACT_EXECUTOR_FEASIBILITY",
-        "r1b": "COMPLETE_STRUCTURALLY_VIABLE_TIER_A_GRADING_THEN_ACTUAL_PRECURSOR_PASS_TIER_B_TOPOLOGY",
-        "r1c": "EXACT_PRECURSOR_ADMISSIBLE_TIER_B_GRADING_ONLY_IF_R1B_RESOURCE_RECEIPT_PASSES",
-        "scientific_top_n_allowed": false,
-        "outcome_based_truncation_allowed": false,
-        "structural_impossibility_pruning_allowed": true,
-        "compact_streamed_execution_required_before_resource_failure_claim": true
+      "current_inventory_mission": {
+        "status": "AUTHORIZED_ACTIVE_AFTER_GOVERNANCE_RESET",
+        "goal": "CHARACTERIZE_REAL_ROW_LEVEL_FEATURE_SURFACE_BEFORE_CHOOSING_LEAN_FROMDEEP_DISCOVERY_METHOD",
+        "signal_roads_allowed": false,
+        "threshold_search_allowed": false,
+        "interactions_allowed": false,
+        "ranking_or_slip_selection_allowed": false,
+        "new_fitting_allowed": false,
+        "validation_reads_allowed": 0,
+        "lockbox_reads_allowed": 0,
+        "live_mutation_allowed": false
       }
     }
   },
@@ -155,9 +149,10 @@
     "sequence_policy": "NO_MIDSTREAM_BACKTRACKING_FROM_FROMDEEP_INTO_CORE_FAMILIES"
   },
   "next_strategy": {
-    "status": "AWAITING_USER_REVIEW_AND_REDESIGN_AUTHORIZATION",
-    "topic": "Do not continue naive R1. If user approves, begin with a tiny outcome-blind topology/compact-executor feasibility step before any further scientific implementation or outcome access.",
-    "candidate_method_step": "FROMDEEP_SIGNAL_ATLAS_R1A_TOPOLOGY_COMPACT_EXECUTOR_FEASIBILITY",
-    "codex_execution_authorized": false
+    "status": "USER_AUTHORIZED_CODEX_EXECUTION_ACTIVE",
+    "topic": "First implement bounded-autonomous Builder governance/control behavior, then continue automatically into a compact row-first FromDeep candidate-feature and historical-as-of inventory. Return only at the final inventory scientific review boundary or a true hard boundary.",
+    "candidate_method_step": "WNBA_BOUNDED_AUTONOMY_RESET_FROMDEEP_FEATURE_INVENTORY_R0",
+    "codex_execution_authorized": true,
+    "required_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_FEATURE_INVENTORY_COMPLETE"
   }
 }
