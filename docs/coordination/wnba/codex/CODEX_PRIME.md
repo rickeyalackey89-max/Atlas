@@ -1,6 +1,6 @@
 # WNBA Codex Prime
 
-Status: **ACTIVE EXECUTION DELEGATION — FROMDEEP CAUSAL LANE RECONCILIATION R0 — REFRESHED WINDOW 1**
+Status: **ACTIVE EXECUTION DELEGATION — FROMDEEP CAUSAL LANE RECONCILIATION R0 — CANONICALIZATION CORRECTION 1**
 
 Use the clean Prime mirror at `C:\Users\13142\Atlas\PrimeDelegation` and canonical WNBA root `C:\Users\13142\Atlas\WNBA`.
 
@@ -16,7 +16,7 @@ Scientific predecessor / sole reconciliation evidence source remains:
 
 `749589392d8faa58f438ddcd601607bf5a35c68b`
 
-## Accepted predecessor
+## Accepted scientific predecessor
 
 The 27-candidate-road causal audit is accepted complete at scientific predecessor `749589392d8faa58f438ddcd601607bf5a35c68b`.
 
@@ -34,36 +34,6 @@ Accepted evidence:
 - protected, validation, lockbox, Aug.13, heldout, fitting, Live, and automatic follow-on counts all zero.
 
 The prior audit is complete and must not be rerun in this mission.
-
-## Execution-window refresh accepted
-
-The prior reconciliation window ended at its hard deadline before scientific activation because focused-test coverage still overstated several matrix requirements.
-
-Accepted stopped-window accounting:
-
-- rebinds `0`;
-- activations `0`;
-- scientific-input reads `0`;
-- formal reconciliation runs `0`;
-- reconciliation outputs `0`;
-- validation/lockbox/protected/heldout/Aug.13/fitting/Live activity `0`.
-
-Four unfinished reconciliation files — spec, engine, runner, tests — remain preserved and are authorized continuation work. **Continue them; do not restart the implementation from scratch.**
-
-Storage-only target commits are accepted:
-
-- `315aca0640b3f8c811a4b9b473ef02a64782aff4`;
-- `0e035eef23f092c48cdfd8716c3ae4e8fedd7179`.
-
-The CSV offload is operational only and does not change the scientific population. Before the formal run, verify every required causal-audit input from commit `749589392d8faa58f438ddcd601607bf5a35c68b` is still present and matches its accepted binding. Fail closed if an authorized scientific input is missing or changed; do not substitute another file.
-
-Read the refresh amendment:
-
-`docs/coordination/wnba/codex/archive/2026-08-19_fromdeep_causal_lane_reconciliation_r0_execution_window_refresh_1.md`
-
-Refresh commit:
-
-`4960aae23d7320c3ad0b29aeab513c0155f957d2`
 
 ## Binding product doctrine
 
@@ -85,6 +55,18 @@ Base work-order revision commit:
 
 `941a761896b2c17d9a268abbcee262448e972252`
 
+Execution-window refresh:
+
+`docs/coordination/wnba/codex/archive/2026-08-19_fromdeep_causal_lane_reconciliation_r0_execution_window_refresh_1.md`
+
+Canonicalization correction amendment:
+
+`docs/coordination/wnba/codex/archive/2026-08-19_fromdeep_causal_lane_reconciliation_r0_implementation_divergence_correction_1.md`
+
+Correction amendment commit:
+
+`8364cf0f5511bee3933705e737b26076893dcaa5`
+
 Mission ID:
 
 `WNBA_FROMDEEP_CAUSAL_LANE_RECONCILIATION_R0`
@@ -95,28 +77,72 @@ Mission ID:
 
 ## Exact primary authority
 
-Marginal reconciliation is limited to exactly the 14 roads listed in the base work order: all roads already classified `CAUSAL_HIGH_PRECISION_SUPPORTED` or `CAUSAL_HIGH_PRECISION_SPARSE`.
+Marginal reconciliation remains limited to exactly the 14 roads listed in the base work order: all roads already classified `CAUSAL_HIGH_PRECISION_SUPPORTED` or `CAUSAL_HIGH_PRECISION_SPARSE`.
 
 Do not add mixed, decayed, inactive, or other historical roads to the marginal high-precision set.
 
 The eight `CAUSAL_MIXED` roads may be summarized from existing audit evidence only as targeted-refinement context.
 
-## Refreshed execution sequence
+## Formal attempt 1 — acknowledged implementation divergence
 
-1. Continue the four preserved untracked reconciliation files.
-2. Strengthen focused tests and matrix mapping until every claimed requirement is genuinely exercised. Do not weaken tests to obtain green status.
-3. Focused-test iterations are ordinary pre-science engineering and may repeat.
-4. Verify all bound scientific input artifacts survived storage offload unchanged.
-5. Then perform exactly one mission rebind/activation sequence and exactly one formal artifact-only reconciliation run.
-6. Audit outputs and stop at mandatory user review.
+Refresh Window 1 reached truthful pre-science readiness and then consumed formal attempt #1.
 
-Because the prior window never activated the row, emit one full parent Builder preamble at actual activation. Subagents inherit it. No repeated governance cycles for ordinary test fixes, parser/report work, Git inspection, or artifact audit.
+Accepted attempt-1 facts:
+
+- focused tests / requirement matrix: 16/16 passed truthfully;
+- Ruff / compile / control validation: passed;
+- rebind and activation: succeeded;
+- all five causal inputs survived offload and matched their bound hashes / receipt crosslinks;
+- formal attempt #1 failed inside analysis with `implementation_divergence`;
+- no reconciliation outputs or final receipt were written;
+- only `focused_tests.xml` exists;
+- protected / validation / lockbox / heldout / Aug.13 / fitting / Live access remained zero;
+- lane remains valid and active at `builder_s5_fromdeep_causal_lane_reconciliation_r0`;
+- no transition, target commit, or target push occurred from the failed attempt.
+
+Defect:
+
+- human-facing market label: `BLKS+STLS`;
+- incorrectly encoded machine key: `blks_plus_stls`;
+- canonical WNBA machine key in the accepted causal artifact: `blks_stls`.
+
+This failure is not scientific evidence.
+
+## Exact correction authority
+
+Authorize only:
+
+1. `blks_plus_stls` -> `blks_stls` for the three affected BLKS+STLS road bindings and their group key;
+2. corresponding spec / engine / focused-test binding repair plus the minimum implementation-hash / receipt synchronization required by the existing controller;
+3. focused tests needed to verify that repair;
+4. exactly **one** correction formal artifact-only reconciliation run using the same scientific inputs and same 14-road authority.
+
+No other market remap, road change, gate change, threshold change, population change, or selection-rule change is authorized.
+
+If the canonical-key repair changes the scientific population rather than merely addressing the same accepted market surface, fail closed.
+
+Formal-run accounting is now:
+
+- failed formal attempts already consumed: `1`;
+- additional correction formal runs authorized: `1`;
+- maximum total formal attempts: `2`;
+- successful reconciliation output runs permitted: `1`.
+
+Do not perform a third formal attempt under this authority.
+
+## Control behavior
+
+Continue the already-active reconciliation work. Do not restart the implementation and do not repeat the full parent mission preamble solely because of this canonical representation repair.
+
+Focused tests and ordinary implementation fixes before the correction run do not count as formal reconciliation attempts.
+
+If changed implementation hashes require controller synchronization, perform only the minimum hash-binding action required. This is not a new scientific evidence class or new scientific method.
 
 ## Key interpretation rules
 
 - no causal replay;
 - no new target-date evaluation;
-- no gate/road/threshold search;
+- no gate / road / threshold search;
 - use only the already-sealed candidate selections from scientific predecessor `749589392d8faa58f438ddcd601607bf5a35c68b`;
 - calculate same-market unique, added, excluded, equivalent, subset, and superset candidate sets from those artifacts;
 - grade those already-known sets from the already-recorded settlements only;
@@ -134,21 +160,18 @@ Do not:
 - generate or alter roads;
 - search thresholds;
 - use probability to suppress output;
-- fit/train/tune/calibrate;
+- fit / train / tune / calibrate;
 - open validation, lockbox, protected, heldout, or Aug.13 evidence;
-- alter core 2L/3L/4L;
-- mutate Live/model/publication/promotion state;
-- perform another broad storage offload/restore unless a concrete new storage blocker appears.
-
-A tiny artifact-only parser/report generator plus focused arithmetic tests is allowed.
+- alter core 2L / 3L / 4L;
+- mutate Live / model / publication / promotion state;
+- perform another broad storage operation;
+- bundle unrelated implementation changes into the canonical-key repair.
 
 ## Workflow
 
-Execution tier: `R0_ARTIFACT_ONLY_RECONCILIATION`.
+Execution tier remains `R0_ARTIFACT_ONLY_RECONCILIATION`.
 
-Target refreshed parent mission <=30 minutes; hard workflow boundary 45 minutes.
-
-No generalized engine, new checkpoint framework, or repeated governance cycles for ordinary artifact parsing/reporting/testing.
+This correction should be small. Codex owns the engineering repair inside the envelope; do not create another generalized framework or repeated governance cycle.
 
 ## Completion
 
@@ -156,6 +179,8 @@ Required final stop:
 
 `BLOCKED_USER_REVIEW_WNBA_FROMDEEP_CAUSAL_LANE_RECONCILIATION_R0_COMPLETE`
 
-Return the 14-road marginal reconciliation, equivalence/subset/superset incremental evidence, mixed-road recency context, three-class recommendation packet, proposed deduplicated freeze-candidate registry for review, artifact/receipt IDs, focused tests/matrix truthfulness summary, post-offload input-integrity verification, formal-run count, and wall-clock versus analyzer/report time.
+If correction formal attempt #2 completes, return the originally required 14-road marginal reconciliation, equivalence/subset/superset incremental evidence, mixed-road recency context, three-class recommendation packet, proposed deduplicated freeze-candidate registry, artifact/receipt IDs, tests, input-integrity confirmation, and explicit attempt #1/#2 accounting.
+
+If correction formal attempt #2 fails in a way that requires another formal run, stop and return to user/Chat.
 
 Do not freeze a selector and do not open protected validation automatically.
