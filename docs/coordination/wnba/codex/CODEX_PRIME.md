@@ -1,81 +1,93 @@
 # WNBA Codex Prime
 
-Status: **HOLD — DO NOT EXECUTE PROTECTED VALIDATION — EXACT CORE CONSTRUCTION LINEAGE RECONCILIATION REQUIRED**
+Status: **ACTIVE — USER-AUTHORIZED FRESH-FRONTIER FULL-STACK PROTECTED VALIDATION R1**
 
 Target repository: `rickeyalackey89-max/Atlas-WNBA`
 
 Target branch: `builder-method-contract-v1`
 
-Current pushed target SHA remains:
+Last known pushed target SHA before this delegation:
 
 `af72026a78731ab476d3f98bb6a599d3636efc4c`
 
-## Immediate hold
+Preserve the existing canonical local production-factory checkpoint. Do not reset, reclone, create a worktree, or discard unrelated local work.
 
-Do **not** activate, rebind, continue the preserved production factory into protected execution, or read any protected/scientific payload for the Aug10-Aug19 block until this hold is replaced by a new explicit Prime delegation.
+## Active mission
 
-Protected/scientific payload reads remain `0`.
+Execute exactly:
 
-Validation reads remain `0`.
+`docs/coordination/wnba/codex/archive/2026-08-20_full_builder_fresh_frontier_protected_validation_r1.md`
 
-Lockbox reads remain `0`.
+Mission ID:
 
-Result-bearing protected runs remain `0`.
+`WNBA_FULL_BUILDER_FRESH_FRONTIER_PROTECTED_VALIDATION_R1`
 
-The preserved local full-stack implementation checkpoint must remain intact. Do not reset/restart/delete it.
+## Explicit user architecture decision
 
-## Why this hold exists
+The final product sequence is now bound as:
 
-The prior Prime shorthand encoded the core order as:
+`full pregame pool -> 2L -> exact selected-leg depletion -> fresh 3L pool -> 3L -> exact selected-leg depletion -> fresh 4L pool -> 4L + independent FromDeep -> seal -> truth -> validation`
 
-`2L -> exact selected-leg depletion -> 3L -> exact selected-leg depletion -> 4L`
+This replaces the prior Chat reconciliation hold.
 
-Before protected validation, Chat/user identified that this shorthand may omit a scientifically material candidate-frontier reconstruction step between families.
+## Critical lineage correction
 
-A target-repository lineage audit is now required because the historical evidence is asymmetric:
+Do not treat the historical 3L `24-6-0` result as proof that fresh post-2L 3L reconstruction was already tested.
 
-- accepted 4L authority clearly requires a **fresh stateful 4L candidate frontier after upstream exact-leg depletion**;
-- the exact frozen 3L pointwise freeze-candidate contract is bound to a materialized pretruth 3L candidate surface and explicitly records `candidate_regeneration_absent = true`;
-- therefore Chat must not silently reinterpret the frozen 3L research result as already authorizing a fresh post-2L 3L frontier without first reconciling the intended production architecture with the exact frozen 3L evidence/method contract.
+Target source shows the materialized 3L research surface used:
 
-This is a governing candidate-population/construction-semantic question. It must be resolved **before** protected outcomes open.
+`base3 = existing candidates_by_family["3"] -> legal_after(base3, selected 2L exact roads)`
 
-## Historical authority that must be reconciled
+and the frozen 3L contract correctly recorded candidate regeneration as absent.
 
-Target repository operational authority takes precedence over Prime shorthand. Reconcile at minimum:
+The user has now explicitly authorized the **fresh 3L candidate-population construction change**.
 
-- target `AGENTS.md` and active Builder lane/control authority;
-- `docs/model_development/builder_method_contract/WNBA_BUILDER_RECONSTRUCTION_DOCTRINE_V1.md`;
-- `docs/model_development/builder_method_contract/WNBA_BUILDER_METHOD_CONTRACT_V1.md`;
-- frozen 2L authority;
-- 3L freeze commit `2b1fca797eebefdb0da190099681460f22036eb1` and its exact freeze-candidate contract;
-- 4L stateful generator/freeze lineage including frozen commit `24c5e29c965f5e808d84470c16146bb18a0b0148`;
-- final FromDeep registry at target commit `af72026a78731ab476d3f98bb6a599d3636efc4c`.
+Implement that fresh frontier from the post-2L residual canonical leg pool using existing WNBA signal-library/Builder-leg-pool/3L-selector/QMC/value machinery. Do not merely filter an old prebuilt 3L candidate list. Do not copy 4L depth/limits unless the exact governing 3L policy resolves to them.
 
-## Preserved intended validation scope
+The 3L **selection methodology remains frozen**: same pointwise historical-as-of feature contract, model class/hyperparameters, weighting, missingness, tie-breaks, and target-date sealing. Reconstruct the development-consumed training surface under the fresh 3L architecture before protected execution, but do not tune or search a new method based on that result.
 
-The user still intends one fully linear whole-stack protected validation of:
+Accepted 4L lineage already requires true fresh post-upstream-depletion construction through its frozen `fresh_four_leg_frontier` path. Preserve that method.
 
-- 2L;
-- 3L;
-- 4L;
-- FromDeep;
+FromDeep remains independent of core depletion and must emit every distinct genuine registry-qualified single, uncapped.
 
-on the untouched candidate protected block through `2026-08-19`, after exact construction semantics are reconciled outcome-blind.
+## Protected boundary
 
-No step-by-step user-review loop is desired once the correct canonical path is bound.
+Candidate protected block remains `2026-08-10` through `2026-08-19`, inclusive.
 
-## No active execution authority
+Before the first protected settlement read:
 
-The prior base work order and execution-window refresh remain historical mission drafts only while this hold is active:
+- target-repository operational authority and active `slip-builders` control must be reconciled;
+- fresh 3L implementation/fidelity must be proven;
+- the fresh-surface historical-as-of 3L development replay must be completed without method tuning;
+- 4L fresh reconstruction fidelity must be proven after actual 2L+3L selections;
+- FromDeep independence must be proven;
+- the protected calendar/source census and integrated method seal must be immutable;
+- full Builder control validation must pass immediately before the evidence-class transition.
 
-- `docs/coordination/wnba/codex/archive/2026-08-20_full_builder_frozen_stack_protected_validation_r0.md`;
-- `docs/coordination/wnba/codex/archive/2026-08-20_full_builder_frozen_stack_protected_validation_r0_execution_window_refresh_1.md`.
+Protected scientific payload reads before that boundary remain `0`.
 
-Do not execute them under this hold.
+Validation reads remain `0` until that transition.
 
-A premature fresh-frontier correction draft was created and then removed before becoming active Prime authority. Do not recover or execute it from Git history.
+Lockbox reads remain `0` throughout.
 
-## Required stop
+Once protected outcomes open, no method/candidate/feature/ranking/depletion/source/road change or result-bearing rerun under altered semantics is allowed.
 
-`BLOCKED_CHAT_RECONCILIATION_WNBA_FULL_BUILDER_CORE_CONSTRUCTION_LINEAGE`
+## Codex operating mode
+
+This is one bounded-autonomous parent mission.
+
+Use subagents aggressively for independent pre-boundary work. They inherit the parent preamble and mission envelope.
+
+Do not create a stop/review loop after every command, subagent, test, date, or family. Run full control validation only at activation, an actual governing-fact change, immediately before protected evidence opens, and final completion/hard boundary.
+
+Implementation-only pre-outcome defects may be repaired autonomously while the scientific meaning is unchanged.
+
+Target parent wall time: `<= 75 minutes`.
+
+Hard workflow boundary: `150 minutes`.
+
+## Required final stop
+
+`BLOCKED_USER_REVIEW_WNBA_FULL_BUILDER_FRESH_FRONTIER_PROTECTED_VALIDATION_R1_COMPLETE`
+
+Do not open lockbox or mutate Live/runtime/publication/promotion authority automatically.
