@@ -1,25 +1,28 @@
 {
   "schema_version": "atlas_prime_delegation_wnba_current_state_v1",
-  "captured_at_ct": "2026-08-19T22:45:00-05:00",
+  "captured_at_ct": "2026-08-19T23:48:00-05:00",
   "snapshot_not_authority": true,
   "sport": "WNBA",
   "source_repository": "rickeyalackey89-max/Atlas-WNBA",
   "source_branch": "builder-method-contract-v1",
   "source_head": "6ae67805e2112f09f16f40f9daf0d5f7676af300",
   "builder": {
-    "status": "USER_AUTHORIZED_FROMDEEP_TARGETED_REFINEMENT_FTM_TOV_R0_READY",
-    "current_target_repo_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_CAUSAL_LANE_RECONCILIATION_R0_COMPLETE",
+    "status": "USER_AUTHORIZED_FROMDEEP_TARGETED_REFINEMENT_FTM_TOV_R0_OUTCOME_FREE_TOPOLOGY_CORRECTION_READY",
+    "current_target_repo_stop": "ACTIVE_BUILDER_S5_FROMDEEP_TARGETED_REFINEMENT_FTM_TOV_R0_AFTER_OUTCOME_FREE_TOPOLOGY_DRIFT",
     "authorized_step": "WNBA_FROMDEEP_TARGETED_REFINEMENT_FTM_TOV_R0",
     "required_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_TARGETED_REFINEMENT_FTM_TOV_R0_COMPLETE",
     "controller_skill": "slip-builders",
     "validation_reads": 0,
     "lockbox_reads": 0,
     "active_codex_execution": false,
-    "execution_authorized_after_prime_sync": true
+    "execution_authorized_after_prime_sync": true,
+    "controller_labeled_attempts_consumed": 1,
+    "successful_result_bearing_scientific_runs": 0
   },
   "cross_sport_demon_specialist": {
     "doctrine": "docs/coordination/ATLAS_DEMON_SPECIALIST_PRODUCT_DOCTRINE.md",
     "names_contract": "docs/coordination/ATLAS_DEMON_SPECIALIST_PRODUCT_NAMES.md",
+    "prime_retry_rule": "docs/coordination/PRIME_PRE_OUTCOME_IMPLEMENTATION_RETRY_RULE.md",
     "shared_product_contract": "SIGNAL_DRIVEN_PRECISION_FIRST_SINGLE_LEG_FLEX_ADD_ON_NO_ARBITRARY_OUTPUT_COUNT_SUPPRESSION",
     "output_count_rule": {
       "zero_qualifiers_outputs_zero": true,
@@ -42,11 +45,17 @@
     "mission_id": "WNBA_FROMDEEP_TARGETED_REFINEMENT_FTM_TOV_R0",
     "work_order": "docs/coordination/wnba/codex/archive/2026-08-19_fromdeep_targeted_refinement_ftm_turnovers_r0.md",
     "work_order_commit": "6a1e1549db3ce137d5c3cf5c9cf654982203d586",
-    "codex_prime_commit": "6b0d1dee6377da4b9ec59a26ddb54909a35ac004",
-    "one_parent_mission_preamble": true,
+    "outcome_free_topology_correction": "docs/coordination/wnba/codex/archive/2026-08-19_fromdeep_targeted_refinement_ftm_turnovers_r0_outcome_free_topology_correction_1.md",
+    "outcome_free_topology_correction_commit": "a22dfaf9cda7b1a04e8eb090b9a28ff1f4d6f223",
+    "prime_retry_rule_commit": "0d8471a02190eea3a7dd846407901c72102ea5d6",
+    "codex_prime_commit": "76d10e9962e8cd348162b880a67a514ed8552054",
+    "one_parent_mission_preamble_already_emitted": true,
+    "repeat_parent_preamble_for_implementation_retry": false,
     "subagents_inherit_parent_preamble": true,
-    "target_parent_mission_minutes": 25,
-    "hard_workflow_review_minutes": 40,
+    "fresh_target_parent_mission_minutes": 30,
+    "fresh_hard_workflow_review_minutes": 45,
+    "successful_result_bearing_scientific_run_limit": 1,
+    "pre_outcome_implementation_retry_requires_new_prime": false,
     "final_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_TARGETED_REFINEMENT_FTM_TOV_R0_COMPLETE"
   },
   "families": {
@@ -65,7 +74,7 @@
       "development_record": "14-8-1"
     },
     "FromDeep": {
-      "status": "TARGETED_REFINEMENT_FTM_TOV_R0_AUTHORIZED",
+      "status": "TARGETED_REFINEMENT_FTM_TOV_R0_OUTCOME_FREE_TOPOLOGY_CORRECTION_AUTHORIZED",
       "product_contract": {
         "is_slip": false,
         "output_form": "ALL_DISTINCT_GENUINE_SPECIALIST_QUALIFIED_SINGLE_LEG_FLEX_CANDIDATES",
@@ -81,28 +90,17 @@
         "evidence_id": "2b4899bc78a3459dac95d52810850ceae73631451b501f7ff98a28c2dd0e7c0f",
         "artifact_id": "db9ddcd2297b62bc4e11b271a5e85a9befcd2d60777ceb3303b4841d21565a71",
         "final_receipt_id": "f87ee4eb81cb4c6400ae19651461f7a36370a0540fc157d4315c98e0e0c5223c",
-        "freeze_candidate_road_id_count": 12,
-        "targeted_refinement_road_id_count": 7,
-        "do_not_carry_road_id_count": 8,
         "proposed_deduplicated_freeze_registry_representatives": 10,
-        "selector_frozen_or_promoted": false,
-        "protected_validation_lockbox_aug13_live_fitting_activity": 0
+        "selector_frozen_or_promoted": false
       },
       "targeted_refinement_ftm_tov_r0": {
-        "markets": [
-          "free_throws_made",
-          "turnovers"
-        ],
+        "markets": ["free_throws_made", "turnovers"],
         "base_road_ids": [
           "ROAD:374bcccb194d9fb5144f45a9759b37637082c59b82d62220617dcaba493e7ba8",
           "ROAD:6e42214971a4b68b8a0448170d7d4df19234866611e120e66c7bff7705da4a07",
           "ROAD:b73c755652c3a18ec1973d4a02a4ce2615b77dfaa6e3f5ae0e05cc70fbf0e78b",
           "ROAD:4ea99f678027c66f4f3e66b7a35bf7dfe315b82602428c6c7b32cda6b1546b0a",
           "ROAD:ba243d0c0982534bb2b30112d09ae9197eeef49ae6cdec59ad5c8ff0a992afba"
-        ],
-        "do_not_refine_targeted_roads": [
-          "ROAD:2aa51fc63ab02cd63dabe666f2ed4668c9f969cdf9b5670a584281d13a7488f4",
-          "ROAD:2cd2b2ad62679304944eb9087a6d02e565e9b1290b243b25e0fcd251b5cb3059"
         ],
         "existing_proposed_freeze_registry_held_unchanged": true,
         "append_predicate_limit": 2,
@@ -114,13 +112,39 @@
         "validation_reads_allowed": 0,
         "lockbox_reads_allowed": 0,
         "protected_heldout_aug13_live_allowed": false,
-        "fitting_training_calibration_allowed": false
+        "fitting_training_calibration_allowed": false,
+        "attempt_1": {
+          "status": "FAILED_CAUSAL_OUTCOME_FREE_DATE_TOPOLOGY_DRIFT",
+          "scientific_evidence_status": "NOT_SCIENTIFIC_EVIDENCE",
+          "focused_verification": "16/16",
+          "bound_inputs_hash_validated": 12,
+          "anatomy_checkpoints_hash_validated": 38,
+          "settlement_consultation": 0,
+          "variant_grading": 0,
+          "registry_additions": 0,
+          "scientific_outputs_written": 0,
+          "protected_validation_lockbox_heldout_aug13_fitting_model_live_activity": 0,
+          "failure_reason": "GLOBAL_29_DATE_AXIS_DERIVED_FROM_FTM_TOV_ROWS_ONLY"
+        },
+        "correction": {
+          "global_date_axis_source": "ALL_MARKET_OUTCOME_FREE_ROWS_SAME_AUTHORIZED_DEVELOPMENT_CORPUS",
+          "refinement_market_scope_remains_ftm_tov_only": true,
+          "required_global_usable_date_count": 29,
+          "outcome_used_for_date_axis": false,
+          "minimal_spec_engine_test_hash_sync_allowed": true,
+          "scientific_method_change_allowed": false
+        },
+        "implementation_retry_policy": {
+          "pre_settlement_implementation_failures_can_retry_autonomously": true,
+          "new_prime_required_for_pre_outcome_non_governing_repairs": false,
+          "successful_result_bearing_scientific_run_limit": 1
+        }
       }
     }
   },
   "next_strategy": {
     "status": "USER_AUTHORIZED_CODEX_EXECUTION_READY",
-    "topic": "Run one bounded targeted refinement pass only for free_throws_made and turnovers. Keep the existing 10-representative proposed freeze registry unchanged, append at most two already-known same-market pregame predicates to the five exact mixed base roads, use prior-only causal thresholds, and return at most one refined freeze candidate per market or honest abstention. Do not open protected validation automatically.",
+    "topic": "Continue the same FTM/TOV targeted refinement mission. Repair the outcome-free global date axis to derive from all-market rows in the same authorized development corpus, verify it exactly matches the accepted 29-date axis before settlement consultation, synchronize only affected implementation bindings, then continue to the single result-bearing refinement evaluation. Repair/retry any further pre-outcome implementation-only defects autonomously under Prime doctrine instead of returning for another permission cycle.",
     "candidate_method_step": "WNBA_FROMDEEP_TARGETED_REFINEMENT_FTM_TOV_R0",
     "codex_execution_authorized": true,
     "active_codex_execution": false,
