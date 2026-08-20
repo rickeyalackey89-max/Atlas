@@ -1,13 +1,13 @@
 {
   "schema_version": "atlas_prime_delegation_wnba_current_state_v1",
-  "captured_at_ct": "2026-08-20T11:45:00-05:00",
+  "captured_at_ct": "2026-08-20T14:32:00-05:00",
   "snapshot_not_authority": true,
   "sport": "WNBA",
   "source_repository": "rickeyalackey89-max/Atlas-WNBA",
   "source_branch": "builder-method-contract-v1",
   "source_head": "af72026a78731ab476d3f98bb6a599d3636efc4c",
   "builder": {
-    "status": "ACTIVE_FULL_STACK_FRESH_FRONTIER_PROTECTED_VALIDATION_R1",
+    "status": "ACTIVE_REFRESHED_CONTINUATION_FULL_STACK_FRESH_FRONTIER_PROTECTED_VALIDATION_R1",
     "authorized_step": "WNBA_FULL_BUILDER_FRESH_FRONTIER_PROTECTED_VALIDATION_R1",
     "required_stop": "BLOCKED_USER_REVIEW_WNBA_FULL_BUILDER_FRESH_FRONTIER_PROTECTED_VALIDATION_R1_COMPLETE",
     "controller_skill": "slip-builders",
@@ -39,9 +39,37 @@
     "whole_stack_required": true,
     "families": ["2L", "3L", "4L", "FromDeep"],
     "protected_scientific_payload_reads_so_far": 0,
+    "protected_settlement_reads_so_far": 0,
     "formal_result_bearing_runs_so_far": 0,
+    "validation_reads_so_far": 0,
     "lockbox_reads_so_far": 0,
     "must_complete_outcome_blind_fidelity_before_open": true
+  },
+  "preserved_checkpoint": {
+    "status": "CONTINUE_DO_NOT_RESTART",
+    "engine_prefix": "09e2a07a",
+    "tests_prefix": "ec513075",
+    "runner_prefix": "515e6022",
+    "spec_prefix": "6b5a5331",
+    "spec_path": "config/evaluation/wnba_builder_full_fresh_frontier_protected_validation_r1.json",
+    "focused_tests_passed": "16/16",
+    "ruff_passed": true,
+    "compile_passed": true,
+    "rebinds_in_stopped_window": 0,
+    "activations_in_stopped_window": 0,
+    "transitions_in_stopped_window": 0,
+    "formal_runs_in_stopped_window": 0,
+    "protected_reads_in_stopped_window": 0,
+    "final_receipt_written": false
+  },
+  "remaining_pre_activation_readiness": {
+    "canonical_spec_and_truthful_eight_row_matrix": "PENDING",
+    "production_writer_end_to_end_coverage": "PENDING",
+    "truthful_io_operation_classification": "PENDING",
+    "watchdog_artifact_receipt_crosslink_closure": "PENDING",
+    "real_production_path_positive_adversarial_tests": "PENDING",
+    "user_review_required_between_these_items": false,
+    "autonomous_pre_outcome_repairs_allowed": true
   },
   "lineage_reconciliation": {
     "status": "RESOLVED_BY_EXPLICIT_USER_ARCHITECTURE_DECISION",
@@ -55,6 +83,20 @@
     "rebuild_development_consumed_fresh_3L_training_surface_before_protected_run": true,
     "four_leg_fresh_post_depletion_frontier_authoritative": true,
     "preserve_local_production_factory_checkpoint": true
+  },
+  "efficiency": {
+    "one_parent_bounded_autonomous_mission": true,
+    "step_by_step_user_review_loop": false,
+    "old_fromdeep_27_road_causal_engine_authorized_in_r1": false,
+    "repeat_full_control_after_each_subordinate_event": false,
+    "full_control_required_at": [
+      "truthful_activation_readiness",
+      "actual_governing_fact_change",
+      "immediately_before_first_protected_evidence_transition",
+      "final_completion_or_hard_boundary"
+    ],
+    "refresh_target_minutes": 150,
+    "refresh_hard_boundary_minutes": 300
   },
   "families": {
     "2L": {
@@ -89,14 +131,17 @@
   },
   "active_prime": {
     "work_order_path": "docs/coordination/wnba/codex/archive/2026-08-20_full_builder_fresh_frontier_protected_validation_r1.md",
+    "execution_refresh_path": "docs/coordination/wnba/codex/archive/2026-08-20_full_builder_fresh_frontier_protected_validation_r1_execution_window_refresh_1.md",
+    "execution_refresh_commit": "ddbbb3e08c142d6af08e240388dffb1973e776f4",
+    "codex_prime_commit": "f76b97358ea78cbe88d55c9c2f863eb00029f4a6",
     "mission_id": "WNBA_FULL_BUILDER_FRESH_FRONTIER_PROTECTED_VALIDATION_R1",
     "one_parent_bounded_autonomous_mission": true,
     "subagents_inherit_parent_preamble": true,
     "step_by_step_user_review_loop": false
   },
   "next_strategy": {
-    "status": "SYNC_PRIME_THEN_EXECUTE_ACTIVE_MISSION",
-    "topic": "Outcome-blindly implement and fidelity-prove fresh post-2L 3L reconstruction, rebuild the development-consumed causal 3L training surface without method tuning, preserve fresh 4L and independent FromDeep, seal the whole stack, then execute one chronological protected validation through 2026-08-19.",
+    "status": "SYNC_PRIME_CONTINUE_PRESERVED_CHECKPOINT_NO_RESTART",
+    "topic": "Finish the five remaining production-readiness obligations truthfully from the preserved R1 checkpoint, then activate once and continue automatically through fresh-3L development reconstruction, integrated seal/census, one protected transition, the full Aug10-Aug19 2L/fresh3L/fresh4L/FromDeep chronological validation, grading, earliest-causal forensic, and final receipt. Do not invoke the old FromDeep 27-road engine and do not repeat full control validation for subordinate implementation events.",
     "codex_execution_authorized": true,
     "protected_validation_open_authorized": true,
     "required_stop": "BLOCKED_USER_REVIEW_WNBA_FULL_BUILDER_FRESH_FRONTIER_PROTECTED_VALIDATION_R1_COMPLETE"
