@@ -1,13 +1,13 @@
 {
   "schema_version": "atlas_prime_delegation_wnba_current_state_v1",
-  "captured_at_ct": "2026-08-20T08:55:00-05:00",
+  "captured_at_ct": "2026-08-20T11:21:00-05:00",
   "snapshot_not_authority": true,
   "sport": "WNBA",
   "source_repository": "rickeyalackey89-max/Atlas-WNBA",
   "source_branch": "builder-method-contract-v1",
   "source_head": "af72026a78731ab476d3f98bb6a599d3636efc4c",
   "builder": {
-    "status": "USER_AUTHORIZED_FULL_BUILDER_FROZEN_STACK_PROTECTED_VALIDATION_R0_READY",
+    "status": "USER_AUTHORIZED_FULL_BUILDER_FROZEN_STACK_PROTECTED_VALIDATION_R0_REFRESH1_READY",
     "current_target_repo_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_TARGETED_REFINEMENT_FTM_TOV_R0_COMPLETE",
     "authorized_step": "WNBA_FULL_BUILDER_FROZEN_STACK_PROTECTED_VALIDATION_R0",
     "required_stop": "BLOCKED_USER_REVIEW_WNBA_FULL_BUILDER_FROZEN_STACK_PROTECTED_VALIDATION_R0_COMPLETE",
@@ -16,10 +16,10 @@
     "lockbox_reads": 0,
     "active_codex_execution": false,
     "execution_authorized_after_prime_sync": true,
-    "protected_validation_open_authorized_after_preboundary_seal_and_control_validation": true
+    "protected_validation_open_authorized_after_production_readiness_and_full_control_validation": true
   },
   "protected_validation": {
-    "status": "AUTHORIZED_FULL_STACK_NOT_YET_OPENED",
+    "status": "AUTHORIZED_FULL_STACK_NOT_YET_OPENED_PRODUCTION_FACTORY_CONTINUATION",
     "mission_id": "WNBA_FULL_BUILDER_FROZEN_STACK_PROTECTED_VALIDATION_R0",
     "candidate_calendar_start": "2026-08-10",
     "candidate_calendar_end": "2026-08-19",
@@ -32,43 +32,53 @@
     "single_linear_mission": true,
     "intermediate_user_review_stops_allowed": false,
     "result_bearing_full_stack_runs_permitted": 1,
+    "protected_scientific_payload_reads_so_far": 0,
+    "formal_result_bearing_runs_so_far": 0,
     "lockbox_open_allowed": false
-  },
-  "cross_sport_demon_specialist": {
-    "doctrine": "docs/coordination/ATLAS_DEMON_SPECIALIST_PRODUCT_DOCTRINE.md",
-    "names_contract": "docs/coordination/ATLAS_DEMON_SPECIALIST_PRODUCT_NAMES.md",
-    "prime_retry_rule": "docs/coordination/PRIME_PRE_OUTCOME_IMPLEMENTATION_RETRY_RULE.md",
-    "shared_product_contract": "SIGNAL_DRIVEN_PRECISION_FIRST_SINGLE_LEG_FLEX_ADD_ON_NO_ARBITRARY_OUTPUT_COUNT_SUPPRESSION",
-    "output_count_rule": {
-      "zero_qualifiers_outputs_zero": true,
-      "all_distinct_genuine_qualifiers_remain_eligible": true,
-      "fixed_or_target_output_count": false,
-      "top_n_count_cap_allowed": false,
-      "density_based_rejection_allowed": false,
-      "deduplicate_exact_candidate_duplicates_only": true
-    },
-    "names": {
-      "WNBA": "FromDeep",
-      "NBA": "FromDeep",
-      "CBB": "FromDeep",
-      "MLB": "BigSwings",
-      "NFL": "HailMarys",
-      "CFB": "UNBOUND_DISPLAY_NAME_SAME_PRODUCT_CONTRACT"
-    }
   },
   "prime_mission": {
     "mission_id": "WNBA_FULL_BUILDER_FROZEN_STACK_PROTECTED_VALIDATION_R0",
-    "work_order": "docs/coordination/wnba/codex/archive/2026-08-20_full_builder_frozen_stack_protected_validation_r0.md",
-    "work_order_commit": "2bae50f0c827e28236b459589907dba2db722759",
-    "codex_prime_commit": "dc0784b22dca6ceb82deb6357b7484cbbae8876e",
+    "base_work_order": "docs/coordination/wnba/codex/archive/2026-08-20_full_builder_frozen_stack_protected_validation_r0.md",
+    "base_work_order_commit": "2bae50f0c827e28236b459589907dba2db722759",
+    "execution_window_refresh": "docs/coordination/wnba/codex/archive/2026-08-20_full_builder_frozen_stack_protected_validation_r0_execution_window_refresh_1.md",
+    "execution_window_refresh_commit": "17554d9033087dbcf6ca552b6e501fb76d9d087e",
+    "codex_prime_commit": "016800229cab27122b032a262c51d8cb96a9f510",
     "historical_agenda_alignment": "WNBA-VAL-001",
     "absorbs_unevaluated_date_census": "WNBA-VAL-002",
     "one_parent_mission_preamble": true,
     "subagents_inherit_parent_preamble": true,
-    "target_parent_mission_minutes": 60,
-    "hard_workflow_minutes": 120,
+    "target_parent_mission_minutes": 120,
+    "hard_workflow_minutes": 240,
     "preoutcome_implementation_repairs_autonomous": true,
+    "no_user_stop_between_production_readiness_and_protected_run": true,
     "final_stop": "BLOCKED_USER_REVIEW_WNBA_FULL_BUILDER_FROZEN_STACK_PROTECTED_VALIDATION_R0_COMPLETE"
+  },
+  "prior_preprotected_stop": {
+    "status": "PRODUCTION_FACTORY_NOT_READY_NO_SCIENTIFIC_EVIDENCE",
+    "failure_code": "BOUND_PRODUCTION_PAYLOAD_MATERIALIZER_NOT_READY",
+    "synthetic_tests": "16/16",
+    "protected_scientific_payload_reads": 0,
+    "validation_reads": 0,
+    "lockbox_reads": 0,
+    "formal_result_bearing_runs": 0,
+    "scientific_outputs": 0,
+    "final_receipts": 0,
+    "rebind_activation_transition_target_commit_push": 0,
+    "remaining_blockers": [
+      "REAL_SOURCE_MATERIALIZATION",
+      "ONE_OPEN_SETTLEMENT_BROKER_GRADER",
+      "EXHAUSTIVE_28_OUTPUT_CLOSURE",
+      "PRODUCTION_PATH_TESTS"
+    ],
+    "preserved_checkpoint_prefixes": {
+      "spec": "c4bf4940",
+      "engine": "0bacd804",
+      "runner": "09e78771",
+      "tests": "044979b0"
+    },
+    "spec_id_intentionally_blank_until_truthful_closure": true,
+    "requirement_matrix_rows_pending": 8,
+    "restart_implementation_allowed": false
   },
   "families": {
     "2L": {
@@ -94,15 +104,6 @@
     },
     "FromDeep": {
       "status": "FINAL_DEVELOPMENT_REGISTRY_ACCEPTED_TO_FREEZE_INSIDE_FULL_STACK_VALIDATION",
-      "product_contract": {
-        "is_slip": false,
-        "output_form": "ALL_DISTINCT_GENUINE_SPECIALIST_QUALIFIED_SINGLE_LEG_FLEX_CANDIDATES",
-        "zero_is_successful_abstention": true,
-        "precision_dominates_broad_coverage": true,
-        "artificial_top_n_cap_allowed": false,
-        "count_based_suppression_allowed": false,
-        "density_metrics_are_descriptive_only": true
-      },
       "final_development_registry": {
         "registry_id": "13d9414cf6f521a0a31f962706372ace1008c6d4e0fdd2462f655d5503992c32",
         "artifact_sha256": "a5604a183b5fb5f306ca637ea7111b6f19794fb570d6007424c081cd18aacd98",
@@ -112,6 +113,8 @@
         "further_development_mining_authorized": false,
         "freeze_inside_active_mission_authorized": true
       },
+      "is_slip": false,
+      "uncapped_signal_driven_output": true,
       "protected_validated": false
     }
   },
@@ -122,6 +125,17 @@
     "signal_road_depletion_allowed": false,
     "future_family_reservation_or_redistribution_allowed": false,
     "fromdeep_independent_of_core_depletion": true
+  },
+  "production_readiness_contract": {
+    "continue_preserved_local_implementation": true,
+    "real_source_materialization_required": true,
+    "one_open_settlement_broker_grader_required": true,
+    "required_output_closure_count": 28,
+    "production_path_tests_required": true,
+    "synthetic_only_tests_sufficient": false,
+    "requirement_matrix_rows_must_be_truthful_before_activation": 8,
+    "protected_reads_before_readiness": 0,
+    "autonomous_preoutcome_repair_retry": true
   },
   "protected_execution_contract": {
     "calendar_census_sealed_before_first_outcome": true,
@@ -136,8 +150,8 @@
     "alternate_method_replay_after_results_allowed": false
   },
   "next_strategy": {
-    "status": "CODEX_EXECUTION_AUTHORIZED_AFTER_PRIME_SYNC",
-    "topic": "Run one fully linear protected validation of the entire frozen WNBA Builder stack over the outcome-blind verified Aug10-Aug19 candidate block: bind 2L/3L/4L/FromDeep, absorb eligibility census, preflight integrated orchestration, open protected evidence once, execute chronologically through the complete block, grade every family, then perform sealed-surface depletion/starvation/earliest-causal forensic and stop for user review. No intermediate step-by-step handoffs.",
+    "status": "CODEX_CONTINUATION_AUTHORIZED_AFTER_PRIME_SYNC",
+    "topic": "Continue the preserved full-stack production factory implementation without restart. Complete real source materialization, one-open settlement broker/grader, truthful 28-output closure, and production-path tests; make all eight matrix rows truthful; then without another user stop perform full control validation, open the Aug10-Aug19 protected block once, execute 2L->depletion->3L->depletion->4L plus independent FromDeep chronologically through the complete block, grade all outputs, run sealed-surface earliest-causal/depletion/starvation forensic, and return one final user-review packet.",
     "candidate_method_step": "WNBA_FULL_BUILDER_FROZEN_STACK_PROTECTED_VALIDATION_R0",
     "codex_execution_authorized": true,
     "active_codex_execution": false,
