@@ -1,6 +1,6 @@
 # WNBA Codex Prime
 
-Status: **ACTIVE EXECUTION DELEGATION — FROMDEEP 27-CANDIDATE-ROAD CAUSAL AUDIT R1**
+Status: **ACTIVE EXECUTION DELEGATION — FROMDEEP CAUSAL LANE RECONCILIATION R0**
 
 Use the clean Prime mirror at `C:\Users\13142\Atlas\PrimeDelegation` and canonical WNBA root `C:\Users\13142\Atlas\WNBA`.
 
@@ -10,150 +10,108 @@ Target branch: `builder-method-contract-v1`
 
 Current pushed target SHA:
 
-`bf7475530320f7f90eaf1604982f9df14bfeb7c6`
+`749589392d8faa58f438ddcd601607bf5a35c68b`
 
-## Superseded delegation
+## Accepted predecessor
 
-Do **not** execute `WNBA_FROMDEEP_SPECIALIST3_CAUSAL_FREEZE_READINESS_R1`.
+The 27-candidate-road causal audit is accepted complete at the current target SHA.
 
-That delegation was created from a Chat interpretation error that reduced the R0 candidate set to one top road in each of three markets.
+Accepted evidence:
 
-The R0 human report actually preserves:
+- 27 exact roads causally audited once;
+- 142 distinct uncapped Demon candidates;
+- active union 85 WIN / 54 LOSS / 3 nonbinary, 61.1511% strict;
+- latest-10 union 45 WIN / 16 LOSS / 1 nonbinary, 73.7705% strict;
+- 3 `CAUSAL_HIGH_PRECISION_SUPPORTED`;
+- 11 `CAUSAL_HIGH_PRECISION_SPARSE`;
+- 8 `CAUSAL_MIXED`;
+- 3 `CAUSAL_DECAYED`;
+- 2 `CAUSAL_INACTIVE_INSUFFICIENT_FIRE`;
+- protected, validation, lockbox, Aug.13, heldout, fitting, Live, and automatic follow-on counts all zero.
 
-- 8 exact `SPECIALIST_GRADE_CURRENT_CANDIDATE` road IDs;
-- 19 exact `SPARSE_HIGH_PRECISION_WATCHLIST` road IDs;
-- 6 separate `DECAYING` evidence-class finalists.
+The prior audit is complete and must not be rerun in this mission.
 
-The 8 specialist roads being concentrated in three markets does not mean only three road identities remain. The watchlist class is high-precision sparse evidence, not rejection.
-
-## Binding product doctrine and names
+## Binding product doctrine
 
 Read and bind the latest versions of:
 
 - `docs/coordination/ATLAS_DEMON_SPECIALIST_PRODUCT_DOCTRINE.md`
 - `docs/coordination/ATLAS_DEMON_SPECIALIST_PRODUCT_NAMES.md`
+- `docs/coordination/wnba/chat/FROMDEEP_PRODUCT_INTEGRATION_CONTRACT.md`
 
-Shared product names:
+FromDeep is signal-driven and uncapped. Zero genuine qualifiers means zero output; ten genuine qualifiers means ten outputs. Candidate count or slate density is never a rejection reason. Deduplicate exact candidate duplicates only.
 
-- WNBA / NBA / CBB: **FromDeep**;
-- MLB: **BigSwings**;
-- NFL: **HailMarys**.
-
-### Critical output-count correction
-
-The specialist product is **signal-driven, not count-driven**.
-
-- zero genuine qualifiers => zero output;
-- one genuine qualifier => one output;
-- ten genuine qualifiers => ten outputs;
-- no arbitrary `0-3` cap, target, density rejection, probability top-N suppression, or count-based elimination is allowed.
-
-Historically sparse output may emerge because the roads are narrow, but output count is descriptive only. A distinct candidate that genuinely clears a retained specialist road must not be eliminated merely because other candidates also qualified on that run.
-
-Deduplicate only exact duplicate manifestations of the same candidate identity.
-
-## Accepted predecessor
-
-Recent Precision Roads R0 is accepted complete at `bf7475530320f7f90eaf1604982f9df14bfeb7c6`.
-
-Accepted census:
-
-- 14,615 graded roads;
-- 3,665 screen-qualified;
-- 220 Pareto-valid;
-- 33 finalists;
-- 8 specialist-grade candidate roads;
-- 19 sparse high-precision watchlist roads;
-- 6 decaying evidence-class finalists;
-- analyzer about 29.6 seconds;
-- protected/validation/lockbox/Aug.13/heldout/fitting/Live access all zero.
-
-The prior eight-road density diagnostic is evidence about observed count only. It is **not** authority to reject genuine qualifiers because a date has more than three fires.
-
-## Active replacement mission
+## Active mission
 
 Read and execute:
 
-`docs/coordination/wnba/codex/archive/2026-08-19_fromdeep_27_candidate_roads_causal_audit_r1.md`
+`docs/coordination/wnba/codex/archive/2026-08-19_fromdeep_causal_lane_reconciliation_r0.md`
 
 Latest work-order revision commit:
 
-`2b2c07bc45e390c47979d1dd9051a65338ef9600`
+`941a761896b2c17d9a268abbcee262448e972252`
 
 Mission ID:
 
-`WNBA_FROMDEEP_27_CANDIDATE_ROADS_CAUSAL_AUDIT_R1`
-
-## Exact candidate authority
-
-Audit all 27 exact road IDs specified in the work order:
-
-- all 8 R0 specialist-grade candidate roads;
-- all 19 R0 sparse high-precision watchlist roads.
-
-Do not replace that set with one road per market.
-
-Do not add the 6 R0 `DECAYING` evidence-class finalists.
-
-Do not generate new roads.
+`WNBA_FROMDEEP_CAUSAL_LANE_RECONCILIATION_R0`
 
 ## Mission in one sentence
 
-**Replay the complete 27-road R0 candidate set causally with prior-only July/August thresholds, preserve high-precision low-frequency roads, identify equivalence/overlap, and report which exact road identities genuinely retain current precision and which distinct Demon candidates clear them—without any count-based suppression.**
+**Using only the completed causal-audit artifacts, reconcile the 14 existing high-precision roads by measuring same-market equivalence, subset/superset marginal candidate contribution, and incremental W/L behavior; summarize the eight already-known mixed roads as refinement context; then return freeze-candidate, targeted-refinement, and do-not-carry recommendations without any new replay or threshold work.**
+
+## Exact primary authority
+
+Marginal reconciliation is limited to exactly the 14 roads listed in the work order: all roads already classified `CAUSAL_HIGH_PRECISION_SUPPORTED` or `CAUSAL_HIGH_PRECISION_SPARSE`.
+
+Do not add mixed, decayed, inactive, or other historical roads to the marginal high-precision set.
+
+The eight `CAUSAL_MIXED` roads may be summarized from existing audit evidence only as targeted-refinement context.
 
 ## Key interpretation rules
 
-- July/August is the active product regime.
-- Latest 10 usable dates are the primary current-traction window.
-- June is background/stress only and has zero threshold/inclusion/ranking authority.
-- Low support is not automatically bad; evidence strength and precision are separate facts.
-- Numeric quantiles are realized from prior `t<D` pregame values only.
-- Outcomes grade only after target selections are sealed.
-- Group alias/equivalent road surfaces but preserve all original road IDs.
-- Deduplicate exact candidate-level duplicates so multiple matching roads do not become multiple copies of one FromDeep pick.
-- **Do not reject a distinct qualifying candidate because the slate already has 3, 5, 10, or any other number of qualifiers.**
+- no causal replay;
+- no new target-date evaluation;
+- no gate/road/threshold search;
+- use only the already-sealed candidate selections from commit `749589392d8faa58f438ddcd601607bf5a35c68b`;
+- calculate same-market unique, added, excluded, equivalent, subset, and superset candidate sets from those artifacts;
+- grade those already-known sets from the already-recorded settlements only;
+- recency remains decision-relevant;
+- low support does not automatically invalidate high precision;
+- candidate/output count is descriptive only and never a pass/fail rule;
+- exact equivalent road surfaces may be collapsed operationally while preserving every source road ID as provenance.
 
 ## No new research branch
 
 Do not:
 
-- add/remove gates;
+- rerun the 27-road causal audit;
+- recompute numeric quantiles;
+- generate or alter roads;
 - search thresholds;
-- enumerate new road combinations;
-- fit/tune/calibrate a model;
-- reopen Commons R0/full condition discovery;
-- impose a probability top-N cap;
-- impose an output-count cap or density pass/fail gate;
+- use probability to suppress output;
+- fit/train/tune/calibrate;
+- open validation, lockbox, protected, heldout, or Aug.13 evidence;
 - alter core 2L/3L/4L;
-- mutate Live/model/publication/promotion state;
-- open validation or lockbox.
+- mutate Live/model/publication/promotion state.
+
+A tiny artifact-only parser/report generator plus focused arithmetic tests is allowed.
 
 ## Workflow
 
+Execution tier: `R0_ARTIFACT_ONLY_RECONCILIATION`.
+
 One parent Builder preamble. Subagents inherit it.
 
-No repeated governance cycles for ordinary implementation, replay, overlap analysis, focused tests, audit, or reporting.
+Target parent mission <=20 minutes; hard workflow boundary 30 minutes.
 
-Target parent mission <=30 minutes; hard workflow boundary 45 minutes.
-
-## Hard boundaries
-
-Validation reads: `0` permitted.
-
-Lockbox reads: `0` permitted.
-
-Aug.13 contribution: `0` permitted.
-
-Heldout/protected evidence: prohibited.
-
-Live/model/publication/promotion mutation: prohibited.
-
-Fitting/training/tuning/calibration: prohibited.
+No generalized engine, new checkpoint framework, or repeated governance cycles for ordinary artifact parsing/reporting/testing.
 
 ## Completion
 
 Required final stop:
 
-`BLOCKED_USER_REVIEW_WNBA_FROMDEEP_27_CANDIDATE_ROADS_CAUSAL_AUDIT_R1_COMPLETE`
+`BLOCKED_USER_REVIEW_WNBA_FROMDEEP_CAUSAL_LANE_RECONCILIATION_R0_COMPLETE`
 
-Return all 27 road results, equivalence/overlap clusters, deduplicated candidate-level union diagnostics, every sealed selected single, and mission wall-clock versus runner time. Density is descriptive only. Do not auto-freeze or auto-open validation.
+Return the 14-road marginal reconciliation, equivalence/subset/superset incremental evidence, mixed-road recency context, three-class recommendation packet, proposed deduplicated freeze-candidate registry for review, artifact/receipt IDs, focused tests, and wall-clock versus analyzer/report time.
+
+Do not freeze a selector and do not open protected validation automatically.
