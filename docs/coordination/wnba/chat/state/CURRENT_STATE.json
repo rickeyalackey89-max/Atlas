@@ -1,21 +1,38 @@
 {
   "schema_version": "atlas_prime_delegation_wnba_current_state_v1",
-  "captured_at_ct": "2026-08-20T08:42:00-05:00",
+  "captured_at_ct": "2026-08-20T08:55:00-05:00",
   "snapshot_not_authority": true,
   "sport": "WNBA",
   "source_repository": "rickeyalackey89-max/Atlas-WNBA",
   "source_branch": "builder-method-contract-v1",
   "source_head": "af72026a78731ab476d3f98bb6a599d3636efc4c",
   "builder": {
-    "status": "BLOCKED_USER_REVIEW_FROMDEEP_FINAL_DEVELOPMENT_REGISTRY_COMPLETE",
+    "status": "USER_AUTHORIZED_FULL_BUILDER_FROZEN_STACK_PROTECTED_VALIDATION_R0_READY",
     "current_target_repo_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_TARGETED_REFINEMENT_FTM_TOV_R0_COMPLETE",
-    "authorized_step": null,
-    "required_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_FINAL_DEVELOPMENT_REGISTRY_COMPLETE",
+    "authorized_step": "WNBA_FULL_BUILDER_FROZEN_STACK_PROTECTED_VALIDATION_R0",
+    "required_stop": "BLOCKED_USER_REVIEW_WNBA_FULL_BUILDER_FROZEN_STACK_PROTECTED_VALIDATION_R0_COMPLETE",
     "controller_skill": "slip-builders",
     "validation_reads": 0,
     "lockbox_reads": 0,
     "active_codex_execution": false,
-    "execution_authorized_after_prime_sync": false
+    "execution_authorized_after_prime_sync": true,
+    "protected_validation_open_authorized_after_preboundary_seal_and_control_validation": true
+  },
+  "protected_validation": {
+    "status": "AUTHORIZED_FULL_STACK_NOT_YET_OPENED",
+    "mission_id": "WNBA_FULL_BUILDER_FROZEN_STACK_PROTECTED_VALIDATION_R0",
+    "candidate_calendar_start": "2026-08-10",
+    "candidate_calendar_end": "2026-08-19",
+    "user_asserted_builder_research_untouched": true,
+    "must_verify_outcome_blind_before_open": true,
+    "operational_truth_file_existence_disqualifies_date": false,
+    "date_cherry_pick_allowed": false,
+    "whole_stack_required": true,
+    "families": ["2L", "3L", "4L", "FromDeep"],
+    "single_linear_mission": true,
+    "intermediate_user_review_stops_allowed": false,
+    "result_bearing_full_stack_runs_permitted": 1,
+    "lockbox_open_allowed": false
   },
   "cross_sport_demon_specialist": {
     "doctrine": "docs/coordination/ATLAS_DEMON_SPECIALIST_PRODUCT_DOCTRINE.md",
@@ -39,23 +56,44 @@
       "CFB": "UNBOUND_DISPLAY_NAME_SAME_PRODUCT_CONTRACT"
     }
   },
+  "prime_mission": {
+    "mission_id": "WNBA_FULL_BUILDER_FROZEN_STACK_PROTECTED_VALIDATION_R0",
+    "work_order": "docs/coordination/wnba/codex/archive/2026-08-20_full_builder_frozen_stack_protected_validation_r0.md",
+    "work_order_commit": "2bae50f0c827e28236b459589907dba2db722759",
+    "codex_prime_commit": "dc0784b22dca6ceb82deb6357b7484cbbae8876e",
+    "historical_agenda_alignment": "WNBA-VAL-001",
+    "absorbs_unevaluated_date_census": "WNBA-VAL-002",
+    "one_parent_mission_preamble": true,
+    "subagents_inherit_parent_preamble": true,
+    "target_parent_mission_minutes": 60,
+    "hard_workflow_minutes": 120,
+    "preoutcome_implementation_repairs_autonomous": true,
+    "final_stop": "BLOCKED_USER_REVIEW_WNBA_FULL_BUILDER_FROZEN_STACK_PROTECTED_VALIDATION_R0_COMPLETE"
+  },
   "families": {
     "2L": {
-      "status": "FROZEN",
-      "record": "32-7"
+      "status": "FROZEN_PENDING_EXACT_AUTHORITY_BIND_IN_FULL_STACK_VALIDATION",
+      "development_record": "32-7",
+      "new_method_choice_allowed": false,
+      "protected_validated": false
     },
     "3L": {
       "status": "FROZEN_RESEARCH_DEPLETION_BACKBONE_WITH_KNOWN_SURFACE_COMPLETENESS_RISK",
       "freeze_commit": "2b1fca797eebefdb0da190099681460f22036eb1",
-      "historical_asof_record": "24-6-0"
+      "historical_asof_record": "24-6-0",
+      "known_post_2l_fresh_frontier_risk": true,
+      "repair_before_validation_allowed": false,
+      "protected_validated": false
     },
     "4L": {
       "status": "FROZEN_RESEARCH_DEPLETION_BACKBONE_CURRENT_LINEAGE",
       "freeze_commit": "24c5e29c965f5e808d84470c16146bb18a0b0148",
-      "development_record": "14-8-1"
+      "method": "WNBA_4L_CANONICAL_ATLAS_RANK1_RESEARCH_DEPLETION_V1",
+      "development_record": "14-8-1",
+      "protected_validated": false
     },
     "FromDeep": {
-      "status": "FINAL_DEVELOPMENT_REGISTRY_PROPOSED_AWAITING_USER_AUTHORIZATION_FOR_PROTECTED_VALIDATION",
+      "status": "FINAL_DEVELOPMENT_REGISTRY_ACCEPTED_TO_FREEZE_INSIDE_FULL_STACK_VALIDATION",
       "product_contract": {
         "is_slip": false,
         "output_form": "ALL_DISTINCT_GENUINE_SPECIALIST_QUALIFIED_SINGLE_LEG_FLEX_CANDIDATES",
@@ -65,50 +103,44 @@
         "count_based_suppression_allowed": false,
         "density_metrics_are_descriptive_only": true
       },
-      "causal_lane_reconciliation_r0": {
-        "commit": "6ae67805e2112f09f16f40f9daf0d5f7676af300",
-        "status": "PASS_ACCEPTED",
-        "proposed_deduplicated_freeze_registry_representatives": 10
-      },
-      "targeted_refinement_ftm_tov_r0": {
-        "commit": "af72026a78731ab476d3f98bb6a599d3636efc4c",
-        "status": "PASS_ACCEPTED",
-        "evidence_stage": "development_consumed_diagnostic",
-        "artifact_id": "d0118e901de46b4e47b3f4b49d582b004fa67f14fc121d472e7096faedc89d33",
-        "final_receipt_id": "4a2267bf58073b3daf480d7ee07c7d9f661645a52f52614af5e58b112351e4a2",
-        "registered_evidence_id": "da84801c5e1c9831e09ad54abf3ee0fc0407e126189c6b10138c1dfd6b90b51f",
-        "raw_refinement_paths": 141,
-        "unique_variants": 115,
-        "free_throws_made_variants": 72,
-        "turnovers_variants": 43,
-        "free_throws_made_disposition": "NO_REFINED_SPECIALIST_ROAD",
-        "turnovers_disposition": "NO_REFINED_SPECIALIST_ROAD",
-        "eligible_refined_freeze_candidates": 0,
-        "sparse_watch_candidates": 0,
-        "successful_result_bearing_scientific_runs": 1,
-        "preoutcome_implementation_failures": 1,
-        "validation_reads": 0,
-        "lockbox_reads": 0,
-        "protected_heldout_aug13_live_fitting_model_activity": 0
-      },
-      "final_proposed_development_registry": {
-        "artifact_path": "data/wnba/bap2_work/builder_stage_5/fromdeep_targeted_refinement_ftm_tov_r0/FROMDEEP_TARGETED_REFINEMENT_FTM_TOV_R0_PROPOSED_FINAL_DEVELOPMENT_REGISTRY.json",
+      "final_development_registry": {
         "registry_id": "13d9414cf6f521a0a31f962706372ace1008c6d4e0fdd2462f655d5503992c32",
         "artifact_sha256": "a5604a183b5fb5f306ca637ea7111b6f19794fb570d6007424c081cd18aacd98",
         "entry_count": 10,
+        "source_commit": "af72026a78731ab476d3f98bb6a599d3636efc4c",
         "refined_additions": 0,
-        "existing_entries_deep_equal_unchanged": true,
-        "selector_frozen_or_promoted": false,
-        "further_development_mining_authorized": false
-      }
+        "further_development_mining_authorized": false,
+        "freeze_inside_active_mission_authorized": true
+      },
+      "protected_validated": false
     }
   },
+  "core_linear_contract": {
+    "order": ["2L", "EXACT_2L_SELECTED_LEG_DEPLETION", "3L", "EXACT_3L_SELECTED_LEG_DEPLETION", "4L"],
+    "depletion_identity": "EXACT_SELECTED_LEG_ONLY_PLAYER_MARKET_TIER_SIDE_LINE",
+    "player_wide_depletion_allowed": false,
+    "signal_road_depletion_allowed": false,
+    "future_family_reservation_or_redistribution_allowed": false,
+    "fromdeep_independent_of_core_depletion": true
+  },
+  "protected_execution_contract": {
+    "calendar_census_sealed_before_first_outcome": true,
+    "pregame_source_fingerprints_required": true,
+    "target_date_outputs_sealed_before_target_settlement": true,
+    "chronological_execution_required": true,
+    "frozen_adaptive_state_may_update_only_if_already_part_of_method": true,
+    "method_change_after_first_protected_read_allowed": false,
+    "early_stop_for_bad_performance_allowed": false,
+    "complete_block_before_interpretation": true,
+    "sealed_surface_root_cause_forensic_after_full_block": true,
+    "alternate_method_replay_after_results_allowed": false
+  },
   "next_strategy": {
-    "status": "AWAITING_EXPLICIT_USER_AUTHORIZATION_FOR_NEW_EVIDENCE_CLASS",
-    "topic": "Freeze the exact accepted 10-entry FromDeep development registry without new outcomes, then cross the protected-validation boundary under full control validation and run one immutable one-shot protected evaluation. No tuning or return to development after validation outcomes.",
-    "candidate_method_step": "WNBA_FROMDEEP_FINAL_REGISTRY_FREEZE_AND_PROTECTED_VALIDATION",
-    "codex_execution_authorized": false,
-    "protected_validation_open_authorized": false,
-    "required_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_FINAL_DEVELOPMENT_REGISTRY_COMPLETE"
+    "status": "CODEX_EXECUTION_AUTHORIZED_AFTER_PRIME_SYNC",
+    "topic": "Run one fully linear protected validation of the entire frozen WNBA Builder stack over the outcome-blind verified Aug10-Aug19 candidate block: bind 2L/3L/4L/FromDeep, absorb eligibility census, preflight integrated orchestration, open protected evidence once, execute chronologically through the complete block, grade every family, then perform sealed-surface depletion/starvation/earliest-causal forensic and stop for user review. No intermediate step-by-step handoffs.",
+    "candidate_method_step": "WNBA_FULL_BUILDER_FROZEN_STACK_PROTECTED_VALIDATION_R0",
+    "codex_execution_authorized": true,
+    "active_codex_execution": false,
+    "required_stop": "BLOCKED_USER_REVIEW_WNBA_FULL_BUILDER_FROZEN_STACK_PROTECTED_VALIDATION_R0_COMPLETE"
   }
 }
