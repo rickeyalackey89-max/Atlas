@@ -1,25 +1,39 @@
 {
   "schema_version": "atlas_prime_delegation_wnba_current_state_v1",
-  "captured_at_ct": "2026-08-20T11:31:00-05:00",
+  "captured_at_ct": "2026-08-20T11:45:00-05:00",
   "snapshot_not_authority": true,
   "sport": "WNBA",
   "source_repository": "rickeyalackey89-max/Atlas-WNBA",
   "source_branch": "builder-method-contract-v1",
   "source_head": "af72026a78731ab476d3f98bb6a599d3636efc4c",
   "builder": {
-    "status": "HOLD_CHAT_RECONCILIATION_CORE_CONSTRUCTION_LINEAGE",
-    "current_target_repo_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_TARGETED_REFINEMENT_FTM_TOV_R0_COMPLETE",
-    "authorized_step": null,
-    "required_stop": "BLOCKED_CHAT_RECONCILIATION_WNBA_FULL_BUILDER_CORE_CONSTRUCTION_LINEAGE",
+    "status": "ACTIVE_FULL_STACK_FRESH_FRONTIER_PROTECTED_VALIDATION_R1",
+    "authorized_step": "WNBA_FULL_BUILDER_FRESH_FRONTIER_PROTECTED_VALIDATION_R1",
+    "required_stop": "BLOCKED_USER_REVIEW_WNBA_FULL_BUILDER_FRESH_FRONTIER_PROTECTED_VALIDATION_R1_COMPLETE",
     "controller_skill": "slip-builders",
     "validation_reads": 0,
     "lockbox_reads": 0,
     "active_codex_execution": false,
-    "execution_authorized_after_prime_sync": false,
-    "protected_validation_open_authorized": false
+    "execution_authorized_after_prime_sync": true,
+    "protected_validation_open_authorized": true,
+    "protected_validation_preconditions_required": true
   },
+  "product_sequence": [
+    "full_pregame_pool",
+    "2L",
+    "exact_2L_selected_leg_depletion",
+    "fresh_3L_pool",
+    "3L_frozen_pointwise_selection",
+    "exact_3L_selected_leg_depletion",
+    "fresh_4L_pool",
+    "4L_canonical_atlas_rank1",
+    "independent_FromDeep",
+    "target_date_pretruth_seal",
+    "truth",
+    "validation"
+  ],
   "protected_validation": {
-    "status": "HOLD_NOT_OPENED",
+    "status": "AUTHORIZED_NOT_YET_OPENED",
     "candidate_calendar_start": "2026-08-10",
     "candidate_calendar_end": "2026-08-19",
     "whole_stack_required": true,
@@ -27,16 +41,19 @@
     "protected_scientific_payload_reads_so_far": 0,
     "formal_result_bearing_runs_so_far": 0,
     "lockbox_reads_so_far": 0,
-    "reason_for_hold": "EXACT_POST_FAMILY_CANDIDATE_FRONTIER_RECONSTRUCTION_SEMANTICS_MUST_BE_RECONCILED_FROM_TARGET_REPOSITORY_AUTHORITY_BEFORE_PROTECTED_ACCESS"
+    "must_complete_outcome_blind_fidelity_before_open": true
   },
   "lineage_reconciliation": {
-    "status": "IN_PROGRESS_CHAT_REVIEW",
+    "status": "RESOLVED_BY_EXPLICIT_USER_ARCHITECTURE_DECISION",
+    "historical_3L_surface_mode": "FILTER_EXISTING_BASE_3L_AFTER_2L_EXACT_DEPLETION",
+    "historical_3L_candidate_regeneration_absent": true,
+    "historical_3L_record": "24-6-0",
+    "historical_3L_record_not_claimed_as_fresh_frontier_evidence": true,
+    "fresh_post_2l_three_leg_frontier_authorized": true,
+    "fresh_3L_is_scope_or_architecture_change": true,
+    "three_leg_selector_method_remains_frozen": true,
+    "rebuild_development_consumed_fresh_3L_training_surface_before_protected_run": true,
     "four_leg_fresh_post_depletion_frontier_authoritative": true,
-    "three_leg_frozen_contract_candidate_regeneration_absent": true,
-    "three_leg_frozen_contract_bound_to_materialized_pretruth_surface": true,
-    "fresh_post_2l_three_leg_frontier_may_change_candidate_population": true,
-    "cannot_be_silently_treated_as_implementation_only": true,
-    "premature_fresh_frontier_correction_is_not_active_authority": true,
     "preserve_local_production_factory_checkpoint": true
   },
   "families": {
@@ -46,10 +63,11 @@
       "protected_validated": false
     },
     "3L": {
-      "status": "FROZEN_RESEARCH_DEPLETION_BACKBONE_PENDING_PRODUCTION_FRONTIER_RECONCILIATION",
+      "status": "FROZEN_POINTWISE_METHOD_WITH_USER_AUTHORIZED_FRESH_POST_2L_CANDIDATE_RECONSTRUCTION",
       "freeze_commit": "2b1fca797eebefdb0da190099681460f22036eb1",
-      "historical_asof_record": "24-6-0",
-      "frozen_contract_candidate_regeneration_absent": true,
+      "historical_filtered_surface_record": "24-6-0",
+      "fresh_candidate_reconstruction_authorized": true,
+      "method_tuning_authorized": false,
       "protected_validated": false
     },
     "4L": {
@@ -64,14 +82,23 @@
       "status": "FINAL_DEVELOPMENT_REGISTRY_ACCEPTED_NOT_PROTECTED_VALIDATED",
       "registry_id": "13d9414cf6f521a0a31f962706372ace1008c6d4e0fdd2462f655d5503992c32",
       "entry_count": 10,
+      "independent_of_core_depletion": true,
+      "output_count_uncapped_signal_driven": true,
       "protected_validated": false
     }
   },
+  "active_prime": {
+    "work_order_path": "docs/coordination/wnba/codex/archive/2026-08-20_full_builder_fresh_frontier_protected_validation_r1.md",
+    "mission_id": "WNBA_FULL_BUILDER_FRESH_FRONTIER_PROTECTED_VALIDATION_R1",
+    "one_parent_bounded_autonomous_mission": true,
+    "subagents_inherit_parent_preamble": true,
+    "step_by_step_user_review_loop": false
+  },
   "next_strategy": {
-    "status": "CHAT_MUST_FINISH_TARGET_REPOSITORY_LINEAGE_AUDIT_BEFORE_NEW_CODEX_AUTHORITY",
-    "topic": "Reconcile the intended production sequence after 2L with the exact frozen 3L candidate-population authority, while preserving the already-proven fresh post-depletion 4L frontier. Only after this is settled should Prime issue one final fully linear protected-validation mission. No protected outcomes may be opened meanwhile.",
-    "codex_execution_authorized": false,
-    "protected_validation_open_authorized": false,
-    "required_stop": "BLOCKED_CHAT_RECONCILIATION_WNBA_FULL_BUILDER_CORE_CONSTRUCTION_LINEAGE"
+    "status": "SYNC_PRIME_THEN_EXECUTE_ACTIVE_MISSION",
+    "topic": "Outcome-blindly implement and fidelity-prove fresh post-2L 3L reconstruction, rebuild the development-consumed causal 3L training surface without method tuning, preserve fresh 4L and independent FromDeep, seal the whole stack, then execute one chronological protected validation through 2026-08-19.",
+    "codex_execution_authorized": true,
+    "protected_validation_open_authorized": true,
+    "required_stop": "BLOCKED_USER_REVIEW_WNBA_FULL_BUILDER_FRESH_FRONTIER_PROTECTED_VALIDATION_R1_COMPLETE"
   }
 }
