@@ -1,6 +1,6 @@
 {
   "schema_version": "atlas_prime_delegation_wnba_current_state_v1",
-  "captured_at_ct": "2026-08-19T21:21:00-05:00",
+  "captured_at_ct": "2026-08-19T22:12:00-05:00",
   "snapshot_not_authority": true,
   "sport": "WNBA",
   "source_repository": "rickeyalackey89-max/Atlas-WNBA",
@@ -8,8 +8,8 @@
   "source_head": "0e035eef23f092c48cdfd8716c3ae4e8fedd7179",
   "scientific_predecessor_head": "749589392d8faa58f438ddcd601607bf5a35c68b",
   "builder": {
-    "status": "USER_AUTHORIZED_FROMDEEP_CAUSAL_LANE_RECONCILIATION_R0_REFRESHED_WINDOW_READY",
-    "current_target_repo_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_27_CANDIDATE_ROADS_CAUSAL_AUDIT_R1_COMPLETE",
+    "status": "USER_AUTHORIZED_FROMDEEP_CAUSAL_LANE_RECONCILIATION_R0_CANONICALIZATION_CORRECTION_READY",
+    "current_target_repo_stop": "ACTIVE_BUILDER_S5_FROMDEEP_CAUSAL_LANE_RECONCILIATION_R0_AFTER_IMPLEMENTATION_DIVERGENCE",
     "authorized_step": "WNBA_FROMDEEP_CAUSAL_LANE_RECONCILIATION_R0",
     "required_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_CAUSAL_LANE_RECONCILIATION_R0_COMPLETE",
     "controller_skill": "slip-builders",
@@ -17,9 +17,10 @@
     "lockbox_reads": 0,
     "active_codex_execution": false,
     "execution_authorized_after_prime_sync": true,
-    "formal_reconciliation_runs": 0,
-    "scientific_input_reads_in_stopped_window": 0,
-    "activation_count_in_stopped_window": 0
+    "formal_reconciliation_attempts_consumed": 1,
+    "successful_reconciliation_output_runs": 0,
+    "additional_correction_formal_runs_authorized": 1,
+    "maximum_total_formal_attempts": 2
   },
   "cross_sport_demon_specialist": {
     "doctrine": "docs/coordination/ATLAS_DEMON_SPECIALIST_PRODUCT_DOCTRINE.md",
@@ -47,17 +48,39 @@
     "work_order": "docs/coordination/wnba/codex/archive/2026-08-19_fromdeep_causal_lane_reconciliation_r0.md",
     "base_work_order_revision_commit": "941a761896b2c17d9a268abbcee262448e972252",
     "execution_window_refresh": "docs/coordination/wnba/codex/archive/2026-08-19_fromdeep_causal_lane_reconciliation_r0_execution_window_refresh_1.md",
-    "execution_window_refresh_commit": "4960aae23d7320c3ad0b29aeab513c0155f957d2",
-    "codex_prime_commit": "ce1f09edf2933cb462e88a50c411e1d372c05765",
-    "one_parent_mission_preamble": true,
+    "implementation_divergence_correction": "docs/coordination/wnba/codex/archive/2026-08-19_fromdeep_causal_lane_reconciliation_r0_implementation_divergence_correction_1.md",
+    "implementation_divergence_correction_commit": "8364cf0f5511bee3933705e737b26076893dcaa5",
+    "codex_prime_commit": "1d47fb4a4dab1d065609ec24f1b154807b56ff54",
+    "one_parent_mission_preamble_already_emitted": true,
+    "repeat_parent_preamble_for_correction": false,
     "subagents_inherit_parent_preamble": true,
-    "target_parent_mission_minutes": 30,
-    "hard_workflow_review_minutes": 45,
     "final_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_CAUSAL_LANE_RECONCILIATION_R0_COMPLETE",
-    "continue_preserved_untracked_files": true,
-    "preserved_untracked_file_count": 4,
-    "test_matrix_truthfulness_required_before_activation": true,
-    "formal_run_limit": 1
+    "formal_attempt_1": {
+      "status": "FAILED_IMPLEMENTATION_DIVERGENCE",
+      "failure_reason": "HUMAN_BLKS_STLS_LABEL_ENCODED_AS_NONCANONICAL_MACHINE_KEY",
+      "incorrect_machine_key": "blks_plus_stls",
+      "canonical_machine_key": "blks_stls",
+      "focused_test_matrix_passed": "16/16",
+      "rebind_succeeded": true,
+      "activation_succeeded": true,
+      "all_five_scientific_inputs_verified": true,
+      "outputs_written": 0,
+      "final_receipt_written": false,
+      "protected_or_validation_access": 0,
+      "scientific_evidence_status": "NOT_SCIENTIFIC_EVIDENCE"
+    },
+    "correction_authority": {
+      "affected_market": "blks_stls",
+      "incorrect_to_canonical_mapping": "blks_plus_stls->blks_stls",
+      "affected_road_binding_count": 3,
+      "group_key_correction_allowed": true,
+      "spec_engine_focused_test_sync_allowed": true,
+      "minimum_implementation_hash_sync_allowed": true,
+      "other_market_remaps_allowed": false,
+      "road_gate_threshold_population_change_allowed": false,
+      "correction_formal_run_limit": 1,
+      "third_formal_attempt_allowed": false
+    }
   },
   "families": {
     "2L": {
@@ -75,7 +98,7 @@
       "development_record": "14-8-1"
     },
     "FromDeep": {
-      "status": "CAUSAL_LANE_RECONCILIATION_R0_REFRESHED_WINDOW_AUTHORIZED",
+      "status": "CAUSAL_LANE_RECONCILIATION_R0_CORRECTION_RUN_AUTHORIZED",
       "product_contract": {
         "is_slip": false,
         "output_form": "ALL_DISTINCT_GENUINE_SPECIALIST_QUALIFIED_SINGLE_LEG_FLEX_CANDIDATES",
@@ -103,13 +126,7 @@
         "sparse_high_precision_road_count": 11,
         "mixed_road_count": 8,
         "decayed_road_count": 3,
-        "inactive_road_count": 2,
-        "validation_reads": 0,
-        "lockbox_reads": 0,
-        "aug13_contribution": 0,
-        "heldout_reads": 0,
-        "fitting_or_tuning": 0,
-        "live_mutations": 0
+        "inactive_road_count": 2
       },
       "causal_lane_reconciliation_r0": {
         "artifact_only": true,
@@ -124,40 +141,18 @@
         "new_causal_replay_allowed": false,
         "new_road_or_gate_search_allowed": false,
         "threshold_or_quantile_recompute_allowed": false,
-        "equivalence_marginal_audit_required": true,
-        "subset_superset_incremental_audit_required": true,
-        "deduplicated_freeze_candidate_registry_for_review_required": true,
         "count_based_rejection_allowed": false,
         "validation_reads_allowed": 0,
         "lockbox_reads_allowed": 0,
         "aug13_contribution_allowed": 0,
         "heldout_reads_allowed": 0,
-        "live_mutation_allowed": false,
-        "stopped_window": {
-          "reason": "HARD_DEADLINE_WITH_FOCUSED_TEST_MATRIX_COVERAGE_OVERSTATEMENT",
-          "rebinds": 0,
-          "activations": 0,
-          "scientific_input_reads": 0,
-          "formal_runs": 0,
-          "outputs_generated": 0,
-          "preserved_untracked_files": 4
-        },
-        "storage_only_workspace_changes": {
-          "archive_commit": "315aca0640b3f8c811a4b9b473ef02a64782aff4",
-          "compact_control_commit": "0e035eef23f092c48cdfd8716c3ae4e8fedd7179",
-          "offloaded_csv_count": 13317,
-          "offloaded_gb": 20.11,
-          "retained_compact_control_csv_count": 38,
-          "reported_c_drive_free_gib": 14.48,
-          "scientific_authority_changed": false,
-          "required_input_integrity_check_before_formal_run": true
-        }
+        "live_mutation_allowed": false
       }
     }
   },
   "next_strategy": {
-    "status": "USER_AUTHORIZED_CODEX_EXECUTION_REFRESHED_WINDOW_READY",
-    "topic": "Continue the four preserved reconciliation files; make focused-test and requirement-matrix coverage truthful; verify the accepted causal-audit inputs survived the storage offload unchanged; then perform exactly one activation/formal artifact-only reconciliation and return the 14-road marginal reconciliation, mixed-road recency context, recommendation packet, and proposed deduplicated freeze-candidate registry. No new replay, new roads, validation, or Live action.",
+    "status": "USER_AUTHORIZED_CODEX_CANONICALIZATION_CORRECTION_READY",
+    "topic": "Correct only the three BLKS+STLS bindings and group key from blks_plus_stls to canonical blks_stls; synchronize the corresponding spec/engine/focused-test implementation hashes; then perform exactly one correction formal artifact-only reconciliation. No other scientific or market change is authorized.",
     "candidate_method_step": "WNBA_FROMDEEP_CAUSAL_LANE_RECONCILIATION_R0",
     "codex_execution_authorized": true,
     "active_codex_execution": false,
