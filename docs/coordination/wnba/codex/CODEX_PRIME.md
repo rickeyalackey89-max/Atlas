@@ -1,26 +1,53 @@
 # WNBA Codex Prime
 
-Status: **ACTIVE EXECUTION DELEGATION — FROMDEEP TARGETED REFINEMENT FTM + TURNOVERS R0 — OUTCOME-FREE TOPOLOGY CORRECTION 1**
-
-Use the clean Prime mirror at `C:\Users\13142\Atlas\PrimeDelegation` and canonical WNBA root `C:\Users\13142\Atlas\WNBA`.
+Status: **BLOCKED USER REVIEW — FROMDEEP DEVELOPMENT COMPLETE; FINAL 10-ENTRY REGISTRY PROPOSED**
 
 Target repository: `rickeyalackey89-max/Atlas-WNBA`
 
 Target branch: `builder-method-contract-v1`
 
-Current pushed target SHA remains:
+Current pushed target SHA:
 
-`6ae67805e2112f09f16f40f9daf0d5f7676af300`
+`af72026a78731ab476d3f98bb6a599d3636efc4c`
 
-## Accepted predecessor
+## Accepted completed mission
 
-FromDeep Causal Lane Reconciliation R0 remains accepted complete at the current pushed target SHA.
+`WNBA_FROMDEEP_TARGETED_REFINEMENT_FTM_TOV_R0` is accepted complete at the current target SHA.
 
-The existing proposed 10-representative freeze registry remains unchanged and is not yet frozen/promoted.
+Accepted result:
 
-## Binding coordination doctrine
+- `free_throws_made`: `NO_REFINED_SPECIALIST_ROAD`;
+- `turnovers`: `NO_REFINED_SPECIALIST_ROAD`;
+- raw refinement paths: `141`;
+- unique variants after collapse: `115`;
+- FTM variants: `72`;
+- turnovers variants: `43`;
+- eligible refined freeze candidates: `0`;
+- sparse-watch refined candidates: `0`;
+- proposed registry additions: `0`;
+- proposed final development registry remains exactly `10` operational entries;
+- existing registry was deep-equal and unchanged;
+- global outcome-free active axis verified at `29` dates with exact latest-10 axis;
+- targeted tests `16/16` passed;
+- full control/transition suite `85/85` passed;
+- independent output-only audit passed;
+- one pre-outcome implementation-only failure plus one successful result-bearing scientific run;
+- protected / validation / lockbox / heldout / Aug.13 / fitting / model / Live activity remained `0`.
 
-Read and bind:
+Evidence:
+
+- target commit: `af72026a78731ab476d3f98bb6a599d3636efc4c`;
+- artifact ID: `d0118e901de46b4e47b3f4b49d582b004fa67f14fc121d472e7096faedc89d33`;
+- final receipt ID: `4a2267bf58073b3daf480d7ee07c7d9f661645a52f52614af5e58b112351e4a2`;
+- registered evidence ID: `da84801c5e1c9831e09ad54abf3ee0fc0407e126189c6b10138c1dfd6b90b51f`;
+- proposed final development registry ID: `13d9414cf6f521a0a31f962706372ace1008c6d4e0fdd2462f655d5503992c32`;
+- proposed final registry artifact SHA-256: `a5604a183b5fb5f306ca637ea7111b6f19794fb570d6007424c081cd18aacd98`.
+
+This remains `development_consumed` diagnostic evidence. The registry is **not frozen, promoted, validated, or Live**.
+
+## Binding coordination/product doctrine
+
+Read and bind when the next mission is authorized:
 
 - `docs/coordination/PRIME_BOUNDED_AUTONOMOUS_MISSIONS.md`
 - `docs/coordination/PRIME_PRE_OUTCOME_IMPLEMENTATION_RETRY_RULE.md`
@@ -28,134 +55,55 @@ Read and bind:
 - `docs/coordination/ATLAS_DEMON_SPECIALIST_PRODUCT_NAMES.md`
 - `docs/coordination/wnba/chat/FROMDEEP_PRODUCT_INTEGRATION_CONTRACT.md`
 
-Prime governs science strongly and implementation mechanics proportionally. Pre-outcome implementation-only defects that preserve scientific meaning are repaired/retried autonomously inside the mission; controller attempt count is not scientific evaluation count.
+FromDeep remains signal-driven and uncapped. Zero genuine qualifiers means zero output; all distinct genuine qualifiers remain eligible. Candidate count is never a rejection rule.
 
-## Active scientific mission
+## Final proposed development registry
 
-Base work order:
+The exact proposed 10-entry registry is the artifact:
 
-`docs/coordination/wnba/codex/archive/2026-08-19_fromdeep_targeted_refinement_ftm_turnovers_r0.md`
+`data/wnba/bap2_work/builder_stage_5/fromdeep_targeted_refinement_ftm_tov_r0/FROMDEEP_TARGETED_REFINEMENT_FTM_TOV_R0_PROPOSED_FINAL_DEVELOPMENT_REGISTRY.json`
 
-Base work-order commit:
+Registry ID:
 
-`6a1e1549db3ce137d5c3cf5c9cf654982203d586`
+`13d9414cf6f521a0a31f962706372ace1008c6d4e0fdd2462f655d5503992c32`
 
-Mission ID:
+Operational representatives remain exactly:
 
-`WNBA_FROMDEEP_TARGETED_REFINEMENT_FTM_TOV_R0`
+- `ROAD:06913b6f82e57c5d332986716ff189be6f38ed2a41eb0d44877bec052849a250` — `blks_stls`;
+- `ROAD:95b6347af3248a1d830c615f250bf2b4c6e0f903493847705c6b0cceb749a58f` — `blks_stls`;
+- `ROAD:619110bd383b954a23228bf4167ff8a09433ff81b6eae7ba89123cb622b25b67` — `blocks`;
+- `ROAD:7ed69228aa36b21c9f2081c91299aee16a54252a33977c546c64939872cbef96` — `blocks`;
+- `ROAD:a9ab4ae58a67cef2a52ee4ef6126decd5fe5beef53f193985136a02105624b03` — `blocks`;
+- `ROAD:653545eeb14ceac07a037a21b4f741dd85ccefadc135552cdec4b872563525e0` — `free_throws_attempted`, preserving equivalent corroborating provenance `ROAD:ed5a34a3ea390f4059a39a37642320bfe90940c278112fd141c283f8ec3a599a`;
+- `ROAD:e48eadf48debc7ea01bb1479d6d03cd1084650e0010aa46d35bd2d29311a5c0a` — `free_throws_attempted`;
+- `ROAD:7b10cb7f1b60945ab82506cb85becab8e0663abdb400de194cea21ffef477e4e` — `offensive_rebounds`;
+- `ROAD:26d2a30bfb30f1364eab20eaa04039c45ea482d9ec070da291c9cc82e272fdd7` — `steals`, preserving equivalent corroborating provenance `ROAD:64476c4f2de09b4a8b637c3c4fa4c3a5aee97150ca9adb1d38fe42f492b6baff`;
+- `ROAD:aedaa6dc3625d9ff78f0248470297578add2e86ae208d4515e24d3598cd4a8c2` — `three_pointers_made`.
 
-Scientific objective remains unchanged:
+No FTM or turnover road joins the registry.
 
-**Perform one bounded development-consumed refinement pass only for `free_throws_made` and `turnovers`, appending at most two already-known same-market pregame predicates to the five exact mixed base roads, and determine whether either market has a specialist-grade refined road worthy of joining the unchanged proposed registry.**
+## Development stop
 
-## Attempt 1 — accepted outcome-free implementation failure
+**No further FromDeep development mining, road search, gate append, threshold search, or targeted refinement is authorized from this state.**
 
-The target controller consumed one labeled attempt, but the failure occurred before any result-bearing scientific evaluation.
+The two unresolved markets were given the bounded final refinement opportunity and honestly abstained. Do not reopen them because they were close to a threshold.
 
-Accepted attempt-1 facts:
+Do not reopen BLKS+STLS, blocks, FTA, offensive rebounds, steals, or 3PM development simply to improve development metrics. Their next truth test is protected validation under an immutable frozen registry, if the user authorizes that evidence transition.
 
-- focused verification: `16/16` passed;
-- all 12 bound inputs + 38 anatomy checkpoints passed hash validation after storage offload;
-- failure: `CAUSAL_OUTCOME_FREE_DATE_TOPOLOGY_DRIFT`;
-- engine incorrectly built the global 29-date axis from FTM/TOV rows only;
-- at least one globally usable date exists only in another market;
-- settlement consultation: `0`;
-- variant grading/outcome scoring: `0`;
-- registry additions: `0`;
-- scientific output artifacts: `0`;
-- final receipt: absent;
-- protected / validation / lockbox / heldout / Aug.13 / fitting / model / Live activity: `0`;
-- target transition/commit/push from this failed attempt: `0`.
+## Next decision boundary
 
-Attempt 1 is therefore **NOT_SCIENTIFIC_EVIDENCE** and consumes zero successful/result-bearing scientific runs.
+The next scientific step is **not another development experiment**.
 
-## Outcome-free topology correction authority
+Pending explicit user/Chat authorization, the next mission should:
 
-Read and execute the amendment:
+1. materialize/freeze the exact 10-entry registry and all exact road/gate/quantile/dedup/output semantics without consulting new outcomes;
+2. verify the frozen registry is byte/semantic-equivalent to the accepted proposed registry;
+3. perform full control validation immediately before the first protected-validation read;
+4. execute one predeclared protected-validation evaluation with the selector immutable;
+5. report road-level and deduplicated-union results without tuning, replacement, threshold relaxation, or returning to development after seeing validation outcomes.
 
-`docs/coordination/wnba/codex/archive/2026-08-19_fromdeep_targeted_refinement_ftm_turnovers_r0_outcome_free_topology_correction_1.md`
+Protected validation is a new evidence class and is **not authorized by this status**.
 
-Amendment commit:
+Required current stop:
 
-`a22dfaf9cda7b1a04e8eb090b9a28ff1f4d6f223`
-
-Exact repair:
-
-- derive the required global usable-date axis from **all-market outcome-free rows of the same already-authorized development corpus**;
-- keep refinement itself strictly FTM/TOV-only;
-- before settlement consultation, verify the reconstructed axis exactly matches the accepted global 29-date development axis;
-- synchronize only the minimum affected spec/engine/test/hash bindings.
-
-No scientific method, road, predicate, threshold, population, market scope, selection criterion, registry rule, or product behavior changes.
-
-## Autonomous implementation-repair behavior
-
-Do **not** stop for a fresh Prime amendment merely because another implementation-only attempt fails before settlement consultation.
-
-Within this same mission, Codex may autonomously repair and retry when:
-
-1. failure occurs before settlement consultation / variant grading / outcome scoring;
-2. no scientific result or recommendation artifact was written;
-3. repair preserves every governing scientific fact;
-4. focused tests/invariants are rerun;
-5. work remains inside the resource envelope.
-
-Successful/result-bearing scientific refinement runs permitted: exactly `1`.
-
-Pre-outcome implementation attempts may be recorded for audit but do not consume that scientific-run allowance.
-
-Return to user/Chat only for an actual governing-fact change, new evidence class, protected/validation/lockbox need, post-outcome scientifically distinct rerun, or genuine resource-boundary breach.
-
-## Scientific scope and base-road authority unchanged
-
-### Free throws made
-
-- `ROAD:374bcccb194d9fb5144f45a9759b37637082c59b82d62220617dcaba493e7ba8`
-- `ROAD:6e42214971a4b68b8a0448170d7d4df19234866611e120e66c7bff7705da4a07`
-- `ROAD:b73c755652c3a18ec1973d4a02a4ce2615b77dfaa6e3f5ae0e05cc70fbf0e78b`
-
-### Turnovers
-
-- `ROAD:4ea99f678027c66f4f3e66b7a35bf7dfe315b82602428c6c7b32cda6b1546b0a`
-- `ROAD:ba243d0c0982534bb2b30112d09ae9197eeef49ae6cdec59ad5c8ff0a992afba`
-
-Do not refine the previously excluded BLKS+STLS/steals roads or any `DO_NOT_CARRY_FORWARD` road.
-
-The existing 10 proposed freeze-registry representatives remain immutable during this mission.
-
-## Hard boundaries unchanged
-
-- no new feature discovery;
-- no base-road changes;
-- max two appended predicates;
-- max six final gates;
-- no arbitrary threshold search;
-- no probability gate;
-- no count-based suppression;
-- max 400 variants;
-- no fitting/training/calibration;
-- validation/lockbox/protected/heldout/Aug.13/Live access prohibited;
-- no core 2L/3L/4L changes;
-- no model/publication/promotion mutation.
-
-This remains development-consumed evidence, never OOS/protected validation.
-
-## Fresh resource window
-
-Start a fresh timer after this Prime sync.
-
-Target parent mission: `30 minutes`.
-
-Hard workflow boundary: `45 minutes`.
-
-The prior outcome-free failure wall time is reported separately and does not reduce this fresh window.
-
-## Completion
-
-Required final stop:
-
-`BLOCKED_USER_REVIEW_WNBA_FROMDEEP_TARGETED_REFINEMENT_FTM_TOV_R0_COMPLETE`
-
-Return the originally required two-market refinement packet, selected refined representative(s) or honest abstention, proposed final development registry, tests/audits, evidence/receipt IDs, explicit attempt accounting, and mission wall-clock versus scientific runner time.
-
-Do not freeze the registry and do not open protected validation automatically.
+`BLOCKED_USER_REVIEW_WNBA_FROMDEEP_FINAL_DEVELOPMENT_REGISTRY_COMPLETE`
