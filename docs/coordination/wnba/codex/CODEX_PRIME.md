@@ -1,12 +1,12 @@
 # WNBA Codex Prime
 
-Status: **ACTIVE — USER-AUTHORIZED FRESH-FRONTIER FULL-STACK PROTECTED VALIDATION R1**
+Status: **ACTIVE — REFRESHED CONTINUATION — FRESH-FRONTIER FULL-STACK PROTECTED VALIDATION R1**
 
 Target repository: `rickeyalackey89-max/Atlas-WNBA`
 
 Target branch: `builder-method-contract-v1`
 
-Last known pushed target SHA before this delegation:
+Last known pushed target SHA before this mission remains:
 
 `af72026a78731ab476d3f98bb6a599d3636efc4c`
 
@@ -14,9 +14,17 @@ Preserve the existing canonical local production-factory checkpoint. Do not rese
 
 ## Active mission
 
-Execute exactly:
+Base mission:
 
 `docs/coordination/wnba/codex/archive/2026-08-20_full_builder_fresh_frontier_protected_validation_r1.md`
+
+Execution-window refresh 1:
+
+`docs/coordination/wnba/codex/archive/2026-08-20_full_builder_fresh_frontier_protected_validation_r1_execution_window_refresh_1.md`
+
+Refresh commit:
+
+`ddbbb3e08c142d6af08e240388dffb1973e776f4`
 
 Mission ID:
 
@@ -24,67 +32,116 @@ Mission ID:
 
 ## Explicit user architecture decision
 
-The final product sequence is now bound as:
+The final product sequence is bound as:
 
 `full pregame pool -> 2L -> exact selected-leg depletion -> fresh 3L pool -> 3L -> exact selected-leg depletion -> fresh 4L pool -> 4L + independent FromDeep -> seal -> truth -> validation`
 
-This replaces the prior Chat reconciliation hold.
+This architecture is not open for reinterpretation inside the mission.
 
-## Critical lineage correction
+## Accepted stopped-window state
 
-Do not treat the historical 3L `24-6-0` result as proof that fresh post-2L 3L reconstruction was already tested.
+The preceding R1 execution window stopped before activation because the production path was not yet truthful enough to authorize protected execution.
 
-Target source shows the materialized 3L research surface used:
+Accepted accounting:
 
-`base3 = existing candidates_by_family["3"] -> legal_after(base3, selected 2L exact roads)`
+- focused tests `16/16` passed;
+- Ruff and compile passed;
+- rebinds `0`;
+- activations `0`;
+- transitions `0`;
+- formal/result-bearing runs `0`;
+- protected target payload reads `0`;
+- protected settlement reads `0`;
+- validation reads `0`;
+- lockbox reads `0`;
+- protected family outputs `0`;
+- final receipt `0`.
 
-and the frozen 3L contract correctly recorded candidate regeneration as absent.
+Preserved local checkpoint:
 
-The user has now explicitly authorized the **fresh 3L candidate-population construction change**.
+- engine `09e2a07a…`;
+- tests `ec513075…`;
+- runner `515e6022…`;
+- spec `6b5a5331…` at `config/evaluation/wnba_builder_full_fresh_frontier_protected_validation_r1.json`.
 
-Implement that fresh frontier from the post-2L residual canonical leg pool using existing WNBA signal-library/Builder-leg-pool/3L-selector/QMC/value machinery. Do not merely filter an old prebuilt 3L candidate list. Do not copy 4L depth/limits unless the exact governing 3L policy resolves to them.
+These hashes identify the continuation point; the files may be edited and rehashed to complete the already-authorized implementation. **Do not restart the implementation.**
 
-The 3L **selection methodology remains frozen**: same pointwise historical-as-of feature contract, model class/hyperparameters, weighting, missingness, tie-breaks, and target-date sealing. Reconstruct the development-consumed training surface under the fresh 3L architecture before protected execution, but do not tune or search a new method based on that result.
+## Immediate continuation work
 
-Accepted 4L lineage already requires true fresh post-upstream-depletion construction through its frozen `fresh_four_leg_frontier` path. Preserve that method.
+Complete the remaining pre-activation engineering obligations from Refresh 1:
 
-FromDeep remains independent of core depletion and must emit every distinct genuine registry-qualified single, uncapped.
+1. make the R1 spec canonical and make all eight requirement-to-code matrix rows genuinely truthful;
+2. add substantive end-to-end coverage of the actual production writer/orchestrator path;
+3. make all I/O/evidence operation classifications truthful and physically enforce premature protected-access blocking;
+4. close watchdog, artifact-manifest, per-date seal, and final-receipt crosslinks;
+5. strengthen real production-path positive/adversarial tests, not merely synthetic helper tests.
+
+Do not weaken tests or mark matrix rows implemented merely to pass activation.
+
+These are subordinate engineering tasks inside the same scientific mission. They are not new research and not user-review boundaries.
+
+## Efficiency / no-old-engine rule
+
+Do **not** invoke the old FromDeep 27-road causal-discovery engine. It has no scientific role in this R1 mission.
+
+Do **not** rerun full reconciliation/control validation after each file edit, test, hash check, subagent update, serialization step, or readiness artifact write.
+
+One parent bounded mission governs the continuation. Subagents inherit the parent envelope.
+
+Full control validation is required only:
+
+- when establishing truthful mission activation readiness;
+- after an actual governing-fact change;
+- immediately before the first protected evidence-class transition;
+- at final completion/hard boundary.
+
+Ordinary pre-outcome implementation defects that preserve the bound science are autonomous repair/retest events.
+
+## Fresh 3L lineage
+
+Historical 3L `24-6-0` was produced from an already-materialized 3L surface filtered after 2L depletion. It is not fresh-frontier evidence.
+
+The user has explicitly authorized the fresh 3L candidate-population construction change.
+
+Implement fresh 3L from the post-2L residual canonical leg pool using existing WNBA signal-library, Builder leg-pool, 3L selector, dependence, QMC, payout/value, and candidate-identity machinery. Do not merely filter an old 3L candidate list. Do not copy 4L depth/limits unless the exact 3L policy resolves to them.
+
+The 3L selection methodology remains frozen: same historical-as-of feature contract, model class/hyperparameters, date weighting, missingness, tie-breaks, and pretruth sealing.
+
+Reconstruct the development-consumed fresh-3L training surface causally before protected execution, with no method tuning or alternative-selection privilege.
+
+## 4L and FromDeep
+
+4L remains the accepted true fresh post-upstream-depletion candidate construction followed by canonical Atlas rank-1 selection.
+
+FromDeep remains independent of core-family depletion and must emit every distinct genuine registry-qualified Demon single, uncapped. The accepted 10-entry registry remains unchanged.
 
 ## Protected boundary
 
-Candidate protected block remains `2026-08-10` through `2026-08-19`, inclusive.
+Candidate protected block remains:
 
-Before the first protected settlement read:
+`2026-08-10` through `2026-08-19`, inclusive.
 
-- target-repository operational authority and active `slip-builders` control must be reconciled;
-- fresh 3L implementation/fidelity must be proven;
-- the fresh-surface historical-as-of 3L development replay must be completed without method tuning;
-- 4L fresh reconstruction fidelity must be proven after actual 2L+3L selections;
-- FromDeep independence must be proven;
-- the protected calendar/source census and integrated method seal must be immutable;
-- full Builder control validation must pass immediately before the evidence-class transition.
-
-Protected scientific payload reads before that boundary remain `0`.
-
-Validation reads remain `0` until that transition.
+Protected scientific payload reads remain `0` until all pre-activation/readiness work, fresh-3L development reconstruction, source/calendar census, integrated method seal, and the required pre-transition control validation are complete.
 
 Lockbox reads remain `0` throughout.
 
-Once protected outcomes open, no method/candidate/feature/ranking/depletion/source/road change or result-bearing rerun under altered semantics is allowed.
+Once the first protected settlement opens, no candidate/ranking/feature/depletion/source/road/method change or altered result-bearing replay is allowed.
 
-## Codex operating mode
+## Linear continuation — no intermediate user stop
 
-This is one bounded-autonomous parent mission.
+Once pre-activation readiness is truthful:
 
-Use subagents aggressively for independent pre-boundary work. They inherit the parent preamble and mission envelope.
+`activate -> fresh-3L development-consumed causal reconstruction -> integrated seal/census -> protected-boundary validation -> open protected once -> run Aug10-Aug19 chronologically through 2L/fresh3L/fresh4L/FromDeep -> per-date seal -> settlement/grade -> earliest-causal forensic -> final receipt -> user review`
 
-Do not create a stop/review loop after every command, subagent, test, date, or family. Run full control validation only at activation, an actual governing-fact change, immediately before protected evidence opens, and final completion/hard boundary.
+Do not return after spec closure, writer coverage, a focused production test, fresh-3L development replay, source census, or individual protected date/family.
 
-Implementation-only pre-outcome defects may be repaired autonomously while the scientific meaning is unchanged.
+## Resource envelope
 
-Target parent wall time: `<= 75 minutes`.
+Target parent wall time from this refresh: `<=150 minutes`.
 
-Hard workflow boundary: `150 minutes`.
+Hard workflow boundary: `300 minutes`.
+
+The target is not a stop condition. Continue while the bounded mission remains healthy.
 
 ## Required final stop
 
