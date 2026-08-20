@@ -65,7 +65,7 @@ Use only the already-produced causal-audit artifacts at the accepted target comm
 
 Do not regenerate the causal selections. Do not reread protected or heldout sources.
 
-## Primary road authority — 14 high-precision roads
+## Primary road authority — exactly 14 high-precision roads
 
 Perform marginal reconciliation on exactly these 14 roads that the causal audit classified as `CAUSAL_HIGH_PRECISION_SUPPORTED` or `CAUSAL_HIGH_PRECISION_SPARSE`.
 
@@ -78,15 +78,8 @@ Perform marginal reconciliation on exactly these 14 roads that the causal audit 
 ### Blocks
 
 - `ROAD:619110bd383b954a23228bf4167ff8a09433ff81b6eae7ba89123cb622b25b67`
-- `ROAD:7ed69228aa36b21c9f2081c91299aee16a54252a33977bec052849a5091d5251d6f906e7ed90b830ebdd31ab8e`
-
-Correction: the preceding line is intentionally invalid and must not be used. The exact third Blocks road is listed below. The mission must fail closed if any road list differs from the exact authoritative list in `ROAD_AUDIT.csv`.
-
-- `ROAD:a9ab4ae58a67cef2a52ee4ef6126decd5fe5beef53f193985136a02105624b03`
-
-The exact second Blocks road is:
-
 - `ROAD:7ed69228aa36b21c9f2081c91299aee16a54252a33977c546c64939872cbef96`
+- `ROAD:a9ab4ae58a67cef2a52ee4ef6126decd5fe5beef53f193985136a02105624b03`
 
 ### Offensive rebounds
 
@@ -108,9 +101,7 @@ The exact second Blocks road is:
 - `ROAD:e48eadf48debc7ea01bb1479d6d03cd1084650e0010aa46d35bd2d29311a5c0a`
 - `ROAD:ed5a34a3ea390f4059a39a37642320bfe90940c278112fd141c283f8ec3a599a`
 
-### Authority sanity check
-
-The unique authoritative road count for marginal reconciliation must be exactly **14**. The accidental malformed Blocks line above is not a road authority and must be ignored after the fail-closed integrity check confirms it is absent from the accepted audit artifact.
+The unique authoritative road count must equal **14**, and every ID must be present in the accepted causal `ROAD_AUDIT.csv` with one of the two high-precision causal classifications. Any mismatch fails closed.
 
 ## Required marginal analysis
 
@@ -132,7 +123,7 @@ For single-road markets among the 14 (`offensive_rebounds`, `three_pointers_made
 
 Do **not** perform new road discovery or threshold work on the 8 `CAUSAL_MIXED` roads. However, summarize their already-known causal evidence from the audit so Chat/user can decide whether a later **targeted current-regime refinement** is warranted.
 
-In particular, do not silently discard a mixed road merely because its full active-regime precision is lower if its latest-window trajectory materially improved. Recency remains decision-relevant.
+Do not silently discard a mixed road merely because its full active-regime precision is lower if its latest-window trajectory materially improved. Recency remains decision-relevant.
 
 The 3 `CAUSAL_DECAYED` and 2 `CAUSAL_INACTIVE_INSUFFICIENT_FIRE` roads should be carried only as context and not included in marginal high-precision reconciliation.
 
