@@ -1,26 +1,21 @@
 {
   "schema_version": "atlas_prime_delegation_wnba_current_state_v1",
-  "captured_at_ct": "2026-08-19T22:12:00-05:00",
+  "captured_at_ct": "2026-08-19T22:45:00-05:00",
   "snapshot_not_authority": true,
   "sport": "WNBA",
   "source_repository": "rickeyalackey89-max/Atlas-WNBA",
   "source_branch": "builder-method-contract-v1",
-  "source_head": "0e035eef23f092c48cdfd8716c3ae4e8fedd7179",
-  "scientific_predecessor_head": "749589392d8faa58f438ddcd601607bf5a35c68b",
+  "source_head": "6ae67805e2112f09f16f40f9daf0d5f7676af300",
   "builder": {
-    "status": "USER_AUTHORIZED_FROMDEEP_CAUSAL_LANE_RECONCILIATION_R0_CANONICALIZATION_CORRECTION_READY",
-    "current_target_repo_stop": "ACTIVE_BUILDER_S5_FROMDEEP_CAUSAL_LANE_RECONCILIATION_R0_AFTER_IMPLEMENTATION_DIVERGENCE",
-    "authorized_step": "WNBA_FROMDEEP_CAUSAL_LANE_RECONCILIATION_R0",
-    "required_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_CAUSAL_LANE_RECONCILIATION_R0_COMPLETE",
+    "status": "USER_AUTHORIZED_FROMDEEP_TARGETED_REFINEMENT_FTM_TOV_R0_READY",
+    "current_target_repo_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_CAUSAL_LANE_RECONCILIATION_R0_COMPLETE",
+    "authorized_step": "WNBA_FROMDEEP_TARGETED_REFINEMENT_FTM_TOV_R0",
+    "required_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_TARGETED_REFINEMENT_FTM_TOV_R0_COMPLETE",
     "controller_skill": "slip-builders",
     "validation_reads": 0,
     "lockbox_reads": 0,
     "active_codex_execution": false,
-    "execution_authorized_after_prime_sync": true,
-    "formal_reconciliation_attempts_consumed": 1,
-    "successful_reconciliation_output_runs": 0,
-    "additional_correction_formal_runs_authorized": 1,
-    "maximum_total_formal_attempts": 2
+    "execution_authorized_after_prime_sync": true
   },
   "cross_sport_demon_specialist": {
     "doctrine": "docs/coordination/ATLAS_DEMON_SPECIALIST_PRODUCT_DOCTRINE.md",
@@ -44,43 +39,15 @@
     }
   },
   "prime_mission": {
-    "mission_id": "WNBA_FROMDEEP_CAUSAL_LANE_RECONCILIATION_R0",
-    "work_order": "docs/coordination/wnba/codex/archive/2026-08-19_fromdeep_causal_lane_reconciliation_r0.md",
-    "base_work_order_revision_commit": "941a761896b2c17d9a268abbcee262448e972252",
-    "execution_window_refresh": "docs/coordination/wnba/codex/archive/2026-08-19_fromdeep_causal_lane_reconciliation_r0_execution_window_refresh_1.md",
-    "implementation_divergence_correction": "docs/coordination/wnba/codex/archive/2026-08-19_fromdeep_causal_lane_reconciliation_r0_implementation_divergence_correction_1.md",
-    "implementation_divergence_correction_commit": "8364cf0f5511bee3933705e737b26076893dcaa5",
-    "codex_prime_commit": "1d47fb4a4dab1d065609ec24f1b154807b56ff54",
-    "one_parent_mission_preamble_already_emitted": true,
-    "repeat_parent_preamble_for_correction": false,
+    "mission_id": "WNBA_FROMDEEP_TARGETED_REFINEMENT_FTM_TOV_R0",
+    "work_order": "docs/coordination/wnba/codex/archive/2026-08-19_fromdeep_targeted_refinement_ftm_turnovers_r0.md",
+    "work_order_commit": "6a1e1549db3ce137d5c3cf5c9cf654982203d586",
+    "codex_prime_commit": "6b0d1dee6377da4b9ec59a26ddb54909a35ac004",
+    "one_parent_mission_preamble": true,
     "subagents_inherit_parent_preamble": true,
-    "final_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_CAUSAL_LANE_RECONCILIATION_R0_COMPLETE",
-    "formal_attempt_1": {
-      "status": "FAILED_IMPLEMENTATION_DIVERGENCE",
-      "failure_reason": "HUMAN_BLKS_STLS_LABEL_ENCODED_AS_NONCANONICAL_MACHINE_KEY",
-      "incorrect_machine_key": "blks_plus_stls",
-      "canonical_machine_key": "blks_stls",
-      "focused_test_matrix_passed": "16/16",
-      "rebind_succeeded": true,
-      "activation_succeeded": true,
-      "all_five_scientific_inputs_verified": true,
-      "outputs_written": 0,
-      "final_receipt_written": false,
-      "protected_or_validation_access": 0,
-      "scientific_evidence_status": "NOT_SCIENTIFIC_EVIDENCE"
-    },
-    "correction_authority": {
-      "affected_market": "blks_stls",
-      "incorrect_to_canonical_mapping": "blks_plus_stls->blks_stls",
-      "affected_road_binding_count": 3,
-      "group_key_correction_allowed": true,
-      "spec_engine_focused_test_sync_allowed": true,
-      "minimum_implementation_hash_sync_allowed": true,
-      "other_market_remaps_allowed": false,
-      "road_gate_threshold_population_change_allowed": false,
-      "correction_formal_run_limit": 1,
-      "third_formal_attempt_allowed": false
-    }
+    "target_parent_mission_minutes": 25,
+    "hard_workflow_review_minutes": 40,
+    "final_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_TARGETED_REFINEMENT_FTM_TOV_R0_COMPLETE"
   },
   "families": {
     "2L": {
@@ -98,7 +65,7 @@
       "development_record": "14-8-1"
     },
     "FromDeep": {
-      "status": "CAUSAL_LANE_RECONCILIATION_R0_CORRECTION_RUN_AUTHORIZED",
+      "status": "TARGETED_REFINEMENT_FTM_TOV_R0_AUTHORIZED",
       "product_contract": {
         "is_slip": false,
         "output_form": "ALL_DISTINCT_GENUINE_SPECIALIST_QUALIFIED_SINGLE_LEG_FLEX_CANDIDATES",
@@ -108,54 +75,55 @@
         "count_based_suppression_allowed": false,
         "density_metrics_are_descriptive_only": true
       },
-      "candidate_roads_causal_audit_r1": {
-        "commit": "749589392d8faa58f438ddcd601607bf5a35c68b",
-        "status": "PASS_ACCEPTED",
-        "formal_replays": 1,
-        "distinct_candidates": 142,
-        "active_wins": 85,
-        "active_losses": 54,
-        "active_nonbinary": 3,
-        "active_strict_precision": 0.6115107913669064,
-        "active_strict_baseline_lift": 0.32316127680379964,
-        "latest10_wins": 45,
-        "latest10_losses": 16,
-        "latest10_nonbinary": 1,
-        "latest10_strict_precision": 0.7377049180327869,
-        "supported_road_count": 3,
-        "sparse_high_precision_road_count": 11,
-        "mixed_road_count": 8,
-        "decayed_road_count": 3,
-        "inactive_road_count": 2
-      },
       "causal_lane_reconciliation_r0": {
-        "artifact_only": true,
-        "high_precision_primary_road_count": 14,
-        "primary_classes": [
-          "CAUSAL_HIGH_PRECISION_SUPPORTED",
-          "CAUSAL_HIGH_PRECISION_SPARSE"
+        "commit": "6ae67805e2112f09f16f40f9daf0d5f7676af300",
+        "status": "PASS_ACCEPTED",
+        "evidence_id": "2b4899bc78a3459dac95d52810850ceae73631451b501f7ff98a28c2dd0e7c0f",
+        "artifact_id": "db9ddcd2297b62bc4e11b271a5e85a9befcd2d60777ceb3303b4841d21565a71",
+        "final_receipt_id": "f87ee4eb81cb4c6400ae19651461f7a36370a0540fc157d4315c98e0e0c5223c",
+        "freeze_candidate_road_id_count": 12,
+        "targeted_refinement_road_id_count": 7,
+        "do_not_carry_road_id_count": 8,
+        "proposed_deduplicated_freeze_registry_representatives": 10,
+        "selector_frozen_or_promoted": false,
+        "protected_validation_lockbox_aug13_live_fitting_activity": 0
+      },
+      "targeted_refinement_ftm_tov_r0": {
+        "markets": [
+          "free_throws_made",
+          "turnovers"
         ],
-        "mixed_roads_context_only_count": 8,
-        "decayed_context_only_count": 3,
-        "inactive_context_only_count": 2,
-        "new_causal_replay_allowed": false,
-        "new_road_or_gate_search_allowed": false,
-        "threshold_or_quantile_recompute_allowed": false,
+        "base_road_ids": [
+          "ROAD:374bcccb194d9fb5144f45a9759b37637082c59b82d62220617dcaba493e7ba8",
+          "ROAD:6e42214971a4b68b8a0448170d7d4df19234866611e120e66c7bff7705da4a07",
+          "ROAD:b73c755652c3a18ec1973d4a02a4ce2615b77dfaa6e3f5ae0e05cc70fbf0e78b",
+          "ROAD:4ea99f678027c66f4f3e66b7a35bf7dfe315b82602428c6c7b32cda6b1546b0a",
+          "ROAD:ba243d0c0982534bb2b30112d09ae9197eeef49ae6cdec59ad5c8ff0a992afba"
+        ],
+        "do_not_refine_targeted_roads": [
+          "ROAD:2aa51fc63ab02cd63dabe666f2ed4668c9f969cdf9b5670a584281d13a7488f4",
+          "ROAD:2cd2b2ad62679304944eb9087a6d02e565e9b1290b243b25e0fcd251b5cb3059"
+        ],
+        "existing_proposed_freeze_registry_held_unchanged": true,
+        "append_predicate_limit": 2,
+        "maximum_final_gate_depth": 6,
+        "maximum_total_variant_count": 400,
+        "new_feature_identity_allowed": false,
+        "probability_gate_allowed": false,
         "count_based_rejection_allowed": false,
         "validation_reads_allowed": 0,
         "lockbox_reads_allowed": 0,
-        "aug13_contribution_allowed": 0,
-        "heldout_reads_allowed": 0,
-        "live_mutation_allowed": false
+        "protected_heldout_aug13_live_allowed": false,
+        "fitting_training_calibration_allowed": false
       }
     }
   },
   "next_strategy": {
-    "status": "USER_AUTHORIZED_CODEX_CANONICALIZATION_CORRECTION_READY",
-    "topic": "Correct only the three BLKS+STLS bindings and group key from blks_plus_stls to canonical blks_stls; synchronize the corresponding spec/engine/focused-test implementation hashes; then perform exactly one correction formal artifact-only reconciliation. No other scientific or market change is authorized.",
-    "candidate_method_step": "WNBA_FROMDEEP_CAUSAL_LANE_RECONCILIATION_R0",
+    "status": "USER_AUTHORIZED_CODEX_EXECUTION_READY",
+    "topic": "Run one bounded targeted refinement pass only for free_throws_made and turnovers. Keep the existing 10-representative proposed freeze registry unchanged, append at most two already-known same-market pregame predicates to the five exact mixed base roads, use prior-only causal thresholds, and return at most one refined freeze candidate per market or honest abstention. Do not open protected validation automatically.",
+    "candidate_method_step": "WNBA_FROMDEEP_TARGETED_REFINEMENT_FTM_TOV_R0",
     "codex_execution_authorized": true,
     "active_codex_execution": false,
-    "required_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_CAUSAL_LANE_RECONCILIATION_R0_COMPLETE"
+    "required_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_TARGETED_REFINEMENT_FTM_TOV_R0_COMPLETE"
   }
 }
