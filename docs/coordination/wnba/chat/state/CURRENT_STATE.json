@@ -1,13 +1,14 @@
 {
   "schema_version": "atlas_prime_delegation_wnba_current_state_v1",
-  "captured_at_ct": "2026-08-19T20:09:00-05:00",
+  "captured_at_ct": "2026-08-19T21:21:00-05:00",
   "snapshot_not_authority": true,
   "sport": "WNBA",
   "source_repository": "rickeyalackey89-max/Atlas-WNBA",
   "source_branch": "builder-method-contract-v1",
-  "source_head": "749589392d8faa58f438ddcd601607bf5a35c68b",
+  "source_head": "0e035eef23f092c48cdfd8716c3ae4e8fedd7179",
+  "scientific_predecessor_head": "749589392d8faa58f438ddcd601607bf5a35c68b",
   "builder": {
-    "status": "USER_AUTHORIZED_FROMDEEP_CAUSAL_LANE_RECONCILIATION_R0_READY",
+    "status": "USER_AUTHORIZED_FROMDEEP_CAUSAL_LANE_RECONCILIATION_R0_REFRESHED_WINDOW_READY",
     "current_target_repo_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_27_CANDIDATE_ROADS_CAUSAL_AUDIT_R1_COMPLETE",
     "authorized_step": "WNBA_FROMDEEP_CAUSAL_LANE_RECONCILIATION_R0",
     "required_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_CAUSAL_LANE_RECONCILIATION_R0_COMPLETE",
@@ -15,7 +16,10 @@
     "validation_reads": 0,
     "lockbox_reads": 0,
     "active_codex_execution": false,
-    "execution_authorized_after_prime_sync": true
+    "execution_authorized_after_prime_sync": true,
+    "formal_reconciliation_runs": 0,
+    "scientific_input_reads_in_stopped_window": 0,
+    "activation_count_in_stopped_window": 0
   },
   "cross_sport_demon_specialist": {
     "doctrine": "docs/coordination/ATLAS_DEMON_SPECIALIST_PRODUCT_DOCTRINE.md",
@@ -41,13 +45,19 @@
   "prime_mission": {
     "mission_id": "WNBA_FROMDEEP_CAUSAL_LANE_RECONCILIATION_R0",
     "work_order": "docs/coordination/wnba/codex/archive/2026-08-19_fromdeep_causal_lane_reconciliation_r0.md",
-    "latest_work_order_revision_commit": "941a761896b2c17d9a268abbcee262448e972252",
-    "codex_prime_commit": "31b26b340ae1ae6b23fdfc35f4fc8830e15c4a83",
+    "base_work_order_revision_commit": "941a761896b2c17d9a268abbcee262448e972252",
+    "execution_window_refresh": "docs/coordination/wnba/codex/archive/2026-08-19_fromdeep_causal_lane_reconciliation_r0_execution_window_refresh_1.md",
+    "execution_window_refresh_commit": "4960aae23d7320c3ad0b29aeab513c0155f957d2",
+    "codex_prime_commit": "ce1f09edf2933cb462e88a50c411e1d372c05765",
     "one_parent_mission_preamble": true,
     "subagents_inherit_parent_preamble": true,
-    "target_parent_mission_minutes": 20,
-    "hard_workflow_review_minutes": 30,
-    "final_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_CAUSAL_LANE_RECONCILIATION_R0_COMPLETE"
+    "target_parent_mission_minutes": 30,
+    "hard_workflow_review_minutes": 45,
+    "final_stop": "BLOCKED_USER_REVIEW_WNBA_FROMDEEP_CAUSAL_LANE_RECONCILIATION_R0_COMPLETE",
+    "continue_preserved_untracked_files": true,
+    "preserved_untracked_file_count": 4,
+    "test_matrix_truthfulness_required_before_activation": true,
+    "formal_run_limit": 1
   },
   "families": {
     "2L": {
@@ -65,7 +75,7 @@
       "development_record": "14-8-1"
     },
     "FromDeep": {
-      "status": "CAUSAL_LANE_RECONCILIATION_R0_AUTHORIZED",
+      "status": "CAUSAL_LANE_RECONCILIATION_R0_REFRESHED_WINDOW_AUTHORIZED",
       "product_contract": {
         "is_slip": false,
         "output_form": "ALL_DISTINCT_GENUINE_SPECIALIST_QUALIFIED_SINGLE_LEG_FLEX_CANDIDATES",
@@ -122,13 +132,32 @@
         "lockbox_reads_allowed": 0,
         "aug13_contribution_allowed": 0,
         "heldout_reads_allowed": 0,
-        "live_mutation_allowed": false
+        "live_mutation_allowed": false,
+        "stopped_window": {
+          "reason": "HARD_DEADLINE_WITH_FOCUSED_TEST_MATRIX_COVERAGE_OVERSTATEMENT",
+          "rebinds": 0,
+          "activations": 0,
+          "scientific_input_reads": 0,
+          "formal_runs": 0,
+          "outputs_generated": 0,
+          "preserved_untracked_files": 4
+        },
+        "storage_only_workspace_changes": {
+          "archive_commit": "315aca0640b3f8c811a4b9b473ef02a64782aff4",
+          "compact_control_commit": "0e035eef23f092c48cdfd8716c3ae4e8fedd7179",
+          "offloaded_csv_count": 13317,
+          "offloaded_gb": 20.11,
+          "retained_compact_control_csv_count": 38,
+          "reported_c_drive_free_gib": 14.48,
+          "scientific_authority_changed": false,
+          "required_input_integrity_check_before_formal_run": true
+        }
       }
     }
   },
   "next_strategy": {
-    "status": "USER_AUTHORIZED_CODEX_EXECUTION_READY",
-    "topic": "Use the completed causal-audit artifacts only. Reconcile the 14 supported/sparse high-precision roads by exact same-market equivalence, subset/superset and marginal added/excluded candidate W/L evidence; summarize the eight mixed roads as current-regime refinement context; return freeze-candidate, targeted-refinement, and do-not-carry recommendations plus a deduplicated freeze-candidate registry for review. No replay, new roads, validation, or Live action.",
+    "status": "USER_AUTHORIZED_CODEX_EXECUTION_REFRESHED_WINDOW_READY",
+    "topic": "Continue the four preserved reconciliation files; make focused-test and requirement-matrix coverage truthful; verify the accepted causal-audit inputs survived the storage offload unchanged; then perform exactly one activation/formal artifact-only reconciliation and return the 14-road marginal reconciliation, mixed-road recency context, recommendation packet, and proposed deduplicated freeze-candidate registry. No new replay, new roads, validation, or Live action.",
     "candidate_method_step": "WNBA_FROMDEEP_CAUSAL_LANE_RECONCILIATION_R0",
     "codex_execution_authorized": true,
     "active_codex_execution": false,
